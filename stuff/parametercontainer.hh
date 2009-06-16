@@ -9,7 +9,7 @@
 
 #include <dune/fem/io/parameter.hh>
 
-#include "stuff.hh"
+#include "misc.hh"
 #include "logging.hh"
 
 
