@@ -11,7 +11,6 @@
 #include <dune/fem/io/file/vtkio.hh>
 
 #include "logging.hh"
-#include "problem.hh"
 #include "parametercontainer.hh"
 
 #include <dune/fem/misc/l2norm.hh>
