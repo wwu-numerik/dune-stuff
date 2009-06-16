@@ -7,6 +7,14 @@ EXTRA_DIST=dune.module
 #LDADD = $(UG_LDFLAGS) $(AMIRAMESH_LDFLAGS) $(UG_LIBS) $(AMIRAMESH_LIBS)
 #AM_CPPFLAGS = $(UG_CPPFLAGS) $(AMIRAMESH_CPPFLAGS)
 
+noinst_PROGRAMS = headertest
+
+headertest_SOURCES = headertest.cc
+
+headertest_CXXFLAGS = $(MPI_CPPFLAGS)  $(AM_CPPFLAGS)
+headertest_LDADD = $(MPI_LDFLAGS) $(ALUGRID_LDFLAGS) $(ALUGRID_LIBS)  \
+$(MPI_LDFLAGS) $(DUNE_LDFLAGS) $(DUNE_LIBS) $(GRAPE_LDFLAGS) $(GRAPE_LIBS) $(BLAS_LIBS)
+
 
 # don't follow the full GNU-standard
 # we need automake 1.5
