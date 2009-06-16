@@ -3,7 +3,7 @@
 AC_PREREQ(2.50)
 DUNE_AC_INIT # gets module version from dune.module file
 AM_INIT_AUTOMAKE
-AC_CONFIG_SRCDIR([dune_stuff.cc])
+AC_CONFIG_SRCDIR([stuff/printing.hh])
 AM_CONFIG_HEADER([config.h])
 
 
@@ -17,7 +17,8 @@ AC_SUBST(AM_CPPFLAGS, $DUNE_CPPFLAGS)
 AC_SUBST(AM_LDFLAGS, $DUNE_LDFLAGS)
 LIBS="$DUNE_LIBS"
 
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([Makefile 
+	stuff/Makefile])
 AC_OUTPUT
 # finally print the summary information
 DUNE_SUMMARY_ALL
