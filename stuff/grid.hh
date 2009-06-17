@@ -71,11 +71,11 @@ class GridWalk {
                 for (   IntersectionIteratorType intIt = gridPart_.ibegin( *it );
                         intIt != intItEnd;
                         ++intIt ) {
-                    const int neigh_idx = getIdx( entityIdxMap_, intIt.outside() );
-                    if ( intIt.neighbor() ) {
+                    if ( !intIt.boundary() ) {
+                        const int neigh_idx = getIdx( entityIdxMap_, intIt.outside() );
                         f( *it, *intIt.outside(), ent_idx, neigh_idx);
                     }
-                }
+		}
             }
             f.postWalk();
         }
