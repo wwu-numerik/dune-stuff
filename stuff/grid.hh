@@ -17,16 +17,17 @@ double getLenghtOfIntersection( const IntersectionIteratorType& intIt )
     typedef typename IntersectionIteratorType::Geometry
         IntersectionGeometryType;
     const IntersectionGeometryType& intersectionGeoemtry = intIt.intersectionGlobal();
-    assert( intersectionGeoemtry.corners() == 2 );
-    typedef typename IntersectionIteratorType::ctype
-        ctype;
-    const int dimworld = IntersectionIteratorType::dimensionworld;
-    typedef Dune::FieldVector< ctype, dimworld >
-        DomainType;
-    const DomainType cornerOne = intersectionGeoemtry[0];
-    const DomainType cornerTwo = intersectionGeoemtry[1];
-    const DomainType difference = cornerOne - cornerTwo;
-    return difference.two_norm();
+    return intersectionGeoemtry.volume();
+//    assert( intersectionGeoemtry.corners() == 2 );
+//    typedef typename IntersectionIteratorType::ctype
+//        ctype;
+//    const int dimworld = IntersectionIteratorType::dimensionworld;
+//    typedef Dune::FieldVector< ctype, dimworld >
+//        DomainType;
+//    const DomainType cornerOne = intersectionGeoemtry[0];
+//    const DomainType cornerTwo = intersectionGeoemtry[1];
+//    const DomainType difference = cornerOne - cornerTwo;
+//    return difference.two_norm();
 }
 
 
