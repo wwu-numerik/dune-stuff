@@ -107,7 +107,7 @@ class PostProcessor
             projectionP( problem_.pressure(), discreteExactPressure_ );
         }
 
-        void save( const GridType& grid, const DiscreteStokesFunctionWrapperType& wrapper )
+        void save( const GridType& /*grid*/, const DiscreteStokesFunctionWrapperType& wrapper )
         {
             if ( !solutionAssembled_ )
                 assembleExactSolution();

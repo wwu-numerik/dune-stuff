@@ -97,11 +97,11 @@ class TexOutput
             outputFile_.flush();
         }
 
-        void putErrorCol( std::ofstream& outputFile_, const double prevError_, const double error_, const double prevh_,  const bool initial  )
+        void putErrorCol( std::ofstream& outputFile_, const double prevError_, const double error_, const double prevh_,  const bool /*initial*/  )
         {
             current_h_ = info_.grid_width;
-            double factor = prevh_/current_h_;
-            double eoc = std::log(prevError_/error_)/log(factor);
+            double factor = current_h_/prevh_;
+            double eoc = std::log(error_/prevError_)/std::log(factor);
             outputFile_ << " & " << error_ << " & " << eoc;
         }
 
@@ -137,6 +137,7 @@ class TexOutput
             outputFile_ << std::setw( 4 )
                 << info_.grid_width << " & "
                 << info_.codim0 << " & "
+                << info_.run_time << " & "
                 << info_.c11 << " & "
                 << info_.d11 << " & "
                 << info_.c12 << " & "
