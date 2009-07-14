@@ -120,7 +120,7 @@ class TexOutput
                 << "\\caption{"
                 << " Grid: " << info_.gridname
                 << " BFG: " << ( info_.bfg ? std::string("yes") : std::string("no") )
-                << " Polorder: " << info_.polorder
+                << " Polorder (u,p,$\\sigma$): (" << info_.polorder_velocity << ", "<< info_.polorder_pressure << ", "<< info_.polorder_sigma << " ) "
                 << "}\\\\  \n"
                 << "\\hline \n";
 
