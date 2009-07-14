@@ -118,10 +118,10 @@ class TexOutput
             }
             outputFile_ << "}\n"
                 << "\\caption{"
-                << "Grid: " << info_.gridname
-                << "BFG: " << ( info_.bfg ? std::string("yes") : std::string("no") )
-                << "Polorder: " << info_.polorder
-                << "}\n"
+                << " Grid: " << info_.gridname
+                << " BFG: " << ( info_.bfg ? std::string("yes") : std::string("no") )
+                << " Polorder: " << info_.polorder
+                << "}\\\\  \n"
                 << "\\hline \n";
 
             for (unsigned int i=0;i<statColSize;i++) {
