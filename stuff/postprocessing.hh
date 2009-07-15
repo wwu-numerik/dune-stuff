@@ -131,12 +131,15 @@ class PostProcessor
 
             vtk_write( wrapper.discretePressure() );
             vtk_write( wrapper.discreteVelocity() );
-            vtk_write( discreteExactVelocity_ );
-			vtk_write( discreteExactPressure_ );
-            vtk_write( discreteExactForce_ );
-			vtk_write( discreteExactDirichlet_ );
-			vtk_write( errorFunc_pressure_ );
-			vtk_write( errorFunc_velocity_ );
+
+            if ( ProblemType:: hasMeaningfulAnalyticalSolution ) {
+                vtk_write( discreteExactVelocity_ );
+                vtk_write( discreteExactPressure_ );
+                vtk_write( discreteExactForce_ );
+                vtk_write( discreteExactDirichlet_ );
+                vtk_write( errorFunc_pressure_ );
+                vtk_write( errorFunc_velocity_ );
+            }
 #ifndef NLOG
 			entityColoration();
 #endif
