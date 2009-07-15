@@ -73,6 +73,7 @@ class PostProcessor
             errorFunc_velocity_( "err_velocity", wrapper.discreteVelocitySpace() ),
             errorFunc_pressure_( "err_pressure", wrapper.discretePressureSpace() ),
             solutionAssembled_( false ),
+            current_refine_level_( std::numeric_limits<int>::min() ),
             l2_error_pressure_( - std::numeric_limits<double>::max() ),
             l2_error_velocity_( - std::numeric_limits<double>::max() ),
             vtkWriter_( wrapper.gridPart() )
@@ -107,15 +108,21 @@ class PostProcessor
         void vtk_write( const Function& f ) {
             vtkWriter_.addVertexData(f);
             std::stringstream path;
-            path << Parameters().getParam( "fem.io.datadir", std::string("data") ) << "/" << f.name()  ;
+            if ( Parameters().getParam( "per-run-output", false ) )
+                path << Parameters().getParam( "fem.io.datadir", std::string("data") ) << "/" << f.name();
+            else
+                path << Parameters().getParam( "fem.io.datadir", std::string("data") )
+                     << "/ref" <<  current_refine_level_ << "_" << f.name();
             vtkWriter_.write( path.str().c_str() );
             vtkWriter_.clear();
         }
 
-        void save( const GridType& /*grid*/, const DiscreteStokesFunctionWrapperType& wrapper )
+        void save( const GridType& /*grid*/, const DiscreteStokesFunctionWrapperType& wrapper, int refine_level )
         {
-            if ( !solutionAssembled_ )
+            if ( !solutionAssembled_ || current_refine_level_ != refine_level ) //re-assemble solution if refine level has changed
                 assembleExactSolution();
+
+            current_refine_level_ = refine_level;
 
             calcError( wrapper.discretePressure() , wrapper.discreteVelocity() );
 
@@ -230,6 +237,7 @@ class PostProcessor
         DiscreteVelocityFunctionType errorFunc_velocity_;
         DiscretePressureFunctionType errorFunc_pressure_;
         bool solutionAssembled_;
+        int current_refine_level_;
         double l2_error_pressure_;
         double l2_error_velocity_;
         VTKWriterType vtkWriter_;
