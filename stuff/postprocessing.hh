@@ -109,10 +109,11 @@ class PostProcessor
             vtkWriter_.addVertexData(f);
             std::stringstream path;
             if ( Parameters().getParam( "per-run-output", false ) )
-                path << Parameters().getParam( "fem.io.datadir", std::string("data") ) << "/" << f.name();
-            else
                 path << Parameters().getParam( "fem.io.datadir", std::string("data") )
                      << "/ref" <<  current_refine_level_ << "_" << f.name();
+            else
+                path << Parameters().getParam( "fem.io.datadir", std::string("data") ) << "/" << f.name();
+
             vtkWriter_.write( path.str().c_str() );
             vtkWriter_.clear();
         }
