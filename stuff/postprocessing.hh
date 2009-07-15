@@ -15,11 +15,7 @@
 
 #include <dune/fem/misc/l2norm.hh>
 #include <cmath>
-
-//! simple macro that uses member vtkWriter instance to write file according to variable name
-#define VTK_WRITE(z)    vtkWriter_.addVertexData(z); \
-                        vtkWriter_.write(( "data/"#z ) ); \
-                        vtkWriter_.clear();
+#include <sstream>
 
 
 template <  class StokesPassImp, class ProblemImp >
@@ -107,6 +103,15 @@ class PostProcessor
             projectionP( problem_.pressure(), discreteExactPressure_ );
         }
 
+        template <class Function>
+        void vtk_write( const Function& f ) {
+            vtkWriter_.addVertexData(f);
+            std::stringstream path;
+            path << Parameters().getParam( "fem.io.datadir", std::string("data") ) << "/" << f.name()  ;
+            vtkWriter_.write( path.str().c_str() );
+            vtkWriter_.clear();
+        }
+
         void save( const GridType& /*grid*/, const DiscreteStokesFunctionWrapperType& wrapper )
         {
             if ( !solutionAssembled_ )
@@ -114,14 +119,14 @@ class PostProcessor
 
             calcError( wrapper.discretePressure() , wrapper.discreteVelocity() );
 
-            VTK_WRITE( wrapper.discretePressure() );
-            VTK_WRITE( wrapper.discreteVelocity() );
-            VTK_WRITE( discreteExactVelocity_ );
-			VTK_WRITE( discreteExactPressure_ );
-            VTK_WRITE( discreteExactForce_ );
-			VTK_WRITE( discreteExactDirichlet_ );
-			VTK_WRITE( errorFunc_pressure_ );
-			VTK_WRITE( errorFunc_velocity_ );
+            vtk_write( wrapper.discretePressure() );
+            vtk_write( wrapper.discreteVelocity() );
+            vtk_write( discreteExactVelocity_ );
+			vtk_write( discreteExactPressure_ );
+            vtk_write( discreteExactForce_ );
+			vtk_write( discreteExactDirichlet_ );
+			vtk_write( errorFunc_pressure_ );
+			vtk_write( errorFunc_velocity_ );
 #ifndef NLOG
 			entityColoration();
 #endif
@@ -209,7 +214,7 @@ class PostProcessor
                 }
             }
 
-            VTK_WRITE( cl );
+            vtk_write( cl );
         }
 
     private:
@@ -231,6 +236,6 @@ class PostProcessor
 
 };
 
-#undef VTK_WRITE
+#undef vtk_write
 
 #endif // end of postprocessing.hh
