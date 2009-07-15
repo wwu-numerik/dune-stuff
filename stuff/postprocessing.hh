@@ -11,6 +11,7 @@
 #include <dune/fem/io/file/vtkio.hh>
 
 #include "logging.hh"
+#include "misc.hh"
 #include "parametercontainer.hh"
 
 #include <dune/fem/misc/l2norm.hh>
@@ -76,9 +77,10 @@ class PostProcessor
             current_refine_level_( std::numeric_limits<int>::min() ),
             l2_error_pressure_( - std::numeric_limits<double>::max() ),
             l2_error_velocity_( - std::numeric_limits<double>::max() ),
-            vtkWriter_( wrapper.gridPart() )
+            vtkWriter_( wrapper.gridPart() ),
+            datadir_( Parameters().getParam( "fem.io.datadir", std::string("data") ))
         {
-
+            Stuff::testCreateDirectory( datadir_ );
         }
 
         ~PostProcessor()
@@ -109,10 +111,10 @@ class PostProcessor
             vtkWriter_.addVertexData(f);
             std::stringstream path;
             if ( Parameters().getParam( "per-run-output", false ) )
-                path << Parameters().getParam( "fem.io.datadir", std::string("data") )
-                     << "/ref" <<  current_refine_level_ << "_" << f.name();
+                path    << datadir_ << "/ref"
+                        <<  current_refine_level_ << "_" << f.name();
             else
-                path << Parameters().getParam( "fem.io.datadir", std::string("data") ) << "/" << f.name();
+                path << datadir_ << "/" << f.name();
 
             vtkWriter_.write( path.str().c_str() );
             vtkWriter_.clear();
@@ -242,7 +244,7 @@ class PostProcessor
         double l2_error_pressure_;
         double l2_error_velocity_;
         VTKWriterType vtkWriter_;
-
+        std::string datadir_;
 };
 
 #undef vtk_write
