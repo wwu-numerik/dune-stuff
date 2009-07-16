@@ -11,15 +11,12 @@
 #include <dune/fem/io/file/vtkio.hh>
 
 #include "logging.hh"
+#include "misc.hh"
 #include "parametercontainer.hh"
 
 #include <dune/fem/misc/l2norm.hh>
 #include <cmath>
-
-//! simple macro that uses member vtkWriter instance to write file according to variable name
-#define VTK_WRITE(z)    vtkWriter_.addVertexData(z); \
-                        vtkWriter_.write(( "data/"#z ) ); \
-                        vtkWriter_.clear();
+#include <sstream>
 
 
 template <  class StokesPassImp, class ProblemImp >
@@ -77,11 +74,13 @@ class PostProcessor
             errorFunc_velocity_( "err_velocity", wrapper.discreteVelocitySpace() ),
             errorFunc_pressure_( "err_pressure", wrapper.discretePressureSpace() ),
             solutionAssembled_( false ),
+            current_refine_level_( std::numeric_limits<int>::min() ),
             l2_error_pressure_( - std::numeric_limits<double>::max() ),
             l2_error_velocity_( - std::numeric_limits<double>::max() ),
-            vtkWriter_( wrapper.gridPart() )
+            vtkWriter_( wrapper.gridPart() ),
+            datadir_( Parameters().getParam( "fem.io.datadir", std::string("data") ))
         {
-
+            Stuff::testCreateDirectory( datadir_ );
         }
 
         ~PostProcessor()
@@ -107,21 +106,40 @@ class PostProcessor
             projectionP( problem_.pressure(), discreteExactPressure_ );
         }
 
-        void save( const GridType& /*grid*/, const DiscreteStokesFunctionWrapperType& wrapper )
+        template <class Function>
+        void vtk_write( const Function& f ) {
+            vtkWriter_.addVertexData(f);
+            std::stringstream path;
+            if ( Parameters().getParam( "per-run-output", false ) )
+                path    << datadir_ << "/ref"
+                        <<  current_refine_level_ << "_" << f.name();
+            else
+                path << datadir_ << "/" << f.name();
+
+            vtkWriter_.write( path.str().c_str() );
+            vtkWriter_.clear();
+        }
+
+        void save( const GridType& /*grid*/, const DiscreteStokesFunctionWrapperType& wrapper, int refine_level )
         {
-            if ( !solutionAssembled_ )
+            if ( !solutionAssembled_ || current_refine_level_ != refine_level ) //re-assemble solution if refine level has changed
                 assembleExactSolution();
+
+            current_refine_level_ = refine_level;
 
             calcError( wrapper.discretePressure() , wrapper.discreteVelocity() );
 
-            VTK_WRITE( wrapper.discretePressure() );
-            VTK_WRITE( wrapper.discreteVelocity() );
-            VTK_WRITE( discreteExactVelocity_ );
-			VTK_WRITE( discreteExactPressure_ );
-            VTK_WRITE( discreteExactForce_ );
-			VTK_WRITE( discreteExactDirichlet_ );
-			VTK_WRITE( errorFunc_pressure_ );
-			VTK_WRITE( errorFunc_velocity_ );
+            vtk_write( wrapper.discretePressure() );
+            vtk_write( wrapper.discreteVelocity() );
+
+            if ( ProblemType:: hasMeaningfulAnalyticalSolution ) {
+                vtk_write( discreteExactVelocity_ );
+                vtk_write( discreteExactPressure_ );
+                vtk_write( discreteExactForce_ );
+                vtk_write( discreteExactDirichlet_ );
+                vtk_write( errorFunc_pressure_ );
+                vtk_write( errorFunc_velocity_ );
+            }
 #ifndef NLOG
 			entityColoration();
 #endif
@@ -209,7 +227,7 @@ class PostProcessor
                 }
             }
 
-            VTK_WRITE( cl );
+            vtk_write( cl );
         }
 
     private:
@@ -225,12 +243,13 @@ class PostProcessor
         DiscreteVelocityFunctionType errorFunc_velocity_;
         DiscretePressureFunctionType errorFunc_pressure_;
         bool solutionAssembled_;
+        int current_refine_level_;
         double l2_error_pressure_;
         double l2_error_velocity_;
         VTKWriterType vtkWriter_;
-
+        std::string datadir_;
 };
 
-#undef VTK_WRITE
+#undef vtk_write
 
 #endif // end of postprocessing.hh
