@@ -27,11 +27,13 @@ typedef std::vector<DataMap> MapVector;
  **/
 class Profiler
 {
+    friend Profiler& profiler();
 
-	public:
+    protected:
 		Profiler() { Reset(1); }
 		~Profiler() {}
 
+	public:
 		//! set this to begin a named section
 		inline void StartTiming( const std::string section_name )
 		{
