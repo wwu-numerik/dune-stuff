@@ -224,6 +224,13 @@ class ParameterContainer
             return Dune::Parameter::getValue( name, def );
         }
 
+        //! passthrough to underlying Dune::Parameter
+        template< typename T >
+        void setParam( std::string name, T val )
+        {
+            return Dune::Parameter::replaceKey( name, val );
+        }
+
     private:
         int grid_dimension_;
         int pol_order_;
