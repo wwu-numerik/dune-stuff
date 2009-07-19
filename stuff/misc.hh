@@ -31,6 +31,31 @@ bool isnan( T x ) { return !(x==x); }
 #include <assert.h>
 #include <cmath>
 
+#define HAS_RUN_INFO
+
+struct RunInfo //define this beforepass is included so it's known in pass, i know it's ugly
+{
+    std::vector< double > L2Errors;
+    double grid_width;
+    int refine_level;
+    double run_time;
+    long codim0;
+    int polorder_velocity;
+    int polorder_pressure;
+    int polorder_sigma;
+    double c11,d11,c12,d12;
+    bool bfg;
+    std::string gridname;
+    double solver_accuracy;
+    double bfg_tau;
+    std::string extra_info;
+    int iterations_inner_avg;
+    int iterations_inner_min;
+    int iterations_inner_max;
+    int iterations_outer_total;
+    double max_inner_accuracy;
+};
+
 namespace Stuff
 {
 
@@ -61,24 +86,28 @@ std::string toString(const ReturnType& s)
 }
 
 template < class Info >
-class EocOutput
+class TexOutputBase
 {
-    typedef std::vector< std::string >
-        Strings;
+    protected:
+        typedef std::vector< std::string >
+            Strings;
 
-    Info info_;
-    double current_h_;
-    Strings headers_;
+        typedef TexOutputBase<Info>
+            BaseType;
+
+        Info info_;
+        double current_h_;
+        Strings headers_;
 
 
     public:
-        EocOutput( const Info& info, Strings& headers )
+        TexOutputBase( const Info& info, Strings& headers )
             : info_(info),
             current_h_(1.0),
             headers_(headers)
         {}
 
-        EocOutput( Strings& headers )
+        TexOutputBase( Strings& headers )
             : info_(Info()),
             current_h_(1.0),
             headers_(headers)
@@ -96,6 +125,39 @@ class EocOutput
 	              << "\\hline \n";
             outputFile_.flush();
         }
+
+        virtual void putErrorCol( std::ofstream& outputFile_, const double prevError_, const double error_, const double prevh_,  const bool /*initial*/  ) = 0;
+
+        virtual void putHeader( std::ofstream& outputFile_ ) = 0;
+
+        virtual void putStaticCols( std::ofstream& outputFile_ ) = 0;
+
+        void endTable( std::ofstream& outputFile_ )
+        {
+            outputFile_ << "\\end{longtable}";
+            outputFile_ << info_.extra_info;
+            outputFile_.flush();
+        }
+
+        double get_h ()
+        {
+            return current_h_;
+        }
+};
+
+class EocOutput : public TexOutputBase<RunInfo>
+{
+    typedef TexOutputBase<RunInfo>
+        BaseType;
+
+    public:
+        EocOutput( const RunInfo& info, BaseType::Strings& headers )
+            : BaseType( info, headers )
+        {}
+
+        EocOutput( BaseType::Strings& headers )
+            : BaseType( RunInfo(), headers )
+        {}
 
         void putErrorCol( std::ofstream& outputFile_, const double prevError_, const double error_, const double prevh_,  const bool /*initial*/  )
         {
@@ -162,58 +224,24 @@ class EocOutput
                 << info_.d12 ;
 
         }
-
-        void endTable( std::ofstream& outputFile_ )
-        {
-            outputFile_ << "\\end{longtable}";
-            outputFile_ << info_.extra_info;
-            outputFile_.flush();
-        }
-
-        double get_h ()
-        {
-            return current_h_;
-        }
 };
 
-template < class Info >
-class BfgOutput
+class BfgOutput : public TexOutputBase<RunInfo>
 {
-    typedef std::vector< std::string >
-        Strings;
+    typedef TexOutputBase<RunInfo>
+        BaseType;
 
-    Info info_;
-    Info reference_;
-    double current_h_;
-    Strings headers_;
-
+    RunInfo reference_;
 
     public:
-        BfgOutput( const Info& info, Strings& headers )
-            : info_(info),
-            current_h_(1.0),
-            headers_(headers)
+        BfgOutput( const RunInfo& info, BaseType::Strings& headers )
+            : BaseType( info, headers )
         {}
 
-        BfgOutput( Strings& headers, RunInfo reference )
-            : info_(Info()),
-            reference_(reference),
-            current_h_(1.0),
-            headers_(headers)
+        BfgOutput( BaseType::Strings& headers, RunInfo reference )
+            : BaseType( RunInfo(), headers ),
+            reference_(reference)
         {}
-
-        void setInfo( const Info& info )
-        {
-            info_ = info;
-        }
-
-        void putLineEnd( std::ofstream& outputFile_ )
-        {
-            outputFile_ << "\n"
-                << "\\tabularnewline\n"
-	              << "\\hline \n";
-            outputFile_.flush();
-        }
 
         void putErrorCol( std::ofstream& outputFile_, const double prevError_, const double error_, const double prevh_,  const bool /*initial*/  )
         {
@@ -262,7 +290,7 @@ class BfgOutput
                         << "\\hline\n"
                         << "\\hline\n";
         }
-//const std::string bfgheaders[] = { "h", "el't","runtime","$\tau$","avg inner","min inner","max inner","total outer","Velocity", "Pressure" };
+
         void putStaticCols( std::ofstream& outputFile_ )
         {
             std::stringstream runtime;
@@ -281,18 +309,6 @@ class BfgOutput
                 << info_.iterations_inner_max << " & "
                 << info_.iterations_outer_total << " & "
                 << info_.max_inner_accuracy ;
-
-        }
-
-        void endTable( std::ofstream& outputFile_ )
-        {
-            outputFile_ << "\\end{longtable}";
-            outputFile_.flush();
-        }
-
-        double get_h ()
-        {
-            return current_h_;
         }
 };
 
