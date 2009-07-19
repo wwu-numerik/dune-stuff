@@ -186,7 +186,8 @@ class EocOutput : public TexOutputBase<RunInfo>
             outputFile_ << "}\n"
                 << "\\caption{"
                 << info_.gridname
-                << ( info_.bfg ? std::string(", BFG ($\\tau = ")+ toString( info_.bfg_tau ) + std::string("$ ,"): std::string(", no BFG,") )
+                << ( info_.bfg ? std::string(", BFG ($\\tau = ")+ toString( info_.bfg_tau ) + std::string("$ ),"): std::string(", no BFG,") )
+                << "\\\\"
                 << " Polorder (u,p,$\\sigma$): (" << info_.polorder_velocity << ", "<< info_.polorder_pressure << ", "<< info_.polorder_sigma << " ) "
                 << " Solver accuracy: " << info_.solver_accuracy
                 << "}\\\\  \n"
@@ -206,7 +207,7 @@ class EocOutput : public TexOutputBase<RunInfo>
                         << "\\hline\n";
         }
 
-        void putStaticCols( std::ofstream& outputFile_ )
+        virtual void putStaticCols( std::ofstream& outputFile_ )
         {
             std::stringstream runtime;
             if ( info_.run_time > 59 )
@@ -223,6 +224,35 @@ class EocOutput : public TexOutputBase<RunInfo>
                 << info_.c12 << " & "
                 << info_.d12 ;
 
+        }
+};
+
+class RefineOutput : public EocOutput
+{
+    typedef EocOutput
+        BaseType;
+
+    public:
+        RefineOutput ( const RunInfo& info, BaseType::Strings& headers )
+            : BaseType( info, headers )
+        {}
+
+        RefineOutput ( BaseType::Strings& headers )
+            : BaseType( RunInfo(), headers )
+        {}
+
+        void putStaticCols( std::ofstream& outputFile_ )
+        {
+            std::stringstream runtime;
+            if ( info_.run_time > 59 )
+                runtime << long(info_.run_time) / 60 << ":" << long(info_.run_time) % 60 ;
+            else
+                runtime << long(info_.run_time) ;
+
+            outputFile_ << std::setw( 4 )
+                << info_.grid_width << " & "
+                << info_.codim0 << " & "
+                << runtime.str() ;
         }
 };
 
