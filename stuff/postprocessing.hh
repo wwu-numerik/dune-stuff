@@ -178,7 +178,6 @@ class PostProcessor
 
         void entityColoration()
         {
-            Logging::LogStream& dbg = Logger().Dbg();
             DiscretePressureFunctionType cl ( "entitiy-num", spaceWrapper_.discretePressureSpace() );
             unsigned long numberOfEntities = 0;
 
