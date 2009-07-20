@@ -333,7 +333,7 @@ class BfgOutput : public TexOutputBase<RunInfo>
                 << info_.grid_width << " & "
                 << info_.codim0 << " & "
                 << runtime.str() << " & "
-                << info_.bfg_tau << " & "
+                << ( info_.bfg ? toString( info_.bfg_tau ) : std::string("--") ) << " & " //don't output a num in reference row
                 << info_.iterations_inner_avg << " & "
                 << info_.iterations_inner_min << " & "
                 << info_.iterations_inner_max << " & "
