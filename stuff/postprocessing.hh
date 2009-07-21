@@ -163,9 +163,7 @@ class PostProcessor
 
             Logger().Info().Resume();
             Logger().Info() << "L2-Error Pressure: " << std::setw(8) << l2_error_pressure_ << "\n"
-                                << "L2-Error Velocity: " << std::setw(8) << l2_error_velocity_ << "\n"
-                                << "L2-Error Pressure (sqrt): " << std::setw(8) << std::sqrt( l2_error_pressure_ ) << "\n"
-                                << "L2-Error Velocity (sqrt): " << std::setw(8) << std::sqrt( l2_error_velocity_ ) << std::endl;
+                            << "L2-Error Velocity: " << std::setw(8) << l2_error_velocity_ << std::endl;
         }
 
         std::vector<double> getError()
