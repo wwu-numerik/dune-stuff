@@ -225,16 +225,15 @@ class ParameterContainer
         template< typename T >
         T getParam( std::string name, T def, bool useDbgStream = true )
         {
-            T ret = Dune::Parameter::getValue( name, def );
             #ifndef NDEBUG
-                if ( ! (ret != def) ) {
+                if ( ! Dune::Parameter::exists( name ) ) {
                     if ( useDbgStream )
                         Logger().Dbg() << "WARNING: using default value for parameter \"" << name << "\"" << std::endl;
                     else
                         std::cerr << "WARNING: using default value for parameter \"" << name << "\"" << std::endl;
                 }
             #endif
-            return ret;
+            return Dune::Parameter::getValue( name, def );
         }
 
         //! passthrough to underlying Dune::Parameter
