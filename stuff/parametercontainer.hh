@@ -217,11 +217,24 @@ class ParameterContainer
             return viscosity_;
         }
 
-        //! passthrough to underlying Dune::Parameter
+        /** \brief  passthrough to underlying Dune::Parameter
+            \param  useDbgStream
+                    needs to be set to false when using this function in Logging::Create,
+                        otherwise an assertion will will cause streams aren't available yet
+        **/
         template< typename T >
-        T getParam( std::string name, T def )
+        T getParam( std::string name, T def, bool useDbgStream = true )
         {
-            return Dune::Parameter::getValue( name, def );
+            T ret = Dune::Parameter::getValue( name, def );
+            #ifndef NDEBUG
+                if ( ! (ret != def) ) {
+                    if ( useDbgStream )
+                        Logger().Dbg() << "WARNING: using default value for parameter \"" << name << "\"" << std::endl;
+                    else
+                        std::cerr << "WARNING: using default value for parameter \"" << name << "\"" << std::endl;
+                }
+            #endif
+            return ret;
         }
 
         //! passthrough to underlying Dune::Parameter
