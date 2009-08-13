@@ -12,6 +12,7 @@
 #include "misc.hh"
 #include "logging.hh"
 
+#include <vector>
 
 /**
  *  \brief  class containing global parameters
@@ -23,16 +24,6 @@
 class ParameterContainer
 {
     public:
-        /**
-         *  \brief  constuctor
-         *
-         *  \attention  call ReadCommandLine() to set up parameterContainer
-         **/
-        ParameterContainer()
-            : all_set_up_( false )
-        {
-        }
-
         /**
          *  \brief  destuctor
          *
@@ -63,12 +54,8 @@ class ParameterContainer
         {
             if ( argc == 2 )
             {
-                argc_ = argc;
-                argv_ = argv;
-                eps_ = 1.0e20;
                 parameter_filename_ = argv[1];
                 Dune::Parameter::append( parameter_filename_ );
-                return true;
             }
             else
             {
@@ -76,56 +63,28 @@ class ParameterContainer
 //                std::cerr << "\nUsage: " << argv[0] << " parameterfile" << std::endl;
 //                PrintParameterSpecs( std::cerr );
 //                std::cerr << std::endl;
-                return true;
             }
+            return CheckSetup();
+
         }
 
-        /**
-         *  \brief  sets all needed parameters
+        /** \brief checks for mandatory params
          *
-         *  \return true, if all needed parameters are set up
-         *
-         *  \attention  SetGridDimension() should be called next
+         *  \return true, if all needed parameters exist
          **/
-        bool SetUp()
+        bool CheckSetup()
         {
-            bool has_not_worked = false;
-            if ( !( Dune::Parameter::exists( "dgf_file_2d" ) ) ) {
-                std::cerr << "\nError: not all parameters found in " << ParameterFilename() << "!";
-                std::cerr << "\nmissing parameters are: dgf_file_2d" << std::endl;
-                has_not_worked = true;
-
+            typedef std::vector<std::string>::iterator
+                Iterator;
+            Iterator it = mandatory_params_.begin();
+            Iterator new_end = std::remove_if( it, mandatory_params_.end(), Dune::Parameter::exists );
+            all_set_up_ = ( new_end ==  it );
+            for ( it; new_end != it; ++it ) {
+            	std::cerr   << "\nError: " << parameter_filename_
+                            << " is missing parameter: "
+                            << *it << std::endl;
             }
-            else {
-                Dune::Parameter::get( "dgf_file_2d", dgf_filenames_[1] );
-            }
-            if ( !( Dune::Parameter::exists( "dgf_file_3d" ) ) ) {
-                if ( !( has_not_worked ) ) {
-                    std::cerr << "\nError: not all parameters found in " << ParameterFilename() << "!";
-                    std::cerr << "\nmissing parameters are: dgf_file_3d" << std::endl;
-                }
-                else {
-                    std::cerr << "                        dgf_file_3d\n" << std::endl;
-                }
-                has_not_worked = true;
-            }
-            else {
-                Dune::Parameter::get( "dgf_file_3d", dgf_filenames_[2] );
-            }
-            if ( !( Dune::Parameter::exists( "viscosity" ) ) ) {
-                if ( !( has_not_worked ) ) {
-                    std::cerr << "\nError: not all parameters found in " << ParameterFilename() << "!";
-                    std::cerr << "\nmissing parameters are: viscosity" << std::endl;
-                }
-                else {
-                    std::cerr << "                        viscosity\n" << std::endl;
-                }
-                has_not_worked = true;
-            }
-            else {
-                Dune::Parameter::get( "viscosity", viscosity_ );
-            }
-            return !( has_not_worked );
+            return all_set_up_;
         }
 
         /**
@@ -135,87 +94,23 @@ class ParameterContainer
          **/
         void PrintParameterSpecs( std::ostream& out )
         {
-            out << "\na valid parameterfile should at least specify the following parameters:";
-            out << "\nRemark: the correspondig files have to exist!" << std::endl;
-            out << "\n(copy this into your parameterfile)" << std::endl;
-            out << "dgf_file_2d: " << std::endl;
-            out << "dgf_file_3d: " << std::endl;
-            out << "viscosity: " << std::endl;
+            out << "\na valid parameterfile should at least specify the following parameters:\n"
+                << "Remark: the correspondig files have to exist!\n"
+                << "(copy this into your parameterfile)\n";
+            std::vector<std::string>::const_iterator it = mandatory_params_.begin();
+            for (; it != mandatory_params_.end(); ++it )
+                std::cerr << *it << ": VALUE\n";
+            std::cerr << std::endl;
         }
 
-        /**
-         *  \brief  returns the filename of the parameterfile
-         *
-         *  \return filename of the parameterfile
-         **/
-        std::string ParameterFilename() const
-        {
-            return parameter_filename_;
+        std::string DgfFilename( unsigned int dim ) const {
+            assert( dim > 0 && dim < 4 );
+            assert( all_set_up_ );
+            std::stringstream fn;
+            fn << "dgf_file_" << dim << "d" ;
+            return Dune::Parameter::getValue<std::string>( fn.str() );
         }
 
-        /**
-         *  \brief  returns the filename of the dgf file
-         *
-         *  \return filename of the dgf file
-         **/
-        std::string DgfFilename() const
-        {
-            return dgf_filenames_[ grid_dimension_ - 1 ];
-        }
-
-        /**
-         *  \brief  sets the dimension
-         **/
-        void SetGridDimension( const int grid_dim )
-        {
-            grid_dimension_ = grid_dim;
-        }
-
-        /**
-         *  \brief  returns the dimension
-         *
-         *  \return dimension
-         **/
-        int GridDimension() const
-        {
-            return grid_dimension_;
-        }
-
-        /**
-         *  \brief  returns the polynomial order
-         *
-         *  \return polynomial order
-         **/
-        int polOrder() const
-        {
-            return pol_order_;
-        }
-
-        /**
-         *  \brief  sets the polynomial order
-         **/
-        void SetPolOrder( const int pol_order )
-        {
-            pol_order_ = pol_order;
-        }
-
-        /**
-         *  \brief  set the viscosity
-         **/
-        void setViscosity( const double viscosity )
-        {
-            viscosity_ = viscosity;
-        }
-
-        /**
-         *  \brief  get the viscosity
-         *
-         *  \return viscosity
-         **/
-        double viscosity() const
-        {
-            return viscosity_;
-        }
 
         /** \brief  passthrough to underlying Dune::Parameter
             \param  useDbgStream
@@ -225,6 +120,7 @@ class ParameterContainer
         template< typename T >
         T getParam( std::string name, T def, bool useDbgStream = true )
         {
+            assert( all_set_up_ );
             #ifndef NDEBUG
                 if ( ! Dune::Parameter::exists( name ) ) {
                     if ( useDbgStream )
@@ -240,19 +136,28 @@ class ParameterContainer
         template< typename T >
         void setParam( std::string name, T val )
         {
+            assert( all_set_up_ );
             return Dune::Parameter::replaceKey( name, val );
         }
 
     private:
-        int grid_dimension_;
-        int pol_order_;
-        double eps_;
-        int argc_;
-        char** argv_;
         bool all_set_up_;
         std::string parameter_filename_;
-        std::string dgf_filenames_[3];
-        double viscosity_;
+        std::vector<std::string> mandatory_params_;
+
+        /**
+         *  \brief  constuctor
+         *
+         *  \attention  call ReadCommandLine() to set up parameterContainer
+         **/
+        ParameterContainer()
+            : all_set_up_( false )
+        {
+            const std::string p[] = { "dgf_file_2d", "dgf_file_3d" };
+            mandatory_params_ = std::vector<std::string> ( p, p + ( sizeof(p) / sizeof( p[0] ) ) );
+        }
+
+        friend ParameterContainer& Parameters();
 };
 
 ///global ParameterContainer instance
