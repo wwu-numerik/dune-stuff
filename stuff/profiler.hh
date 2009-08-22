@@ -72,6 +72,7 @@ class Profiler
          *  called once fromm ctor with numRuns=1
          **/
 		void Reset( const int numRuns ) {
+		    Logger().Dbg() << "preparing profiler for " << numRuns << " runs" << std::endl;
 			m_timings.clear();
 			m_timings =  MapVector( numRuns, DataMap() );
 			m_total_runs = numRuns;

@@ -79,7 +79,7 @@ class ParameterContainer
             Iterator it = mandatory_params_.begin();
             Iterator new_end = std::remove_if( it, mandatory_params_.end(), Dune::Parameter::exists );
             all_set_up_ = ( new_end ==  it );
-            for ( it; new_end != it; ++it ) {
+            for ( ; new_end != it; ++it ) {
             	std::cerr   << "\nError: " << parameter_filename_
                             << " is missing parameter: "
                             << *it << std::endl;
