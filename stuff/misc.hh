@@ -190,10 +190,10 @@ class EocOutput : public TexOutputBase<RunInfo>
             outputFile_ << "}\n"
                 << "\\caption{"
                 << info_.gridname
-                << ( info_.bfg ? std::string(", BFG ($\\tau = ")+ toString( info_.bfg_tau ) + std::string("$ ),"): std::string(", no BFG,") )
+                << ( info_.bfg ? std::string(", BFG ($\\tau = ")+ toString( info_.bfg_tau ) + std::string("$ ),"): std::string(", kein BFG,") )
                 << "\\\\"
                 << " Polorder (u,p,$\\sigma$): (" << info_.polorder_velocity << ", "<< info_.polorder_pressure << ", "<< info_.polorder_sigma << " ) "
-                << " Solver accuracy: " << info_.solver_accuracy
+                << " Loeser Genauigkeit: " << info_.solver_accuracy
                 << "}\\\\  \n"
                 << "\\hline \n";
 
@@ -307,7 +307,7 @@ class BfgOutput : public TexOutputBase<RunInfo>
                 << "\\caption{"
                 << info_.gridname
                 << " Polorder (u,p,$\\sigma$): (" << info_.polorder_velocity << ", "<< info_.polorder_pressure << ", "<< info_.polorder_sigma << " ) "
-                << " Solver accuracy: " << info_.solver_accuracy
+                << " Loeser Genauigkeit: " << info_.solver_accuracy
                 << "}\\\\  \n"
                 << "\\hline \n";
 
@@ -318,7 +318,7 @@ class BfgOutput : public TexOutputBase<RunInfo>
             }
             for (unsigned int i=0;i<dynColSize;i++) {
                 outputFile_ << " & " << headers_[i+statColSize]
-                    << " & Diff to ref ";
+                    << " & Diff. zur Referenz";
             }
             outputFile_ << "\n \\endhead\n"
                         << "\\hline\n"
