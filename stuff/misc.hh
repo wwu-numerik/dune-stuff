@@ -166,9 +166,9 @@ class EocOutput : public TexOutputBase<RunInfo>
             double factor = current_h_/prevh_;
             double eoc = std::log(error_/prevError_)/std::log(factor);
             if ( isnan( eoc ) )
-                outputFile_ << " & " << error_ << " & " << "--";
+                outputFile_ << " & " << std::scientific << error_ << std::fixed << " & " << "--";
             else
-                outputFile_ << " & " << error_ << " & " << eoc;
+                outputFile_ << " & " << std::scientific << error_ << std::fixed << " & " << eoc;
         }
 
         void putHeader( std::ofstream& outputFile_ )
@@ -284,7 +284,7 @@ class BfgOutput : public TexOutputBase<RunInfo>
             col = ! col;
             current_h_ = info_.grid_width;
             double diff = error_ - reference_.L2Errors[col];
-            outputFile_ << " & " << error_ << " & " << diff;
+            outputFile_ << " & " << std::scientific << error_ << std::fixed << " & " << diff;
         }
 
         void putHeader( std::ofstream& outputFile_ )
@@ -342,7 +342,7 @@ class BfgOutput : public TexOutputBase<RunInfo>
                 << info_.iterations_inner_min << " & "
                 << info_.iterations_inner_max << " & "
                 << info_.iterations_outer_total << " & "
-                << info_.max_inner_accuracy ;
+                << std::scientific << info_.max_inner_accuracy << std::fixed ;
         }
 };
 
@@ -414,9 +414,9 @@ class AccurracyOutput : public TexOutputBase<RunInfo>
                 << info_.codim0 << " & "
                 << runtime.str() << " & "
                 << info_.iterations_inner_avg << " & "
-                << info_.inner_solver_accuracy  << " & "
+                << std::scientific << info_.inner_solver_accuracy  << std::fixed << " & "
                 << info_.iterations_outer_total << " & "
-                << info_.solver_accuracy ;
+                << std::scientific << info_.solver_accuracy        << std::fixed ;
         }
 };
 
@@ -489,7 +489,7 @@ class AccurracyOutputOuter : public TexOutputBase<RunInfo>
                 << runtime.str() << " & "
                 << info_.iterations_inner_avg << " & "
                 << info_.iterations_outer_total << " & "
-                << info_.solver_accuracy ;
+                << std::scientific << info_.solver_accuracy  << std::fixed ;
         }
 };
 
