@@ -30,6 +30,9 @@ bool isnan( T x ) { return !(x==x); }
 #include <vector>
 #include <assert.h>
 #include <cmath>
+#include <cerrno>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 #define HAS_RUN_INFO
 
