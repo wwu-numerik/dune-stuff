@@ -30,6 +30,62 @@ double getLenghtOfIntersection( const IntersectionIteratorType& intIt )
 //    return difference.two_norm();
 }
 
+template < class GridPartType, class DiscreteFunctionSpaceType, class OutStream >
+void getGridInformation( GridPartType& gridPart, DiscreteFunctionSpaceType& space, OutStream& out )
+{
+    int numberOfEntities( 0 );
+    int numberOfIntersections( 0 );
+    int numberOfInnerIntersections( 0 );
+    int numberOfBoundaryIntersections( 0 );
+    double maxGridWidth( 0.0 );
+
+    typedef typename GridPartType::GridType
+        GridType;
+
+    typedef typename GridType::template Codim< 0 >::Entity
+        EntityType;
+
+    typedef typename GridPartType::template Codim< 0 >::IteratorType
+        EntityIteratorType;
+
+    typedef typename GridPartType::IntersectionIteratorType
+        IntersectionIteratorType;
+
+    EntityIteratorType entityItEndLog = space.end();
+    for (   EntityIteratorType entityItLog = space.begin();
+            entityItLog != entityItEndLog;
+            ++entityItLog ) {
+        const EntityType& entity = *entityItLog;
+        // count entities
+        ++numberOfEntities;
+        // walk the intersections
+        IntersectionIteratorType intItEnd = gridPart.iend( entity );
+        for (   IntersectionIteratorType intIt = gridPart.ibegin( entity );
+                intIt != intItEnd;
+                ++intIt ) {
+            // count intersections
+            ++numberOfIntersections;
+            maxGridWidth = Stuff::getLenghtOfIntersection( intIt ) > maxGridWidth ? Stuff::getLenghtOfIntersection( intIt ) : maxGridWidth;
+            // if we are inside the grid
+            if ( intIt.neighbor() && !intIt.boundary() ) {
+                // count inner intersections
+                ++numberOfInnerIntersections;
+            }
+            // if we are on the boundary of the grid
+            if ( !intIt.neighbor() && intIt.boundary() ) {
+                // count boundary intersections
+                ++numberOfBoundaryIntersections;
+            }
+        }
+    }
+    out << "found " << numberOfEntities << " entities," << std::endl;
+    out << "found " << numberOfIntersections << " intersections," << std::endl;
+    out << "      " << numberOfInnerIntersections << " intersections inside and" << std::endl;
+    out << "      " << numberOfBoundaryIntersections << " intersections on the boundary." << std::endl;
+    out << "      maxGridWidth is " << maxGridWidth << std::endl;
+}
+
+
 
 template < class Space, int codim = 0 >
 class GridWalk {
