@@ -127,12 +127,11 @@ class PostProcessor
 
             current_refine_level_ = refine_level;
 
-            calcError( wrapper.discretePressure() , wrapper.discreteVelocity() );
-
             vtk_write( wrapper.discretePressure() );
             vtk_write( wrapper.discreteVelocity() );
 
             if ( ProblemType:: hasMeaningfulAnalyticalSolution ) {
+                calcError( wrapper.discretePressure() , wrapper.discreteVelocity() );
                 vtk_write( discreteExactVelocity_ );
                 vtk_write( discreteExactPressure_ );
                 vtk_write( discreteExactForce_ );
