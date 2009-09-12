@@ -9,6 +9,7 @@
 
 #include <dune/fem/operator/projection/l2projection.hh>
 #include <dune/fem/io/file/vtkio.hh>
+#include <dune/fem/io/file/datawriter.hh>
 
 #include "logging.hh"
 #include "misc.hh"
@@ -120,7 +121,7 @@ class PostProcessor
             vtkWriter_.clear();
         }
 
-        void save( const GridType& /*grid*/, const DiscreteStokesFunctionWrapperType& wrapper, int refine_level )
+        void save( const GridType& grid, const DiscreteStokesFunctionWrapperType& wrapper, int refine_level )
         {
             if ( !solutionAssembled_ || current_refine_level_ != refine_level ) //re-assemble solution if refine level has changed
                 assembleExactSolution();
@@ -139,6 +140,11 @@ class PostProcessor
                 vtk_write( errorFunc_pressure_ );
                 vtk_write( errorFunc_velocity_ );
             }
+			typedef Dune::Tuple<DiscreteVelocityFunctionType*>
+				IOTupleType;
+			IOTupleType dataTup ( &discreteExactVelocity_ );
+				typedef Dune::DataWriter< GridType, IOTupleType > DataWriterType;
+			DataWriterType datawriter ( grid, dataTup, 0,0,0 );
 #ifndef NLOG
 			entityColoration();
 #endif
