@@ -140,11 +140,12 @@ class PostProcessor
                 vtk_write( errorFunc_pressure_ );
                 vtk_write( errorFunc_velocity_ );
             }
-			typedef Dune::Tuple<DiscreteVelocityFunctionType*>
+			typedef Dune::Tuple< const DiscreteVelocityFunctionType*, const DiscretePressureFunctionType* >
 				IOTupleType;
-			IOTupleType dataTup ( &discreteExactVelocity_ );
+			IOTupleType dataTup ( &wrapper.discreteVelocity(), &wrapper.discretePressure() );
 				typedef Dune::DataWriter< GridType, IOTupleType > DataWriterType;
 			DataWriterType datawriter ( grid, dataTup, 0,0,0 );
+			datawriter.write( 0, 0 );
 #ifndef NLOG
 			entityColoration();
 #endif
