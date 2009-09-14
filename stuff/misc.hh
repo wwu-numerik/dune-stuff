@@ -58,6 +58,16 @@ struct RunInfo //define this beforepass is included so it's known in pass, i kno
     int iterations_inner_max;
     int iterations_outer_total;
     double max_inner_accuracy;
+	std::string problemIdentifier;
+
+	RunInfo() {
+		grid_width = refine_level = run_time = codim0 = polorder_velocity = polorder_pressure
+			= polorder_sigma = bfg = solver_accuracy = inner_solver_accuracy = bfg_tau
+			= iterations_inner_avg = iterations_inner_min = iterations_inner_max
+			= iterations_outer_total = max_inner_accuracy = -1;
+		gridname = problemIdentifier = "UNSET";
+		extra_info = "";
+	}
 };
 
 namespace Stuff
@@ -259,10 +269,11 @@ class EocOutput : public TexOutputBase<RunInfo>
             }
             outputFile_ << "}\n"
                 << "\\caption{"
+				<< info_.problemIdentifier << ": " 
                 << info_.gridname
                 << ( info_.bfg ? std::string(", BFG ($\\tau = ")+ toString( info_.bfg_tau ) + std::string("$ ),"): std::string(", kein BFG,") )
                 << "\\\\"
-                << " Polorder (u,p,$\\sigma$): (" << info_.polorder_velocity << ", "<< info_.polorder_pressure << ", "<< info_.polorder_sigma << " ) "
+                << " Polorder (u,p,$ \\sigma $): (" << info_.polorder_velocity << ", "<< info_.polorder_pressure << ", "<< info_.polorder_sigma << " ) "
                 << " Loeser Genauigkeit: " << info_.solver_accuracy
                 << "}\\\\  \n"
                 << "\\hline \n";
@@ -375,6 +386,7 @@ class BfgOutput : public TexOutputBase<RunInfo>
             }
             outputFile_ << "}\n"
                 << "\\caption{"
+				<< info_.problemIdentifier << ": " 
                 << info_.gridname
                 << " Polorder (u,p,$\\sigma$): (" << info_.polorder_velocity << ", "<< info_.polorder_pressure << ", "<< info_.polorder_sigma << " ) "
                 << " Loeser Genauigkeit: " << info_.solver_accuracy
@@ -453,6 +465,7 @@ class AccurracyOutput : public TexOutputBase<RunInfo>
             }
             outputFile_ << "}\n"
                 << "\\caption{"
+				<< info_.problemIdentifier << ": " 
                 << info_.gridname
                 << " Polorder (u,p,$\\sigma$): (" << info_.polorder_velocity << ", "<< info_.polorder_pressure << ", "<< info_.polorder_sigma << " ) "
                 << "}\\\\  \n"
@@ -527,6 +540,7 @@ class AccurracyOutputOuter : public TexOutputBase<RunInfo>
             }
             outputFile_ << "}\n"
                 << "\\caption{"
+				<< info_.problemIdentifier << ": " 
                 << info_.gridname
                 << " Polorder (u,p,$\\sigma$): (" << info_.polorder_velocity << ", "<< info_.polorder_pressure << ", "<< info_.polorder_sigma << " ) "
                 << "}\\\\  \n"
