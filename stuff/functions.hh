@@ -1,6 +1,8 @@
 #ifndef STUFF_FUNCTIONS_HH_INCLUDED
 #define STUFF_FUNCTIONS_HH_INCLUDED
 
+#include <cmath>
+
 namespace Stuff{
 
 template < class Matrix, class Function >

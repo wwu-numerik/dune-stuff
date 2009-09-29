@@ -2,16 +2,17 @@
  *  \file logging.hh
  *  \brief  logging
  **/
- #ifndef LOGGING_HH_INCLUDED
- #define LOGGING_HH_INCLUDED
+#ifndef LOGGING_HH_INCLUDED
+#define LOGGING_HH_INCLUDED
 
- #include <fstream>
- #include <ostream>
- #include <sstream>
- #include <ctime>
- #include <iomanip>
- #include <assert.h>
-  #include "misc.hh"
+#include <fstream>
+#include <ostream>
+#include <sstream>
+#include <ctime>
+#include <iomanip>
+#include <map>
+#include <assert.h>
+#include "misc.hh"
 
 
 /** \brief handles all logging
