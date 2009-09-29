@@ -109,7 +109,7 @@ class PostProcessor
 
         template <class Function>
         void vtk_write( const Function& f ) {
-            vtkWriter_.addVertexData(f);
+            vtkWriter_.addVectorVertexData( f );
             std::stringstream path;
             if ( Parameters().getParam( "per-run-output", false ) )
                 path    << datadir_ << "/ref"
