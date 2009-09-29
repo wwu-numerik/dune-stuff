@@ -143,9 +143,14 @@ class PostProcessor
 			typedef Dune::Tuple< const DiscreteVelocityFunctionType*, const DiscretePressureFunctionType* >
 				IOTupleType;
 			IOTupleType dataTup ( &wrapper.discreteVelocity(), &wrapper.discretePressure() );
-				typedef Dune::DataWriter< GridType, IOTupleType > DataWriterType;
+
+            typedef Dune::DataWriter< GridType, IOTupleType >
+                DataWriterType;
 			DataWriterType datawriter ( grid, dataTup, 0,0,0 );
 			datawriter.write( 0, 0 );
+			datawriter.saveMacroGrid( Parameters().DgfFilename( GridType::dimension ) );
+
+			//save the macrogrid file so grape will find if in any case (ie. non ALU)
 #ifndef NLOG
 			entityColoration();
 #endif
