@@ -2,6 +2,7 @@
 #define STUFF_FUNCTIONS_HH_INCLUDED
 
 #include <cmath>
+#include <fstream>
 
 namespace Stuff{
 
@@ -105,6 +106,79 @@ void switchDofs( Function& f )
     }
     return;
 }
+
+
+template <  class DiscreteFunctionType,
+            class ErrorStream >
+int saveDiscreteFunction(   const DiscreteFunctionType& discreteFunction,
+                            const std::string gridType,
+                            const int refineLevel,
+                            const std::string dgfFilename,
+                            const std::string saveToFilenamePrefix,
+                            ErrorStream& error )
+{
+    int errorState( 0 );
+
+    error.Flush();
+
+    if ( !( discreteFunction.write_ascii( saveToFilenamePrefix + std::string( ".ddf" ) ) ) ) {
+        ++errorState;
+        error << "Error in saveDiscreteFunction(): could not write to " << saveToFilenamePrefix + std::string( ".ddf" ) << "!" << std::endl;
+        return errorState;
+    }
+
+
+    // save dgf file with information
+    std::ifstream readFile( dgfFilename.c_str() );
+    if ( readFile.is_open() ) {
+        std::ofstream writeFile( std::string( saveToFilenamePrefix + std::string( ".dgf" ) ).c_str() );
+        if ( writeFile.is_open() ) {
+            // shift until "DGF"
+            while( !( readFile.eof() ) ) {
+                std::string line( "" );
+                std::getline( readFile, line );
+                if ( line.size() ) {
+                    // remove lines with redundant information == "# ddf_"
+                    if( !( ( line[0] == '#' ) && ( line[1] == ' ' ) && ( line[2] == 'd' ) && ( line[3] == 'd' ) && ( line[4] == 'f' ) && ( line[5] == '_' ) ) ) {
+                        writeFile << line << std::endl;
+                    }
+                    if( ( line[0] == 'D' ) && ( line[1] == 'G' ) && ( line[2] == 'F' ) ) {
+                        break;
+                    }
+                }
+            }
+            // insert informations
+            writeFile << "# ddf_gridtype: " << gridType << std::endl;
+            writeFile << "# ddf_refine_level: " << refineLevel << std::endl;
+            // rest of dgf file
+            while( !( readFile.eof() ) ) {
+                std::string line( "" );
+                std::getline( readFile, line );
+                if ( line.size() ) {
+                    // remove lines with redundant information == "# ddf_"
+                    if( !( ( line[0] == '#' ) && ( line[1] == ' ' ) && ( line[2] == 'd' ) && ( line[3] == 'd' ) && ( line[4] == 'f' ) && ( line[5] == '_' ) ) ) {
+                        writeFile << line << std::endl;
+                    }
+                }
+            }
+            writeFile.flush();
+            writeFile.close();
+            readFile.close();
+        }
+        else {
+            ++errorState;
+            error << "Error in saveDiscreteFunction(): could not write to " << saveToFilenamePrefix + std::string( ".dgf" ) << "!" << std::endl;
+            return errorState;
+        }
+    }
+    else {
+        ++errorState;
+        error << "Error in saveDiscreteFunction(): could not open " << dgfFilename << "!" << std::endl;
+        return errorState;
+    }
+    return errorState;
+}
+
 
 }//end namespace
 
