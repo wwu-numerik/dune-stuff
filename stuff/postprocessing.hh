@@ -79,7 +79,7 @@ class PostProcessor
             l2_error_pressure_( - std::numeric_limits<double>::max() ),
             l2_error_velocity_( - std::numeric_limits<double>::max() ),
             vtkWriter_( wrapper.gridPart() ),
-            datadir_( Parameters().getParam( "fem.io.datadir", std::string("data") ))
+            datadir_( Parameters().getParam( "fem.io.datadir", std::string("data") ) + "/" )
         {
             Stuff::testCreateDirectory( datadir_ );
         }
@@ -109,7 +109,11 @@ class PostProcessor
 
         template <class Function>
         void vtk_write( const Function& f ) {
-            vtkWriter_.addVectorVertexData( f );
+            if ( Function::FunctionSpaceType::DimRange > 1 )
+                vtkWriter_.addVectorVertexData( f );
+            else
+                vtkWriter_.addVertexData( f );
+
             std::stringstream path;
             if ( Parameters().getParam( "per-run-output", false ) )
                 path    << datadir_ << "/ref"

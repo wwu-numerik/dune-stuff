@@ -269,7 +269,7 @@ class EocOutput : public TexOutputBase<RunInfo>
             }
             outputFile_ << "}\n"
                 << "\\caption{"
-				<< info_.problemIdentifier << ": " 
+				<< info_.problemIdentifier << ": "
                 << info_.gridname
                 << ( info_.bfg ? std::string(", BFG ($\\tau = ")+ toString( info_.bfg_tau ) + std::string("$ ),"): std::string(", kein BFG,") )
                 << "\\\\"
@@ -386,7 +386,7 @@ class BfgOutput : public TexOutputBase<RunInfo>
             }
             outputFile_ << "}\n"
                 << "\\caption{"
-				<< info_.problemIdentifier << ": " 
+				<< info_.problemIdentifier << ": "
                 << info_.gridname
                 << " Polorder (u,p,$\\sigma$): (" << info_.polorder_velocity << ", "<< info_.polorder_pressure << ", "<< info_.polorder_sigma << " ) "
                 << " Loeser Genauigkeit: " << info_.solver_accuracy
@@ -465,7 +465,7 @@ class AccurracyOutput : public TexOutputBase<RunInfo>
             }
             outputFile_ << "}\n"
                 << "\\caption{"
-				<< info_.problemIdentifier << ": " 
+				<< info_.problemIdentifier << ": "
                 << info_.gridname
                 << " Polorder (u,p,$\\sigma$): (" << info_.polorder_velocity << ", "<< info_.polorder_pressure << ", "<< info_.polorder_sigma << " ) "
                 << "}\\\\  \n"
@@ -540,7 +540,7 @@ class AccurracyOutputOuter : public TexOutputBase<RunInfo>
             }
             outputFile_ << "}\n"
                 << "\\caption{"
-				<< info_.problemIdentifier << ": " 
+				<< info_.problemIdentifier << ": "
                 << info_.gridname
                 << " Polorder (u,p,$\\sigma$): (" << info_.polorder_velocity << ", "<< info_.polorder_pressure << ", "<< info_.polorder_sigma << " ) "
                 << "}\\\\  \n"
