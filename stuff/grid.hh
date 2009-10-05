@@ -1,6 +1,8 @@
 #ifndef STUFF_GRID_HH_INCLUDED
 #define STUFF_GRID_HH_INCLUDED
 
+#include <dune/common/fvector.hh>
+
 namespace Stuff {
 
 /**
@@ -143,6 +145,30 @@ class GridWalk {
             EntityIdxMap;
         EntityIdxMap entityIdxMap_;
 };
+
+template < class GeometryType >
+Dune::FieldVector< typename GeometryType::ctype, GeometryType::mydimension >  getBarycenterLocal( const GeometryType& geometry )
+{
+    assert( geometry.corners() > 0 );
+    Dune::FieldVector< typename GeometryType::ctype, GeometryType::mydimension  > center;
+    for( int i = 0; i < geometry.corners(); ++i ) {
+        center += geometry.local( geometry[i] );
+    }
+    center /= geometry.corners();
+    return center;
+}
+
+template < class GeometryType >
+Dune::FieldVector< typename GeometryType::ctype, GeometryType::coorddimension >  getBarycenterGlobal( const GeometryType& geometry )
+{
+    assert( geometry.corners() > 0 );
+    Dune::FieldVector< typename GeometryType::ctype, GeometryType::coorddimension > center;
+    for( int i = 0; i < geometry.corners(); ++i ) {
+        center += geometry[i] ;
+    }
+    center /= geometry.corners();
+    return center;
+}
 
 }//end namespace
 
