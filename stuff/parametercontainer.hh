@@ -140,6 +140,19 @@ class ParameterContainer
             return Dune::Parameter::replaceKey( name, val );
         }
 
+		template < class T >
+		std::vector<T> getList( const std::string name, T def ) {
+			if ( ! Dune::Parameter::exists( name ) ) {
+				std::vector<T> ret;
+				ret.push_back( def );
+				return ret;
+			}
+			std::string tokenstring = getParam( name, std::string("dummy") );
+			std::string delimiter = getParam( std::string("parameterlist_delimiter"), std::string(";"), false );
+			Stuff::Tokenizer<T> tokens ( tokenstring, delimiter );
+			return tokens.getTokens();
+		}
+
     private:
         bool all_set_up_;
         std::string parameter_filename_;
