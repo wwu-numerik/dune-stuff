@@ -115,29 +115,31 @@ class GridWalk {
                 entityIdxMap_.push_back( it );
             }
         }
-        template < class Functor >
-        void operator () ( Functor& f )
-        {
-            f.preWalk();
-            EntityIteratorType entityItEndLog = space_.end();
-            for (   EntityIteratorType it = space_.begin();
-                    it != entityItEndLog;
-                    ++it )
-            {
-                const int ent_idx = getIdx( entityIdxMap_, it );
-                f( *it, *it, ent_idx, ent_idx);
-                IntersectionIteratorType intItEnd = gridPart_.iend( *it );
-                for (   IntersectionIteratorType intIt = gridPart_.ibegin( *it );
-                        intIt != intItEnd;
-                        ++intIt ) {
-                    if ( !intIt.boundary() ) {
-                        const int neigh_idx = getIdx( entityIdxMap_, intIt.outside() );
-                        f( *it, *intIt.outside(), ent_idx, neigh_idx);
-                    }
+
+		template < class Functor >
+		void operator () ( Functor& f )
+		{
+			f.preWalk();
+			EntityIteratorType entityItEndLog = space_.end();
+			for (   EntityIteratorType it = space_.begin();
+					it != entityItEndLog;
+					++it )
+			{
+				const int ent_idx = getIdx( entityIdxMap_, it );
+				f( *it, *it, ent_idx, ent_idx);
+				IntersectionIteratorType intItEnd = gridPart_.iend( *it );
+				for (   IntersectionIteratorType intIt = gridPart_.ibegin( *it );
+						intIt != intItEnd;
+						++intIt ) {
+					if ( !intIt.boundary() ) {
+						const int neigh_idx = getIdx( entityIdxMap_, intIt.outside() );
+						f( *it, *intIt.outside(), ent_idx, neigh_idx);
+					}
+				}
+			}
+			f.postWalk();
 		}
-            }
-            f.postWalk();
-        }
+
     private:
         Space& space_;
         GridPart& gridPart_;
