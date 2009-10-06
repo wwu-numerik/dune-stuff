@@ -67,7 +67,7 @@ void getGridInformation( GridPartType& gridPart, DiscreteFunctionSpaceType& spac
                 ++intIt ) {
             // count intersections
             ++numberOfIntersections;
-            maxGridWidth = Stuff::getLenghtOfIntersection( intIt ) > maxGridWidth ? Stuff::getLenghtOfIntersection( intIt ) : maxGridWidth;
+            maxGridWidth = std::max( Stuff::getLenghtOfIntersection( intIt ), maxGridWidth );
             // if we are inside the grid
             if ( intIt.neighbor() && !intIt.boundary() ) {
                 // count inner intersections
