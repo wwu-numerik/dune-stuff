@@ -4,6 +4,10 @@
 #include <cmath>
 #include <fstream>
 
+#include <dune/fem/io/file/vtkio.hh>
+
+#include "misc.hh"
+
 namespace Stuff{
 
 template < class Matrix, class Function >
@@ -174,6 +178,123 @@ int saveDiscreteFunction(   const DiscreteFunctionType& discreteFunction,
     else {
         ++errorState;
         error << "Error in saveDiscreteFunction(): could not open " << dgfFilename << "!" << std::endl;
+        return errorState;
+    }
+    return errorState;
+}
+
+template <  class DiscreteFunctionType,
+            class ErrorStream >
+int loadDiscreteFunction(   const std::string loadFromfilenamePrefix,
+                            ErrorStream& error )
+{
+    int errorState( 0 );
+
+    error.Flush();
+
+    std::string gridType( "" );
+    int refineLevel( 0 );
+
+    bool gridTypeRead( false );
+    bool refineLevelRead( false );
+
+    std::ifstream readFile( std::string( loadFromfilenamePrefix + std::string( ".dgf" ) ).c_str() );
+    if ( readFile.is_open() ) {
+        while( !( readFile.eof() ) ) {
+            if ( !( gridTypeRead && refineLevelRead ) ) {
+                std::string line( "" );
+                std::getline( readFile, line );
+                if ( line.size() ) {
+                    if ( line.substr( 0, 6 ) == "# ddf_" ) {
+                        unsigned int key_start = 6;
+                        unsigned int key_end = key_start;
+                        for ( ; key_end < line.size(); ++key_end ) {
+                            const char &c = line[key_end];
+                            if( (c == ' ') || (c == '\t') || (c == ':') ) {
+                                break;
+                            }
+                        }
+                        std::string key = line.substr( key_start, key_end - key_start );
+                        unsigned int value_start = key_end;
+                        for( ; value_start < line.size() ; ++value_start ) {
+                            if( line[value_start] == ':' ) {
+                                break;
+                            }
+                        }
+                        ++value_start;
+                        for( ; value_start < line.size(); ++value_start ) {
+                            if( ( line[value_start] != ' ' ) && ( line[value_start] != '\t' ) ) {
+                                break;
+                            }
+                        }
+                        if( value_start >= line.size() ) {
+                            ++errorState;
+                        }
+                        std::string value = line.substr( value_start, line.size() - value_start );
+                        if ( key == "gridtype" ) {
+                            gridType = value;
+                            gridTypeRead = true;
+                        }
+                        else if ( key == "refine_level" ) {
+                            refineLevel = Stuff::fromString< int >( value );
+                            refineLevelRead = true;
+                        }
+                    }
+                }
+            }
+            else {
+                break;
+            }
+        }
+    }
+    else {
+        ++errorState;
+        error << "Error: could not open " << std::string( loadFromfilenamePrefix + std::string( ".dgf" ) ) << "!" << std::endl;
+        return errorState;
+    }
+
+    if ( gridTypeRead && refineLevelRead ) {
+
+        typedef typename DiscreteFunctionType::FunctionSpaceType
+            DiscreteFunctionSpaceType;
+
+        typedef typename DiscreteFunctionSpaceType::GridPartType
+            GridPartType;
+
+        typedef typename GridPartType::GridType
+            GridType;
+
+        typedef Dune::GridPtr< GridType >
+            GridPointerType;
+
+        GridPointerType gridPointer( std::string( loadFromfilenamePrefix + std::string( ".dgf" ) ) );
+        gridPointer->globalRefine( refineLevel );
+        GridPartType gridPart( *gridPointer );
+
+        DiscreteFunctionSpaceType discreteFunctionSpace( gridPart );
+
+        DiscreteFunctionType discreteFunction( loadFromfilenamePrefix, discreteFunctionSpace );
+
+        const bool readFromAscii = discreteFunction.read_ascii( std::string( loadFromfilenamePrefix + std::string( ".ddf" ) ) );
+
+        if ( readFromAscii ) {
+            Dune::VTKIO< GridPartType > vtkWriter( gridPart );
+            const std::string vtkWriterFilename = std::string( "data/saved_" ) + loadFromfilenamePrefix;
+            vtkWriter.addVectorVertexData( discreteFunction );
+            vtkWriter.write( vtkWriterFilename.c_str() );
+            vtkWriter.clear();
+        }
+        else {
+            ++errorState;
+            error << "Error: could not read from " << std::string( loadFromfilenamePrefix + std::string( ".ddf" ) ) << "!" << std::endl;
+            return errorState;
+        }
+    }
+    else {
+        ++errorState;
+        error << "Error: one of the following lines is missing in " << std::string( loadFromfilenamePrefix + std::string( ".dgf" ) ) << "!" << std::endl;
+        error << "\t# ddf_gridtype: GRIDTYPE" << std::endl;
+        error << "\t# ddf_refine_level: REFINELEVEL" << std::endl;
         return errorState;
     }
     return errorState;
