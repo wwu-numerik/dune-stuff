@@ -121,8 +121,12 @@ class Logging
                 LogStream( LogFlags loglevel, int& logflags, std::ofstream& file, std::ofstream& fileWoTime )
                     : loglevel_(loglevel), logflags_(logflags),
                     suspended_logflags_(logflags), logfile_(file),
-                    logfileWoTime_( fileWoTime ), is_suspended_(false) {}
-                ~LogStream(){}
+                    logfileWoTime_( fileWoTime ), is_suspended_(false)
+                {}
+
+                ~LogStream() {
+                    Flush();
+                }
 
                 template < typename T >
                 LogStream& operator << ( T in )
