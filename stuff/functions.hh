@@ -4,6 +4,7 @@
 #include <cmath>
 #include <fstream>
 
+#include <dune/grid/io/file/dgfparser/dgfparser.hh> //for GridPtr
 #include <dune/fem/io/file/vtkio.hh>
 
 #include "misc.hh"
