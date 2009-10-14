@@ -300,6 +300,135 @@ int loadDiscreteFunction(   const std::string loadFromfilenamePrefix,
     return errorState;
 }
 
+int readRefineLevelFromDGF(  const std::string filename )
+{
+    std::string gridType( "" );
+    int refineLevel( 0 );
+
+    bool gridTypeRead( false );
+    bool refineLevelRead( false );
+
+    std::ifstream readFile( filename.c_str() );
+    if ( readFile.is_open() ) {
+        while( !( readFile.eof() ) ) {
+            if ( !( gridTypeRead && refineLevelRead ) ) {
+                std::string line( "" );
+                std::getline( readFile, line );
+                if ( line.size() ) {
+                    if ( line.substr( 0, 6 ) == "# ddf_" ) {
+                        unsigned int key_start = 6;
+                        unsigned int key_end = key_start;
+                        for ( ; key_end < line.size(); ++key_end ) {
+                            const char &c = line[key_end];
+                            if( (c == ' ') || (c == '\t') || (c == ':') ) {
+                                break;
+                            }
+                        }
+                        std::string key = line.substr( key_start, key_end - key_start );
+                        unsigned int value_start = key_end;
+                        for( ; value_start < line.size() ; ++value_start ) {
+                            if( line[value_start] == ':' ) {
+                                break;
+                            }
+                        }
+                        ++value_start;
+                        for( ; value_start < line.size(); ++value_start ) {
+                            if( ( line[value_start] != ' ' ) && ( line[value_start] != '\t' ) ) {
+                                break;
+                            }
+                        }
+                        if( value_start >= line.size() ) {
+                            --refineLevel;
+                        }
+                        std::string value = line.substr( value_start, line.size() - value_start );
+                        if ( key == "gridtype" ) {
+                            gridType = value;
+                            gridTypeRead = true;
+                        }
+                        else if ( key == "refine_level" ) {
+                            refineLevel = Stuff::fromString< int >( value );
+                            refineLevelRead = true;
+                            return refineLevel;
+                        }
+                    }
+                }
+            }
+            else {
+                break;
+            }
+        }
+    }
+    else {
+        --refineLevel;
+        std::cerr << "Error: could not open " << filename << "!" << std::endl;
+        return refineLevel;
+    }
+    return refineLevel;
+}
+
+std::string readGridTypeFromDGF(  const std::string filename )
+{
+    std::string gridType( "no_gridtype_found_in " + filename );
+    int refineLevel( 0 );
+
+    bool gridTypeRead( false );
+    bool refineLevelRead( false );
+
+    std::ifstream readFile( filename.c_str() );
+    if ( readFile.is_open() ) {
+        while( !( readFile.eof() ) ) {
+            if ( !( gridTypeRead && refineLevelRead ) ) {
+                std::string line( "" );
+                std::getline( readFile, line );
+                if ( line.size() ) {
+                    if ( line.substr( 0, 6 ) == "# ddf_" ) {
+                        unsigned int key_start = 6;
+                        unsigned int key_end = key_start;
+                        for ( ; key_end < line.size(); ++key_end ) {
+                            const char &c = line[key_end];
+                            if( (c == ' ') || (c == '\t') || (c == ':') ) {
+                                break;
+                            }
+                        }
+                        std::string key = line.substr( key_start, key_end - key_start );
+                        unsigned int value_start = key_end;
+                        for( ; value_start < line.size() ; ++value_start ) {
+                            if( line[value_start] == ':' ) {
+                                break;
+                            }
+                        }
+                        ++value_start;
+                        for( ; value_start < line.size(); ++value_start ) {
+                            if( ( line[value_start] != ' ' ) && ( line[value_start] != '\t' ) ) {
+                                break;
+                            }
+                        }
+                        if( value_start >= line.size() ) {
+                            return gridType;
+                        }
+                        std::string value = line.substr( value_start, line.size() - value_start );
+                        if ( key == "gridtype" ) {
+                            gridType = value;
+                            gridTypeRead = true;
+                        }
+                        else if ( key == "refine_level" ) {
+                            refineLevel = Stuff::fromString< int >( value );
+                            refineLevelRead = true;
+                        }
+                    }
+                }
+            }
+            else {
+                break;
+            }
+        }
+    }
+    else {
+        std::cerr << "Error: could not open " << filename << "!" << std::endl;
+        return gridType;
+    }
+    return gridType;
+}
 
 }//end namespace
 
