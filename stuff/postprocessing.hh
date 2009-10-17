@@ -198,15 +198,10 @@ class PostProcessor
             errorFunc_velocity_.assign( discreteExactVelocity_ );
             errorFunc_velocity_ -= velocity;
 
-            Dune::L2Error< DiscretePressureFunctionType > pressureErr;
-            Dune::L2Error< DiscreteVelocityFunctionType > velocityErr;
-
             Dune::L2Norm< GridPartType > l2_Error( gridPart_ );
-            pressureErr.norm( discreteExactPressure_, pressure );
-            l2_error_pressure_ = pressureErr.norm( discreteExactPressure_, pressure );
-//                l2_Error.norm( errorFunc_pressure_ );
-            l2_error_velocity_ = velocityErr.norm( discreteExactVelocity_, velocity );
-//                l2_Error.norm( errorFunc_velocity_ );
+
+            l2_error_pressure_ = l2_Error.norm( errorFunc_pressure_ );
+            l2_error_velocity_ = l2_Error.norm( errorFunc_velocity_ );
 
             Logger().Info().Resume();
             Logger().Info() << "L2-Error Pressure: " << std::setw(8) << l2_error_pressure_ << "\n"
