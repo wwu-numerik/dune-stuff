@@ -16,6 +16,7 @@
 #include "parametercontainer.hh"
 
 #include <dune/fem/misc/l2norm.hh>
+#include <dune/fem/misc/l2error.hh>
 #include <cmath>
 #include <sstream>
 
@@ -127,15 +128,11 @@ class PostProcessor
 
         void save( const GridType& grid, const DiscreteStokesFunctionWrapperType& wrapper, int refine_level )
         {
-            if ( !solutionAssembled_ || current_refine_level_ != refine_level ) //re-assemble solution if refine level has changed
-                assembleExactSolution();
-
-            current_refine_level_ = refine_level;
-
-            vtk_write( wrapper.discretePressure() );
-            vtk_write( wrapper.discreteVelocity() );
-
             if ( ProblemType:: hasMeaningfulAnalyticalSolution ) {
+                if ( !solutionAssembled_ || current_refine_level_ != refine_level ) //re-assemble solution if refine level has changed
+                    assembleExactSolution();
+                current_refine_level_ = refine_level;
+
                 calcError( wrapper.discretePressure() , wrapper.discreteVelocity() );
                 vtk_write( discreteExactVelocity_ );
                 vtk_write( discreteExactPressure_ );
@@ -144,6 +141,29 @@ class PostProcessor
                 vtk_write( errorFunc_pressure_ );
                 vtk_write( errorFunc_velocity_ );
             }
+
+            save_common( grid, wrapper, refine_level );
+        }
+
+        void save( const GridType& grid, const DiscreteStokesFunctionWrapperType& wrapper, const DiscreteStokesFunctionWrapperType& reference, int refine_level )
+        {
+            current_refine_level_ = refine_level;
+            calcError( wrapper, reference );
+            vtk_write( discreteExactVelocity_ );
+            vtk_write( discreteExactPressure_ );
+            vtk_write( errorFunc_pressure_ );
+            vtk_write( errorFunc_velocity_ );
+
+            save_common( grid, wrapper, refine_level );
+        }
+
+        void save_common( const GridType& grid, const DiscreteStokesFunctionWrapperType& wrapper, int refine_level )
+        {
+            current_refine_level_ = refine_level;
+
+            vtk_write( wrapper.discretePressure() );
+            vtk_write( wrapper.discreteVelocity() );
+
 			typedef Dune::Tuple< const DiscreteVelocityFunctionType*, const DiscretePressureFunctionType* >
 				IOTupleType;
 			IOTupleType dataTup ( &wrapper.discreteVelocity(), &wrapper.discretePressure() );
@@ -160,6 +180,14 @@ class PostProcessor
 #endif
         }
 
+        void calcError( const DiscreteStokesFunctionWrapperType& computed, const DiscreteStokesFunctionWrapperType& reference )
+        {
+            discreteExactPressure_.assign( reference.discretePressure() );
+            discreteExactVelocity_.assign( reference.discreteVelocity() );
+            solutionAssembled_ = true;
+            calcError( computed.discretePressure(), computed.discreteVelocity() );
+        }
+
         void calcError( const DiscretePressureFunctionType& pressure, const DiscreteVelocityFunctionType& velocity )
         {
             if ( !solutionAssembled_ )
@@ -170,11 +198,15 @@ class PostProcessor
             errorFunc_velocity_.assign( discreteExactVelocity_ );
             errorFunc_velocity_ -= velocity;
 
+            Dune::L2Error< DiscretePressureFunctionType > pressureErr;
+            Dune::L2Error< DiscreteVelocityFunctionType > velocityErr;
+
             Dune::L2Norm< GridPartType > l2_Error( gridPart_ );
-            l2_error_pressure_ =
-                l2_Error.norm( errorFunc_pressure_ );
-            l2_error_velocity_ =
-                l2_Error.norm( errorFunc_velocity_ );
+            pressureErr.norm( discreteExactPressure_, pressure );
+            l2_error_pressure_ = pressureErr.norm( discreteExactPressure_, pressure );
+//                l2_Error.norm( errorFunc_pressure_ );
+            l2_error_velocity_ = velocityErr.norm( discreteExactVelocity_, velocity );
+//                l2_Error.norm( errorFunc_velocity_ );
 
             Logger().Info().Resume();
             Logger().Info() << "L2-Error Pressure: " << std::setw(8) << l2_error_pressure_ << "\n"
