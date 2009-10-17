@@ -771,8 +771,7 @@ class MinMaxAvg {
 			}
 		}
 
-		template < class Stream >
-		void output( Stream& stream ) {
+		void output( std::ostream& stream ) {
 			stream << "min: " << min_ << " max: " << max_ << " avg: " << avg_ << std::endl;
 		}
 
@@ -783,8 +782,7 @@ class MinMaxAvg {
 		MinMaxAvg( const ThisType& other );
 };
 
-template < class Stream >
-void fileToStreamFiltered( Stream& stream, std::string filename, std::string filter )
+void fileToStreamFiltered( std::ostream& stream, std::string filename, std::string filter )
 {
     std::ifstream file( filename.c_str(), std::ifstream::in );
     ASSERT_EXCEPTION( file.good(), filename.c_str() )
@@ -797,11 +795,10 @@ void fileToStreamFiltered( Stream& stream, std::string filename, std::string fil
     file.close();
 }
 
-template < class Stream >
-void meminfo( Stream& stream )
+void meminfo( std::ostream& stream )
 {
     stream << "Memory info: \n";
-    stream.Resume();
+//    stream.Resume();
     pid_t pid = getpid();
     std::stringstream filename;
     filename << "/proc/" << pid << "/status";

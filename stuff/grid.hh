@@ -32,8 +32,8 @@ double getLenghtOfIntersection( const IntersectionIteratorType& intIt )
 //    return difference.two_norm();
 }
 
-template < class GridPartType, class DiscreteFunctionSpaceType, class OutStream >
-void getGridInformation( GridPartType& gridPart, DiscreteFunctionSpaceType& space, OutStream& out )
+template < class GridPartType, class DiscreteFunctionSpaceType >
+void getGridInformation( GridPartType& gridPart, DiscreteFunctionSpaceType& space, std::ostream& out )
 {
     int numberOfEntities( 0 );
     int numberOfIntersections( 0 );

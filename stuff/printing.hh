@@ -26,8 +26,8 @@ namespace Stuff {
  *  \param[opt] prefix
  *          prefix to be printed before every line
  **/
-template < class T, class stream >
-void printFieldVector( T& arg, std::string name, stream& out, std::string prefix = "" )
+template < class T >
+void printFieldVector( T& arg, std::string name, std::ostream& out, std::string prefix = "" )
 {
     out << "\n" << prefix << "printing " << name << " (Dune::FieldVector)" << std::endl;
     typedef typename T::ConstIterator
@@ -56,8 +56,8 @@ void printFieldVector( T& arg, std::string name, stream& out, std::string prefix
  *  \param[opt] prefix
  *          prefix to be printed before every line
  **/
-template < class T, class stream >
-void printFieldMatrix( T& arg, std::string name, stream& out, std::string prefix = "" )
+template < class T >
+void printFieldMatrix( T& arg, std::string name, std::ostream& out, std::string prefix = "" )
 {
     out << "\n" << prefix << "printing " << name << " (Dune::FieldMatrix)";
     typedef typename T::ConstRowIterator
@@ -76,8 +76,8 @@ void printFieldMatrix( T& arg, std::string name, stream& out, std::string prefix
     }
 }
 
-template < class T, class stream >
-void printSparseRowMatrixMatlabStyle( const T& arg, const std::string name, stream& out )
+template < class T >
+void printSparseRowMatrixMatlabStyle( const T& arg, const std::string name, std::ostream& out )
 {
     out << "\n" << name << " = [ " << std::endl;
     for ( int row = 0; row < arg.rows(); row++ ) {
@@ -89,8 +89,8 @@ void printSparseRowMatrixMatlabStyle( const T& arg, const std::string name, stre
     out << "];" << std::endl;
 }
 
-template < class T, class stream >
-void printDiscreteFunctionMatlabStyle( const T& arg, const std::string name, stream& out )
+template < class T >
+void printDiscreteFunctionMatlabStyle( const T& arg, const std::string name, std::ostream& out )
 {
     out << "\n" << name << " = [ " << std::endl;
     typedef typename T::ConstDofIteratorType
@@ -103,8 +103,8 @@ void printDiscreteFunctionMatlabStyle( const T& arg, const std::string name, str
     out << "];" << std::endl;
 }
 
-template < class T, class stream >
-void printDoubleVectorMatlabStyle( const T* arg, const int size,  const std::string name, stream& out )
+template < class T >
+void printDoubleVectorMatlabStyle( const T* arg, const int size,  const std::string name, std::ostream& out )
 {
     out << "\n" << name << " = [ " << std::endl;
     for ( unsigned int i = 0; i < size; i++ ) {
@@ -115,8 +115,8 @@ void printDoubleVectorMatlabStyle( const T* arg, const int size,  const std::str
 }
 
 
-template < class Stream, class Type >
-void printDoubleVec( Stream& stream, const Type * vec, const unsigned int N )
+template < class Type >
+void printDoubleVec( std::ostream& stream, const Type * vec, const unsigned int N )
 {
     stream << "\n [ " << std::setw(5);
     for ( unsigned int i = 0; i < N ; ++i )
@@ -125,8 +125,8 @@ void printDoubleVec( Stream& stream, const Type * vec, const unsigned int N )
     stream << " ] " << std::endl;
 }
 
-template < class Stream, class DiscFunc >
-void oneLinePrint( Stream& stream, const DiscFunc& func )
+template < class DiscFunc >
+void oneLinePrint( std::ostream& stream, const DiscFunc& func )
 {
     typedef typename DiscFunc::ConstDofIteratorType DofIteratorType;
     DofIteratorType it = func.dbegin();
@@ -140,11 +140,11 @@ void oneLinePrint( Stream& stream, const DiscFunc& func )
 }
 
 
-template < class GlobalMatrix, class Stream >
+template < class GlobalMatrix >
 class LocalMatrixPrintFunctor
 {
     public:
-        LocalMatrixPrintFunctor( const GlobalMatrix& m, Stream& stream, const std::string name )
+        LocalMatrixPrintFunctor( const GlobalMatrix& m, std::ostream& stream, const std::string name )
             : matrix_(m),
             stream_(stream),
             name_( name )
@@ -179,12 +179,12 @@ class LocalMatrixPrintFunctor
 
     private:
         const GlobalMatrix& matrix_;
-        Stream& stream_;
+        std::ostream& stream_;
         const std::string name_;
 };
 
-template <class Stream, class Function>
-void printFunctionMinMax( Stream& stream, const Function& func ) {
+template < class Function>
+void printFunctionMinMax( std::ostream& stream, const Function& func ) {
     double min = 0.0;
     double max = 0.0;
     Stuff::getMinMaxOfDiscreteFunction( func, min, max );

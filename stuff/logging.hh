@@ -106,7 +106,7 @@ class Logging
                 bool is_suspended_;
         };
 
-        class LogStream //: virtual public std::ostream
+        class LogStream : virtual public std::ostream
         {
             protected:
                 LogFlags loglevel_;
