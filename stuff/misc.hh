@@ -32,6 +32,7 @@ bool isnan( T x ) { return !(x==x); }
 #include <assert.h>
 #include <cmath>
 #include <cerrno>
+#include <stdexcept>
 #include <sys/stat.h>
 #include <sys/types.h>
 
