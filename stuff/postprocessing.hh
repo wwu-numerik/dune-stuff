@@ -14,6 +14,7 @@
 #include "logging.hh"
 #include "misc.hh"
 #include "parametercontainer.hh"
+#include "customprojection.hh"
 
 #include <dune/fem/misc/l2norm.hh>
 #include <dune/fem/misc/l2error.hh>
@@ -91,6 +92,8 @@ class PostProcessor
 
         void assembleExactSolution()
         {
+			Stuff::CustomProjection::project( problem_.dirichletData(), discreteExactDirichlet_ );
+
             typedef Dune::L2Projection< double, double, ContinuousVelocityType, DiscreteVelocityFunctionType > ProjectionV;
                 ProjectionV projectionV;
             projectionV( problem_.velocity(), discreteExactVelocity_ );
