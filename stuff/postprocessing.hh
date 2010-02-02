@@ -98,10 +98,6 @@ class PostProcessor
                 ProjectionV projectionV;
             projectionV( problem_.velocity(), discreteExactVelocity_ );
 
-            typedef Dune::L2Projection< double, double, DirichletDataType, DiscreteVelocityFunctionType > ProjectionD;
-                ProjectionD projectionD;
-            projectionD( problem_.dirichletData(), discreteExactDirichlet_ );
-
             typedef Dune::L2Projection< double, double, ForceType, DiscreteVelocityFunctionType > ProjectionF;
                 ProjectionF projectionF;
             projectionF( problem_.force(), discreteExactForce_ );

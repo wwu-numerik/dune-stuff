@@ -21,6 +21,8 @@ public:
 			GridPart;
 		typedef typename GridPart::template Codim< 0 >::IteratorType
 			EntityIteratorType;
+		typedef typename GridPart::GridType::template Codim< 0 >::Entity
+			EntityType;
 		typedef typename GridPart::IntersectionIteratorType
 			IntersectionIteratorType;
 		typedef typename IntersectionIteratorType::EntityPointer
@@ -31,14 +33,18 @@ public:
 			FaceQuadratureType;
 		typedef typename DiscreteFunctionSpace::BaseFunctionSetType
 			BaseFunctionSetType;
+		typedef typename DiscreteFunctionSpace::RangeType
+			RangeType;
 		const DiscreteFunctionSpace& space_ = discFunc.space();
 		const GridPart& gridPart_ = space_.gridPart();
+		RangeType phi (0.0);
 		EntityIteratorType entityItEndLog = space_.end();
 		for (   EntityIteratorType it = space_.begin();
 				it != entityItEndLog;
 				++it )
 		{
-			LocalFunctionType lf = discFunc.localFunction( *it );
+			EntityType& e = *it;
+			LocalFunctionType lf = discFunc.localFunction( e );
 			BaseFunctionSetType baseFunctionset = space_.baseFunctionSet( *it );
 			unsigned int intersection_count = 0;
 			IntersectionIteratorType intItEnd = gridPart_.iend( *it );
@@ -50,14 +56,19 @@ public:
 												   intIt,
 												   ( 4 * space_.order() ) + 1,
 												   FaceQuadratureType::INSIDE );
-				for ( int i = 0; i < baseFunctionset.numBaseFunctions(); ++i ) {
-					typename DestinationFunctionType::RangeType value;
-					for ( int quad = 0; quad < faceQuadrature.nop(); ++quad ) {
-						//intel,weight, point->global
-						if ( intIt.boundary() ) {
-							f.evaluate( faceQuadrature.point(quad), value, intIt );
+				typename DestinationFunctionType::RangeType ret;
+				for ( int qP = 0; qP < faceQuadrature.nop(); ++qP ) {
+					const double intel =
+						 faceQuadrature.weight(qP) * e.geometry().integrationElement( faceQuadrature.point(qP) ); // general case
+
+					if ( intIt.boundary() )
+					{
+						f.evaluate( faceQuadrature.point(qP), ret, intIt );
+
+						for ( int i = 0; i < baseFunctionset.numBaseFunctions(); ++i ) {
+							baseFunctionset.evaluate(i, faceQuadrature[qP], phi);
+							lf[i] += intel * (ret * phi) ;
 						}
-						lf[i] = value;
 					}
 				}
 			}
