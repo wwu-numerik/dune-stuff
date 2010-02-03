@@ -9,6 +9,14 @@
 
 namespace Stuff {
 
+/** A custom projection of an analytical function that uses a non-standard evalute signature:\n
+		<pre>template < class IntersectionIteratorType >\n
+		void evaluate( const DomainType& arg, RangeType& ret, const IntersectionIteratorType& faceIter ) const<pre>\n
+	\note example being our boundary functions
+	\note output currently somewhat meaningless
+	\see analyticaldata.hh
+**/
+
 class CustomProjection {
 
 public:
