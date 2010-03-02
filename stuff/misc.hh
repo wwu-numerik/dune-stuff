@@ -599,22 +599,6 @@ class AccurracyOutputOuter : public TexOutputBase<RunInfo>
         }
 };
 
-
-/**
- *  \brief Only free mem pointed to by valid pointer, log warning otherwise
- *
- **/
-
-template < class T >
-void safe_delete ( T t ) //this is actually bullshit :P
-{
-    if (t){
-        delete t;
-        t=0;
-    }
-    //else log warning
-}
-
 template < class Container, class Element >
 int getIdx( const Container& ct, Element e )
 {

@@ -232,7 +232,8 @@ class Logging
         {
             IdVecCIter it = streamIDs_.end();
             for ( ; it != streamIDs_.begin(); --it ) {
-                Stuff::safe_delete( streammap_[*it] );
+				delete streammap_[*it];
+				streammap_[*it] = 0;
             }
 
             if ( ( logflags_ & LOG_FILE ) != 0 ) {
@@ -245,7 +246,8 @@ class Logging
             // delete the MatlabLogStream
             matlabLogStreamPtr->Flush();
             matlabLogFile_.close();
-            Stuff::safe_delete( matlabLogStreamPtr );
+			delete matlabLogStreamPtr;
+			matlabLogStreamPtr = 0;
         }
 
     public:
@@ -289,7 +291,8 @@ class Logging
             /// begin dtor
             IdVecCIter it = streamIDs_.end();
             for ( ; it != streamIDs_.begin(); --it ) {
-                Stuff::safe_delete( streammap_[*it] );
+				delete streammap_[*it];
+				streammap_[*it]=0;
             }
 
             if ( ( logflags_ & LOG_FILE ) != 0 ) {
@@ -302,7 +305,8 @@ class Logging
             // delete the MatlabLogStream
             matlabLogStreamPtr->Flush();
             matlabLogFile_.close();
-            Stuff::safe_delete( matlabLogStreamPtr );
+			delete matlabLogStreamPtr;
+			matlabLogStreamPtr = 0;
             /// end dtor
 
             Create ( logflags_, prefix );

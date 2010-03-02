@@ -51,20 +51,15 @@ class ParameterContainer
          **/
        bool ReadCommandLine( int argc, char** argv )
         {
-            if ( argc == 2 )
-            {
+			if ( argc == 2 ) {
                 parameter_filename_ = argv[1];
                 Dune::Parameter::append( parameter_filename_ );
             }
-            else
-            {
+			else {
                 Dune::Parameter::append( argc, argv );
-//                std::cerr << "\nUsage: " << argv[0] << " parameterfile" << std::endl;
-//                PrintParameterSpecs( std::cerr );
-//                std::cerr << std::endl;
             }
+			warning_output_ = Dune::Parameter::getValue( "disableParameterWarnings", warning_output_ );
             return CheckSetup();
-
         }
 
         /** \brief checks for mandatory params
@@ -121,7 +116,7 @@ class ParameterContainer
         {
             assert( all_set_up_ );
             #ifndef NDEBUG
-                if ( ! Dune::Parameter::exists( name ) ) {
+				if ( warning_output_ && ! Dune::Parameter::exists( name ) ) {
                     if ( useDbgStream )
                         Logger().Dbg() << "WARNING: using default value for parameter \"" << name << "\"" << std::endl;
                     else
@@ -154,6 +149,7 @@ class ParameterContainer
 
     private:
         bool all_set_up_;
+		bool warning_output_;
         std::string parameter_filename_;
         std::vector<std::string> mandatory_params_;
 
@@ -163,7 +159,8 @@ class ParameterContainer
          *  \attention  call ReadCommandLine() to set up parameterContainer
          **/
         ParameterContainer()
-            : all_set_up_( false )
+			: all_set_up_( false ),
+			warning_output_( true )
         {
             const std::string p[] = { "dgf_file_2d", "dgf_file_3d" };
             mandatory_params_ = std::vector<std::string> ( p, p + ( sizeof(p) / sizeof( p[0] ) ) );
