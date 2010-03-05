@@ -18,7 +18,6 @@
  *
  *  ParameterContainer contains all the needed global parameters getting them via Dune::Parameter
  *
- *  \todo   needs reorganizing!
  **/
 class ParameterContainer
 {
@@ -134,6 +133,7 @@ class ParameterContainer
             return Dune::Parameter::replaceKey( name, val );
         }
 
+		//! extension to Fem::paramter that allows vector/list like paramteres from a single key
 		template < class T >
 		std::vector<T> getList( const std::string name, T def ) {
 			if ( ! Dune::Parameter::exists( name ) ) {
@@ -169,7 +169,7 @@ class ParameterContainer
         friend ParameterContainer& Parameters();
 };
 
-///global ParameterContainer instance
+//! global ParameterContainer instance
 ParameterContainer& Parameters()
 {
     static ParameterContainer parameters;
