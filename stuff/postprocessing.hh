@@ -21,7 +21,7 @@
 #include <cmath>
 #include <sstream>
 
-
+//! Error and vtk output wrapper class for Stokes problem/pass
 template <  class StokesPassImp, class ProblemImp >
 class PostProcessor
 {
@@ -90,6 +90,9 @@ class PostProcessor
         {
         }
 
+		/** \brief analytical data is L2 projected
+			\todo only use Stuff::CustomProjection when really necessary
+			**/
         void assembleExactSolution()
         {
 			Stuff::CustomProjection::project( problem_.dirichletData(), discreteExactDirichlet_ );
@@ -107,6 +110,7 @@ class PostProcessor
             projectionP( problem_.pressure(), discreteExactPressure_ );
         }
 
+		//! output function that 'knows' function output mode; assembles filename
         template <class Function>
         void vtk_write( const Function& f ) {
             if ( Function::FunctionSpaceType::DimRange > 1 )
@@ -125,6 +129,7 @@ class PostProcessor
             vtkWriter_.clear();
         }
 
+		//! use this function if no reference (ie. coarser/finer) solution is available, or an analytical one is
         void save( const GridType& grid, const DiscreteStokesFunctionWrapperType& wrapper, int refine_level )
         {
             if ( ProblemType:: hasMeaningfulAnalyticalSolution ) {
@@ -144,6 +149,7 @@ class PostProcessor
             save_common( grid, wrapper, refine_level );
         }
 
+		//! use this save in eoc runs with no analytical solution available
         void save( const GridType& grid, const DiscreteStokesFunctionWrapperType& wrapper, const DiscreteStokesFunctionWrapperType& reference, int refine_level )
         {
             current_refine_level_ = refine_level;
@@ -156,6 +162,7 @@ class PostProcessor
             save_common( grid, wrapper, refine_level );
         }
 
+		//! used by both PostProcessor::save modes, outputs solutions (in grape/vtk form), but no errors or analytical functions
         void save_common( const GridType& grid, const DiscreteStokesFunctionWrapperType& wrapper, int refine_level )
         {
             current_refine_level_ = refine_level;
@@ -171,22 +178,24 @@ class PostProcessor
                 DataWriterType;
 			DataWriterType datawriter ( grid, dataTup, 0,0,0 );
 			datawriter.write( 0, 0 );
-			datawriter.saveMacroGrid( Parameters().DgfFilename( GridType::dimension ) );
-
 			//save the macrogrid file so grape will find if in any case (ie. non ALU)
+			datawriter.saveMacroGrid( Parameters().DgfFilename( GridType::dimension ) );
 #ifndef NLOG
 			entityColoration();
 #endif
         }
 
+		//! proxy function that is to be used if no analytical solutions are availble to calculate errors against
         void calcError( const DiscreteStokesFunctionWrapperType& computed, const DiscreteStokesFunctionWrapperType& reference )
         {
             discreteExactPressure_.assign( reference.discretePressure() );
             discreteExactVelocity_.assign( reference.discreteVelocity() );
+			//set to to true so calcError call does not try to assemble exact solutions again
             solutionAssembled_ = true;
             calcError( computed.discretePressure(), computed.discreteVelocity() );
         }
 
+		//! print and save L2 error(functions)
         void calcError( const DiscretePressureFunctionType& pressure, const DiscreteVelocityFunctionType& velocity )
         {
             if ( !solutionAssembled_ )
@@ -207,6 +216,7 @@ class PostProcessor
                             << "L2-Error Velocity: " << std::setw(8) << l2_error_velocity_ << std::endl;
         }
 
+		//! used to sore errors in runinfo structure (for eoc latex output)
         std::vector<double> getError()
         {
             std::vector<double> ret;
@@ -215,6 +225,7 @@ class PostProcessor
             return ret;
         }
 
+		//! assign each entity it's 'id' int and save/(vtk)output it in a discrete function
         void entityColoration()
         {
             DiscretePressureFunctionType cl ( "entitiy-num", spaceWrapper_.discretePressureSpace() );
@@ -234,37 +245,13 @@ class PostProcessor
                 const EntityType& entity = *entityItLog;
                 const typename EntityType::Geometry& geo = entity .geometry();
 
-//                dbg << "entity: " << numberOfEntities <<"\n";
-                for ( int i = 0; i < geo.corners(); ++i ){
-//                    Stuff::printFieldVector( geo[i], "  corner", dbg );
-                }
-//                dbg << std::endl;
-
                 typename DiscretePressureFunctionType::LocalFunctionType
                     lf = cl.localFunction( entity );
 
                 for ( int i = 0; i < lf.numDofs(); ++i ){
                     lf[i] = numberOfEntities;
                 }
-
-                unsigned long numberOfIntersections =0;
-                IntersectionIteratorType intItEnd = gridPart_.iend( entity );
-                for (   IntersectionIteratorType intIt = gridPart_.ibegin( entity );
-                        intIt != intItEnd;
-                        ++intIt,++numberOfIntersections ) {
-                    // if we are inside the grid
-                    if ( intIt.neighbor() && !intIt.boundary() ) {
-                        // count inner intersections
-
-                    }
-                    // if we are on the boundary of the grid
-                    if ( !intIt.neighbor() && intIt.boundary() ) {
-                        // count boundary intersections
-
-                    }
-                }
             }
-
             vtk_write( cl );
         }
 
