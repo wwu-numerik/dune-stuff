@@ -1,0 +1,29 @@
+#editor files
+*~
+*.orig
+*BASE*
+*LOCAL*
+*REMOTE*
+*.swp
+*.bak
+
+#build products
+*.o
+build*/
+CMakeFiles
+CMakeCache.txt
+
+#grid stuff
+*.ele
+*.poly
+*.node
+*.face
+*.ALUGrid
+*.ALU?dGrid
+
+#qtcreator project file:
+CMakeLists.txt.user
+
+#other SCMs
+.svn
+*.svn

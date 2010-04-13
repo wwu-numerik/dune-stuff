@@ -1,0 +1,16 @@
+*.svn
+Makefile
+Makefile.in
+.deps
+stamp-h1
+missing
+config.*
+autom4te.cache
+depcomp
+aclocal.m4
+libtool
+configure
+ltmain.sh
+install-sh
+dependencies.m4
+am
