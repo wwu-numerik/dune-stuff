@@ -1,0 +1,16 @@
+#tex compile byproducts
+*.aux
+*.log
+*.ind
+*.ilg
+*.blg
+*.bbl
+*.out
+*.idx
+*.loa
+*.tdo
+*.toc
+#tex output
+*.pdf
+*.dvi
+*.ps
