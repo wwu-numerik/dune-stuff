@@ -1,0 +1,13 @@
+#!/bin/bash
+	
+OFILE=test.avi
+if [ $# -ge 2 ] ; then
+	OFILE=$1
+fi
+
+EXT=png
+if [ $# -ge 3 ] ; then
+	EXT=$2
+fi
+
+mencoder mf://*.${EXT} -mf fps=24 -o ${OFILE} -ovc lavc -lavcopts vcodec=msmpeg4v2:vbitrate=3800
