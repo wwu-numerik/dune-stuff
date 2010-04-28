@@ -23,6 +23,7 @@ public:
 	template < class OriginFunctionType, class DestinationFunctionType >
 	static void project (const OriginFunctionType& f, DestinationFunctionType& discFunc)
 	{
+		const double time = 0.0;
 		typedef typename DestinationFunctionType::FunctionSpaceType
 			DiscreteFunctionSpace;
 		typedef typename DiscreteFunctionSpace::GridPartType
@@ -61,17 +62,17 @@ public:
 					++intIt ) {
 				intersection_count++;
 				FaceQuadratureType faceQuadrature( gridPart_,
-												   intIt,
+												   *intIt,
 												   ( 4 * space_.order() ) + 1,
 												   FaceQuadratureType::INSIDE );
 				typename DestinationFunctionType::RangeType ret;
-				for ( int qP = 0; qP < faceQuadrature.nop(); ++qP ) {
+				for ( size_t qP = 0; qP < faceQuadrature.nop(); ++qP ) {
 					const double intel =
 						 faceQuadrature.weight(qP) * e.geometry().integrationElement( faceQuadrature.point(qP) ); // general case
 
-					if ( intIt.boundary() )
+					if ( intIt->boundary() )
 					{
-						f.evaluate( faceQuadrature.point(qP), ret, intIt );
+						f.evaluate( faceQuadrature.point(qP), ret, *intIt );
 
 						for ( int i = 0; i < baseFunctionset.numBaseFunctions(); ++i ) {
 							baseFunctionset.evaluate(i, faceQuadrature[qP], phi);
