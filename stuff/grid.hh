@@ -7,29 +7,19 @@ namespace Stuff {
 
 /**
  *  \brief  calculates length of given intersection in world coordinates
- *  \tparam IntersectionIteratorType
- *          IntersectionIteratorType
- *  \param[in]  intIt
+ *  \tparam IntersectionType
+ *          IntersectionType
+ *  \param[in]  intersection
  *          intersection
  *  \return length of intersection
  **/
-template < class IntersectionIteratorType >
-double getLenghtOfIntersection( const IntersectionIteratorType& intIt )
+template < class IntersectionType >
+double getLenghtOfIntersection( const IntersectionType& intersection )
 {
-    typedef typename IntersectionIteratorType::Geometry
+	typedef typename IntersectionType::Geometry
         IntersectionGeometryType;
-    const IntersectionGeometryType& intersectionGeoemtry = intIt.intersectionGlobal();
+	const IntersectionGeometryType& intersectionGeoemtry = intersection.intersectionGlobal();
     return intersectionGeoemtry.volume();
-//    assert( intersectionGeoemtry.corners() == 2 );
-//    typedef typename IntersectionIteratorType::ctype
-//        ctype;
-//    const int dimworld = IntersectionIteratorType::dimensionworld;
-//    typedef Dune::FieldVector< ctype, dimworld >
-//        DomainType;
-//    const DomainType cornerOne = intersectionGeoemtry[0];
-//    const DomainType cornerTwo = intersectionGeoemtry[1];
-//    const DomainType difference = cornerOne - cornerTwo;
-//    return difference.two_norm();
 }
 
 template < class GridPartType, class DiscreteFunctionSpaceType, class OutStream >

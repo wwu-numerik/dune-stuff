@@ -243,8 +243,6 @@ class PostProcessor
                     entityItLog != entityItEndLog;
                     ++entityItLog, ++numberOfEntities ) {
                 const EntityType& entity = *entityItLog;
-                const typename EntityType::Geometry& geo = entity .geometry();
-
                 typename DiscretePressureFunctionType::LocalFunctionType
                     lf = cl.localFunction( entity );
 
