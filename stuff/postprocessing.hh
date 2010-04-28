@@ -113,10 +113,14 @@ class PostProcessor
 		//! output function that 'knows' function output mode; assembles filename
         template <class Function>
         void vtk_write( const Function& f ) {
-            if ( Function::FunctionSpaceType::DimRange > 1 )
+			if ( Function::FunctionSpaceType::DimRange > 1 ) {
                 vtkWriter_.addVectorVertexData( f );
-            else
+				vtkWriter_.addVectorCellData( f );
+			}
+			else {
                 vtkWriter_.addVertexData( f );
+				vtkWriter_.addCellData( f );
+			}
 
             std::stringstream path;
             if ( Parameters().getParam( "per-run-output", false ) )
