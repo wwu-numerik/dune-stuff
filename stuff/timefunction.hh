@@ -20,20 +20,7 @@ namespace Dune {
 
 			const TimeProviderImp& timeProvider_;
 
-		 public:
-				//! field type of domain
-				using BaseType::DomainFieldType;
-				//! field type of range
-				using BaseType::RangeFieldType;
-				//! domain type
-				using BaseType::DomainType;
-				//! range type
-				using BaseType::RangeType;
-				//! jacobian type
-				using BaseType::JacobianRangeType;
-				//! hessian type
-				using BaseType::HessianRangeType;
-				using Interface::asImp;
+			using Interface::asImp;
 
 		public:
 			TimeFunction(const TimeProviderImp& timeProvider, const FunctionSpaceImp& space )
@@ -44,10 +31,10 @@ namespace Dune {
 			~TimeFunction()
 			{}
 
-			inline void evaluate( const typename BaseType::DomainType& x, typename BaseType::RangeType& ret ) const
+			virtual inline void evaluate( const typename BaseType::DomainType& x, typename BaseType::RangeType& ret ) const
 			{
 				const double t = timeProvider_.time();
-				CHECK_AND_CALL_INTERFACE_IMPLEMENTATION( asImp().evaluate( t, x, ret ) );
+				CHECK_AND_CALL_INTERFACE_IMPLEMENTATION( asImp().evaluateTime( t, x, ret ) );
 			}
 
 			/** \brief evaluate the Jacobian of the function
