@@ -101,9 +101,6 @@ namespace Dune {
 
 			template <class VTKOut>
 			class VTKOutputter {
-					const std::string path_;
-					const bool parallel_;
-					const int step_;
 				public:
 				//! Constructor
 					VTKOutputter(VTKOut& vtkOut,std::string path, bool parallel,int step)
@@ -179,6 +176,9 @@ namespace Dune {
 
 				private:
 					VTKOut & vtkOut_;
+					const std::string path_;
+					const bool parallel_;
+					const int step_;
 			};
 
 	#if USE_VTKWRITER
