@@ -83,28 +83,26 @@ class FemEoc
         std::cerr << "Could not open file : "
                   << inputFile
                   << " ... using default template" << std::endl;
-          main << "\\documentclass[10pt,english]{article}\n"
-           << "\\usepackage[T1]{fontenc}\n"
-           << "\\usepackage[T1]{vmargin}\n"
-           << "\\setpapersize[landscape]{A4}\n"
-	         << "\\usepackage[latin1]{inputenc}\n"
-	         << "\\usepackage{setspace}\n"
-	         << "\\onehalfspacing\n"
-	         << "\\makeatletter\n"
-	         << "\\providecommand{\\boldsymbol}[1]{\\mbox{\\boldmath $#1$}}\n"
-	         << "\\providecommand{\\tabularnewline}{\\\\}\n"
-	         << "\\usepackage{babel}\n"
-	         << "\\makeatother\n"
-	         << "\\begin{document}\n"
-           << "\\begin{center}\\large\n"
-           << descript
-           << "\n\\end{center}\n\n"
-           << "\\input{"
-           << bodyfile
-           << "}\n";
-          main << "\\end{tabular}\\\\\n\n"
-                 << "\\end{document}\n" << std::endl;
-
+		  main	<< "\\documentclass[10pt,english]{article}\n"
+				<< "\\usepackage{fontenc}\n"
+				<< "\\usepackage{vmargin}\n"
+				<< "\\setpapersize[landscape]{A4}\n"
+				<< "\\usepackage[latin1]{inputenc}\n"
+				<< "\\usepackage{setspace}\n"
+				<< "\\onehalfspacing\n"
+				<< "\\makeatletter\n"
+				<< "\\providecommand{\\boldsymbol}[1]{\\mbox{\\boldmath $#1$}}\n"
+				<< "\\providecommand{\\tabularnewline}{\\\\}\n"
+				<< "\\usepackage{babel}\n"
+				<< "\\makeatother\n"
+				<< "\\begin{document}\n"
+				<< "\\begin{center}\\large\n"
+				<< descript
+				<< "\n\\end{center}\n\n"
+				<< "\\input{"
+				<< bodyfile
+				<< "}\n";
+				<< "\\end{document}\n" << std::endl;
       }
       else {
 
