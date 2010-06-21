@@ -27,7 +27,7 @@ bool isnan( T x ) { return !(x==x); }
 #ifndef NDEBUG
 	#define NEEDS_IMPLEMENTATION\
 			{\
-				 std::stringstream ss; ss << " implemenatation missing: " << __FILE__ << ":" << __LINE__ ; \
+				 std::stringstream ss; ss << " implementation missing: " << __FUNCTION__ << " -- "<< __FILE__ << ":" << __LINE__ ; \
 				 std::cerr << ss.str() << std::endl;\
 			}
 #else
