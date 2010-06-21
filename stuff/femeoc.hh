@@ -101,7 +101,7 @@ class FemEoc
 				<< "\n\\end{center}\n\n"
 				<< "\\input{"
 				<< bodyfile
-				<< "}\n";
+				<< "}\n"
 				<< "\\end{document}\n" << std::endl;
       }
       else {
