@@ -125,38 +125,35 @@ struct RunInfo
 namespace Stuff
 {
 
-/**
- *  \todo   doc
- **/
-template< class FieldMatrixImp >
-double colonProduct(    const FieldMatrixImp& arg1,
-                        const FieldMatrixImp& arg2 )
+template <class SomeRangeType >
+static double colonProduct(    const SomeRangeType& arg1,
+						const SomeRangeType& arg2 )
 {
-    assert( arg1.rowdim() == arg2.coldim() );
-    double ret = 0.0;
-    // iterators
-    typedef typename FieldMatrixImp::ConstRowIterator
-        ConstRowIteratorType;
-    typedef typename FieldMatrixImp::row_type::ConstIterator
-        ConstIteratorType;
-    ConstRowIteratorType arg1RowItEnd = arg1.end();
-    ConstRowIteratorType arg2RowItEnd = arg2.end();
-    ConstRowIteratorType arg2RowIt = arg2.begin();
-    for (   ConstRowIteratorType arg1RowIt = arg1.begin();
-            arg1RowIt != arg1RowItEnd, arg2RowIt != arg2RowItEnd;
-            ++arg1RowIt, ++arg2RowIt ) {
-        ConstIteratorType row1ItEnd = arg1RowIt->end();
-        ConstIteratorType row2ItEnd = arg2RowIt->end();
-        ConstIteratorType row2It = arg2RowIt->begin();
-        for (   ConstIteratorType row1It = arg1RowIt->begin();
-                row1It != row1ItEnd, row2It != row2ItEnd;
-                ++row1It, ++row2It ) {
-            ret += *row1It * *row2It;
-        }
-    }
-    return ret;
-}
+	Dune::CompileTimeChecker< SomeRangeType::cols == SomeRangeType::rows > SigmaRangeType_is_not_a_square_matrix;
 
+	double ret = 0.0;
+	// iterators
+	typedef typename SomeRangeType::ConstRowIterator
+		ConstRowIteratorType;
+	typedef typename SomeRangeType::row_type::ConstIterator
+		ConstIteratorType;
+	ConstRowIteratorType arg1RowItEnd = arg1.end();
+	ConstRowIteratorType arg2RowItEnd = arg2.end();
+	ConstRowIteratorType arg2RowIt = arg2.begin();
+	for (   ConstRowIteratorType arg1RowIt = arg1.begin();
+			arg1RowIt != arg1RowItEnd, arg2RowIt != arg2RowItEnd;
+			++arg1RowIt, ++arg2RowIt ) {
+		ConstIteratorType row1ItEnd = arg1RowIt->end();
+		ConstIteratorType row2ItEnd = arg2RowIt->end();
+		ConstIteratorType row2It = arg2RowIt->begin();
+		for (   ConstIteratorType row1It = arg1RowIt->begin();
+				row1It != row1ItEnd, row2It != row2ItEnd;
+				++row1It, ++row2It ) {
+			ret += *row1It * *row2It;
+		}
+	}
+	return ret;
+}
 /**
  *  \brief  multiplies rows of arg2 with arg1
  *  \todo   doc
