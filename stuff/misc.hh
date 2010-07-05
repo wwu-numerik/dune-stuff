@@ -24,6 +24,8 @@ bool isnan( T x ) { return !(x==x); }
     #define LOGIC_ERROR
 #endif
 
+#include <cstring>
+
 char* copy(const char* s) { int l=strlen(s)+1; char* t = new char[l];  for(int i=0;i<l;i++) { t[i] = s[i]; } return t; }
 #define __CLASS__ strtok(copy(__PRETTY_FUNCTION__),"<(")
 
@@ -121,6 +123,8 @@ struct RunInfo
 		extra_info = "";
 	}
 };
+
+#include <dune/common/misc.hh>
 
 namespace Stuff
 {
