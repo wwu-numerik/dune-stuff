@@ -109,6 +109,7 @@ struct RunInfo
     int iterations_outer_total;
     double max_inner_accuracy;
 	std::string problemIdentifier;
+	double current_time, delta_t;
 
 	RunInfo() {
 		refine_level = codim0 = polorder_velocity
@@ -121,8 +122,20 @@ struct RunInfo
 				= inner_solver_accuracy = -1.0;
 		gridname = problemIdentifier = "UNSET";
 		extra_info = "";
+		delta_t = 0.1;
+		current_time = 0.0;
 	}
 };
+
+//! used in all runs to store L2 errors across runs
+typedef std::vector< RunInfo >
+	RunInfoVector;
+
+typedef unsigned int
+	RunInfoVectorMapKeyType;
+
+typedef std::map< RunInfoVectorMapKeyType, RunInfoVector >
+	RunInfoVectorMap;
 
 #include <dune/common/misc.hh>
 
