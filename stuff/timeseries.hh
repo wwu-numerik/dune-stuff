@@ -78,6 +78,7 @@ class TimeSeriesOutput {
 //				assert( all vectors have same length );
 //				assert( all vectors have same timesteps );
 //			}
+			return false;
 		}
 
 		void writeTex( std::string basename )
@@ -102,7 +103,7 @@ class TimeSeriesOutput {
 				const int refine = it->second.at(0).refine_level;
 				out << 	"\\addplot[color=" << colors_[color_index] << ",mark=" << marks_[mark_index] << "]\n"
 					<< "table[x=timestep,y=" << prefix_l2_pressure_ << i << "] {" << filename_csv << "};"
-					<< "\\addlegendentry{refine " << i << "}\n";
+					<< "\\addlegendentry{refine " << refine << "}\n";
 			}
 			out << "\\end{axis} \n\\end{tikzpicture}\\\\\n";
 
@@ -123,7 +124,7 @@ class TimeSeriesOutput {
 				const int refine = it->second.at(0).refine_level;
 				out << 	"\\addplot[color=" << colors_[color_index] << ",mark=" << marks_[mark_index] << "]\n"
 					<< "table[x=timestep,y=" << prefix_l2_velocity_ << i << "] {" << filename_csv << "};"
-					<< "\\addlegendentry{refine " << i << "}\n";
+					<< "\\addlegendentry{refine " << refine << "}\n";
 			}
 			out << "\\end{axis} \n\\end{tikzpicture}\\\\\n";
 
@@ -144,7 +145,7 @@ class TimeSeriesOutput {
 				const int refine = it->second.at(0).refine_level;
 				out << 	"\\addplot[color=" << colors_[color_index] << ",mark=" << marks_[mark_index] << "]\n"
 					<< "table[x=timestep,y=" << prefix_runtime_<< i << "] {" << filename_csv << "};"
-					<< "\\addlegendentry{refine " << i << "}\n";
+					<< "\\addlegendentry{refine " << refine << "}\n";
 			}
 			out << "\\end{axis} \n\\end{tikzpicture}\\\\\n";
 		}
