@@ -33,7 +33,7 @@ namespace Dune {
 
 			virtual inline void evaluate( const typename BaseType::DomainType& x, typename BaseType::RangeType& ret ) const
 			{
-				const double t = timeProvider_.time();
+				const double t = timeProvider_.subTime();
 				CHECK_AND_CALL_INTERFACE_IMPLEMENTATION( asImp().evaluateTime( t, x, ret ) );
 			}
 
