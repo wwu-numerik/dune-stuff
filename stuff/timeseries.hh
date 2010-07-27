@@ -53,8 +53,8 @@ class TimeSeriesOutput {
 			{
 				const unsigned int refine = it->second.at(0).refine_level;
 				Logger().Info() << "Refine " << refine << ", Avg L2 Error Velocity|Pressure "
-						<< averaged_error_pressure_[it->first] << "|"
-						<< averaged_error_velocity_[it->first] << "; total runtime: "
+						<< averaged_error_velocity_[it->first] << "|"
+						<< averaged_error_pressure_[it->first] << "; total runtime: "
 						<< cummulated_runtime_ [it->first] << std::endl;
 			}
 			marks_.push_back( "|" );
