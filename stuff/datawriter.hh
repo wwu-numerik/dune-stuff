@@ -47,7 +47,7 @@ namespace Dune {
 			*/
 			void write(double time, int timestep ) const
 			{
-				if( BaseType::willWrite( time, timestep ) )
+//				if( BaseType::willWrite( time, timestep ) )
 				{
 					{
 						// check online display
