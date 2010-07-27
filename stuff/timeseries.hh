@@ -16,7 +16,9 @@ class TimeSeriesOutput {
 			vector_size_ ( runInfoVectorMap_.begin()->second.size() ),
 			prefix_l2_velocity_( "L2-Velo_" ),
 			prefix_l2_pressure_( "L2-Pres_" ),
-			prefix_runtime_( "runtime_" )
+			prefix_runtime_( "runtime_" ),
+			prefix_eoc_velocity_( "EOC_velocity" ),
+			prefix_eoc_pressure_( "EOC_pressure" )
 		{
 			const RunInfoVector& first = runInfoVectorMap_.begin()->second;
 			for ( RunInfoVector::const_iterator it = first.begin();
@@ -148,16 +150,37 @@ class TimeSeriesOutput {
 					<< "\\addlegendentry{refine " << refine << "}\n";
 			}
 			out << "\\end{axis} \n\\end{tikzpicture}\\\\\n";
+
+			const bool have_eoc = vector_count_ > 1;
+			if ( have_eoc ) {
+				std::string eoc_csv_filename = writeEOCcsv( basename );
+				out << "\\begin{tikzpicture}[scale=\\plotscale]\n"
+					<< "\\begin{axis}[\n"
+					<< "legend style={ at={(1.02,1)},anchor=north west},\n"
+					<< "xlabel=refine,\n"
+					<< "ylabel=$eoc$]\n";
+				out << 	"\\addplot[color=" << colors_[0] << ",mark=" << marks_[1] << "]\n"
+					<< "table[x=refine,y=" << prefix_eoc_velocity_ << "] {" << eoc_csv_filename << "};"
+					<< "\\addlegendentry{eoc velocity}\n";
+				out << 	"\\addplot[color=" << colors_[1] << ",mark=" << marks_[0] << "]\n"
+					<< "table[x=refine,y=" << prefix_eoc_pressure_ << "] {" << eoc_csv_filename << "};"
+					<< "\\addlegendentry{eoc pressure}\n";
+				out << "\\end{axis} \n\\end{tikzpicture}\\\\\n";
+			}
 		}
 
 	private:
 		const RunInfoVectorMap& runInfoVectorMap_;
-		std::vector<double> timesteps_;
+		typedef std::vector<double>
+			TimestepVector;
+		TimestepVector timesteps_;
 		const size_t vector_count_;
 		const size_t vector_size_;
 		const std::string prefix_l2_velocity_;
 		const std::string prefix_l2_pressure_;
 		const std::string prefix_runtime_;
+		const std::string prefix_eoc_velocity_;
+		const std::string prefix_eoc_pressure_;
 		std::vector<std::string> marks_;
 		std::vector<std::string> colors_;
 		std::map<RunInfoVectorMapKeyType,double> cummulated_runtime_;
@@ -169,8 +192,9 @@ class TimeSeriesOutput {
 			std::string filename  = basename + ".csv";
 			testCreateDirectory( pathOnly( filename ) );
 			std::ofstream out( filename.c_str() );
-			out << "timestep\t" ;
 
+			//header
+			out << "timestep\t";
 			for ( size_t i = 0; i < vector_count_; ++i )
 			{
 				out <<  prefix_l2_velocity_ << i << "\t"
@@ -179,6 +203,7 @@ class TimeSeriesOutput {
 			}
 			out << "\n";
 
+			//data
 			for ( size_t i = 0; i < vector_size_; ++i )
 			{
 				out << timesteps_[i] << "\t";
@@ -195,10 +220,52 @@ class TimeSeriesOutput {
 				out << "\n";
 			}
 			out << std::endl;
-
 			return filename;
 		}
 
+		std::string writeEOCcsv( std::string basename )
+		{
+			std::vector< std::pair<double,double > > max_errors_velocity;
+			std::vector< std::pair<double,double > > max_errors_pressure;
+			for ( RunInfoVectorMap::const_iterator mit = runInfoVectorMap_.begin();
+				  mit != runInfoVectorMap_.end();
+				  ++mit )
+			{
+				const RunInfoVector& vec = mit->second;
+				double max_velocity = std::numeric_limits<double>::min();
+				double max_pressure = std::numeric_limits<double>::min();
+
+				for ( RunInfoVector::const_iterator it = vec.begin();
+					  it != vec.end();
+					  ++it )
+				{
+					max_velocity = std::max( it->L2Errors[0], max_velocity );
+					max_pressure = std::max( it->L2Errors[1], max_pressure );
+				}
+				max_errors_velocity.push_back( std::make_pair( max_velocity, vec[0].grid_width ) );
+				max_errors_pressure.push_back( std::make_pair( max_pressure, vec[0].grid_width ) );
+			}
+
+			std::string filename = basename + ".eoc.csv";
+			testCreateDirectory( pathOnly( filename ) );
+			std::ofstream out( filename.c_str() );
+
+			out << "refine\t" << prefix_eoc_velocity_ << "\t" << prefix_eoc_pressure_ << "\n";
+			for ( size_t i = 0; i < max_errors_pressure.size()-1; ++i )
+			{
+				const double width_qout = max_errors_pressure[i].second / max_errors_pressure[i+1].second;
+				const double pressure_qout = max_errors_pressure[i].first/ max_errors_pressure[i+1].first;
+				const double velocity_qout = max_errors_velocity[i].first/ max_errors_velocity[i+1].first;
+				const double pressure_eoc = std::log( pressure_qout  ) / std::log( width_qout );
+				const double velocity_eoc = std::log( velocity_qout ) / std::log( width_qout );
+				out << i + 1 << "\t"
+					<< velocity_eoc << "\t"
+					<< pressure_eoc << "\n";
+			}
+
+			out << std::endl;
+			return filename;
+		}
 };
 
 } //namespace Stuff
