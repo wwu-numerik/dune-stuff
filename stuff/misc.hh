@@ -25,6 +25,7 @@ bool isnan( T x ) { return !(x==x); }
 #endif
 
 #include <cstring>
+#include <assert.h>
 
 char* copy(const char* s) { int l=strlen(s)+1; char* t = new char[l];  for(int i=0;i<l;i++) { t[i] = s[i]; } return t; }
 #define __CLASS__ strtok(copy(__PRETTY_FUNCTION__),"<(")
@@ -58,7 +59,6 @@ const char*  pathStuff( const char* path,  int depth = 2  )
 #include <sstream>
 #include <iomanip>
 #include <vector>
-#include <assert.h>
 #include <cmath>
 #include <cerrno>
 #include <limits>
@@ -142,11 +142,13 @@ typedef std::map< RunInfoVectorMapKeyType, RunInfoVector >
 namespace Stuff
 {
 
-template <class SomeRangeType >
+template <class SomeRangeType, class OtherRangeType >
 static double colonProduct(    const SomeRangeType& arg1,
-						const SomeRangeType& arg2 )
+						const OtherRangeType& arg2 )
 {
-	Dune::CompileTimeChecker< SomeRangeType::cols == SomeRangeType::rows > SigmaRangeType_is_not_a_square_matrix;
+	Dune::CompileTimeChecker< SomeRangeType::cols == SomeRangeType::rows
+			&& OtherRangeType::cols == OtherRangeType::rows
+			&& OtherRangeType::cols == SomeRangeType::rows> RangeTypes_dont_fit;
 
 	double ret = 0.0;
 	// iterators
