@@ -432,9 +432,9 @@ std::string readGridTypeFromDGF(  const std::string filename )
 }
 
 template < class FunctionType, class DiscreteFunctionSpaceType  >
-double meanValue( const FunctionType& function, const DiscreteFunctionSpaceType& space, const int polOrd = -1 )
+typename FunctionType::RangeType meanValue( const FunctionType& function, const DiscreteFunctionSpaceType& space, const int polOrd = -1 )
 {
-	double integral_value = 0;
+	typename FunctionType::RangeType integral_value = typename FunctionType::RangeType(0);
 	double total_volume =0;
 	typedef typename DiscreteFunctionSpaceType::Traits::GridPartType GridPartType;
 	typedef typename DiscreteFunctionSpaceType::Traits::IteratorType Iterator;
@@ -493,9 +493,81 @@ double meanValue( const FunctionType& function, const DiscreteFunctionSpaceType&
 	  }
 
 	}
-	return integral_value / total_volume;
+	integral_value /= total_volume;
+	return integral_value;
 }
 
+template < class FunctionType, class DiscreteFunctionSpaceType  >
+double boundaryIntegral( const FunctionType& function, const DiscreteFunctionSpaceType& space, const int polOrd = -1 )
+{
+	double integral_value = 0;
+	double total_volume =0;
+	typedef typename DiscreteFunctionSpaceType::Traits::GridPartType GridPartType;
+	typedef typename DiscreteFunctionSpaceType::Traits::IteratorType Iterator;
+	typedef typename DiscreteFunctionSpaceType::BaseFunctionSetType BaseFunctionSetType ;
+	typedef typename GridPartType::GridType GridType;
+
+//	typedef typename FunctionType::LocalFunctionType LocalFType;
+
+	typename DiscreteFunctionSpaceType::RangeType ret (0.0);
+
+	// type of quadrature
+	typedef Dune::CachingQuadrature<GridPartType,1> QuadratureType;
+
+	typedef Dune::LocalDGMassMatrix< DiscreteFunctionSpaceType, Dune::CachingQuadrature<GridPartType,0> > LocalMassMatrixType;
+
+	const int quadOrd = (polOrd == -1) ? (2 * space.order()) : polOrd;
+
+	// create local mass matrix object
+	LocalMassMatrixType massMatrix( space, quadOrd );
+
+	// check whether geometry mappings are affine or not
+	const bool affineMapping = massMatrix.affine();
+
+	const Iterator endit = space.end();
+	for(Iterator it = space.begin(); it != endit ; ++it)
+	{
+		// get entity
+		const typename GridType::template Codim<0>::Entity& entity = *it;
+		// get geometry
+		const typename GridType::template Codim<0>::Geometry& geo = entity.geometry();
+		total_volume += geo.volume();
+
+		typename GridPartType::IntersectionIteratorType intItEnd = space.gridPart().iend( entity );
+		for (   typename GridPartType::IntersectionIteratorType intIt = space.gridPart().ibegin( entity );
+			  intIt != intItEnd;
+			  ++intIt )
+		{
+			if ( !intIt->neighbor() && intIt->boundary() )
+			{
+				// get quadrature
+				const QuadratureType quad( space.gridPart(),
+											*intIt,
+											quadOrd,
+											QuadratureType::INSIDE );
+				const int quadNop = quad.nop();
+				for(int qP = 0; qP < quadNop ; ++qP)
+				{
+					const double intel = (affineMapping) ?
+						quad.weight(qP) : // affine case
+						quad.weight(qP) * geo.integrationElement( quad.point(qP) ); // general case
+
+					// evaluate function
+					typename DiscreteFunctionSpaceType::RangeType
+						dummy;
+					typename DiscreteFunctionSpaceType::DomainType
+						xWorld = geo.global( quad.point(qP) );
+					function.evaluate(xWorld, dummy, intIt);
+					ret = dummy;
+					ret *= intel;
+
+					integral_value += ret * intIt->unitOuterNormal( quad.localPoint(qP) ) ;
+				}
+			}
+		}
+	}
+	return integral_value;
+}
 
 }//end namespace
 
