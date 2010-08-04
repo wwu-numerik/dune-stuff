@@ -431,6 +431,72 @@ std::string readGridTypeFromDGF(  const std::string filename )
     return gridType;
 }
 
+template < class FunctionType, class DiscreteFunctionSpaceType  >
+double meanValue( const FunctionType& function, const DiscreteFunctionSpaceType& space, const int polOrd = -1 )
+{
+	double integral_value = 0;
+	double total_volume =0;
+	typedef typename DiscreteFunctionSpaceType::Traits::GridPartType GridPartType;
+	typedef typename DiscreteFunctionSpaceType::Traits::IteratorType Iterator;
+	typedef typename DiscreteFunctionSpaceType::BaseFunctionSetType BaseFunctionSetType ;
+	typedef typename GridPartType::GridType GridType;
+
+//	typedef typename FunctionType::LocalFunctionType LocalFType;
+
+	typename DiscreteFunctionSpaceType::RangeType ret (0.0);
+
+	// type of quadrature
+	typedef Dune::CachingQuadrature<GridPartType,0> QuadratureType;
+
+	typedef Dune::LocalDGMassMatrix< DiscreteFunctionSpaceType, QuadratureType > LocalMassMatrixType;
+
+	const int quadOrd = (polOrd == -1) ? (2 * space.order()) : polOrd;
+
+	// create local mass matrix object
+	LocalMassMatrixType massMatrix( space, quadOrd );
+
+	// check whether geometry mappings are affine or not
+	const bool affineMapping = massMatrix.affine();
+
+	const Iterator endit = space.end();
+	for(Iterator it = space.begin(); it != endit ; ++it)
+	{
+	  // get entity
+	  const typename GridType::template Codim<0>::Entity& en = *it;
+	  // get geometry
+	  const typename GridType::template Codim<0>::Geometry& geo = en.geometry();
+	  total_volume += geo.volume();
+
+	  // get quadrature
+	  QuadratureType quad(en, quadOrd);
+
+	  // get local function of argument
+//	  const LocalFType local_function = function.localFunction(en);
+
+	  const int quadNop = quad.nop();
+
+	  for(int qP = 0; qP < quadNop ; ++qP)
+	  {
+		const double intel = (affineMapping) ?
+			 quad.weight(qP) : // affine case
+			 quad.weight(qP) * geo.integrationElement( quad.point(qP) ); // general case
+
+		// evaluate function
+		typename DiscreteFunctionSpaceType::RangeType
+			dummy;
+		typename DiscreteFunctionSpaceType::DomainType
+			xWorld = geo.global( quad.point(qP) );
+		function.evaluate(xWorld, dummy);
+		ret =dummy;
+
+		  integral_value += intel * ret ;
+	  }
+
+	}
+	return integral_value / total_volume;
+}
+
+
 }//end namespace
 
 #endif //includeguard
