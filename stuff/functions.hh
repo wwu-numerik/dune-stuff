@@ -488,8 +488,9 @@ typename FunctionType::RangeType meanValue( const FunctionType& function, const 
 			xWorld = geo.global( quad.point(qP) );
 		function.evaluate(xWorld, dummy);
 		ret =dummy;
+		ret *= intel;
 
-		  integral_value += intel * ret ;
+		integral_value +=  ret ;
 	  }
 
 	}
