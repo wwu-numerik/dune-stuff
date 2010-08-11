@@ -432,7 +432,7 @@ std::string readGridTypeFromDGF(  const std::string filename )
 }
 
 template < class FunctionType, class DiscreteFunctionSpaceType  >
-typename FunctionType::RangeType meanValue( const FunctionType& function, const DiscreteFunctionSpaceType& space, const int polOrd = -1 )
+std::pair< typename FunctionType::RangeType, double > integralAndVolume( const FunctionType& function, const DiscreteFunctionSpaceType& space, const int polOrd = -1 )
 {
 	typename FunctionType::RangeType integral_value = typename FunctionType::RangeType(0);
 	double total_volume =0;
@@ -494,8 +494,15 @@ typename FunctionType::RangeType meanValue( const FunctionType& function, const 
 	  }
 
 	}
-	integral_value /= total_volume;
-	return integral_value;
+	return std::make_pair( integral_value, total_volume);
+}
+
+template < class FunctionType, class DiscreteFunctionSpaceType  >
+typename FunctionType::RangeType meanValue( const FunctionType& function, const DiscreteFunctionSpaceType& space, const int polOrd = -1 )
+{
+	std::pair< typename FunctionType::RangeType , double > pair = Stuff::integralAndVolume( function, space, polOrd );
+	pair.first /= pair.second;
+	return pair.first ;
 }
 
 template < class FunctionType, class DiscreteFunctionSpaceType  >
