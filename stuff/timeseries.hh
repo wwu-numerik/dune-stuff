@@ -83,16 +83,28 @@ class TimeSeriesOutput {
 			return false;
 		}
 
+		void endSubfloat(std::ofstream& out )
+		{
+			out << "\\end{axis} \n\\end{tikzpicture}}\\\\\n";
+		}
+
+		void beginSubfloat(std::ofstream& out )
+		{
+			out << "\\subfloat{\n\\begin{tikzpicture}[scale=\\plotscale]\n"
+				<< "\\begin{axis}[\n"
+				<< "legend style={ at={(1.02,1)},anchor=north west},\n";
+		}
+
 		void writeTex( std::string basename )
 		{
 			std::string filename_csv = writeCSV( basename );
 			std::string filename  = basename + ".tex";
 			std::ofstream out( filename.c_str() );
+			double dt;
+			out << "\\begin{figure}\n";
 			//pressure
-			out << "\\begin{tikzpicture}[scale=\\plotscale]\n"
-				<< "\\begin{axis}[\n"
-				<< "legend style={ at={(1.02,1)},anchor=north west},\n"
-				<< "xlabel=Zeit,\n"
+			beginSubfloat( out );
+			out << "xlabel=Zeit,\n"
 				<< "ylabel=$||p_{err}||$]\n";
 
 			size_t i = 0;
@@ -100,20 +112,21 @@ class TimeSeriesOutput {
 				  it != runInfoVectorMap_.end();
 				  ++it, ++i )
 			{
+
 				size_t color_index = i % colors_.size();
 				size_t mark_index = i % marks_.size();
 				const int refine = it->second.at(0).refine_level;
-				out << 	"\\addplot[color=" << colors_[color_index] << ",mark=" << marks_[mark_index] << "]\n"
+				const double reynolds = it->second.at(0).reynolds;
+				dt = it->second.at(0).delta_t;
+				out << "\\addplot[color=" << colors_[color_index] << ",mark=" << marks_[mark_index] << "]\n"
 					<< "table[x=timestep,y=" << prefix_l2_pressure_ << i << "] {" << filename_csv << "};"
-					<< "\\addlegendentry{refine " << refine << "}\n";
+					<< "\\addlegendentry{L " << refine << ", Re " << reynolds << "}\n";
 			}
-			out << "\\end{axis} \n\\end{tikzpicture}\\\\\n";
+			endSubfloat( out );
 
 			//velocity
-			out << "\\begin{tikzpicture}[scale=\\plotscale]\n"
-				<< "\\begin{axis}[\n"
-				<< "legend style={ at={(1.02,1)},anchor=north west},\n"
-				<< "xlabel=Zeit,\n"
+			beginSubfloat( out );
+			out << "xlabel=Zeit,\n"
 				<< "ylabel=$||u_{err}||$]\n";
 
 			i = 0;
@@ -124,17 +137,16 @@ class TimeSeriesOutput {
 				size_t color_index = i % colors_.size();
 				size_t mark_index = i % marks_.size();
 				const int refine = it->second.at(0).refine_level;
+				const double reynolds = it->second.at(0).reynolds;
 				out << 	"\\addplot[color=" << colors_[color_index] << ",mark=" << marks_[mark_index] << "]\n"
 					<< "table[x=timestep,y=" << prefix_l2_velocity_ << i << "] {" << filename_csv << "};"
-					<< "\\addlegendentry{refine " << refine << "}\n";
+					<< "\\addlegendentry{L " << refine << ", Re " << reynolds << "}\n";
 			}
-			out << "\\end{axis} \n\\end{tikzpicture}\\\\\n";
+			endSubfloat( out );
 
 			//runtime
-			out << "\\begin{tikzpicture}[scale=\\plotscale]\n"
-				<< "\\begin{axis}[\n"
-				<< "legend style={ at={(1.02,1)},anchor=north west},\n"
-				<< "xlabel=Zeit,\n"
+			beginSubfloat( out );
+			out << "xlabel=Zeit,\n"
 				<< "ylabel=$t_{step}$]\n";
 
 			i = 0;
@@ -145,12 +157,15 @@ class TimeSeriesOutput {
 				size_t color_index = i % colors_.size();
 				size_t mark_index = i % marks_.size();
 				const int refine = it->second.at(0).refine_level;
+				const double reynolds = it->second.at(0).reynolds;
 				out << 	"\\addplot[color=" << colors_[color_index] << ",mark=" << marks_[mark_index] << "]\n"
 					<< "table[x=timestep,y=" << prefix_runtime_<< i << "] {" << filename_csv << "};"
-					<< "\\addlegendentry{refine " << refine << "}\n";
+					<< "\\addlegendentry{L " << refine << ", Re " << reynolds << "}\n";
 			}
-			out << "\\end{axis} \n\\end{tikzpicture}\\\\\n";
+			endSubfloat( out );
 
+			out << "\\caption{dt " << dt << "}"
+				<< "\n\\end{figure}\n";
 			const bool have_eoc = vector_count_ > 1;
 			if ( have_eoc ) {
 				std::string eoc_csv_filename = writeEOCcsv( basename );
