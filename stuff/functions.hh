@@ -576,6 +576,20 @@ double boundaryIntegral( const FunctionType& function, const DiscreteFunctionSpa
 	}
 	return integral_value;
 }
+template <class DiscreteFunctionType>
+void invertFunctionDofs( DiscreteFunctionType& function )
+{
+	typedef typename DiscreteFunctionType::DofIteratorType
+		DofIteratorType;
+
+    DofIteratorType it = function.dbegin();
+    for( ; it != function.dend(); ++it )
+    {
+	    if (*it != 0.0 )
+			*it = 1/(*it);
+    }
+    return;
+}
 
 }//end namespace
 
