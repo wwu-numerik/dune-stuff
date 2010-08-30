@@ -591,6 +591,34 @@ void invertFunctionDofs( DiscreteFunctionType& function )
     return;
 }
 
-}//end namespace
+template <class DiscreteFunctionType>
+bool FunctionContainsNanOrInf( const DiscreteFunctionType& function )
+{
+	typedef typename DiscreteFunctionType::ConstDofIteratorType
+		DofIteratorType;
+
+	DofIteratorType it = function.dbegin();
+	for( ; it != function.dend(); ++it )
+	{
+		if ( std::isnan(*it) || std::isinf(*it) )
+			return true;
+	}
+	return false;
+}
+
+template < class MatrixType >
+bool MatrixContainsNanOrInf( const MatrixType& matrix )
+{
+	for(int row=0; row < matrix.size(0); ++row) {
+		for(int col=0; col < matrix.size(1); ++col) {
+			if ( std::isnan( matrix(row,col) ) || std::isinf( matrix(row,col) ) )
+				return true;
+		}
+	}
+	return false;
+}
+
+
+}//end namespace Stuff
 
 #endif //includeguard
