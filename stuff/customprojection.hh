@@ -7,6 +7,9 @@
 #include <dune/fem/function/common/discretefunctionadapter.hh>
 #include <dune/fem/operator/1order/localmassmatrix.hh>
 
+#include <boost/foreach.hpp>
+#define foreach         BOOST_FOREACH
+
 namespace Stuff {
 
 /** A custom projection of an analytical function that uses a non-standard evalute signature:\n
@@ -47,10 +50,8 @@ public:
 		const DiscreteFunctionSpace& space_ = discFunc.space();
 		const GridPart& gridPart_ = space_.gridPart();
 		RangeType phi (0.0);
-		EntityIteratorType entityItEndLog = space_.end();
-		for (   EntityIteratorType it = space_.begin();
-				it != entityItEndLog;
-				++it )
+
+		foreach (   EntityIteratorType it, space_ )
 		{
 			EntityType& e = *it;
 			LocalFunctionType lf = discFunc.localFunction( e );
