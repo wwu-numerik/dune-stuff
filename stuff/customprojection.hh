@@ -7,6 +7,7 @@
 #include <dune/fem/function/common/discretefunctionadapter.hh>
 #include <dune/fem/operator/1order/localmassmatrix.hh>
 
+#include <boost/typeof/typeof.hpp>
 #include <boost/foreach.hpp>
 #define foreach         BOOST_FOREACH
 
@@ -48,7 +49,7 @@ public:
 		typedef typename DiscreteFunctionSpace::RangeType
 			RangeType;
 		const DiscreteFunctionSpace& space_ = discFunc.space();
-		const GridPart& gridPart_ = space_.gridPart();
+		const BOOST_AUTO( gridPart_ , space_.gridPart() );
 		RangeType phi (0.0);
 
 		foreach (   EntityIteratorType it, space_ )
