@@ -443,6 +443,16 @@ class Logging
             return ctime ( &cur_time );
         }
 
+		void Flush()
+		{
+			for ( StreamMap::iterator it = streammap_.begin();
+				it != streammap_.end();
+				++it )
+			{
+				it->second->Flush();
+			}
+		}
+
         int AddStream( int flags )
         {
 //            assert( streamIDs_.find( streamID ) == streamIDs_.end() );
