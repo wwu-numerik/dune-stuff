@@ -6,23 +6,36 @@
 #include <dune/stuff/logging.hh>
 
 namespace Stuff {
-	void handleInterrupt(int signal)
-	{
-		Logger().Info() << "forcefully terminated at " << Logging::TimeString() << std::endl;
-		Logger().Flush();
-		exit(signal);
-	}
+	namespace Signals {
+		void resetSignal(int signal)
+		{
+			struct sigaction new_action;
+			new_action.sa_handler = SIG_DFL;
+			sigemptyset (&new_action.sa_mask);
+			new_action.sa_flags = 0;
+			sigaction (signal, &new_action, NULL);
+		}
 
-	void installSignalHandlers()
-	{
-		struct sigaction new_action;
+		void handleInterrupt(int signal)
+		{
+			Logger().Info() << "forcefully terminated at " << Logging::TimeString() << std::endl;
+			Logger().Flush();
+			//reset signal handler and commit suicide
+			resetSignal(signal);
+			kill(getpid(), signal);
+		}
 
-		/* Set up the structure to specify the new action. */
-		new_action.sa_handler = handleInterrupt;
-		sigemptyset (&new_action.sa_mask);
-		new_action.sa_flags = 0;
+		void installSignalHandlers()
+		{
+			struct sigaction new_action;
 
-		sigaction (SIGINT, &new_action, NULL);
-	}
+			/* Set up the structure to specify the new action. */
+			new_action.sa_handler = handleInterrupt;
+			sigemptyset (&new_action.sa_mask);
+			new_action.sa_flags = 0;
+
+			sigaction (SIGINT, &new_action, NULL);
+		}
+	}//end namespace signals
 } //end namepsace stuff
 #endif
