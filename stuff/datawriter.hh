@@ -114,6 +114,9 @@ namespace Dune {
 					template <class DFType>
 					void visit(DFType* f)
 					{
+						if (!f)
+							return;
+
 						std::string name = genFilename( (parallel_) ? "" : path_, f->name(), step_ );
 						if ( DFType::FunctionSpaceType::DimRange > 1 ) {
 							vtkOut_.addVectorVertexData( *f );
@@ -185,6 +188,9 @@ namespace Dune {
 			template <class DFType>
 			void writeVTKOutput(const DFType* func) const
 			{
+
+				if( !func )
+					return;
 
 				// check whether we have parallel run
 				const bool parallel = (grid_.comm().size() > 1);
