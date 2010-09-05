@@ -22,8 +22,11 @@ double getLenghtOfIntersection( const IntersectionType& intersection )
     return intersectionGeoemtry.volume();
 }
 
+/** \brief grid statistic output to given stream
+  \todo not require a space to be passed
+  */
 template < class GridPartType, class DiscreteFunctionSpaceType, class OutStream >
-void getGridInformation( GridPartType& gridPart, DiscreteFunctionSpaceType& space, OutStream& out )
+void printGridInformation( GridPartType& gridPart, DiscreteFunctionSpaceType& space, OutStream& out )
 {
     int numberOfEntities( 0 );
     int numberOfIntersections( 0 );
@@ -43,8 +46,8 @@ void getGridInformation( GridPartType& gridPart, DiscreteFunctionSpaceType& spac
     typedef typename GridPartType::IntersectionIteratorType
         IntersectionIteratorType;
 
-    EntityIteratorType entityItEndLog = space.end();
-    for (   EntityIteratorType entityItLog = space.begin();
+	EntityIteratorType entityItEndLog = space.end();
+	for (   EntityIteratorType entityItLog = space.begin();
             entityItLog != entityItEndLog;
             ++entityItLog ) {
         const EntityType& entity = *entityItLog;
@@ -79,6 +82,9 @@ void getGridInformation( GridPartType& gridPart, DiscreteFunctionSpaceType& spac
 
 
 
+/** \brief lets you apply a Functor to each entity
+  \todo not require a space to be passed
+  */
 template < class Space, int codim = 0 >
 class GridWalk {
     private:
@@ -138,6 +144,7 @@ class GridWalk {
         EntityIdxMap entityIdxMap_;
 };
 
+//! gets barycenter of given geometry in local coordinates
 template < class GeometryType >
 Dune::FieldVector< typename GeometryType::ctype, GeometryType::mydimension >  getBarycenterLocal( const GeometryType& geometry )
 {
@@ -150,6 +157,7 @@ Dune::FieldVector< typename GeometryType::ctype, GeometryType::mydimension >  ge
     return center;
 }
 
+//! gets barycenter of given geometry in global coordinates
 template < class GeometryType >
 Dune::FieldVector< typename GeometryType::ctype, GeometryType::coorddimension >  getBarycenterGlobal( const GeometryType& geometry )
 {

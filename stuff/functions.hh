@@ -12,6 +12,7 @@
 
 namespace Stuff{
 
+//! (inplace) multiplies given function with matrix diagonal
 template < class Matrix, class Function >
 void DiagonalMult( const Matrix& matrix, Function& f )
 {
@@ -36,7 +37,6 @@ void DiagonalMult( const Matrix& matrix, Function& f )
  *  \brief  gets min and max of a Dune::DiscreteFunction
  *
  *          or compatible in terms of iterators
- *  \todo   doc
  *  \attention  works only for constant base function = sqrt(2) atm
  **/
 template < class FunctionType >
@@ -57,24 +57,25 @@ void getMinMaxOfDiscreteFunction(   const FunctionType& function,
     }
 }
 
+//! count dofs of f1,f2 with abs(f1[i] - f2[i]) > tolerance
 template < class FunctionType >
 unsigned int getNumDiffDofs(    const FunctionType& f1,
                         const FunctionType& f2,
                         const double tolerance )
 {
-    assert( f1.size() == f2.size() ); //should be implicit cause their of same type...
+	assert( f1.size() == f2.size() ); //should be implicit cause they're of the same type...
     unsigned int numDiffs = 0;
     typedef typename FunctionType::ConstDofIteratorType
         ConstDofIteratorType;
     ConstDofIteratorType  itEnd = f1.dend();
     ConstDofIteratorType  f2it  = f2.dbegin();
-    // find minimum and maximum
     for ( ConstDofIteratorType f1it = f1.dbegin(); f1it != itEnd; ++f1it, ++f2it ) {
         numDiffs += ( std::fabs( *f1it - *f2it ) > tolerance );
     }
     return numDiffs ;
 }
 
+//! shift each dof by scalar
 template < class Function >
 void addScalarToFunc( Function& f, double sc )
 {
@@ -85,19 +86,21 @@ void addScalarToFunc( Function& f, double sc )
     return;
 }
 
+//! returns arithmetic mean of function's dofs
 template < class Function >
-double getFuncAvg( const Function& f )
+typename Function::FieldType getFuncAvg( const Function& f )
 {
     typedef typename Function::ConstDofIteratorType DofIteratorType;
     DofIteratorType it = f.dbegin();
-    const unsigned int numdofs = f.size();
-    double sum = 0;
+	const unsigned int numdofs = f.size();
+	typename Function::FieldType sum = 0;
     for ( ; it != f.dend(); ++it )
         sum += *it;
     sum /= double(numdofs);
     return sum;
 }
 
+//! inverts dof order
 template < class Function >
 void switchDofs( Function& f )
 {
@@ -113,7 +116,7 @@ void switchDofs( Function& f )
     return;
 }
 
-
+/** \todo FELIX needs to doc me **/
 template <  class DiscreteFunctionType,
             class ErrorStream >
 int saveDiscreteFunction(   const DiscreteFunctionType& discreteFunction,
@@ -185,6 +188,7 @@ int saveDiscreteFunction(   const DiscreteFunctionType& discreteFunction,
     return errorState;
 }
 
+/** \todo FELIX needs to doc me **/
 template <  class DiscreteFunctionType,
             class ErrorStream >
 int loadDiscreteFunction(   const std::string loadFromfilenamePrefix,
@@ -302,6 +306,7 @@ int loadDiscreteFunction(   const std::string loadFromfilenamePrefix,
     return errorState;
 }
 
+/** \todo FELIX needs to doc me **/
 int readRefineLevelFromDGF(  const std::string filename )
 {
     std::string gridType( "" );
@@ -368,6 +373,7 @@ int readRefineLevelFromDGF(  const std::string filename )
     return refineLevel;
 }
 
+/** \todo FELIX needs to doc me **/
 std::string readGridTypeFromDGF(  const std::string filename )
 {
     std::string gridType( "no_gridtype_found_in " + filename );
@@ -432,6 +438,7 @@ std::string readGridTypeFromDGF(  const std::string filename )
     return gridType;
 }
 
+/** \todo RENE needs to doc me **/
 template < class FunctionType, class DiscreteFunctionSpaceType  >
 std::pair< typename FunctionType::RangeType, double > integralAndVolume( const FunctionType& function, const DiscreteFunctionSpaceType& space, const int polOrd = -1 )
 {
@@ -498,6 +505,7 @@ std::pair< typename FunctionType::RangeType, double > integralAndVolume( const F
 	return std::make_pair( integral_value, total_volume);
 }
 
+/** \todo RENE needs to doc me **/
 template < class FunctionType, class DiscreteFunctionSpaceType  >
 typename FunctionType::RangeType meanValue( const FunctionType& function, const DiscreteFunctionSpaceType& space, const int polOrd = -1 )
 {
@@ -506,6 +514,7 @@ typename FunctionType::RangeType meanValue( const FunctionType& function, const 
 	return pair.first ;
 }
 
+/** \todo RENE needs to doc me **/
 template < class FunctionType, class DiscreteFunctionSpaceType  >
 double boundaryIntegral( const FunctionType& function, const DiscreteFunctionSpaceType& space, const int polOrd = -1 )
 {
@@ -577,6 +586,8 @@ double boundaryIntegral( const FunctionType& function, const DiscreteFunctionSpa
 	}
 	return integral_value;
 }
+
+/** \todo RENE needs to doc me **/
 template <class DiscreteFunctionType>
 void invertFunctionDofs( DiscreteFunctionType& function )
 {
@@ -592,6 +603,7 @@ void invertFunctionDofs( DiscreteFunctionType& function )
     return;
 }
 
+//! return true if any dof is nan or inf
 template <class DiscreteFunctionType>
 bool FunctionContainsNanOrInf( const DiscreteFunctionType& function )
 {
@@ -607,6 +619,7 @@ bool FunctionContainsNanOrInf( const DiscreteFunctionType& function )
 	return false;
 }
 
+//! return true if any entry is nan or inf
 template < class MatrixType >
 bool MatrixContainsNanOrInf( const MatrixType& matrix )
 {

@@ -15,12 +15,11 @@ namespace Stuff {
 
 /** A custom projection of an analytical function that uses a non-standard evalute signature:\n
 		<pre>template < class IntersectionIteratorType >\n
-		void evaluate( const DomainType& arg, RangeType& ret, const IntersectionIteratorType& faceIter ) const<pre>\n
+		void evaluate( const DomainType& arg, RangeType& ret, const IntersectionIteratorType& faceIter ) const</pre>\n
 	\note example being our boundary functions
 	\note output currently somewhat meaningless
 	\see analyticaldata.hh
 **/
-
 class CustomProjection {
 
 public:
@@ -89,6 +88,7 @@ public:
 }//end namespace Stuff
 
 namespace Dune {
+//! basically the fem L2Projection with a function evaluate that converts between compatible types instead of failing
 class BetterL2Projection {
 public:
 	template <class FunctionImp, class DiscreteFunctionImp>

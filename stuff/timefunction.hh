@@ -4,6 +4,9 @@
 #include <dune/fem/function/common/function.hh>
 
 namespace Dune {
+	/** \brief a Base class for Dune::Function compatible classes that need automatic time awareness via TimeProvider
+	  *
+	  **/
 	template < class FunctionSpaceImp, class FunctionImp, class TimeProviderImp >
 	class TimeFunction :
 				public BartonNackmanInterface< TimeFunction < FunctionSpaceImp, FunctionImp, TimeProviderImp >,

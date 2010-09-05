@@ -5,7 +5,9 @@
 
 namespace Dune {
 
-	//! TimeproviderType can only be FractionalTimeProvider atm
+	/** \brief a Dune::DataWriter derivative that handles current time internaly via passed Dune::Timeprovider
+		\note TimeproviderType can only be FractionalTimeProvider atm
+		**/
 	template < class TimeproviderType, class GridType, class OutputTupleType >
 	class TimeAwareDataWriter : public DataWriter< GridType, OutputTupleType >{
 		protected:

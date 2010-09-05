@@ -6,7 +6,9 @@
 
 namespace Stuff {
 
-
+/** \brief mnice tex graph output for a time dependent simulation
+	\todo use more boost::format
+  **/
 class TimeSeriesOutput {
 
 	public:

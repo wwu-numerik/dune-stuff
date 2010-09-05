@@ -143,6 +143,7 @@ typedef std::map< RunInfoVectorMapKeyType, RunInfoVector >
 namespace Stuff
 {
 
+/** \todo DOCME **/
 template <class SomeRangeType, class OtherRangeType >
 static double colonProduct(    const SomeRangeType& arg1,
 						const OtherRangeType& arg2 )

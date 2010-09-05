@@ -9,8 +9,9 @@ namespace Stuff {
 
 /** \brief A Dune::Function derived class that allows almost arbitrary function evaluations in a parameter file.
 	\note Yes, this means no more recompiling to change your right-hand side, intial value or whatever functions.
+
 	All you need to provide in your parameter file is for each function a block like this:
-	\codeline NAME_{x,y,z}: expression
+	<pre> NAME_{x,y,z}: expression</pre>
 	where y,z are optional depending on the dimensionality of the parametrizing function space.
 	You can use x,y,z,t in your expression and they'll be properly replaced with current function args when the function is evaluated.
 	For list of available functions see: mathexpr.h
