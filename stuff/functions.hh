@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <fstream>
+#include <limits>
 
 #include <dune/grid/io/file/dgfparser/dgfparser.hh> //for GridPtr
 #include <dune/fem/io/file/vtkio.hh>
@@ -44,8 +45,8 @@ void getMinMaxOfDiscreteFunction(   const FunctionType& function,
                                     double& max )
 {
     // preparations
-    min = 0.0;
-    max = 0.0;
+	min = std::numeric_limits<double>::min();
+	max = std::numeric_limits<double>::max();
     typedef typename FunctionType::ConstDofIteratorType
         ConstDofIteratorType;
     ConstDofIteratorType  itEnd = function.dend();
