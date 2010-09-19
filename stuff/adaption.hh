@@ -17,7 +17,7 @@ template < class DiscreteStokesFunctionWrapperImp >
 class DiscreteStokesFunctionWrapperAdaptionManager : public Stuff::InstanceCounter< DiscreteStokesFunctionWrapperAdaptionManager<DiscreteStokesFunctionWrapperImp> >
 {
 	 protected:
-		typedef InstanceCounter< DiscreteStokesFunctionWrapperAdaptionManager<DiscreteStokesFunctionWrapperImp> >
+		typedef Stuff::InstanceCounter< DiscreteStokesFunctionWrapperAdaptionManager<DiscreteStokesFunctionWrapperImp> >
 			InstanceCounterType;
 		typedef typename DiscreteStokesFunctionWrapperImp::GridType
 			GridType;
