@@ -44,7 +44,7 @@ public:
 		typedef typename DiscreteFunctionSpace::RangeType
 			RangeType;
 		const DiscreteFunctionSpace& space_ = discFunc.space();
-		const BOOST_AUTO( gridPart_ , space_.gridPart() );
+		const GridPart& gridPart_ = space_.gridPart();
 		RangeType phi (0.0);
 		EntityIteratorType entityItEndLog = space_.end();
 		for (   EntityIteratorType it = space_.begin();
