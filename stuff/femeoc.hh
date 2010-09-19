@@ -86,6 +86,7 @@ class FemEoc
 		  main	<< "\\documentclass[10pt,english]{article}\n"
 				<< "\\usepackage{fontenc}\n"
 				<< "\\usepackage{vmargin}\n"
+				<< "\\usepackage{longtable}\n"
 				<< "\\setpapersize[landscape]{A4}\n"
 				<< "\\usepackage[latin1]{inputenc}\n"
 				<< "\\usepackage{setspace}\n"
