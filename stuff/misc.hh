@@ -109,7 +109,7 @@ struct RunInfo
     int iterations_outer_total;
     double max_inner_accuracy;
 	std::string problemIdentifier;
-	double current_time, delta_t, viscosity, reynolds;
+	double current_time, delta_t, viscosity, reynolds, alpha;
 
 	RunInfo() {
 		refine_level = codim0 = polorder_velocity
@@ -119,7 +119,7 @@ struct RunInfo
 		bfg = true;
 		bfg_tau = max_inner_accuracy = grid_width
 				= solver_accuracy = run_time
-				= inner_solver_accuracy = -1.0;
+				= alpha = inner_solver_accuracy = -1.0;
 		gridname = problemIdentifier = "UNSET";
 		extra_info = "";
 		delta_t = 0.1;
@@ -379,7 +379,9 @@ class EocOutput : public TexOutputBase<RunInfo>
                 << "\\\\"
                 << " Polorder (u,p,$ \\sigma $): (" << info_.polorder_velocity << ", "<< info_.polorder_pressure << ", "<< info_.polorder_sigma << " ) "
                 << " Loeser Genauigkeit: " << info_.solver_accuracy
-                << "}\\\\  \n"
+				<< ", $\\alpha = " << info_.alpha
+				<< "$, $\\mu = " << info_.viscosity
+				<< "$}\\\\  \n"
                 << "\\hline \n";
 
             for (unsigned int i=0;i<statColSize;i++) {
