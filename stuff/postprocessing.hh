@@ -18,6 +18,8 @@
 
 #include <dune/fem/misc/l2norm.hh>
 #include <dune/fem/misc/l2error.hh>
+#include <dune/stuff/functions.hh>
+#include <boost/format.hpp>
 #include <cmath>
 #include <sstream>
 
@@ -215,9 +217,15 @@ class PostProcessor
             l2_error_pressure_ = l2_Error.norm( errorFunc_pressure_ );
             l2_error_velocity_ = l2_Error.norm( errorFunc_velocity_ );
 
+			const double boundaryInt = Stuff::boundaryIntegral( problem_.dirichletData(), discreteExactVelocity_.space() );
+			const double pressureMean = Stuff::integralAndVolume( pressure, pressure.space() ).first;
+			const double exactPressureMean = Stuff::integralAndVolume( problem_.pressure(), discreteExactPressure_.space() ).first;
+
             Logger().Info().Resume();
             Logger().Info() << "L2-Error Pressure: " << std::setw(8) << l2_error_pressure_ << "\n"
-                            << "L2-Error Velocity: " << std::setw(8) << l2_error_velocity_ << std::endl;
+                            << "L2-Error Velocity: " << std::setw(8) << l2_error_velocity_ << "\n"
+							<< boost::format( "Pressure volume integral: %f (discrete), %f (exact)\n") % pressureMean % exactPressureMean
+							<< boost::format( "g_D boundary integral: %f\n") % boundaryInt;
         }
 
 		//! used to sore errors in runinfo structure (for eoc latex output)
