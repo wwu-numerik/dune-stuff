@@ -99,7 +99,7 @@ class TimeSeriesOutput {
 
 		void writeTex( std::string basename )
 		{
-			std::string filename_csv = writeCSV( basename );
+			std::string filename_csv = filenameOnly( writeCSV( basename ) );
 			std::string filename  = basename + ".tex";
 			std::ofstream out( filename.c_str() );
 			double dt;
@@ -170,7 +170,7 @@ class TimeSeriesOutput {
 				<< "\n\\end{figure}\n";
 			const bool have_eoc = vector_count_ > 1;
 			if ( have_eoc ) {
-				std::string eoc_csv_filename = writeEOCcsv( basename );
+				std::string eoc_csv_filename = filenameOnly( writeEOCcsv( basename ) );
 				out << "\\begin{tikzpicture}[scale=\\plotscale]\n"
 					<< "\\begin{axis}[\n"
 					<< "legend style={ at={(1.02,1)},anchor=north west},\n"
