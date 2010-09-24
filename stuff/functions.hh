@@ -45,8 +45,8 @@ void getMinMaxOfDiscreteFunction(   const FunctionType& function,
                                     double& max )
 {
     // preparations
-	min = std::numeric_limits<double>::min();
-	max = std::numeric_limits<double>::max();
+	min = std::numeric_limits<double>::max();
+	max = std::numeric_limits<double>::min();
     typedef typename FunctionType::ConstDofIteratorType
         ConstDofIteratorType;
     ConstDofIteratorType  itEnd = function.dend();
