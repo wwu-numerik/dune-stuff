@@ -936,6 +936,19 @@ template <typename T> T clamp(const T var,const T min,const T max)
 	return ( (var < min) ? min : ( var > max ) ? max : var );
 }
 
+struct TimeGuard {
+	const time_t cur_time;
+	TimeGuard()
+		:cur_time ( time( NULL ) )
+	{}
+	~TimeGuard()
+	{
+		time_t delta = time( NULL ) -  cur_time;
+		std::cout << ctime ( &delta ) << std::endl;
+	}
+};
+
 } // end namepspace stuff
+
 
 #endif // end of stuff.hh
