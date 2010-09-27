@@ -88,9 +88,62 @@ public:
 namespace Dune {
 //! basically the fem L2Projection with a function evaluate that converts between compatible types instead of failing
 class BetterL2Projection {
+protected:
+	template < class FunctionType >
+	struct DefaultEvaluationFunctor;
 public:
 	template <class FunctionImp, class DiscreteFunctionImp>
 	static void project(const FunctionImp& func,
+								DiscreteFunctionImp& discFunc,
+								int polOrd = -1)
+	{
+		CompileTimeChecker< !Conversion<FunctionImp, IsDiscreteFunction> ::exists > TimeAwareL2Projection_not_implemented_for_discrete_source_functions;
+		DefaultEvaluationFunctor< FunctionImp > functor( func );
+		projectCommon( functor, discFunc, polOrd );
+	}
+	template < class TimeProviderType, class FunctionImp, class DiscreteFunctionImp>
+	static void project(	const TimeProviderType& timeProvider,
+							const FunctionImp& func,
+							DiscreteFunctionImp& discFunc,
+							int polOrd = -1)
+	{
+		CompileTimeChecker< !Conversion<FunctionImp, IsDiscreteFunction> ::exists > TimeAwareL2Projection_not_implemented_for_discrete_source_functions;
+		TimeEvaluationFunctor< FunctionImp, TimeProviderType > functor( func, timeProvider );
+		projectCommon( functor, discFunc, polOrd );
+	}
+
+protected:
+	template < class FunctionType >
+	struct DefaultEvaluationFunctor
+	{
+		const FunctionType& function_;
+		DefaultEvaluationFunctor( const FunctionType& function )
+			:function_( function )
+		{}
+
+		void evaluate( const typename FunctionType::DomainType& arg, typename FunctionType::RangeType& ret ) const
+		{
+			function_.evaluate( arg, ret );
+		}
+	};
+	template < class FunctionType, class TimeProviderType >
+	struct TimeEvaluationFunctor
+	{
+		const FunctionType& function_;
+		const TimeProviderType& timeProvider_;
+		TimeEvaluationFunctor(	const FunctionType& function,
+								const TimeProviderType& timeProvider)
+			:function_( function ),
+			timeProvider_( timeProvider )
+		{}
+		void evaluate( const typename FunctionType::DomainType& arg, typename FunctionType::RangeType& ret ) const
+		{
+			function_.evaluate( timeProvider_.subTime(), arg, ret );
+		}
+	};
+
+	template < class DiscreteFunctionImp, class EvaluationFunctorType >
+	static void projectCommon(	const EvaluationFunctorType& evalutionFunctor,
 								DiscreteFunctionImp& discFunc,
 								int polOrd = -1)
 	{
@@ -101,7 +154,7 @@ public:
 	  typedef typename DiscreteFunctionSpaceType::BaseFunctionSetType BaseFunctionSetType ;
 	  typedef typename GridPartType::GridType GridType;
 
-	  typedef typename FunctionImp::LocalFunctionType LocalFType;
+//	  typedef typename FunctionImp::LocalFunctionType LocalFType;
 
 	  typename DiscreteFunctionSpaceType::RangeType ret (0.0);
 	  typename DiscreteFunctionSpaceType::RangeType phi (0.0);
@@ -136,8 +189,6 @@ public:
 
 		// get local function of destination
 		LocalFuncType lf = discFunc.localFunction(en);
-		// get local function of argument
-		const LocalFType f = func.localFunction(en);
 
 		// get base function set
 		const BaseFunctionSetType & baseset = lf.baseFunctionSet();
@@ -152,10 +203,8 @@ public:
 			   quad.weight(qP) * geo.integrationElement( quad.point(qP) ); // general case
 
 		  // evaluate function
-		  typename FunctionImp::DiscreteFunctionSpaceType::RangeType
-				  dummy;
-		  f.evaluate(quad[qP], dummy);
-		  ret =dummy;
+		  typename DiscreteFunctionSpaceType::DomainType x = geo.global( quad.point( qP ) );
+		  evalutionFunctor.evaluate( x, ret );
 
 		  // do projection
 		  for(int i=0; i<numDofs; ++i)
