@@ -25,6 +25,7 @@ bool isnan( T x ) { return !(x==x); }
 #endif
 
 #include <cstring>
+#include <map>
 #include <assert.h>
 
 char* copy(const char* s) { int l=strlen(s)+1; char* t = new char[l];  for(int i=0;i<l;i++) { t[i] = s[i]; } return t; }

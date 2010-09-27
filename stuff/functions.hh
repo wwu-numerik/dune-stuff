@@ -619,6 +619,23 @@ bool FunctionContainsNanOrInf( const DiscreteFunctionType& function )
 	return false;
 }
 
+//! return true if any dof is nan or inf
+template <class DiscreteFunctionType>
+void divideFunctionDofs( DiscreteFunctionType& target, const DiscreteFunctionType& divider )
+{
+	typedef typename DiscreteFunctionType::ConstDofIteratorType
+		CDofIteratorType;
+	typedef typename DiscreteFunctionType::DofIteratorType
+		DofIteratorType;
+
+	DofIteratorType it = target.dbegin();
+	CDofIteratorType cit = divider.dbegin();
+	for( ; it != target.dend(); ++it,++cit )
+	{
+		*it /= *cit;
+	}
+}
+
 //! return true if any entry is nan or inf
 template < class MatrixType >
 bool MatrixContainsNanOrInf( const MatrixType& matrix )
