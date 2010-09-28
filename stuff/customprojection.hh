@@ -141,6 +141,21 @@ protected:
 			function_.evaluate( timeProvider_.subTime(), arg, ret );
 		}
 	};
+	template < class FunctionType >
+	struct TimeEvaluationFunctor<FunctionType,double>
+	{
+		const FunctionType& function_;
+		const double time_;
+		TimeEvaluationFunctor(	const FunctionType& function,
+								const double time )
+			:function_( function ),
+			time_( time )
+		{}
+		void evaluate( const typename FunctionType::DomainType& arg, typename FunctionType::RangeType& ret ) const
+		{
+			function_.evaluate( time_, arg, ret );
+		}
+	};
 
 	template < class DiscreteFunctionImp, class EvaluationFunctorType >
 	static void projectCommon(	const EvaluationFunctorType& evalutionFunctor,
