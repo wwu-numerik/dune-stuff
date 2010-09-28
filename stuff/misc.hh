@@ -139,6 +139,7 @@ typedef unsigned int
 typedef std::map< RunInfoVectorMapKeyType, RunInfoVector >
 	RunInfoVectorMap;
 
+#include <cstdio>
 #include <dune/common/misc.hh>
 
 namespace Stuff

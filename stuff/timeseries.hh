@@ -1,6 +1,7 @@
 #ifndef DUNE_STUFF_TIMESERIES_HH
 #define DUNE_STUFF_TIMESERIES_HH
 
+#include <cstdio>
 #include <dune/stuff/misc.hh>
 #include <dune/stuff/logging.hh>
 
