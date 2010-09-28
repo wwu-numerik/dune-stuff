@@ -40,6 +40,11 @@ namespace Dune {
 				CHECK_AND_CALL_INTERFACE_IMPLEMENTATION( asImp().evaluateTime( t, x, ret ) );
 			}
 
+			virtual inline void evaluate( double time, const typename BaseType::DomainType& x, typename BaseType::RangeType& ret ) const
+			{
+				CHECK_AND_CALL_INTERFACE_IMPLEMENTATION( asImp().evaluateTime( time, x, ret ) );
+			}
+
 			/** \brief evaluate the Jacobian of the function
 			 *
 			 *  \param[in]  x    evaluation point
