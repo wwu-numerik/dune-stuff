@@ -6,9 +6,12 @@
 #include <utility>
 
 namespace Stuff {
-	template <class GridPartType >
+	/** \brief Class that facilitates getting absolute and relative error of a pair of DisceteFunctions
+		\tparam NormType
+	  **/
+	template <class GridPartType, class NormType = Dune::L2Norm<GridPartType> >
 	class L2Error {
-			typedef Dune::L2Norm< GridPartType >
+			typedef NormType
 				L2NormType;
 			L2NormType l2norm_;
 
