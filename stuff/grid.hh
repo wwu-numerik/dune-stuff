@@ -84,6 +84,8 @@ void printGridInformation( GridPartType& gridPart, DiscreteFunctionSpaceType& sp
 
 /** \brief lets you apply a Functor to each entity
   \todo not require a space to be passed
+  \todo allow stacking of operators to save gridwalks
+  \todo threadsafe maps (haha:P)
   */
 template < class Space, int codim = 0 >
 class GridWalk {
@@ -98,7 +100,7 @@ class GridWalk {
             EntityPointer;
 
     public:
-        GridWalk ( Space& gp )
+        GridWalk ( const Space& gp )
             : space_(gp),
             gridPart_( gp.gridPart() )
         {
@@ -113,7 +115,7 @@ class GridWalk {
         }
 
 		template < class Functor >
-		void operator () ( Functor& f )
+		void operator () ( Functor& f ) const
 		{
 			f.preWalk();
 			EntityIteratorType entityItEndLog = space_.end();
@@ -137,8 +139,8 @@ class GridWalk {
 		}
 
     private:
-        Space& space_;
-        GridPart& gridPart_;
+        const Space& space_;
+        const GridPart& gridPart_;
         typedef std::vector< EntityPointer >
             EntityIdxMap;
         EntityIdxMap entityIdxMap_;
