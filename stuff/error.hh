@@ -44,12 +44,7 @@ namespace Stuff {
 			Errors get( const DiscreteFunctionType& function_A, const DiscreteFunctionType& function_B  ) const
 			{
 				DiscreteFunctionType tmp("L2Error::tmp", function_A.space() );
-				tmp.assign( function_A );
-				tmp -= function_B;
-				const double abs = l2norm_.norm( tmp );
-				return Errors ( abs,
-								abs / l2norm_.norm( function_B ),
-								function_A.name() );
+				return get( function_A, function_B, tmp );
 			}
 
 			template < class DiscreteFunctionType >
