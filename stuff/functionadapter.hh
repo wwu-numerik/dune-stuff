@@ -3,9 +3,15 @@
 
 #include <vector>
 #include <boost/shared_ptr.hpp>
+#include <dune/stuff/printing.hh>
 
 namespace Stuff {
 
+/** DiscreteFunction container \f$G\f$ that takes a \$f(dxd)\$f matrix valued function \f$f\f$ as input that splits itself into \$fd\$f
+	DiscreteFunctions that are each \$fd\$f valued.
+  * \f{eqnarray*}f\rightarrow (a_{ij})_{1<=i,j<=d}\\
+  * G_k= \sum_K\int_K \sum_{l=1..d}a_{kl} \phi_{l} dx\f}
+  **/
 template < class DiscreteFunctionType, class DiscreteGradientFunctionType >
 class GradientSplitterFunction : public std::vector< boost::shared_ptr< DiscreteFunctionType > >
 {
@@ -24,7 +30,7 @@ public:
 			DomainType;
 		const size_t dim = DomainType::dimension;
 		for ( size_t d = 0; d < dim; ++d ) {
-			PointerType p( new DiscreteFunctionType( (boost::format("%s_%d") % gradient.name() % d).str(),
+			PointerType p( new DiscreteFunctionType( (boost::format("%s_%s") % gradient.name() % Stuff::dimToAxisName(d,true) ).str(),
 			                                         space ) );//never use temporary smart pointers
 			push_back( p );
 		}
