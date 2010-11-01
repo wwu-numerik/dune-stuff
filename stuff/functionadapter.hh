@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <boost/shared_ptr.hpp>
+#include <stuff/printing.hh>
 
 namespace Stuff {
 
