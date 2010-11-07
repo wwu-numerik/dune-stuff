@@ -23,7 +23,7 @@ class GradientSplitterFunction : public std::vector< boost::shared_ptr< Discrete
 		PointerType;
 
 public:
-	GradientSplitterFunction(	typename DiscreteFunctionType::FunctionSpaceType& space,
+	GradientSplitterFunction(	const typename DiscreteFunctionType::FunctionSpaceType& space,
 								const DiscreteGradientFunctionType&  gradient )
 	{
 		typedef typename DiscreteFunctionType::FunctionSpaceType::DomainType
