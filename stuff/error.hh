@@ -23,20 +23,23 @@ namespace Stuff {
 			struct Errors : public std::pair<double,double> {
 				typedef std::pair<double,double>
 					BaseType;
-				double& absolute;
-				double& relative;
 				std::string name_;
 				Errors( double abs, double rel, std::string name )
 					: BaseType( abs, rel ),
-					absolute( BaseType::first ),
-					relative( BaseType::second ),
 					name_(name)
 				{}
 
 				//!make friend op <<
 				std::string str() const
 				{
-					return ( boost::format( "%s L2 error: %e (abs) | %e (rel)\n") % name_ % absolute % relative ).str();
+					return ( boost::format( "%s L2 error: %e (abs) | %e (rel)\n") % name_ % absolute() % relative() ).str();
+				}
+
+				double absolute() const {
+					return BaseType::first;
+				}
+				double relative() const {
+					return BaseType::second;
 				}
 			};
 
