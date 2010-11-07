@@ -70,7 +70,8 @@ class DiscreteStokesFunctionWrapperAdaptionManager : public Stuff::InstanceCount
 
 		void adapt()
 		{
-		   combined_adaptManager_->adapt();
+			assert( combined_adaptManager_ );
+			combined_adaptManager_->adapt();
 		}
 
 		DiscreteStokesFunctionWrapperAdaptionManager( DiscreteStokesFunctionWrapperAdaptionManager& other )
