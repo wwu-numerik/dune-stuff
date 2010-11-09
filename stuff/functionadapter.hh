@@ -167,14 +167,30 @@ public:
 		}
 	};
 
+	struct ProductFunctorVectorial {
+		template < class R1, class R2 >
+		static double call (const R1& r1,const R2& r2 ) {
+			return Stuff::colonProduct( r1, r2 );
+		}
+	};
+
+	struct ProductFunctorScalar {
+		template < class R1, class R2 >
+		static double call (const R1& r1,const R2& r2 ) {
+			return ( r1 * r2 );
+		}
+	};
+
 	template <	class DiscreteVelocityFunctionType,
-				class SigmaFunctionType >
+				class SigmaFunctionType,
+				class ProductFunctor >
 	class GradientAdapterFunction :
 			public SigmaFunctionType
 	{
 		protected:
 			typedef GradientAdapterFunction <	DiscreteVelocityFunctionType,
-												SigmaFunctionType >
+												SigmaFunctionType,
+												ProductFunctor>
 				ThisType;
 			typedef SigmaFunctionType
 				BaseType;
@@ -271,7 +287,7 @@ public:
 						{
 							typename DiscreteFunctionType::DiscreteFunctionSpaceType::RangeType phi (0.0);
 							baseset.evaluate(i, quad[qP], phi);
-							self_local[i] += intel * ( Stuff::colonProduct(velocity_jacobian_eval, phi) );
+							self_local[i] += intel * ProductFunctor::call( velocity_jacobian_eval, phi );
 						}
 					}
 
