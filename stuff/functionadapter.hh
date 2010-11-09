@@ -167,17 +167,19 @@ public:
 		}
 	};
 
-	struct ProductFunctorVectorial {
+	struct ProductFunctorMatrices {
 		template < class R1, class R2 >
 		static double call (const R1& r1,const R2& r2 ) {
 			return Stuff::colonProduct( r1, r2 );
 		}
 	};
 
-	struct ProductFunctorScalar {
+	struct ProductFunctorMatrixVector {
 		template < class R1, class R2 >
 		static double call (const R1& r1,const R2& r2 ) {
-			return ( r1 * r2 );
+			Dune::FieldVector< double, 1 > res;
+			r1.mv( r2, res ) ;
+			return res[0];
 		}
 	};
 
