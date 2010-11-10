@@ -415,10 +415,11 @@ public:
 							gradient_jacobian_eval;
 						gradient_local.jacobian( quad[qP], gradient_jacobian_eval );
 
-						GradientJacobianToLaplacian<	2,
-																						typename DiscreteVelocityFunctionSpaceType::RangeType,
-																						typename DiscreteSigmaFunctionSpaceType::JacobianRangeType >
-															velocity_real_laplacian ( gradient_jacobian_eval );
+						typedef GradientJacobianToLaplacian<	DiscreteFunctionType::RangeType::size,
+																typename DiscreteFunctionType::RangeType,
+																typename SigmaFunctionType::JacobianRangeType >
+						        GR;
+									GR						velocity_real_laplacian ( gradient_jacobian_eval );
 
 						// do projection
 						for(int i=0; i<numDofs; ++i)
