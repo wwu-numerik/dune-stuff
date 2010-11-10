@@ -425,7 +425,7 @@ public:
 						{
 							typename DiscreteFunctionType::DiscreteFunctionSpaceType::RangeType phi (0.0);
 							baseset.evaluate(i, quad[qP], phi);
-							self_local[i] += intel * ( velocity_real_laplacian * phi );
+							self_local[i] += 2 * intel * ( velocity_real_laplacian * phi );
 						}
 					}
 
