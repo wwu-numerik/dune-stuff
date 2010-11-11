@@ -5,8 +5,6 @@
 #include <string>
 #include <cc++/thread.h> //threading class
 
-using namespace ost; //namespace for gnu common c++ library
-
 namespace Stuff {
 
   /** @brief class realizing a threaded progress bar
@@ -29,7 +27,7 @@ namespace Stuff {
    *          You have to use -lccgnu2 if you want to link this with gcc.
    *
    */
-  class ProgressBar : public Thread { //every threaded class must be inherited from Thread class
+  class ProgressBar : public ost::Thread { //every threaded class must be inherited from Thread class
     
   public:
     /** @brief constructor that initializes the value for percent to zero.
