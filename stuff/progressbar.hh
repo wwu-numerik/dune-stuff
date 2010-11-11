@@ -7,6 +7,10 @@
 
 namespace Stuff {
 
+template < class OutputStream >
+class SimpleProgressBar;
+
+
   /** @brief class realizing a threaded progress bar
    *
    *  Example of usage:
@@ -35,7 +39,7 @@ namespace Stuff {
      *
      *  @param[in] numBlocks The width of the progress bar, default is 100
      */
-    ProgressBar(OutputStream& stream, const int numBlocks=100)
+    ProgressBar(OutputStream& stream = std::cout, const int numBlocks=100)
 	    : percent(0),
 	    numBlocks_(numBlocks),
 	    output_stream_( stream )
@@ -88,6 +92,58 @@ namespace Stuff {
     int       percent; 
     const int numBlocks_;
 	OutputStream& output_stream_;
+
+	friend class SimpleProgressBar<OutputStream>;
+  };
+
+  /** \brief wrap a ProgessBar with discrete Increments
+		Example usage: \code
+			unsigned k = 10;
+			Stuff::SimpleProgressBar<> pbar(k);
+			for(int i=0; i<k+1; i++,++pbar) {
+				sleep( 1 );
+			}
+			++pbar;
+		\endcode
+	**/
+  template < class OutputStream = std::ostream >
+  class SimpleProgressBar {
+	  typedef SimpleProgressBar<OutputStream >
+		ThisType;
+	public:
+	  /** \param[in]	increments maximum number of increments this bar will receive.
+						Set it to number of entites in your gridwalk for example if you want  to map the gridwalk's progress.
+		**/
+	  SimpleProgressBar(const unsigned int increments, OutputStream& stream = std::cout, const int numBlocks=100 )
+			: increments_(increments),
+			progress_bar_(stream, numBlocks),
+			current_step_(0)
+	  {}
+	  ~SimpleProgressBar()
+	  {
+		  progress_bar_.terminate();
+	  }
+
+	  void increment() {
+		  current_step_++;
+		  set();
+	  }
+
+	  ThisType& operator++()
+	  {
+		  increment();
+		  return *this;
+	  }
+	  private:
+		void set() {
+			unsigned pr = ceil( double(current_step_)/double(increments_)*100 );
+			progress_bar_.setPercent( pr );
+		}
+
+	private:
+		const unsigned int increments_;
+		ProgressBar<OutputStream> progress_bar_;
+		unsigned int current_step_;
   };
 
 
