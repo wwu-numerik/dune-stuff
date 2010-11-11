@@ -27,6 +27,7 @@ namespace Stuff {
    *          You have to use -lccgnu2 if you want to link this with gcc.
    *
    */
+	template < class OutputStream = std::ostream >
   class ProgressBar : public ost::Thread { //every threaded class must be inherited from Thread class
     
   public:
@@ -34,8 +35,10 @@ namespace Stuff {
      *
      *  @param[in] numBlocks The width of the progress bar, default is 100
      */
-    ProgressBar(const int numBlocks=100) : percent(0),
-                                          numBlocks_(numBlocks)
+    ProgressBar(OutputStream& stream, const int numBlocks=100)
+	    : percent(0),
+	    numBlocks_(numBlocks),
+	    output_stream_( stream )
     {
       // start the thread now
       start(); 
@@ -56,18 +59,18 @@ namespace Stuff {
             bar.replace(i, 1, " "); 
         }
         //print the progress bar
-        std::cout << "\r[" << bar << "]";
+        output_stream_ << "\r[" << bar << "]";
         /*output 4 characters, in the next output to cout,
           one for space, and three for the numbers*/
-        std::cout.width(4); 
-        std::cout << percent << "%" << std::flush;
+        output_stream_ << std::setw(4) << percent << "%";
+		output_stream_.flush();
         //break when reaching 100%
         if (percent==100) 
           break; 
         //interval between updates, in miliseconds
         Thread::sleep(500); 
       }
-      std::cout << std::endl;
+      output_stream_ << std::endl;
       //when the run function is ended, this thread is over
     }
 
@@ -84,7 +87,10 @@ namespace Stuff {
     //member variable holding the percentage, 0-100
     int       percent; 
     const int numBlocks_;
+	OutputStream& output_stream_;
   };
+
+
  
 } // namespace Stuff
 
