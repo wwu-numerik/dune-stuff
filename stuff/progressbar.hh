@@ -5,6 +5,9 @@
 #include <string>
 #include <cc++/thread.h> //threading class
 
+#include "misc.hh"
+
+
 namespace Stuff {
 
 template < class OutputStream >
@@ -48,6 +51,8 @@ class SimpleProgressBar;
       start(); 
     }
 
+	static const unsigned sleepTime = 500;
+
     /** @brief function responsible for displaying and
      *         updating the progress bar
      */
@@ -72,7 +77,7 @@ class SimpleProgressBar;
         if (percent==100) 
           break; 
         //interval between updates, in miliseconds
-        Thread::sleep(500); 
+        Thread::sleep(sleepTime);
       }
       output_stream_ << std::endl;
       //when the run function is ended, this thread is over
@@ -117,15 +122,18 @@ class SimpleProgressBar;
 	  SimpleProgressBar(const unsigned int increments, OutputStream& stream = std::cout, const int numBlocks=100 )
 			: increments_(increments),
 			progress_bar_(stream, numBlocks),
-			current_step_(0)
+			current_step_(0),
+			stream_( stream )
 	  {}
 	  ~SimpleProgressBar()
 	  {
+		  increment();
+		  progress_bar_.sleep(ProgressBar<OutputStream>::sleepTime);
 		  progress_bar_.terminate();
 	  }
 
 	  void increment() {
-		  current_step_++;
+		  current_step_ = Stuff::clamp( ++current_step_, unsigned(0), increments_ );
 		  set();
 	  }
 
@@ -136,7 +144,7 @@ class SimpleProgressBar;
 	  }
 	  private:
 		void set() {
-			unsigned pr = ceil( double(current_step_)/double(increments_)*100 );
+			unsigned pr = ceil( 100.0 * ( double(current_step_)/double(increments_) ) );
 			progress_bar_.setPercent( pr );
 		}
 
@@ -144,6 +152,7 @@ class SimpleProgressBar;
 		const unsigned int increments_;
 		ProgressBar<OutputStream> progress_bar_;
 		unsigned int current_step_;
+		OutputStream& stream_;
   };
 
 
