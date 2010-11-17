@@ -86,16 +86,22 @@ class TimeSeriesOutput {
 			return false;
 		}
 
-		void endSubfloat(std::ofstream& out )
+		void endSubfloat(std::ofstream& out, bool y_axis_logarithmic = true )
 		{
-			out << "\\end{axis} \n\\end{tikzpicture}}\\\\\n";
+			if ( y_axis_logarithmic )
+				out << "\\end{semilogyaxis} \n\\end{tikzpicture}}\\\\\n";
+			else
+				out << "\\end{axis} \n\\end{tikzpicture}}\\\\\n";
 		}
 
-		void beginSubfloat(std::ofstream& out )
+		void beginSubfloat(std::ofstream& out, bool y_axis_logarithmic = true )
 		{
-			out << "\\subfloat{\n\\begin{tikzpicture}[scale=\\plotscale]\n"
-				<< "\\begin{axis}[\n"
-				<< "legend style={ at={(1.02,1)},anchor=north west},\n";
+			out << "\\subfloat{\n\\begin{tikzpicture}[scale=\\plotscale]\n";
+			if ( y_axis_logarithmic )
+				out << "\\begin{semilogyaxis}[\n";
+			else
+				out << "\\begin{axis}[\n";
+			out << "legend style={ at={(1.02,1)},anchor=north west},\n";
 		}
 
 		void writeTex( std::string basename )
@@ -148,7 +154,7 @@ class TimeSeriesOutput {
 			endSubfloat( out );
 
 			//runtime
-			beginSubfloat( out );
+			beginSubfloat( out, false );
 			out << "xlabel=Zeit,\n"
 				<< "ylabel=$t_{step}$]\n";
 
@@ -165,7 +171,7 @@ class TimeSeriesOutput {
 					<< "table[x=timestep,y=" << prefix_runtime_<< i << "] {" << filename_csv << "};"
 					<< "\\addlegendentry{L " << refine << ", Re " << reynolds << "}\n";
 			}
-			endSubfloat( out );
+			endSubfloat( out, false );
 
 			out << "\\caption{dt " << dt << "}"
 				<< "\n\\end{figure}\n";
