@@ -4,6 +4,8 @@
 #include <cstdio>
 #include <dune/stuff/misc.hh>
 #include <dune/stuff/logging.hh>
+#include <boost/format.hpp>
+#include <boost/typeof/typeof.hpp>
 
 namespace Stuff {
 
@@ -86,12 +88,16 @@ class TimeSeriesOutput {
 			return false;
 		}
 
-		void endSubfloat(std::ofstream& out, bool y_axis_logarithmic = true )
+		void endSubfloat(std::ofstream& out, bool y_axis_logarithmic = true, bool breakline = true )
 		{
 			if ( y_axis_logarithmic )
-				out << "\\end{semilogyaxis} \n\\end{tikzpicture}}\\\\\n";
+				out << "\\end{semilogyaxis} \n\\end{tikzpicture}}";
 			else
-				out << "\\end{axis} \n\\end{tikzpicture}}\\\\\n";
+				out << "\\end{axis} \n\\end{tikzpicture}}";
+			if ( breakline )
+				out << "\\\\\n";
+			else
+				out << "\n";
 		}
 
 		void beginSubfloat(std::ofstream& out, bool y_axis_logarithmic = true )
@@ -109,6 +115,7 @@ class TimeSeriesOutput {
 			std::string filename_csv = filenameOnly( writeCSV( basename ) );
 			std::string filename  = basename + ".tex";
 			std::ofstream out( filename.c_str() );
+
 			double dt;
 			out << "\\begin{figure}\n";
 			//pressure
@@ -131,7 +138,7 @@ class TimeSeriesOutput {
 					<< "table[x=timestep,y=" << prefix_l2_pressure_ << i << "] {" << filename_csv << "};"
 					<< "\\addlegendentry{L " << refine << ", Re " << reynolds << "}\n";
 			}
-			endSubfloat( out );
+			endSubfloat( out, true, false );
 
 			//velocity
 			beginSubfloat( out );
@@ -153,6 +160,22 @@ class TimeSeriesOutput {
 			}
 			endSubfloat( out );
 
+			//eoc
+			const bool have_eoc = vector_count_ > 1;
+			if ( have_eoc ) {
+				beginSubfloat( out, false );
+				out << "xlabel=refine level,\n"
+					<< "ylabel=$eoc$]\n";
+				std::string eoc_csv_filename = filenameOnly( writeEOCcsv( basename ) );
+				out << 	"\\addplot[color=" << colors_[0] << ",mark=" << marks_[1] << "]\n"
+					<< "table[x=refine,y=" << prefix_eoc_velocity_ << "] {" << eoc_csv_filename << "};"
+					<< "\\addlegendentry{$eoc_u$}\n";
+				out << 	"\\addplot[color=" << colors_[1] << ",mark=" << marks_[0] << "]\n"
+					<< "table[x=refine,y=" << prefix_eoc_pressure_ << "] {" << eoc_csv_filename << "};"
+					<< "\\addlegendentry{$eoc_p$}\n";
+				endSubfloat( out, false, false );
+			}
+
 			//runtime
 			beginSubfloat( out, false );
 			out << "xlabel=Zeit,\n"
@@ -173,24 +196,30 @@ class TimeSeriesOutput {
 			}
 			endSubfloat( out, false );
 
+			BOOST_AUTO( common_info,runInfoVectorMap_.begin()->second.at(0) );
+			boost::format meta_info("\\subfloat{"
+			                        "\\begin{tabular}{ll}\n"
+									" Grid & %s\\\\\n"
+									" Polynomial orders & $P_\\sigma = %d$, $P_p = %d$,$P_u = %d$\\\\\n"
+									" Problem id & %s \\\\\n"
+									" Solver accuracy & \\begin{tabular}{ll}\n"
+									"                    inner & %e \\\\\n"
+									"                    outer & %e \\\\\n"
+									"                   \\end{tabular}\\\\\n"
+									"	Misc info & %s \\\\\n"
+									"\\end{tabular}\n}" );
+			meta_info	% common_info.gridname
+						% common_info. polorder_sigma
+						% common_info. polorder_pressure
+						% common_info. polorder_velocity
+						% common_info. problemIdentifier
+						% common_info. inner_solver_accuracy
+						% common_info. solver_accuracy
+						% common_info. extra_info;
+			out << meta_info;
+
 			out << "\\caption{dt " << dt << "}"
 				<< "\n\\end{figure}\n";
-			const bool have_eoc = vector_count_ > 1;
-			if ( have_eoc ) {
-				std::string eoc_csv_filename = filenameOnly( writeEOCcsv( basename ) );
-				out << "\\begin{tikzpicture}[scale=\\plotscale]\n"
-					<< "\\begin{axis}[\n"
-					<< "legend style={ at={(1.02,1)},anchor=north west},\n"
-					<< "xlabel=refine,\n"
-					<< "ylabel=$eoc$]\n";
-				out << 	"\\addplot[color=" << colors_[0] << ",mark=" << marks_[1] << "]\n"
-					<< "table[x=refine,y=" << prefix_eoc_velocity_ << "] {" << eoc_csv_filename << "};"
-					<< "\\addlegendentry{eoc velocity}\n";
-				out << 	"\\addplot[color=" << colors_[1] << ",mark=" << marks_[0] << "]\n"
-					<< "table[x=refine,y=" << prefix_eoc_pressure_ << "] {" << eoc_csv_filename << "};"
-					<< "\\addlegendentry{eoc pressure}\n";
-				out << "\\end{axis} \n\\end{tikzpicture}\\\\\n";
-			}
 		}
 
 	private:
