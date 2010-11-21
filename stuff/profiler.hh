@@ -110,8 +110,8 @@ class Profiler
 
 	protected:
 		MapVector m_timings;
-		int m_cur_run_num;
-		int m_total_runs;
+		unsigned int m_cur_run_num;
+		unsigned int m_total_runs;
 		//debug counter, only outputted in debug mode
 		std::map<int,int> m_count;
 		clock_t init_time_;
