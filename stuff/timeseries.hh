@@ -280,6 +280,7 @@ class TimeSeriesOutput {
 		{
 			std::vector< std::pair<double,double > > max_errors_velocity;
 			std::vector< std::pair<double,double > > max_errors_pressure;
+			std::vector< double > max_dt_vec;
 			for ( RunInfoVectorMap::const_iterator mit = runInfoVectorMap_.begin();
 				  mit != runInfoVectorMap_.end();
 				  ++mit )
@@ -287,6 +288,7 @@ class TimeSeriesOutput {
 				const RunInfoVector& vec = mit->second;
 				double max_velocity = std::numeric_limits<double>::min();
 				double max_pressure = std::numeric_limits<double>::min();
+				double max_dt = std::numeric_limits<double>::min();
 
 				for ( RunInfoVector::const_iterator it = vec.begin();
 					  it != vec.end();
@@ -294,9 +296,11 @@ class TimeSeriesOutput {
 				{
 					max_velocity = std::max( it->L2Errors[0], max_velocity );
 					max_pressure = std::max( it->L2Errors[1], max_pressure );
+					max_dt = std::max( it->delta_t, max_dt );
 				}
 				max_errors_velocity.push_back( std::make_pair( max_velocity, vec[0].grid_width ) );
 				max_errors_pressure.push_back( std::make_pair( max_pressure, vec[0].grid_width ) );
+				max_dt_vec.push_back( max_dt );
 			}
 
 			std::string filename = basename + ".eoc.csv";
@@ -307,10 +311,12 @@ class TimeSeriesOutput {
 			for ( size_t i = 0; i < max_errors_pressure.size()-1; ++i )
 			{
 				const double width_qout = max_errors_pressure[i].second / max_errors_pressure[i+1].second;
+				const double dt_qout = max_dt_vec[i] / max_dt_vec[i+1];
+				const double total_qout = width_qout * dt_qout;
 				const double pressure_qout = max_errors_pressure[i].first/ max_errors_pressure[i+1].first;
 				const double velocity_qout = max_errors_velocity[i].first/ max_errors_velocity[i+1].first;
-				const double pressure_eoc = std::log( pressure_qout  ) / std::log( width_qout );
-				const double velocity_eoc = std::log( velocity_qout ) / std::log( width_qout );
+				const double pressure_eoc = std::log( pressure_qout  ) / std::log( total_qout );
+				const double velocity_eoc = std::log( velocity_qout ) / std::log( total_qout );
 				out << i + 1 << "\t"
 					<< velocity_eoc << "\t"
 					<< pressure_eoc << "\n";
