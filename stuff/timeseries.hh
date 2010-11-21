@@ -54,15 +54,42 @@ class TimeSeriesOutput {
 				averaged_error_pressure_[it->first] = total_error_pressure / double(vec.size());
 				averaged_error_velocity_[it->first] = total_error_velocity / double(vec.size());
 			}
+
+			for ( RunInfoVectorMap::const_iterator mit = runInfoVectorMap_.begin();
+				  mit != runInfoVectorMap_.end();
+				  ++mit )
+			{
+				const RunInfoVector& vec = mit->second;
+				double max_velocity = std::numeric_limits<double>::min();
+				double max_pressure = std::numeric_limits<double>::min();
+				double max_dt = std::numeric_limits<double>::min();
+
+				for ( RunInfoVector::const_iterator it = vec.begin();
+					  it != vec.end();
+					  ++it )
+				{
+					max_velocity = std::max( it->L2Errors[0], max_velocity );
+					max_pressure = std::max( it->L2Errors[1], max_pressure );
+					max_dt = std::max( it->delta_t, max_dt );
+				}
+				max_errors_velocity.push_back( std::make_pair( max_velocity, vec[0].grid_width ) );
+				max_errors_pressure.push_back( std::make_pair( max_pressure, vec[0].grid_width ) );
+				max_error_velocity_map_[mit->first] = max_velocity;
+				max_error_pressure_map_[mit->first] = max_pressure;
+				max_dt_vec.push_back( max_dt );
+			}
+
 			for ( RunInfoVectorMap::const_iterator it = runInfoVectorMap_.begin();
 				  it != runInfoVectorMap_.end();
 				  ++it )
 			{
 				const unsigned int refine = it->second.at(0).refine_level;
-				Logger().Info() << "Refine " << refine << ", Avg L2 Error Velocity|Pressure "
-						<< averaged_error_velocity_[it->first] << "|"
-						<< averaged_error_pressure_[it->first] << "; total runtime: "
-						<< cummulated_runtime_ [it->first] << std::endl;
+				Logger().Info()
+							<< boost::format ("Refine %d\tMax (Avg) L2 Error Velocity|Pressure\t %e (%e) | %e (%e) \t total runtime: %d ") % refine
+									% max_error_velocity_map_[it->first] % averaged_error_velocity_[it->first]
+									% max_error_pressure_map_[it->first] % averaged_error_pressure_[it->first]
+									% cummulated_runtime_ [it->first]
+							<< std::endl;
 			}
 			marks_.push_back( "|" );
 			marks_.push_back( "x" );
@@ -116,7 +143,7 @@ class TimeSeriesOutput {
 			std::string filename  = basename + ".tex";
 			std::ofstream out( filename.c_str() );
 
-			double dt;
+			double dt = -666;//nonsense init value to see parse fail (or my devil worship, take your pick)
 			out << "\\begin{figure}\n";
 			//pressure
 			beginSubfloat( out );
@@ -239,6 +266,11 @@ class TimeSeriesOutput {
 		std::map<RunInfoVectorMapKeyType,double> cummulated_runtime_;
 		std::map<RunInfoVectorMapKeyType,double> averaged_error_velocity_;
 		std::map<RunInfoVectorMapKeyType,double> averaged_error_pressure_;
+		std::map<RunInfoVectorMapKeyType,double> max_error_velocity_map_;
+		std::map<RunInfoVectorMapKeyType,double> max_error_pressure_map_;
+		std::vector< std::pair<double,double > > max_errors_velocity;
+		std::vector< std::pair<double,double > > max_errors_pressure;
+		std::vector< double > max_dt_vec;
 
 		std::string  writeCSV( std::string basename )
 		{
@@ -278,31 +310,6 @@ class TimeSeriesOutput {
 
 		std::string writeEOCcsv( std::string basename )
 		{
-			std::vector< std::pair<double,double > > max_errors_velocity;
-			std::vector< std::pair<double,double > > max_errors_pressure;
-			std::vector< double > max_dt_vec;
-			for ( RunInfoVectorMap::const_iterator mit = runInfoVectorMap_.begin();
-				  mit != runInfoVectorMap_.end();
-				  ++mit )
-			{
-				const RunInfoVector& vec = mit->second;
-				double max_velocity = std::numeric_limits<double>::min();
-				double max_pressure = std::numeric_limits<double>::min();
-				double max_dt = std::numeric_limits<double>::min();
-
-				for ( RunInfoVector::const_iterator it = vec.begin();
-					  it != vec.end();
-					  ++it )
-				{
-					max_velocity = std::max( it->L2Errors[0], max_velocity );
-					max_pressure = std::max( it->L2Errors[1], max_pressure );
-					max_dt = std::max( it->delta_t, max_dt );
-				}
-				max_errors_velocity.push_back( std::make_pair( max_velocity, vec[0].grid_width ) );
-				max_errors_pressure.push_back( std::make_pair( max_pressure, vec[0].grid_width ) );
-				max_dt_vec.push_back( max_dt );
-			}
-
 			std::string filename = basename + ".eoc.csv";
 			testCreateDirectory( pathOnly( filename ) );
 			std::ofstream out( filename.c_str() );
