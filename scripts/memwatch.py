@@ -84,7 +84,13 @@ class DataPlot(Qwt.QwtPlot):
 		self.curveR.setData(self.x, self.y)
 		self.replot()
 
+def usage(args):
+	print 'usage:\npython %s /absolute/path/to/binary [params_for_binary]*'%args[0]
+	return -1
+
 def main(args): 
+	if len(args) < 2:
+		sys.exit(usage(args))
 	app = Qt.QApplication(args)
 	demo = DataPlot()
 	demo.resize(800, 600)
