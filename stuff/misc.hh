@@ -133,7 +133,7 @@ struct RunInfo
 typedef std::vector< RunInfo >
 	RunInfoVector;
 
-typedef unsigned int
+typedef int
 	RunInfoVectorMapKeyType;
 
 typedef std::map< RunInfoVectorMapKeyType, RunInfoVector >
