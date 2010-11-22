@@ -221,7 +221,6 @@ public:
 					LocalFType;
 
 				const DiscreteFunctionSpaceType space ( velocity.space().gridPart() );
-				const GridPartType& gridPart = space.gridPart();
 				// type of quadrature
 				typedef Dune::CachingQuadrature<GridPartType,0> VolumeQuadratureType;
 				typedef Dune::CachingQuadrature<GridPartType,1> FaceQuadratureType;
