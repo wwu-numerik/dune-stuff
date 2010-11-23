@@ -1,7 +1,16 @@
 // -*- tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 2 -*-
 // vi: set et ts=8 sw=2 sts=2:
-#ifndef DUNE_STATIC_ASSERT_HH
-#define DUNE_STATIC_ASSERT_HH
+
+#include <dune/common/version.hh>
+//this lets us use the static assert in pre 2.0 code too, easing later porting
+#if DUNE_VERSION_NEWER(DUNE_COMMON,2,0,0)
+
+#include <dune/common/static_assert.hh>
+
+#else
+
+#ifndef EEDUNE_STATIC_ASSERT_HH
+#define EEDUNE_STATIC_ASSERT_HH
 
 /** 
  * @addtogroup Common
@@ -143,3 +152,4 @@ struct Traits {
 
 #endif
 
+#endif //#if DUNE_VERSION_NEWER(DUNE_COMMON,2,0,0)
