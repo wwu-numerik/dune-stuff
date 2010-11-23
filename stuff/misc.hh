@@ -27,6 +27,7 @@ bool isnan( T x ) { return !(x==x); }
 #include <cstring>
 #include <map>
 #include <assert.h>
+#include "static_assert.hh"
 
 char* copy(const char* s) { int l=strlen(s)+1; char* t = new char[l];  for(int i=0;i<l;i++) { t[i] = s[i]; } return t; }
 #define __CLASS__ strtok(copy(__PRETTY_FUNCTION__),"<(")
@@ -140,7 +141,7 @@ typedef std::map< RunInfoVectorMapKeyType, RunInfoVector >
 	RunInfoVectorMap;
 
 #include <cstdio>
-#include <dune/common/misc.hh>
+//#include <dune/common/misc.hh>
 
 namespace Stuff
 {
@@ -150,9 +151,9 @@ template <class SomeRangeType, class OtherRangeType >
 static double colonProduct(    const SomeRangeType& arg1,
 						const OtherRangeType& arg2 )
 {
-	Dune::CompileTimeChecker< SomeRangeType::cols == SomeRangeType::rows
+	dune_static_assert( SomeRangeType::cols == SomeRangeType::rows
 			&& OtherRangeType::cols == OtherRangeType::rows
-			&& OtherRangeType::cols == SomeRangeType::rows> RangeTypes_dont_fit;
+			&& OtherRangeType::cols == SomeRangeType::rows, "RangeTypes_dont_fit" );
 
 	double ret = 0.0;
 	// iterators
