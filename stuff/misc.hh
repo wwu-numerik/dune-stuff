@@ -153,7 +153,7 @@ static double colonProduct(    const SomeRangeType& arg1,
 {
 	dune_static_assert( SomeRangeType::cols == SomeRangeType::rows
 			&& OtherRangeType::cols == OtherRangeType::rows
-			&& OtherRangeType::cols == SomeRangeType::rows, "RangeTypes_dont_fit" );
+			&& int(OtherRangeType::cols) == int(SomeRangeType::rows), "RangeTypes_dont_fit" );
 
 	double ret = 0.0;
 	// iterators
