@@ -27,6 +27,7 @@ bool isnan( T x ) { return !(x==x); }
 #include <cstring>
 #include <map>
 #include <assert.h>
+#include <algorithm>
 
 char* copy(const char* s) { int l=strlen(s)+1; char* t = new char[l];  for(int i=0;i<l;i++) { t[i] = s[i]; } return t; }
 #define __CLASS__ strtok(copy(__PRETTY_FUNCTION__),"<(")
@@ -948,6 +949,13 @@ struct TimeGuard {
 		std::cout << ctime ( &delta ) << std::endl;
 	}
 };
+
+//! \todo seems borked, resutls in gigantic amount of compile errors?!
+template < class StlContainer, class T >
+void fill_entirely ( StlContainer& c, const T& value )
+{
+	std::fill( c.begin(), c.end(), value );
+}
 
 } // end namepspace stuff
 
