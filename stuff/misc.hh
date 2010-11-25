@@ -28,6 +28,7 @@ bool isnan( T x ) { return !(x==x); }
 #include <map>
 #include <assert.h>
 #include <algorithm>
+#include <dune/common/fixedarray.hh>
 
 char* copy(const char* s) { int l=strlen(s)+1; char* t = new char[l];  for(int i=0;i<l;i++) { t[i] = s[i]; } return t; }
 #define __CLASS__ strtok(copy(__PRETTY_FUNCTION__),"<(")
@@ -957,7 +958,34 @@ void fill_entirely ( StlContainer& c, const T& value )
 	std::fill( c.begin(), c.end(), value );
 }
 
-} // end namepspace stuff
+template < class T, int N >
+struct wraparound_array : public Dune::array<T,N> {
+	typedef Dune::array<T,N>
+		BaseType;
+	typename BaseType::reference operator [] (std::size_t i)
+	{
+		return BaseType::operator []( i % N );
+	}
+	typename BaseType::reference operator [] (int i)
+	{
+		std::size_t real_index = i;
+		if ( i < 0 )
+			real_index = static_cast<size_t>(N - ( ( ( i * -1 ) % N ) + 1) ) ;
+		return BaseType::operator []( real_index );
+	}
+	typename BaseType::const_reference operator [] (std::size_t i) const
+	{
+		return BaseType::operator []( i % N );
+	}
+	typename BaseType::const_reference operator [] (int i) const
+	{
+		std::size_t real_index = i;
+		if ( i < 0 )
+			real_index = static_cast<size_t>(N - ( ( ( i * -1 ) % N ) + 1) ) ;
+		return BaseType::operator []( real_index );
+	}
+};
 
+} // end namepspace stuff
 
 #endif // end of stuff.hh
