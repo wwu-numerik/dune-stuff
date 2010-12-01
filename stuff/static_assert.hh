@@ -9,8 +9,8 @@
 
 #else
 
-#ifndef EEDUNE_STATIC_ASSERT_HH
-#define EEDUNE_STATIC_ASSERT_HH
+#ifndef DUNE_STATIC_ASSERT_HH
+#define DUNE_STATIC_ASSERT_HH
 
 /** 
  * @addtogroup Common

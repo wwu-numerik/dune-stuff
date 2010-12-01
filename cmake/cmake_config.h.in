@@ -1,0 +1,22 @@
+#ifndef DUNE_STUFF_CONFIG_H
+#define DUNE_STUFF_CONFIG_H
+
+#undef COMMIT
+
+/* the git tag / commit we build from */
+#define COMMIT "@COMMIT@"
+
+
+#include "config.h"
+#undef HAVE_ALUGRID
+#define HAVE_ALUGRID 1
+#define @GRIDTYPE@
+#define GRIDDIM @GRIDDIM@
+#define POLORDER @POLORDER@
+#define ENABLE_ALUGRID HAVE_ALUGRID
+
+#ifdef NDEBUG
+	#define DNDEBUG
+#endif
+
+#endif	/* DUNE_STUFF_CONFIG_H */

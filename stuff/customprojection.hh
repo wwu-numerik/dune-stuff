@@ -22,7 +22,6 @@ public:
 	template < class OriginFunctionType, class DestinationFunctionType >
 	static void project (const OriginFunctionType& f, DestinationFunctionType& discFunc)
 	{
-		const double time = 0.0;
 		typedef typename DestinationFunctionType::FunctionSpaceType
 			DiscreteFunctionSpace;
 		typedef typename DiscreteFunctionSpace::GridPartType
