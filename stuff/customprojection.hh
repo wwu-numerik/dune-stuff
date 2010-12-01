@@ -99,7 +99,7 @@ public:
 								DiscreteFunctionImp& discFunc,
 								int polOrd = -1)
 	{
-		CompileTimeChecker< !Conversion<FunctionImp, IsDiscreteFunction> ::exists > TimeAwareL2Projection_not_implemented_for_discrete_source_functions;
+		dune_static_assert( !(Conversion<FunctionImp, IsDiscreteFunction> ::exists), "TimeAwareL2Projection_not_implemented_for_discrete_source_functions" );
 		DefaultEvaluationFunctor< FunctionImp > functor( func );
 		projectCommon( functor, discFunc, polOrd );
 	}
@@ -109,7 +109,7 @@ public:
 							DiscreteFunctionImp& discFunc,
 							int polOrd = -1)
 	{
-		CompileTimeChecker< !Conversion<FunctionImp, IsDiscreteFunction> ::exists > TimeAwareL2Projection_not_implemented_for_discrete_source_functions;
+		dune_static_assert( !(Conversion<FunctionImp, IsDiscreteFunction> ::exists), "TimeAwareL2Projection_not_implemented_for_discrete_source_functions" );
 		TimeEvaluationFunctor< FunctionImp, TimeProviderType > functor( func, timeProvider );
 		projectCommon( functor, discFunc, polOrd );
 	}
