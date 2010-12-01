@@ -115,6 +115,7 @@ struct RunInfo
     double max_inner_accuracy;
 	std::string problemIdentifier;
 	double current_time, delta_t, viscosity, reynolds, alpha;
+	std::string algo_id;
 
 	RunInfo() {
 		refine_level = codim0 = polorder_velocity
@@ -130,6 +131,7 @@ struct RunInfo
 		delta_t = 0.1;
 		current_time = 0.0;
 		viscosity = reynolds = 1.0;
+		algo_id = "N.A.";
 	}
 };
 

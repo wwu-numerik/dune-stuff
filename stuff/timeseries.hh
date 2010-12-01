@@ -96,11 +96,15 @@ class TimeSeriesOutput {
 			marks_.push_back( "o" );
 			marks_.push_back( "*" );
 			marks_.push_back( "-" );
+			marks_.push_back( "#" );
+			marks_.push_back( "@" );
 			colors_.push_back( "red" );
 			colors_.push_back( "blue" );
 			colors_.push_back( "green" );
 			colors_.push_back( "yellow" );
 			colors_.push_back( "cyan" );
+			colors_.push_back( "magenta" );
+			colors_.push_back( "black" );
 		}
 
 		bool sanityCheck()
@@ -159,11 +163,12 @@ class TimeSeriesOutput {
 				size_t color_index = i % colors_.size();
 				size_t mark_index = i % marks_.size();
 				const int refine = it->second.at(0).refine_level;
+				const std::string id = it->second.at(0).algo_id;
 				const double reynolds = it->second.at(0).reynolds;
 				dt = it->second.at(0).delta_t;
 				out << "\\addplot[color=" << colors_[color_index] << ",mark=" << marks_[mark_index] << "]\n"
 					<< "table[x=timestep,y=" << prefix_l2_pressure_ << i << "] {" << filename_csv << "};"
-					<< "\\addlegendentry{L " << refine << ", Re " << reynolds << "}\n";
+					<< boost::format("\\addlegendentry{%s: L %d, Re %d}\n") % id % refine % reynolds;
 			}
 			endSubfloat( out, true, false );
 
@@ -180,10 +185,11 @@ class TimeSeriesOutput {
 				size_t color_index = i % colors_.size();
 				size_t mark_index = i % marks_.size();
 				const int refine = it->second.at(0).refine_level;
+				const std::string id = it->second.at(0).algo_id;
 				const double reynolds = it->second.at(0).reynolds;
 				out << 	"\\addplot[color=" << colors_[color_index] << ",mark=" << marks_[mark_index] << "]\n"
 					<< "table[x=timestep,y=" << prefix_l2_velocity_ << i << "] {" << filename_csv << "};"
-					<< "\\addlegendentry{L " << refine << ", Re " << reynolds << "}\n";
+					<< boost::format("\\addlegendentry{%s: L %d, Re %d}\n") % id % refine % reynolds;
 			}
 			endSubfloat( out );
 
@@ -216,10 +222,11 @@ class TimeSeriesOutput {
 				size_t color_index = i % colors_.size();
 				size_t mark_index = i % marks_.size();
 				const int refine = it->second.at(0).refine_level;
+				const std::string id = it->second.at(0).algo_id;
 				const double reynolds = it->second.at(0).reynolds;
 				out << 	"\\addplot[color=" << colors_[color_index] << ",mark=" << marks_[mark_index] << "]\n"
 					<< "table[x=timestep,y=" << prefix_runtime_<< i << "] {" << filename_csv << "};"
-					<< "\\addlegendentry{L " << refine << ", Re " << reynolds << "}\n";
+					<< boost::format("\\addlegendentry{%s: L %d, Re %d}\n") % id % refine % reynolds;
 			}
 			endSubfloat( out, false );
 
