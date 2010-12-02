@@ -138,6 +138,8 @@ struct RunInfo
 //! used in all runs to store L2 errors across runs
 typedef std::vector< RunInfo >
 	RunInfoVector;
+typedef std::map< double, RunInfo >
+	RunInfoTimeMap;
 
 typedef int
 	RunInfoVectorMapKeyType;
@@ -145,6 +147,8 @@ typedef int
 typedef std::map< RunInfoVectorMapKeyType, RunInfoVector >
 	RunInfoVectorMap;
 
+typedef std::map< RunInfoVectorMapKeyType, RunInfoTimeMap >
+	RunInfoTimeMapMap;
 #include <cstdio>
 //#include <dune/common/misc.hh>
 

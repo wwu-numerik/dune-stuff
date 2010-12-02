@@ -15,37 +15,46 @@ namespace Stuff {
 class TimeSeriesOutput {
 
 	public:
-		TimeSeriesOutput( const RunInfoVectorMap& runInfoVectorMap )
-			: runInfoVectorMap_( runInfoVectorMap ),
-			vector_count_( runInfoVectorMap_.size() ),
-			vector_size_ ( runInfoVectorMap_.begin()->second.size() ),
+		TimeSeriesOutput( const RunInfoTimeMapMap& runInfoVectorMap )
+			: runInfoMapMap_( runInfoVectorMap ),
+			vector_count_( runInfoMapMap_.size() ),
+			vector_size_ ( runInfoMapMap_.begin()->second.size() ),
 			prefix_l2_velocity_( "L2-Velo_" ),
 			prefix_l2_pressure_( "L2-Pres_" ),
 			prefix_runtime_( "runtime_" ),
 			prefix_eoc_velocity_( "EOC_velocity" ),
 			prefix_eoc_pressure_( "EOC_pressure" )
 		{
-			const RunInfoVector& first = runInfoVectorMap_.begin()->second;
-			for ( RunInfoVector::const_iterator it = first.begin();
-				  it != first.end();
-				  ++it )
+			//select 'largest' runinfo map
+			RunInfoTimeMapMap::const_iterator mit = runInfoMapMap_.begin();
+			const RunInfoTimeMap* largest = &(runInfoMapMap_.begin()->second);
+			++mit;
+			for( ; mit != runInfoMapMap_.end(); ++mit )
 			{
-				timesteps_.push_back( it->current_time );
+				if ( mit->second.size() > largest->size() )
+					largest = &(mit->second);
 			}
 
-			for ( RunInfoVectorMap::const_iterator it = runInfoVectorMap_.begin();
-				  it != runInfoVectorMap_.end();
+			for ( RunInfoTimeMap::const_iterator it = largest->begin();
+				  it != largest->end();
 				  ++it )
 			{
-				const RunInfoVector& vec = it->second;
+				timesteps_.push_back( it->first );
+			}
+
+			for ( RunInfoTimeMapMap::const_iterator it = runInfoMapMap_.begin();
+				  it != runInfoMapMap_.end();
+				  ++it )
+			{
+				const RunInfoTimeMap& vec = it->second;
 				double runtime = 0;
 				double total_error_pressure = 0;
 				double total_error_velocity = 0;
-				for ( RunInfoVector::const_iterator vit = vec.begin();
+				for ( RunInfoTimeMap::const_iterator vit = vec.begin();
 					  vit != vec.end();
 					  ++vit )
 				{
-					const RunInfo& info = *vit;
+					const RunInfo& info = vit->second;
 					runtime += info.run_time;
 					total_error_velocity += info.L2Errors[0];
 					total_error_pressure += info.L2Errors[1];
@@ -55,35 +64,35 @@ class TimeSeriesOutput {
 				averaged_error_velocity_[it->first] = total_error_velocity / double(vec.size());
 			}
 
-			for ( RunInfoVectorMap::const_iterator mit = runInfoVectorMap_.begin();
-				  mit != runInfoVectorMap_.end();
+			for ( RunInfoTimeMapMap::const_iterator mit = runInfoMapMap_.begin();
+				  mit != runInfoMapMap_.end();
 				  ++mit )
 			{
-				const RunInfoVector& vec = mit->second;
+				const RunInfoTimeMap& vec = mit->second;
 				double max_velocity = std::numeric_limits<double>::min();
 				double max_pressure = std::numeric_limits<double>::min();
 				double max_dt = std::numeric_limits<double>::min();
 
-				for ( RunInfoVector::const_iterator it = vec.begin();
+				for ( RunInfoTimeMap::const_iterator it = vec.begin();
 					  it != vec.end();
 					  ++it )
 				{
-					max_velocity = std::max( it->L2Errors[0], max_velocity );
-					max_pressure = std::max( it->L2Errors[1], max_pressure );
-					max_dt = std::max( it->delta_t, max_dt );
+					max_velocity = std::max( it->second.L2Errors[0], max_velocity );
+					max_pressure = std::max( it->second.L2Errors[1], max_pressure );
+					max_dt = std::max( it->second.delta_t, max_dt );
 				}
-				max_errors_velocity.push_back( std::make_pair( max_velocity, vec[0].grid_width ) );
-				max_errors_pressure.push_back( std::make_pair( max_pressure, vec[0].grid_width ) );
+				max_errors_velocity.push_back( std::make_pair( max_velocity, vec.begin()->second.grid_width ) );
+				max_errors_pressure.push_back( std::make_pair( max_pressure, vec.begin()->second.grid_width ) );
 				max_error_velocity_map_[mit->first] = max_velocity;
 				max_error_pressure_map_[mit->first] = max_pressure;
 				max_dt_vec.push_back( max_dt );
 			}
 
-			for ( RunInfoVectorMap::const_iterator it = runInfoVectorMap_.begin();
-				  it != runInfoVectorMap_.end();
+			for ( RunInfoTimeMapMap::const_iterator it = runInfoMapMap_.begin();
+				  it != runInfoMapMap_.end();
 				  ++it )
 			{
-				const unsigned int refine = it->second.at(0).refine_level;
+				const unsigned int refine = it->second.begin()->second.refine_level;
 				Logger().Info()
 							<< boost::format ("Refine %d\tMax (Avg) L2 Error Velocity|Pressure\t %e (%e) | %e (%e) \t total runtime: %d ") % refine
 									% max_error_velocity_map_[it->first] % averaged_error_velocity_[it->first]
@@ -155,17 +164,18 @@ class TimeSeriesOutput {
 				<< "ylabel=$||p_{err}||$]\n";
 
 			size_t i = 0;
-			for ( RunInfoVectorMap::const_iterator it = runInfoVectorMap_.begin();
-				  it != runInfoVectorMap_.end();
+			for ( RunInfoTimeMapMap::const_iterator it = runInfoMapMap_.begin();
+				  it != runInfoMapMap_.end();
 				  ++it, ++i )
 			{
 
 				size_t color_index = i % colors_.size();
 				size_t mark_index = i % marks_.size();
-				const int refine = it->second.at(0).refine_level;
-				const std::string id = it->second.at(0).algo_id;
-				const double reynolds = it->second.at(0).reynolds;
-				dt = it->second.at(0).delta_t;
+				RunInfo info = it->second.begin()->second;
+				const int refine = info.refine_level;
+				const std::string id = info.algo_id;
+				const double reynolds = info.reynolds;
+				dt = info.delta_t;
 				out << "\\addplot[color=" << colors_[color_index] << ",mark=" << marks_[mark_index] << "]\n"
 					<< "table[x=timestep,y=" << prefix_l2_pressure_ << i << "] {" << filename_csv << "};"
 					<< boost::format("\\addlegendentry{%s: L %d, Re %d}\n") % id % refine % reynolds;
@@ -178,15 +188,16 @@ class TimeSeriesOutput {
 				<< "ylabel=$||u_{err}||$]\n";
 
 			i = 0;
-			for ( RunInfoVectorMap::const_iterator it = runInfoVectorMap_.begin();
-				  it != runInfoVectorMap_.end();
+			for ( RunInfoTimeMapMap::const_iterator it = runInfoMapMap_.begin();
+				  it != runInfoMapMap_.end();
 				  ++it, ++i )
 			{
 				size_t color_index = i % colors_.size();
 				size_t mark_index = i % marks_.size();
-				const int refine = it->second.at(0).refine_level;
-				const std::string id = it->second.at(0).algo_id;
-				const double reynolds = it->second.at(0).reynolds;
+				RunInfo info = it->second.begin()->second;
+				const int refine = info.refine_level;
+				const std::string id = info.algo_id;
+				const double reynolds = info.reynolds;
 				out << 	"\\addplot[color=" << colors_[color_index] << ",mark=" << marks_[mark_index] << "]\n"
 					<< "table[x=timestep,y=" << prefix_l2_velocity_ << i << "] {" << filename_csv << "};"
 					<< boost::format("\\addlegendentry{%s: L %d, Re %d}\n") % id % refine % reynolds;
@@ -215,22 +226,23 @@ class TimeSeriesOutput {
 				<< "ylabel=$t_{step}$]\n";
 
 			i = 0;
-			for ( RunInfoVectorMap::const_iterator it = runInfoVectorMap_.begin();
-				  it != runInfoVectorMap_.end();
+			for ( RunInfoTimeMapMap::const_iterator it = runInfoMapMap_.begin();
+				  it != runInfoMapMap_.end();
 				  ++it, ++i )
 			{
 				size_t color_index = i % colors_.size();
 				size_t mark_index = i % marks_.size();
-				const int refine = it->second.at(0).refine_level;
-				const std::string id = it->second.at(0).algo_id;
-				const double reynolds = it->second.at(0).reynolds;
+				RunInfo info = it->second.begin()->second;
+				const int refine = info.refine_level;
+				const std::string id = info.algo_id;
+				const double reynolds = info.reynolds;
 				out << 	"\\addplot[color=" << colors_[color_index] << ",mark=" << marks_[mark_index] << "]\n"
 					<< "table[x=timestep,y=" << prefix_runtime_<< i << "] {" << filename_csv << "};"
 					<< boost::format("\\addlegendentry{%s: L %d, Re %d}\n") % id % refine % reynolds;
 			}
 			endSubfloat( out, false );
 
-			BOOST_AUTO( common_info,runInfoVectorMap_.begin()->second.at(0) );
+			BOOST_AUTO( common_info,runInfoMapMap_.begin()->second.begin()->second );
 			boost::format meta_info("\\subfloat{"
 			                        "\\begin{tabular}{ll}\n"
 									" Grid & %s\\\\\n"
@@ -257,7 +269,7 @@ class TimeSeriesOutput {
 		}
 
 	private:
-		const RunInfoVectorMap& runInfoVectorMap_;
+		const RunInfoTimeMapMap& runInfoMapMap_;
 		typedef std::vector<double>
 			TimestepVector;
 		TimestepVector timesteps_;
@@ -298,15 +310,28 @@ class TimeSeriesOutput {
 			//data
 			for ( size_t i = 0; i < vector_size_; ++i )
 			{
-				out << timesteps_[i] << "\t";
+				const double current_time = timesteps_[i];
+				out << current_time << "\t";
 
-				for ( RunInfoVectorMap::const_iterator it = runInfoVectorMap_.begin();
-					  it != runInfoVectorMap_.end();
+				for ( RunInfoTimeMapMap::const_iterator it = runInfoMapMap_.begin();
+					  it != runInfoMapMap_.end();
 					  ++it )
 				{
-					out << it->second.at(i).L2Errors[0] << "\t"
-						<< it->second.at(i).L2Errors[1] << "\t"
-						<< it->second.at(i).run_time << "\t" ;
+					RunInfoTimeMap::const_iterator c_it = it->second.find( current_time );
+					if ( c_it != it->second.end() )
+					{
+						RunInfo d = c_it->second;
+						out << d.L2Errors[0] << "\t"
+							<< d.L2Errors[1] << "\t"
+							<< d.run_time << "\t" ;
+					}
+					else
+					{
+						out << "NaN" << "\t"
+							<< "NaN" << "\t"
+							<< "NaN" << "\t" ;
+
+					}
 
 				}
 				out << "\n";
