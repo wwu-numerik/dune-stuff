@@ -34,6 +34,7 @@ class TimeSeriesOutput {
 				if ( mit->second.size() > largest->size() )
 					largest = &(mit->second);
 			}
+			vector_size_ = largest->size();
 
 			for ( RunInfoTimeMap::const_iterator it = largest->begin();
 				  it != largest->end();
@@ -274,7 +275,7 @@ class TimeSeriesOutput {
 			TimestepVector;
 		TimestepVector timesteps_;
 		const size_t vector_count_;
-		const size_t vector_size_;
+		size_t vector_size_;
 		const std::string prefix_l2_velocity_;
 		const std::string prefix_l2_pressure_;
 		const std::string prefix_runtime_;
@@ -308,7 +309,7 @@ class TimeSeriesOutput {
 			out << "\n";
 
 			//data
-			for ( size_t i = 0; i < vector_size_; ++i )
+			for ( size_t i = 0; i < timesteps_.size(); ++i )
 			{
 				const double current_time = timesteps_[i];
 				out << current_time << "\t";
