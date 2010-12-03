@@ -2,6 +2,8 @@
 #define DUNE_STUFF_TIMESERIES_HH
 
 #include <cstdio>
+#include <algorithm>
+#include <dune/common/fixedarray.hh>
 #include <dune/stuff/misc.hh>
 #include <dune/stuff/logging.hh>
 #include <boost/format.hpp>
@@ -40,7 +42,7 @@ class TimeSeriesOutput {
 				  it != largest->end();
 				  ++it )
 			{
-				timesteps_.push_back( it->first );
+				timesteps_.push_back( (boost::format("%f") % it->first).str() );
 			}
 
 			for ( RunInfoTimeMapMap::const_iterator it = runInfoMapMap_.begin();
@@ -271,7 +273,7 @@ class TimeSeriesOutput {
 
 	private:
 		const RunInfoTimeMapMap& runInfoMapMap_;
-		typedef std::vector<double>
+		typedef std::vector<std::string>
 			TimestepVector;
 		TimestepVector timesteps_;
 		const size_t vector_count_;
@@ -308,32 +310,48 @@ class TimeSeriesOutput {
 			}
 			out << "\n";
 
+			Dune::array<double,3> nans;
+			std::fill( nans.begin(), nans.end(), std::numeric_limits<double>::quiet_NaN() );
+			std::vector< Dune::array<double,3> > datapoints ( runInfoMapMap_.size(), nans );
+			typedef std::vector< std::vector< Dune::array<double,3> > >
+				HelperVector;
+			HelperVector remapped_data ( timesteps_.size(), datapoints );
+
+			int el_pos = 0;
+			for ( RunInfoTimeMapMap::const_iterator it = runInfoMapMap_.begin();
+				  it != runInfoMapMap_.end();
+				  ++it,++el_pos )
+			{
+				for ( RunInfoTimeMap::const_iterator vit = it->second.begin();
+					  vit != it->second.end();
+					  ++vit )
+				{
+					const std::string time = (boost::format("%f")%vit->first).str();
+					const RunInfo& info = vit->second;
+					int pos = std::find(timesteps_.begin(), timesteps_.end(), time) - timesteps_.begin();
+					if ( pos >= timesteps_.size() )
+					{
+						std::cerr << boost::format("map %d exceed limit %d -- %f \n") %el_pos	% pos % time;
+						continue;
+					}
+					Dune::array<double,3>& b = remapped_data[pos][el_pos];
+					b[0] = info.L2Errors[0];;
+					b[1] = info.L2Errors[1];
+					b[2] = info.run_time;
+				}
+			}
 			//data
 			for ( size_t i = 0; i < timesteps_.size(); ++i )
 			{
-				const double current_time = timesteps_[i];
+				const std::string current_time = timesteps_[i];
 				out << current_time << "\t";
 
-				for ( RunInfoTimeMapMap::const_iterator it = runInfoMapMap_.begin();
-					  it != runInfoMapMap_.end();
-					  ++it )
+				for( int j = 0; j < vector_count_; ++j)
 				{
-					RunInfoTimeMap::const_iterator c_it = it->second.find( current_time );
-					if ( c_it != it->second.end() )
-					{
-						RunInfo d = c_it->second;
-						out << d.L2Errors[0] << "\t"
-							<< d.L2Errors[1] << "\t"
-							<< d.run_time << "\t" ;
-					}
-					else
-					{
-						out << "NaN" << "\t"
-							<< "NaN" << "\t"
-							<< "NaN" << "\t" ;
-
-					}
-
+					out << boost::format("%f\t%f\t%f\t")
+						   % remapped_data[i][j][0]
+						   % remapped_data[i][j][1]
+						   % remapped_data[i][j][2];
 				}
 				out << "\n";
 			}
