@@ -3,6 +3,7 @@
 
 #include <cstdio>
 #include <algorithm>
+#include <set>
 #include <dune/common/fixedarray.hh>
 #include <dune/stuff/misc.hh>
 #include <dune/stuff/logging.hh>
@@ -27,23 +28,24 @@ class TimeSeriesOutput {
 			prefix_eoc_velocity_( "EOC_velocity" ),
 			prefix_eoc_pressure_( "EOC_pressure" )
 		{
-			//select 'largest' runinfo map
-			RunInfoTimeMapMap::const_iterator mit = runInfoMapMap_.begin();
-			const RunInfoTimeMap* largest = &(runInfoMapMap_.begin()->second);
-			++mit;
-			for( ; mit != runInfoMapMap_.end(); ++mit )
+			typedef std::set<std::string>
+				TmpSet;
+			TmpSet tmp;
+			for( RunInfoTimeMapMap::const_iterator mit = runInfoMapMap_.begin(); mit != runInfoMapMap_.end(); ++mit )
 			{
-				if ( mit->second.size() > largest->size() )
-					largest = &(mit->second);
+				for ( RunInfoTimeMap::const_iterator vit = mit->second.begin();
+					  vit != mit->second.end();
+					  ++vit )
+				{
+					tmp.insert( (boost::format("%f") % vit->first).str() );
+				}
 			}
-			vector_size_ = largest->size();
-
-			for ( RunInfoTimeMap::const_iterator it = largest->begin();
-				  it != largest->end();
-				  ++it )
+			vector_size_ = tmp.size();
+			for ( TmpSet::const_iterator s_it = tmp.begin(); s_it != tmp.end(); ++s_it )
 			{
-				timesteps_.push_back( (boost::format("%f") % it->first).str() );
+				timesteps_.push_back( *s_it );
 			}
+			std::sort( timesteps_.begin(), timesteps_.end() );
 
 			for ( RunInfoTimeMapMap::const_iterator it = runInfoMapMap_.begin();
 				  it != runInfoMapMap_.end();
