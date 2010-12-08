@@ -93,6 +93,34 @@ class TimeSeriesOutput {
 				max_dt_vec.push_back( max_dt );
 			}
 
+			// L^2(t_0,T;L^2) errors
+			for ( RunInfoTimeMapMap::const_iterator it = runInfoMapMap_.begin();
+				  it != runInfoMapMap_.end();
+				  ++it )
+			{
+				const RunInfoTimeMap& info_map = it->second;
+				RunInfoVectorMapKeyType key = it->first;
+				//integrate errors in [t_0;T]
+				double velocity_sum = 0;
+				double pressure_sum = 0;
+				double dt_sum = 0;
+				for ( RunInfoTimeMap::const_iterator mit = info_map.begin();
+					  mit != info_map.end();
+					  ++mit )
+				{
+					velocity_sum += mit->second.L2Errors[0] / info_map.size();
+					pressure_sum += mit->second.L2Errors[1] / info_map.size();
+					dt_sum += mit->second.delta_t;
+				}
+				velocity_sum *= dt_sum;
+				pressure_sum *= dt_sum;
+				avg_errors_velocity_map_[key] = velocity_sum;
+				avg_errors_pressure_map_[key] = pressure_sum;
+				avg_errors_velocity_.push_back( std::make_pair( velocity_sum, info_map.begin()->second.grid_width )  );
+				avg_errors_pressure_.push_back( std::make_pair( pressure_sum, info_map.begin()->second.grid_width )  );
+
+			}
+
 			for ( RunInfoTimeMapMap::const_iterator it = runInfoMapMap_.begin();
 				  it != runInfoMapMap_.end();
 				  ++it )
@@ -100,11 +128,12 @@ class TimeSeriesOutput {
 				const unsigned int refine = it->second.begin()->second.refine_level;
 				Logger().Info()
 							<< boost::format ("Refine %d\tMax (Avg) L2 Error Velocity|Pressure\t %e (%e) | %e (%e) \t total runtime: %d ") % refine
-									% max_error_velocity_map_[it->first] % averaged_error_velocity_[it->first]
-									% max_error_pressure_map_[it->first] % averaged_error_pressure_[it->first]
+									% max_error_velocity_map_[it->first] % avg_errors_velocity_map_[it->first]
+									% max_error_pressure_map_[it->first] % avg_errors_pressure_map_[it->first]
 									% cummulated_runtime_ [it->first]
 							<< std::endl;
 			}
+
 			marks_.push_back( "|" );
 			marks_.push_back( "x" );
 			marks_.push_back( "o" );
@@ -217,11 +246,17 @@ class TimeSeriesOutput {
 					<< "ylabel=$eoc$]\n";
 				std::string eoc_csv_filename = filenameOnly( writeEOCcsv( basename ) );
 				out << 	"\\addplot[color=" << colors_[0] << ",mark=" << marks_[1] << "]\n"
-					<< "table[x=refine,y=" << prefix_eoc_velocity_ << "] {" << eoc_csv_filename << "};"
+					<< "table[x=refine,y=" << prefix_eoc_velocity_ << "_avg" << "] {" << eoc_csv_filename << "};"
 					<< "\\addlegendentry{$eoc_u$}\n";
 				out << 	"\\addplot[color=" << colors_[1] << ",mark=" << marks_[0] << "]\n"
-					<< "table[x=refine,y=" << prefix_eoc_pressure_ << "] {" << eoc_csv_filename << "};"
+					<< "table[x=refine,y=" << prefix_eoc_pressure_ << "_avg" << "] {" << eoc_csv_filename << "};"
 					<< "\\addlegendentry{$eoc_p$}\n";
+				out << 	"\\addplot[color=" << colors_[3] << ",mark=" << marks_[2] << "]\n"
+					<< "table[x=refine,y=" << prefix_eoc_velocity_ << "_avg" << "] {" << eoc_csv_filename << "};"
+					<< "\\addlegendentry{$eoc^a_u$}\n";
+				out << 	"\\addplot[color=" << colors_[2] << ",mark=" << marks_[3] << "]\n"
+					<< "table[x=refine,y=" << prefix_eoc_pressure_ << "_avg" << "] {" << eoc_csv_filename << "};"
+					<< "\\addlegendentry{$eoc^a_p$}\n";
 				endSubfloat( out, false, false );
 			}
 
@@ -269,6 +304,23 @@ class TimeSeriesOutput {
 						% common_info. extra_info;
 			out << meta_info;
 
+			std::ostringstream out_tmp;
+			out_tmp << "\\begin{tabular}{cccc}\n"
+						"Lvl & $ u_{err}$ & $p_{err}$ & runtime\\\\ ";
+			for ( RunInfoTimeMapMap::const_iterator it = runInfoMapMap_.begin();
+				  it != runInfoMapMap_.end();
+				  ++it )
+			{
+				const unsigned int refine = it->second.begin()->second.refine_level;
+
+				out_tmp << boost::format ("%d & %e & %e & %d\\\\ ") % refine
+									% avg_errors_velocity_map_[it->first]
+									% avg_errors_pressure_map_[it->first]
+									% cummulated_runtime_ [it->first];
+			}
+			out_tmp << "\\end{tabular}\n";
+			out << boost::format ("\\subfloat{%s}") % out_tmp.str();
+
 			out << "\\caption{dt " << dt << "}"
 				<< "\n\\end{figure}\n";
 		}
@@ -292,8 +344,16 @@ class TimeSeriesOutput {
 		std::map<RunInfoVectorMapKeyType,double> averaged_error_pressure_;
 		std::map<RunInfoVectorMapKeyType,double> max_error_velocity_map_;
 		std::map<RunInfoVectorMapKeyType,double> max_error_pressure_map_;
+		//!error - gridwith/dt pair
 		std::vector< std::pair<double,double > > max_errors_velocity;
 		std::vector< std::pair<double,double > > max_errors_pressure;
+
+		//! L^2(t_0,T;L^2) errors
+		std::map<RunInfoVectorMapKeyType,double> avg_errors_velocity_map_;
+		std::map<RunInfoVectorMapKeyType,double> avg_errors_pressure_map_;
+		std::vector< std::pair<double,double > > avg_errors_velocity_;
+		std::vector< std::pair<double,double > > avg_errors_pressure_;
+
 		std::vector< double > max_dt_vec;
 
 		std::string  writeCSV( std::string basename )
@@ -367,7 +427,12 @@ class TimeSeriesOutput {
 			testCreateDirectory( pathOnly( filename ) );
 			std::ofstream out( filename.c_str() );
 
-			out << "refine\t" << prefix_eoc_velocity_ << "\t" << prefix_eoc_pressure_ << "\n";
+			boost::format header("refine\t%s\t%s_avg\t%s\t%s_avg\n");
+
+			out << header
+				   % prefix_eoc_velocity_ % prefix_eoc_velocity_
+				   % prefix_eoc_pressure_ % prefix_eoc_pressure_ ;
+
 			for ( size_t i = 0; i < max_errors_pressure.size()-1; ++i )
 			{
 				const double width_qout = max_errors_pressure[i].second / max_errors_pressure[i+1].second;
@@ -375,11 +440,16 @@ class TimeSeriesOutput {
 				const double total_qout = width_qout * dt_qout;
 				const double pressure_qout = max_errors_pressure[i].first/ max_errors_pressure[i+1].first;
 				const double velocity_qout = max_errors_velocity[i].first/ max_errors_velocity[i+1].first;
+				const double avg_pressure_qout = avg_errors_pressure_[i].first/ avg_errors_pressure_[i+1].first;
+				const double avg_velocity_qout = avg_errors_velocity_[i].first/ avg_errors_velocity_[i+1].first;
 				const double pressure_eoc = std::log( pressure_qout  ) / std::log( total_qout );
 				const double velocity_eoc = std::log( velocity_qout ) / std::log( total_qout );
-				out << i + 1 << "\t"
-					<< velocity_eoc << "\t"
-					<< pressure_eoc << "\n";
+				const double avg_pressure_eoc = std::log( avg_pressure_qout ) / std::log( total_qout );
+				const double avg_velocity_eoc = std::log( avg_velocity_qout ) / std::log( total_qout );
+				out << boost::format("%d\t%e\t%e\t%e\t%e\n")
+						% (i + 1)
+						% velocity_eoc % avg_velocity_eoc
+						% pressure_eoc % avg_pressure_eoc;
 			}
 
 			out << std::endl;
