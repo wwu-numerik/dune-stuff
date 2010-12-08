@@ -2,6 +2,7 @@
 #define DUNE_STUFF_ERROR_HH
 
 #include <dune/fem/misc/l2norm.hh>
+#include <dune/fem/misc/h1norm.hh>
 #include <boost/format.hpp>
 #include <utility>
 
