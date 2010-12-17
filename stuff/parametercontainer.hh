@@ -13,6 +13,31 @@
 
 #include <vector>
 
+namespace Stuff {
+	//! a class usable as a default validator for Dune::Parameter
+	template< class T >
+	class ValidateAny
+			: public Dune::ValidatorDefault< T, ValidateAny< T > >
+	{
+		typedef ValidateAny< T > ThisType;
+		typedef Dune::ValidatorDefault< T, ThisType > BaseType;
+
+	public:
+		inline ValidateAny ( ){}
+		inline ValidateAny ( const ThisType & ){}
+
+		inline bool operator() ( const T& ) const
+		{
+			return true;
+		}
+
+		inline void print(std::ostream& s) const
+		{
+			s << "ValidateAny: all values should be valid... " << std::endl << std::endl;
+		}
+	};
+}
+
 /**
  *  \brief  class containing global parameters
  *
@@ -113,17 +138,23 @@ class ParameterContainer
         template< typename T >
         T getParam( std::string name, T def, bool useDbgStream = true )
         {
-            assert( all_set_up_ );
-            #ifndef NDEBUG
-				if ( warning_output_ && ! Dune::Parameter::exists( name ) ) {
-                    if ( useDbgStream )
-                        Logger().Dbg() << "WARNING: using default value for parameter \"" << name << "\"" << std::endl;
-                    else
-                        std::cerr << "WARNING: using default value for parameter \"" << name << "\"" << std::endl;
-                }
-            #endif
-            return Dune::Parameter::getValue( name, def );
+			return getParam( name, def, Stuff::ValidateAny<T>(), useDbgStream );
         }
+
+		template< typename T, class Validator >
+		T getParam( std::string name, T def, const Validator& validator, bool useDbgStream = true )
+		{
+			assert( all_set_up_ );
+			#ifndef NDEBUG
+				if ( warning_output_ && ! Dune::Parameter::exists( name ) ) {
+					if ( useDbgStream )
+						Logger().Dbg() << "WARNING: using default value for parameter \"" << name << "\"" << std::endl;
+					else
+						std::cerr << "WARNING: using default value for parameter \"" << name << "\"" << std::endl;
+				}
+			#endif
+			return Dune::Parameter::getValidValue( name, def, validator );
+		}
 
 		std::map<char,const char*> getFunction( const std::string& name, const std::string def = "0" )
 		{
@@ -184,4 +215,5 @@ ParameterContainer& Parameters()
     static ParameterContainer parameters;
     return parameters;
 }
+
 #endif // end of PARAMETERHANDLER.HH
