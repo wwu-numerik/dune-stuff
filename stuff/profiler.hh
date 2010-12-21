@@ -108,6 +108,20 @@ class Profiler
             m_cur_run_num++;
 		}
 
+		class ScopedTiming {
+			const std::string section_name_;
+			public:
+				ScopedTiming( const std::string& section_name )
+					:section_name_(section_name)
+				{
+					Profiler::instance().StartTiming( section_name_ );
+				}
+				~ScopedTiming()
+				{
+					Profiler::instance().StopTiming( section_name_ );
+				}
+		};
+
 	protected:
 		MapVector m_timings;
 		unsigned int m_cur_run_num;
@@ -116,7 +130,11 @@ class Profiler
 		std::map<int,int> m_count;
 		clock_t init_time_;
 
-
+		static Profiler& instance()
+		{
+			static Profiler pf;
+			return pf;
+		}
 };
 
 template < class CollectiveCommunication >
@@ -221,7 +239,7 @@ long Profiler::OutputCommon( CollectiveCommunication& comm, InfoContainer& run_i
 	csv << "refine\t" << "processes\t"<< "numDofs\t" << "L2 error\t";
 	for ( DataMap::const_iterator it = m_timings[0].begin(); it != m_timings[0].end(); ++it )
 	{
-		csv << it->first << ","  ;
+		csv << it->first << "\t"  ;
 	}
     csv << "Relative total time" << std::endl;
 
@@ -257,9 +275,7 @@ long Profiler::OutputCommon( CollectiveCommunication& comm, InfoContainer& run_i
 //! global profiler object
 Profiler& profiler()
 {
-	static Profiler pf;
-	return pf;
-
+	return Profiler::instance();
 }
 
 #endif // PROFILER_HH_INCLUDED
