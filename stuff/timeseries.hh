@@ -430,7 +430,7 @@ class TimeSeriesOutput {
 					const std::string time = (boost::format("%f")%vit->first).str();
 					const RunInfo& info = vit->second;
 					int pos = std::find(timesteps_.begin(), timesteps_.end(), time) - timesteps_.begin();
-					if ( pos >= timesteps_.size() )
+					if ( pos >= int(timesteps_.size()) )
 					{
 						std::cerr << boost::format("map %d exceed limit %d -- %f \n") %el_pos	% pos % time;
 						continue;
@@ -448,7 +448,7 @@ class TimeSeriesOutput {
 				const std::string current_time = timesteps_[i];
 				out << current_time << "\t";
 
-				for( int j = 0; j < vector_count_; ++j)
+				for( int j = 0; j < int(vector_count_); ++j)
 				{
 					out << boost::format("%f\t%f\t%f\t%f\t")
 						   % remapped_data[i][j][0]
