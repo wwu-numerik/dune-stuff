@@ -33,9 +33,9 @@ class PostProcessor
 
         typedef StokesPassImp
             StokesPassType;
-        typedef typename StokesPassType::DiscreteStokesFunctionSpaceWrapperType
+		typedef typename StokesPassType::Traits::DiscreteStokesFunctionSpaceWrapperType
             DiscreteStokesFunctionSpaceWrapperType;
-        typedef typename StokesPassType::DiscreteStokesFunctionWrapperType
+		typedef typename StokesPassType::Traits::DiscreteStokesFunctionWrapperType
             DiscreteStokesFunctionWrapperType;
 
         typedef typename ProblemType::VelocityType
@@ -47,7 +47,7 @@ class PostProcessor
         typedef typename ProblemType::DirichletDataType
             DirichletDataType;
 
-        typedef typename StokesPassType::GridPartType
+		typedef typename StokesPassType::Traits::GridPartType
             GridPartType;
         typedef typename GridPartType::GridType
             GridType;
@@ -55,14 +55,14 @@ class PostProcessor
         typedef Dune::VTKIO<GridPartType>
             VTKWriterType;
 
-        typedef typename StokesPassType::DiscreteVelocityFunctionType
+		typedef typename StokesPassType::Traits::DiscreteVelocityFunctionType
             DiscreteVelocityFunctionType;
-        typedef typename StokesPassType::DiscreteVelocityFunctionSpaceType
+		typedef typename StokesPassType::Traits::DiscreteVelocityFunctionSpaceType
             DiscreteVelocityFunctionSpaceType;
 
-        typedef typename StokesPassType::DiscretePressureFunctionType
+		typedef typename StokesPassType::Traits::DiscretePressureFunctionType
             DiscretePressureFunctionType;
-        typedef typename StokesPassType::DiscretePressureFunctionSpaceType
+		typedef typename StokesPassType::Traits::DiscretePressureFunctionSpaceType
             DiscretePressureFunctionSpaceType;
 
 
