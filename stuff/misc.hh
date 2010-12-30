@@ -30,6 +30,7 @@ bool isnan( T x ) { return !(x==x); }
 #include <algorithm>
 #include <dune/common/fixedarray.hh>
 #include "static_assert.hh"
+#include <cstddef>
 
 char* copy(const char* s) { int l=strlen(s)+1; char* t = new char[l];  for(int i=0;i<l;i++) { t[i] = s[i]; } return t; }
 #define __CLASS__ strtok(copy(__PRETTY_FUNCTION__),"<(")
@@ -714,6 +715,7 @@ int getIdx( const Container& ct, Element e )
     return -1;
 }
 
+//! no-branch sign function
 long sign(long x) { return long(x!=0) | (long(x>=0)-1);  }
 
 //! strip filename from \path if present, return empty string if only filename present
@@ -768,6 +770,7 @@ bool testCreateDirectory( std::string path ) {
     return true;
 }
 
+//! no idea what this was for
 template < typename T >
 std::string getParameterString( const std::string& prefix, T min, T max, T inc )
 {
@@ -924,6 +927,7 @@ void meminfo( Stream& stream )
     stream << "------------ \n\n" << std::endl;
 }
 
+//! extern matrix addition that ignore 0 entries
 template <class MatrixType>
 void addMatrix( MatrixType& dest, const MatrixType& arg, const double eps = 1e-14 )
 {
@@ -935,18 +939,20 @@ void addMatrix( MatrixType& dest, const MatrixType& arg, const double eps = 1e-1
 		}
 }
 
-//! useless and/or obsolete stl wrapper?
+//! for backward compat only
 template < class ContainerType >
 void MergeVector( ContainerType& target, const ContainerType& a )
 {
     target.insert( target.end(), a.begin(), a.end() );
 }
 
+//! bound \param var in [\param min,\param max]
 template <typename T> T clamp(const T var,const T min,const T max)
 {
 	return ( (var < min) ? min : ( var > max ) ? max : var );
 }
 
+//! stupid timing helper
 struct TimeGuard {
 	const time_t cur_time;
 	TimeGuard()
@@ -997,6 +1003,7 @@ struct wraparound_array : public Dune::array<T,N> {
 	}
 };
 
+//! docme
 class MovingAverage
 {
 	double avg_;
