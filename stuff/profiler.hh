@@ -261,12 +261,12 @@ long Profiler::OutputCommon( CollectiveCommunication& comm, InfoContainer& run_i
     std::ofstream csv( filename.c_str() );
 
 //outputs column names
-	csv << "refine\t" << "processes\t"<< "numDofs\t" << "L2 error\t";
+	csv << "refine\t" << "processes\t"<< "numDofs\t" << "L2_error\t";
 	for ( DataMap::const_iterator it = m_timings[0].begin(); it != m_timings[0].end(); ++it )
 	{
 		csv << it->first << "\t"  ;
 	}
-    csv << "Relative total time" << std::endl;
+	csv << "Relative_total_time" << std::endl;
 
 //outputs column values
 
