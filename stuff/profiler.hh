@@ -94,22 +94,22 @@ class Profiler
          * \tparam CollectiveCommunication should be Dune::CollectiveCommunication< MPI_Comm / double >
          **/
         template < class CollectiveCommunication >
-		long OutputAveraged( CollectiveCommunication& comm, const int refineLevel, const long numDofs, const double scale_factor = 0.001 );
+		long OutputAveraged( CollectiveCommunication& comm, const int refineLevel, const long numDofs, const double scale_factor = 1.0 );
 
         /** output to \param filename
          * \param comm used to gather and average the runtime data over all processes
          * \tparam CollectiveCommunication should be Dune::CollectiveCommunication< MPI_Comm / double >
          **/
 		template < class CollectiveCommunication, class InfoContainer >
-		long OutputCommon( CollectiveCommunication& comm, InfoContainer& run_infos, std::string filename, const double scale_factor = 0.001 );
+		long OutputCommon( CollectiveCommunication& comm, InfoContainer& run_infos, std::string filename, const double scale_factor = 1.0 );
 
 		//! default proxy for output
         template < class CollectiveCommunication, class InfoContainer >
-		long Output( CollectiveCommunication& comm, InfoContainer& run_infos, const double scale_factor = 0.001 );
+		long Output( CollectiveCommunication& comm, InfoContainer& run_infos, const double scale_factor = 1.0 );
 
 		//! proxy for output of a map of runinfos
         template < class CollectiveCommunication, class InfoContainerMap >
-		void OutputMap( CollectiveCommunication& comm, InfoContainerMap& run_infos_map, const double scale_factor = 0.001 );
+		void OutputMap( CollectiveCommunication& comm, InfoContainerMap& run_infos_map, const double scale_factor = 1.0 );
 
         /** call this with correct numRuns <b> before </b> starting any profiling
          *  if you're planning on doing more than one iteration of your code
@@ -133,6 +133,7 @@ class Profiler
             m_cur_run_num++;
 		}
 
+		//! a utility class to time a limited scope of code
 		class ScopedTiming {
 			const std::string section_name_;
 			public:
