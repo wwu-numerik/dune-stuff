@@ -6,6 +6,7 @@
 #include <cc++/thread.h> //threading class
 
 #include "misc.hh"
+#include "math.hh"
 
 
 namespace Stuff {
