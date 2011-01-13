@@ -61,6 +61,7 @@ class TimeSeriesOutput {
 				{
 					const RunInfo& info = vit->second;
 					runtime += info.run_time;
+					assert( info.L2Errors.size() > 1 );
 					total_error_velocity += info.L2Errors[0];
 					total_error_pressure += info.L2Errors[1];
 				}
@@ -109,6 +110,7 @@ class TimeSeriesOutput {
 					  mit != info_map.end();
 					  ++mit )
 				{
+					assert( mit->second.H1Errors.size() > 0 );
 					velocity_sum += mit->second.L2Errors[0] / info_map.size();
 					pressure_sum += mit->second.L2Errors[1] / info_map.size();
 					h1_velocity_sum += mit->second.H1Errors[0] / info_map.size();
