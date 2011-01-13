@@ -310,6 +310,17 @@ namespace Stuff {
 					}
 				}
 		};
+
+		template < class M >
+		void forceTranspose(const M& arg, M& dest)
+		{
+			assert( arg.cols() == dest.rows() );
+			assert( dest.cols() == arg.rows() );
+//			dest.clear();
+			for ( int i = 0; i < arg.cols(); ++i )
+				for ( int j = 0; j < arg.rows(); ++j )
+					dest.set( j, i, arg(i,j));
+		}
 	}
 } // namespace Stuff 
 
