@@ -51,6 +51,14 @@ class assert_exception : public std::runtime_error
    assert_exception(std::string msg) : std::runtime_error(msg) {};
 };
 
+namespace Stuff {
+class singlerun_abort_exception : public std::runtime_error
+{
+  public:
+   singlerun_abort_exception(std::string msg) : std::runtime_error(msg) {};
+};
+}
+
 #ifndef NDEBUG
 #define ASSERT_EXCEPTION(cond,msg) if(!(cond))\
 	{ std::string rmsg ( std::string(__FILE__) + std::string(":") + Stuff::toString(__LINE__) + std::string("\n") + std::string(msg) );  \
