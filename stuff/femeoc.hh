@@ -9,7 +9,7 @@
 #include <dune/common/fvector.hh>
 #include <dune/fem/io/file/iointerface.hh>
 
-namespace Dune
+namespace Stuff
 {
 
 /**
@@ -60,7 +60,7 @@ class FemEoc
   }
   void init(const std::string& path,
             const std::string& name, const std::string& descript, const std::string& inputFile ) {
-    IOInterface::createPath(path);
+	Dune::IOInterface::createPath(path);
     init(path+"/"+name,descript, path+"/"+inputFile );
   }
   void init(const std::string& name, const std::string& descript, const std::string& inputFile ) {
@@ -155,7 +155,7 @@ class FemEoc
       error_[pos+i] = err[i];
   }
   template <int SIZE>
-  void seterrors(size_t id,const FieldVector<double,SIZE>& err) {
+  void seterrors(size_t id,const Dune::FieldVector<double,SIZE>& err) {
     int pos = pos_[id];
     for (int i=0;i<SIZE;++i)
       error_[pos+i] = err[i];
@@ -309,7 +309,7 @@ class FemEoc
    *         addEntry)
    */
   template <int SIZE>
-  static void setErrors(size_t id,const FieldVector<double,SIZE>& err) {
+  static void setErrors(size_t id,const Dune::FieldVector<double,SIZE>& err) {
     instance().seterrors(id,err);
   }
   /** \brief add a single error value for the given id (returned by

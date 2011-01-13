@@ -88,10 +88,10 @@ namespace Dune {
 
 					// only write info for proc 0, otherwise on large number of procs
 					// this is to much output
-					if(myRank_ <= 0)
-					{
-						std::cout << "DataWriter["<<myRank_<<"]::write:  time = "<< time << "  writeData: step number " << writeStep_ << std::endl;
-					}
+//					if(myRank_ <= 0)
+//					{
+//						std::cout << "DataWriter["<<myRank_<<"]::write:  time = "<< time << "  writeData: step number " << writeStep_ << std::endl;
+//					}
 					saveTime_ += saveStep_;
 					++writeStep_;
 				}
