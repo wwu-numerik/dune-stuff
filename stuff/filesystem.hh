@@ -49,7 +49,8 @@ std::string filenameOnly( const std::string& path )
 //! may include filename, will be stripped
 void testCreateDirectory( const std::string path ) {
 	std::string pathonly = pathOnly( path );
-	Dune::IOInterface::createPath( pathonly );
+	if( ! pathonly.empty() )
+		Dune::IOInterface::createPath( pathonly );
 }
 
 //! read a file and output all lines containing filter string to a stream
