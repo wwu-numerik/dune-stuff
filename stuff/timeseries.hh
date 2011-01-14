@@ -467,8 +467,10 @@ class TimeSeriesOutput {
 		std::string writeEOCcsv( std::string basename )
 		{
 			std::string filename = basename + ".eoc.csv";
+			std::string integrated_filename = basename + ".int.csv";
 			testCreateDirectory( pathOnly( filename ) );
 			std::ofstream out( filename.c_str() );
+			std::ofstream int_out( integrated_filename.c_str() );
 
 			boost::format header("refine\t%s\t%s_avg\t%s\t%s_avg\t%s_h1\n");
 
@@ -476,8 +478,10 @@ class TimeSeriesOutput {
 				   % prefix_eoc_velocity_ % prefix_eoc_velocity_
 				   % prefix_eoc_pressure_ % prefix_eoc_pressure_
 				   % prefix_eoc_velocity_;
+			int_out << "refine\tL2t_velocity\tL2t_pressure\tL2t_h1_velocity\n";
 
-			for ( size_t i = 0; i < max_errors_pressure.size()-1; ++i )
+			const size_t errordata_point_count = max_errors_pressure.size();
+			for ( size_t i = 0; i < errordata_point_count-1; ++i )
 			{
 				const double width_qout = max_errors_pressure[i].second / max_errors_pressure[i+1].second;
 				const double dt_qout = max_dt_vec[i] / max_dt_vec[i+1];
@@ -497,9 +501,21 @@ class TimeSeriesOutput {
 						% velocity_eoc % avg_velocity_eoc
 						% pressure_eoc % avg_pressure_eoc
 						% h1_avg_velocity_eoc;
+				int_out << boost::format("%d\t%e\t%e\t%e\n")
+						   % i
+						   % avg_errors_velocity_[i].first
+						   % avg_errors_pressure_[i].first
+						   % avg_h1_errors_velocity_[i].first;
 			}
+			const size_t last_idx = errordata_point_count -1;
+			int_out << boost::format("%d\t%e\t%e\t%e\n")
+					   % last_idx
+					   % avg_errors_velocity_[last_idx].first
+					   % avg_errors_pressure_[last_idx].first
+					   % avg_h1_errors_velocity_[last_idx].first;
 
 			out << std::endl;
+			int_out << std::endl;
 			return filename;
 		}
 };
