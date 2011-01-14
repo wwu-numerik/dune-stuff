@@ -452,7 +452,7 @@ class TimeSeriesOutput {
 
 				for( int j = 0; j < int(vector_count_); ++j)
 				{
-					out << boost::format("%f\t%f\t%f\t%f\t")
+					out << boost::format("%e\t%e\t%e\t%e\t")
 						   % remapped_data[i][j][0]
 						   % remapped_data[i][j][1]
 						   % remapped_data[i][j][2]
