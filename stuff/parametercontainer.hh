@@ -82,6 +82,12 @@ class ParameterContainer
 			else {
                 Dune::Parameter::append( argc, argv );
             }
+			Dune::Parameter::replaceKey( "fem.prefix",
+										Dune::Parameter::getValidValue( std::string("fem.io.datadir"),
+																		std::string("data"),
+																		Stuff::ValidateAny<std::string>()
+																	   )
+										);
 			warning_output_ = Dune::Parameter::getValue( "disableParameterWarnings", warning_output_ );
             return CheckSetup();
         }
