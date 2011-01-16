@@ -12,6 +12,7 @@
 #include "logging.hh"
 
 #include <vector>
+#include <algorithm>
 
 namespace Stuff {
 	//! a class usable as a default validator for Dune::Parameter
@@ -35,6 +36,32 @@ namespace Stuff {
 		{
 			s << "ValidateAny: all values should be valid... " << std::endl << std::endl;
 		}
+	};
+
+	//! validates arg if in given list
+	template< class T, class ListImp = std::vector<T> >
+	class ValidateInList
+			: public Dune::ValidatorDefault< T, ValidateInList< T, ListImp > >
+	{
+		typedef ValidateInList<T, ListImp> ThisType;
+		typedef Dune::ValidatorDefault< T, ThisType > BaseType;
+		typedef ListImp ListType;
+		ListType valid_list_;
+	public:
+		ValidateInList(const ListType& valid_list)
+			:valid_list_(valid_list)
+		{}
+
+		inline bool operator() ( const T& val ) const
+		{
+			return std::find( valid_list_.begin(), valid_list_.end(), val ) != valid_list_.end();
+		}
+
+		inline void print(std::ostream& s) const
+		{
+			s << "ValidateInList: checked Parameter was not in valid list" << std::endl << std::endl;
+		}
+
 	};
 }
 
