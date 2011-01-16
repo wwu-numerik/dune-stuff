@@ -501,18 +501,23 @@ class TimeSeriesOutput {
 						% velocity_eoc % avg_velocity_eoc
 						% pressure_eoc % avg_pressure_eoc
 						% h1_avg_velocity_eoc;
-				int_out << boost::format("%d\t%e\t%e\t%e\n")
-						   % i
-						   % avg_errors_velocity_[i].first
-						   % avg_errors_pressure_[i].first
-						   % avg_h1_errors_velocity_[i].first;
+				int_out << boost::format("%d\t%e\t%e\t%e\t%e\t%e\n")
+							% i
+							% avg_errors_velocity_[i].first
+							% avg_errors_pressure_[i].first
+							% avg_h1_errors_velocity_[i].first
+							% max_errors_velocity[i].first
+							% max_errors_pressure[i].first;
+
 			}
 			const size_t last_idx = errordata_point_count -1;
-			int_out << boost::format("%d\t%e\t%e\t%e\n")
+			int_out << boost::format("%d\t%e\t%e\t%e\t%e\t%e\n")
 					   % last_idx
 					   % avg_errors_velocity_[last_idx].first
 					   % avg_errors_pressure_[last_idx].first
-					   % avg_h1_errors_velocity_[last_idx].first;
+					   % avg_h1_errors_velocity_[last_idx].first
+					   % max_errors_velocity[last_idx].first
+					   % max_errors_pressure[last_idx].first;
 
 			out << std::endl;
 			int_out << std::endl;
