@@ -1,0 +1,15 @@
+\documentclass[landscape]{article}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{subfig}
+\usepackage[left=0.5in,right=1in,top=0.25in,bottom=0.25in]{geometry} 
+\newcommand{\plotscale}{0.8}
+
+\begin{document}
+\let\\\relax
+\directlua{	for name in lfs.dir(lfs.currentdir()) do
+				for n in name:gmatch("part_\%d.tex" ) do
+					tex.sprint("\\input " ..  n .. " ")
+				end
+			end}
+\end{document}
