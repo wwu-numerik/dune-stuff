@@ -478,7 +478,7 @@ class TimeSeriesOutput {
 				   % prefix_eoc_velocity_ % prefix_eoc_velocity_
 				   % prefix_eoc_pressure_ % prefix_eoc_pressure_
 				   % prefix_eoc_velocity_;
-			int_out << "refine\tL2t_velocity\tL2t_pressure\tL2t_h1_velocity\nMaxL2_velocity\nMaxL2_pressure\n";
+			int_out << "refine\tL2t_velocity\tL2t_pressure\tL2t_h1_velocity\tMaxL2_velocity\tMaxL2_pressure\n";
 
 			const size_t errordata_point_count = max_errors_pressure.size();
 			for ( size_t i = 0; i < errordata_point_count-1; ++i )

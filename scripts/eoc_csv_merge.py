@@ -48,7 +48,8 @@ titles = args[scheme_count:]
 
 first_col = options.runtype
 
-prefixes = ["L2t_velocity", "L2t_pressure", "L2t_h1_velocity"]
+prefixes = ["L2t_velocity", "L2t_pressure", "L2t_h1_velocity","maxV","maxP"]
+#prefixes = ["L2t_velocity", "L2t_pressure", "L2t_h1_velocity"]
 origin_column_header = [first_col] + prefixes
 prefixes = [ "%s_"%x for x in prefixes ]
 target_column_header = [first_col] 
