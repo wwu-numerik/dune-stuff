@@ -143,7 +143,7 @@ class PostProcessor
                     assembleExactSolution();
                 current_refine_level_ = refine_level;
 
-                calcError( wrapper.discretePressure() , wrapper.discreteVelocity() );
+				calcError( wrapper );
                 vtk_write( discreteExactVelocity_ );
                 vtk_write( discreteExactPressure_ );
                 vtk_write( discreteExactForce_ );
@@ -190,6 +190,11 @@ class PostProcessor
 			entityColoration();
 #endif
         }
+
+		void calcError( const DiscreteStokesFunctionWrapperType& wrapper )
+		{
+			calcError( wrapper.discretePressure() , wrapper.discreteVelocity() );
+		}
 
 		//! proxy function that is to be used if no analytical solutions are availble to calculate errors against
         void calcError( const DiscreteStokesFunctionWrapperType& computed, const DiscreteStokesFunctionWrapperType& reference )
