@@ -17,6 +17,11 @@ namespace Stuff {
   **/
 class TimeSeriesOutput {
 
+	static double integralPointValue( const double right, const double left, const double weight )
+	{
+		return (right*right+left*left)*weight*0.5;
+	}
+
 	public:
 		TimeSeriesOutput( const RunInfoTimeMapMap& runInfoVectorMap )
 			: runInfoMapMap_( runInfoVectorMap ),
@@ -94,7 +99,7 @@ class TimeSeriesOutput {
 				max_dt_vec.push_back( max_dt );
 			}
 
-			// L^2(t_0,T;L^2) errors
+			// L^2(t_0,T;L^2) errors (trapezregel)
 			for ( RunInfoTimeMapMap::const_iterator it = runInfoMapMap_.begin();
 				  it != runInfoMapMap_.end();
 				  ++it )
@@ -106,19 +111,18 @@ class TimeSeriesOutput {
 				double pressure_sum = 0;
 				double h1_velocity_sum = 0;
 				double dt_sum = 0;
-				for ( RunInfoTimeMap::const_iterator mit = info_map.begin();
-					  mit != info_map.end();
-					  ++mit )
+				RunInfoTimeMap::const_iterator mit = info_map.begin();
+				for ( size_t idx = 0;
+					  idx < info_map.size()-1;
+					  ++idx )
 				{
 					assert( mit->second.H1Errors.size() > 0 );
-					velocity_sum += mit->second.L2Errors[0] / info_map.size();
-					pressure_sum += mit->second.L2Errors[1] / info_map.size();
-					h1_velocity_sum += mit->second.H1Errors[0] / info_map.size();
-					dt_sum += mit->second.delta_t;
+					const RunInfo& current	= mit->second;
+					const RunInfo& next		= (++mit)->second;
+					velocity_sum	+= integralPointValue( next.L2Errors[0], current.L2Errors[0], current.delta_t );
+					pressure_sum	+= integralPointValue( next.L2Errors[1], current.L2Errors[1], current.delta_t );
+					h1_velocity_sum += integralPointValue( next.H1Errors[0], current.H1Errors[0], current.delta_t );
 				}
-				velocity_sum *= dt_sum;
-				pressure_sum *= dt_sum;
-				h1_velocity_sum *= dt_sum;
 				velocity_sum = std::sqrt( velocity_sum );
 				h1_velocity_sum = std::sqrt( h1_velocity_sum );
 				pressure_sum = std::sqrt( pressure_sum );
