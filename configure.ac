@@ -9,7 +9,7 @@ AM_CONFIG_HEADER([config.h])
 # we need no more than the standard DE-stuff
 # this module depends on dune-common dune-grid dune-fem
 # this implies checking for [dune-common], [dune-grid], [dune-istl], [dune-fem]
-DUNE_CHECK_ALL_M
+DUNE_CHECK_ALL
 DUNE_SYMLINK
 
 # implicitly set the Dune-flags everywhere
