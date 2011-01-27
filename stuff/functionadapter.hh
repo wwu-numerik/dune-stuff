@@ -4,6 +4,7 @@
 #include <vector>
 #include <boost/shared_ptr.hpp>
 #include <dune/stuff/printing.hh>
+#include <dune/stuff/static_assert.hh>
 
 namespace Stuff {
 
@@ -142,7 +143,8 @@ public:
 	{
 		GradientJacobianToLaplacian( const JacobianRangeType& jacobian )
 		{
-			Dune::CompileTimeChecker< ( dim == 1 || dim > 3 ) > NotImplemented;
+			dune_static_assert((dim==1 || dim>3), "GradientJacobianToLaplacian is not implemented for this dimension!");
+			// Dune::CompileTimeChecker< ( dim == 1 || dim > 3 ) > NotImplemented;
 		}
 	};
 

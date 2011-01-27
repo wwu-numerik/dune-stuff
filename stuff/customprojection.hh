@@ -6,6 +6,8 @@
 #include <dune/fem/function/common/discretefunction.hh>
 #include <dune/fem/function/common/discretefunctionadapter.hh>
 #include <dune/fem/operator/1order/localmassmatrix.hh>
+#include <dune/stuff/static_assert.hh>
+#include <dune/stuff/math.hh>
 
 namespace Stuff {
 
@@ -249,7 +251,8 @@ namespace Stuff {
 		{
 			GradientJacobianToLaplacian( const JacobianRangeType& jacobian )
 			{
-				Dune::CompileTimeChecker< ( dim == 1 || dim > 3 ) > NotImplemented;
+			  //Dune::CompileTimeChecker< ( dim == 1 || dim > 3 ) > NotImplemented;
+				dune_static_assert(( dim == 1 || dim > 3 ), "GradientJacobianToLaplacian not implemented for this dimension!");
 			}
 		};
 
@@ -337,9 +340,9 @@ namespace Stuff {
 					for(Iterator it = space.begin(); it != endit ; ++it)
 					{
 						// get entity
-						const typename GridType::template Codim<0>::Entity& entity = *it;
+						const typename GridPartType::GridType::template Codim<0>::Entity& entity = *it;
 						// get geometry
-						typedef  typename GridType::template Codim<0>::Geometry
+						typedef  typename GridPartType::GridType::template Codim<0>::Geometry
 							Geometry;
 						const Geometry& geo = entity.geometry();
 
