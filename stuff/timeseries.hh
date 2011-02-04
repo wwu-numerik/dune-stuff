@@ -110,7 +110,6 @@ class TimeSeriesOutput {
 				double velocity_sum = 0;
 				double pressure_sum = 0;
 				double h1_velocity_sum = 0;
-				double dt_sum = 0;
 				RunInfoTimeMap::const_iterator mit = info_map.begin();
 				for ( size_t idx = 0;
 					  idx < info_map.size()-1;
@@ -119,9 +118,9 @@ class TimeSeriesOutput {
 					assert( mit->second.H1Errors.size() > 0 );
 					const RunInfo& current	= mit->second;
 					const RunInfo& next		= (++mit)->second;
-					velocity_sum	+= integralPointValue( next.L2Errors[0], current.L2Errors[0], current.delta_t );
-					pressure_sum	+= integralPointValue( next.L2Errors[1], current.L2Errors[1], current.delta_t );
-					h1_velocity_sum += integralPointValue( next.H1Errors[0], current.H1Errors[0], current.delta_t );
+					velocity_sum	+= integralPointValue( next.L2Errors[0], current.L2Errors[0], next.current_time - current.current_time );
+					pressure_sum	+= integralPointValue( next.L2Errors[1], current.L2Errors[1], next.current_time - current.current_time );
+					h1_velocity_sum += integralPointValue( next.H1Errors[0], current.H1Errors[0], next.current_time - current.current_time );
 				}
 				velocity_sum = std::sqrt( velocity_sum );
 				h1_velocity_sum = std::sqrt( h1_velocity_sum );
