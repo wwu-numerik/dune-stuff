@@ -12,7 +12,7 @@ namespace Dune {
 	class TimeAwareDataWriter : public DataWriter< GridType, OutputTupleType >{
 		protected:
 			typedef DataWriter< GridType, OutputTupleType >
-					BaseType;
+				BaseType;
 			using BaseType::grape;
 			using BaseType::grid_;
 			using BaseType::path_;
@@ -79,7 +79,7 @@ namespace Dune {
 	#endif
 					else if ( outputFormat_ == gnuplot )
 					{
-						writeGnuPlotOutput( Element<0>::get(data_), time );
+						writeGnuPlotOutput( time );
 					}
 					else
 					{
@@ -100,6 +100,42 @@ namespace Dune {
 
 		protected:
 			const TimeproviderType& timeprovider_;
+			static inline std::string genFilename(const std::string& path,
+										   const std::string& fn,
+										   int ntime,
+										   int precision = 6)
+			{
+				std::ostringstream name;
+
+				if(path.size() > 0)
+				{
+					name << path;
+					name << "/";
+				}
+				name << fn;
+
+				char cp[256];
+				switch(precision)
+				{
+					case 2  : { sprintf(cp, "%02d", ntime); break; }
+					case 3  : { sprintf(cp, "%03d", ntime); break; }
+					case 4  : { sprintf(cp, "%04d", ntime); break; }
+					case 5  : { sprintf(cp, "%05d", ntime); break; }
+					case 6  : { sprintf(cp, "%06d", ntime); break; }
+					case 7  : { sprintf(cp, "%07d", ntime); break; }
+					case 8  : { sprintf(cp, "%08d", ntime); break; }
+					case 9  : { sprintf(cp, "%09d", ntime); break; }
+					case 10 : { sprintf(cp, "%010d", ntime); break; }
+					default:
+						{
+							DUNE_THROW(Exception, "Couldn't gernerate filename with precision = "<<precision);
+						}
+				}
+				name << cp;
+
+				// here implicitly a string is generated
+				return name.str();
+			}
 
 			template <class VTKOut>
 			class VTKOutputter {
@@ -141,42 +177,6 @@ namespace Dune {
 						}
 
 						vtkOut_.clear();
-					}
-					static inline std::string genFilename(const std::string& path,
-												   const std::string& fn,
-												   int ntime,
-												   int precision = 6)
-					{
-						std::ostringstream name;
-
-						if(path.size() > 0)
-						{
-							name << path;
-							name << "/";
-						}
-						name << fn;
-
-						char cp[256];
-						switch(precision)
-						{
-							case 2  : { sprintf(cp, "%02d", ntime); break; }
-							case 3  : { sprintf(cp, "%03d", ntime); break; }
-							case 4  : { sprintf(cp, "%04d", ntime); break; }
-							case 5  : { sprintf(cp, "%05d", ntime); break; }
-							case 6  : { sprintf(cp, "%06d", ntime); break; }
-							case 7  : { sprintf(cp, "%07d", ntime); break; }
-							case 8  : { sprintf(cp, "%08d", ntime); break; }
-							case 9  : { sprintf(cp, "%09d", ntime); break; }
-							case 10 : { sprintf(cp, "%010d", ntime); break; }
-							default:
-								{
-									DUNE_THROW(Exception, "Couldn't gernerate filename with precision = "<<precision);
-								}
-						}
-						name << cp;
-
-						// here implicitly a string is generated
-						return name.str();
 					}
 
 				private:
@@ -220,6 +220,83 @@ namespace Dune {
 				}
 			}
 	#endif
+			struct Gnu {
+				const double time_;
+				const std::string path_,datapref_;
+				const bool parallel_;
+				const int step_;
+				Gnu(const double time,
+					std::string path, bool parallel,int step,std::string datapref)
+										   : time_(time),
+										   path_(path),
+											 datapref_(datapref),
+										   parallel_(parallel),
+										   step_(step){}
+				// write to gnuplot file format
+				template <class DFType>
+				void visit(const DFType* func) const
+				{
+					if (!func)
+						return;
+
+					typedef typename DFType :: Traits Traits;
+					typedef typename Traits :: LocalFunctionType LocalFunctionType;
+					typedef typename Traits :: DiscreteFunctionSpaceType DiscreteFunctionSpaceType;
+					typedef typename DiscreteFunctionSpaceType :: IteratorType IteratorType;
+					typedef typename DiscreteFunctionSpaceType :: GridPartType GridPartType;
+
+					typedef typename DiscreteFunctionSpaceType :: DomainType DomainType;
+					typedef typename DiscreteFunctionSpaceType :: RangeType RangeType;
+
+					enum{ dimDomain = DiscreteFunctionSpaceType :: dimDomain };
+					enum{ dimRange = DiscreteFunctionSpaceType :: dimRange };
+
+					// generate filename
+//					std::string name = genFilename( path_, datapref_, step_ );
+					std::string name = genFilename( path_, datapref_, 0 );
+					name += "_" + func->name() + ".gnu";
+					const bool first = (time_ > 0.0);
+					std::ios_base::openmode mode = first ?  std::ios_base::app : std::ios_base::out;
+					std::ofstream gnuout( name.c_str(), mode );
+
+					if ( first )
+					{
+						gnuout << "#";
+						for (int i = 0; i < dimDomain; ++i)
+							gnuout << "x_"<< i << " ";
+						for (int i = 0; i < dimRange; ++i)
+							gnuout << "f_"<< i << " ";
+						gnuout << "time" << "\n";
+					}
+					// start iteration
+					IteratorType endit = func->space().end();
+					for (IteratorType it = func->space().begin(); it != endit; ++it) {
+						CachingQuadrature<GridPartType,0> quad(*it,func->space().order());
+						LocalFunctionType lf = func->localFunction(*it);
+						for (size_t i=0;i<quad.nop();++i) {
+							RangeType u;
+							DomainType x = it->geometry().global(quad.point(i));
+							lf.evaluate(quad[i],u);
+							for (int i = 0; i < dimDomain; ++i)
+								gnuout << x[i] << " ";
+							for (int i = 0; i < dimRange; ++i)
+								gnuout << u[i] << " ";
+							gnuout << time_ << "\n";
+						}
+					}
+					gnuout << "\n\n";
+				}
+			};
+
+			void writeGnuPlotOutput( const double time ) const
+			{
+				const bool parallel = (grid_.comm().size() > 1);
+				ForEachValue<OutputTupleType> forEach(data_);
+				Gnu io( time, path_, parallel, timeprovider_.timeStep(),datapref_ );
+				forEach.apply( io );
+
+			}
+
 
 	};
 
