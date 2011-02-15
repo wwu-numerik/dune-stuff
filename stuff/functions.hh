@@ -75,7 +75,11 @@ unsigned int getNumDiffDofs(    const FunctionType& f1,
     return numDiffs ;
 }
 
-//! shift each dof by scalar
+/**
+  * \brief shift each dof by scalar
+  *
+  * this is the actual functions value, no multiplication with basefunctions afterwards
+  **/
 template < class Function >
 void addScalarToFunc( Function& f, double sc )
 {
