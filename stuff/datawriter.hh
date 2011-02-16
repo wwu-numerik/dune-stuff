@@ -2,6 +2,82 @@
 #define TIMEAWAREDATAWRITER_HH
 
 #include <dune/fem/io/file/datawriter.hh>
+#include <dune/grid/io/file/vtk/vtkwriter.hh>
+#include <dune/fem/function/common/function.hh>
+#include <dune/fem/function/common/discretefunctionadapter.hh>
+#include <dune/fem/space/common/functionspace.hh>
+#include <dune/fem/space/dgspace.hh>
+#include <dune/stuff/customprojection.hh>
+
+namespace Stuff {
+
+	//! a demonic analytical/discrete function hybrid that at each point evaluates to the two_norm of a given discreteFunction
+	template< class DiscreteFunctionImp, int polOrder = 2 >
+	class MagnitudeFunction :
+			public Dune::Function< Dune::FunctionSpace< typename DiscreteFunctionImp::FunctionSpaceType::DomainFieldType,
+														double,
+														DiscreteFunctionImp::FunctionSpaceType::dimDomain,
+														1 >,
+									MagnitudeFunction< DiscreteFunctionImp, polOrder > >
+	{
+		typedef MagnitudeFunction< DiscreteFunctionImp, polOrder >
+			ThisType;
+
+	public:
+		typedef Dune::FunctionSpace< typename DiscreteFunctionImp::FunctionSpaceType::DomainFieldType,
+																double,
+																DiscreteFunctionImp::FunctionSpaceType::dimDomain,
+																1 >
+			MagnitudeSpaceType;
+		typedef Dune::Function< MagnitudeSpaceType, ThisType >
+			BaseType;
+		typedef DiscreteFunctionImp
+			DiscreteFunctionType;
+
+		typedef typename DiscreteFunctionType::DiscreteFunctionSpaceType::GridPartType
+			GridPartType;
+		typedef Dune::DiscontinuousGalerkinSpace< MagnitudeSpaceType, GridPartType, polOrder >
+			MagnitudeDiscreteFunctionSpaceType;
+		typedef Dune::AdaptiveDiscreteFunction< MagnitudeDiscreteFunctionSpaceType >
+			MagnitudeDiscreteFunctionType;
+
+		//! constructor taking discrete function
+		MagnitudeFunction ( const DiscreteFunctionType& df )
+			: BaseType(magnitude_space_),
+			  discreteFunction_( df ),
+			  magnitude_disretefunctionspace_( discreteFunction_.space().gridPart() ),
+			  magnitude_disretefunction_( discreteFunction_.name() + "-magnitude", magnitude_disretefunctionspace_ )
+		{
+			Dune::BetterL2Projection
+				::project( *this, magnitude_disretefunction_ );
+		}
+
+		//! virtual destructor
+		virtual ~MagnitudeFunction () {}
+
+		void evaluate (	const typename MagnitudeSpaceType::DomainType &x,
+						typename MagnitudeSpaceType::RangeType &ret ) const
+		{
+			typename DiscreteFunctionType::FunctionSpaceType::RangeType val;
+			discreteFunction_.evaluate(x,val);
+			ret = val.two_norm();
+		}
+
+		const MagnitudeDiscreteFunctionType& discreteFunction() const
+		{
+			return magnitude_disretefunction_;
+		}
+
+	private:
+		static const MagnitudeSpaceType magnitude_space_;
+		const DiscreteFunctionType &discreteFunction_;
+		MagnitudeDiscreteFunctionSpaceType magnitude_disretefunctionspace_;
+		MagnitudeDiscreteFunctionType magnitude_disretefunction_;
+	};
+
+	template < class DF, int I > const typename MagnitudeFunction<DF,I>::MagnitudeSpaceType
+		MagnitudeFunction<DF,I>::magnitude_space_ = typename MagnitudeFunction<DF,I>::MagnitudeSpaceType();
+} //namespace Stuff
 
 namespace Dune {
 
@@ -155,10 +231,15 @@ namespace Dune {
 						if (!f)
 							return;
 
+						//needs to in same scope as clear() ?
+						Stuff::MagnitudeFunction<DFType> magnitude( *f );
+
 						std::string name = genFilename( (parallel_) ? "" : path_, f->name(), step_ );
 						if ( DFType::FunctionSpaceType::DimRange > 1 ) {
 							vtkOut_.addVectorVertexData( *f );
 							vtkOut_.addVectorCellData( *f );
+							vtkOut_.addVertexData( magnitude.discreteFunction() );
+							vtkOut_.addCellData( magnitude.discreteFunction() );
 						}
 						else {
 							vtkOut_.addVertexData( *f );
