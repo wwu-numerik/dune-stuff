@@ -5,6 +5,7 @@
 #include <fstream>
 #include <limits>
 
+#include <dune/stuff/timefunction.hh>
 #include <dune/grid/io/file/dgfparser/dgfparser.hh> //for GridPtr
 #include <dune/fem/io/file/vtkio.hh>
 #include <dune/fem/operator/1order/localmassmatrix.hh>
@@ -653,7 +654,64 @@ bool MatrixContainsNanOrInf( const MatrixType& matrix )
 	return false;
 }
 
+template < class FunctionSpaceImp >
+class NullFunction : public Dune::Function < FunctionSpaceImp , NullFunction < FunctionSpaceImp > >
+{
+	  public:
+		  typedef NullFunction< FunctionSpaceImp >
+			  ThisType;
+		  typedef Dune::Function < FunctionSpaceImp ,ThisType >
+			  BaseType;
+		  typedef typename BaseType::DomainType
+			  DomainType;
+		  typedef typename BaseType::RangeType
+			  RangeType;
+
+		  NullFunction( const FunctionSpaceImp& space )
+			  : BaseType ( space )
+		  {}
+
+		  ~NullFunction()
+		  {}
+
+		  inline void evaluate( const double /*time*/, const DomainType& /*arg*/, RangeType& ret ) const { ret = RangeType( 0 ); }
+		  inline void evaluate( const DomainType& /*arg*/, RangeType& ret ) const { ret = RangeType( 0 ); }
+		  template < class IntersectionIteratorType >
+		  inline void evaluate( const double /*time*/, const DomainType& /*arg*/, RangeType& ret, const IntersectionIteratorType /*it*/) const { ret = RangeType( 0 ); }
+};
+
+template < class FunctionSpaceImp, class TimeProviderImp >
+class NullFunctionTP : public Dune::TimeFunction < FunctionSpaceImp , NullFunctionTP< FunctionSpaceImp,TimeProviderImp >, TimeProviderImp >
+{
+	public:
+		typedef NullFunctionTP< FunctionSpaceImp, TimeProviderImp >
+			ThisType;
+		typedef Dune::TimeFunction< FunctionSpaceImp, ThisType, TimeProviderImp >
+			BaseType;
+		typedef typename BaseType::DomainType
+			DomainType;
+		typedef typename BaseType::RangeType
+			RangeType;
+
+		NullFunctionTP(	const TimeProviderImp& timeprovider,
+					const FunctionSpaceImp& space )
+			: BaseType( timeprovider, space )
+		{}
+
+		~NullFunctionTP()
+		{}
+
+		void evaluateTime( const double /*time*/, const DomainType& /*arg*/, RangeType& ret ) const { ret = RangeType( 0 ); }
+};
 
 }//end namespace Stuff
+
+#define NULLFUNCTION_TP(classname)\
+template < class T, class P > struct classname : public Stuff::NullFunctionTP< T,P >\
+{classname( const P& p,const T& t ):Stuff::NullFunctionTP< T,P >(p,t){}};
+#define NULLFUNCTION(classname)\
+template < class T > struct classname : public Stuff::NullFunction< T >\
+{classname( const double d, const T& t ):Stuff::NullFunction< T >(t){}\
+classname( const T& t ):Stuff::NullFunction< T >(t){}};
 
 #endif //includeguard
