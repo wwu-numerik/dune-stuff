@@ -1,5 +1,5 @@
-#ifndef TIMEFUNCTION_HH
-#define TIMEFUNCTION_HH
+#ifndef STUFF_TIMEFUNCTION_HH
+#define STUFF_TIMEFUNCTION_HH
 
 #include <dune/fem/function/common/function.hh>
 
@@ -77,4 +77,4 @@ namespace Dune {
 
 }
 
-#endif // TIMEFUNCTION_HH
+#endif // STUFF_TIMEFUNCTION_HH
