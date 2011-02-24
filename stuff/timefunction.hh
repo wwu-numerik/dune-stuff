@@ -2,6 +2,7 @@
 #define STUFF_TIMEFUNCTION_HH
 
 #include <dune/fem/function/common/function.hh>
+#include <dune/common/bartonnackmanifcheck.hh>
 
 namespace Dune {
 	/** \brief a Base class for Dune::Function compatible classes that need automatic time awareness via TimeProvider
