@@ -27,6 +27,9 @@ namespace Dune {
 			using Interface::asImp;
 
 		public:
+			typedef TimeProviderImp
+				TimeProviderType;
+
 			TimeFunction(const TimeProviderImp& timeProvider, const FunctionSpaceImp& space )
 			  :BaseType( space ),
 			  timeProvider_( timeProvider )
@@ -72,6 +75,11 @@ namespace Dune {
 			{
 			  CHECK_AND_CALL_INTERFACE_IMPLEMENTATION
 				( asImp().evaluate( diffVariable, x, ret ) );
+			}
+
+			const TimeProviderType& timeProvider() const
+			{
+				return timeProvider_;
 			}
 
 	};
