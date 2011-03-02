@@ -287,7 +287,7 @@ namespace Dune {
 
 					{
 						// create vtk output handler
-						typedef VTKIO < GridPartType > VTKIOType;
+						typedef SubsamplingVTKIO < GridPartType > VTKIOType;
 						VTKIOType vtkio ( gridPart, VTKOptions::nonconforming );
 
 						// add all functions
