@@ -110,6 +110,11 @@ class PostProcessor
             typedef Dune::L2Projection< double, double, ContinuousPressureType, DiscretePressureFunctionType > ProjectionP;
                 ProjectionP projectionP;
             projectionP( problem_.pressure(), discreteExactPressure_ );
+			if ( Parameters().getParam( "save_matrices", false ) ) {
+				Logging::MatlabLogStream& matlabLogStream = Logger().Matlab();
+				Stuff::printDiscreteFunctionMatlabStyle( discreteExactVelocity_, "u_exakt", matlabLogStream );
+				Stuff::printDiscreteFunctionMatlabStyle( discreteExactPressure_, "p_exakt", matlabLogStream );
+			}
         }
 
 		//! output function that 'knows' function output mode; assembles filename
