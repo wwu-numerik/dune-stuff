@@ -2,7 +2,6 @@
 # Process this file with autoconf to produce a configure script.
 DUNE_AC_INIT # gets module version from dune.module file
 AM_INIT_AUTOMAKE
-AC_CONFIG_SRCDIR([stuff/printing.hh])
 AM_CONFIG_HEADER([config.h])
 
 
@@ -22,7 +21,6 @@ AC_SUBST([LOCAL_LIBS], '')
 
 
 AC_CONFIG_FILES([Makefile 
-	stuff/Makefile
 	dune-stuff.pc])
 AC_OUTPUT
 # finally print the summary information
