@@ -490,10 +490,8 @@ std::pair< typename FunctionType::RangeType, double > integralAndVolume( const F
 
 	  for(int qP = 0; qP < quadNop ; ++qP)
 	  {
-		const double intel = (affineMapping) ?
-			 quad.weight(qP) : // affine case
-			 quad.weight(qP) * geo.integrationElement( quad.point(qP) ); // general case
-
+		const double intel = quad.weight(qP)
+				* geo.integrationElement( quad.point(qP) ); // general case
 		// evaluate function
 		typename DiscreteFunctionSpaceType::RangeType
 			dummy;
@@ -655,10 +653,10 @@ bool MatrixContainsNanOrInf( const MatrixType& matrix )
 }
 
 template < class FunctionSpaceImp >
-class NullFunction : public Dune::Function < FunctionSpaceImp , NullFunction < FunctionSpaceImp > >
+class ConstantFunction : public Dune::Function < FunctionSpaceImp , ConstantFunction< FunctionSpaceImp > >
 {
 	  public:
-		  typedef NullFunction< FunctionSpaceImp >
+		  typedef ConstantFunction< FunctionSpaceImp >
 			  ThisType;
 		  typedef Dune::Function < FunctionSpaceImp ,ThisType >
 			  BaseType;
@@ -667,24 +665,30 @@ class NullFunction : public Dune::Function < FunctionSpaceImp , NullFunction < F
 		  typedef typename BaseType::RangeType
 			  RangeType;
 
-		  NullFunction( const FunctionSpaceImp& space )
-			  : BaseType ( space )
+		  ConstantFunction( const FunctionSpaceImp& space,
+						   const double constant = 0.0 )
+			  : BaseType ( space ),
+				constant_(  constant )
 		  {}
 
-		  ~NullFunction()
+		  ~ConstantFunction()
 		  {}
 
-		  inline void evaluate( const double /*time*/, const DomainType& /*arg*/, RangeType& ret ) const { ret = RangeType( 0 ); }
-		  inline void evaluate( const DomainType& /*arg*/, RangeType& ret ) const { ret = RangeType( 0 ); }
+		  inline void evaluate( const double /*time*/, const DomainType& /*arg*/, RangeType& ret ) const { ret = RangeType( constant_ ); }
+		  inline void evaluate( const DomainType& /*arg*/, RangeType& ret ) const { ret = RangeType( constant_ ); }
 		  template < class IntersectionIteratorType >
-		  inline void evaluate( const double /*time*/, const DomainType& /*arg*/, RangeType& ret, const IntersectionIteratorType /*it*/) const { ret = RangeType( 0 ); }
+		  inline void evaluate( const double /*time*/, const DomainType& /*arg*/,
+							   RangeType& ret, const IntersectionIteratorType /*it*/) const
+		  { ret = RangeType( constant_ ); }
+	private:
+		  const double constant_;
 };
 
 template < class FunctionSpaceImp, class TimeProviderImp >
-class NullFunctionTP : public Dune::TimeFunction < FunctionSpaceImp , NullFunctionTP< FunctionSpaceImp,TimeProviderImp >, TimeProviderImp >
+class ConstantFunctionTP : public Dune::TimeFunction < FunctionSpaceImp , ConstantFunctionTP< FunctionSpaceImp,TimeProviderImp >, TimeProviderImp >
 {
 	public:
-		typedef NullFunctionTP< FunctionSpaceImp, TimeProviderImp >
+		typedef ConstantFunctionTP< FunctionSpaceImp, TimeProviderImp >
 			ThisType;
 		typedef Dune::TimeFunction< FunctionSpaceImp, ThisType, TimeProviderImp >
 			BaseType;
@@ -693,25 +697,29 @@ class NullFunctionTP : public Dune::TimeFunction < FunctionSpaceImp , NullFuncti
 		typedef typename BaseType::RangeType
 			RangeType;
 
-		NullFunctionTP(	const TimeProviderImp& timeprovider,
-					const FunctionSpaceImp& space )
-			: BaseType( timeprovider, space )
+		ConstantFunctionTP(	const TimeProviderImp& timeprovider,
+					const FunctionSpaceImp& space,
+					const double constant = 0.0 )
+			: BaseType( timeprovider, space ),
+			  constant_(  constant )
 		{}
 
-		~NullFunctionTP()
+		~ConstantFunctionTP()
 		{}
 
-		void evaluateTime( const double /*time*/, const DomainType& /*arg*/, RangeType& ret ) const { ret = RangeType( 0 ); }
+		void evaluateTime( const double /*time*/, const DomainType& /*arg*/, RangeType& ret ) const { ret = RangeType( constant_ ); }
+private:
+	  const double constant_;
 };
 
 }//end namespace Stuff
 
 #define NULLFUNCTION_TP(classname)\
-template < class T, class P > struct classname : public Stuff::NullFunctionTP< T,P >\
-{classname( const P& p,const T& t ):Stuff::NullFunctionTP< T,P >(p,t){}};
+template < class T, class P > struct classname : public Stuff::ConstantFunctionTP< T,P >\
+{classname( const P& p,const T& t ):Stuff::ConstantFunctionTP< T,P >(p,t){}};
 #define NULLFUNCTION(classname)\
-template < class T > struct classname : public Stuff::NullFunction< T >\
-{classname( const double d, const T& t ):Stuff::NullFunction< T >(t){}\
-classname( const T& t ):Stuff::NullFunction< T >(t){}};
+template < class T > struct classname : public Stuff::ConstantFunction< T >\
+{classname( const double d, const T& t ):Stuff::ConstantFunction< T >(t){}\
+classname( const T& t ):Stuff::ConstantFunction< T >(t){}};
 
 #endif //includeguard
