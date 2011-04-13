@@ -466,10 +466,10 @@ std::pair< typename FunctionType::RangeType, double > integralAndVolume( const F
 	const int quadOrd = (polOrd == -1) ? (2 * space.order()) : polOrd;
 
 	// create local mass matrix object
-	LocalMassMatrixType massMatrix( space, quadOrd );
+//	LocalMassMatrixType massMatrix( space, quadOrd );
 
 	// check whether geometry mappings are affine or not
-	const bool affineMapping = massMatrix.affine();
+//	const bool affineMapping = massMatrix.affine();
 
 	const Iterator endit = space.end();
 	for(Iterator it = space.begin(); it != endit ; ++it)
