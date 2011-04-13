@@ -57,8 +57,8 @@ namespace Dune {
 			inline void jacobian ( const typename BaseType::DomainType &x,
 								   typename BaseType::JacobianRangeType &ret ) const
 			{
-				DUNE_THROW( Dune::NotImplemented, "needs to be extended to allow time dependent jacobian" );
-			  CHECK_AND_CALL_INTERFACE_IMPLEMENTATION( asImp().jacobian( x, ret ) );
+				const double t = timeProvider_.subTime();
+			  CHECK_AND_CALL_INTERFACE_IMPLEMENTATION( asImp().jacobianTime( t, x, ret ) );
 			}
 
 			/** \brief evaluate a derivative of the function
