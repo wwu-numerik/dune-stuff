@@ -123,7 +123,7 @@ namespace Dune {
 			   \param[in] timestep current number of time step
 			   \param[in] data data to write (template type, should be a tuple)
 			*/
-			void write(double time, int timestep ) const
+			void write(double time, int /*timestep*/ ) const
 			{
 //				if( BaseType::willWrite( time, timestep ) )
 				{
