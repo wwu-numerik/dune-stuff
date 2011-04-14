@@ -1,0 +1,5 @@
+#pragma GCC diagnostic warning "-Wdeprecated-declarations"
+#pragma GCC diagnostic warning "-Wunused-parameter"
+#pragma GCC diagnostic warning "-Wextra"
+#pragma GCC diagnostic warning "-Wignored-qualifiers"
+#pragma GCC diagnostic warning "-Wtype-limits"
