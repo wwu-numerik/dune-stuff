@@ -48,14 +48,14 @@ char* copy(const char* s) { int l=strlen(s)+1; char* t = new char[l];  for(int i
 class assert_exception : public std::runtime_error
 {
   public:
-   assert_exception(std::string msg) : std::runtime_error(msg) {};
+   assert_exception(std::string msg) : std::runtime_error(msg) {}
 };
 
 namespace Stuff {
 class singlerun_abort_exception : public std::runtime_error
 {
   public:
-   singlerun_abort_exception(std::string msg) : std::runtime_error(msg) {};
+   singlerun_abort_exception(std::string msg) : std::runtime_error(msg) {}
 };
 }
 

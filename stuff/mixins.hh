@@ -11,7 +11,7 @@ class InstanceCounter
 public:
 	InstanceCounter() {instanceCounter_++;}
 	~InstanceCounter() {instanceCounter_--;}
-	const int instanceCount() const {return instanceCounter_;}
+	int instanceCount() const {return instanceCounter_;}
 };
 
 template <class Derived> int InstanceCounter<Derived>::instanceCounter_ = 0;
