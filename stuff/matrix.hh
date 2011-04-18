@@ -290,12 +290,11 @@ namespace Stuff {
 					: local_matrix_( object.localMatrix(self,neigh) ),
 					eps_( eps ),
 					rows_( local_matrix_.rows() ),
-					cols_( local_matrix_.columns() )
-				{
-					entries_.resize( rows_ * cols_, 0.0 );
-				}
+					cols_( local_matrix_.columns() ),
+					entries_( rows_ * cols_, FieldType( 0.0 ) )
+				{}
 
-				void add( const int row , const int col, const FieldType val )
+				inline void add( const int row , const int col, const FieldType val )
 				{
 					entries_[row*cols_+col] += val;
 				}
@@ -306,7 +305,7 @@ namespace Stuff {
 					{
 						for( int j = 0; j < cols_; ++j )
 						{
-							const FieldType i_j = entries_[i*cols_+j];
+							const FieldType& i_j = entries_[i*cols_+j];
 							if( std::fabs(i_j) > eps_ )
 								local_matrix_.add( i, j , i_j );
 						}

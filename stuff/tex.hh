@@ -365,7 +365,7 @@ class AccurracyOutputOuter : public TexOutputBase<RunInfo>
 			: BaseType( RunInfo(), headers )
 		{}
 
-		void putErrorCol( std::ofstream& outputFile_, const double prevError_, const double error_, const double prevh_,  const bool /*initial*/  )
+		void putErrorCol( std::ofstream& outputFile_, const double /*prevError_*/, const double error_, const double /*prevh_*/,  const bool /*initial*/  )
 		{
 			//some trickery to calc correct diff w/o further work on the fem stuff
 			static bool col = true;

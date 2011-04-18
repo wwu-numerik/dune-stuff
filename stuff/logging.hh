@@ -41,7 +41,9 @@ class Logging
                     : matlabLogFile_( logFile ),
                     loglevel_(loglevel),
                     logflags_(logflags),
-                    suspended_logflags_(logflags) {}
+					suspended_logflags_(logflags),
+					is_suspended_(false)
+				{}
 
                 ~MatlabLogStream(){}
 
@@ -249,6 +251,7 @@ class Logging
 
     protected:
         Logging( )
+			: matlabLogStreamPtr( 0 )
         {
             streamIDs_.push_back( LOG_ERR );
             streamIDs_.push_back( LOG_DEBUG );
@@ -542,6 +545,9 @@ class Logging
         MatlabLogStream* matlabLogStreamPtr;
 
         friend Logging& Logger ();
+		//satisfy stricter warnings wrt copying
+		Logging( const Logging& );
+		Logging& operator= (const Logging&);
 
 };
 
