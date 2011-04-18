@@ -8,12 +8,10 @@
 
 
 #include "config.h"
-#undef HAVE_ALUGRID
-#define HAVE_ALUGRID 1
+
 #define @GRIDTYPE@
 #define GRIDDIM @GRIDDIM@
 #define POLORDER @POLORDER@
-#define ENABLE_ALUGRID HAVE_ALUGRID
 
 #ifdef NDEBUG
 	#define DNDEBUG
