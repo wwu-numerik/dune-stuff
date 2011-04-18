@@ -55,7 +55,8 @@ class Profiler
 
 	public:
 		//! set this to begin a named section
-		void StartTiming( const std::string section_name ) {
+		void StartTiming( const std::string section_name )
+		{
 			if ( m_cur_run_num >= m_timings.size() ) {
 				m_timings.push_back( DataMap() );
 				m_total_runs++;
@@ -75,7 +76,8 @@ class Profiler
 		}
 
         //! stop named section's counter
-		void StopTiming( const std::string section_name ) {
+		void StopTiming( const std::string section_name )
+		{
 			assert( m_cur_run_num < m_timings.size() );
 			if ( known_timers_map_.find(section_name) == known_timers_map_.end() )
 				DUNE_THROW(Dune::RangeError, "trying to stop timer " << section_name << " that wasn't started\n");
@@ -90,7 +92,8 @@ class Profiler
 		}
 
 		//! get runtime of section in seconds
-		long GetTiming( const std::string section_name ) const {
+		long GetTiming( const std::string section_name ) const
+		{
 			assert( m_cur_run_num < m_timings.size() );
 			return GetTiming( section_name, m_cur_run_num );
 		}
