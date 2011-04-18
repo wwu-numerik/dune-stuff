@@ -213,7 +213,8 @@ long Profiler::OutputAveraged( CollectiveCommunication& comm, const int refineLe
 	{
 		for ( DataMap::const_iterator it = vit->begin(); it != vit->end(); ++it )
         {
-			averages[it->first] += GetTiming( it->second );
+			//! this used to be GetTiming( it->second ), which is only valid thru an implicit and wrong conversion..
+			averages[it->first] += GetTiming( it->first );
         }
 	}
 
