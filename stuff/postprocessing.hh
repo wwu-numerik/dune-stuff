@@ -15,6 +15,7 @@
 #include "misc.hh"
 #include "parametercontainer.hh"
 #include "customprojection.hh"
+#include "printing.hh"
 
 #include <dune/fem/misc/l2norm.hh>
 #include <dune/fem/misc/l2error.hh>

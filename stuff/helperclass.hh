@@ -145,7 +145,7 @@ std::string demangledTypeId(T& obj){
 
 //create output for demangled typeid
 template<class T>
-void realTypeId(T& obj, std::string name="", int maxlevel){
+void realTypeId(T& obj, std::string name="", int maxlevel=10000){
 	std::cout << name << (name=="" ? "" : "'s type is ") << highlightTemplate(demangledTypeId(obj),maxlevel)  <<  std::endl ;	
 }
 
@@ -197,7 +197,7 @@ std::string highlightString(std::string str, int colornr=0){
 std::string highlightSearchString(std::string str, std::string searchstr, int colornr=0){
 	assert(colornr<256 && colornr>=0);
 	int index=str.find(searchstr,0);
-	while (index!=std::string::npos){
+	while (index!=int(std::string::npos)){
 		std::string dummy = "\033[38;5;"+intToString(colornr)+"m";
 		std::string dummy2 = "\033[38;5;0m";
 		str.insert(index, dummy);

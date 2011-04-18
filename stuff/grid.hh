@@ -2,6 +2,7 @@
 #define STUFF_GRID_HH_INCLUDED
 
 #include <dune/common/fvector.hh>
+#include <vector>
 
 namespace Stuff {
 
