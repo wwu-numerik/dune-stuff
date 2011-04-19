@@ -1,6 +1,8 @@
 #ifndef DUNE_STUFF_FUNCTIONADAPTER_HH
 #define DUNE_STUFF_FUNCTIONADAPTER_HH
 
+#include "math.hh"
+
 #include <vector>
 #include <boost/shared_ptr.hpp>
 #include <dune/stuff/printing.hh>
@@ -74,9 +76,9 @@ public:
 		for(Iterator it = space.begin(); it != endit ; ++it)
 		{
 			// get entity
-			const typename GridType::template Codim<0>::Entity& entity = *it;
+			const typename DiscreteFunctionType::GridType::template Codim<0>::Entity& entity = *it;
 			// get geometry
-			typedef  typename GridType::template Codim<0>::Geometry
+			typedef  typename DiscreteFunctionType::GridType::template Codim<0>::Geometry
 				Geometry;
 			const Geometry& geo = entity.geometry();
 
@@ -244,9 +246,9 @@ public:
 				for(Iterator it = space.begin(); it != endit ; ++it)
 				{
 					// get entity
-					const typename GridType::template Codim<0>::Entity& entity = *it;
+					const typename DiscreteVelocityFunctionType::GridType::template Codim<0>::Entity& entity = *it;
 					// get geometry
-					typedef  typename GridType::template Codim<0>::Geometry
+					typedef  typename DiscreteVelocityFunctionType::GridType::template Codim<0>::Geometry
 						Geometry;
 					const Geometry& geo = entity.geometry();
 
@@ -379,9 +381,9 @@ public:
 				for(Iterator it = space.begin(); it != endit ; ++it)
 				{
 					// get entity
-					const typename GridType::template Codim<0>::Entity& entity = *it;
+					const typename DiscreteVelocityFunctionType::GridType::template Codim<0>::Entity& entity = *it;
 					// get geometry
-					typedef  typename GridType::template Codim<0>::Geometry
+					typedef  typename DiscreteVelocityFunctionType::GridType::template Codim<0>::Geometry
 						Geometry;
 					const Geometry& geo = entity.geometry();
 

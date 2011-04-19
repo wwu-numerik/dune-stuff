@@ -7,6 +7,7 @@
 #ifndef PARAMETERCONTAINER_HH_INCLUDED
 #define PARAMETERCONTAINER_HH_INCLUDED
 
+#include <dune/common/deprecated.hh> //ensure DUNE_DEPRECATED is defined properly
 #include <dune/fem/io/parameter.hh>
 
 #include "logging.hh"

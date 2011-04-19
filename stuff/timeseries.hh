@@ -1,6 +1,7 @@
 #ifndef DUNE_STUFF_TIMESERIES_HH
 #define DUNE_STUFF_TIMESERIES_HH
 
+#include "cmake_config.h" //otherwise array has issues
 #include <cstdio>
 #include <algorithm>
 #include <set>
