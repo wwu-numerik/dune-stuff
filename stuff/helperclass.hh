@@ -11,7 +11,7 @@
 #if DUNE_VERSION_NEWER(DUNE_GRID,2,1,0)
 #include <dune/grid/utility/gridtype.hh>
 //#include <gridtype.hh>
-#else 
+#else
 #include <dune/grid/io/file/dgfparser/dgfgridtype.hh>
 #endif
 
@@ -161,7 +161,7 @@ std::string highlightTemplate(std::string str, int maxlevel = 10000){
 	assert(maxlevel>=0);
 	int startindex = 0;
 	int level=0;
-	for (int i=0; i<str.size(); i++){
+	for (size_t i=0; i<str.size(); i++){
 		if (str[i] == '<'){
 			level++;
 			std::string dummy = "\033[38;5;"+ intToString(templateColorChooser(level))+"m";
@@ -213,7 +213,7 @@ class StaticInfoPrinter
 {
 #if DUNE_VERSION_NEWER(DUNE_GRID,2,1,0)
 	typedef Dune::GridSelector::GridType   MyHGridType ;
-#else 
+#else
 	typedef GridType    MyHGridType ;
 #endif
 
@@ -307,11 +307,11 @@ class InfoPrinter
 
 	public:
 
-	typedef typename DiscFuncType::GridType                      GridType;                         
+	typedef typename DiscFuncType::GridType                      GGridType;
 	typedef typename DiscFuncType::DiscreteFunctionSpaceType     DiscSpaceType;
-	typedef typename GridType::template Codim<0>::LeafIterator   LeafIteratorType;
-	typedef typename GridType::template Codim<1>::LeafIterator   IntersectionLeafIteratorType;
-	typedef typename GridType::template Codim<2>::LeafIterator   IntersectionLeafIteratorType2;
+	typedef typename GGridType::template Codim<0>::LeafIterator   LeafIteratorType;
+	typedef typename GGridType::template Codim<1>::LeafIterator   IntersectionLeafIteratorType;
+	typedef typename GGridType::template Codim<2>::LeafIterator   IntersectionLeafIteratorType2;
 
 	typedef typename DiscSpaceType::BaseFunctionSetType          BaseFunctionSetType;
 	typedef typename DiscSpaceType::IteratorType                 IteratorType;
@@ -322,15 +322,15 @@ class InfoPrinter
 	typedef typename GeometryType::GlobalCoordinate              GlobalCoordinateType;
 	typedef typename GeometryType::ctype                         ctype;
 	typedef typename DiscFuncType::LocalFunctionType             LocalFunctionType;
-	typedef Dune::DofManager<GridType>                           DofManagerType;
-	typedef typename GridType::GlobalIdSet                       GlobalIdSet;
-	typedef typename GridType::LocalIdSet                        LocalIdSet;
-	typedef typename GridType::LevelIndexSet                     LevelIndexSet;
-	typedef typename GridType::LeafIndexSet                      LeafIndexSet;
+	typedef Dune::DofManager<GGridType>                           DofManagerType;
+	typedef typename GGridType::GlobalIdSet                       GlobalIdSet;
+	typedef typename GGridType::LocalIdSet                        LocalIdSet;
+	typedef typename GGridType::LevelIndexSet                     LevelIndexSet;
+	typedef typename GGridType::LeafIndexSet                      LeafIndexSet;
 	
 
-	typedef typename GridType::LeafGridView                      LeafGridView;
-	typedef typename GridType::LevelGridView                     LevelGridView;
+	typedef typename GGridType::LeafGridView                      LeafGridView;
+	typedef typename GGridType::LevelGridView                     LevelGridView;
 
 
 	typedef typename LeafGridView::template Codim<0>::Iterator   LeafIterator; //element
@@ -586,7 +586,7 @@ class InfoPrinter
 	DiscFuncType& df_;
 	const DiscSpaceType& discfuncspace_; 
 	const IteratorType endit_;
-	const GridType& grid_;
+	const GGridType& grid_;
 	const DofManagerType& dofman_;
 
 };
