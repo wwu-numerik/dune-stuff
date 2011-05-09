@@ -5,6 +5,7 @@
 #include <sstream>
 #include <vector>
 #include "misc.hh"
+#include "runinfo.hh"
 
 namespace Stuff {
 //! interface and base class for all out eoc tex output

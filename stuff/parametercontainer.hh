@@ -11,9 +11,11 @@
 #include <dune/fem/io/parameter.hh>
 
 #include "logging.hh"
+#include "filesystem.hh"
 
 #include <vector>
 #include <algorithm>
+#include <fstream>
 
 namespace Stuff {
 	//! a class usable as a default validator for Dune::Parameter
@@ -251,4 +253,14 @@ ParameterContainer& Parameters()
     return parameters;
 }
 
+namespace Stuff {
+	//! get a path in datadir with existence guarantee (cannot be in filessytem.hh -- cyclic dep )
+	std::string getFileinDatadir( const std::string& fn )
+	{
+		boost::filesystem::path path( Parameters().getParam("fem.io.datadir", std::string(".") ) );
+		path /= fn;
+		boost::filesystem::create_directories( path.parent_path() );
+		return path.string();
+	}
+}
 #endif // end of PARAMETERHANDLER.HH
