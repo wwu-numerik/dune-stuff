@@ -18,7 +18,7 @@ struct RunInfo
 	std::vector< double > H1Errors;
 	double grid_width;
 	int refine_level;
-	double run_time;
+	double run_time,cumulative_run_time;
 	long codim0;
 	int polorder_velocity;
 	int polorder_pressure;
@@ -46,7 +46,7 @@ struct RunInfo
 			= iterations_inner_max = iterations_outer_total = -1;
 		bfg = true;
 		bfg_tau = max_inner_accuracy = grid_width
-				= solver_accuracy = run_time
+				= solver_accuracy = run_time = cumulative_run_time
 				= alpha = inner_solver_accuracy = -1.0;
 		gridname = problemIdentifier = "UNSET";
 		extra_info = "none";
@@ -67,59 +67,75 @@ struct RunInfo
 	template < class Stream >
 	void tableLine( Stream& stream ) const
 	{
-		static boost::format line("%e\t%d\t%e\t%d\t%d\t%d\t%d\t%d\t%s\t%e\t%e\t%e\t%s\t%d\t%d\t%d\t%d\t%e\t%s\t%e\t%e\t%e\t%e\t%e\t%s");
+		static boost::format line("%e,%d,%e,%d,%d,%d,%d,%d,%s,%e,%e,%e,%s,%d,%d,%d,%d,%e,%s,%e,%e,%e,%e,%e,%s,%e");
+		static boost::format single(",%e");
 		stream << line %
-				grid_width%
-				refine_level%
-				run_time%
-				codim0%
-				polorder_velocity%
-				polorder_pressure%
-				polorder_sigma%
-		//		std::pair<int% double> c11,d11,c12,d12%
-				 bfg%
-				gridname%
-				solver_accuracy%
-				inner_solver_accuracy%
-				bfg_tau%
-				extra_info%
-				iterations_inner_avg%
-				iterations_inner_min%
-				iterations_inner_max%
-				iterations_outer_total%
-				max_inner_accuracy%
-				problemIdentifier%
-				current_time%  delta_t%  viscosity%  reynolds%  alpha%
-				algo_id;
+				  grid_width%
+				  refine_level%
+				  run_time%
+				  codim0%
+				  polorder_velocity%
+				  polorder_pressure%
+				  polorder_sigma%
+				  //		std::pair<int% double> c11,d11,c12,d12%
+				  bfg%
+				  gridname%
+				  solver_accuracy%
+				  inner_solver_accuracy%
+				  bfg_tau%
+				  extra_info%
+				  iterations_inner_avg%
+				  iterations_inner_min%
+				  iterations_inner_max%
+				  iterations_outer_total%
+				  max_inner_accuracy%
+				  problemIdentifier%
+				  current_time%  delta_t%  viscosity%  reynolds%  alpha%
+				  algo_id%
+				  cumulative_run_time;
+		BOOST_FOREACH( double err, L2Errors ) {
+			stream << 	single % err ;
+		}
+		BOOST_FOREACH( double err, H1Errors ) {
+			stream << 	single % err ;
+		}
 		stream << std::endl;
 	}
 	template < class Stream >
 	void tableHeader( Stream& stream ) const
 	{
-		static boost::format line("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s");
+		static boost::format line("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s");
 		stream << line %
-				"grid_width"%
-				"refine_level"%
-				"run_time"%
-				"codim0"%
-				"polorder_velocity"%
-				"polorder_pressure"%
-				"polorder_sigma"%
-		//		std::pair<int"% double> c11,d11,c12,d12"%
-				 "bfg"%
-				"gridname"%
-				"solver_accuracy"%
-				"inner_solver_accuracy"%
-				"bfg_tau"%
-				"extra_info"%
-				"iterations_inner_avg"%
-				"iterations_inner_min"%
-				"iterations_inner_max"%
-				"iterations_outer_total"%
-				"max_inner_accuracy"%
-				"problemIdentifier"%
-				"current_time"%  "delta_t"%  "viscosity"%  "reynolds"%  "alpha"%
-				"algo_id";
+				  "grid_width"%
+				  "refine_level"%
+				  "run_time"%
+				  "codim0"%
+				  "polorder_velocity"%
+				  "polorder_pressure"%
+				  "polorder_sigma"%
+				  //		std::pair<int"% double> c11,d11,c12,d12"%
+				  "bfg"%
+				  "gridname"%
+				  "solver_accuracy"%
+				  "inner_solver_accuracy"%
+				  "bfg_tau"%
+				  "extra_info"%
+				  "iterations_inner_avg"%
+				  "iterations_inner_min"%
+				  "iterations_inner_max"%
+				  "iterations_outer_total"%
+				  "max_inner_accuracy"%
+				  "problemIdentifier"%
+				  "current_time"%  "delta_t"%  "viscosity"%  "reynolds"%  "alpha"%
+				  "algo_id"%
+				  "cumulative_run_time";
+		static boost::format err(",%s_%d");
+		for( size_t i = 0; i < L2Errors.size(); ++i ) {
+			stream << 	err % "L2" % i;
+		}
+		for( size_t i = 0; i < H1Errors.size(); ++i ) {
+			stream << 	err % "H1" % i;
+		}
 		stream << std::endl;
 	}
 };
