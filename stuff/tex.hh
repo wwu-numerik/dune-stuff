@@ -1,11 +1,14 @@
 #ifndef DUNE_STUFF_TEX_HH
 #define DUNE_STUFF_TEX_HH
 
+#include "misc.hh"
+#include "runinfo.hh"
+#include "grid.hh"
+
 #include <ostream>
 #include <sstream>
 #include <vector>
-#include "misc.hh"
-#include "runinfo.hh"
+#include <boost/format.hpp>
 
 namespace Stuff {
 //! interface and base class for all out eoc tex output
@@ -429,6 +432,108 @@ class AccurracyOutputOuter : public TexOutputBase<RunInfo>
 				<< std::scientific << info_.solver_accuracy  << std::fixed ;
 		}
 };
+
+class PgfEntityFunctor {
+	public:
+		PgfEntityFunctor( std::ofstream& file )
+			:file_(file)
+		{}
+
+		template <class Entity>
+		void operator() ( const Entity& ent, const Entity& /*dummy*/, const int ent_idx, const int ent_idx_neigh )
+		{
+			if ( ent_idx_neigh != ent_idx )
+				return;
+			typedef typename Entity::Geometry
+				EntityGeometryType;
+			typedef Dune::FieldVector< typename EntityGeometryType::ctype, EntityGeometryType::coorddimension>
+				DomainType;
+			const typename Entity::Geometry& geo = ent.geometry();
+			double vol = geo.volume();
+			boost::format vertex("\\coordinate(C_%d_%d) at (%f,%f);\n");
+			for ( size_t i = 0; i < geo.corners(); ++i )
+			{
+				const DomainType& corner( geo.corner( i ) );
+				file_ << vertex % ent_idx % i % corner[0] % corner[1];
+			}
+			// \draw (A)--(B)--(C)--cycle;
+			file_ << "\\draw ";
+			boost::format line("(C_%d_%d)--");
+			for ( size_t i = 0; i < geo.corners(); ++i )
+			{
+				file_ << line % ent_idx % i ;
+			}
+			file_ << "cycle;\n ";
+		}
+
+		void preWalk() const{}
+		void postWalk()const{}
+	private:
+		std::ofstream& file_;
+};
+
+//template <class GridView>
+class PgfEntityFunctorIntersections {
+	public:
+		PgfEntityFunctorIntersections( std::ofstream& file )
+			:file_(file)
+		{}
+
+		template <class Entity>
+		void operator() ( const Entity& ent, const Entity& /*dummy*/, const int ent_idx, const int ent_idx_neigh )
+		{
+			if ( ent_idx_neigh != ent_idx )
+				return;
+			typedef typename Entity::Geometry
+				EntityGeometryType;
+			boost::format path("\\draw ((%f,%f)--((%f,%f);\n");
+			typedef typename Entity::LeafIntersectionIterator
+				IntersectionIteratorType;
+			IntersectionIteratorType intItEnd = ent.ileafend();
+			for (   IntersectionIteratorType intIt = ent.ileafbegin();
+					intIt != intItEnd;
+					++intIt )
+			{
+				typedef typename IntersectionIteratorType::Geometry
+					IntersectionGeometry;
+				typedef Dune::FieldVector< typename IntersectionGeometry::ctype, IntersectionGeometry::coorddimension>
+					CoordType;
+				CoordType a = intIt->intersectionGlobal().corner(0);
+				CoordType b = intIt->intersectionGlobal().corner(1);
+				file_ << path % a[0] % a[1]
+							  % b[0] % b[1];
+			}
+		}
+
+		void preWalk() const{}
+		void postWalk()const{}
+	private:
+		std::ofstream& file_;
+};
+
+template < class GridType >
+class PgfGrid {
+public:
+	PgfGrid( const GridType& grid )
+		:grid_(grid)
+	{}
+
+	void output( const std::string fn )
+	{
+		std::ofstream file( getFileinDatadir( fn ).c_str() );
+		GridWalk<typename GridType::LeafGridView> grid_walk( grid_.leafView() );
+//		PgfEntityFunctor pgf( file );
+//		grid_walk( pgf );
+//		file.close();
+		PgfEntityFunctorIntersections pgf( file );
+		grid_walk( pgf );
+		file.close();
+	}
+
+private:
+	const GridType& grid_;
+};
+
 } //end namespace Stuff
 
 #endif // DUNE_STUFF_TEX_HH
