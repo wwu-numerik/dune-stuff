@@ -88,30 +88,27 @@ void printGridInformation( GridPartType& gridPart, DiscreteFunctionSpaceType& sp
   \todo allow stacking of operators to save gridwalks
   \todo threadsafe maps (haha:P)
   */
-template < class Space, int codim = 0 >
+template < class GridView, int codim = 0 >
 class GridWalk {
     private:
-        typedef typename Space::GridPartType
-            GridPart;
-        typedef typename GridPart::template Codim< codim >::IteratorType
+		typedef typename GridView::template Codim<0>::Iterator
+			ElementLeafIterator;
+		typedef typename GridView::template Codim< codim >::IteratorType
             EntityIteratorType;
-        typedef typename GridPart::IntersectionIteratorType
+		typedef typename GridView::template Codim<0>::IntersectionIterator
             IntersectionIteratorType;
         typedef typename IntersectionIteratorType::EntityPointer
             EntityPointer;
 
     public:
-        GridWalk ( const Space& gp )
-            : space_(gp),
-            gridPart_( gp.gridPart() )
+		GridWalk ( const GridView& gp )
+			: gridView_( gp )
         {
-            EntityIteratorType entityItEndLog = space_.end();
             unsigned int en_idx = 0;
-            for (   EntityIteratorType it = space_.begin();
-                    it != entityItEndLog;
-                    ++it,++en_idx )
+			for (ElementLeafIterator it = gridView_.template begin<0>();
+				 it!=gridView_.template end<0>(); ++it,++en_idx)
             {
-                entityIdxMap_.push_back( it );
+				entityIdxMap_.push_back( *it );
             }
         }
 
@@ -119,15 +116,13 @@ class GridWalk {
 		void operator () ( Functor& f ) const
 		{
 			f.preWalk();
-			EntityIteratorType entityItEndLog = space_.end();
-			for (   EntityIteratorType it = space_.begin();
-					it != entityItEndLog;
-					++it )
+			for (ElementLeafIterator it = gridView_.template begin<0>();
+				 it!=gridView_.template end<0>(); ++it)
 			{
-				const int ent_idx = getIdx( entityIdxMap_, it );
+				const int ent_idx = getIdx( entityIdxMap_, *it );
 				f( *it, *it, ent_idx, ent_idx);
-				IntersectionIteratorType intItEnd = gridPart_.iend( *it );
-				for (   IntersectionIteratorType intIt = gridPart_.ibegin( *it );
+				IntersectionIteratorType intItEnd = gridView_.iend( *it );
+				for (   IntersectionIteratorType intIt = gridView_.ibegin( *it );
 						intIt != intItEnd;
 						++intIt ) {
 					if ( !intIt.boundary() ) {
@@ -140,8 +135,7 @@ class GridWalk {
 		}
 
     private:
-        const Space& space_;
-        const GridPart& gridPart_;
+		const GridView& gridView_;
         typedef std::vector< EntityPointer >
             EntityIdxMap;
         EntityIdxMap entityIdxMap_;
