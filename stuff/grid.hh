@@ -92,10 +92,8 @@ template < class GridView, int codim = 0 >
 class GridWalk {
     private:
 		typedef typename GridView::template Codim<0>::Iterator
-			ElementLeafIterator;
-		typedef typename GridView::template Codim< codim >::IteratorType
-            EntityIteratorType;
-		typedef typename GridView::template Codim<0>::IntersectionIterator
+			ElementIterator;
+		typedef typename GridView::IntersectionIterator
             IntersectionIteratorType;
         typedef typename IntersectionIteratorType::EntityPointer
             EntityPointer;
@@ -105,7 +103,7 @@ class GridWalk {
 			: gridView_( gp )
         {
             unsigned int en_idx = 0;
-			for (ElementLeafIterator it = gridView_.template begin<0>();
+			for (ElementIterator it = gridView_.template begin<0>();
 				 it!=gridView_.template end<0>(); ++it,++en_idx)
             {
 				entityIdxMap_.push_back( *it );
@@ -116,7 +114,7 @@ class GridWalk {
 		void operator () ( Functor& f ) const
 		{
 			f.preWalk();
-			for (ElementLeafIterator it = gridView_.template begin<0>();
+			for (ElementIterator it = gridView_.template begin<0>();
 				 it!=gridView_.template end<0>(); ++it)
 			{
 				const int ent_idx = getIdx( entityIdxMap_, *it );
