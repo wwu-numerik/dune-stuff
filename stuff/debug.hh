@@ -69,5 +69,18 @@ class singlerun_abort_exception : public std::runtime_error
 	#define ASSERT_EXCEPTION(cond,msg)
 #endif
 
+#if 1 /*  there should be no more any compilers needing the "#else" version */
+	#define UNUSED(identifier) /* identifier */
+#else  /*  stupid, broken compiler */
+	#define UNUSED(identifier) identifier
+#endif
+
+/*  some arguments are only used in debug mode, but unused in release one */
+#ifndef NDEBUG
+	#define UNUSED_UNLESS_DEBUG(param)  param
+#else
+	#define UNUSED_UNLESS_DEBUG(param)  UNUSED(param)
+#endif
+
 
 #endif // DUNE_STUFF_DEBUG_HH

@@ -179,7 +179,7 @@ class ParameterContainer
         }
 
 		template< typename T, class Validator >
-		T getParam( std::string name, T def, const Validator& validator, bool useDbgStream = true )
+		T getParam( std::string name, T def, const Validator& validator, bool UNUSED_UNLESS_DEBUG(useDbgStream) = true )
 		{
 			assert( all_set_up_ );
 			#ifndef NDEBUG
