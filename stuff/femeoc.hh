@@ -9,8 +9,8 @@
 #include <dune/common/fvector.hh>
 #include <dune/fem/io/file/iointerface.hh>
 
-namespace Stuff
-{
+namespace Stuff {
+namespace Tex {
 
 /**
     @ingroup HelperClasses
@@ -330,6 +330,6 @@ class FemEoc
         instance().writeerr(writer, last);
     }
 };
-
-}
+}//namespace Tex
+}//namespace Stuff
 #endif
