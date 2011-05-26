@@ -1,8 +1,11 @@
 #ifndef STUFF_GRID_HH_INCLUDED
 #define STUFF_GRID_HH_INCLUDED
 
+#include "math.hh"
+#include "misc.hh"
 #include <dune/common/fvector.hh>
 #include <vector>
+#include <boost/format.hpp>
 
 namespace Stuff {
 
@@ -132,6 +135,17 @@ class GridWalk {
 			f.postWalk();
 		}
 
+		template < class Functor >
+		void walkCodim0( Functor& f ) const
+		{
+			for (ElementIterator it = gridView_.template begin<0>();
+				 it!=gridView_.template end<0>(); ++it)
+			{
+				const int ent_idx = getIdx( entityIdxMap_, *it );
+				f( *it, ent_idx );
+			}
+		}
+
     private:
 		const GridView& gridView_;
         typedef std::vector< EntityPointer >
@@ -163,6 +177,68 @@ Dune::FieldVector< typename GeometryType::ctype, GeometryType::coorddimension > 
     }
     center /= geometry.corners();
     return center;
+}
+
+template < class GridType >
+struct GridDimensions {
+	typedef MinMaxAvg<typename GridType::ctype>
+		MinMaxAvgType;
+	typedef Dune::array< MinMaxAvgType, GridType::dimensionworld >
+		CoordLimitsType;
+	CoordLimitsType coord_limits;
+	MinMaxAvgType entity_volume;
+
+	struct GridDimensionsFunctor {
+		CoordLimitsType& coord_limits_;
+		MinMaxAvgType& entity_volume_;
+
+		GridDimensionsFunctor( CoordLimitsType& c, MinMaxAvgType& e ):coord_limits_(c),entity_volume_(e){}
+
+		template <class Entity>
+		void operator() ( const Entity& ent, const int /*ent_idx*/ )
+		{
+			typedef typename Entity::Geometry
+				EntityGeometryType;
+			typedef Dune::FieldVector< typename EntityGeometryType::ctype, EntityGeometryType::coorddimension>
+				DomainType;
+			const typename Entity::Geometry& geo = ent.geometry();
+			entity_volume_.push( geo.volume() );
+			for ( size_t i = 0; i < geo.corners(); ++i )
+			{
+				const DomainType& corner( geo.corner( i ) );
+				for ( size_t k = 0; k < GridType::dimensionworld; ++k )
+					coord_limits_[k].push( corner[k] );
+			}
+		}
+	};
+	GridDimensions( const GridType& grid )
+	{
+		typedef typename GridType::LeafGridView
+			View;
+		const View& view = grid.leafView();
+		GridDimensionsFunctor f( coord_limits, entity_volume );
+		GridWalk<View>( view ).walkCodim0( f );
+	}
+};
+
+template <class T>
+inline std::ostream& operator<< (std::ostream& s, const GridDimensions<T>& d )
+{
+	for ( size_t k = 0; k < GridType::dimensionworld; ++k )
+	{
+		const typename GridDimensions<T>::MinMaxAvgType& mma = d.coord_limits[k];
+		s << boost::format( "x%d\tmin: %f\tavg: %f\tmax: %f\n" )
+			 % k
+			 % mma.min()
+			 % mma.average()
+			 % mma.max();
+	}
+	s << boost::format("Entity vol min: %f\tavg: %f\tmax: %f")
+		 % d.entity_volume.min()
+		 % d.entity_volume.average()
+		 % d.entity_volume.max();
+	s << std::endl;
+	return s;
 }
 
 }//end namespace

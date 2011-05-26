@@ -1,8 +1,21 @@
 #ifndef DUNE_STUFF_TIKZGRID_HH
 #define DUNE_STUFF_TIKZGRID_HH
 
+#include "misc.hh"
+#include "grid.hh"
+#include "static_assert.hh"
+#include <boost/format.hpp>
+#include <fstream>
+
 namespace Stuff {
 namespace Tex {
+
+typedef wraparound_array<std::string,7>
+	TexColorArrayType;
+namespace {
+	TexColorArrayType::BaseType tmp_colors = {{ "black","red","blue","green","yellow","cyan","magenta" }};
+}
+static const TexColorArrayType texcolors_( tmp_colors );
 
 class PgfEntityFunctor {
 	public:
@@ -98,9 +111,9 @@ class PgfEntityFunctorIntersections {
 			typedef Dune::FieldVector< typename EntityGeometryType::ctype, EntityGeometryType::coorddimension>
 				CoordType;
 			const CoordType center = getBarycenterGlobal(entity.geometry());
-			file_ << boost::format( "\\node[circle] at (%f,%f) {};\n" )
+			file_ << boost::format( "\\node[circle] at (%f,%f) {%d};\n" )
 //					 % color_
-					 % center[0] % center[1] ;
+					 % center[0] % center[1] % 1;
 		}
 
 		void preWalk() const{}
@@ -142,7 +155,7 @@ class PgfEntityFunctorIntersectionsWithShift : public PgfEntityFunctorIntersecti
 
 			const CoordType center = getBarycenterGlobal(ent.geometry());
 			const float fac = 0.16*level_;
-
+			maybePrintEntityNum( ent );
 			IntersectionIteratorType intItEnd = ent.ilevelend();
 			for (   IntersectionIteratorType intIt = ent.ilevelbegin();
 					intIt != intItEnd;
@@ -160,7 +173,6 @@ class PgfEntityFunctorIntersectionsWithShift : public PgfEntityFunctorIntersecti
 							% a[0] % a[1]
 							% b[0] % b[1];
 			}
-			maybePrintEntityNum( ent );
 			file_.flush();
 		}
 };
@@ -178,10 +190,6 @@ public:
 	{
 		std::ofstream file( getFileinDatadir( fn ).c_str() );
 		GridWalk<typename GridType::LeafGridView> grid_walk( grid_.leafView() );
-//		PgfEntityFunctor pgf( file );
-//		grid_walk( pgf );
-//		file.close();
-
 		PgfEntityFunctorIntersections pgf( file );
 		grid_walk( pgf );
 		file.close();
@@ -198,13 +206,6 @@ public:
 		:grid_(grid)
 	{
 		dune_static_assert( GridType::dimensionworld == 2, "pgf output only implemented for dim 2" );
-		texcolors_[0] = "black";
-		texcolors_[1] = "red";
-		texcolors_[2] = "blue";
-		texcolors_[3] = "green";
-		texcolors_[4] = "yellow";
-		texcolors_[5] = "cyan";
-		texcolors_[6] = "magenta";
 	}
 
 	void output( const std::string fn, const int refines )
@@ -225,9 +226,72 @@ public:
 				View;
 			const View& view = grid_.levelView(i);
 			GridWalk<View> grid_walk( view );
-			PgfEntityFunctorIntersections pgf( file, texcolors_[i], i);//, 2*( (2*i+1)/float(maxref)+0.2) );
+			PgfEntityFunctorIntersectionsWithShift pgf( file, texcolors_[i], i, true);//, 2*( (2*i+1)/float(maxref)+0.2) );
 			grid_walk( pgf );
 			file << "%%%%%%%%%%%%%%%" << view.size( 0 ) << "%%%%%%%%%%%%%%%%\n";
+		}
+
+		file << "\\end{tikzpicture}\n"
+				"\\end{document}\n";
+		file.close();
+	}
+
+private:
+	GridType& grid_;
+};
+
+template < class GridType >
+class RefineSeriesPgfGrid {
+public:
+	RefineSeriesPgfGrid( GridType& grid )
+		:grid_(grid)
+	{
+		dune_static_assert( GridType::dimensionworld == 2, "pgf output only implemented for dim 2" );
+	}
+
+	void output( const std::string fn, const int refines )
+	{
+		Stuff::GridDimensions<GridType> dimensions( grid_ );
+		const double x_diam = std::abs(dimensions.coord_limits[0].min()) +
+				std::abs(dimensions.coord_limits[0].max());
+		const double y_diam = std::abs(dimensions.coord_limits[1].min()) +
+				std::abs(dimensions.coord_limits[1].max());
+		std::ofstream file( getFileinDatadir( fn ).c_str() );
+		file << "\\documentclass{article}\n"
+				"\\usepackage{tikz}\n"
+				"\\usetikzlibrary{calc,intersections, arrows,shapes.misc,shapes.arrows}\n"
+				"\\pagestyle{empty}\n"
+				"\\newcommand{\\plotscale}{1}"
+			<< boost::format("\\newcommand{\\offset}{%f}") % (x_diam*1.2)
+			<< "\\begin{document}\n"
+				"\\begin{tikzpicture}[scale=\\plotscale]\n\\begin{scope}";
+		const int maxref = refines;
+		grid_.globalRefine( maxref );
+//		for ( int i = maxref-1; i >= 0; --i )
+		for ( int i = 0; i < maxref; ++i )
+		{
+			typedef typename GridType::LevelGridView
+				View;
+			{
+				const View& view = grid_.levelView(i);
+				GridWalk<View> grid_walk( view );
+				PgfEntityFunctorIntersections thisLevel( file, texcolors_[i], i);
+				grid_walk( thisLevel );
+			}
+			if ( i > 0 )
+			{
+				const View& view = grid_.levelView(i-1);
+				GridWalk<View> grid_walk( view );
+				PgfEntityFunctorIntersections lastLevel( file, texcolors_[i-1], i-1);
+				grid_walk( lastLevel );
+
+			}
+			file << boost::format("\\renewcommand{\\offset}{%f}\n") % (x_diam*1.2*(i+1));
+			file << "\\end{scope}";
+			if ( i < maxref -1 )
+				file << "\\begin{scope}[shift={(\\offset,0)}]\n";
+
+
 		}
 		file << "\\end{tikzpicture}\n"
 				"\\end{document}\n";
@@ -236,8 +300,9 @@ public:
 
 private:
 	GridType& grid_;
-	wraparound_array<std::string,7>  texcolors_;
 };
+
+
 
 
 } // namespace Tex
