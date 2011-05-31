@@ -257,43 +257,36 @@ public:
 		const double y_diam = std::abs(dimensions.coord_limits[1].min()) +
 				std::abs(dimensions.coord_limits[1].max());
 		std::ofstream file( getFileinDatadir( fn ).c_str() );
+		boost::format level_float("\\subfloat[Level %d]{\n\\begin{tikzpicture}[scale=\\plotscale]\n");
 		file << "\\documentclass{article}\n"
-				"\\usepackage{tikz}\n"
+				"\\usepackage{tikz}\n\\usepackage{subfig}\n"
 				"\\usetikzlibrary{calc,intersections, arrows,shapes.misc,shapes.arrows}\n"
-				"\\pagestyle{empty}\n"
-				"\\newcommand{\\plotscale}{1}"
-			<< boost::format("\\newcommand{\\offset}{%f}") % (x_diam*1.2)
-			<< "\\begin{document}\n"
-				"\\begin{tikzpicture}[scale=\\plotscale]\n\\begin{scope}";
+				"\\pagestyle{empty}\n\\newcommand{\\plotscale}{0.8}\n"
+				"\\begin{document}\n\\begin{figure}";
 		const int maxref = refines;
 		grid_.globalRefine( maxref );
 //		for ( int i = maxref-1; i >= 0; --i )
 		for ( int i = 0; i < maxref; ++i )
 		{
+			file << level_float % i;
 			typedef typename GridType::LevelGridView
 				View;
 			{
 				const View& view = grid_.levelView(i);
 				GridWalk<View> grid_walk( view );
-				PgfEntityFunctorIntersections thisLevel( file, texcolors_[i], i);
+				PgfEntityFunctorIntersections thisLevel( file, "black", i);
 				grid_walk( thisLevel );
 			}
-			if ( i > 0 )
-			{
-				const View& view = grid_.levelView(i-1);
-				GridWalk<View> grid_walk( view );
-				PgfEntityFunctorIntersections lastLevel( file, texcolors_[i-1], i-1);
-				grid_walk( lastLevel );
-
-			}
-			file << boost::format("\\renewcommand{\\offset}{%f}\n") % (x_diam*1.2*(i+1));
-			file << "\\end{scope}";
-			if ( i < maxref -1 )
-				file << "\\begin{scope}[shift={(\\offset,0)}]\n";
-
-
+//			if ( i > 0 )//for dual/changed color outptu
+//			{
+//				const View& view = grid_.levelView(i-1);
+//				GridWalk<View> grid_walk( view );
+//				PgfEntityFunctorIntersections lastLevel( file, "black", i-1);
+//				grid_walk( lastLevel );
+//			}
+			file << "\\end{tikzpicture}}\n";
 		}
-		file << "\\end{tikzpicture}\n"
+		file << "\\end{figure}\n"
 				"\\end{document}\n";
 		file.close();
 	}
