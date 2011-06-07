@@ -83,9 +83,9 @@ public:
 			arg_z_ = arg[2];
 		time_ = time;
 		ret[0] = op_x_->Val();
-		if ( arg.dim() > 1 )
+		if ( ret.dim() > 1 )
 			ret[1] = op_y_->Val();
-		if ( arg.dim() > 2 )
+		if ( ret.dim() > 2 )
 			ret[2] = op_z_->Val();
 	}
 
