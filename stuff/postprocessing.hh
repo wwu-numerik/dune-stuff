@@ -112,7 +112,7 @@ class PostProcessor
                 ProjectionP projectionP;
             projectionP( problem_.pressure(), discreteExactPressure_ );
 			if ( Parameters().getParam( "save_matrices", false ) ) {
-				Logging::MatlabLogStream& matlabLogStream = Logger().Matlab();
+				Stuff::Logging::MatlabLogStream& matlabLogStream = Logger().Matlab();
 				Stuff::printDiscreteFunctionMatlabStyle( discreteExactVelocity_, "u_exakt", matlabLogStream );
 				Stuff::printDiscreteFunctionMatlabStyle( discreteExactPressure_, "p_exakt", matlabLogStream );
 			}

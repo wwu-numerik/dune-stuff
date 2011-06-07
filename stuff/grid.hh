@@ -84,7 +84,11 @@ void printGridInformation( GridPartType& gridPart, DiscreteFunctionSpaceType& sp
     out << "      maxGridWidth is " << maxGridWidth << std::endl;
 }
 
-
+//! Base class for Gridwalk Functors that don't want to reimplement pre/postWalk
+struct GridwalkFunctorDefault {
+	void preWalk() const{}
+	void postWalk()const{}
+};
 
 /** \brief lets you apply a Functor to each entity
   \todo not require a space to be passed
@@ -227,18 +231,60 @@ inline std::ostream& operator<< (std::ostream& s, const GridDimensions<T>& d )
 	for ( size_t k = 0; k < T::dimensionworld; ++k )
 	{
 		const typename GridDimensions<T>::MinMaxAvgType& mma = d.coord_limits[k];
-		s << boost::format( "x%d\tmin: %f\tavg: %f\tmax: %f\n" )
+		s << boost::format( "x%d\tmin: %e\tavg: %e\tmax: %e\n" )
 			 % k
 			 % mma.min()
 			 % mma.average()
 			 % mma.max();
 	}
-	s << boost::format("Entity vol min: %f\tavg: %f\tmax: %f")
+	s << boost::format("Entity vol min: %e\tavg: %e\tmax: %e")
 		 % d.entity_volume.min()
 		 % d.entity_volume.average()
 		 % d.entity_volume.max();
 	s << std::endl;
 	return s;
+}
+
+template < class GridType >
+struct MaximumEntityVolumeRefineFunctor {
+	MaximumEntityVolumeRefineFunctor ( GridType& grid, double volume, double factor )
+		:threshold_volume_( volume * factor ),
+		grid_(grid)
+	{}
+
+	template <class Entity>
+	void operator() ( const Entity& ent, const int /*ent_idx*/ )
+	{
+		const double volume = ent.geometry().volume();
+		if ( volume > threshold_volume_ )
+			grid_.mark( 1, ent );
+	}
+
+	const double threshold_volume_;
+	GridType& grid_;
+};
+
+//! refine entities until all have volume < size_factor * unrefined_minimum_volume
+template < class GridType >
+void EnforceMaximumEntityVolume( GridType& grid, const double size_factor )
+{
+	const GridDimensions<GridType> unrefined_dimensions( grid );
+	const double unrefined_min_volume = unrefined_dimensions.entity_volume.min();
+	typedef typename GridType::LeafGridView
+		View;
+	View view = grid.leafView();
+	MaximumEntityVolumeRefineFunctor<GridType> f( grid, unrefined_min_volume, size_factor );
+	while ( true )
+	{
+		size_t codim0 = view.size( 0 );
+		grid.preAdapt();
+		GridWalk<View>( view ).walkCodim0( f );
+		grid.adapt();
+		grid.postAdapt();
+//		view = grid.leafView();
+		if ( codim0 != view.size( 0 ) )
+			break;
+	}
 }
 
 }//end namespace
