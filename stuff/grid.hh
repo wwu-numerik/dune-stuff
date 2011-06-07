@@ -224,7 +224,7 @@ struct GridDimensions {
 template <class T>
 inline std::ostream& operator<< (std::ostream& s, const GridDimensions<T>& d )
 {
-	for ( size_t k = 0; k < GridType::dimensionworld; ++k )
+	for ( size_t k = 0; k < T::dimensionworld; ++k )
 	{
 		const typename GridDimensions<T>::MinMaxAvgType& mma = d.coord_limits[k];
 		s << boost::format( "x%d\tmin: %f\tavg: %f\tmax: %f\n" )
