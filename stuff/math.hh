@@ -16,6 +16,8 @@
 #include <boost/accumulators/statistics/min.hpp>
 #include <boost/accumulators/statistics/mean.hpp>
 
+#include <dune/common/deprecated.hh>
+
 namespace Stuff {
 
 /** \todo DOCME **/
@@ -113,7 +115,11 @@ class MinMaxAvg {
 		ElementType max () const { return boost::accumulators::max(acc_); }
 		ElementType average () const { return boost::accumulators::mean(acc_); }
 
-		void push( const ElementType& el ) {
+		void DUNE_DEPRECATED push( const ElementType& el ) {
+			acc_( el );
+		}
+
+		void operator()( const ElementType& el ) {
 			acc_( el );
 		}
 
