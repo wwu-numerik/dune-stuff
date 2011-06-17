@@ -206,12 +206,12 @@ struct GridDimensions {
 			typedef Dune::FieldVector< typename EntityGeometryType::ctype, EntityGeometryType::coorddimension>
 				DomainType;
 			const typename Entity::Geometry& geo = ent.geometry();
-			entity_volume_.push( geo.volume() );
-			for ( size_t i = 0; i < geo.corners(); ++i )
+			entity_volume_( geo.volume() );
+			for ( int i = 0; i < geo.corners(); ++i )
 			{
 				const DomainType& corner( geo.corner( i ) );
 				for ( size_t k = 0; k < GridType::dimensionworld; ++k )
-					coord_limits_[k].push( corner[k] );
+					coord_limits_[k]( corner[k] );
 			}
 		}
 	};
