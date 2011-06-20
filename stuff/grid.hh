@@ -208,15 +208,19 @@ struct GridDimensions {
 			typedef Dune::FieldVector< typename EntityGeometryType::ctype, EntityGeometryType::coorddimension>
 				DomainType;
 			const typename Entity::Geometry& geo = ent.geometry();
-			entity_volume_.push( geo.volume() );
-			for ( size_t i = 0; i < geo.corners(); ++i )
+			entity_volume_( geo.volume() );
+			for ( int i = 0; i < geo.corners(); ++i )
 			{
 				const DomainType& corner( geo.corner( i ) );
 				for ( size_t k = 0; k < GridType::dimensionworld; ++k )
-					coord_limits_[k].push( corner[k] );
+					coord_limits_[k]( corner[k] );
 			}
 		}
 	};
+
+	double volumeRelation() const
+	{ return entity_volume.min() != 0.0 ? entity_volume.max() / entity_volume.min() : -1; }
+
 	GridDimensions( const GridType& grid )
 	{
 		typedef typename GridType::LeafGridView
@@ -227,10 +231,10 @@ struct GridDimensions {
 	}
 };
 
-template <class T>
-inline std::ostream& operator<< (std::ostream& s, const GridDimensions<T>& d )
+template <class Stream, class T>
+inline Stream& operator<< (Stream& s, const GridDimensions<T>& d )
 {
-	for ( size_t k = 0; k < GridType::dimensionworld; ++k )
+	for ( size_t k = 0; k < T::dimensionworld; ++k )
 	{
 		const typename GridDimensions<T>::MinMaxAvgType& mma = d.coord_limits[k];
 		s << boost::format( "x%d\tmin: %e\tavg: %e\tmax: %e\n" )
@@ -239,10 +243,11 @@ inline std::ostream& operator<< (std::ostream& s, const GridDimensions<T>& d )
 			 % mma.average()
 			 % mma.max();
 	}
-	s << boost::format("Entity vol min: %e\tavg: %e\tmax: %e")
+	s << boost::format("Entity vol min: %e\tavg: %e\tmax: %e\tQout: %e")
 		 % d.entity_volume.min()
 		 % d.entity_volume.average()
-		 % d.entity_volume.max();
+		 % d.entity_volume.max()
+		 % d.volumeRelation();
 	s << std::endl;
 	return s;
 }
@@ -278,13 +283,12 @@ void EnforceMaximumEntityVolume( GridType& grid, const double size_factor )
 	MaximumEntityVolumeRefineFunctor<GridType> f( grid, unrefined_min_volume, size_factor );
 	while ( true )
 	{
-		size_t codim0 = view.size( 0 );
 		grid.preAdapt();
 		GridWalk<View>( view ).walkCodim0( f );
-		grid.adapt();
-		grid.postAdapt();
-		if ( codim0 != view.size( 0 ) )
+		if ( !grid.adapt() )
 			break;
+		grid.postAdapt();
+		std::cout << Stuff::GridDimensions<GridType>( grid );
 	}
 }
 

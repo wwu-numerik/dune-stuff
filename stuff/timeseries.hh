@@ -410,10 +410,10 @@ class TimeSeriesOutput {
 			out << "timestep\t";
 			for ( size_t i = 0; i < vector_count_; ++i )
 			{
-				out <<  prefix_l2_velocity_ << i << "\t"
-					<<  prefix_l2_velocity_ << i << "_h1\t"
-					<<  prefix_l2_pressure_ << i << "\t"
-					<<  prefix_runtime_ << i << "\t";
+				out <<  prefix_l2_velocity_ << i << ","
+					<<  prefix_l2_velocity_ << i << "_h1,"
+					<<  prefix_l2_pressure_ << i << ","
+					<<  prefix_runtime_ << i << ",";
 			}
 			out << "\n";
 
@@ -454,11 +454,11 @@ class TimeSeriesOutput {
 			for ( size_t i = 0; i < timesteps_.size(); ++i )
 			{
 				const std::string current_time = timesteps_[i];
-				out << current_time << "\t";
+				out << current_time << ",";
 
 				for( int j = 0; j < int(vector_count_); ++j)
 				{
-					out << boost::format("%e\t%e\t%e\t%e\t")
+					out << boost::format("%e,%e,%e,%e,")
 						   % remapped_data[i][j][0]
 						   % remapped_data[i][j][1]
 						   % remapped_data[i][j][2]
@@ -478,13 +478,13 @@ class TimeSeriesOutput {
 			std::ofstream out( filename.c_str() );
 			std::ofstream int_out( integrated_filename.c_str() );
 
-			boost::format header("refine\t%s\t%s_avg\t%s\t%s_avg\t%s_h1\n");
+			boost::format header("refine,%s,%s_avg,%s,%s_avg,%s_h1\n");
 
 			out << header
 				   % prefix_eoc_velocity_ % prefix_eoc_velocity_
 				   % prefix_eoc_pressure_ % prefix_eoc_pressure_
 				   % prefix_eoc_velocity_;
-			int_out << "refine\tL2t_velocity\tL2t_pressure\tL2t_h1_velocity\tMaxL2_velocity\tMaxL2_pressure\n";
+			int_out << "refine,L2t_velocity,L2t_pressure,L2t_h1_velocity,MaxL2_velocity,MaxL2_pressure\n";
 
 			const size_t errordata_point_count = max_errors_pressure.size();
 			for ( size_t i = 0; i < errordata_point_count-1; ++i )
@@ -502,12 +502,12 @@ class TimeSeriesOutput {
 				const double avg_pressure_eoc = std::log( avg_pressure_qout ) / std::log( total_qout );
 				const double avg_velocity_eoc = std::log( avg_velocity_qout ) / std::log( total_qout );
 				const double h1_avg_velocity_eoc = std::log( h1_avg_velocity_qout ) / std::log( total_qout );
-				out << boost::format("%d\t%e\t%e\t%e\t%e\t%e\n")
+				out << boost::format("%d,%e,%e,%e,%e,%e\n")
 						% (i + 1)
 						% velocity_eoc % avg_velocity_eoc
 						% pressure_eoc % avg_pressure_eoc
 						% h1_avg_velocity_eoc;
-				int_out << boost::format("%d\t%e\t%e\t%e\t%e\t%e\n")
+				int_out << boost::format("%d,%e,%e,%e,%e,%e\n")
 							% i
 							% avg_errors_velocity_[i].first
 							% avg_errors_pressure_[i].first
@@ -517,7 +517,7 @@ class TimeSeriesOutput {
 
 			}
 			const size_t last_idx = errordata_point_count -1;
-			int_out << boost::format("%d\t%e\t%e\t%e\t%e\t%e\n")
+			int_out << boost::format("%d,%e,%e,%e,%e,%e\n")
 					   % last_idx
 					   % avg_errors_velocity_[last_idx].first
 					   % avg_errors_pressure_[last_idx].first
