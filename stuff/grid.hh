@@ -3,7 +3,9 @@
 
 #include "math.hh"
 #include "misc.hh"
+#include "static_assert.hh"
 #include <dune/common/fvector.hh>
+#include <dune/grid/common/geometry.hh>
 #include <vector>
 #include <boost/format.hpp>
 
@@ -281,10 +283,27 @@ void EnforceMaximumEntityVolume( GridType& grid, const double size_factor )
 		GridWalk<View>( view ).walkCodim0( f );
 		grid.adapt();
 		grid.postAdapt();
-//		view = grid.leafView();
 		if ( codim0 != view.size( 0 ) )
 			break;
 	}
+}
+
+template < int dim, class GridImp, template<int,int,class> class EntityImp >
+double geometryDiameter( const Dune::Entity< 0, dim, GridImp, EntityImp >& entity )
+{
+	static_assert(dim==2,"not implemented");
+	typedef Dune::Entity< 0, dim, GridImp, EntityImp >
+		EntityType;
+	typedef typename EntityType::LeafIntersectionIterator
+		IntersectionIteratorType;
+	IntersectionIteratorType end = entity.ileafend();
+	double factor = 1.0;
+	for ( IntersectionIteratorType it = entity.ileafbegin(); it != end ; ++it )
+	{
+		const typename IntersectionIteratorType::Intersection& intersection = *it;
+		factor *= intersection.intersectionGlobal().volume();
+	}
+	return factor/(2.0*entity.geometry().volume());
 }
 
 }//end namespace
