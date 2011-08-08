@@ -407,7 +407,7 @@ class TimeSeriesOutput {
 			std::ofstream out( filename.c_str() );
 
 			//header
-			out << "timestep\t";
+			out << "timestep,";
 			for ( size_t i = 0; i < vector_count_; ++i )
 			{
 				out <<  prefix_l2_velocity_ << i << ","
@@ -473,60 +473,65 @@ class TimeSeriesOutput {
 		std::string writeEOCcsv( std::string basename )
 		{
 			std::string filename = basename + ".eoc.csv";
-			std::string integrated_filename = basename + ".int.csv";
 			testCreateDirectory( pathOnly( filename ) );
 			std::ofstream out( filename.c_str() );
-			std::ofstream int_out( integrated_filename.c_str() );
 
-			boost::format header("refine,%s,%s_avg,%s,%s_avg,%s_h1\n");
+			boost::format header("refine,%s,%s_avg,%s,%s_avg,%s_h1");
 
 			out << header
 				   % prefix_eoc_velocity_ % prefix_eoc_velocity_
 				   % prefix_eoc_pressure_ % prefix_eoc_pressure_
-				   % prefix_eoc_velocity_;
-			int_out << "refine,L2t_velocity,L2t_pressure,L2t_h1_velocity,MaxL2_velocity,MaxL2_pressure\n";
+				   % prefix_eoc_velocity_
+				<< ",L2t_velocity,L2t_pressure,L2t_h1_velocity,MaxL2_velocity,MaxL2_pressure\n";
 
 			const size_t errordata_point_count = max_errors_pressure.size();
-			for ( size_t i = 0; i < errordata_point_count-1; ++i )
+
+			boost::format line("%d,%e,%e,%e,%e,%e,%e,%e,%e,%e,%e\n");
+			out << line
+					   % 0
+					   % std::numeric_limits<double>::quiet_NaN()
+					   % std::numeric_limits<double>::quiet_NaN()
+					   % std::numeric_limits<double>::quiet_NaN()
+					   % std::numeric_limits<double>::quiet_NaN()
+					   % std::numeric_limits<double>::quiet_NaN()
+					   % avg_errors_velocity_[0].first
+					   % avg_errors_pressure_[0].first
+					   % avg_h1_errors_velocity_[0].first
+					   % max_errors_velocity[0].first
+					   % max_errors_pressure[0].first;
+
+
+			for ( size_t i = 1; i < errordata_point_count; ++i )
 			{
-				const double width_qout = max_errors_pressure[i].second / max_errors_pressure[i+1].second;
-				const double dt_qout = max_dt_vec[i] / max_dt_vec[i+1];
+				const double width_qout = max_errors_pressure[i-1].second / max_errors_pressure[i].second;
+				const double dt_qout = max_dt_vec[i-1] / max_dt_vec[i];
 				const double total_qout = width_qout * dt_qout;
-				const double pressure_qout = max_errors_pressure[i].first/ max_errors_pressure[i+1].first;
-				const double velocity_qout = max_errors_velocity[i].first/ max_errors_velocity[i+1].first;
-				const double avg_pressure_qout = avg_errors_pressure_[i].first/ avg_errors_pressure_[i+1].first;
-				const double avg_velocity_qout = avg_errors_velocity_[i].first/ avg_errors_velocity_[i+1].first;
-				const double h1_avg_velocity_qout = avg_h1_errors_velocity_[i].first/ avg_h1_errors_velocity_[i+1].first;
+				const double pressure_qout = max_errors_pressure[i-1].first/ max_errors_pressure[i].first;
+				const double velocity_qout = max_errors_velocity[i-1].first/ max_errors_velocity[i].first;
+				const double avg_pressure_qout = avg_errors_pressure_[i-1].first/ avg_errors_pressure_[i].first;
+				const double avg_velocity_qout = avg_errors_velocity_[i-1].first/ avg_errors_velocity_[i].first;
+				const double h1_avg_velocity_qout = avg_h1_errors_velocity_[i-1].first/ avg_h1_errors_velocity_[i].first;
 				const double pressure_eoc = std::log( pressure_qout  ) / std::log( total_qout );
 				const double velocity_eoc = std::log( velocity_qout ) / std::log( total_qout );
 				const double avg_pressure_eoc = std::log( avg_pressure_qout ) / std::log( total_qout );
 				const double avg_velocity_eoc = std::log( avg_velocity_qout ) / std::log( total_qout );
 				const double h1_avg_velocity_eoc = std::log( h1_avg_velocity_qout ) / std::log( total_qout );
-				out << boost::format("%d,%e,%e,%e,%e,%e\n")
-						% (i + 1)
-						% velocity_eoc % avg_velocity_eoc
-						% pressure_eoc % avg_pressure_eoc
-						% h1_avg_velocity_eoc;
-				int_out << boost::format("%d,%e,%e,%e,%e,%e\n")
-							% i
-							% avg_errors_velocity_[i].first
-							% avg_errors_pressure_[i].first
-							% avg_h1_errors_velocity_[i].first
-							% max_errors_velocity[i].first
-							% max_errors_pressure[i].first;
+				out << line
+						% i
+						% velocity_eoc
+						% avg_velocity_eoc
+						% pressure_eoc
+						% avg_pressure_eoc
+						% h1_avg_velocity_eoc
+						% avg_errors_velocity_[i].first
+						% avg_errors_pressure_[i].first
+						% avg_h1_errors_velocity_[i].first
+						% max_errors_velocity[i].first
+						% max_errors_pressure[i].first;
 
 			}
-			const size_t last_idx = errordata_point_count -1;
-			int_out << boost::format("%d,%e,%e,%e,%e,%e\n")
-					   % last_idx
-					   % avg_errors_velocity_[last_idx].first
-					   % avg_errors_pressure_[last_idx].first
-					   % avg_h1_errors_velocity_[last_idx].first
-					   % max_errors_velocity[last_idx].first
-					   % max_errors_pressure[last_idx].first;
-
 			out << std::endl;
-			int_out << std::endl;
+			out.close();
 			return filename;
 		}
 };
