@@ -622,6 +622,16 @@ bool FunctionContainsNanOrInf( const DiscreteFunctionType& function )
 	return false;
 }
 
+bool FunctionContainsNanOrInf( const double* function, size_t size )
+{
+	for( size_t i = 0; i < size; ++i )
+	{
+		if ( std::isnan(function[i]) || std::isinf(function[i]) )
+			return true;
+	}
+	return false;
+}
+
 //! return true if any dof is nan or inf
 template <class DiscreteFunctionType>
 void divideFunctionDofs( DiscreteFunctionType& target, const DiscreteFunctionType& divider )
