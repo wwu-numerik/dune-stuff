@@ -142,11 +142,11 @@ namespace Dune {
 				DUNE_THROW( Dune::NotImplemented, "__FUNCTION__ only present for interface compat" );
 			}
 
-			inline void evaluate( double /*time*/,
-								  const typename BaseType::DomainType& /*x*/,
-								  typename BaseType::RangeType& /*ret*/ ) const
+			inline void evaluate( double time,
+								  const typename BaseType::DomainType& x,
+								  typename BaseType::RangeType& ret ) const
 			{
-				DUNE_THROW( Dune::NotImplemented, "__FUNCTION__ only present for interface compat" );
+				CHECK_AND_CALL_INTERFACE_IMPLEMENTATION( asImp().evaluateTime( time, x, ret ) );
 			}
 
 
