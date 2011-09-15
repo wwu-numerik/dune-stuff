@@ -245,16 +245,20 @@ namespace Dune {
 							vtkOut_.addVertexData( *f );
 							vtkOut_.addCellData( *f );
 						}
+						const bool binary_output = Parameters().getParam( "binary_vtk", true );
 
 						if( parallel_ )
 						{
 							// write all data for parallel runs
-							vtkOut_.pwrite( name.c_str(), path_.c_str(), "." , Dune::VTKOptions::binaryappended );
+							vtkOut_.pwrite( name.c_str(), path_.c_str(), "." ,
+									binary_output ? Dune::VTKOptions::binaryappended
+										      : Dune::VTKOptions::ascii );
 						}
 						else
 						{
 							// write all data serial
-							vtkOut_.write( name.c_str(), Dune::VTKOptions::binaryappended );
+							vtkOut_.write( name.c_str(), binary_output ? Dune::VTKOptions::binaryappended
+												   : Dune::VTKOptions::ascii  );
 						}
 
 						vtkOut_.clear();
