@@ -722,14 +722,60 @@ private:
 	  const double constant_;
 };
 
+template < class FunctionSpaceImp, class TimeProviderImp >
+class ConstantIntersectionTimeFunction : public Dune::IntersectionTimeFunction < FunctionSpaceImp , ConstantIntersectionTimeFunction< FunctionSpaceImp,TimeProviderImp >, TimeProviderImp >
+{
+public:
+	typedef ConstantIntersectionTimeFunction< FunctionSpaceImp, TimeProviderImp >
+		ThisType;
+	typedef Dune::IntersectionTimeFunction< FunctionSpaceImp, ThisType, TimeProviderImp >
+		BaseType;
+	typedef typename BaseType::DomainType
+		DomainType;
+	typedef typename BaseType::RangeType
+		RangeType;
+
+	/**
+	  *  \brief  constructor
+	  *  \param  viscosity,alpha   dummies
+	  **/
+	ConstantIntersectionTimeFunction( const TimeProviderImp& timeprovider,
+				   const FunctionSpaceImp& space,
+				   const double constant = 0.0 )
+		: BaseType ( timeprovider, space ),
+		constant_(  constant )
+	{}
+
+	/**
+   *  \brief  destructor
+   *
+   *  doing nothing
+   **/
+	~ConstantIntersectionTimeFunction()
+	{}
+
+	template < class IntersectionType >
+	void evaluateTime( const double /*time*/, const DomainType& /*arg*/, RangeType& ret, const IntersectionType& /*intersection */) const
+	{
+		ret = RangeType(0.0);
+	}
+private:
+	  const double constant_;
+};
+
 }//end namespace Stuff
 
 #define NULLFUNCTION_TP(classname)\
 template < class T, class P > struct classname : public Stuff::ConstantFunctionTP< T,P >\
-{classname( const P& p,const T& t ):Stuff::ConstantFunctionTP< T,P >(p,t){}};
+{classname( const P& p,const T& t, double=0.0, double=0.0 ):Stuff::ConstantFunctionTP< T,P >(p,t){}};
+
+#define NULLFUNCTION_TP_BOUNDARY(classname)\
+template < class T, class P > struct classname : public Stuff::ConstantIntersectionTimeFunction< T,P >\
+{classname( const P& p,const T& t, double=0.0, double=0.0 ):Stuff::ConstantIntersectionTimeFunction< T,P >(p,t){}};
+
 #define NULLFUNCTION(classname)\
 template < class T > struct classname : public Stuff::ConstantFunction< T >\
-{classname( const double d, const T& t ):Stuff::ConstantFunction< T >(t){}\
+{classname( const double d, const T& t, double=0.0, double=0.0 ):Stuff::ConstantFunction< T >(t){}\
 classname( const T& t ):Stuff::ConstantFunction< T >(t){}};
 
 #endif //includeguard
