@@ -254,21 +254,21 @@ inline Stream& operator<< (Stream& s, const GridDimensions<T>& d )
 
 template < class GridType >
 struct MaximumEntityVolumeRefineFunctor {
-	MaximumEntityVolumeRefineFunctor ( GridType& grid, double volume, double factor )
-		:threshold_volume_( volume * factor ),
-		grid_(grid)
-	{}
+    MaximumEntityVolumeRefineFunctor ( GridType& grid, double volume, double factor )
+	    :threshold_volume_( volume * factor ),
+	    grid_(grid)
+    {}
 
-	template <class Entity>
-	void operator() ( const Entity& ent, const int /*ent_idx*/ )
-	{
-		const double volume = ent.geometry().volume();
-		if ( volume > threshold_volume_ )
-			grid_.mark( 1, ent );
-	}
+    template <class Entity>
+    void operator() ( const Entity& ent, const int /*ent_idx*/ )
+    {
+	    const double volume = ent.geometry().volume();
+	    if ( volume > threshold_volume_ )
+		    grid_.mark( 1, ent );
+    }
 
-	const double threshold_volume_;
-	GridType& grid_;
+    const double threshold_volume_;
+    GridType& grid_;
 };
 
 //! refine entities until all have volume < size_factor * unrefined_minimum_volume
@@ -292,11 +292,10 @@ void EnforceMaximumEntityVolume( GridType& grid, const double size_factor )
 	}
 }
 
-template < int dim, class GridImp, template<int,int,class> class EntityImp >
-double geometryDiameter( const Dune::Entity< 0, dim, GridImp, EntityImp >& entity )
+template < class GridImp, template<int,int,class> class EntityImp >
+double geometryDiameter( const Dune::Entity< 0, 2, GridImp, EntityImp >& entity )
 {
-	static_assert(dim==2,"not implemented");
-	typedef Dune::Entity< 0, dim, GridImp, EntityImp >
+	typedef Dune::Entity< 0, 2, GridImp, EntityImp >
 		EntityType;
 	typedef typename EntityType::LeafIntersectionIterator
 		IntersectionIteratorType;
@@ -309,6 +308,25 @@ double geometryDiameter( const Dune::Entity< 0, dim, GridImp, EntityImp >& entit
 	}
 	return factor/(2.0*entity.geometry().volume());
 }
+
+template < class GridImp, template<int,int,class> class EntityImp >
+double geometryDiameter( const Dune::Entity< 0, 3, GridImp, EntityImp >& entity )
+{
+    DUNE_THROW( Dune::Exception, "copypasta from 2D" );
+    typedef Dune::Entity< 0, 3, GridImp, EntityImp >
+	    EntityType;
+    typedef typename EntityType::LeafIntersectionIterator
+	    IntersectionIteratorType;
+    IntersectionIteratorType end = entity.ileafend();
+    double factor = 1.0;
+    for ( IntersectionIteratorType it = entity.ileafbegin(); it != end ; ++it )
+    {
+	    const typename IntersectionIteratorType::Intersection& intersection = *it;
+	    factor *= intersection.intersectionGlobal().volume();
+    }
+    return factor/(2.0*entity.geometry().volume());
+}
+
 
 }//end namespace
 
