@@ -11,14 +11,9 @@
 
 namespace Stuff {
 
-	//! a demonic analytical/discrete function hybrid that at each point evaluates to the two_norm of a given discreteFunction
+	//! not really a function, but provides what you expect via discreteFunction
 	template< class DiscreteFunctionImp, int polOrder = 2 >
-	class MagnitudeFunction :
-			public Dune::Function< Dune::FunctionSpace< typename DiscreteFunctionImp::FunctionSpaceType::DomainFieldType,
-														double,
-														DiscreteFunctionImp::FunctionSpaceType::dimDomain,
-														1 >,
-									MagnitudeFunction< DiscreteFunctionImp, polOrder > >
+	class MagnitudeFunction
 	{
 		typedef MagnitudeFunction< DiscreteFunctionImp, polOrder >
 			ThisType;
@@ -29,7 +24,14 @@ namespace Stuff {
 																DiscreteFunctionImp::FunctionSpaceType::dimDomain,
 																1 >
 			MagnitudeSpaceType;
-		typedef Dune::Function< MagnitudeSpaceType, ThisType >
+		typedef Dune::AdaptiveDiscreteFunction<
+				Dune::DiscontinuousGalerkinSpace<
+				    Dune::FunctionSpace<    typename DiscreteFunctionImp::FunctionSpaceType::DomainFieldType,
+							    double,
+							    DiscreteFunctionImp::FunctionSpaceType::dimDomain,
+						    1 >,
+				typename DiscreteFunctionImp::DiscreteFunctionSpaceType::GridPartType, polOrder >
+			   >
 			BaseType;
 		typedef DiscreteFunctionImp
 			DiscreteFunctionType;
@@ -42,26 +44,91 @@ namespace Stuff {
 			MagnitudeDiscreteFunctionType;
 
 		//! constructor taking discrete function
-		MagnitudeFunction ( const DiscreteFunctionType& df )
-			: BaseType(magnitude_space_),
-			  discreteFunction_( df ),
-			  magnitude_disretefunctionspace_( discreteFunction_.space().gridPart() ),
-			  magnitude_disretefunction_( discreteFunction_.name() + "-magnitude", magnitude_disretefunctionspace_ )
+		MagnitudeFunction ( const DiscreteFunctionType& discreteFunction )
+			:
+//		          BaseType( discreteFunction.name() + "-magnitude", magnitude_disretefunctionspace_ ),
+			  magnitude_disretefunctionspace_( discreteFunction.space().gridPart() ),
+			  magnitude_disretefunction_( discreteFunction.name() + "-magnitude", magnitude_disretefunctionspace_ )
 		{
-			Dune::BetterL2Projection
-				::project( *this, magnitude_disretefunction_ );
-		}
+		    typedef typename DiscreteFunctionImp::DiscreteFunctionSpaceType DiscreteFunctionSpaceType;
+		    typedef typename MagnitudeDiscreteFunctionType::LocalFunctionType LocalFuncType;
+		    typedef typename DiscreteFunctionSpaceType::Traits::GridPartType GridPartType;
+		    typedef typename DiscreteFunctionSpaceType::Traits::IteratorType Iterator;
+		    typedef typename MagnitudeDiscreteFunctionSpaceType::BaseFunctionSetType BaseFunctionSetType ;
+		    typedef typename GridPartType::GridType GridType;
+
+	  //	  typedef typename FunctionImp::LocalFunctionType LocalFType;
+
+		    typename MagnitudeDiscreteFunctionSpaceType::RangeType ret (0.0);
+		    typename MagnitudeDiscreteFunctionSpaceType::RangeType phi (0.0);
+		    const DiscreteFunctionSpaceType& space =  discreteFunction.space();
+
+		    // type of quadrature
+		    typedef Dune::CachingQuadrature<GridPartType,0> QuadratureType;
+		    // type of local mass matrix
+		    typedef Dune::LocalDGMassMatrix< MagnitudeDiscreteFunctionSpaceType, QuadratureType > LocalMassMatrixType;
+
+		    const int quadOrd = (polOrder == -1) ? (2 * space.order()) : polOrder;
+
+		    // create local mass matrix object
+		    LocalMassMatrixType massMatrix( magnitude_disretefunctionspace_, quadOrd );
+
+		    // check whether geometry mappings are affine or not
+		    const bool affineMapping = massMatrix.affine();
+
+		    // clear destination
+		    magnitude_disretefunction_.clear();
+
+		    const Iterator endit = space.end();
+		    for(Iterator it = space.begin(); it != endit ; ++it)
+		    {
+			  // get entity
+			  const typename GridType::template Codim<0>::Entity& en = *it;
+			  // get geometry
+			  const typename GridType::template Codim<0>::Geometry& geo = en.geometry();
+
+			  // get quadrature
+			  QuadratureType quad(en, quadOrd);
+
+			  // get local function of destination
+			  LocalFuncType lf = magnitude_disretefunction_.localFunction(en);
+
+			  // get base function set
+			  const BaseFunctionSetType & baseset = lf.baseFunctionSet();
+
+			  const int quadNop = quad.nop();
+			  const int numDofs = lf.numDofs();
+
+			  for(int qP = 0; qP < quadNop ; ++qP)
+			  {
+			    const double intel = (affineMapping) ?
+				     quad.weight(qP) : // affine case
+				     quad.weight(qP) * geo.integrationElement( quad.point(qP) ); // general case
+
+			    // evaluate function
+			    typename DiscreteFunctionSpaceType::DomainType x = geo.global( quad.point( qP ) );
+			    typename DiscreteFunctionType::RangeType val;
+			    discreteFunction.localFunction( en ).evaluate(quad.point( qP ),val);
+			    ret = val.two_norm();
+
+			    // do projection
+			    for(int i=0; i<numDofs; ++i)
+			    {
+				  baseset.evaluate(i, quad[qP], phi);
+				  lf[i] += intel * (ret * phi) ;
+			    }
+			  }
+
+			  // in case of non-linear mapping apply inverse
+			  if ( ! affineMapping )
+			  {
+			    massMatrix.applyInverse( en, lf );
+			  }
+		    }
+		  }
 
 		//! virtual destructor
 		virtual ~MagnitudeFunction () {}
-
-		void evaluate (	const typename MagnitudeSpaceType::DomainType &x,
-						typename MagnitudeSpaceType::RangeType &ret ) const
-		{
-			typename DiscreteFunctionType::FunctionSpaceType::RangeType val;
-			discreteFunction_.evaluate(x,val);
-			ret = val.two_norm();
-		}
 
 		const MagnitudeDiscreteFunctionType& discreteFunction() const
 		{
@@ -70,7 +137,7 @@ namespace Stuff {
 
 	private:
 		static const MagnitudeSpaceType magnitude_space_;
-		const DiscreteFunctionType &discreteFunction_;
+//		const DiscreteFunctionType &discreteFunction_;
 		MagnitudeDiscreteFunctionSpaceType magnitude_disretefunctionspace_;
 		MagnitudeDiscreteFunctionType magnitude_disretefunction_;
 	};
