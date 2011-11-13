@@ -5,19 +5,19 @@
 #include <dune/common/bartonnackmanifcheck.hh>
 
 namespace Dune {
-	/** \brief a Base class for Dune::Function compatible classes that need automatic time awareness via TimeProvider
+	/** \brief a Base class for Dune::Fem::Function compatible classes that need automatic time awareness via TimeProvider
 	  *
 	  **/
 	template < class FunctionSpaceImp, class FunctionImp, class TimeProviderImp >
 	class TimeFunction :
 				public BartonNackmanInterface< TimeFunction < FunctionSpaceImp, FunctionImp, TimeProviderImp >,
 									   FunctionImp >,
-				public Function < FunctionSpaceImp , TimeFunction < FunctionSpaceImp, FunctionImp, TimeProviderImp > >
+                public Fem::Function < FunctionSpaceImp , TimeFunction < FunctionSpaceImp, FunctionImp, TimeProviderImp > >
 	{
 		protected:
 			typedef TimeFunction< FunctionSpaceImp, FunctionImp, TimeProviderImp >
 				ThisType;
-			typedef Function < FunctionSpaceImp , ThisType >
+            typedef Fem::Function < FunctionSpaceImp , ThisType >
 				BaseType;
 			typedef BartonNackmanInterface< ThisType, FunctionImp >
 				Interface;
@@ -70,7 +70,7 @@ namespace Dune {
 			 *  \param[out] ret           value of the derivative in x
 			 */
 			template< int diffOrder >
-			inline void evaluate ( const FieldVector< int, diffOrder > &diffVariable,
+            inline void evaluate ( const FieldVector< int, diffOrder > &diffVariable,
 								   const typename BaseType::DomainType &x,
 								   typename BaseType::RangeType &ret ) const
 			{
@@ -92,12 +92,12 @@ namespace Dune {
 	class IntersectionTimeFunction :
 				public BartonNackmanInterface< IntersectionTimeFunction < FunctionSpaceImp, FunctionImp, TimeProviderImp >,
 									   FunctionImp >,
-				public Function < FunctionSpaceImp , IntersectionTimeFunction < FunctionSpaceImp, FunctionImp, TimeProviderImp > >
+                public Fem::Function < FunctionSpaceImp , IntersectionTimeFunction < FunctionSpaceImp, FunctionImp, TimeProviderImp > >
 	{
 		protected:
 			typedef IntersectionTimeFunction< FunctionSpaceImp, FunctionImp, TimeProviderImp >
 				ThisType;
-			typedef Function < FunctionSpaceImp , ThisType >
+            typedef Fem::Function < FunctionSpaceImp , ThisType >
 				BaseType;
 			typedef BartonNackmanInterface< ThisType, FunctionImp >
 				Interface;
@@ -169,7 +169,7 @@ namespace Dune {
 			 *  \param[out] ret           value of the derivative in x
 			 */
 			template< int diffOrder >
-			inline void evaluate ( const FieldVector< int, diffOrder >& /*diffVariable*/,
+            inline void evaluate ( const FieldVector< int, diffOrder >& /*diffVariable*/,
 								   const typename BaseType::DomainType& /*x*/,
 								   typename BaseType::RangeType& /*ret*/ ) const
 			{

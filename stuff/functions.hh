@@ -663,12 +663,12 @@ bool MatrixContainsNanOrInf( const MatrixType& matrix )
 }
 
 template < class FunctionSpaceImp >
-class ConstantFunction : public Dune::Function < FunctionSpaceImp , ConstantFunction< FunctionSpaceImp > >
+class ConstantFunction : public Dune::Fem::Function < FunctionSpaceImp , ConstantFunction< FunctionSpaceImp > >
 {
 	  public:
 		  typedef ConstantFunction< FunctionSpaceImp >
 			  ThisType;
-		  typedef Dune::Function < FunctionSpaceImp ,ThisType >
+		  typedef Dune::Fem::Function < FunctionSpaceImp ,ThisType >
 			  BaseType;
 		  typedef typename BaseType::DomainType
 			  DomainType;

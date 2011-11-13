@@ -317,7 +317,7 @@ class DiscreteGradientPass
                         ++intIt ) {
 
                     // some info about the intersection
-                    const typename IntersectionIteratorType::Geometry& geometryIntersection = intIt.intersectionGlobal();
+                    const typename IntersectionIteratorType::Geometry& geometryIntersection = intIt.geometry();
                     const double volumeIntersection = geometryIntersection.volume();
 
                     // get quadrature

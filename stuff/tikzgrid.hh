@@ -92,8 +92,8 @@ class PgfEntityFunctorIntersections {
 					intIt != intItEnd;
 					++intIt )
 			{
-				CoordType a = intIt->intersectionGlobal().corner(0);
-				CoordType b = intIt->intersectionGlobal().corner(1);
+				CoordType a = intIt->geometry().corner(0);
+				CoordType b = intIt->geometry().corner(1);
 				file_ << path % color_ % "\\gridlinewidth"
 							% a[0] % a[1]
 							% b[0] % b[1];
@@ -162,8 +162,8 @@ class PgfEntityFunctorIntersectionsWithShift : public PgfEntityFunctorIntersecti
 					intIt != intItEnd;
 					++intIt )
 			{
-				CoordType a = intIt->intersectionGlobal().corner(0);
-				CoordType b = intIt->intersectionGlobal().corner(1);
+				CoordType a = intIt->geometry().corner(0);
+				CoordType b = intIt->geometry().corner(1);
 				CoordType a_c = center-a;
 				CoordType b_c = center-b;
 				a_c *=fac;

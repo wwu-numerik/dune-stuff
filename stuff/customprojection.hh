@@ -24,7 +24,7 @@ public:
 	template < class OriginFunctionType, class DestinationFunctionType >
 	static void project (const OriginFunctionType& f, DestinationFunctionType& discFunc)
 	{
-		typedef typename DestinationFunctionType::FunctionSpaceType
+        typedef typename DestinationFunctionType::DiscreteFunctionSpaceType
 			DiscreteFunctionSpace;
 		typedef typename DiscreteFunctionSpace::GridPartType
 			GridPart;
@@ -34,7 +34,7 @@ public:
 			EntityType;
 		typedef typename GridPart::IntersectionIteratorType
 			IntersectionIteratorType;
-		typedef typename IntersectionIteratorType::EntityPointer
+        typedef typename IntersectionIteratorType::Intersection::EntityPointer
 			EntityPointer;
 		typedef typename DestinationFunctionType::LocalFunctionType
 			LocalFunctionType;

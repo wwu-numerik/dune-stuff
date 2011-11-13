@@ -24,7 +24,7 @@ double getLenghtOfIntersection( const IntersectionType& intersection )
 {
 	typedef typename IntersectionType::Geometry
         IntersectionGeometryType;
-	const IntersectionGeometryType& intersectionGeoemtry = intersection.intersectionGlobal();
+    const IntersectionGeometryType& intersectionGeoemtry = intersection.geometry();
     return intersectionGeoemtry.volume();
 }
 
@@ -304,7 +304,7 @@ double geometryDiameter( const Dune::Entity< 0, 2, GridImp, EntityImp >& entity 
 	for ( IntersectionIteratorType it = entity.ileafbegin(); it != end ; ++it )
 	{
 		const typename IntersectionIteratorType::Intersection& intersection = *it;
-		factor *= intersection.intersectionGlobal().volume();
+        factor *= intersection.geometry().volume();
 	}
 	return factor/(2.0*entity.geometry().volume());
 }
@@ -322,7 +322,7 @@ double geometryDiameter( const Dune::Entity< 0, 3, GridImp, EntityImp >& entity 
     for ( IntersectionIteratorType it = entity.ileafbegin(); it != end ; ++it )
     {
 	    const typename IntersectionIteratorType::Intersection& intersection = *it;
-	    factor *= intersection.intersectionGlobal().volume();
+        factor *= intersection.geometry().volume();
     }
     return factor/(2.0*entity.geometry().volume());
 }

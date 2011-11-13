@@ -7,7 +7,7 @@
 
 namespace Stuff {
 
-/** \brief A Dune::Function derived class that allows almost arbitrary function evaluations in a parameter file.
+/** \brief A Dune::Fem::Function derived class that allows almost arbitrary function evaluations in a parameter file.
 	\note Yes, this means no more recompiling to change your right-hand side, intial value or whatever functions.
 
 	All you need to provide in your parameter file is for each function a block like this:
@@ -17,10 +17,10 @@ namespace Stuff {
 	For list of available functions see: mathexpr.h
 	**/
 template < class FunctionSpaceImp >
-		class RuntimeFunction : public Dune::Function < FunctionSpaceImp , RuntimeFunction< FunctionSpaceImp > >
+		class RuntimeFunction : public Dune::Fem::Function < FunctionSpaceImp , RuntimeFunction< FunctionSpaceImp > >
 {
 protected:
-	typedef Dune::Function < FunctionSpaceImp , RuntimeFunction< FunctionSpaceImp > >
+	typedef Dune::Fem::Function < FunctionSpaceImp , RuntimeFunction< FunctionSpaceImp > >
 		BaseType;
 	typedef double
 		FieldType;
