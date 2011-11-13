@@ -429,7 +429,8 @@ public:
 					// in case of non-linear mapping apply inverse
 					if ( ! affineMapping )
 					{
-						massMatrix.applyInverse( entity, self_local );
+                        assert( false );//fail here since last line is commented because of failing const stuff in localdgmatrix
+//						massMatrix.applyInverse( entity, self_local );
 					}
 				}
 			}
