@@ -23,6 +23,7 @@
 #include <boost/format.hpp>
 #include <cmath>
 #include <sstream>
+#include <tuple>
 
 //! Error and vtk output wrapper class for Stokes problem/pass
 template <  class StokesPassImp, class ProblemImp >
@@ -188,10 +189,8 @@ class PostProcessor
 
             typedef Dune::DataWriter< GridType, IOTupleType >
                 DataWriterType;
-			DataWriterType datawriter ( grid, dataTup, 0,0,0 );
-			datawriter.write( 0, 0 );
-			//save the macrogrid file so grape will find if in any case (ie. non ALU)
-			datawriter.saveMacroGrid( Parameters().DgfFilename( GridType::dimension ) );
+            DataWriterType datawriter ( grid, dataTup );
+            datawriter.writeData( 0, "" );
 #ifndef NLOG
 			entityColoration();
 #endif
