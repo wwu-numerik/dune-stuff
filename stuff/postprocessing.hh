@@ -183,7 +183,7 @@ class PostProcessor
             vtk_write( wrapper.discretePressure() );
             vtk_write( wrapper.discreteVelocity() );
 
-			typedef Dune::Tuple< const DiscreteVelocityFunctionType*, const DiscretePressureFunctionType* >
+            typedef Dune::tuple< const DiscreteVelocityFunctionType*, const DiscretePressureFunctionType* >
 				IOTupleType;
 			IOTupleType dataTup ( &wrapper.discreteVelocity(), &wrapper.discretePressure() );
 
