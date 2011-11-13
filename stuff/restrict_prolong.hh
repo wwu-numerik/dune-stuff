@@ -12,15 +12,16 @@ namespace Dune {
 	\note This set does not take ownership of added operators.
   */
 template < class RestrictProlongOperatorType >
-class RestrictProlongOperatorSet :public RestrictProlongInterface< RestrictProlongTraits< RestrictProlongOperatorSet<RestrictProlongOperatorType> > >
+class RestrictProlongOperatorSet :public RestrictProlongInterface< RestrictProlongTraits<
+                                                                    RestrictProlongOperatorSet<RestrictProlongOperatorType>,double > >
 {
 public:
-	typedef typename RestrictProlongOperatorType::RangeFieldType
-		RangeFieldType;
+    typedef typename RestrictProlongOperatorType::DomainFieldType
+        DomainFieldType;
 	RestrictProlongOperatorSet()
 	{}
 
-	void setFatherChildWeight (const RangeFieldType& val) const
+    void setFatherChildWeight (const DomainFieldType& val) const
 	{
 		for (	SetConstIteratorType it = pair_set_.begin();
 				it != pair_set_.end();
