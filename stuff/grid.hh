@@ -5,6 +5,7 @@
 #include "misc.hh"
 #include "static_assert.hh"
 #include <dune/common/fvector.hh>
+#include <dune/stuff/deprecated.hh>
 #include <dune/grid/common/geometry.hh>
 #include <vector>
 #include <boost/format.hpp>
@@ -161,28 +162,16 @@ class GridWalk {
 
 //! gets barycenter of given geometry in local coordinates
 template < class GeometryType >
-Dune::FieldVector< typename GeometryType::ctype, GeometryType::mydimension >  getBarycenterLocal( const GeometryType& geometry )
+DUNE_DEPRECATED_MSG("use geometry.local( geometry.center() ) instead") Dune::FieldVector< typename GeometryType::ctype, GeometryType::mydimension >  getBarycenterLocal( const GeometryType& geometry )
 {
-    assert( geometry.corners() > 0 );
-    Dune::FieldVector< typename GeometryType::ctype, GeometryType::mydimension  > center;
-    for( int i = 0; i < geometry.corners(); ++i ) {
-        center += geometry.local( geometry[i] );
-    }
-    center /= geometry.corners();
-    return center;
+    return geometry.local( geometry.center() );
 }
 
 //! gets barycenter of given geometry in global coordinates
 template < class GeometryType >
-Dune::FieldVector< typename GeometryType::ctype, GeometryType::coorddimension >  getBarycenterGlobal( const GeometryType& geometry )
+DUNE_DEPRECATED_MSG("use geometry.center() directly") Dune::FieldVector< typename GeometryType::ctype, GeometryType::coorddimension > getBarycenterGlobal( const GeometryType& geometry )
 {
-    assert( geometry.corners() > 0 );
-    Dune::FieldVector< typename GeometryType::ctype, GeometryType::coorddimension > center;
-    for( int i = 0; i < geometry.corners(); ++i ) {
-        center += geometry[i] ;
-    }
-    center /= geometry.corners();
-    return center;
+    return geometry.center();
 }
 
 template < class GridType >
