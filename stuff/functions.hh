@@ -578,7 +578,7 @@ double boundaryIntegral( const FunctionType& function, const DiscreteFunctionSpa
 						dummy;
 					typename DiscreteFunctionSpaceType::DomainType
 						xWorld = geo.global( quad.point(qP) );
-					function.evaluate(xWorld, dummy, intIt);
+					function.evaluate(xWorld, dummy, *intIt);
 					ret = dummy;
 					ret *= intel;
 
