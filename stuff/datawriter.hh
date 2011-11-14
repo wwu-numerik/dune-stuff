@@ -4,7 +4,7 @@
 #include <dune/fem/io/file/datawriter.hh>
 #include <dune/grid/io/file/vtk/vtkwriter.hh>
 #include <dune/fem/function/common/function.hh>
-#include <dune/fem/function/common/discretefunctionadapter.hh>
+#include <dune/fem/function/common/gridfunctionadapter.hh>
 #include <dune/fem/space/common/functionspace.hh>
 #include <dune/fem/space/dgspace.hh>
 #include <dune/stuff/customprojection.hh>
@@ -19,14 +19,14 @@ namespace Stuff {
 			ThisType;
 
 	public:
-		typedef Dune::Fem::FunctionSpace< typename DiscreteFunctionImp::FunctionSpaceType::DomainFieldType,
+		typedef Dune::FunctionSpace< typename DiscreteFunctionImp::FunctionSpaceType::DomainFieldType,
 																double,
 																DiscreteFunctionImp::FunctionSpaceType::dimDomain,
 																1 >
 			MagnitudeSpaceType;
 		typedef Dune::AdaptiveDiscreteFunction<
 				Dune::DiscontinuousGalerkinSpace<
-				    Dune::Fem::FunctionSpace<    typename DiscreteFunctionImp::FunctionSpaceType::DomainFieldType,
+				    Dune::FunctionSpace<    typename DiscreteFunctionImp::FunctionSpaceType::DomainFieldType,
 							    double,
 							    DiscreteFunctionImp::FunctionSpaceType::dimDomain,
 						    1 >,
@@ -156,7 +156,6 @@ namespace Dune {
 		protected:
 			typedef DataWriter< GridType, OutputTupleType >
 				BaseType;
-			using BaseType::grape;
 			using BaseType::grid_;
 			using BaseType::path_;
 			using BaseType::datapref_;
@@ -167,14 +166,13 @@ namespace Dune {
 			using BaseType::gnuplot;
 			using BaseType::data_;
 			using BaseType::saveTime_;
-			using BaseType::myRank_;
 			using BaseType::saveStep_;
 
 	   public:
 			TimeAwareDataWriter( const TimeproviderType& timeprovider,
 								 const GridType& grid,
 								 OutputTupleType& tuple )
-				: BaseType( grid, grid.name(), tuple, timeprovider.startTime(), timeprovider.endTime() ),
+				: BaseType( grid, tuple, timeprovider ),
 				timeprovider_( timeprovider )
 			{
 
@@ -199,25 +197,27 @@ namespace Dune {
 						BaseType::display();
 					}
 
-					if( BaseType::outputFormat_ == grape )
+//					if( BaseType::outputFormat_ == grape )
 					{
-						// create new path for time step output
-						std::string timeStepPath = IOInterface::createPath ( grid_.comm(),
-																			 path_, datapref_ , writeStep_ );
+//						// create new path for time step output
+//						std::string timeStepPath = IOInterface::createPath ( grid_.comm(),
+//																			 path_, datapref_ , writeStep_ );
 
-						// for structured grids copy grid
-						IOInterface::copyMacroGrid(grid_,path_,timeStepPath,datapref_);
+//						// for structured grids copy grid
+//						IOInterface::copyMacroGrid(grid_,path_,timeStepPath,datapref_);
 
-						GrapeDataIO<GridType> dataio;
-						// call output of IOTuple
-						IOTuple<OutputTupleType>::output(dataio,
-														 grid_ ,time, writeStep_, timeStepPath , datapref_, data_ );
+
+//						DUNE_THROW( IOError, "Grape output not implemented, needs to be backported from dataoutput. (or not ;-)" );
+//						GrapeDataIO<GridType> dataio;
+//						// call output of IOTuple
+//						IOTuple<OutputTupleType>::output(dataio,
+//														 grid_ ,time, writeStep_, timeStepPath , datapref_, data_ );
 					}
 	#if USE_VTKWRITER
-					else if ( outputFormat_ == vtk || outputFormat_ == vtkvtx )
+					/*else*/ if ( outputFormat_ == vtk || outputFormat_ == vtkvtx )
 					{
 						// write data in vtk output format
-						writeVTKOutput( Element<0>::get(data_) );
+						writeVTKOutput( get<0>(data_) );
 					}
 	#endif
 					else if ( outputFormat_ == gnuplot )
@@ -318,14 +318,14 @@ namespace Dune {
 						{
 							// write all data for parallel runs
 							vtkOut_.pwrite( name.c_str(), path_.c_str(), "." ,
-									binary_output ? Dune::VTKOptions::binaryappended
-										      : Dune::VTKOptions::ascii );
+									binary_output ? Dune::VTK::base64
+										      : Dune::VTK::ascii );
 						}
 						else
 						{
 							// write all data serial
-							vtkOut_.write( name.c_str(), binary_output ? Dune::VTKOptions::binaryappended
-												   : Dune::VTKOptions::ascii  );
+							vtkOut_.write( name.c_str(), binary_output ? Dune::VTK::base64
+												   : Dune::VTK::ascii  );
 						}
 
 						vtkOut_.clear();
