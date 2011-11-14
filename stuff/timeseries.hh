@@ -7,7 +7,7 @@
 #include <cstdio>
 #include <algorithm>
 #include <set>
-#include <dune/common/fixedarray.hh>
+
 #include <dune/stuff/misc.hh>
 #include <dune/stuff/logging.hh>
 #include <boost/format.hpp>
