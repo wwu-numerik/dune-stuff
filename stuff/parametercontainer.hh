@@ -17,6 +17,8 @@
 #include <algorithm>
 #include <fstream>
 
+#include <boost/format.hpp>
+
 namespace Stuff {
 	//! a class usable as a default validator for Dune::Parameter
 	template< class T >
@@ -162,9 +164,9 @@ class ParameterContainer
         std::string DgfFilename( unsigned int dim ) const {
             assert( dim > 0 && dim < 4 );
             assert( all_set_up_ );
-            std::stringstream fn;
-            fn << "dgf_file_" << dim << "d" ;
-            return Dune::Parameter::getValue<std::string>( fn.str() );
+	    std::string retval = Dune::Parameter::getValue<std::string>( (boost::format("dgf_file_%dd") % dim).str() );
+	    Dune::Parameter::append( (boost::format("fem.io.macroGridFile_%dd") % dim).str(), retval );
+	    return retval;
         }
 
 
