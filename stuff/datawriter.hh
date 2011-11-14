@@ -19,14 +19,14 @@ namespace Stuff {
 			ThisType;
 
 	public:
-		typedef Dune::Fem::FunctionSpace< typename DiscreteFunctionImp::FunctionSpaceType::DomainFieldType,
+		typedef Dune::FunctionSpace< typename DiscreteFunctionImp::FunctionSpaceType::DomainFieldType,
 																double,
 																DiscreteFunctionImp::FunctionSpaceType::dimDomain,
 																1 >
 			MagnitudeSpaceType;
 		typedef Dune::AdaptiveDiscreteFunction<
 				Dune::DiscontinuousGalerkinSpace<
-				    Dune::Fem::FunctionSpace<    typename DiscreteFunctionImp::FunctionSpaceType::DomainFieldType,
+				    Dune::FunctionSpace<    typename DiscreteFunctionImp::FunctionSpaceType::DomainFieldType,
 							    double,
 							    DiscreteFunctionImp::FunctionSpaceType::dimDomain,
 						    1 >,
