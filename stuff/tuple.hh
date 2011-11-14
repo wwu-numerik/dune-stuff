@@ -9,7 +9,7 @@ namespace Stuff {
 //! split our function wrapper into sep pointers for Datawriter input
 template < class T1, class T2 = T1, class T3 = T2, class T4 = T3>
 struct TupleSerializer {
-	typedef Dune::Tuple<	const typename T1::DiscreteVelocityFunctionType*,
+	typedef Dune::tuple<	const typename T1::DiscreteVelocityFunctionType*,
 							const typename T1::DiscretePressureFunctionType*,
 							const typename T2::DiscreteVelocityFunctionType*,
 							const typename T2::DiscretePressureFunctionType*,
@@ -46,7 +46,7 @@ struct TupleSerializer {
 							&(t2.discretePressure()),
 							&(t3.discreteVelocity()),
 							&(t3.discretePressure()),
-							NULL, NULL);
+							nullptr, nullptr);
 		return *t;
 	}
 	static TupleType& getTuple( T1& t1,
@@ -57,7 +57,7 @@ struct TupleSerializer {
 							&(t1.discretePressure()),
 							&(t2.discreteVelocity()),
 							&(t2.discretePressure()),
-							NULL, NULL, NULL, NULL );
+							nullptr, nullptr, nullptr, nullptr );
 		return *t;
 	}
 	static TupleType& getTuple( T1& t1 )
@@ -65,7 +65,7 @@ struct TupleSerializer {
 		//yay for dangling pointers, but using a local static here fubared sequential runs with diff grid
 		TupleType* t = new  TupleType( &(t1.discreteVelocity()),
 							&(t1.discretePressure()),
-							NULL, NULL, NULL, NULL, NULL, NULL );
+							nullptr, nullptr, nullptr, nullptr, nullptr, nullptr );
 		return *t;
 	}
 };
@@ -73,20 +73,20 @@ struct TupleSerializer {
 template <	class T1, class T2 = T1, class T3 = T1,
 			class T4 = T1, class T5 = T1, class T6 = T1,
 			class T7 = T1, class T8 = T1, class T9 = T1 >
-struct FullTuple : public Dune::Tuple<T1,T2,T3,T4,T5,T6,T7,T8,T9>
+struct FullTuple : public Dune::tuple<T1,T2,T3,T4,T5,T6,T7,T8,T9>
 {
 	FullTuple( T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9 )
-		: Dune::Tuple<T1,T2,T3,T4,T5,T6,T7,T8,T9>(t1,t2,t3,t4,t5,t6,t7,t8,t9)
+		: Dune::tuple<T1,T2,T3,T4,T5,T6,T7,T8,T9>(t1,t2,t3,t4,t5,t6,t7,t8,t9)
 	{}
 };
 
 template < class T1 >
 Dune::Tuple<T1> makeTuple( T1& t1 )
-{ return Dune::Tuple<T1>(t1); }
+{ return Dune::tuple<T1>(t1); }
 
 template < class T1, class T2 >
 Dune::Tuple<T1,T2> makeTuple( T1& t1, T2& t2 )
-{ return Dune::Tuple<T1,T2>(t1,t2); }
+{ return Dune::tuple<T1,T2>(t1,t2); }
 
 } //namespace Stuff {
 #endif // DUNE_STUFF_TUPLE_HH
