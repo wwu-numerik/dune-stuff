@@ -60,7 +60,8 @@ class FemEoc
   }
   void init(const std::string& path,
             const std::string& name, const std::string& descript, const std::string& inputFile ) {
-	Dune::IOInterface::createPath(path);
+    if ( !Dune::directoryExists(path) && !Dune::createDirectory(path) )
+        DUNE_THROW( Dune::IOError, (boost::format("couldn't create directory") % path).str() );
     init(path+"/"+name,descript, path+"/"+inputFile );
   }
   void init(const std::string& name, const std::string& descript, const std::string& inputFile ) {

@@ -31,8 +31,8 @@ namespace Dune {
 			typedef TimeProviderImp
 				TimeProviderType;
 
-			TimeFunction(const TimeProviderImp& timeProvider, const FunctionSpaceImp& space )
-			  :BaseType( space ),
+            TimeFunction(const TimeProviderImp& timeProvider, const FunctionSpaceImp& /*space*/ )
+              :BaseType(),
 			  timeProvider_( timeProvider )
 			{}
 
@@ -111,8 +111,8 @@ namespace Dune {
 			typedef TimeProviderImp
 				TimeProviderType;
 
-			IntersectionTimeFunction(const TimeProviderImp& timeProvider, const FunctionSpaceImp& space )
-			  :BaseType( space ),
+            IntersectionTimeFunction(const TimeProviderImp& timeProvider, const FunctionSpaceImp& /*space*/ )
+              :BaseType(),
 			  timeProvider_( timeProvider )
 			{}
 

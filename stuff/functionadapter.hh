@@ -275,9 +275,6 @@ public:
 							quad.weight(qP): // affine case
 							quad.weight(qP)* geo.integrationElement( xLocal ); // general case
 
-						typename DiscreteFunctionSpaceType::DomainType
-							xWorld = geo.global( xLocal );
-
 						// evaluate function
 						typename DiscreteVelocityFunctionType::DiscreteFunctionSpaceType::RangeType
 							velocity_eval;
@@ -410,9 +407,6 @@ public:
 						const double intel = (affineMapping) ?
 							quad.weight(qP): // affine case
 							quad.weight(qP)* geo.integrationElement( xLocal ); // general case
-
-						typename DiscreteFunctionSpaceType::DomainType
-							xWorld = geo.global( xLocal );
 
 						typename SigmaFunctionType::DiscreteFunctionSpaceType::JacobianRangeType
 							gradient_jacobian_eval;

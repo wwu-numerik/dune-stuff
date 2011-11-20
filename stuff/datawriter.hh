@@ -106,7 +106,7 @@ namespace Stuff {
 				     quad.weight(qP) * geo.integrationElement( quad.point(qP) ); // general case
 
 			    // evaluate function
-			    typename DiscreteFunctionSpaceType::DomainType x = geo.global( quad.point( qP ) );
+//			    typename DiscreteFunctionSpaceType::DomainType x = geo.global( quad.point( qP ) );
 			    typename DiscreteFunctionType::RangeType val;
 			    discreteFunction.localFunction( en ).evaluate(quad.point( qP ),val);
 			    ret = val.two_norm();

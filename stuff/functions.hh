@@ -10,6 +10,7 @@
 #include <dune/fem/io/file/vtkio.hh>
 #include <dune/fem/operator/1order/localmassmatrix.hh>
 #include "misc.hh"
+#include "deprecated.hh"
 
 namespace Stuff{
 
@@ -379,6 +380,8 @@ int readRefineLevelFromDGF(  const std::string filename )
 }
 
 /** \todo FELIX needs to doc me **/
+std::string readGridTypeFromDGF(  const std::string filename ) DUNE_DEPRECATED_MSG("removing the darcy stuff from stokes soon");
+
 std::string readGridTypeFromDGF(  const std::string filename )
 {
     std::string gridType( "no_gridtype_found_in " + filename );
@@ -675,9 +678,9 @@ class ConstantFunction : public Dune::Fem::Function < FunctionSpaceImp , Constan
 		  typedef typename BaseType::RangeType
 			  RangeType;
 
-		  ConstantFunction( const FunctionSpaceImp& space,
+          ConstantFunction( const FunctionSpaceImp& /*space*/,
 						   const double constant = 0.0 )
-			  : BaseType ( space ),
+              : BaseType (),
 				constant_(  constant )
 		  {}
 
