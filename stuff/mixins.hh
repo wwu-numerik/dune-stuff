@@ -10,7 +10,7 @@ class InstanceCounter
 	static int instanceCounter_;
 public:
 	InstanceCounter() {instanceCounter_++;}
-	~InstanceCounter() {instanceCounter_--;}
+	virtual ~InstanceCounter() {instanceCounter_--;}
 	int instanceCount() const {return instanceCounter_;}
 };
 
