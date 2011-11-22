@@ -19,6 +19,7 @@ public:
     typedef typename RestrictProlongOperatorType::DomainFieldType
         DomainFieldType;
 	RestrictProlongOperatorSet()
+	    : pair_set_( SetType() )
 	{}
 
     void setFatherChildWeight (const DomainFieldType& val) const
