@@ -163,12 +163,12 @@ class Profiler
 		class ScopedTiming : public boost::noncopyable {
 			const std::string section_name_;
 			public:
-				ScopedTiming( const std::string& section_name )
+				inline ScopedTiming( const std::string& section_name )
 					:section_name_(section_name)
 				{
 					Profiler::instance().StartTiming( section_name_ );
 				}
-				~ScopedTiming()
+				inline ~ScopedTiming()
 				{
 					Profiler::instance().StopTiming( section_name_ );
 				}
