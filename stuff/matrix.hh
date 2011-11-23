@@ -281,8 +281,8 @@ namespace Stuff {
 				FieldType;
 			LocalMatrixType local_matrix_;
 			const double eps_;
-			const int rows_;
-			const int cols_;
+			const unsigned int rows_;
+			const unsigned int cols_;
 			std::vector<FieldType> entries_;
 
 			public:
@@ -294,16 +294,18 @@ namespace Stuff {
 					entries_( rows_ * cols_, FieldType( 0.0 ) )
 				{}
 
-				inline void add( const int row , const int col, const FieldType val )
+				inline void add( const unsigned int row , const unsigned int col, const FieldType val )
 				{
-					entries_[row*cols_+col] += val;
+				    assert( row < rows_ );
+				    assert( col < cols_ );
+				    entries_[row*cols_+col] += val;
 				}
 
 				~LocalMatrixProxy()
 				{
-					for( int i = 0; i < rows_; ++i )
+					for( unsigned int i = 0; i < rows_; ++i )
 					{
-						for( int j = 0; j < cols_; ++j )
+						for( unsigned int j = 0; j < cols_; ++j )
 						{
 							const FieldType& i_j = entries_[i*cols_+j];
 							if( std::fabs(i_j) > eps_ )
