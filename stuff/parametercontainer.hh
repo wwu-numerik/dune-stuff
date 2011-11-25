@@ -121,7 +121,7 @@ class ParameterContainer
 			Dune::Parameter::replaceKey( "fem.prefix", datadir );
 #warning "replaceKey was hard commented in common"
 			if ( !Dune::Parameter::exists( "fem.io.logdir" ) )
-					Dune::Parameter::replaceKey( "fem.io.logdir", datadir );
+					Dune::Parameter::replaceKey( "fem.io.logdir", "log" );
 			warning_output_ = Dune::Parameter::getValue( "disableParameterWarnings", warning_output_ );
             return CheckSetup();
         }
