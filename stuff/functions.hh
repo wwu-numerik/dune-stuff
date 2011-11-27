@@ -656,8 +656,8 @@ void divideFunctionDofs( DiscreteFunctionType& target, const DiscreteFunctionTyp
 template < class MatrixType >
 bool MatrixContainsNanOrInf( const MatrixType& matrix )
 {
-	for(int row=0; row < matrix.size(0); ++row) {
-		for(int col=0; col < matrix.size(1); ++col) {
+    for(size_t row=0; row < matrix.rows(); ++row) {
+        for(size_t col=0; col < matrix.cols(); ++col) {
 			if ( std::isnan( matrix(row,col) ) || std::isinf( matrix(row,col) ) )
 				return true;
 		}
