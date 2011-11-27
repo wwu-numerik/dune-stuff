@@ -7,7 +7,7 @@
 #ifndef PARAMETERCONTAINER_HH_INCLUDED
 #define PARAMETERCONTAINER_HH_INCLUDED
 
-#include <dune/common/deprecated.hh> //ensure DUNE_DEPRECATED is defined properly
+#include <dune/stuff/deprecated.hh> //ensure DUNE_DEPRECATED is defined properly
 #include <dune/fem/io/parameter.hh>
 
 #include "logging.hh"
@@ -185,6 +185,7 @@ class ParameterContainer
 		T getParam( std::string name, T def, const Validator& validator, bool UNUSED_UNLESS_DEBUG(useDbgStream) = true )
 		{
 			assert( all_set_up_ );
+            assert( validator( def ) );
 			#ifndef NDEBUG
 				if ( warning_output_ && ! Dune::Parameter::exists( name ) ) {
 					if ( useDbgStream )
@@ -193,7 +194,13 @@ class ParameterContainer
 						std::cerr << "WARNING: using default value for parameter \"" << name << "\"" << std::endl;
 				}
 			#endif
-			return Dune::Parameter::getValidValue( name, def, validator );
+            try {
+                return Dune::Parameter::getValidValue( name, def, validator );
+            }
+            catch (Dune::InconsistentDefaultValue& p) {
+                std::cerr << boost::format( "Dune::Fem::Parameter reports inconsistent parameter: %s\n") % p.what();
+            }
+            return def;
 		}
 
 		std::map<char,const char*> getFunction( const std::string& name, const std::string def = "0" )
