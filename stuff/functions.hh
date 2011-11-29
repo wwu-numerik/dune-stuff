@@ -4,6 +4,8 @@
 #include <cmath>
 #include <fstream>
 #include <limits>
+#include <boost/math/special_functions/fpclassify.hpp>
+#include <dune/fem/function/blockvectorfunction/blockvectorfunction.hh>
 
 #include <dune/stuff/timefunction.hh>
 #include <dune/grid/io/file/dgfparser/dgfparser.hh> //for GridPtr
@@ -11,6 +13,19 @@
 #include <dune/fem/operator/1order/localmassmatrix.hh>
 #include "misc.hh"
 #include "deprecated.hh"
+
+
+namespace boost {
+namespace math {
+	template <class BlockVectorImp, class DofImp>
+	inline bool isinf( const Dune::StraightenBlockVector<BlockVectorImp,DofImp>& x)
+	{
+	    assert( false );return true;
+	}
+
+}
+}
+
 
 namespace Stuff{
 
@@ -619,17 +634,18 @@ bool FunctionContainsNanOrInf( const DiscreteFunctionType& function )
 	DofIteratorType it = function.dbegin();
 	for( ; it != function.dend(); ++it )
 	{
-		if ( std::isnan(*it) || std::isinf(*it) )
+		if ( boost::math::isnan(*it) || boost::math::isinf(*it) )
 			return true;
 	}
 	return false;
 }
 
-bool FunctionContainsNanOrInf( const double* function, size_t size )
+template < class LeakPointerType >
+bool FunctionContainsNanOrInf( const LeakPointerType function, size_t size )
 {
 	for( size_t i = 0; i < size; ++i )
 	{
-		if ( std::isnan(function[i]) || std::isinf(function[i]) )
+		if ( boost::math::isnan(function[i]) || boost::math::isinf(function[i]) )
 			return true;
 	}
 	return false;
