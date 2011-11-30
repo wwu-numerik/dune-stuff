@@ -39,13 +39,13 @@ static double colonProduct(    const SomeRangeType& arg1,
 	ConstRowIteratorType arg2RowItEnd = arg2.end();
 	ConstRowIteratorType arg2RowIt = arg2.begin();
 	for (   ConstRowIteratorType arg1RowIt = arg1.begin();
-			arg1RowIt != arg1RowItEnd, arg2RowIt != arg2RowItEnd;
+			arg1RowIt != arg1RowItEnd && arg2RowIt != arg2RowItEnd;
 			++arg1RowIt, ++arg2RowIt ) {
 		ConstIteratorType row1ItEnd = arg1RowIt->end();
 		ConstIteratorType row2ItEnd = arg2RowIt->end();
 		ConstIteratorType row2It = arg2RowIt->begin();
 		for (   ConstIteratorType row1It = arg1RowIt->begin();
-				row1It != row1ItEnd, row2It != row2ItEnd;
+				row1It != row1ItEnd && row2It != row2ItEnd;
 				++row1It, ++row2It ) {
 			ret += *row1It * *row2It;
 		}
