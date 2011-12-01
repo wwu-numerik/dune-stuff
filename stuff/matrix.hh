@@ -17,15 +17,15 @@ namespace Dune {
 	    : public Preconditioner<typename MatrixImp :: RowDiscreteFunctionType :: DofStorageType,
 	    typename MatrixImp :: ColDiscreteFunctionType :: DofStorageType>
     {
-	typedef Preconditioner<typename MatrixImp :: RowDiscreteFunctionType:: DofStorageType,
-				typename MatrixImp :: ColDiscreteFunctionType:: DofStorageType>
-	    BaseType;
-	typedef typename MatrixImp :: RowDiscreteFunctionType:: DofStorageType X;
-	typedef typename MatrixImp :: ColDiscreteFunctionType:: DofStorageType Y;
-	void pre (X&, Y&) {}
-	void apply (X&, const Y &){}
-	void post (X&){}
-	enum { category=SolverCategory::sequential };
+        typedef Preconditioner<typename MatrixImp :: RowDiscreteFunctionType:: DofStorageType,
+                    typename MatrixImp :: ColDiscreteFunctionType:: DofStorageType>
+            BaseType;
+        typedef typename MatrixImp :: RowDiscreteFunctionType:: DofStorageType X;
+        typedef typename MatrixImp :: ColDiscreteFunctionType:: DofStorageType Y;
+        void pre (X&, Y&) {}
+        void apply (X&, const Y &){}
+        void post (X&){}
+        enum { category=SolverCategory::sequential };
     };
 
     template <class MatrixImp>
@@ -117,7 +117,7 @@ namespace Dune {
 //	      communicate( x );
 
 	      // apply vector to matrix
-	      matrix_.mv(x,y);
+          matrix_.multOEM(x,y);
 
 	      // delete non-interior
 //	      scp_.deleteNonInterior( y );
@@ -130,7 +130,8 @@ namespace Dune {
 //	      communicate( x );
 
 	      // apply matrix
-	      matrix_.usmv(alpha,x,y);
+//          matrix_.applyAdd(alpha,x,y);
+          matrix_.usmv(alpha,x,y);
 
 	      // delete non-interior
 //	      scp_.deleteNonInterior( y );
@@ -139,11 +140,12 @@ namespace Dune {
 	    template < class T, class O >
 	    double residuum(const T& rhs, O& x) const
 	    {
-		assert( false );
 	      // exchange data
-//	      communicate( x );
-
-	      double res = 0.0;
+          communicate( x );
+          T tmp( rhs );
+          apply( x, tmp );
+          tmp -= rhs;
+          double res = tmp.two_norm();
 
 	      res = rowSpace_.grid().comm().sum( res );
 	      // return global sum of residuum
