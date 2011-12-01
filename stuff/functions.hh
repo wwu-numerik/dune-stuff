@@ -20,9 +20,12 @@ namespace math {
 	template <class BlockVectorImp, class DofImp>
 	inline bool isinf( const Dune::StraightenBlockVector<BlockVectorImp,DofImp>& x)
 	{
-	    assert( false );return true;
+        for (size_t i = 0; i < x.size(); ++i ) {
+            if ( std::isinf( x[i] ) )
+                return true;
+        }
+        return false;
 	}
-
 }
 }
 
