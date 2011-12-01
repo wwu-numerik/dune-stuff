@@ -479,7 +479,7 @@ std::pair< typename FunctionType::RangeType, double > integralAndVolume( const F
 	// type of quadrature
 	typedef Dune::CachingQuadrature<GridPartType,0> QuadratureType;
 
-	typedef Dune::LocalDGMassMatrix< DiscreteFunctionSpaceType, QuadratureType > LocalMassMatrixType;
+    typedef Dune::LocalMassMatrix< DiscreteFunctionSpaceType, QuadratureType > LocalMassMatrixType;
 
 	const int quadOrd = (polOrd == -1) ? (2 * space.order()) : polOrd;
 
@@ -553,7 +553,7 @@ double boundaryIntegral( const FunctionType& function, const DiscreteFunctionSpa
 	// type of quadrature
 	typedef Dune::CachingQuadrature<GridPartType,1> QuadratureType;
 
-	typedef Dune::LocalDGMassMatrix< DiscreteFunctionSpaceType, Dune::CachingQuadrature<GridPartType,0> > LocalMassMatrixType;
+    typedef Dune::LocalMassMatrix< DiscreteFunctionSpaceType, Dune::CachingQuadrature<GridPartType,0> > LocalMassMatrixType;
 
 	const int quadOrd = (polOrd == -1) ? (2 * space.order()) : polOrd;
 

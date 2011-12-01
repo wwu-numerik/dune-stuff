@@ -66,7 +66,7 @@ namespace Stuff {
 		    // type of quadrature
 		    typedef Dune::CachingQuadrature<GridPartType,0> QuadratureType;
 		    // type of local mass matrix
-		    typedef Dune::LocalDGMassMatrix< MagnitudeDiscreteFunctionSpaceType, QuadratureType > LocalMassMatrixType;
+            typedef Dune::LocalMassMatrix< MagnitudeDiscreteFunctionSpaceType, QuadratureType > LocalMassMatrixType;
 
 		    const int quadOrd = (polOrder == -1) ? (2 * space.order()) : polOrder;
 
