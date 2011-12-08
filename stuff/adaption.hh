@@ -3,7 +3,8 @@
 
 #include <dune/stuff/restrict_prolong.hh>
 #include <dune/fem/space/dgspace/dgadaptmanager.hh>
-#include <dune/stuff/mixins.hh>
+#include <dune/common/shared_ptr.hh>
+#include <boost/shared_ptr.hpp>
 
 namespace Dune {
 /**
@@ -14,11 +15,9 @@ namespace Dune {
  *
  **/
 template < class DiscreteStokesFunctionWrapperImp >
-class DiscreteStokesFunctionWrapperAdaptionManager : public Stuff::InstanceCounter< DiscreteStokesFunctionWrapperAdaptionManager<DiscreteStokesFunctionWrapperImp> >
+class DiscreteStokesFunctionWrapperAdaptionManager
 {
 	 protected:
-		typedef Stuff::InstanceCounter< DiscreteStokesFunctionWrapperAdaptionManager<DiscreteStokesFunctionWrapperImp> >
-			InstanceCounterType;
 		typedef typename DiscreteStokesFunctionWrapperImp::GridType
 			GridType;
 
@@ -34,73 +33,68 @@ class DiscreteStokesFunctionWrapperAdaptionManager : public Stuff::InstanceCount
 
 		typedef Dune::RestrictProlongPair<RestrictProlongVelocityType&, RestrictProlongPressureType& >
 			RestrictProlongPairType;
-		typedef RestrictProlongOperatorSet<RestrictProlongPairType>
+        typedef boost::shared_ptr< RestrictProlongPairType >
+            RestrictProlongPairPointerType;
+        typedef RestrictProlongOperatorSet<RestrictProlongPairPointerType>
 			RestrictProlongOperatorSetType;
 
 		typedef Dune::AdaptationManager< GridType, RestrictProlongOperatorSetType >
 			AdaptationManagerType;
 
+        typedef boost::shared_ptr< AdaptationManagerType >
+            AdaptationManagerPointerType;
+
 	public:
 		DiscreteStokesFunctionWrapperAdaptionManager (  GridType& grid,
 														DiscreteStokesFunctionWrapperImp& functionWrapper )
-			:
-			grid_( grid ),
+            : grid_( grid ),
 			function_wrapper_( functionWrapper),
 			rpVelocity_             ( functionWrapper.discreteVelocity() ),
 			rpPressure_             ( functionWrapper.discretePressure() ),
-			restrictPair_( rpVelocity_, rpPressure_ )
+            restrictPair_ptr_( new RestrictProlongPairType( rpVelocity_, rpPressure_) )
 		{
-			if ( InstanceCounterType::instanceCount() == 1 )
-			{
-				combined_adaptManager_ = new AdaptationManagerType( grid, restrictOperator_Set_ );
-			}
-			assert( combined_adaptManager_ );
-			restrictOperator_Set_.add( &restrictPair_ );
+            combined_adaptManager_ptr_ = getAdaptationManager();
+            assert( combined_adaptManager_ptr_ );
+            restrictOperator_Set_.add( restrictPair_ptr_ );
 		}
+
+        AdaptationManagerPointerType getAdaptationManager()
+        {
+            static AdaptationManagerPointerType ptr( new AdaptationManagerType( grid_, restrictOperator_Set_ ) );
+            return ptr;
+        }
 
 		~DiscreteStokesFunctionWrapperAdaptionManager()
 		{
-			restrictOperator_Set_.remove( &restrictPair_ );
-			if ( InstanceCounterType::instanceCount() == 1 )
-			{
-				delete combined_adaptManager_;
-				combined_adaptManager_ = 0;
-			}
+            restrictOperator_Set_.remove( restrictPair_ptr_ );
 		}
 
 		void adapt()
 		{
-			assert( combined_adaptManager_ );
-			combined_adaptManager_->adapt();
+            assert( combined_adaptManager_ptr_ );
+            combined_adaptManager_ptr_->adapt();
 		}
 
 		DiscreteStokesFunctionWrapperAdaptionManager( DiscreteStokesFunctionWrapperAdaptionManager& other )
-			:
-			grid_( other.grid_ ),
+            : grid_( other.grid_ ),
 			function_wrapper_( other.function_wrapper_ ),
 			rpVelocity_             ( function_wrapper_.discreteVelocity() ),
 			rpPressure_             ( function_wrapper_.discretePressure() ),
-			restrictPair_( rpVelocity_, rpPressure_ )
-		{
-
-		}
+            restrictPair_ptr_(  new RestrictProlongPairType( rpVelocity_, rpPressure_ ) )
+        {}
 
 	protected:
 		GridType& grid_;
 		DiscreteStokesFunctionWrapperImp& function_wrapper_;
 		RestrictProlongVelocityType rpVelocity_;
 		RestrictProlongPressureType rpPressure_;
-		RestrictProlongPairType restrictPair_;
+        RestrictProlongPairPointerType restrictPair_ptr_;
 		static RestrictProlongOperatorSetType restrictOperator_Set_;
-		static AdaptationManagerType* combined_adaptManager_;
+        AdaptationManagerPointerType combined_adaptManager_ptr_;
  };
 template <class T>
 	typename DiscreteStokesFunctionWrapperAdaptionManager<T>::RestrictProlongOperatorSetType
 		DiscreteStokesFunctionWrapperAdaptionManager<T>::restrictOperator_Set_;
-
-template <class T>
-	typename DiscreteStokesFunctionWrapperAdaptionManager<T>::AdaptationManagerType*
-		DiscreteStokesFunctionWrapperAdaptionManager<T>::combined_adaptManager_ = 0;
 
 } // end namespace Dune
 #endif // DUNE_STUFF_ADAPTION_HH

@@ -5,18 +5,18 @@
 #include <dune/fem/space/common/restrictprolonginterface.hh>
 
 namespace Dune {
-/** \brief an arbitrary length set of RestrictProlong operators of same type
+/** \brief an arbitrary size set of RestrictProlong operators of same type
   * This class is useful if you have more than a Pair of discrete functions that
 	need to be restricted/prolonged via some AdaptionManger.\n
 	All interface mandated functions are simply sequentially forwarded to each element in the set.
 	\note This set does not take ownership of added operators.
   */
-template < class RestrictProlongOperatorType >
+template < class RestrictProlongOperatorPointerType >
 class RestrictProlongOperatorSet :public RestrictProlongInterface< RestrictProlongTraits<
-                                                                    RestrictProlongOperatorSet<RestrictProlongOperatorType>,double > >
+                                                                    RestrictProlongOperatorSet<RestrictProlongOperatorPointerType>,double > >
 {
 public:
-    typedef typename RestrictProlongOperatorType::DomainFieldType
+    typedef typename RestrictProlongOperatorPointerType::element_type::DomainFieldType
         DomainFieldType;
 	RestrictProlongOperatorSet()
 	    : pair_set_( SetType() )
@@ -66,16 +66,18 @@ public:
 				it != pair_set_.end();
 				++it )
 		{
-			(*it)->addToList(comm);
+            RestrictProlongOperatorPointerType k = (*it);
+
+            k->addToList(comm);
 		}
 	}
 
-	void add( RestrictProlongOperatorType* rpair )
+    void add( RestrictProlongOperatorPointerType rpair )
 	{
 		pair_set_.insert( rpair );
 	}
 
-	bool remove( RestrictProlongOperatorType* rpair )
+    bool remove( RestrictProlongOperatorPointerType rpair )
 	{
 		// we use this erase signature so that only one of possibly multiple instances gets remvod
 		SetIteratorType it = pair_set_.find( rpair );
@@ -85,7 +87,7 @@ public:
 	}
 
 protected:
-	typedef std::set<RestrictProlongOperatorType*>
+    typedef std::set<RestrictProlongOperatorPointerType>
 		SetType;
 	typedef typename SetType::iterator
 		SetIteratorType;
