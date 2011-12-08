@@ -2,6 +2,8 @@
 #define DUNE_STUFF_DEBUG_HH
 
 #include <cstring>
+#include <boost/assert.hpp>
+#include <boost/format.hpp>
 
 #define SEGFAULT {int*J=0;*J=9;}
 
@@ -82,5 +84,11 @@ class singlerun_abort_exception : public std::runtime_error
 	#define UNUSED_UNLESS_DEBUG(param)  UNUSED(param)
 #endif
 
+
+
+#define ASSERT_LT( expt, actual ) \
+    BOOST_ASSERT_MSG( (expt<actual),  (boost::format("assertion %1% < %2% failed: %3% >= %4%") % #expt % #actual % expt % actual).str().c_str() )
+#define ASSERT_EQ( expt, actual ) \
+    BOOST_ASSERT_MSG( (expt==actual),  (boost::format("assertion %1% == %2% failed: %3% != %4%") % #expt % #actual % expt % actual).str().c_str() )
 
 #endif // DUNE_STUFF_DEBUG_HH
