@@ -94,14 +94,9 @@ void printSparseRowMatrixMatlabStyle( const T& arg, std::string name, stream& ou
     out << boost::format( "\n%s =sparse( %d, %d );" ) % name % I % J << std::endl;
     for ( size_t row = 0; row < arg.rows(); row++ ) {
         for ( size_t col = 0; col < arg.cols(); col++ ) {
-<<<<<<< HEAD
             const auto value = arg(row,col);
             if ( std::fabs(value) > eps )
                 out << name << "(" << row+1 << "," << col+1 << ")=" << std::setprecision( matlab_output_precision ) << value << ";\n";
-=======
-			if ( std::fabs(arg(row,col)) > eps )
-				out << name << "(" << row+1 << "," << col+1 << ")=" << std::setprecision( matlab_output_precision ) << arg(row,col) << ";\n";
->>>>>>> some ISTL compliance
         }
     }
 }
@@ -340,16 +335,16 @@ void printFunctionMinMax( Stream& stream, const Function& func ) {
 //! useful for visualizing sparsity patterns of matrices
 template < class Matrix, class Stream>
 void matrixToGnuplotStream( const Matrix& matrix, Stream& stream ) {
+    assert( false );
     unsigned long nz = 0;
     for ( size_t row = 0; row < matrix.rows(); ++row ) {
         for ( size_t col = 0; col < matrix.cols(); ++col ) {
             if ( matrix.find( row, col ) )
-                assert(false);
-//                stream << row << "\t" << col << "\t" << matrix( row, col ) << std::endl;
-        }
+                stream << row << "\t" << col << "\t" << matrix( row, col ) << std::endl;
+		}
         nz += matrix.numNonZeros (row);
         stream << "#non zeros in row " << row << " " << matrix.numNonZeros (row) <<  " (of " << matrix.cols() << " cols)\n";
-    }
+	}
     stream << "#total non zeros " << nz << " of " << matrix.rows() * matrix.cols() << " entries\n";
 }
 
