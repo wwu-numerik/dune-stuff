@@ -4,7 +4,7 @@
 #include "misc.hh"
 #include "runinfo.hh"
 #include "grid.hh"
-#include "static_assert.hh"
+#include <dune/common/static_assert.hh>
 
 #include <ostream>
 #include <sstream>

@@ -6,7 +6,7 @@
 #include <vector>
 #include <boost/shared_ptr.hpp>
 #include <dune/stuff/printing.hh>
-#include <dune/stuff/static_assert.hh>
+#include <dune/common/static_assert.hh>
 
 namespace Stuff {
 

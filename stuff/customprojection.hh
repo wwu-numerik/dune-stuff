@@ -6,7 +6,7 @@
 #include <dune/fem/function/common/discretefunction.hh>
 #include <dune/fem/function/common/gridfunctionadapter.hh>
 #include <dune/fem/operator/1order/localmassmatrix.hh>
-#include <dune/stuff/static_assert.hh>
+#include <dune/common/static_assert.hh>
 #include <dune/stuff/math.hh>
 
 namespace Stuff {

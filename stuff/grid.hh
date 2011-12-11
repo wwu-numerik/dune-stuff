@@ -3,7 +3,7 @@
 
 #include "math.hh"
 #include "misc.hh"
-#include "static_assert.hh"
+#include <dune/common/static_assert.hh>
 #include <dune/common/fvector.hh>
 #include <dune/stuff/deprecated.hh>
 #include <dune/grid/common/geometry.hh>
