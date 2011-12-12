@@ -3,7 +3,7 @@
 
 #include "misc.hh"
 #include "grid.hh"
-#include "static_assert.hh"
+#include <dune/common/static_assert.hh>
 #include <boost/format.hpp>
 #include <dune/grid/io/file/dgfparser/dgfparser.hh>
 #include <fstream>

@@ -412,7 +412,7 @@ public:
 							gradient_jacobian_eval;
 						gradient_local.jacobian( quad[qP], gradient_jacobian_eval );
 
-						GradientJacobianToLaplacian<	DiscreteFunctionType::RangeType::size,
+                        GradientJacobianToLaplacian<	DiscreteFunctionType::RangeType::dimension,
 																typename DiscreteFunctionType::RangeType,
 																typename SigmaFunctionType::JacobianRangeType >
 								velocity_real_laplacian ( gradient_jacobian_eval );
