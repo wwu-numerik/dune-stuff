@@ -82,7 +82,8 @@ public:
 		// we use this erase signature so that only one of possibly multiple instances gets remvod
 		SetIteratorType it = pair_set_.find( rpair );
 		bool found = it != pair_set_.end();
-		pair_set_.erase( it );
+        if ( found )
+            pair_set_.erase( it );
 		return found;
 	}
 
