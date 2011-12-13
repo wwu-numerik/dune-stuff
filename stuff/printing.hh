@@ -335,7 +335,6 @@ void printFunctionMinMax( Stream& stream, const Function& func ) {
 //! useful for visualizing sparsity patterns of matrices
 template < class Matrix, class Stream>
 void matrixToGnuplotStream( const Matrix& matrix, Stream& stream ) {
-    assert( false );
     unsigned long nz = 0;
     for ( size_t row = 0; row < matrix.rows(); ++row ) {
         for ( size_t col = 0; col < matrix.cols(); ++col ) {
