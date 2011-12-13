@@ -143,7 +143,7 @@ public:
 	template < int dim, class RangeType, class JacobianRangeType >
 	struct GradientJacobianToLaplacian : public RangeType
 	{
-		GradientJacobianToLaplacian( const JacobianRangeType& jacobian )
+        GradientJacobianToLaplacian( const JacobianRangeType& /*jacobian*/ )
 		{
 			dune_static_assert((dim==1 || dim>3), "GradientJacobianToLaplacian is not implemented for this dimension!");
 			// Dune::CompileTimeChecker< ( dim == 1 || dim > 3 ) > NotImplemented;

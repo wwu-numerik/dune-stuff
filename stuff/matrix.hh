@@ -159,7 +159,7 @@ namespace Dune {
 	    }
 
 	  protected:
-	    void communicate(const X& x) const
+        void communicate(const X& /*x*/) const
 	    {
 		assert( false );
 	      if( rowSpace_.grid().comm().size() <= 1 ) return ;
@@ -200,7 +200,7 @@ namespace Dune {
 
 			#ifdef USE_BFG_CG_SCHEME
 			template <class VectorType, class IterationInfo>
-			void multOEM(const VectorType * x, VectorType * ret, const IterationInfo& info ) const
+            void multOEM(const VectorType * x, VectorType * ret, const IterationInfo& /*info*/ ) const
 			{
 				// call multOEM of the matrix
 				object_.multOEM(x,ret );
@@ -440,7 +440,7 @@ namespace Stuff {
 		{
 			printMemUsage( matrix_object.matrix(), stream, name );
 		}
-#ifndef STOKES_USE_ISTL ///TODO
+#if ! STOKES_USE_ISTL ///TODO
 		//! a small proxy object that automagically prevents near-0 value fill-in
         template < class MatrixPointerType >
 		class LocalMatrixProxy {
@@ -488,8 +488,8 @@ namespace Stuff {
 						}
 					}
 				}
-                const unsigned int rows() const { return rows_; }
-                const unsigned int cols() const { return cols_; }
+                unsigned int rows() const { return rows_; }
+                unsigned int cols() const { return cols_; }
 		};
 #else
 //! a small proxy object that automagically prevents near-0 value fill-in
@@ -556,8 +556,8 @@ namespace Stuff {
                     }
 				}
 
-                const unsigned int rows() const { return rows_; }
-                const unsigned int cols() const { return cols_; }
+                unsigned int rows() const { return rows_; }
+                unsigned int cols() const { return cols_; }
 		};
 #endif
 		template < class M >
