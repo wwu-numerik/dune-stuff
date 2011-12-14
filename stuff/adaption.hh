@@ -2,7 +2,7 @@
 #define DUNE_STUFF_ADAPTION_HH
 
 #include <dune/stuff/restrict_prolong.hh>
-#include <dune/fem/space/dgspace/dgadaptmanager.hh>
+#include <dune/fem/space/dgspace/localrestrictprolong.hh>
 #include <dune/common/shared_ptr.hh>
 #include <boost/shared_ptr.hpp>
 

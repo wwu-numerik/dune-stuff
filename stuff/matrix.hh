@@ -33,11 +33,12 @@ namespace Dune {
 	    typename MatrixImp :: RowDiscreteFunctionType :: DofStorageType,
 	    typename MatrixImp :: ColDiscreteFunctionType :: DofStorageType>
     {
-	    typedef SchurkomplementOperatorAdapter< MatrixImp > ThisType ;
+        typedef SchurkomplementOperatorAdapter< MatrixImp >
+            ThisType ;
 	    typedef AssembledLinearOperator< MatrixImp,
-			typename MatrixImp :: RowDiscreteFunctionType :: DofStorageType,
-			typename MatrixImp :: ColDiscreteFunctionType :: DofStorageType>
-		BaseType;
+                typename MatrixImp :: RowDiscreteFunctionType :: DofStorageType,
+                typename MatrixImp :: ColDiscreteFunctionType :: DofStorageType>
+            BaseType;
 
 	  public:
 	    enum { category=SolverCategory::sequential };
