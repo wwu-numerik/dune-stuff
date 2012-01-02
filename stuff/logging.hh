@@ -103,6 +103,8 @@ class Logging
                     is_suspended_ = false;
                 }
 
+                std::ofstream& fileStream() { return matlabLogFile_; }
+
             private:
                 std::stringstream buffer_;
                 std::ofstream& matlabLogFile_;

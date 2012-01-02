@@ -540,13 +540,13 @@ namespace Stuff {
                     const auto dmend = domainSpace.mapper().end( self );
                     for( auto dmit = domainSpace.mapper().begin( self ); dmit != dmend; ++dmit )
                     {
-                      assert( dmit.global() == domainSpace.mapToGlobal( self, dmit.local() ) );
+//                      ASSERT_EQ( dmit.global() , domainSpace.mapToGlobal( self, dmit.local() ) );
                       rowMap_[ dmit.local() ] = dmit.global();
                     }
                     const auto rmend = rangeSpace.mapper().end( neigh );
                     for( auto rmit = rangeSpace.mapper().begin( neigh ); rmit != rmend; ++rmit )
                     {
-                      assert( rmit.global() == rangeSpace.mapToGlobal( neigh, rmit.local() ) );
+//                      ASSERT_EQ( rmit.global() , rangeSpace.mapToGlobal( neigh, rmit.local() ) );
                       colMap_[ rmit.local() ] = rmit.global();
                     }
                 }
@@ -555,6 +555,7 @@ namespace Stuff {
 				{
                     ASSERT_LT( row, rows_ );
                     ASSERT_LT( col, cols_ );
+                    assert( !std::isnan( matrix_pointer_->matrix()(rowMap_[ row ], colMap_[ col ]) ) );
 				    entries_[row*cols_+col] += val;
 				}
 
@@ -567,7 +568,11 @@ namespace Stuff {
                             const FieldType& i_j = entries_[i*cols_+j];
                             if( std::fabs(i_j) > eps_ )
                             {
+                                assert( !std::isnan( i_j ) );
+                                assert( !std::isinf( i_j ) );
                                 matrix_pointer_->add( rowMap_[ i ], colMap_[ j ], i_j );
+                                assert( !std::isnan( matrix_pointer_->matrix()(rowMap_[ i ], colMap_[ j ]) ) );
+                                assert( !std::isinf( matrix_pointer_->matrix()(rowMap_[ i ], colMap_[ j ]) ) );
                             }
                         }
                     }

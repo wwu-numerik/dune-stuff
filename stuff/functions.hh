@@ -677,8 +677,7 @@ bool MatrixContainsNanOrInf( const MatrixType& matrix )
 {
     for(int row=0; row < int(matrix.rows()); ++row) {
         for(int col=0; col < int(matrix.cols()); ++col) {
-//			if ( std::isnan( matrix(row,col) ) || std::isinf( matrix(row,col) ) )
-            assert( false );
+            if ( std::isnan( matrix(row,col) ) || std::isinf( matrix(row,col) ) )
 				return true;
 		}
 	}
