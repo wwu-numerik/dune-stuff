@@ -1,6 +1,40 @@
 #ifndef __PROGRESSBAR_HH__
 #define __PROGRESSBAR_HH__
 
+// the following is set by Cmake if libccgnu2 is present
+#ifndef CCGNU2_FOUND
+
+// provide empty implementation
+namespace Stuff {
+  template < class OutputStream > class SimpleProgressBar;
+  
+	template < class OutputStream = std::ostream >
+  struct ProgressBar {    
+    ProgressBar(OutputStream& stream = std::cout, const int numBlocks=100) {
+      std::cerr << "Warning: ProgressBar is not fully functional as libccgnu2 is not present!\n";
+    }
+
+    static const unsigned sleepTime = 500;
+    void run() {}
+    void setPercent(const int& pct) {}
+    friend class SimpleProgressBar<OutputStream>;
+  };
+
+
+  template < class OutputStream = std::ostream >
+  struct SimpleProgressBar {
+	  typedef SimpleProgressBar<OutputStream >	ThisType;
+	public:
+	  SimpleProgressBar(const unsigned int increments, OutputStream& stream = std::cout, const int numBlocks=100 ) {
+      std::cerr << "Warning: SimpleProgressBar is not fully functional as libccgnu2 is not present!\n";
+    }
+	  void increment() {}
+	  ThisType& operator++() {}
+  };
+} // namespace Stuff
+ 
+#else
+
 #include <iostream>
 #include <string>
 #include <cc++/thread.h> //threading class
@@ -159,5 +193,7 @@ class SimpleProgressBar;
 
  
 } // namespace Stuff
+
+#endif // CCGNU2_FOUND
 
 #endif /* __PROGRESSBAR_HH__ */
