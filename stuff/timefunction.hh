@@ -70,7 +70,7 @@ namespace Dune {
 			 *  \param[out] ret           value of the derivative in x
 			 */
 			template< int diffOrder >
-			inline void evaluate ( const FieldVector< deriType, diffOrder > &diffVariable,
+			inline void evaluate ( const FieldVector< int, diffOrder > &diffVariable,
 								   const typename BaseType::DomainType &x,
 								   typename BaseType::RangeType &ret ) const
 			{
@@ -169,7 +169,7 @@ namespace Dune {
 			 *  \param[out] ret           value of the derivative in x
 			 */
 			template< int diffOrder >
-			inline void evaluate ( const FieldVector< deriType, diffOrder >& /*diffVariable*/,
+			inline void evaluate ( const FieldVector< int, diffOrder >& /*diffVariable*/,
 								   const typename BaseType::DomainType& /*x*/,
 								   typename BaseType::RangeType& /*ret*/ ) const
 			{
