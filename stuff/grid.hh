@@ -6,6 +6,7 @@
 #include <dune/common/static_assert.hh>
 #include <dune/common/fvector.hh>
 #include <dune/stuff/deprecated.hh>
+#include <dune/stuff/math.hh>
 #include <dune/grid/common/geometry.hh>
 #include <vector>
 #include <boost/format.hpp>
@@ -105,7 +106,7 @@ class GridWalk {
 			ElementIterator;
 		typedef typename GridView::IntersectionIterator
             IntersectionIteratorType;
-        typedef typename IntersectionIteratorType::EntityPointer
+        typedef typename IntersectionIteratorType::Intersection::EntityPointer
             EntityPointer;
 
     public:
