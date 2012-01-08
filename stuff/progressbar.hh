@@ -10,13 +10,13 @@ namespace Stuff {
   
 	template < class OutputStream = std::ostream >
   struct ProgressBar {    
-    ProgressBar(OutputStream& stream = std::cout, const int numBlocks=100) {
+    ProgressBar(OutputStream& /*stream*/ = std::cout, const int /*numBlocks*/=100) {
       std::cerr << "Warning: ProgressBar is not fully functional as libccgnu2 is not present!\n";
     }
 
     static const unsigned sleepTime = 500;
     void run() {}
-    void setPercent(const int& pct) {}
+    void setPercent(const int& /*pct*/) {}
     friend class SimpleProgressBar<OutputStream>;
   };
 
@@ -25,11 +25,11 @@ namespace Stuff {
   struct SimpleProgressBar {
 	  typedef SimpleProgressBar<OutputStream >	ThisType;
 	public:
-	  SimpleProgressBar(const unsigned int increments, OutputStream& stream = std::cout, const int numBlocks=100 ) {
+      SimpleProgressBar(const unsigned int /*increments*/, OutputStream& /*stream*/ = std::cout, const int /*numBlocks*/=100 ) {
       std::cerr << "Warning: SimpleProgressBar is not fully functional as libccgnu2 is not present!\n";
     }
 	  void increment() {}
-	  ThisType& operator++() {}
+      ThisType& operator++() { return *this; }
   };
 } // namespace Stuff
  
