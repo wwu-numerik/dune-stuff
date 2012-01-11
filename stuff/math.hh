@@ -145,6 +145,7 @@ template <typename T> T clamp(const T var,const T min,const T max)
 	return ( (var < min) ? min : ( var > max ) ? max : var );
 }
 
+//! float comparison
 template < class T >
 bool aboutEqual( const T& x, const T& y,
                  T relative_tolerance = 1e-10,

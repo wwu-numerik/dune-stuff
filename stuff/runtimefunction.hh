@@ -101,8 +101,6 @@ public:
 			ret[1] = op_y_->Val();
 		if ( ret.dim() > 2 )
 			ret[2] = op_z_->Val();
-        if ( name_ == "Velocity" )
-            std::cerr << "Velocity " << arg << " " << ret << std::endl;
 	}
 };
 
