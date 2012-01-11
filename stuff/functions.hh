@@ -779,8 +779,12 @@ public:
 	template < class IntersectionType >
 	void evaluateTime( const double /*time*/, const DomainType& /*arg*/, RangeType& ret, const IntersectionType& /*intersection */) const
 	{
-		ret = RangeType(0.0);
+        ret = RangeType(constant_);
 	}
+    void evaluateTime( const double /*time*/, const DomainType& /*arg*/, RangeType& ret) const
+    {
+        ret = RangeType(constant_);
+    }
 private:
 	  const double constant_;
 };
