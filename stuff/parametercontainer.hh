@@ -203,12 +203,12 @@ class ParameterContainer
             return def;
 		}
 
-		std::map<char,const char*> getFunction( const std::string& name, const std::string def = "0" )
+        std::map<char,std::string> getFunction( const std::string& name, const std::string def = "0" )
 		{
-			std::map<char,const char*> ret;
-			ret['x'] = getParam( name+"_x", def ).c_str();
-			ret['y'] = getParam( name+"_y", def ).c_str();
-			ret['z'] = getParam( name+"_z", def ).c_str();
+            std::map<char,std::string> ret;
+            ret['x'] = getParam( name+"_x", def );
+            ret['y'] = getParam( name+"_y", def );
+            ret['z'] = getParam( name+"_z", def );
 			return ret;
 		}
 

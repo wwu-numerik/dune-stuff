@@ -5,10 +5,17 @@
 #include <dune/common/bartonnackmanifcheck.hh>
 
 namespace Dune {
+    struct ConstTimeProvider {
+        const double time_;
+        ConstTimeProvider( double time = 0.0 )
+            : time_(time){}
+        double subTime() const { return time_; }
+    };
+
 	/** \brief a Base class for Dune::Fem::Function compatible classes that need automatic time awareness via TimeProvider
 	  *
 	  **/
-	template < class FunctionSpaceImp, class FunctionImp, class TimeProviderImp >
+    template < class FunctionSpaceImp, class FunctionImp, class TimeProviderImp >
 	class TimeFunction :
 				public BartonNackmanInterface< TimeFunction < FunctionSpaceImp, FunctionImp, TimeProviderImp >,
 									   FunctionImp >,
@@ -23,6 +30,7 @@ namespace Dune {
 				Interface;
 
 			const TimeProviderImp& timeProvider_;
+            TimeProviderImp* timeProviderPtr_;//in case we cosntruct our own
 
 			using Interface::asImp;
 			static const int dim_ = FunctionSpaceImp::dimDomain ;
@@ -32,12 +40,25 @@ namespace Dune {
 				TimeProviderType;
 
             TimeFunction(const TimeProviderImp& timeProvider, const FunctionSpaceImp& /*space*/ )
-              :BaseType(),
-			  timeProvider_( timeProvider )
+                : BaseType(),
+                timeProviderPtr_( nullptr ),
+                timeProvider_( timeProvider )
 			{}
+            TimeFunction(const TimeProviderImp& timeProvider )
+                : BaseType(),
+                timeProviderPtr_( nullptr ),
+                timeProvider_( timeProvider )
+            {}
+            explicit TimeFunction(double t)
+                : BaseType(),
+                timeProviderPtr_( new TimeProviderType( t ) ),
+                timeProvider_( *timeProviderPtr_ )
+            {}
 
-			~TimeFunction()
-			{}
+            virtual ~TimeFunction()
+            {
+                delete timeProviderPtr_;
+            }
 
 			inline void evaluate( const typename BaseType::DomainType& x, typename BaseType::RangeType& ret ) const
 			{

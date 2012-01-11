@@ -79,7 +79,8 @@ RVar::RVar(const char*namep,double*pvalp)
 {pval=pvalp;name=CopyStr(namep);}
 
 RVar::~RVar()
-{if(name!=NULL)delete[] name;}
+{//if(name!=NULL)delete[] name;
+}
 
 RFunction::RFunction()
 {
