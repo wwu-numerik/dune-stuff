@@ -118,10 +118,10 @@ class ParameterContainer
 																	   std::string("data"),
 																	   Stuff::ValidateAny<std::string>()
 																	  );
-			Dune::Parameter::replaceKey( "fem.prefix", datadir );
+            Dune::Parameter::append( "fem.prefix", datadir );
 #warning "replaceKey was hard commented in common"
 			if ( !Dune::Parameter::exists( "fem.io.logdir" ) )
-					Dune::Parameter::replaceKey( "fem.io.logdir", "log" );
+                    Dune::Parameter::append( "fem.io.logdir", "log" );
 			warning_output_ = Dune::Parameter::getValue( "disableParameterWarnings", warning_output_ );
             return CheckSetup();
         }
