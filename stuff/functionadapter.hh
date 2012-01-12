@@ -7,7 +7,6 @@
 #include <boost/shared_ptr.hpp>
 #include <dune/stuff/printing.hh>
 #include <dune/common/static_assert.hh>
-#include <dune/fem/operator/1order/localmassmatrix.hh>
 
 namespace Stuff {
 
@@ -63,7 +62,7 @@ public:
 		typedef Dune::CachingQuadrature<GridPartType,0> VolumeQuadratureType;
 		typedef Dune::CachingQuadrature<GridPartType,1> FaceQuadratureType;
 		// type of local mass matrix
-        typedef Dune::LocalDGMassMatrix< DiscreteFunctionSpaceType, VolumeQuadratureType> LocalMassMatrixType;
+        typedef Dune::LocalMassMatrix< DiscreteFunctionSpaceType, VolumeQuadratureType> LocalMassMatrixType;
 
 		const int quadOrd =  (2 * space.order());
 
@@ -230,7 +229,7 @@ public:
 				typedef Dune::CachingQuadrature<GridPartType,0> VolumeQuadratureType;
 				typedef Dune::CachingQuadrature<GridPartType,1> FaceQuadratureType;
 				// type of local mass matrix
-                typedef Dune::LocalDGMassMatrix< DiscreteFunctionSpaceType, VolumeQuadratureType> LocalMassMatrixType;
+                typedef Dune::LocalMassMatrix< DiscreteFunctionSpaceType, VolumeQuadratureType> LocalMassMatrixType;
 
                 const int quadOrd = std::max( 2 * space.order() +2,  polOrd );
 
@@ -363,7 +362,7 @@ public:
 				typedef Dune::CachingQuadrature<GridPartType,0> VolumeQuadratureType;
 				typedef Dune::CachingQuadrature<GridPartType,1> FaceQuadratureType;
 				// type of local mass matrix
-                typedef Dune::LocalDGMassMatrix< DiscreteFunctionSpaceType, VolumeQuadratureType> LocalMassMatrixType;
+                typedef Dune::LocalMassMatrix< DiscreteFunctionSpaceType, VolumeQuadratureType> LocalMassMatrixType;
 
                 const int quadOrd = std::max( 2 * space.order() +2,  polOrd );
 

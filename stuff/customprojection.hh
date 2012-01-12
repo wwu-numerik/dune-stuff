@@ -182,7 +182,7 @@ protected:
 	  // type of quadrature
 	  typedef CachingQuadrature<GridPartType,0> QuadratureType;
 	  // type of local mass matrix
-      typedef LocalDGMassMatrix< DiscreteFunctionSpaceType, QuadratureType > LocalMassMatrixType;
+      typedef LocalMassMatrix< DiscreteFunctionSpaceType, QuadratureType > LocalMassMatrixType;
 
       const int quadOrd = std::max( 2 * space.order() +2,  polOrd );
 
@@ -323,7 +323,7 @@ namespace Stuff {
 					typedef Dune::CachingQuadrature<GridPartType,0> VolumeQuadratureType;
 					typedef Dune::CachingQuadrature<GridPartType,1> FaceQuadratureType;
 					// type of local mass matrix
-                    typedef Dune::LocalDGMassMatrix< DiscreteFunctionSpaceType, VolumeQuadratureType> LocalMassMatrixType;
+                    typedef Dune::LocalMassMatrix< DiscreteFunctionSpaceType, VolumeQuadratureType> LocalMassMatrixType;
 
                     const int quadOrd = std::max( 2 * space.order() +2,  polOrd );
 

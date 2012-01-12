@@ -8,10 +8,8 @@
 #include <dune/fem/space/common/functionspace.hh>
 #include <dune/fem/space/lagrangespace.hh>
 #include <dune/fem/space/dgspace.hh>
-#include <dune/fem/operator/1order/localmassmatrix.hh>
 #include <dune/stuff/customprojection.hh>
 #include <dune/stuff/debug.hh>
-
 
 namespace Stuff {
 
@@ -53,7 +51,7 @@ namespace Stuff {
 		    // type of quadrature
 		    typedef Dune::CachingQuadrature<GridPartType,0> QuadratureType;
 		    // type of local mass matrix
-            typedef Dune::LocalDGMassMatrix< MagnitudeDiscreteFunctionSpaceType, QuadratureType > LocalMassMatrixType;
+            typedef Dune::LocalMassMatrix< MagnitudeDiscreteFunctionSpaceType, QuadratureType > LocalMassMatrixType;
 
             const int quadOrd = 2 * space.order()+2;
 
