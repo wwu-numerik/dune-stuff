@@ -29,8 +29,8 @@ namespace Dune {
 			typedef BartonNackmanInterface< ThisType, FunctionImp >
 				Interface;
 
-			const TimeProviderImp& timeProvider_;
             TimeProviderImp* timeProviderPtr_;//in case we cosntruct our own
+            const TimeProviderImp& timeProvider_;
 
 			using Interface::asImp;
 			static const int dim_ = FunctionSpaceImp::dimDomain ;
@@ -80,7 +80,7 @@ namespace Dune {
 								   typename BaseType::JacobianRangeType &ret ) const
 			{
 				const double t = timeProvider_.subTime();
-			  CHECK_AND_CALL_INTERFACE_IMPLEMENTATION( asImp().jacobianTime( t, x, ret ) );
+                CHECK_AND_CALL_INTERFACE_IMPLEMENTATION( asImp().jacobianTime( t, x, ret ) );
 			}
 
 			/** \brief evaluate a derivative of the function
