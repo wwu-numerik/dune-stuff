@@ -196,7 +196,7 @@ class ParameterContainer
             try {
                 return Dune::Parameter::getValidValue( name, def, validator );
             }
-            catch (Dune::InconsistentDefaultValue& p) {
+            catch (Dune::ParameterInvalid& p) {
                 std::cerr << boost::format( "Dune::Fem::Parameter reports inconsistent parameter: %s\n") % p.what();
             }
             return def;
