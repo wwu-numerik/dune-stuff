@@ -10,7 +10,7 @@
 #include <dune/stuff/timefunction.hh>
 #include <dune/grid/io/file/dgfparser/dgfparser.hh> //for GridPtr
 #include <dune/fem/io/file/vtkio.hh>
-#include <dune/fem/operator/1order/localmassmatrix.hh>
+#include "localmassmatrix.hh"
 #include "misc.hh"
 #include "deprecated.hh"
 
@@ -482,7 +482,7 @@ std::pair< typename FunctionType::RangeType, double > integralAndVolume( const F
 	// type of quadrature
 	typedef Dune::CachingQuadrature<GridPartType,0> QuadratureType;
 
-    typedef Dune::LocalMassMatrix< DiscreteFunctionSpaceType, QuadratureType > LocalMassMatrixType;
+    typedef Stuff::LocalMassMatrix< DiscreteFunctionSpaceType, QuadratureType > LocalMassMatrixType;
 
     const int quadOrd = std::max( 2 * space.order() +2,  polOrd );
 
@@ -556,7 +556,7 @@ double boundaryIntegral( const FunctionType& function, const DiscreteFunctionSpa
 	// type of quadrature
 	typedef Dune::CachingQuadrature<GridPartType,1> QuadratureType;
 
-    typedef Dune::LocalMassMatrix< DiscreteFunctionSpaceType, Dune::CachingQuadrature<GridPartType,0> > LocalMassMatrixType;
+    typedef Stuff::LocalMassMatrix< DiscreteFunctionSpaceType, Dune::CachingQuadrature<GridPartType,0> > LocalMassMatrixType;
 
     const int quadOrd = std::max( 2 * space.order() +2,  polOrd );
 

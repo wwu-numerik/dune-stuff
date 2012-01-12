@@ -11,6 +11,8 @@
 #include <dune/stuff/customprojection.hh>
 #include <dune/stuff/debug.hh>
 
+#include "localmassmatrix.hh"
+
 namespace Stuff {
 
 	//! not really a function, but provides what you expect via discreteFunction
@@ -51,7 +53,7 @@ namespace Stuff {
 		    // type of quadrature
 		    typedef Dune::CachingQuadrature<GridPartType,0> QuadratureType;
 		    // type of local mass matrix
-            typedef Dune::LocalMassMatrix< MagnitudeDiscreteFunctionSpaceType, QuadratureType > LocalMassMatrixType;
+            typedef Stuff::LocalMassMatrix< MagnitudeDiscreteFunctionSpaceType, QuadratureType > LocalMassMatrixType;
 
             const int quadOrd = 2 * space.order()+2;
 

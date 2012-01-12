@@ -5,9 +5,10 @@
 #include <dune/fem/operator/common/operator.hh>
 #include <dune/fem/function/common/discretefunction.hh>
 #include <dune/fem/function/common/gridfunctionadapter.hh>
-#include <dune/fem/operator/1order/localmassmatrix.hh>
+
 #include <dune/common/static_assert.hh>
 #include <dune/stuff/math.hh>
+#include "localmassmatrix.hh"
 
 namespace Stuff {
 
@@ -323,7 +324,7 @@ namespace Stuff {
 					typedef Dune::CachingQuadrature<GridPartType,0> VolumeQuadratureType;
 					typedef Dune::CachingQuadrature<GridPartType,1> FaceQuadratureType;
 					// type of local mass matrix
-                    typedef Dune::LocalMassMatrix< DiscreteFunctionSpaceType, VolumeQuadratureType> LocalMassMatrixType;
+                    typedef Stuff::LocalMassMatrix< DiscreteFunctionSpaceType, VolumeQuadratureType> LocalMassMatrixType;
 
                     const int quadOrd = std::max( 2 * space.order() +2,  polOrd );
 
