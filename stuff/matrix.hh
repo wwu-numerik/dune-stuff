@@ -4,6 +4,7 @@
 #include <dune/fem/operator/matrix/spmatrix.hh>
 #include <dune/common/static_assert.hh>
 #include <dune/stuff/debug.hh>
+#include <dune/stuff/math.hh>
 
 #if HAVE_DUNE_ISTL
 #   include <dune/istl/operators.hh>
@@ -491,7 +492,7 @@ namespace Stuff {
 						for( unsigned int j = 0; j < cols_; ++j )
 						{
 							const FieldType& i_j = entries_[i*cols_+j];
-							if( std::fabs(i_j) > eps_ )
+                            if( !aboutEqual(i_j,0.0) )
                                 local_matrix_.add( i, j , i_j );
 						}
 					}
