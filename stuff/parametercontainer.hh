@@ -216,7 +216,7 @@ class ParameterContainer
         void setParam( std::string name, T val )
         {
             assert( all_set_up_ );
-            return Dune::Parameter::replaceKey( name, val );
+            return Dune::Parameter::append( name, val );
         }
 
 		//! extension to Fem::paramter that allows vector/list like paramteres from a single key
