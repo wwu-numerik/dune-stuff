@@ -6,7 +6,7 @@
 
 namespace Stuff {
 //! create yet another child class just in case fem actually implements something in LocalMassMatrix in addition to its base
-#if DUNE_VERSION_NEWER_REV(DUNE_FEM,1,2,0)
+#if DUNE_VERSION_NEWER_REV(DUNE_FEM,1,3,0)
 template <class DiscreteFunctionSpaceImp, class VolumeQuadratureImp>
 struct LocalMassMatrix : public Dune::LocalMassMatrix< DiscreteFunctionSpaceImp, VolumeQuadratureImp > {
     LocalMassMatrix( const DiscreteFunctionSpaceImp& spc, const int volQuadOrd = -1 )
