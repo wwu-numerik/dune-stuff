@@ -12,6 +12,7 @@
 
 #include "logging.hh"
 #include "filesystem.hh"
+#include "misc.hh"
 
 #include <vector>
 #include <algorithm>
@@ -216,7 +217,7 @@ class ParameterContainer
         void setParam( std::string name, T val )
         {
             assert( all_set_up_ );
-            return Dune::Parameter::append( name, val );
+            return Dune::Parameter::append( name, Stuff::toString( val ) );
         }
 
 		//! extension to Fem::paramter that allows vector/list like paramteres from a single key
