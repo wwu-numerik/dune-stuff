@@ -5,6 +5,7 @@
 #include <dune/common/bartonnackmanifcheck.hh>
 
 namespace Dune {
+    //! a dummy timeprovider for usage in Stuff::RuntimeFunction
     struct ConstTimeProvider {
         const double time_;
         ConstTimeProvider( double time = 0.0 )

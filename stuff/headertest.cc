@@ -12,7 +12,6 @@
 #include <dune/stuff/misc.hh>
 #include <dune/stuff/logging.hh>
 #include <dune/stuff/parametercontainer.hh>
-#include <dune/stuff/postprocessing.hh>
 #include <dune/stuff/profiler.hh>
 #include <dune/stuff/grid.hh>
 #include <dune/stuff/functions.hh>

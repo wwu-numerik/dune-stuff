@@ -4,7 +4,7 @@
 #include <cmath>
 #include <fstream>
 #include <limits>
-#include <boost/math/special_functions/fpclassify.hpp>
+
 #include <dune/fem/function/blockvectorfunction/blockvectorfunction.hh>
 
 #include <dune/stuff/timefunction.hh>
@@ -12,23 +12,8 @@
 #include <dune/fem/io/file/vtkio.hh>
 #include "localmassmatrix.hh"
 #include "misc.hh"
+#include "math.hh"
 #include "deprecated.hh"
-
-
-namespace boost {
-namespace math {
-	template <class BlockVectorImp, class DofImp>
-	inline bool isinf( const Dune::StraightenBlockVector<BlockVectorImp,DofImp>& x)
-	{
-        for (size_t i = 0; i < x.size(); ++i ) {
-            if ( std::isinf( x[i] ) )
-                return true;
-        }
-        return false;
-	}
-}
-}
-
 
 namespace Stuff{
 

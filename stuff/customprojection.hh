@@ -88,10 +88,8 @@ public:
 }//end namespace Stuff
 
 namespace Dune {
-/**
-	 basically the fem L2Projection with a function evaluate that converts between compatible types instead of failing
 
-	 **/
+//! basically the fem L2Projection with a function evaluate that converts between compatible types instead of failing
 class BetterL2Projection {
 protected:
 	template < class FunctionType >
@@ -162,85 +160,83 @@ protected:
 		}
 	};
 
-	template < class DiscreteFunctionImp, class EvaluationFunctorType >
-	static void projectCommon(	const EvaluationFunctorType& evalutionFunctor,
-								DiscreteFunctionImp& discFunc,
-								int polOrd = -1)
-	{
-	  typedef typename DiscreteFunctionImp::DiscreteFunctionSpaceType DiscreteFunctionSpaceType;
-	  typedef typename DiscreteFunctionImp::LocalFunctionType LocalFuncType;
-	  typedef typename DiscreteFunctionSpaceType::Traits::GridPartType GridPartType;
-	  typedef typename DiscreteFunctionSpaceType::Traits::IteratorType Iterator;
-	  typedef typename DiscreteFunctionSpaceType::BaseFunctionSetType BaseFunctionSetType ;
-	  typedef typename GridPartType::GridType GridType;
+    template < class DiscreteFunctionImp, class EvaluationFunctorType >
+    static void projectCommon(	const EvaluationFunctorType& evalutionFunctor,
+                                DiscreteFunctionImp& discFunc,
+                                int polOrd = -1)
+    {
+        typedef typename DiscreteFunctionImp::DiscreteFunctionSpaceType DiscreteFunctionSpaceType;
+        typedef typename DiscreteFunctionImp::LocalFunctionType LocalFuncType;
+        typedef typename DiscreteFunctionSpaceType::Traits::GridPartType GridPartType;
+        typedef typename DiscreteFunctionSpaceType::Traits::IteratorType Iterator;
+        typedef typename DiscreteFunctionSpaceType::BaseFunctionSetType BaseFunctionSetType ;
+        typedef typename GridPartType::GridType GridType;
 
-//	  typedef typename FunctionImp::LocalFunctionType LocalFType;
+        typename DiscreteFunctionSpaceType::RangeType ret (0.0);
+        typename DiscreteFunctionSpaceType::RangeType phi (0.0);
+        const DiscreteFunctionSpaceType& space =  discFunc.space();
 
-	  typename DiscreteFunctionSpaceType::RangeType ret (0.0);
-	  typename DiscreteFunctionSpaceType::RangeType phi (0.0);
-	  const DiscreteFunctionSpaceType& space =  discFunc.space();
+        // type of quadrature
+        typedef CachingQuadrature<GridPartType,0> QuadratureType;
+        // type of local mass matrix
+        typedef LocalMassMatrix< DiscreteFunctionSpaceType, QuadratureType > LocalMassMatrixType;
 
-	  // type of quadrature
-	  typedef CachingQuadrature<GridPartType,0> QuadratureType;
-	  // type of local mass matrix
-      typedef LocalMassMatrix< DiscreteFunctionSpaceType, QuadratureType > LocalMassMatrixType;
+        const int quadOrd = std::max( 2 * space.order() +2,  polOrd );
 
-      const int quadOrd = std::max( 2 * space.order() +2,  polOrd );
+        // create local mass matrix object
+        LocalMassMatrixType massMatrix( space, quadOrd );
 
-	  // create local mass matrix object
-	  LocalMassMatrixType massMatrix( space, quadOrd );
+        // check whether geometry mappings are affine or not
+        const bool affineMapping = massMatrix.affine();
 
-	  // check whether geometry mappings are affine or not
-	  const bool affineMapping = massMatrix.affine();
+        // clear destination
+        discFunc.clear();
 
-	  // clear destination
-	  discFunc.clear();
+        const Iterator endit = space.end();
+        for(Iterator it = space.begin(); it != endit ; ++it)
+        {
+            // get entity
+            const typename GridType::template Codim<0>::Entity& en = *it;
+            // get geometry
+            const typename GridType::template Codim<0>::Geometry& geo = en.geometry();
 
-	  const Iterator endit = space.end();
-	  for(Iterator it = space.begin(); it != endit ; ++it)
-	  {
-		// get entity
-		const typename GridType::template Codim<0>::Entity& en = *it;
-		// get geometry
-		const typename GridType::template Codim<0>::Geometry& geo = en.geometry();
+            // get quadrature
+            QuadratureType quad(en, quadOrd);
 
-		// get quadrature
-		QuadratureType quad(en, quadOrd);
+            // get local function of destination
+            LocalFuncType lf = discFunc.localFunction(en);
 
-		// get local function of destination
-		LocalFuncType lf = discFunc.localFunction(en);
+            // get base function set
+            const BaseFunctionSetType & baseset = lf.baseFunctionSet();
 
-		// get base function set
-		const BaseFunctionSetType & baseset = lf.baseFunctionSet();
+            const int quadNop = quad.nop();
+            const int numDofs = lf.numDofs();
 
-		const int quadNop = quad.nop();
-		const int numDofs = lf.numDofs();
+            for(int qP = 0; qP < quadNop ; ++qP)
+            {
+                const double intel = (affineMapping) ?
+                            quad.weight(qP) : // affine case
+                            quad.weight(qP) * geo.integrationElement( quad.point(qP) ); // general case
 
-		for(int qP = 0; qP < quadNop ; ++qP)
-		{
-		  const double intel = (affineMapping) ?
-			   quad.weight(qP) : // affine case
-			   quad.weight(qP) * geo.integrationElement( quad.point(qP) ); // general case
+                // evaluate function
+                typename DiscreteFunctionSpaceType::DomainType x = geo.global( quad.point( qP ) );
+                evalutionFunctor.evaluate( x, ret );
 
-		  // evaluate function
-		  typename DiscreteFunctionSpaceType::DomainType x = geo.global( quad.point( qP ) );
-		  evalutionFunctor.evaluate( x, ret );
+                // do projection
+                for(int i=0; i<numDofs; ++i)
+                {
+                    baseset.evaluate(i, quad[qP], phi);
+                    lf[i] += intel * (ret * phi) ;
+                }
+            }
 
-		  // do projection
-		  for(int i=0; i<numDofs; ++i)
-		  {
-			baseset.evaluate(i, quad[qP], phi);
-			lf[i] += intel * (ret * phi) ;
-		  }
-		}
-
-		// in case of non-linear mapping apply inverse
-		if ( ! affineMapping )
-		{
-		  massMatrix.applyInverse( en, lf );
-		}
-	  }
-	}
+            // in case of non-linear mapping apply inverse
+            if ( ! affineMapping )
+            {
+                massMatrix.applyInverse( en, lf );
+            }
+        }
+    }
 };
 
 }//end namespace Dune

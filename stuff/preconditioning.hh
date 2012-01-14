@@ -3,6 +3,7 @@
 
 namespace Stuff {
 
+//! allow any class fullfilling the Operator concept to be used as a preconditioner
 template <class Operator, template < class T, class F> class Solver, class RangeDiscreteFunctionType>
 class OperatorBasedPreconditioner {
 
@@ -37,11 +38,6 @@ public:
 	template <class VECtype>
 	void multOEM(const VECtype *x, VECtype * ret) const
 	{
-//		RangeDiscreteFunctionType arg("arg", range_space_, x);
-//		RangeDiscreteFunctionType dest("dest", range_space_);
-//		solver_.apply(arg,dest);
-//		for(int i=0;i<range_space_.size();++i)
-//			ret[i] = dest.leakPointer()[i];
 		operator_.multOEM(x,ret);
 	}
 

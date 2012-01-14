@@ -95,7 +95,6 @@ struct GridwalkFunctorDefault {
 };
 
 /** \brief lets you apply a Functor to each entity
-  \todo not require a space to be passed
   \todo allow stacking of operators to save gridwalks
   \todo threadsafe maps (haha:P)
   */
@@ -175,8 +174,10 @@ DUNE_DEPRECATED_MSG("use geometry.center() directly") Dune::FieldVector< typenam
     return geometry.center();
 }
 
+//! Provide min/max coordinates for all space dimensions of a Grid (in the leafView)
 template < class GridType >
 struct GridDimensions {
+    //! automatic running min/max
 	typedef MinMaxAvg<typename GridType::ctype>
 		MinMaxAvgType;
 	typedef Dune::array< MinMaxAvgType, GridType::dimensionworld >
@@ -184,10 +185,11 @@ struct GridDimensions {
 	CoordLimitsType coord_limits;
 	MinMaxAvgType entity_volume;
 
-	struct GridDimensionsFunctor {
+    //! gridwalk functor that does the actual work for \ref GridDimensions
+    class GridDimensionsFunctor {
 		CoordLimitsType& coord_limits_;
 		MinMaxAvgType& entity_volume_;
-
+    public:
 		GridDimensionsFunctor( CoordLimitsType& c, MinMaxAvgType& e ):coord_limits_(c),entity_volume_(e){}
 
 		template <class Entity>
@@ -242,6 +244,7 @@ inline Stream& operator<< (Stream& s, const GridDimensions<T>& d )
 	return s;
 }
 
+//! GridWalk functor that refines all entitites above given volume
 template < class GridType >
 struct MaximumEntityVolumeRefineFunctor {
     MaximumEntityVolumeRefineFunctor ( GridType& grid, double volume, double factor )

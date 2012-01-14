@@ -28,7 +28,6 @@ class TexOutputBase
 		double current_h_;
 		Strings headers_;
 
-
 	public:
 		TexOutputBase( const Info& info, Strings& headers )
 			: info_(info),

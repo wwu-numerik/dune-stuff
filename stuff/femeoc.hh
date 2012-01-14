@@ -1,5 +1,5 @@
-#ifndef DUNE_FEMEOC_HH
-#define DUNE_FEMEOC_HH
+#ifndef DUNE_STUFF_FEMEOC_HH
+#define DUNE_STUFF_FEMEOC_HH
 
 #include <cassert>
 #include <sstream>
@@ -33,6 +33,7 @@ namespace Tex {
     with the setErrors methods.
     The method write is used to write a single line
     to the eoc table.
+    \note copy/paste from fem with certain adjustments
  */
 class FemEoc
 {

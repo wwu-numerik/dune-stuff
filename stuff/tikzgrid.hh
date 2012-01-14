@@ -18,6 +18,9 @@ namespace {
 }
 static const TexColorArrayType texcolors_( tmp_colors );
 
+/** \brief print a tex(tikz) representation of each entity to file
+ * \ingroup GridWalk
+ **/
 class PgfEntityFunctor {
 	public:
 		PgfEntityFunctor( std::ofstream& file )
@@ -56,6 +59,10 @@ class PgfEntityFunctor {
 	private:
 		std::ofstream& file_;
 };
+
+/** \brief print a tex(tikz) representation of each entity intersection to file
+ * \ingroup GridWalk
+ **/
 class PgfEntityFunctorIntersections {
 	public:
 		PgfEntityFunctorIntersections(std::ofstream& file,
@@ -127,6 +134,10 @@ class PgfEntityFunctorIntersections {
 		const bool print_entity_num_;
 };
 
+/** \brief print a tex(tikz) representation of each entity to file
+ * \note PgfEntityFunctorIntersections, shifting the drawn line "inwards"
+ * \ingroup GridWalk
+ **/
 class PgfEntityFunctorIntersectionsWithShift : public PgfEntityFunctorIntersections {
 	public:
 		PgfEntityFunctorIntersectionsWithShift(std::ofstream& file,
@@ -178,6 +189,7 @@ class PgfEntityFunctorIntersectionsWithShift : public PgfEntityFunctorIntersecti
 		}
 };
 
+//! print a tex representation of any given 2D grid leaf level to file
 template < class GridType >
 class PgfGrid {
 public:
@@ -200,6 +212,7 @@ private:
 	const GridType& grid_;
 };
 
+//! print a tex representation of any given 2D grid refine views to file
 template < class GridType >
 class StackedPgfGrid {
 public:
@@ -241,6 +254,7 @@ private:
 	GridType& grid_;
 };
 
+//! print a tex representation of any given 2D grid refine views to file
 template < class GridType >
 class RefineSeriesPgfGrid {
 public:
@@ -309,9 +323,6 @@ public:
 private:
 	GridType& grid_;
 };
-
-
-
 
 } // namespace Tex
 }//namespace Stuff {

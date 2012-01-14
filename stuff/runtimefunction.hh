@@ -8,7 +8,7 @@
 
 namespace Stuff {
 
-/** \brief A Dune::Fem::Function derived class that allows almost arbitrary function evaluations in a parameter file.
+/** \brief A Dune::TimeFunction derived class that allows almost arbitrary function evaluations in a parameter file.
 	\note Yes, this means no more recompiling to change your right-hand side, intial value or whatever functions.
 
 	All you need to provide in your parameter file is for each function a block like this:
