@@ -82,12 +82,9 @@ class PgfEntityFunctorIntersections {
 		{
 			if ( ent_idx_neigh != ent_idx )
 				return;
-
-			typedef typename Entity::Geometry
-				EntityGeometryType;
 			typedef typename Entity::LevelIntersectionIterator
 				IntersectionIteratorType;
-			typedef typename IntersectionIteratorType::Geometry
+            typedef typename IntersectionIteratorType::Intersection::Geometry
 				IntersectionGeometry;
 			typedef Dune::FieldVector< typename IntersectionGeometry::ctype, IntersectionGeometry::coorddimension>
 				CoordType;
@@ -105,12 +102,12 @@ class PgfEntityFunctorIntersections {
 							% a[0] % a[1]
 							% b[0] % b[1];
 			}
-			maybePrintEntityNum( ent );
+            maybePrintEntityNum( ent, ent_idx );
 			file_.flush();
 		}
 
 		template < class Entity >
-		void maybePrintEntityNum( const Entity& entity )
+        void maybePrintEntityNum( const Entity& entity, const int idx )
 		{
 			if ( !print_entity_num_)
 				return;
@@ -118,10 +115,10 @@ class PgfEntityFunctorIntersections {
 				EntityGeometryType;
 			typedef Dune::FieldVector< typename EntityGeometryType::ctype, EntityGeometryType::coorddimension>
 				CoordType;
-			const CoordType center = getBarycenterGlobal(entity.geometry());
+            const CoordType center = entity.geometry().center();
 			file_ << boost::format( "\\node[circle] at (%f,%f) {%d};\n" )
 //					 % color_
-					 % center[0] % center[1] % 1;
+                     % center[0] % center[1] % idx;
 		}
 
 		void preWalk() const{}
@@ -158,16 +155,16 @@ class PgfEntityFunctorIntersectionsWithShift : public PgfEntityFunctorIntersecti
 				EntityGeometryType;
 			typedef typename Entity::LevelIntersectionIterator
 				IntersectionIteratorType;
-			typedef typename IntersectionIteratorType::Geometry
+            typedef typename IntersectionIteratorType::Intersection::Geometry
 				IntersectionGeometry;
 			typedef Dune::FieldVector< typename IntersectionGeometry::ctype, IntersectionGeometry::coorddimension>
 				CoordType;
 
 			boost::format path("\\draw[draw=%s,line width=%s pt,line cap=round] (%f,%f)--(%f,%f);\n");
 
-			const CoordType center = getBarycenterGlobal(ent.geometry());
+            const CoordType center = ent.geometry().center();
 			const float fac = 0.16*level_;
-			maybePrintEntityNum( ent );
+            maybePrintEntityNum( ent, ent_idx );
 			IntersectionIteratorType intItEnd = ent.ilevelend();
 			for (   IntersectionIteratorType intIt = ent.ilevelbegin();
 					intIt != intItEnd;
@@ -222,15 +219,19 @@ public:
 		dune_static_assert( GridType::dimensionworld == 2, "pgf output only implemented for dim 2" );
 	}
 
-	void output( const std::string fn, const int refines )
+    void output( const std::string fn, const int refines, const bool includable = true )
 	{
 		std::ofstream file( getFileinDatadir( fn ).c_str() );
-		file << "\\documentclass{article}\n"
-				"\\usepackage{tikz}\n"
-				"\\usetikzlibrary{calc,intersections}\n"
-				"\\pagestyle{empty}\n"
-				"\\begin{document}\n"
-				"\\begin{tikzpicture}[scale=4.87]\n";
+        if ( !includable ) {
+            file << "\\documentclass{article}\n"
+                    "\\usepackage{tikz}\n"
+                    "\\usetikzlibrary{calc,intersections}\n"
+                    "\\pagestyle{empty}\n"
+                    "\\begin{document}\n"
+                    "\\begin{tikzpicture}[scale=4.87]\n";
+        }
+        else
+            file <<	"\\begin{tikzpicture}\n";
 		const int maxref = refines;
 		grid_.globalRefine( maxref );
 //		for ( int i = maxref-1; i >= 0; --i )
@@ -245,8 +246,9 @@ public:
 			file << "%%%%%%%%%%%%%%%" << view.size( 0 ) << "%%%%%%%%%%%%%%%%\n";
 		}
 
-		file << "\\end{tikzpicture}\n"
-				"\\end{document}\n";
+        file << "\\end{tikzpicture}\n";
+        if ( !includable )
+                file << "\\end{document}\n";
 		file.close();
 	}
 
@@ -267,10 +269,6 @@ public:
 	void output( const std::string fn, const int refines, const bool includable = true )
 	{
 		Stuff::GridDimensions<GridType> dimensions( grid_ );
-//		const double x_diam = std::abs(dimensions.coord_limits[0].min()) +
-//				std::abs(dimensions.coord_limits[0].max());
-//		const double y_diam = std::abs(dimensions.coord_limits[1].min()) +
-//				std::abs(dimensions.coord_limits[1].max());
 		std::ofstream file( getFileinDatadir( fn ).c_str() );
 		boost::format level_float("\\subfloat[Level %d]{\n\\begin{tikzpicture}[scale=\\gridplotscale]\n");
 		if ( !includable )
@@ -292,7 +290,7 @@ public:
 				const View& view = grid_.levelView(i);
 				file << level_float % i;
 				GridWalk<View> grid_walk( view );
-				PgfEntityFunctorIntersections thisLevel( file, "black", i);
+                PgfEntityFunctorIntersections thisLevel( file, "black", i, true);
 				grid_walk( thisLevel );
 			}
 //			if ( i > 0 )//for dual/changed color outptu
@@ -305,10 +303,14 @@ public:
 
 			boost::format edge( "\\node[scale=\\gridcoordscale] at (%f,%f) {(%d,%d)};\n" );
 			const double offset = 0.2;
-			file << edge % (dimensions.coord_limits[0].min()-offset) % (dimensions.coord_limits[1].min()-offset)
-						 % (dimensions.coord_limits[0].min()) % (dimensions.coord_limits[1].min());
-			file << edge % (dimensions.coord_limits[0].max()+offset) % (dimensions.coord_limits[1].max()+offset)
-						 % (dimensions.coord_limits[0].max()) % (dimensions.coord_limits[1].max());
+            file << edge % (dimensions.coord_limits[0].min()-offset)
+                         % (dimensions.coord_limits[1].min()-offset)
+                         % (dimensions.coord_limits[0].min())
+                         % (dimensions.coord_limits[1].min());
+            file << edge % (dimensions.coord_limits[0].max()+offset)
+                         % (dimensions.coord_limits[1].max()+offset)
+                         % (dimensions.coord_limits[0].max())
+                         % (dimensions.coord_limits[1].max());
 			if ( (i+1) % 3 == 0 )
 				file << "\\end{tikzpicture}}\\\\\n";
 			else

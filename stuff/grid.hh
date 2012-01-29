@@ -111,14 +111,7 @@ class GridWalk {
     public:
 		GridWalk ( const GridView& gp )
 			: gridView_( gp )
-        {
-            unsigned int en_idx = 0;
-			for (ElementIterator it = gridView_.template begin<0>();
-				 it!=gridView_.template end<0>(); ++it,++en_idx)
-            {
-				entityIdxMap_.push_back( *it );
-            }
-        }
+        {}
 
 		template < class Functor >
 		void operator () ( Functor& f ) const
@@ -127,15 +120,17 @@ class GridWalk {
 			for (ElementIterator it = gridView_.template begin<0>();
 				 it!=gridView_.template end<0>(); ++it)
 			{
-				const int ent_idx = getIdx( entityIdxMap_, *it );
+                const int ent_idx = gridView_.indexSet().index(*it);
 				f( *it, *it, ent_idx, ent_idx);
 				IntersectionIteratorType intItEnd = gridView_.iend( *it );
 				for (   IntersectionIteratorType intIt = gridView_.ibegin( *it );
 						intIt != intItEnd;
 						++intIt ) {
-					if ( !intIt.boundary() ) {
-						const int neigh_idx = getIdx( entityIdxMap_, intIt.outside() );
-						f( *it, *intIt.outside(), ent_idx, neigh_idx);
+                    const auto& intersection = *intIt;
+                    if ( !intersection.boundary() ) {
+                        const auto neighbour_ptr = intersection.outside();
+                        const int neigh_idx = gridView_.indexSet().index(*neighbour_ptr);
+                        f( *it, *neighbour_ptr, ent_idx, neigh_idx);
 					}
 				}
 			}
@@ -148,16 +143,13 @@ class GridWalk {
 			for (ElementIterator it = gridView_.template begin<0>();
 				 it!=gridView_.template end<0>(); ++it)
 			{
-				const int ent_idx = getIdx( entityIdxMap_, *it );
+                const int ent_idx = gridView_.indexSet().index(*it);
 				f( *it, ent_idx );
 			}
 		}
 
     private:
-		const GridView& gridView_;
-        typedef std::vector< EntityPointer >
-            EntityIdxMap;
-        EntityIdxMap entityIdxMap_;
+        const GridView& gridView_;
 };
 
 //! gets barycenter of given geometry in local coordinates
