@@ -18,6 +18,15 @@ namespace {
 }
 static const TexColorArrayType texcolors_( tmp_colors );
 
+struct TikzCoordWrapper : Dune::FieldVector<double,2>{
+    template < class T >
+    TikzCoordWrapper( const T& vector ) {
+        (*this)[0] = (*this)[1] = 0;
+        for( size_t i; i < std::min(int(vector.size()), 2); ++i )
+            (*this)[i] = vector[i];
+    }
+};
+
 /** \brief print a tex(tikz) representation of each entity to file
  * \ingroup GridWalk
  **/
@@ -41,7 +50,7 @@ class PgfEntityFunctor {
 			boost::format vertex("\\coordinate(C_%d_%d) at (%f,%f);\n");
 			for ( size_t i = 0; i < geo.corners(); ++i )
 			{
-				const DomainType& corner( geo.corner( i ) );
+                const TikzCoordWrapper corner( geo.corner( i ) );
 				file_ << vertex % ent_idx % i % corner[0] % corner[1];
 			}
 			// \draw (A)--(B)--(C)--cycle;
@@ -63,6 +72,7 @@ class PgfEntityFunctor {
 /** \brief print a tex(tikz) representation of each entity intersection to file
  * \ingroup GridWalk
  **/
+
 class PgfEntityFunctorIntersections {
 	public:
 		PgfEntityFunctorIntersections(std::ofstream& file,
@@ -96,8 +106,8 @@ class PgfEntityFunctorIntersections {
 					intIt != intItEnd;
 					++intIt )
 			{
-				CoordType a = intIt->geometry().corner(0);
-				CoordType b = intIt->geometry().corner(1);
+                TikzCoordWrapper a(intIt->geometry().corner(0));
+                TikzCoordWrapper b(intIt->geometry().corner(1));
 				file_ << path % color_ % "\\gridlinewidth"
 							% a[0] % a[1]
 							% b[0] % b[1];
@@ -113,9 +123,7 @@ class PgfEntityFunctorIntersections {
 				return;
 			typedef typename Entity::Geometry
 				EntityGeometryType;
-			typedef Dune::FieldVector< typename EntityGeometryType::ctype, EntityGeometryType::coorddimension>
-				CoordType;
-            const CoordType center = entity.geometry().center();
+            TikzCoordWrapper center(entity.geometry().center());
 			file_ << boost::format( "\\node[circle] at (%f,%f) {%d};\n" )
 //					 % color_
                      % center[0] % center[1] % idx;
@@ -162,7 +170,7 @@ class PgfEntityFunctorIntersectionsWithShift : public PgfEntityFunctorIntersecti
 
 			boost::format path("\\draw[draw=%s,line width=%s pt,line cap=round] (%f,%f)--(%f,%f);\n");
 
-            const CoordType center = ent.geometry().center();
+            const TikzCoordWrapper center (ent.geometry().center());
 			const float fac = 0.16*level_;
             maybePrintEntityNum( ent, ent_idx );
 			IntersectionIteratorType intItEnd = ent.ilevelend();
@@ -170,10 +178,10 @@ class PgfEntityFunctorIntersectionsWithShift : public PgfEntityFunctorIntersecti
 					intIt != intItEnd;
 					++intIt )
 			{
-				CoordType a = intIt->geometry().corner(0);
-				CoordType b = intIt->geometry().corner(1);
-				CoordType a_c = center-a;
-				CoordType b_c = center-b;
+                TikzCoordWrapper a(intIt->geometry().corner(0));
+                TikzCoordWrapper b(intIt->geometry().corner(1));
+                TikzCoordWrapper a_c = center-a;
+                TikzCoordWrapper b_c = center-b;
 				a_c *=fac;
 				b_c *=fac;
 				a+=a_c;
@@ -192,9 +200,7 @@ class PgfGrid {
 public:
 	PgfGrid( const GridType& grid )
 		:grid_(grid)
-	{
-		dune_static_assert( GridType::dimensionworld == 2, "pgf output only implemented for dim 2" );
-	}
+    {}
 
 	void output( const std::string fn )
 	{
@@ -215,9 +221,7 @@ class StackedPgfGrid {
 public:
 	StackedPgfGrid( GridType& grid )
 		:grid_(grid)
-	{
-		dune_static_assert( GridType::dimensionworld == 2, "pgf output only implemented for dim 2" );
-	}
+    {}
 
     void output( const std::string fn, const int refines, const bool includable = true )
 	{
@@ -262,9 +266,7 @@ class RefineSeriesPgfGrid {
 public:
 	RefineSeriesPgfGrid( GridType& grid )
 		:grid_(grid)
-	{
-		dune_static_assert( GridType::dimensionworld == 2, "pgf output only implemented for dim 2" );
-	}
+    {}
 
 	void output( const std::string fn, const int refines, const bool includable = true )
 	{
@@ -301,16 +303,31 @@ public:
 //				grid_walk( lastLevel );
 //			}
 
-			boost::format edge( "\\node[scale=\\gridcoordscale] at (%f,%f) {(%d,%d)};\n" );
-			const double offset = 0.2;
-            file << edge % (dimensions.coord_limits[0].min()-offset)
-                         % (dimensions.coord_limits[1].min()-offset)
-                         % (dimensions.coord_limits[0].min())
-                         % (dimensions.coord_limits[1].min());
-            file << edge % (dimensions.coord_limits[0].max()+offset)
-                         % (dimensions.coord_limits[1].max()+offset)
-                         % (dimensions.coord_limits[0].max())
-                         % (dimensions.coord_limits[1].max());
+            switch ( GridType::dimensionworld ) {
+            case 1: {
+                boost::format edge( "\\node[scale=\\gridcoordscale] at (%f,0) {(%d)};\n" );
+                const double offset = 0.2;
+                file << edge % (dimensions.coord_limits[0].min()-offset)
+                             % (dimensions.coord_limits[0].min());
+                file << edge % (dimensions.coord_limits[0].max()+offset)
+                             % (dimensions.coord_limits[0].max());
+                break;
+            }
+            case 2:
+            case 3: {
+                boost::format edge( "\\node[scale=\\gridcoordscale] at (%f,%f) {(%d,%d)};\n" );
+                const double offset = 0.2;
+                file << edge % (dimensions.coord_limits[0].min()-offset)
+                             % (dimensions.coord_limits[1].min()-offset)
+                             % (dimensions.coord_limits[0].min())
+                             % (dimensions.coord_limits[1].min());
+                file << edge % (dimensions.coord_limits[0].max()+offset)
+                             % (dimensions.coord_limits[1].max()+offset)
+                             % (dimensions.coord_limits[0].max())
+                             % (dimensions.coord_limits[1].max());
+                break;
+            }
+            }
 			if ( (i+1) % 3 == 0 )
 				file << "\\end{tikzpicture}}\\\\\n";
 			else
