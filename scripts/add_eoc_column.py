@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 import csv
 import sys
+import os
 import math
 import copy
 
-
-with open( sys.argv[2], 'wb' ) as out:
+out_fn = sys.argv[2]
+with open( out_fn, 'wb' ) as out:
 	fn = sys.argv[1]
 	delimiter = ','
 	csv_reader = csv.DictReader( open(fn,'rb'), delimiter=delimiter )
@@ -20,10 +21,9 @@ with open( sys.argv[2], 'wb' ) as out:
 	writer.writeheader()
 	lastRow = None
 	for row in csv_reader:
-		u_eoc = 'none'
-		p_eoc = 'none'
+		u_eoc = 'nan'
+		p_eoc = 'nan'
 		if lastRow:
-			print lastRow
 			u_last = float(lastRow['L2_0'])
 			p_last = float(lastRow['L2_1'])
 			h_last = float(lastRow['grid_width'])
@@ -40,3 +40,5 @@ with open( sys.argv[2], 'wb' ) as out:
 		lastRow = copy.deepcopy(row)
 	out.flush()
 
+os.system( "sed -i 's/L2_0/L2_velocity/g' %s"%out_fn )
+os.system( "sed -i 's/L2_1/L2_pressure/g' %s"%out_fn )
