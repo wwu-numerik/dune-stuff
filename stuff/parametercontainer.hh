@@ -13,6 +13,7 @@
 #include "logging.hh"
 #include "filesystem.hh"
 #include "misc.hh"
+#include "validation.hh"
 
 #include <vector>
 #include <algorithm>
@@ -20,56 +21,10 @@
 
 #include <boost/format.hpp>
 
-namespace Stuff {
-// ! a class usable as a default validator for Dune::Parameter
-template< class T >
-class ValidateAny
-  : public Dune::ValidatorDefault< T, ValidateAny< T > >
-{
-  typedef ValidateAny< T >                      ThisType;
-  typedef Dune::ValidatorDefault< T, ThisType > BaseType;
-
-public:
-  inline ValidateAny() {}
-  inline ValidateAny(const ThisType&) {}
-
-  inline bool operator()(const T&) const {
-    return true;
-  }
-
-  inline void print(std::ostream& s) const {
-    s << "ValidateAny: all values should be valid... " << std::endl << std::endl;
-  }
-};
-
-// ! validates arg if in given list
-template< class T, class ListImp = std::vector< T > >
-class ValidateInList
-  : public Dune::ValidatorDefault< T, ValidateInList< T, ListImp > >
-{
-  typedef ValidateInList< T, ListImp >          ThisType;
-  typedef Dune::ValidatorDefault< T, ThisType > BaseType;
-  typedef ListImp                               ListType;
-  ListType valid_list_;
-
-public:
-  ValidateInList(const ListType& valid_list)
-    : valid_list_(valid_list)
-  {}
-
-  inline bool operator()(const T& val) const {
-    return std::find(valid_list_.begin(), valid_list_.end(), val) != valid_list_.end();
-  }
-
-  inline void print(std::ostream& s) const {
-    s << "ValidateInList: checked Parameter was not in valid list" << std::endl << std::endl;
-  }
-};
-}
 
 /**
    *  \brief  class containing global parameters
-   *
+   *  \deprecated
    *  ParameterContainer contains all the needed global parameters getting them via Dune::Parameter
    *
    **/
@@ -125,7 +80,7 @@ public:
      **/
   bool CheckSetup() {
     typedef std::vector< std::string >::iterator
-    Iterator;
+        Iterator;
     Iterator it = mandatory_params_.begin();
     Iterator new_end = std::remove_if(it, mandatory_params_.end(), Dune::Parameter::exists);
     all_set_up_ = (new_end == it);
@@ -245,9 +200,8 @@ private:
 };
 
 // ! global ParameterContainer instance
-ParameterContainer& Parameters() {
+ParameterContainer& DUNE_DEPRECATED_MSG("use the Dune::ParameterTree based ConfigContainer instead") Parameters() {
   static ParameterContainer parameters;
-
   return parameters;
 }
 
