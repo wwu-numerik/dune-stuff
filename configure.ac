@@ -1,26 +1,23 @@
-# -*- Autoconf -*-
+#! /bin/bash
+# $Id$
 # Process this file with autoconf to produce a configure script.
 DUNE_AC_INIT # gets module version from dune.module file
 AM_INIT_AUTOMAKE
+AC_CONFIG_SRCDIR([dune/stuff/misc.hh])
 AM_CONFIG_HEADER([config.h])
 
-
-# we need no more than the standard DE-stuff
-# this module depends on dune-common dune-grid dune-fem
-# this implies checking for [dune-common], [dune-grid], [dune-istl], [dune-fem]
+# check all dune-module stuff
 DUNE_CHECK_ALL
-DUNE_SYMLINK
 
-# implicitly set the Dune-flags everywhere
-AC_SUBST(DUNE_STUFF_ROOT, '$(top_buildir)')
-AC_SUBST(DUNE_STUFF_CPPFLAGS, '-I$(top_buildir)')
-AC_SUBST(AM_CPPFLAGS, '$(DUNE_CPPFLAGS) -I$(top_srcdir)')
-AC_SUBST(AM_LDFLAGS, '$(DUNE_LDFLAGS) $(DUNE_LIBS)')
+
+# preset variable to path such that #include <dune/...> works
+AC_SUBST([AM_CPPFLAGS], '$(DUNE_CPPFLAGS) -I$(top_srcdir)')
+AC_SUBST([AM_LDFLAGS], '$(DUNE_LDFLAGS) $(DUNE_LIBS)')
 AC_SUBST([LOCAL_LIBS], '')
 
 
 
-AC_CONFIG_FILES([Makefile 
+AC_CONFIG_FILES([src/Makefile 
 	dune-stuff.pc])
 AC_OUTPUT
 # finally print the summary information
