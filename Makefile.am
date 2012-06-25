@@ -14,3 +14,4 @@ AUTOMAKE_OPTIONS = foreign 1.5
 DISTCHECK_CONFIGURE_FLAGS = --with-dune=$(DUNEROOT) CXX="$(CXX)" CC="$(CC)"
 
 include $(top_srcdir)/am/global-rules
+include $(top_srcdir)/am/top-rules
