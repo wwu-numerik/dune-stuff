@@ -18,6 +18,10 @@ AC_SUBST([LOCAL_LIBS], '')
 
 
 AC_CONFIG_FILES([Makefile
+	dune/Makefile
+	dune/stuff/Makefile
+	dune/stuff/test/Makefile
+	src/Makefile
 	dune-stuff.pc])
 AC_OUTPUT
 # finally print the summary information
