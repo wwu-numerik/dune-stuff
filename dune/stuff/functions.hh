@@ -725,12 +725,17 @@ public:
     : BaseType()
       , constant_(constant)
   {}
+  ConstantFunction(const double constant = 0.0)
+    : BaseType()
+      , constant_(constant)
+  {}
 
   ~ConstantFunction()
   {}
 
-  inline void evaluate(const double /*time*/, const DomainType& /*arg*/, RangeType& ret) const { ret = RangeType(
-                                                                                                   constant_); }
+  inline void evaluate(const double /*time*/, const DomainType& /*arg*/, RangeType& ret) const {
+    ret = RangeType(constant_);
+  }
   inline void evaluate(const DomainType& /*arg*/, RangeType& ret) const { ret = RangeType(constant_); }
   template< class IntersectionIteratorType >
   inline void evaluate(const double /*time*/, const DomainType& /*arg*/,
@@ -840,8 +845,10 @@ private:
   template< class T > \
   struct classname \
     : public Stuff::ConstantFunction< T > \
-  { classname(const double d, const T &t, double = 0.0, double = 0.0) \
+  { classname(const double /*d*/, const T &t, double = 0.0, double = 0.0) \
       : Stuff::ConstantFunction< T >(t) {} \
+    classname() \
+      : Stuff::ConstantFunction< T >() {} \
     classname(const T &t) \
       : Stuff::ConstantFunction< T >(t) {} };
 
