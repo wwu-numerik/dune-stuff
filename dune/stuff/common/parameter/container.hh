@@ -7,13 +7,13 @@
 #ifndef PARAMETERCONTAINER_HH_INCLUDED
 #define PARAMETERCONTAINER_HH_INCLUDED
 
-#include <dune/stuff/common/deprecated.hh> // ensure DUNE_DEPRECATED is defined properly
+#include <dune/common/deprecated.hh>
 #include <dune/fem/io/parameter.hh>
 
-#include "logging.hh"
-#include "filesystem.hh"
-#include "misc.hh"
-#include "validation.hh"
+#include <dune/stuff/common/logging.hh>
+#include <dune/stuff/common/filesystem.hh>
+#include <dune/stuff/common/misc.hh>
+#include <dune/stuff/common/parameter/validation.hh>
 
 #include <vector>
 #include <algorithm>

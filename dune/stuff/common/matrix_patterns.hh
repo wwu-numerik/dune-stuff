@@ -1,6 +1,11 @@
 #ifndef STUFF_MATRIX_PATTERNS_HH
 #define STUFF_MATRIX_PATTERNS_HH
 
+#include <set>
+#include <vector>
+
+#include <dune/stuff/common/debug.hh>
+
 namespace Dune {
 
 namespace Stuff {

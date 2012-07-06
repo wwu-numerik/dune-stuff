@@ -6,6 +6,8 @@
    *
    */
 
+#warning "Rene should take a look at this!"
+#if 0
 // #define new(a, rest...) mynew( a, atoi(__LINE__), __FILE__, rest )
 
 // void * mynew( size_t sz, int line, char* file) throw (std::bad_alloc)
@@ -64,6 +66,7 @@ void operator delete[](void* p) throw ()      {
 }
 
 #define new (a) new (a, __func__)
+#endif
 /** Copyright (c) 2012, Rene Milk
    * All rights reserved.
    *

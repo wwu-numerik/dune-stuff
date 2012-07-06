@@ -10,6 +10,8 @@
 #endif
 #include <string>
 
+#include <dune/stuff/common/string.hh>
+
 namespace Dune {
 
 namespace Stuff {
@@ -67,11 +69,11 @@ static const char* endblink = "\033[25m";
 static const char* endreverse = "\033[27m";
 
 std::string color(int i) {
-  return "\033[38;5;" + intToString(i) + "m";
+  return "\033[38;5;" + Dune::Stuff::Common::String::convertTo(i) + "m";
 }
 
 std::string backcolor(int i) {
-  return "\033[38;5;" + intToString(i) + "m";
+  return "\033[38;5;" + Dune::Stuff::Common::String::convertTo(i) + "m";
 }
 
 // demangles typeid
@@ -111,14 +113,14 @@ std::string highlightTemplate(std::string str, int maxlevel = 10000) {
     if (str[i] == '<')
     {
       level++;
-      std::string dummy = "\033[38;5;" + intToString( templateColorChooser(level) ) + "m";
+      std::string dummy = "\033[38;5;" + Dune::Stuff::Common::String::convertTo( templateColorChooser(level) ) + "m";
       str.insert(i, dummy);
       i += dummy.size();
       if (level == maxlevel)
         startindex = i + 1;
     } else if (str[i] == '>') {
       level--;
-      std::string dummy = "\033[38;5;" + intToString( templateColorChooser(level) ) + "m";
+      std::string dummy = "\033[38;5;" + Dune::Stuff::Common::String::convertTo( templateColorChooser(level) ) + "m";
       str.insert(++i, dummy);
       if (level + 1 == maxlevel)
       {
@@ -135,7 +137,7 @@ std::string highlightTemplate(std::string str, int maxlevel = 10000) {
 
 // highlight a string in a specified color
 std::string highlightString(std::string str, int colornr = 0) {
-  return "\033[38;5;" + intToString(colornr % 256) + "m" + str + "\033[38;5;0m";
+  return "\033[38;5;" + Dune::Stuff::Common::String::convertTo(colornr % 256) + "m" + str + "\033[38;5;0m";
 }
 
 // highlight a string which is searched in another string in a specified color
@@ -144,7 +146,7 @@ std::string highlightSearchString(std::string str, std::string searchstr, int co
 
   while ( index != int(std::string::npos) )
   {
-    std::string dummy = "\033[38;5;" + intToString(colornr % 256) + "m";
+    std::string dummy = "\033[38;5;" + Dune::Stuff::Common::String::convertTo(colornr % 256) + "m";
     std::string dummy2 = "\033[38;5;0m";
     str.insert(index, dummy);
     str.insert(index + searchstr.size() + dummy.size(), dummy2);

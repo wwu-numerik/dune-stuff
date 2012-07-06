@@ -73,6 +73,8 @@ class ISTLLocalMatrixProxy
   LocalMatrixType;
   typedef typename MatrixObjectType::MatrixType::block_type
   block_type;
+  typedef typename MatrixObjectType::DomainSpaceType::GridType
+  GridType;
   typedef typename GridType::template Codim< 0 >::Entity
   EntityType;
   typedef typename MatrixObjectType::MatrixType::Ttype
@@ -148,7 +150,6 @@ public:
   unsigned int rows() const { return rows_; }
   unsigned int cols() const { return cols_; }
 };
-
 
 } // namespace Common
 

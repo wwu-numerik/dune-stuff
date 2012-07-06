@@ -302,7 +302,7 @@ public:
     logdir = datadir + logdir;
 
     filename_ = logdir + logfile + "_time.log";
-    Stuff::testCreateDirectory(logdir);     // could assert this if i figure out why errno is != EEXIST
+    Stuff::Common::Filesystem::testCreateDirectory(logdir);     // could assert this if i figure out why errno is != EEXIST
     filenameWoTime_ = logdir + logfile + ".log";
     if ( (logflags_ & LOG_FILE) != 0 )
     {
@@ -319,7 +319,7 @@ public:
     }
     // create the MatlabLogStream
     std::string matlabLogFileName = logdir + logfile + "_matlab.m";
-    Stuff::testCreateDirectory(matlabLogFileName);           // could assert this if i figure out why errno is != EEXIST
+    Stuff::Common::Filesystem::testCreateDirectory(matlabLogFileName);           // could assert this if i figure out why errno is != EEXIST
     matlabLogFile_.open( matlabLogFileName.c_str() );
     assert( matlabLogFile_.is_open() );
     matlabLogStreamPtr = new MatlabLogStream(LOG_FILE, logflags_, matlabLogFile_);
@@ -539,7 +539,7 @@ private:
   int logflags_;
   MatlabLogStream* matlabLogStreamPtr;
 
-  friend Logging& :: Logger();
+  friend Logging& Logger();
   // satisfy stricter warnings wrt copying
   Logging(const Logging&);
   Logging& operator=(const Logging&);
