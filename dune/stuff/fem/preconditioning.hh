@@ -1,7 +1,11 @@
 #ifndef DUNE_STUFF_PRECONDITIONING_HH
 #define DUNE_STUFF_PRECONDITIONING_HH
 
-namespace Stuff {
+namespace Dune {
+
+  namespace Stuff {
+
+    namespace Fem {
 // ! allow any class fullfilling the Operator concept to be used as a preconditioner
 template< class Operator, template< class T, class F > class Solver, class RangeDiscreteFunctionType >
 class OperatorBasedPreconditioner
@@ -42,8 +46,15 @@ public:
     return right_preconditioning_;
   }
 };
-} // end namespace Stuff
+
+} // namespace Fem
+
+} // namespace Stuff
+
+} // namespace Dune
+
 #endif // DUNE_STUFF_PRECONDITIONING_HH
+
 /** Copyright (c) 2012, Rene Milk
    * All rights reserved.
    *

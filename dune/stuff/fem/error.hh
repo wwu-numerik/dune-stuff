@@ -6,7 +6,12 @@
 #include <boost/format.hpp>
 #include <utility>
 
+namespace Dune {
+
 namespace Stuff {
+
+namespace Fem {
+
 /** \brief Class that facilitates getting absolute and relative error of a pair of DisceteFunctions
    * \tparam NormType
    **/
@@ -66,8 +71,15 @@ public:
                   );
   } // get
 };
-} // end namespace Stuff
+
+} // namespace Fem
+
+} // namespace Stuff
+
+} // namespace Dune
+
 #endif // DUNE_STUFF_ERROR_HH
+
 /** Copyright (c) 2012, Rene Milk
    * All rights reserved.
    *

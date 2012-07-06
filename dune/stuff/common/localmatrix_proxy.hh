@@ -6,8 +6,12 @@
 #include "debug.hh"
 #include "math.hh"
 
+namespace Dune {
+
 namespace Stuff {
-namespace Matrix {
+
+namespace Common {
+
 // ! a small proxy object that automagically prevents near-0 value fill-in
 template< class MatrixPointerType >
 class LocalMatrixProxy
@@ -144,8 +148,13 @@ public:
   unsigned int rows() const { return rows_; }
   unsigned int cols() const { return cols_; }
 };
-}
-}   // namespace Stuff { namespace Matrix {
+
+
+} // namespace Common
+
+} // namespace Stuff
+
+} // namespace Dune
 
 #endif // LOCALMATRIX_PROXY_HH
 /** Copyright (c) 2012, Rene Milk

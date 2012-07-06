@@ -22,21 +22,21 @@
 namespace Dune
 {
 
-namespace Capabilities
-{
+//namespace Capabilities
+//{
 
-template< class Grid >
-struct hasHierarchicIndexSet;
+//template< class Grid >
+//struct hasHierarchicIndexSet;
 
-template<>
-struct hasHierarchicIndexSet< Dune::CpGrid >
-{
-  static const bool v = false;
-};
+//template<>
+//struct hasHierarchicIndexSet< Dune::CpGrid >
+//{
+//  static const bool v = false;
+//};
 
-} // namespace Capabilities
+//} // namespace Capabilities
 
-namespace HelperTools
+namespace Stuff
 {
 
 namespace Grid
@@ -137,7 +137,7 @@ private:
 
 } // namespace Grid
 
-} // namespace HelperTools
+} // namespace Stuff
 
 } // namespace Dune
 

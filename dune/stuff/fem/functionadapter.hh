@@ -6,10 +6,15 @@
 
 #include <vector>
 #include <boost/shared_ptr.hpp>
-#include <dune/stuff/printing.hh>
+#include <dune/stuff/common/print.hh>
 #include <dune/common/static_assert.hh>
 
+namespace Dune {
+
 namespace Stuff {
+
+namespace Fem {
+
 /** DiscreteFunction container \f$G\f$ that takes a \$f(dxd)\$f matrix valued function \f$f\f$ as input that splits
  * itself into \$fd\$f
    * DiscreteFunctions that are each \$fd\$f valued.
@@ -439,7 +444,12 @@ public:
     }
   } // init
 };
-}
+
+} // namespace Fem
+
+} // namespace Stuff
+
+} // namespace Dune
 
 #endif // DUNE_STUFF_FUNCTIONADAPTER_HH
 /** Copyright (c) 2012, Rene Milk

@@ -3,8 +3,13 @@
 
 #include <boost/date_time/posix_time/posix_time.hpp>
 
+namespace Dune {
+
 namespace Stuff {
-class MyExecutionTimer
+
+namespace Common {
+
+class ExecutionTimer
 {
 public:
   static void startTimer() {
@@ -35,20 +40,26 @@ private:
   static boost::posix_time::ptime stopt_;
 };
 
-boost::posix_time::ptime MyExecutionTimer::startt_;
-boost::posix_time::ptime MyExecutionTimer::stopt_;
+boost::posix_time::ptime ExecutionTimer::startt_;
+boost::posix_time::ptime ExecutionTimer::stopt_;
 
 #define EXECUTETIMEDSECONDS(command) \
-  ( MyExecutionTimer::startTimer(), command, MyExecutionTimer::stopTimerSeconds() )
+  ( ExecutionTimer::startTimer(), command, ExecutionTimer::stopTimerSeconds() )
 
 #define EXECUTETIMEDMILLISECONDS(command) \
-  ( MyExecutionTimer::startTimer(), command, MyExecutionTimer::stopTimerMilliseconds() )
+  ( ExecutionTimer::startTimer(), command, ExecutionTimer::stopTimerMilliseconds() )
 
 #define EXECUTETIMEDMICROSECONDS(command) \
-  ( MyExecutionTimer::startTimer(), command, MyExecutionTimer::stopTimerMicroseconds() )
+  ( ExecutionTimer::startTimer(), command, ExecutionTimer::stopTimerMicroseconds() )
+
+} // namespace Common
+
 } // namespace Stuff
 
+} // namespace Dune
+
 #endif /* __EXECUTIONTIMER_HH__ */
+
 /** Copyright (c) 2012, Sven Kaulmann
    * All rights reserved.
    *

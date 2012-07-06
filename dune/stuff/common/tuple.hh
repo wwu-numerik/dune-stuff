@@ -4,8 +4,13 @@
 #include <dune/common/tuples.hh>
 // #include <dune/fem/misc/femtuples.hh>
 
+namespace Dune {
+
 namespace Stuff {
-// ! split our function wrapper into sep pointers for Datawriter input
+
+namespace Common {
+
+  // ! split our function wrapper into sep pointers for Datawriter input
 template< class T1, class T2 = T1, class T3 = T2, class T4 = T3 >
 struct TupleSerializer
 {
@@ -91,8 +96,15 @@ Dune::Tuple< T1 > makeTuple(T1& t1)
 template< class T1, class T2 >
 Dune::Tuple< T1, T2 > makeTuple(T1& t1, T2& t2)
 { return Dune::tuple< T1, T2 >(t1, t2); }
-} // namespace Stuff {
+
+} // namespace Common
+
+} // namespace Stuff
+
+} // namespace Dune
+
 #endif // DUNE_STUFF_TUPLE_HH
+
 /** Copyright (c) 2012, Rene Milk
    * All rights reserved.
    *

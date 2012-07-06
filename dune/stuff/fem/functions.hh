@@ -7,7 +7,7 @@
 
 #include <dune/fem/function/blockvectorfunction/blockvectorfunction.hh>
 
-#include <dune/stuff/timefunction.hh>
+#include <dune/stuff/fem/timefunction.hh>
 #include <dune/grid/io/file/dgfparser/dgfparser.hh> // for GridPtr
 #include <dune/fem/io/file/vtkio.hh>
 #include "localmassmatrix.hh"
@@ -15,7 +15,12 @@
 #include "math.hh"
 #include "deprecated.hh"
 
+namespace Dune {
+
 namespace Stuff {
+
+namespace Fem {
+
 // ! (inplace) multiplies given function with matrix diagonal
 template< class Matrix, class Function >
 void DiagonalMult(const Matrix& matrix, Function& f) {
@@ -825,7 +830,12 @@ public:
 private:
   const double constant_;
 };
+
+} // end namespace Fem
+
 } // end namespace Stuff
+
+} // end namespace Dune
 
 #define NULLFUNCTION_TP(classname) \
   template< class T, class P > \

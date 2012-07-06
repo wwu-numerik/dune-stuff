@@ -24,9 +24,9 @@ void clear( DenseVectorType& vector )
   {
     vector[i] = ValueType(0);
   }
-} // end function clear
+} // void clear( DenseVectorType& vector )
 
-} // end namespace Vector
+} // namespace Vector
 
 } // namespace Common
 

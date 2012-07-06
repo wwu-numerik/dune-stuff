@@ -7,6 +7,14 @@
 
 #define SEGFAULT { int* J = 0; * J = 9; }
 
+namespace Dune {
+
+namespace Stuff {
+
+namespace Common {
+
+namespace Debug {
+
 // ! from right/bottom limiter for file paths
 const char* rightPathLimiter(const char* path, int depth = 2) {
   char* c = new char[255];
@@ -64,7 +72,6 @@ public:
     : std::runtime_error(msg) {}
 };
 
-namespace Stuff {
 class singlerun_abort_exception
   : public std::runtime_error
 {
@@ -72,7 +79,6 @@ public:
   singlerun_abort_exception(std::string msg)
     : std::runtime_error(msg) {}
 };
-}
 
 #ifndef NDEBUG
  #define ASSERT_EXCEPTION(cond, msg) \
@@ -108,7 +114,16 @@ public:
                     (boost::format( \
                        "assertion %1% == %2% failed: %3% != %4%") % # expt % # actual % expt % actual).str().c_str() )
 
+} // namespace Debug
+
+} // namespace Common
+
+} // namespace Stuff
+
+} // namespace Dune
+
 #endif // DUNE_STUFF_DEBUG_HH
+
 /** Copyright (c) 2012, Rene Milk
    * All rights reserved.
    *

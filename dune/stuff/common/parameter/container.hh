@@ -7,7 +7,7 @@
 #ifndef PARAMETERCONTAINER_HH_INCLUDED
 #define PARAMETERCONTAINER_HH_INCLUDED
 
-#include <dune/stuff/deprecated.hh> // ensure DUNE_DEPRECATED is defined properly
+#include <dune/stuff/common/deprecated.hh> // ensure DUNE_DEPRECATED is defined properly
 #include <dune/fem/io/parameter.hh>
 
 #include "logging.hh"
@@ -21,6 +21,13 @@
 
 #include <boost/format.hpp>
 
+namespace Dune {
+
+namespace Stuff {
+
+namespace Common {
+
+namespace Parameter {
 
 /**
    *  \brief  class containing global parameters
@@ -28,7 +35,7 @@
    *  ParameterContainer contains all the needed global parameters getting them via Dune::Parameter
    *
    **/
-class ParameterContainer
+class Container
 {
 public:
   /**
@@ -36,7 +43,7 @@ public:
      *
      *  doing nothing
      **/
-  ~ParameterContainer()
+  ~Container()
   {}
 
   /**
@@ -188,7 +195,7 @@ private:
      *
      *  \attention  call ReadCommandLine() to set up parameterContainer
      **/
-  ParameterContainer()
+  Container()
     : all_set_up_(false)
       , warning_output_(true) {
     const std::string p[] = { "dgf_file_2d", "dgf_file_3d" };
@@ -200,12 +207,11 @@ private:
 };
 
 // ! global ParameterContainer instance
-ParameterContainer& DUNE_DEPRECATED_MSG("use the Dune::ParameterTree based ConfigContainer instead") Parameters() {
-  static ParameterContainer parameters;
+Container& DUNE_DEPRECATED_MSG("use the Dune::ParameterTree based ConfigContainer instead") Parameters() {
+  static Container parameters;
   return parameters;
 }
 
-namespace Stuff {
 // ! get a path in datadir with existence guarantee (cannot be in filessytem.hh -- cyclic dep )
 std::string getFileinDatadir(const std::string& fn) {
   boost::filesystem::path path( Parameters().getParam( "fem.io.datadir", std::string(".") ) );
@@ -214,8 +220,17 @@ std::string getFileinDatadir(const std::string& fn) {
   boost::filesystem::create_directories( path.parent_path() );
   return path.string();
 } // getFileinDatadir
-}
+
+} // namespace Parameter
+
+} // namespace Common
+
+} // namespace Stuff
+
+} // namespace Dune
+
 #endif // end of PARAMETERHANDLER.HH
+
 /** Copyright (c) 2012, Rene Milk
    * All rights reserved.
    *

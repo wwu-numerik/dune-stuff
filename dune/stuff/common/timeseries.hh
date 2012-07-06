@@ -8,23 +8,28 @@
 #include <algorithm>
 #include <set>
 
-#include <dune/stuff/misc.hh>
-#include <dune/stuff/logging.hh>
+#include <dune/stuff/common/misc.hh>
+#include <dune/stuff/common/logging.hh>
 #include <boost/format.hpp>
 #include <boost/typeof/typeof.hpp>
 
+namespace Dune {
+
 namespace Stuff {
+
+namespace Common {
+
 /** \brief nice tex graph output for a time dependent simulation
    * \todo use more boost::format
    **/
-class TimeSeriesOutput
+class TimeSeries
 {
   static double integralPointValue(const double right, const double left, const double weight) {
     return (right * right + left * left) * weight * 0.5;
   }
 
 public:
-  TimeSeriesOutput(const RunInfoTimeMapMap& runInfoVectorMap)
+  TimeSeries(const RunInfoTimeMapMap& runInfoVectorMap)
     : runInfoMapMap_(runInfoVectorMap)
       , vector_count_( runInfoMapMap_.size() )
       , vector_size_( runInfoMapMap_.begin()->second.size() )
@@ -534,7 +539,12 @@ private:
     return filename;
   } // writeEOCcsv
 };
+
+} // namespace Common
+
 } // namespace Stuff
+
+} // namespace Dune
 
 #endif // DUNE_STUFF_TIMESERIES_HH
 /** Copyright (c) 2012, Rene Milk

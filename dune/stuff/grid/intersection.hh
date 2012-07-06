@@ -5,13 +5,12 @@
 #include <dune/common/fvector.hh>
 #include <dune/common/static_assert.hh>
 
-// dune-helper-tools includes
-#include <dune/helper-tools/common/string.hh>
+// dune-stuff
+#include <dune/stuff/common/string.hh>
 
 namespace Dune
 {
-
-namespace HelperTools
+namespace Stuff
 {
 
 namespace Grid
@@ -144,7 +143,7 @@ bool contains( const IntersectionType& intersection, const Dune::FieldVector< Fi
 
 } // end namespace Grid
 
-} // end namespace HelperTools
+} // end of namespace Stuff
 
 } // end namespace Dune
 

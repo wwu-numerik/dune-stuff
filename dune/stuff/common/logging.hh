@@ -15,12 +15,15 @@
 #include "misc.hh"
 #include "filesystem.hh"
 
-namespace Stuff {
-class Logging;
-}
-Stuff::Logging& Logger();
+namespace Dune {
 
 namespace Stuff {
+
+namespace Common {
+
+class Logging;
+Logging& Logger();
+
 /** \brief handles all logging
   **/
 class Logging
@@ -541,16 +544,22 @@ private:
   Logging(const Logging&);
   Logging& operator=(const Logging&);
 };
-} // end namespace Stuff{
 
 // !global Logging instance
-Stuff::Logging& Logger() {
-  static Stuff::Logging log;
-
+Logging& Logger()
+{
+  static Logging log;
   return log;
 }
 
+} // namespace Common
+
+} // namespace Stuff
+
+} // namespace Dune
+
 #endif // ifndef LOGGING_HH_INCLUDED
+
 /** Copyright (c) 2012, Rene Milk
    * All rights reserved.
    *

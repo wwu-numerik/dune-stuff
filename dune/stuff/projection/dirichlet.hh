@@ -4,13 +4,12 @@
 // std includes
 #include <vector>
 
-// dune-helper-tools includes
-#include <dune/helper-tools/grid/intersection.hh>
+// dune-stuff
+#include <dune/stuff/grid/intersection.hh>
 
 namespace Dune
 {
-
-namespace HelperTools
+namespace Stuff
 {
 
 namespace Projection
@@ -148,7 +147,7 @@ private:
 
 } // end namespace Projection
 
-} // end namespace HelperTools
+} // end namespace Stuff
 
 } // end namespace Dune
 

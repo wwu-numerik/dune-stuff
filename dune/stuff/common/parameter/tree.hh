@@ -69,7 +69,7 @@ void assertSub(const Dune::ParameterTree& paramTree, std::string sub, std::strin
 
 } // namespace Common
 
-} // namespace HelperTools
+} // namespace Stuff
 
 } // namespace Dune
 

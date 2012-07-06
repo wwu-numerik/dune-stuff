@@ -7,17 +7,22 @@
 #include <dune/fem/function/common/gridfunctionadapter.hh>
 
 #include <dune/common/static_assert.hh>
-#include <dune/stuff/math.hh>
+#include <dune/stuff/common/math.hh>
 #include "localmassmatrix.hh"
 
+namespace Dune {
+
 namespace Stuff {
-/** A custom projection of an analytical function that uses a non-standard evalute signature:\n
-   *  <pre>template < class IntersectionIteratorType >\n
-   *  void evaluate( const DomainType& arg, RangeType& ret, const IntersectionIteratorType& faceIter ) const</pre>\n
-   * \note example being our boundary functions
-   * \note output currently somewhat meaningless
-   * \see analyticaldata.hh
-   **/
+
+namespace Fem {
+
+  /** A custom projection of an analytical function that uses a non-standard evalute signature:\n
+     *  <pre>template < class IntersectionIteratorType >\n
+     *  void evaluate( const DomainType& arg, RangeType& ret, const IntersectionIteratorType& faceIter ) const</pre>\n
+     * \note example being our boundary functions
+     * \note output currently somewhat meaningless
+     * \see analyticaldata.hh
+     **/
 class CustomProjection
 {
 public:
@@ -86,9 +91,7 @@ public:
     }
   } // project
 };
-} // end namespace Stuff
 
-namespace Dune {
 // ! basically the fem L2Projection with a function evaluate that converts between compatible types instead of failing
 class BetterL2Projection
 {
@@ -237,10 +240,9 @@ protected:
     }
   } // projectCommon
 };
-} // end namespace Dune
 
-namespace Stuff {
 namespace Experimental {
+
 template< int dim, class RangeType, class JacobianRangeType >
 struct GradientJacobianToLaplacian
   : public RangeType
@@ -392,10 +394,17 @@ public:
     }
   }
 };
-}   // ns Experimental
-} // ns Stuff
+
+} // namespace Experimental
+
+} // namespace Fem
+
+} // namespace Stuff
+
+} // namespace Dune
 
 #endif // CUSTOMPROJECTION_HH
+
 /** Copyright (c) 2012, Rene Milk    , Sven Kaulmann
    * All rights reserved.
    *

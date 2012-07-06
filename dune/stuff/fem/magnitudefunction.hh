@@ -5,12 +5,17 @@
 #include <dune/fem/function/common/gridfunctionadapter.hh>
 #include <dune/fem/space/common/functionspace.hh>
 #include <dune/fem/space/dgspace.hh>
-#include <dune/stuff/customprojection.hh>
-#include <dune/stuff/debug.hh>
+#include <dune/stuff/fem/customprojection.hh>
+#include <dune/stuff/common/debug.hh>
 
 #include "localmassmatrix.hh"
 
+namespace Dune {
+
 namespace Stuff {
+
+namespace Fem {
+
 // ! Wrap a DiscreteFunction to a scalar function representing its two-norm
 template< class DiscreteFunctionImp, int polOrder = 3 >
 class MagnitudeFunction
@@ -120,7 +125,12 @@ private:
 template< class DF, int I >
 const typename MagnitudeFunction< DF, I >::MagnitudeSpaceType
 MagnitudeFunction< DF, I >::magnitude_space_ = typename MagnitudeFunction< DF, I >::MagnitudeSpaceType();
+
+} // namespace Fem
+
 } // namespace Stuff
+
+} // namespace Dune
 
 #endif // DUNE_STUFF_MAGNITUDEFUNCTION_HH
 /** Copyright (c) 2012, Rene Milk

@@ -14,9 +14,9 @@
 #include <dune/fem/space/dgspace.hh>
 
 #ifndef NLOG
- #include <dune/stuff/printing.hh>
- #include <dune/stuff/misc.hh>
- #include <dune/stuff/logging.hh>
+ #include <dune/stuff/common/print.hh>
+ #include <dune/stuff/common/misc.hh>
+ #include <dune/stuff/common/logging.hh>
 #endif // ifndef NLOG
 
 #if (POLORDER != 0)
@@ -24,6 +24,11 @@
 #endif
 
 namespace Dune {
+namespace Stuff
+{
+
+namespace Fem {
+
 // forward decraration
 template< class DiscreteGradientModelTraitsImp >
 class DiscreteGradientModel;
@@ -411,7 +416,12 @@ private:
   GridPartType& gridPart_;
   GridType& grid_;
 }; // end of DiscreteGradientPass
-} // end ns DUne
+
+} // namespace Fem
+
+} // namespace Stuff
+
+} // namespace Dune
 
 #endif // end of dicretegradientpass.hh DUNE_STUFF_DISCRETEGRADIENTPASS_HH
 /** Copyright (c) 2012, Rene Milk

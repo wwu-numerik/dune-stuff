@@ -5,6 +5,11 @@
 #include <dune/fem/space/common/restrictprolonginterface.hh>
 
 namespace Dune {
+
+  namespace Stuff {
+
+    namespace Fem {
+
 /** \brief an arbitrary size set of RestrictProlong operators of same type
    * This class is useful if you have more than a Pair of discrete functions that
    * need to be restricted/prolonged via some AdaptionManger.\n
@@ -94,7 +99,13 @@ protected:
   SetConstIteratorType;
   SetType pair_set_;
 };
-} // end namespace Dune
+
+} // namespace Fem
+
+} // namespace Stuff
+
+} // namespace Dune
+
 #endif // DUNE_STUFF_RESTRICT_PROLONG_HH
 
 /** Copyright (c) 2012, Rene Milk

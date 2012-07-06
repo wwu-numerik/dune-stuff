@@ -3,6 +3,7 @@
 #pragma GCC diagnostic warning "-Wextra"
 #pragma GCC diagnostic warning "-Wignored-qualifiers"
 #pragma GCC diagnostic warning "-Wtype-limits"
+
 /** Copyright (c) 2012, Rene Milk
    * All rights reserved.
    *

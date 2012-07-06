@@ -1,12 +1,17 @@
 #ifndef DUNE_STUFF_ADAPTION_HH
 #define DUNE_STUFF_ADAPTION_HH
 
-#include <dune/stuff/restrict_prolong.hh>
+#include <dune/stuff/fem/restrict_prolong.hh>
 #include <dune/fem/space/dgspace/localrestrictprolong.hh>
 #include <dune/common/shared_ptr.hh>
 #include <boost/shared_ptr.hpp>
 
 namespace Dune {
+
+namespace Stuff {
+
+namespace Fem {
+
 /**
    *  \brief encapsulates the adaption handling for our DiscreteOseenFunctionWrapper
    *	Each instance produces its own RestrictProlongPair of operators for one stokesFunctionWrapper, these are in turn
@@ -94,7 +99,13 @@ protected:
 template< class T >
 typename DiscreteOseenFunctionWrapperAdaptionManager< T >::RestrictProlongOperatorSetType
 DiscreteOseenFunctionWrapperAdaptionManager< T >::restrictOperator_Set_;
-} // end namespace Dune
+
+} // namespace Fem
+
+} // namespace Stuff
+
+} // namespace Dune
+
 #endif // DUNE_STUFF_ADAPTION_HH
 /** Copyright (c) 2012, Rene Milk
    * All rights reserved.

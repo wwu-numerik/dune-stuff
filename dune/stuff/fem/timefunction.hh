@@ -5,6 +5,12 @@
 #include <dune/common/bartonnackmanifcheck.hh>
 
 namespace Dune {
+  namespace Stuff
+  {
+
+    namespace Fem
+    {
+
 // ! a dummy timeprovider for usage in Stuff::RuntimeFunction
 struct ConstTimeProvider
 {
@@ -193,7 +199,12 @@ public:
     return timeProvider_;
   }
 };
-}
+
+} // namespace Fem
+
+} // namespace Stuff
+
+} // namespace Dune
 
 #endif // STUFF_TIMEFUNCTION_HH
 /** Copyright (c) 2012, Rene Milk

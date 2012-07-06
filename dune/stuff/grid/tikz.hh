@@ -1,17 +1,24 @@
 #ifndef DUNE_STUFF_TIKZGRID_HH
 #define DUNE_STUFF_TIKZGRID_HH
 
-#include "misc.hh"
-#include "grid.hh"
+#include <dune/stuff/common/misc.hh>
+#include "walk.hh"
 #include <dune/common/static_assert.hh>
 #include <boost/format.hpp>
 #include <dune/grid/io/file/dgfparser/dgfparser.hh>
 #include <fstream>
 
+namespace Dune {
+
 namespace Stuff {
-namespace Tex {
+
+namespace Grid {
+
+  namespace Tikz {
+
 typedef wraparound_array< std::string, 7 >
 TexColorArrayType;
+
 namespace {
 TexColorArrayType::BaseType tmp_colors = { { "black", "red", "blue", "green", "yellow", "cyan", "magenta" } };
 }
@@ -346,8 +353,13 @@ public:
 private:
   GridType& grid_;
 };
-} // namespace Tex
-} // namespace Stuff {
+} // namespace Tikz
+
+} // namespace Grid
+
+} // namespace Stuff
+
+} // namespace Dune
 
 #endif // DUNE_STUFF_TIKZGRID_HH
 /** Copyright (c) 2012, Rene Milk

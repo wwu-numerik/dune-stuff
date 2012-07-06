@@ -11,8 +11,14 @@
 #include <vector>
 #include <boost/format.hpp>
 
+namespace Dune {
+
 namespace Stuff {
+
+namespace Common {
+
 namespace Tex {
+
 // ! interface and base class for all out eoc tex output
 template< class Info >
 class TexOutputBase
@@ -474,8 +480,14 @@ public:
                 << std::scientific << info_.solver_accuracy << std::fixed;
   } // putStaticCols
 };
+
 } // namespace Tex
-} // end namespace Stuff
+
+} // namespace Common
+
+} // namespace Stuff
+
+} // namespace Dune
 
 #endif // DUNE_STUFF_TEX_HH
 /** Copyright (c) 2012, Rene Milk

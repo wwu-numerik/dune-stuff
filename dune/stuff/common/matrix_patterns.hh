@@ -1,8 +1,13 @@
 #ifndef STUFF_MATRIX_PATTERNS_HH
 #define STUFF_MATRIX_PATTERNS_HH
 
+namespace Dune {
+
 namespace Stuff {
-namespace Matrix {
+
+namespace Common {
+
+namespace MatrixPatterns {
 /**
    * @brief Class for storing the sparsity pattern of a matrix. Copy from dune-detailed-discretisations.
    *
@@ -332,8 +337,14 @@ public:
     matrix->endindices();
   } // end method createPtr
 }; // end class ElementNeighborStencil
+
+} // namespace MatrixPatterns
+
+} // namespace Common
+
 } // namespace Stuff
-} // namespace Matrix
+
+} // namespace Dune
 
 #endif // STUFF_MATRIX_PATTERNS_HH
 /** Copyright (c) 2012, Rene Milk

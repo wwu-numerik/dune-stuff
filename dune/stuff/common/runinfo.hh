@@ -9,7 +9,12 @@
 #include <boost/format.hpp>
 #include <boost/foreach.hpp>
 
+namespace Dune {
+
 namespace Stuff {
+
+namespace Common {
+
 /** \brief wrap any info that might be remotely interesting about a single run
   **/
 struct RunInfo
@@ -173,9 +178,15 @@ void dumpRunInfoVectorToFile(const RunInfoVector& vec, const std::string fn = "r
   file.flush();
   file.close();
 } // dumpRunInfoVectorToFile
-} // namespace Stuff {
+
+} // namespace Common
+
+} // namespace Stuff
+
+} // namespace Dune
 
 #endif // DUNE_STUFF_RUNINFO_HH
+
 /** Copyright (c) 2012, Rene Milk
    * All rights reserved.
    *
