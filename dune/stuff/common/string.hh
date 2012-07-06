@@ -2,8 +2,8 @@
    *  \file   stuff.hh
    *  \brief  contains some stuff
    **/
-#ifndef STUFF_MISC_HH_INCLUDED
-#define STUFF_MISC_HH_INCLUDED
+#ifndef DUNE_STUFF_COMMON_STRING_HH
+#define DUNE_STUFF_COMMON_STRING_HH
 
 #include <cstring>
 #include <map>
@@ -32,11 +32,18 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <cstdio>
-#include <dune/stuff/deprecated.hh>
+#include <dune/stuff/common/deprecated.hh>
 #include <boost/algorithm/string.hpp>
 
+namespace Dune
+{
 
-namespace Stuff {
+namespace Stuff
+{
+
+namespace Common
+{
+
 // ! simple and dumb std::string to anything conversion
 template< class ReturnType >
 ReturnType fromString(const std::string& s) {
@@ -255,9 +262,15 @@ inline std::vector<std::string> stringTokenize( const std::string& msg,
                              mode );
     return strings;
 }
+
+} // namespace Common
+
 } // end namepspace stuff
 
-#endif // end of stuff.hh
+} //namespace Dune
+
+#endif // DUNE_STUFF_COMMON_STRING_HH
+
 /** Copyright (c) 2012, Rene Milk    , Sven Kaulmann
    * All rights reserved.
    *

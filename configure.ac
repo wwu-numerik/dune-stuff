@@ -3,7 +3,7 @@
 # Process this file with autoconf to produce a configure script.
 DUNE_AC_INIT # gets module version from dune.module file
 AM_INIT_AUTOMAKE
-AC_CONFIG_SRCDIR([dune/stuff/debug.hh])
+AC_CONFIG_SRCDIR([dune/stuff/common/debug.hh])
 AM_CONFIG_HEADER([config.h])
 
 # check all dune-module stuff

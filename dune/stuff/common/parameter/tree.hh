@@ -1,5 +1,5 @@
-#ifndef DUNE_HELPER_TOOLS_COMMON_PARAMETERTREE_HH
-#define DUNE_HELPER_TOOLS_COMMON_PARAMETERTREE_HH
+#ifndef DUNE_STUFF_COMMON_PARAMETER_TREE_HH
+#define DUNE_STUFF_COMMON_PARAMETER_TREE_HH
 
 // system
 #include <sstream>
@@ -12,13 +12,16 @@
 namespace Dune
 {
 
-namespace HelperTools
+namespace Stuff
 {
 
 namespace Common
 {
 
-namespace ParameterTree
+namespace Parameter
+{
+
+namespace Tree
 {
 
 /**
@@ -60,7 +63,9 @@ void assertSub(const Dune::ParameterTree& paramTree, std::string sub, std::strin
   }
 } // void assert_sub(std::string "sub")
 
-} // namespace ParameterTree
+} // namespace Tree
+
+} // namespace Parameter
 
 } // namespace Common
 
@@ -68,4 +73,4 @@ void assertSub(const Dune::ParameterTree& paramTree, std::string sub, std::strin
 
 } // namespace Dune
 
-#endif // DUNE_HELPER_TOOLS_COMMON_PARAMETERTREE_HH
+#endif // DUNE_STUFF_COMMON_PARAMETER_TREE_HH

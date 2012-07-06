@@ -1,4 +1,4 @@
-const std::string Cornerpoint::id = "helper-tools.grid.provider.cornerpoint";
+const std::string Cornerpoint::id = "stuff.grid.provider.cornerpoint";
 
 Cornerpoint::Cornerpoint(Dune::ParameterTree& paramTree)
   : grid_()

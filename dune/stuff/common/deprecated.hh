@@ -1,5 +1,5 @@
-#ifndef STUFF_DEPRECATED_HH
-#define STUFF_DEPRECATED_HH
+#ifndef DUNE_STUFF_COMMON_DEPRECATED_HH
+#define DUNE_STUFF_COMMON_DEPRECATED_HH
 
 #include <dune/common/deprecated.hh>
 
@@ -12,9 +12,10 @@
   #define DUNE_DEPRECATED_MSG(text) DUNE_DEPRECATED
  #endif /* __GNUC__ */
 
-#endif // ifndef DUNE_DEPRECATED_MSG
+#endif // DUNE_DEPRECATED_MSG
 
-#endif // DEPRECATED_HH
+#endif // DUNE_STUFF_COMMON_DEPRECATED_HH
+
 /** Copyright (c) 2012, Rene Milk
    * All rights reserved.
    *

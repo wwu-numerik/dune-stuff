@@ -1,10 +1,10 @@
-#ifndef STUFF_MATRIX_HH
-#define STUFF_MATRIX_HH
+#ifndef DUNE_STUFF_COMMON_MATRIX_HH
+#define DUNE_STUFF_COMMON_MATRIX_HH
 
 #include <dune/fem/operator/matrix/spmatrix.hh>
 #include <dune/common/static_assert.hh>
-#include <dune/stuff/debug.hh>
-#include <dune/stuff/math.hh>
+#include <dune/stuff/common/debug.hh>
+#include <dune/stuff/common/math.hh>
 
 #if HAVE_DUNE_ISTL
  #include <dune/istl/operators.hh>
@@ -12,11 +12,21 @@
  #include <dune/fem/operator/matrix/preconditionerwrapper.hh>
 #endif // if HAVE_DUNE_ISTL
 
-namespace Dune {
+namespace Dune
+{
+
+namespace Stuff
+{
+
+namespace Common
+{
+
+namespace Matrix
+{
 
 // \todo doc
 template< class DenseMatrixType >
-void clear( DenseMatrixType& matrix )
+void clear(DenseMatrixType& matrix)
 {
   typedef typename DenseMatrixType::value_type
     ValueType;
@@ -28,7 +38,7 @@ void clear( DenseMatrixType& matrix )
       matrix[i][j] = ValueType(0);
     }
   }
-} // end function clear
+} // void clear(DenseMatrixType& matrix)
 
 // ! TODO
 template< class MatrixImp >
@@ -45,7 +55,7 @@ struct PrecondionWrapperDummy
   void apply(X&, const Y&) {}
   void post(X&) {}
   enum { category = SolverCategory::sequential };
-};
+}; // struct PrecondionWrapperDummy
 
 // ! obsolete,dysfunctional Matrixoperator
 template< class MatrixType >
@@ -83,7 +93,7 @@ public:
   const ThisType& systemMatrix() const {
     return *this;
   }
-};
+}; // class SaneSparseRowMatrixOperator
 
 /** \brief get the diagonal of a fieldMatrix into a fieldvector
    * \note While in principle this might do for SparseRowMatrix as well, don't do it! SparseRowMatrix has specialised
@@ -102,7 +112,7 @@ public:
     for (size_t i = 0; i < FieldMatrixType::rows; i++)
       (*this)[i] = matrix[i][i];
   }
-};
+}; // class MatrixDiagonal
 
 // ! returns Sum of matrix' diagonal entries
 template< class FieldMatrixType >
@@ -112,7 +122,7 @@ typename FieldMatrixType::field_type matrixTrace(const FieldMatrixType& matrix) 
   for (size_t i = 0; i < FieldMatrixType::rows; i++)
     trace += diag[i];
   return trace;
-} // matrixTrace
+} // typename FieldMatrixType::field_type matrixTrace(const FieldMatrixType& matrix)
 
 // ! produces a NxN Identity matrix compatible with parent type
 template< class MatrixType >
@@ -127,7 +137,7 @@ public:
   }
 
   const MatrixType& matrix() const { return *this; }
-};
+}; // class IdentityMatrix
 
 // ! produces a NxN Identity matrix object compatible with parent type
 template< class MatrixObjectType >
@@ -178,9 +188,7 @@ bool areTransposed(const MatrixType& a, const MatrixType& b, const double tolera
   }
   return true;
 } // areTransposed
-} // namespace Dune
 
-namespace Stuff {
 // ! extern matrix addition that ignore 0 entries
 template< class MatrixType >
 void addMatrix(MatrixType& dest, const MatrixType& arg, const double eps = 1e-14) {
@@ -294,7 +302,6 @@ FieldMatrixImp rowWiseMatrixMultiplication(const FieldMatrixImp& arg1,
   return ret;
 } // rowWiseMatrixMultiplication
 
-namespace Matrix {
 // ! prints actual memusage of matrix in kB
 template< class MatrixType, class Stream >
 void printMemUsage(const MatrixType& matrix, Stream& stream, std::string name = "") {
@@ -318,10 +325,17 @@ void forceTranspose(const M& arg, M& dest) {
     for (int j = 0; j < arg.rows(); ++j)
       dest.set( j, i, arg(i, j) );
 } // forceTranspose
-}
+
+} // namespace Matrix
+
+} // namespace Common
+
 } // namespace Stuff
 
-#endif // MATRIX_HH
+} // namespace Dune
+
+#endif // DUNE_STUFF_COMMON_MATRIX_HH
+
 /** Copyright (c) 2012, Rene Milk    , Sven Kaulmann
    * All rights reserved.
    *
