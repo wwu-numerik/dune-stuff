@@ -17,9 +17,6 @@
 
 namespace Dune
 {
-namespace Stuff
-{
-
 
 namespace Stuff
 {
@@ -354,11 +351,6 @@ public:
 
 } // namespace Stuff
 
-
-} // end of namespace Stuff
-#ifndef DUNE_NEW_NAMESPACES
-using namespace Stuff;
-#endif
 } // namespace Dune
 
 #endif // DUNE_STUFF_GRID_PROVIDER_CUBE_HH
