@@ -21,6 +21,11 @@ AC_CONFIG_FILES([Makefile
 	dune/Makefile
 	dune/stuff/Makefile
 	dune/stuff/common/Makefile
+	dune/stuff/fem/Makefile
+	dune/stuff/function/Makefile
+	dune/stuff/grid/Makefile
+	dune/stuff/grid/provider/Makefile
+	dune/stuff/projection/Makefile
 	dune/stuff/test/Makefile
 	dune-stuff.pc])
 AC_OUTPUT
