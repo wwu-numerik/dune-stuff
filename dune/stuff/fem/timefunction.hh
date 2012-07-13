@@ -4,12 +4,12 @@
 #include <dune/fem/function/common/function.hh>
 #include <dune/common/bartonnackmanifcheck.hh>
 
-namespace Dune {
-  namespace Stuff
-  {
-
-    namespace Fem
-    {
+namespace Dune
+{
+namespace Stuff
+{
+namespace Fem
+{
 
 // ! a dummy timeprovider for usage in Stuff::RuntimeFunction
 struct ConstTimeProvider
@@ -27,12 +27,12 @@ template< class FunctionSpaceImp, class FunctionImp, class TimeProviderImp >
 class TimeFunction
   : public BartonNackmanInterface< TimeFunction< FunctionSpaceImp, FunctionImp, TimeProviderImp >,
                                    FunctionImp >
-    , public Fem::Function< FunctionSpaceImp, TimeFunction< FunctionSpaceImp, FunctionImp, TimeProviderImp > >
+    , public Dune::Fem::Function< FunctionSpaceImp, TimeFunction< FunctionSpaceImp, FunctionImp, TimeProviderImp > >
 {
 protected:
   typedef TimeFunction< FunctionSpaceImp, FunctionImp, TimeProviderImp >
   ThisType;
-  typedef Fem::Function< FunctionSpaceImp, ThisType >
+  typedef Dune::Fem::Function< FunctionSpaceImp, ThisType >
   BaseType;
   typedef BartonNackmanInterface< ThisType, FunctionImp >
   Interface;
@@ -117,12 +117,12 @@ template< class FunctionSpaceImp, class FunctionImp, class TimeProviderImp >
 class IntersectionTimeFunction
   : public BartonNackmanInterface< IntersectionTimeFunction< FunctionSpaceImp, FunctionImp, TimeProviderImp >,
                                    FunctionImp >
-    , public Fem::Function< FunctionSpaceImp, IntersectionTimeFunction< FunctionSpaceImp, FunctionImp, TimeProviderImp > >
+    , public Dune::Fem::Function< FunctionSpaceImp, IntersectionTimeFunction< FunctionSpaceImp, FunctionImp, TimeProviderImp > >
 {
 protected:
   typedef IntersectionTimeFunction< FunctionSpaceImp, FunctionImp, TimeProviderImp >
   ThisType;
-  typedef Fem::Function< FunctionSpaceImp, ThisType >
+  typedef Dune::Fem::Function< FunctionSpaceImp, ThisType >
   BaseType;
   typedef BartonNackmanInterface< ThisType, FunctionImp >
   Interface;

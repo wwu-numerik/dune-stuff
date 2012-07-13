@@ -53,7 +53,7 @@ public:
     // type of quadrature
     typedef Dune::CachingQuadrature< GridPartType, 0 > QuadratureType;
     // type of local mass matrix
-    typedef Stuff::LocalMassMatrix< MagnitudeDiscreteFunctionSpaceType, QuadratureType > LocalMassMatrixType;
+    typedef Dune::Stuff::Fem::LocalMassMatrix< MagnitudeDiscreteFunctionSpaceType, QuadratureType > LocalMassMatrixType;
 
     const int quadOrd = 2 * space.order() + 2;
 

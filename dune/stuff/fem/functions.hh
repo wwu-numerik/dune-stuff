@@ -273,7 +273,7 @@ int loadDiscreteFunction(const std::string loadFromfilenamePrefix,
               gridType = value;
               gridTypeRead = true;
             } else if (key == "refine_level") {
-              refineLevel = Stuff::fromString< int >(value);
+              refineLevel = Dune::Stuff::Common::String::convertFrom< int >(value);
               refineLevelRead = true;
             }
           }
@@ -396,7 +396,7 @@ int readRefineLevelFromDGF(const std::string filename) {
               gridType = value;
               gridTypeRead = true;
             } else if (key == "refine_level") {
-              refineLevel = Stuff::fromString< int >(value);
+              refineLevel = Dune::Stuff::Common::String::convertFrom< int >(value);
               refineLevelRead = true;
               return refineLevel;
             }
@@ -476,7 +476,7 @@ std::string readGridTypeFromDGF(const std::string filename) {
               gridType = value;
               gridTypeRead = true;
             } else if (key == "refine_level") {
-              refineLevel = Stuff::fromString< int >(value);
+              refineLevel = Dune::Stuff::Common::String::convertFrom< int >(value);
               refineLevelRead = true;
             }
           }
@@ -511,7 +511,7 @@ std::pair< typename FunctionType::RangeType, double > integralAndVolume(const Fu
   // type of quadrature
   typedef Dune::CachingQuadrature< GridPartType, 0 > QuadratureType;
 
-  typedef Stuff::LocalMassMatrix< DiscreteFunctionSpaceType, QuadratureType > LocalMassMatrixType;
+  typedef Dune::Stuff::Fem::LocalMassMatrix< DiscreteFunctionSpaceType, QuadratureType > LocalMassMatrixType;
 
   const int quadOrd = std::max(2 * space.order() + 2, polOrd);
 
@@ -562,7 +562,7 @@ template< class FunctionType, class DiscreteFunctionSpaceType >
 typename FunctionType::RangeType meanValue(const FunctionType& function,
                                            const DiscreteFunctionSpaceType& space,
                                            const int polOrd = -1) {
-  std::pair< typename FunctionType::RangeType, double > pair = Stuff::integralAndVolume(function, space, polOrd);
+  std::pair< typename FunctionType::RangeType, double > pair = integralAndVolume(function, space, polOrd);
   pair.first /= pair.second;
   return pair.first;
 }
@@ -585,7 +585,7 @@ double boundaryIntegral(const FunctionType& function, const DiscreteFunctionSpac
   // type of quadrature
   typedef Dune::CachingQuadrature< GridPartType, 1 > QuadratureType;
 
-  typedef Stuff::LocalMassMatrix< DiscreteFunctionSpaceType,
+  typedef Dune::Stuff::Fem::LocalMassMatrix< DiscreteFunctionSpaceType,
                                   Dune::CachingQuadrature< GridPartType, 0 > > LocalMassMatrixType;
 
   const int quadOrd = std::max(2 * space.order() + 2, polOrd);
@@ -753,13 +753,13 @@ private:
 
 template< class FunctionSpaceImp, class TimeProviderImp >
 class ConstantFunctionTP
-  : public Dune::TimeFunction< FunctionSpaceImp,
+  : public TimeFunction< FunctionSpaceImp,
                                ConstantFunctionTP< FunctionSpaceImp, TimeProviderImp >, TimeProviderImp >
 {
 public:
   typedef ConstantFunctionTP< FunctionSpaceImp, TimeProviderImp >
   ThisType;
-  typedef Dune::TimeFunction< FunctionSpaceImp, ThisType, TimeProviderImp >
+  typedef TimeFunction< FunctionSpaceImp, ThisType, TimeProviderImp >
   BaseType;
   typedef typename BaseType::DomainType
   DomainType;
@@ -784,14 +784,14 @@ private:
 
 template< class FunctionSpaceImp, class TimeProviderImp >
 class ConstantIntersectionTimeFunction
-  : public Dune::IntersectionTimeFunction< FunctionSpaceImp,
+  : public IntersectionTimeFunction< FunctionSpaceImp,
                                            ConstantIntersectionTimeFunction< FunctionSpaceImp,
                                                                              TimeProviderImp >, TimeProviderImp >
 {
 public:
   typedef ConstantIntersectionTimeFunction< FunctionSpaceImp, TimeProviderImp >
   ThisType;
-  typedef Dune::IntersectionTimeFunction< FunctionSpaceImp, ThisType, TimeProviderImp >
+  typedef IntersectionTimeFunction< FunctionSpaceImp, ThisType, TimeProviderImp >
   BaseType;
   typedef typename BaseType::DomainType
   DomainType;
@@ -840,9 +840,9 @@ private:
 #define NULLFUNCTION_TP(classname) \
   template< class T, class P > \
   struct classname \
-    : public Stuff::ConstantFunctionTP< T, P > \
+    : public Dune::Stuff::Fem::ConstantFunctionTP< T, P > \
   { classname(const P &p, const T &t, double = 0.0, double = 0.0) \
-      : Stuff::ConstantFunctionTP< T, P >(p, t) {} };
+      : Dune::Stuff::Fem::ConstantFunctionTP< T, P >(p, t) {} };
 
 #define NULLFUNCTION_TP_BOUNDARY(classname) \
   template< class T, class P > \
@@ -854,13 +854,13 @@ private:
 #define NULLFUNCTION(classname) \
   template< class T > \
   struct classname \
-    : public Stuff::ConstantFunction< T > \
+    : public Dune::Stuff::Fem::ConstantFunction< T > \
   { classname(const double /*d*/, const T &t, double = 0.0, double = 0.0) \
-      : Stuff::ConstantFunction< T >(t) {} \
+      : Dune::Stuff::Fem::ConstantFunction< T >(t) {} \
     classname() \
-      : Stuff::ConstantFunction< T >() {} \
+      : Dune::Stuff::Fem::ConstantFunction< T >() {} \
     classname(const T &t) \
-      : Stuff::ConstantFunction< T >(t) {} };
+      : Dune::Stuff::Fem::ConstantFunction< T >(t) {} };
 
 #endif // includeguard
 /** Copyright (c) 2012, Felix Albrecht, Rene Milk

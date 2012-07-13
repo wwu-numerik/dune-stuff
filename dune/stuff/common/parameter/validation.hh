@@ -45,7 +45,7 @@ protected:
 // ! a class usable as a default validator
 template< class T >
 class ValidateAny
-  : public Stuff::ValidatorInterface< T, ValidateAny< T > >
+  : public ValidatorInterface< T, ValidateAny< T > >
 {
   typedef ValidateAny< T >                      ThisType;
   typedef ValidatorInterface< T, ThisType >     BaseType;
@@ -66,7 +66,7 @@ public:
 // ! validates arg iff in given list
 template< class T, class ListImp = std::vector< T > >
 class ValidateInList
-  : public Stuff::ValidatorInterface< T, ValidateInList< T, ListImp > >
+  : public ValidatorInterface< T, ValidateInList< T, ListImp > >
 {
   typedef ValidateInList< T, ListImp >          ThisType;
   typedef ValidatorInterface< T, ThisType >     BaseType;
@@ -100,7 +100,7 @@ public:
     }
 
     std::string msg() const {
-        return (boost::format("given value was invalid: not less than %s") % toString(baseval_)).str();
+        return (boost::format("given value was invalid: not less than %s") % String::convertTo(baseval_)).str();
     }
 private:
     const T baseval_;
@@ -192,7 +192,8 @@ private:
 } //end namesapce Dune
 
 template < class T, class Validator >
-std::ostream operator << ( std::ostream& out, const Stuff::ValidatorInterface< T, Validator >& validator )
+std::ostream operator << ( std::ostream& out,
+                           const Dune::Stuff::Common::Parameter::ValidatorInterface< T, Validator >& validator )
 {
     return out << validator.msg();
 }
