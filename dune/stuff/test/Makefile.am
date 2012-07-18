@@ -24,6 +24,8 @@ AM_CXXFLAGS = $(COVERAGE)
 
 test_validation_SOURCES = common_parameter_validation.cc
 test_logger_SOURCES = common_logger.cc
+test_logger_CPPFLAGS = $(AM_CPPFLAGS) $(BOOST_CPPFLAGS) $(DUNE_CPPFLAGS) 
+test_logger_LDADD = -lboost_filesystem -lboost_system $(LDADD)
 
 ## distribution tarball
 SOURCES = $(test_validation_SOURCES) $(test_logger_SOURCES)

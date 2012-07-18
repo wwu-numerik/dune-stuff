@@ -70,8 +70,7 @@ struct RunInfo
     return info;
   } // dummy
 
-  template< class Stream >
-  void tableLine(Stream& stream) const {
+  void tableLine(std::ostream& stream) const {
     static boost::format line("%e,%d,%e,%d,%d,%d,%d,%d,%s,%e,%e,%e,%s,%d,%d,%d,%d,%e,%s,%e,%e,%e,%e,%e,%s,%e");
     static boost::format single(",%e");
 
@@ -110,8 +109,7 @@ struct RunInfo
     stream << std::endl;
   } // tableLine
 
-  template< class Stream >
-  void tableHeader(Stream& stream) const {
+  void tableHeader(std::ostream& stream) const {
     static boost::format line("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s");
 
     stream << line

@@ -6,6 +6,7 @@
 #define DUNE_STUFF_COMMON_STRING_HH
 
 #include <cstring>
+#include <ctime>
 #include <map>
 #include <assert.h>
 #include <algorithm>
@@ -35,17 +36,10 @@
 #include <dune/common/deprecated.hh>
 #include <boost/algorithm/string.hpp>
 
-namespace Dune
-{
-
-namespace Stuff
-{
-
-namespace Common
-{
-
-namespace String
-{
+namespace Dune {
+namespace Stuff {
+namespace Common {
+namespace String {
 
 // ! simple and dumb std::string to anything conversion
 template< class ReturnType >
@@ -105,12 +99,14 @@ inline std::vector<std::string> tokenize( const std::string& msg,
     return strings;
 }
 
+inline std::string fromTime(time_t cur_time = time(NULL)) {
+  return ctime(&cur_time);
+}
+
+
 } // namespace String
-
 } // namespace Common
-
 } // namespace Stuff
-
 } // namespace Dune
 
 #endif // DUNE_STUFF_COMMON_STRING_HH

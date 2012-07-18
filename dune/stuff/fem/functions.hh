@@ -127,17 +127,16 @@ void switchDofs(Function& f) {
 } // switchDofs
 
 /** \todo FELIX needs to doc me **/
-template< class DiscreteFunctionType,
-          class ErrorStream >
+template< class DiscreteFunctionType>
 int saveDiscreteFunction(const DiscreteFunctionType& discreteFunction,
                          const std::string gridType,
                          const int refineLevel,
                          const std::string dgfFilename,
                          const std::string saveToFilenamePrefix,
-                         ErrorStream& error) {
+                         std::ostream& error) {
   int errorState(0);
 
-  error.Flush();
+  error.flush();
 
   if ( !( discreteFunction.write_ascii( saveToFilenamePrefix + std::string(".ddf") ) ) )
   {
@@ -209,13 +208,12 @@ int saveDiscreteFunction(const DiscreteFunctionType& discreteFunction,
 } // saveDiscreteFunction
 
 /** \todo FELIX needs to doc me **/
-template< class DiscreteFunctionType,
-          class ErrorStream >
+template< class DiscreteFunctionType >
 int loadDiscreteFunction(const std::string loadFromfilenamePrefix,
-                         ErrorStream& error) {
+                         std::ostream& error) {
   int errorState(0);
 
-  error.Flush();
+  error.flush();
 
   std::string gridType("");
   int refineLevel(0);
