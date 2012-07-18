@@ -288,7 +288,7 @@ public:
      *  \param logfile filename for log, can contain paths, but creation will fail if dir is non-existant
      **/
   void Create( unsigned int logflags = LOG_FILE | LOG_CONSOLE | LOG_ERR,
-               std::string logfile = "dune_stokes",
+               std::string logfile = "dune_stuff_log",
                std::string datadir = "data",
                std::string logdir = std::string("") ) {
     logflags_ = logflags;
@@ -325,6 +325,7 @@ public:
     matlabLogStreamPtr = new MatlabLogStream(LOG_FILE, logflags_, matlabLogFile_);
   } // Create
 
+  //! \attention This will probably not do wht we want it to!
   void SetPrefix(std::string prefix) {
     // / begin dtor
     IdVecCIter it = streamIDs_.end();
