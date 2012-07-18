@@ -17,11 +17,8 @@
 #include "logstreams.hh"
 
 namespace Dune {
-
 namespace Stuff {
-
 namespace Common {
-
 class Logging;
 Logging& Logger();
 
@@ -81,7 +78,8 @@ public:
     logdir = datadir + logdir;
 
     filename_ = logdir + logfile + "_time.log";
-    Stuff::Common::Filesystem::testCreateDirectory(logdir);     // could assert this if i figure out why errno is != EEXIST
+    Stuff::Common::Filesystem::testCreateDirectory(logdir);     // could assert this if i figure out why errno is !=
+                                                                // EEXIST
     filenameWoTime_ = logdir + logfile + ".log";
     if ( (logflags_ & LOG_FILE) != 0 )
     {
@@ -98,13 +96,14 @@ public:
     }
     // create the MatlabLogStream
     std::string matlabLogFileName = logdir + logfile + "_matlab.m";
-    Stuff::Common::Filesystem::testCreateDirectory(matlabLogFileName);           // could assert this if i figure out why errno is != EEXIST
+    Stuff::Common::Filesystem::testCreateDirectory(matlabLogFileName);           // could assert this if i figure out
+                                                                                 // why errno is != EEXIST
     matlabLogFile_.open( matlabLogFileName.c_str() );
     assert( matlabLogFile_.is_open() );
     matlabLogStreamPtr = new MatlabLogStream(LOG_FILE, logflags_, matlabLogFile_);
   } // Create
 
-  //! \attention This will probably not do wht we want it to!
+  // ! \attention This will probably not do wht we want it to!
   void setPrefix(std::string prefix) {
     // / begin dtor
     IdVecCIter it = streamIDs_.end();
@@ -225,8 +224,11 @@ public:
   /** \}
      */
 
-  LogStream& getStream(int stream) { assert(streammap_[(LogFlags) stream]);
-                                     return *streammap_[(LogFlags) stream]; }
+  LogStream& getStream(int stream) {
+    assert(streammap_[(LogFlags) stream]);
+    return *streammap_[(LogFlags) stream];
+  }
+
   LogStream& err() { return getStream(LOG_ERR); }
   LogStream& info() { return getStream(LOG_INFO); }
   LogStream& dbg() { return getStream(LOG_DEBUG); }
@@ -320,12 +322,11 @@ private:
 };
 
 // !global Logging instance
-Logging& Logger()
-{
+Logging& Logger() {
   static Logging log;
+
   return log;
 }
-
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
