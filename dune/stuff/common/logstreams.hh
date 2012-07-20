@@ -43,6 +43,13 @@ public:
     return (!is_suspended_) && (logflags_ & loglevel_);
   }
 
+  template< typename T >
+  ILogStream& operator<<(T in) {
+    if ( enabled() )
+      buffer_ << in;
+    return *this;
+  }   // <<
+
   ILogStream& operator<<( std::ostream& (*pf)(std::ostream &) ) {
     if ( enabled() ) {
       buffer_ << pf;
@@ -60,13 +67,6 @@ public:
       (c.*pf)(buffer_);
     }
   }
-
-  template< typename T >
-  ILogStream& operator<<(T in) {
-    if ( enabled() )
-      buffer_ << in;
-    return *this;
-  }   // <<
 
   /** \brief stop accepting input into the buffer
      * the suspend_priority_ mechanism provides a way to silence streams from 'higher' modules

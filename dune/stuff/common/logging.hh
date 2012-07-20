@@ -15,6 +15,9 @@
 #include "misc.hh"
 #include "filesystem.hh"
 #include "logstreams.hh"
+#include "string.hh"
+
+#include <boost/range/adaptors.hpp>
 
 namespace Dune {
 namespace Stuff {
@@ -26,7 +29,7 @@ Logging& Logger();
   **/
 class Logging
 {
-protected:
+private:
   Logging()
     : matlabLogStreamPtr(0) {
     streamIDs_.push_back(LOG_ERR);
@@ -34,15 +37,14 @@ protected:
     streamIDs_.push_back(LOG_INFO);
   }
 
+public:
   ~Logging() {
-    IdVecCIter it = streamIDs_.end();
-
-    for ( ; it != streamIDs_.begin(); --it)
+    //destroy in reverse creation order, 2012 style
+    for ( auto id :  boost::adaptors::reverse(streamIDs_))
     {
-      if (streammap_[*it])
-        streammap_[*it]->flush();
-      delete streammap_[*it];
-      streammap_[*it] = 0;
+      //logstream dtor is mandated to flush itself
+      delete streammap_[id];
+      streammap_[id] = 0;
     }
 
     if ( (logflags_ & LOG_FILE) != 0 )
@@ -60,7 +62,6 @@ protected:
     matlabLogStreamPtr = 0;
   }
 
-public:
   /** \brief setup loglevel, logfilename
      *  \param logflags any OR'd combination of flags
      *  \param logfile filename for log, can contain paths, but creation will fail if dir is non-existant
@@ -134,83 +135,62 @@ public:
     create(logflags_, prefix);
   } // SetPrefix
 
-  void setStreamFlags(LogFlags stream, int flags) {
-    assert( stream & (LOG_ERR | LOG_INFO | LOG_DEBUG) );
+  void setStreamFlags(LogFlags streamID, int flags) {
+    assert( flagmap_.find(streamID) != flagmap_.end() );
     // this might result in logging to diff targtes, so we flush the current targets
-    flagmap_[stream] = flags;
+    flush();
+    flagmap_[streamID] = flags;
   }
 
-  int getStreamFlags(LogFlags stream) {
-    assert( flagmap_.find(stream) != flagmap_.end() );
-    return flagmap_[stream];
+  int getStreamFlags(LogFlags streamID) const {
+    const auto it = flagmap_.find(streamID);
+    if (it == flagmap_.end())
+      DUNE_THROW(InvalidStateException, "cannot get flags for unkown Stream id");
+    return it->second;
   }
 
+  /** \name forwarded Log functions
+     * \{
+     */
   template< typename Pointer, class Class >
-  void log(void (Class::* pf)(std::ostream &) const, Class& c, LogFlags stream) {
-    assert( flagmap_.find(stream) != flagmap_.end() );
-    if ( (flagmap_[stream] & LOG_CONSOLE) != 0 )
-      (c.*pf)(std::cout);
-    if ( (flagmap_[stream] & LOG_FILE) != 0 )
-      (c.*pf)(logfile_);
+  void log(void (Class::* pf)(std::ostream &) const, Class& c, LogFlags streamID) {
+    getStream(streamID).log(pf, c);
   } // Log
 
   template< class Class, typename Pointer >
-  void log(Pointer pf, Class& c, LogFlags stream) {
-    assert( flagmap_.find(stream) != flagmap_.end() );
-    if ( (flagmap_[stream] & LOG_CONSOLE) != 0 )
-      (c.*pf)(std::cout);
-    if ( (flagmap_[stream] & LOG_FILE) != 0 )
-    {
-      (c.*pf)(logfile_);
-      (c.*pf)(logfileWoTime_);
-    }
+  void log(Pointer pf, Class& c, LogFlags streamID) {
+    getStream(streamID).log(pf, c);
   } // Log
 
-  /** \}
-     */
-
-  /** \name Log funcs for basic types/classes
-     * \{
-     */
   template< class T >
-  void log(T c, LogFlags stream) {
-    assert( flagmap_.find(stream) != flagmap_.end() );
-    if ( (flagmap_[stream] & LOG_CONSOLE) != 0 )
-      std::cout << c;
-    if ( (flagmap_[stream] & LOG_FILE) != 0 )
-    {
-      logfile_ << c;
-      logfileWoTime_ << c;
-    }
+  void log(T c, LogFlags streamID) {
+    getStream(streamID) << c;
   } // Log
 
   /** \}
      */
 
   LogStream& getStream(LogFlags stream) {
-    assert( flagmap_.find(stream) != flagmap_.end() );
-    return *streammap_[stream];
+    const auto it = streammap_.find(stream);
+    if (it == streammap_.end())
+      DUNE_THROW(InvalidStateException, "cannot get unkown Stream");
+    return *(it->second);
   }
 
   LogStream& err() { return getStream(LOG_ERR); }
   LogStream& info() { return getStream(LOG_INFO); }
-  LogStream& dbg() { return getStream(LOG_DEBUG); }
+  LogStream& dbg() DUNE_DEPRECATED_MSG("use debug() instead") { return getStream(LOG_DEBUG); }
   LogStream& debug() { return getStream(LOG_DEBUG); }
-  MatlabLogStream& matlab() { return *matlabLogStreamPtr; }
+  MatlabLogStream& matlab() { assert(matlabLogStreamPtr); return *matlabLogStreamPtr; }
 
   void flush() {
-    for (StreamMap::iterator it = streammap_.begin();
-         it != streammap_.end();
-         ++it)
-    {
-      it->second->flush();
-    }
+    for (auto pair : streammap_)
+      pair.second->flush();
   } // Flush
 
   int addStream(LogFlags flags) {
 //    assert( streamIDs_.find(flags) == streamIDs_.end() );
     static int streamID_int = 16;
-
     streamID_int <<= 2;
     LogFlags streamID = (LogFlags) streamID_int;
     streamIDs_.push_back(streamID);
@@ -220,21 +200,13 @@ public:
   } // AddStream
 
   void resume(LogStream::PriorityType prio = LogStream::default_suspend_priority) {
-    for (StreamMap::iterator it = streammap_.begin();
-         it != streammap_.end();
-         ++it)
-    {
-      it->second->resume(prio);
-    }
+    for (auto pair : streammap_)
+      pair.second->resume(prio);
   } // Resume
 
   void suspend(LogStream::PriorityType prio = LogStream::default_suspend_priority) {
-    for (StreamMap::iterator it = streammap_.begin();
-         it != streammap_.end();
-         ++it)
-    {
-      it->second->suspend(prio);
-    }
+    for (auto pair : streammap_)
+      pair.second->suspend(prio);
   } // Suspend
 
   struct SuspendLocal
@@ -288,7 +260,6 @@ private:
 // !global Logging instance
 Logging& Logger() {
   static Logging log;
-
   return log;
 }
 } // namespace Common
