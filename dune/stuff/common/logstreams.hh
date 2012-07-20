@@ -61,6 +61,13 @@ public:
     }
   }
 
+  template< typename T >
+  ILogStream& operator<<(T in) {
+    if ( enabled() )
+      buffer_ << in;
+    return *this;
+  }   // <<
+
   /** \brief stop accepting input into the buffer
      * the suspend_priority_ mechanism provides a way to silence streams from 'higher' modules
      * no-op if already suspended
@@ -91,19 +98,8 @@ public:
     }
   }   // Resume
 
-  template< typename T >
-  ILogStream& operator<<(T in) {
-    if ( enabled() )
-      buffer_ << in;
-    return *this;
-  }   // <<
-
   // ! dump buffer into file/stream and clear it
-  virtual void flush()
-  {
-      buffer_.flush();
-      buffer_.clear();
-  }
+  virtual void flush() = 0;
 
 protected:
   std::stringstream buffer_;
@@ -125,12 +121,16 @@ public:
       , matlabLogFile_(logFile)
   {}
 
+  virtual ~MatlabLogStream() {
+      flush();
+  }
+
   // ! dump buffer into file/stream and clear it
   void flush() {
     matlabLogFile_ << buffer_.str();
     matlabLogFile_.flush();
     buffer_.flush();
-    buffer_.str("");              // clear the buffer
+    buffer_.clear();
   }
 
   // ! there should be no need to at the fstream directly
@@ -151,6 +151,10 @@ public:
       , logfile_(file)
       , logfileWoTime_(fileWoTime)
   {}
+
+  virtual ~LogStream() {
+      flush();
+  }
 
   void flush() {
     if ( enabled() )

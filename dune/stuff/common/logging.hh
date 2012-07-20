@@ -39,6 +39,8 @@ protected:
 
     for ( ; it != streamIDs_.begin(); --it)
     {
+      if (streammap_[*it])
+        streammap_[*it]->flush();
       delete streammap_[*it];
       streammap_[*it] = 0;
     }
@@ -193,6 +195,7 @@ public:
   LogStream& err() { return getStream(LOG_ERR); }
   LogStream& info() { return getStream(LOG_INFO); }
   LogStream& dbg() { return getStream(LOG_DEBUG); }
+  LogStream& debug() { return getStream(LOG_DEBUG); }
   MatlabLogStream& matlab() { return *matlabLogStreamPtr; }
 
   void flush() {
