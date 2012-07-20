@@ -78,8 +78,8 @@ public:
     logdir = datadir + logdir;
 
     filename_ = logdir + logfile + "_time.log";
-    Stuff::Common::Filesystem::testCreateDirectory(logdir);     // could assert this if i figure out why errno is !=
-                                                                // EEXIST
+    Stuff::Common::Filesystem::testCreateDirectory(logdir);
+
     filenameWoTime_ = logdir + logfile + ".log";
     if ( (logflags_ & LOG_FILE) != 0 )
     {
@@ -154,7 +154,7 @@ public:
 
   template< class Class, typename Pointer >
   void log(Pointer pf, Class& c, LogFlags stream) {
-    assert( stream & (LOG_ERR | LOG_INFO | LOG_DEBUG) );
+    assert( flagmap_.find(stream) != flagmap_.end() );
     if ( (flagmap_[stream] & LOG_CONSOLE) != 0 )
       (c.*pf)(std::cout);
     if ( (flagmap_[stream] & LOG_FILE) != 0 )
@@ -170,9 +170,9 @@ public:
   /** \name Log funcs for basic types/classes
      * \{
      */
-  template< class Class >
-  void log(Class c, LogFlags stream) {
-    assert( stream & (LOG_ERR | LOG_INFO | LOG_DEBUG) );
+  template< class T >
+  void log(T c, LogFlags stream) {
+    assert( flagmap_.find(stream) != flagmap_.end() );
     if ( (flagmap_[stream] & LOG_CONSOLE) != 0 )
       std::cout << c;
     if ( (flagmap_[stream] & LOG_FILE) != 0 )
@@ -185,9 +185,9 @@ public:
   /** \}
      */
 
-  LogStream& getStream(int stream) {
-    assert(streammap_[(LogFlags) stream]);
-    return *streammap_[(LogFlags) stream];
+  LogStream& getStream(LogFlags stream) {
+    assert( flagmap_.find(stream) != flagmap_.end() );
+    return *streammap_[stream];
   }
 
   LogStream& err() { return getStream(LOG_ERR); }
@@ -204,8 +204,8 @@ public:
     }
   } // Flush
 
-  int addStream(int flags) {
-// assert( streamIDs_.find( streamID ) == streamIDs_.end() );
+  int addStream(LogFlags flags) {
+//    assert( streamIDs_.find(flags) == streamIDs_.end() );
     static int streamID_int = 16;
 
     streamID_int <<= 2;
