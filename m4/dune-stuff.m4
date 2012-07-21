@@ -5,5 +5,5 @@ AC_DEFUN([DUNE_STUFF_CHECKS],[
 
 AC_DEFUN([DUNE_STUFF_CHECK_MODULE],
 [
-    DUNE_CHECK_MODULES([dune-stuff], [stuff/common/debug.hh])
+    DUNE_CHECK_MODULES([dune-stuff], [stuff/exists.hh])
 ])
