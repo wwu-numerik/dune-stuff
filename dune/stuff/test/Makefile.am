@@ -5,7 +5,8 @@ GRIDDIM=2
 
 # tests where program to build and program to run are equal
 NORMALTESTS = common_parameter_validation common_logger common_color 
-	function_expression 
+	function_expression \
+	grid_provider
 
 # list of tests to run
 TESTS = $(NORMALTESTS)
@@ -39,6 +40,10 @@ common_color_SOURCES = common_color.cc
 function_expression_SOURCES = function_expression.cc
 function_expression_LDADD = $(common_LDADD)
 function_expression_CPPFLAGS = $(common_CPPFLAGS) 
+
+grid_provider_SOURCES = grid_provider.cc
+grid_provider_LDADD = $(common_LDADD)
+grid_provider_CPPFLAGS = $(common_CPPFLAGS) 
 
 ## distribution tarball
 SOURCES = $(common_parameter_validation_SOURCES) $(common_logger_SOURCES)
