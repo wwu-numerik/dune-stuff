@@ -3,7 +3,22 @@
   \brief  Demonstrates the capabilities of some Dune::RB::Grid::Providers.
   **/
 
-#include "config.h"
+#ifdef HAVE_CMAKE_CONFIG
+ #include "cmake_config.h"
+#elif defined (HAVE_CONFIG_H)
+ #include <config.h>
+#endif // ifdef HAVE_CMAKE_CONFIG
+
+//#if HAVE_DUNE_FEM
+#include <dune/fem/misc/mpimanager.hh>
+#include <dune/fem/space/fvspace/fvspace.hh>
+#include <dune/fem/space/dgspace.hh>
+#include <dune/fem/gridpart/adaptiveleafgridpart.hh>
+#include <dune/fem/function/adaptivefunction.hh>
+#include <dune/fem/operator/projection/l2projection.hh>
+#include <dune/fem/io/file/datawriter.hh>
+#include <dune/stuff/fem/customprojection.hh>
+//#endif
 
 // system
 #include <iostream>
@@ -12,12 +27,11 @@
 // boost
 #include <boost/filesystem.hpp>
 
-// dune-common
+
 #include <dune/common/mpihelper.hh>
 #include <dune/common/parametertreeparser.hh>
 #include <dune/common/fvector.hh>
 
-// dune-stuff
 #include <dune/stuff/function/expression.hh>
 
 /**
@@ -79,8 +93,9 @@ int main(int argc, char** argv)
     ensureParamFile("function.param");
     Dune::ParameterTree paramTree;
     initParamTree(argc, argv, paramTree);
+    typedef Dune::GridSelector::GridType GridType;
     // parameter domain
-    const int dimDomain = 3;
+    const int dimDomain = GridType::dimensionworld;
     typedef Dune::FieldVector< double, dimDomain > DomainType;
     DomainType mu(1.0);
     const int dimRange = 2;
@@ -102,6 +117,32 @@ int main(int argc, char** argv)
     mu = 0.5;
     parameterFunction.evaluate(mu, result);
     std::cout << "evaluate(" << mu << ") = " << result << std::endl;
+
+//#if HAVE_DUNE_FEM
+    Dune::GridPtr< GridType > gridPtr( paramTree.get("dgf_file", "dummy") );
+    typedef Dune::AdaptiveLeafGridPart< GridType >
+        GridPartType;
+    GridPartType gridPart_(*gridPtr);
+
+    typedef ParameterFunctionType::FunctionSpaceType FSpace;
+    typedef Dune::DiscontinuousGalerkinSpace< FSpace,
+                                              GridPartType,
+                                              1 >
+    DiscreteFunctionSpaceType;
+    typedef Dune::AdaptiveDiscreteFunction< DiscreteFunctionSpaceType >
+    DiscreteFunctionType;
+    DiscreteFunctionSpaceType disc_space(gridPart_);
+    DiscreteFunctionType rf_disc("rf", disc_space);
+    typedef Dune::tuple< const DiscreteFunctionType* >
+    OutputTupleType;
+    typedef Dune::DataWriter< GridPartType::GridType,
+                              OutputTupleType >
+    DataWriterType;
+    Dune::Stuff::Fem::BetterL2Projection::project(parameterFunction, rf_disc);
+    OutputTupleType out(&rf_disc);
+    DataWriterType dt(gridPart_.grid(), out);
+    dt.write();
+//#endif
   } catch (Dune::Exception& e) {
     std::cout << e.what() << std::endl;
   }
