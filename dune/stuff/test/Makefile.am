@@ -4,7 +4,8 @@ GRIDTYPE=YASPGRID
 GRIDDIM=2
 
 # tests where program to build and program to run are equal
-NORMALTESTS = common_parameter_validation common_logger common_color function_expression_2
+NORMALTESTS = common_parameter_validation common_logger common_color 
+	function_expression 
 
 # list of tests to run
 TESTS = $(NORMALTESTS)
@@ -35,9 +36,9 @@ common_logger_LDADD = $(common_LDADD)
 
 common_color_SOURCES = common_color.cc
 
-function_expression_2_SOURCES = function_expression_2.cc
-function_expression_2_LDADD = $(common_LDADD)
-function_expression_2_CPPFLAGS = $(common_CPPFLAGS) 
+function_expression_SOURCES = function_expression.cc
+function_expression_LDADD = $(common_LDADD)
+function_expression_CPPFLAGS = $(common_CPPFLAGS) 
 
 ## distribution tarball
 SOURCES = $(common_parameter_validation_SOURCES) $(common_logger_SOURCES)
