@@ -14,6 +14,7 @@
 #include <dune/stuff/common/filesystem.hh>
 #include <dune/stuff/common/misc.hh>
 #include <dune/stuff/common/parameter/validation.hh>
+#include <dune/stuff/common/string.hh>
 
 #include <vector>
 #include <algorithm>
@@ -72,7 +73,7 @@ public:
     }
     const std::string datadir = Dune::Parameter::getValidValue(std::string("fem.io.datadir"),
                                                                std::string("data"),
-                                                               Stuff::ValidateAny< std::string >()
+                                                               ValidateAny< std::string >()
                                                                );
     Dune::Parameter::append("fem.prefix", datadir);
     if ( !Dune::Parameter::exists("fem.io.logdir") )
@@ -130,7 +131,7 @@ public:
      **/
   template< typename T >
   T getParam(std::string name, T def, bool useDbgStream = true) {
-    return getParam(name, def, Stuff::ValidateAny< T >(), useDbgStream);
+    return getParam(name, def, ValidateAny< T >(), useDbgStream);
   }
 
   template< typename T, class Validator >
@@ -141,7 +142,7 @@ public:
     if ( warning_output_ && !Dune::Parameter::exists(name) )
     {
       if (useDbgStream)
-        Logger().Dbg() << "WARNING: using default value for parameter \"" << name << "\"" << std::endl;
+        Dune::Stuff::Common::Logger().debug() << "WARNING: using default value for parameter \"" << name << "\"" << std::endl;
       else
         std::cerr << "WARNING: using default value for parameter \"" << name << "\"" << std::endl;
     }
@@ -166,7 +167,7 @@ public:
   template< typename T >
   void setParam(std::string name, T val) {
     assert(all_set_up_);
-    return Dune::Parameter::append( name, Stuff::toString(val) );
+    return Dune::Parameter::append( name, Dune::Stuff::Common::String::convertTo(val) );
   }
 
   // ! extension to Fem::paramter that allows vector/list like paramteres from a single key
@@ -180,8 +181,7 @@ public:
     }
     std::string tokenstring = getParam( name, std::string("dummy") );
     std::string delimiter = getParam(std::string("parameterlist_delimiter"), std::string(";"), false);
-    Stuff::Tokenizer< T > tokens(tokenstring, delimiter);
-    return tokens.getTokens();
+    return Dune::Stuff::Common::String::tokenize< T >(tokenstring, delimiter);
   } // getList
 
 private:
@@ -203,7 +203,7 @@ private:
     mandatory_params_ = std::vector< std::string >( p, p + ( sizeof(p) / sizeof(p[0]) ) );
   }
 
-  friend ParameterContainer& Parameters();
+  friend Container& Parameters();
 };
 
 // ! global ParameterContainer instance

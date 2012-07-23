@@ -56,7 +56,7 @@ public:
          it != entityItEndLog;
          ++it)
     {
-      EntityType& e = *it;
+      const EntityType& e = *it;
       LocalFunctionType lf = discFunc.localFunction(e);
       BaseFunctionSetType baseFunctionset = space_.baseFunctionSet(*it);
       unsigned int intersection_count = 0;
@@ -382,7 +382,7 @@ public:
         {
           typename DiscreteFunctionType::DiscreteFunctionSpaceType::RangeType phi(0.0);
           baseset.evaluate(i, quad[qP], phi);
-          self_local[i] += intel * ( Stuff::colonProduct(velocity_jacobian_eval, phi) );
+          self_local[i] += intel * ( Dune::Stuff::Common::Math::colonProduct(velocity_jacobian_eval, phi) );
         }
       }
 

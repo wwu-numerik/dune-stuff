@@ -96,7 +96,7 @@ void printFieldMatrix(T& arg, std::string name, stream& out, std::string prefix 
    **/
 template< class T, class stream >
 void printSparseRowMatrixMatlabStyle( const T& arg, std::string name, stream& out,
-                                      const double eps = Parameters().getParam("eps", 1e-14) ) {
+                                      const double eps = Dune::Stuff::Common::Parameter::Parameters().getParam("eps", 1e-14) ) {
   name = std::string("fem.") + name;
   const int I = arg.rows();
   const int J = arg.cols();
@@ -118,7 +118,7 @@ void printSparseRowMatrixMatlabStyle( const T& arg, std::string name, stream& ou
    **/
 template< class MatrixType, class stream >
 void printISTLMatrixMatlabStyle( const MatrixType& arg, std::string name, stream& out,
-                                 const double eps = Parameters().getParam("eps", 1e-14) ) {
+                                 const double eps = Dune::Stuff::Common::Parameter::Parameters().getParam("eps", 1e-14) ) {
   name = std::string("istl.") + name;
   const int I = arg.N();
   const int J = arg.M();
@@ -342,7 +342,7 @@ void printFunctionMinMax(std::ostream& stream, const Function& func) {
   double min = 0.0;
   double max = 0.0;
 
-  Stuff::getMinMaxOfDiscreteFunction(func, min, max);
+  Dune::Stuff::Fem::getMinMaxOfDiscreteFunction(func, min, max);
   stream << "  - " << func.name() << std::endl
          << "    min: " << std::sqrt(2.0) * min << std::endl
          << "    max: " << std::sqrt(2.0) * max << std::endl;
@@ -369,9 +369,9 @@ void matrixToGnuplotStream(const Matrix& matrix, std::ostream& stream) {
 // ! proxy to Stuff::matrixToGnuplotStream that redirects its output to a file
 template< class Matrix >
 void matrixToGnuplotFile(const Matrix& matrix, std::string filename) {
-  std::string dir(Parameters().getParam( "fem.io.datadir", std::string("data") ) + "/gnuplot/");
+  std::string dir(Dune::Stuff::Common::Parameter::Parameters().getParam( "fem.io.datadir", std::string("data") ) + "/gnuplot/");
 
-  testCreateDirectory(dir);
+  Dune::Stuff::Common::Filesystem::testCreateDirectory(dir);
   std::ofstream file( (dir + filename).c_str() );
   matrixToGnuplotStream(matrix, file);
   file.flush();

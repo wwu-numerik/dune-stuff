@@ -13,6 +13,7 @@
 #include "localmassmatrix.hh"
 #include <dune/stuff/common/misc.hh>
 #include <dune/stuff/common/math.hh>
+#include <dune/stuff/common/string.hh>
 #include <dune/common/deprecated.hh>
 
 namespace Dune {

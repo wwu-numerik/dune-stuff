@@ -4,7 +4,7 @@
 #include "misc.hh"
 #include "debug.hh"
 #include "filesystem.hh"
-#include "common/parameter/container.hh"
+#include "parameter/container.hh"
 #include "math.hh"
 #include "runinfo.hh"
 
@@ -58,7 +58,7 @@ struct TimingData
    **/
 class Profiler
 {
-  friend Profiler& :: profiler();
+  friend Profiler& profiler();
 
 protected:
   Profiler() { Reset(1); }
@@ -207,7 +207,6 @@ protected:
 
   static Profiler& instance() {
     static Profiler pf;
-
     return pf;
   }
 };
@@ -234,7 +233,7 @@ long Profiler::OutputAveraged(CollectiveCommunication& comm,
   }
   #endif // ifndef NDEBUG
 
-  Stuff::testCreateDirectory( Stuff::pathOnly( filename.str() ) );
+  Dune::Stuff::Common::Filesystem::testCreateDirectory( Dune::Stuff::Common::Filesystem::pathOnly( filename.str() ) );
   std::ofstream csv( ( filename.str() ).c_str() );
 
   typedef std::map< std::string, long > AvgMap;
@@ -279,14 +278,14 @@ long Profiler::Output(CollectiveCommunication& comm, InfoContainer& run_infos, c
 
   std::ostringstream filename;
 
-  filename << Parameters().getParam( "fem.io.datadir", std::string(".") ) << "/prof_p" << numProce << ".csv";
+  filename << Dune::Stuff::Common::Parameter::Parameters().getParam( "fem.io.datadir", std::string(".") ) << "/prof_p" << numProce << ".csv";
   filename.flush();
   return OutputCommon(comm, run_infos, filename.str(), scale_factor);
 } // Output
 
 template< class CollectiveCommunication, class InfoContainerMap >
 void Profiler::OutputMap(CollectiveCommunication& comm, InfoContainerMap& run_infos_map, const double scale_factor) {
-  std::string dir( Parameters().getParam( "fem.io.datadir", std::string(".") ) );
+  std::string dir( Dune::Stuff::Common::Parameter::Parameters().getParam( "fem.io.datadir", std::string(".") ) );
 
   BOOST_FOREACH(typename InfoContainerMap::value_type el, run_infos_map)
   {
@@ -312,7 +311,7 @@ long Profiler::OutputCommon(CollectiveCommunication& comm,
   }
   #endif // ifndef NDEBUG
 
-  Stuff::testCreateDirectory( Stuff::pathOnly(filename) );
+  Dune::Stuff::Common::Filesystem::testCreateDirectory( Dune::Stuff::Common::Filesystem::pathOnly(filename) );
   std::ofstream csv( filename.c_str() );
 
 // outputs column names
@@ -330,7 +329,7 @@ long Profiler::OutputCommon(CollectiveCommunication& comm,
   assert( run_infos.size() >= m_timings.size() );
   for ( ; ti_it != m_timings.end(); ++ti_it)
   {
-    Stuff::RunInfo info = run_infos[idx];
+    Dune::Stuff::Common::RunInfo info = run_infos[idx];
     csv << boost::format("%d,%d,%d,%e,") % info.refine_level
     % comm.size() % info.codim0
     % ( info.L2Errors.size() ? info.L2Errors[0] : double(-1) );
@@ -392,7 +391,7 @@ class LoopTimer
   int iteration_;
   std::ostream& output_stream_;
   WeightType weight_;
-  MovingAverage avg_time_per_iteration_;
+  Dune::Stuff::Common::Math::MovingAverage avg_time_per_iteration_;
   Dune::ExecutionTimer step_timer_;
 
 public:
