@@ -2,8 +2,10 @@
 #define DUNE_STUFF_GRID_INFORMATION_HH
 
 #include <ostream>
-#include <boost/format.hh>
+#include <boost/format.hpp>
 #include <dune/stuff/common/math.hh>
+#include <dune/stuff/grid/intersection.hh>
+#include <dune/stuff/grid/walk.hh>
 
 namespace Dune {
 namespace Stuff {
@@ -49,7 +51,7 @@ void print(GridPartType& gridPart, DiscreteFunctionSpaceType& space, std::ostrea
     {
       // count intersections
       ++numberOfIntersections;
-      maxGridWidth = std::max(Stuff::getLenghtOfIntersection(intIt), maxGridWidth);
+      maxGridWidth = std::max(intIt->geometry().volume(), maxGridWidth);
       // if we are inside the grid
       if ( intIt.neighbor() && !intIt.boundary() )
       {
@@ -105,7 +107,7 @@ template< class GridType >
 struct Dimensions
 {
   // ! automatic running min/max
-  typedef MinMaxAvg< typename GridType::ctype >
+  typedef Dune::Stuff::Common::Math::MinMaxAvg< typename GridType::ctype >
   MinMaxAvgType;
   typedef Dune::array< MinMaxAvgType, GridType::dimensionworld >
   CoordLimitsType;
@@ -148,7 +150,7 @@ public:
     View;
     const View& view = grid.leafView();
     GridDimensionsFunctor f(coord_limits, entity_volume);
-    GridWalk< View >(view).walkCodim0(f);
+    Dune::Stuff::Grid::Walk< View >(view).walkCodim0(f);
   }
 };
 
