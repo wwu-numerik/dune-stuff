@@ -6,9 +6,6 @@
 /* the git tag / commit we build from */
 #define COMMIT "@COMMIT@"
 
-
-#include "config.h"
-
 #define @GRIDTYPE@
 #define GRIDDIM @GRIDDIM@
 #define POLORDER @POLORDER@
@@ -16,5 +13,7 @@
 #ifdef NDEBUG
 	#define DNDEBUG
 #endif
+
+#include "config.h"
 
 #endif	/* DUNE_STUFF_CONFIG_H */
