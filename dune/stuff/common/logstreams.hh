@@ -22,14 +22,14 @@ enum LogFlags
   LOG_NEXT = 64
 };
 
-class ILogStream
+class LogStream
   : public std::ostream
 {
 public:
   typedef int PriorityType;
   static const PriorityType default_suspend_priority = 0;
 
-  ILogStream(int loglevel, int& logflags)
+  LogStream(int loglevel, int& logflags)
     : std::ostream( buffer_.rdbuf() )
       , logflags_(logflags)
       , loglevel_(loglevel)
@@ -38,7 +38,7 @@ public:
       , suspend_priority_(default_suspend_priority)
   {}
 
-  virtual ~ILogStream() {
+  virtual ~LogStream() {
   }
 
   inline bool enabled() const {
@@ -46,13 +46,13 @@ public:
   }
 
   template< typename T >
-  ILogStream& operator<<(T in) {
+  LogStream& operator<<(T in) {
     if ( enabled() )
       buffer_ << in;
     return *this;
   }   // <<
 
-  ILogStream& operator<<( std::ostream& (*pf)(std::ostream &) ) {
+  LogStream& operator<<( std::ostream& (*pf)(std::ostream &) ) {
     if ( enabled() ) {
       buffer_ << pf;
       if ( pf == (std::ostream& ( * )(std::ostream&))std::endl ) {
@@ -112,14 +112,15 @@ private:
   int suspended_logflags_;
   bool is_suspended_;
   PriorityType suspend_priority_;
-};
+}; // LogStream
+
 // ! only for logging to a single file which should then be executable by matlab
 class MatlabLogStream
-  : public ILogStream
+  : public LogStream
 {
 public:
   MatlabLogStream(int loglevel, int& logflags, std::ofstream& logFile)
-    : ILogStream(loglevel, logflags)
+    : LogStream(loglevel, logflags)
       , matlabLogFile_(logFile)
   {}
 
@@ -141,20 +142,20 @@ public:
 
 private:
   std::ofstream& matlabLogFile_;
-};
+}; // class MatlabLogStream
 
 // ! ostream compatible class wrapping file and console output
-class LogStream
-  : public ILogStream
+class FileLogStream
+  : public LogStream
 {
 public:
-  LogStream(int loglevel, int& logflags, std::ofstream& file, std::ofstream& fileWoTime)
-    : ILogStream(loglevel, logflags)
+  FileLogStream(int loglevel, int& logflags, std::ofstream& file, std::ofstream& fileWoTime)
+    : LogStream(loglevel, logflags)
       , logfile_(file)
       , logfileWoTime_(fileWoTime)
   {}
 
-  virtual ~LogStream() {
+  virtual ~FileLogStream() {
       flush();
   }
 
@@ -183,7 +184,23 @@ public:
 private:
   std::ofstream& logfile_;
   std::ofstream& logfileWoTime_;
-};
+}; // class FileLogStream
+
+// /dev/null
+class EmptyLogStream
+  : public LogStream
+{
+public:
+  EmptyLogStream(int& logflags)
+    : LogStream(int(LOG_NONE), logflags)
+  {}
+
+  void flush()
+  {
+    buffer_.clear();
+  }
+}; // class EmptyLogStream
+
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
