@@ -1,12 +1,13 @@
+#include "test_common.hh"
 #include <dune/stuff/common/color.hh>
 
 using namespace Dune::Stuff::Common::Color;
 
 int main(int,char**) {
-	std::cout << "Testing some color codes for this terminal." << std::endl;
-	std::cout << "WARNING: This test will succeed although some of the color codes" << std::endl;
-	std::cout << "are not supported by your terminal!" << std::endl;
-	std::cout << "(Sometimes 'blink', 'reverse' or 'italic' are not supported.)" << std::endl;
+  std::cout << "Testing some color codes for this terminal." << std::endl;
+  std::cout << "WARNING: This test will succeed although some of the color codes" << std::endl;
+  std::cout << "are not supported by your terminal!" << std::endl;
+  std::cout << "(Sometimes 'blink', 'reverse' or 'italic' are not supported.)" << std::endl;
   std::cout << underline << "a simple 'hello world': " << endunderline
             << "hello world" << std::endl;
   std::cout << underline << "a colored 'hello world': " << endunderline
