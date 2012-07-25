@@ -55,8 +55,9 @@ public:
   LogStream& operator<<( std::ostream& (*pf)(std::ostream &) ) {
     if ( enabled() ) {
       buffer_ << pf;
-      if ( pf == (std::ostream& ( * )(std::ostream&))std::endl ) {
-          flush();
+      if (( pf == (std::ostream& ( * )(std::ostream&))std::endl )
+          || ( pf == (std::ostream& ( * )(std::ostream&))std::flush )) {
+        flush();
       }
     }
     return *this;
