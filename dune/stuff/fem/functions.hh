@@ -726,28 +726,33 @@ public:
 
   ConstantFunction(const FunctionSpaceImp& /*space*/,
                    const double constant = 0.0)
-    : BaseType()
-      , constant_(constant)
+    : constant_(RangeType(constant))
   {}
-  ConstantFunction(const double constant = 0.0)
-    : BaseType()
-      , constant_(constant)
+  explicit ConstantFunction(const double constant = 0.0)
+    : constant_(RangeType(constant))
+  {}
+  explicit ConstantFunction(const RangeType& constant)
+    : constant_(constant)
   {}
 
   ~ConstantFunction()
   {}
 
   inline void evaluate(const double /*time*/, const DomainType& /*arg*/, RangeType& ret) const {
-    ret = RangeType(constant_);
+    ret = constant_;
   }
   inline void evaluate(const DomainType& /*arg*/, RangeType& ret) const { ret = RangeType(constant_); }
   template< class IntersectionIteratorType >
   inline void evaluate(const double /*time*/, const DomainType& /*arg*/,
                        RangeType& ret, const IntersectionIteratorType /*it*/) const
-  { ret = RangeType(constant_); }
+  { ret = constant_; }
 
+  //! this signature might be used by GRAPE
+  inline void evaluate(const DomainType& /*arg*/,const RangeFieldType,  RangeType& ret) const {
+    ret = constant_;
+  }
 private:
-  const double constant_;
+  const RangeType constant_;
 };
 
 template< class FunctionSpaceImp, class TimeProviderImp >
@@ -860,6 +865,13 @@ private:
       : Dune::Stuff::Fem::ConstantFunction< T >() {} \
     classname(const T &t) \
       : Dune::Stuff::Fem::ConstantFunction< T >(t) {} };
+
+#define CONSTANTFUNCTION(classname, constant) \
+  template< class T > \
+  struct classname \
+    : public Dune::Stuff::Fem::ConstantFunction< T > \
+  { classname() \
+      : Dune::Stuff::Fem::ConstantFunction< T >(typename T::RangeType(constant)) {} };
 
 #endif // includeguard
 /** Copyright (c) 2012, Felix Albrecht, Rene Milk
