@@ -190,6 +190,7 @@ public:
   LogStream& info() { return getStream(LOG_INFO); }
   LogStream& dbg() DUNE_DEPRECATED_MSG("use debug() instead") { return getStream(LOG_DEBUG); }
   LogStream& debug() { return getStream(LOG_DEBUG); }
+  LogStream& devnull() { return emptyLogStream_; }
   LogStream& matlab() {
     if(matlabLogStreamPtr)
       return *matlabLogStreamPtr;
