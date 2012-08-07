@@ -163,14 +163,14 @@ public:
     return ret;
   } // getFunction
 
-  // ! passthrough to underlying Dune::Parameter
+  //! passthrough to underlying Dune::Parameter
   template< typename T >
   void setParam(std::string name, T val) {
     assert(all_set_up_);
     return Dune::Parameter::append( name, Dune::Stuff::Common::String::convertTo(val) );
   }
 
-  // ! extension to Fem::paramter that allows vector/list like paramteres from a single key
+  //! extension to Fem::paramter that allows vector/list like paramteres from a single key
   template< class T >
   std::vector< T > getList(const std::string name, T def) {
     if ( !Dune::Parameter::exists(name) )
@@ -206,13 +206,13 @@ private:
   friend Container& Parameters();
 };
 
-// ! global ParameterContainer instance
+//! global ParameterContainer instance
 Container& DUNE_DEPRECATED_MSG("use the Dune::ParameterTree based ConfigContainer instead") Parameters() {
   static Container parameters;
   return parameters;
 }
 
-// ! get a path in datadir with existence guarantee (cannot be in filessytem.hh -- cyclic dep )
+//! get a path in datadir with existence guarantee (cannot be in filessytem.hh -- cyclic dep )
 std::string getFileinDatadir(const std::string& fn) {
   boost::filesystem::path path( Parameters().getParam( "fem.io.datadir", std::string(".") ) );
 

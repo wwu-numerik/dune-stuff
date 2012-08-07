@@ -92,7 +92,7 @@ public:
   } // project
 };
 
-// ! basically the fem L2Projection with a function evaluate that converts between compatible types instead of failing
+//! basically the fem L2Projection with a function evaluate that converts between compatible types instead of failing
 class BetterL2
 {
 protected:

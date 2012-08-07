@@ -38,7 +38,7 @@ public:
         , name_(name)
     {}
 
-    // !make friend op <<
+    //!make friend op <<
     std::string str() const {
       return ( boost::format("%s L2 error: %e (abs) | %e (rel)\n") % name_ % absolute() % relative() ).str();
     }

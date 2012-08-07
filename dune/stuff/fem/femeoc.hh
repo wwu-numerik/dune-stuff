@@ -267,7 +267,7 @@ public:
     return instance_;
   }
 
-  // ! open file path/name and write a description string into tex file
+  //! open file path/name and write a description string into tex file
   static void initialize(const std::string& path,
                          const std::string& name,
                          const std::string& descript,
@@ -275,7 +275,7 @@ public:
     instance().init(path, name, descript, templateFilename);
   }
 
-  // ! open file name and write description string into tex file
+  //! open file name and write description string into tex file
   static void initialize(const std::string& name,
                          const std::string& descript,
                          const std::string& templateFilename) {

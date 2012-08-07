@@ -149,7 +149,7 @@ struct RunInfo
   } // tableHeader
 };
 
-// ! used in all runs to store L2 errors across runs
+//! used in all runs to store L2 errors across runs
 typedef std::vector< RunInfo >
 RunInfoVector;
 typedef std::map< double, RunInfo >

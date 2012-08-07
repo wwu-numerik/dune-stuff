@@ -37,7 +37,7 @@ public:
     }
   } // setFatherChildWeight
 
-  // ! restrict data to father
+  //! restrict data to father
   template< class EntityType >
   void restrictLocal(EntityType& father,
                      EntityType& son,
@@ -50,7 +50,7 @@ public:
     }
   } // restrictLocal
 
-  // ! prolong data to children
+  //! prolong data to children
   template< class EntityType >
   void prolongLocal(EntityType& father,
                     EntityType& son,
@@ -63,7 +63,7 @@ public:
     }
   } // prolongLocal
 
-  // ! prolong data to children
+  //! prolong data to children
   template< class CommunicatorImp >
   void addToList(CommunicatorImp& comm) {
     for (typename SetType::iterator it = pair_set_.begin();

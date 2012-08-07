@@ -12,7 +12,7 @@ namespace Stuff {
 
 namespace Common {
 
-// ! a small proxy object that automagically prevents near-0 value fill-in
+//! a small proxy object that automagically prevents near-0 value fill-in
 template< class MatrixPointerType >
 class LocalMatrixProxy
 {
@@ -63,7 +63,7 @@ public:
   unsigned int cols() const { return cols_; }
 };
 
-// ! a small proxy object that automagically prevents near-0 value fill-in
+//! a small proxy object that automagically prevents near-0 value fill-in
 template< class MatrixPointerType >
 class ISTLLocalMatrixProxy
 {
@@ -87,9 +87,9 @@ class ISTLLocalMatrixProxy
   const unsigned int rows_;
   const unsigned int cols_;
   std::vector< FieldType > entries_;
-  // ! global row numbers
+  //! global row numbers
   std::vector< int > rowMap_;
-  // ! global col numbers
+  //! global col numbers
   std::vector< int > colMap_;
 
 public:

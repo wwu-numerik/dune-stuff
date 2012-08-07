@@ -19,7 +19,7 @@ namespace Common {
 
 namespace Tex {
 
-// ! interface and base class for all out eoc tex output
+//! interface and base class for all out eoc tex output
 template< class Info >
 class TexOutputBase
 {
@@ -81,7 +81,7 @@ public:
   }
 };
 
-// ! format RunInfo and error vetor into a latex table, performs actual eoc calculation
+//! format RunInfo and error vetor into a latex table, performs actual eoc calculation
 class EocOutput
   : public TexOutputBase< RunInfo >
 {
@@ -97,7 +97,7 @@ public:
     : BaseType(RunInfo(), headers)
   {}
 
-  // ! eoc calc happens here
+  //! eoc calc happens here
   void putErrorCol(std::ofstream& outputFile_,
                    const double prevError_,
                    const double error_,
@@ -180,7 +180,7 @@ public:
   } // putStaticCols
 };
 
-// ! basically the same as EocOutput, but with less columns (no stab coefficients)
+//! basically the same as EocOutput, but with less columns (no stab coefficients)
 class RefineOutput
   : public EocOutput
 {
@@ -211,7 +211,7 @@ public:
   } // putStaticCols
 };
 
-// ! tex output for bfg runs
+//! tex output for bfg runs
 class BfgOutput
   : public TexOutputBase< RunInfo >
 {
@@ -310,7 +310,7 @@ public:
   } // putStaticCols
 };
 
-// ! tex output for accuracy runs(where both inner and outer accuracy are varied)
+//! tex output for accuracy runs(where both inner and outer accuracy are varied)
 class AccurracyOutput
   : public TexOutputBase< RunInfo >
 {
@@ -396,7 +396,7 @@ public:
   } // putStaticCols
 };
 
-// ! tex output for accuracy runs(where only outer accuracy is varied)
+//! tex output for accuracy runs(where only outer accuracy is varied)
 class AccurracyOutputOuter
   : public TexOutputBase< RunInfo >
 {

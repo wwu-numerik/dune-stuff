@@ -41,11 +41,11 @@ template< class GridPartImp, class DiscreteFunctionImp >
 class DiscreteGradientModelTraits
 {
 public:
-  // ! CRTP trick
+  //! CRTP trick
   typedef DiscreteGradientModel< DiscreteGradientModelTraits >
   DiscreteModelType;
 
-  // ! grid part type
+  //! grid part type
   typedef GridPartImp
   GridPartType;
 
@@ -53,7 +53,7 @@ public:
      *  \name   types needed for the pass
      *  \{
      **/
-  // ! return type of the pass
+  //! return type of the pass
   typedef DiscreteFunctionImp
   DestinationType;
   /**
@@ -69,11 +69,11 @@ template< class DiscreteGradientModelTraitsImp >
 class DiscreteGradientModel
 {
 public:
-  // ! traits
+  //! traits
   typedef DiscreteGradientModelTraitsImp
   Traits;
 
-  // ! grid part type
+  //! grid part type
   typedef typename Traits::GridPartType
   GridPartType;
 };
@@ -89,15 +89,15 @@ class DiscreteGradientPass
   : public Pass< DiscreteModelImp, PreviousPassImp, PassID >
 {
 public:
-  // ! base type
+  //! base type
   typedef Pass< DiscreteModelImp, PreviousPassImp, PassID >
   BaseType;
 
-  // ! previous pass type
+  //! previous pass type
   typedef PreviousPassImp
   PreviousPassType;
 
-  // ! discrete model type
+  //! discrete model type
   typedef DiscreteModelImp
   DiscreteModelType;
 
@@ -121,7 +121,7 @@ public:
      **/
 
 private:
-  // ! grd part type
+  //! grd part type
   typedef typename DiscreteModelType::GridPartType
   GridPartType;
 
@@ -190,47 +190,47 @@ public:
     // clear return
     dest.clear();
 
-    // ! type of the grid
+    //! type of the grid
     typedef typename GridPartType::GridType
     GridType;
 
-    // ! type of codim 0 entity
+    //! type of codim 0 entity
     typedef typename GridType::template Codim< 0 >::Entity
     EntityType;
 
-    // ! entity geometry type
+    //! entity geometry type
     typedef typename EntityType::Geometry
     EntityGeometryType;
 
-    // ! entity iterator of the gridpart
+    //! entity iterator of the gridpart
     typedef typename GridPartType::template Codim< 0 >::IteratorType
     EntityIteratorType;
 
-    // ! Intersection iterator of the gridpart
+    //! Intersection iterator of the gridpart
     typedef typename GridPartType::IntersectionIteratorType
     IntersectionIteratorType;
 
-    // ! local function type
+    //! local function type
     typedef typename DomainType::LocalFunctionType
     LocalFunctionType;
 
-    // ! local gradient type
+    //! local gradient type
     typedef typename RangeType::LocalFunctionType
     LocalGradientType;
 
-    // ! discrete function base fucntion set type
+    //! discrete function base fucntion set type
     typedef typename DiscreteFunctionSpaceType::BaseFunctionSetType
     DiscreteFunctionBaseFunctionSetType;
 
-    // ! discrete gradient base function set type
+    //! discrete gradient base function set type
     typedef typename DiscreteGradientSpaceType::BaseFunctionSetType
     DiscreteGradientBaseFunctionSetType;
 
-    // ! we use caching quadratures for the entities
+    //! we use caching quadratures for the entities
     typedef Dune::CachingQuadrature< GridPartType, 0 >
     VolumeQuadratureType;
 
-    // ! we use caching quadratures for the faces
+    //! we use caching quadratures for the faces
     typedef Dune::CachingQuadrature< GridPartType, 1 >
     FaceQuadratureType;
 

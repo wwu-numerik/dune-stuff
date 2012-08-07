@@ -47,7 +47,7 @@ namespace Common
 namespace Misc
 {
 
-// ! element-index-in-container search
+//! element-index-in-container search
 template< class StlSequence >
 inline int getIdx(const StlSequence& ct,
                   const typename StlSequence::value_type& val) {
@@ -75,7 +75,7 @@ struct TimeGuard
   }
 };
 
-// ! \todo seems borked, resutls in gigantic amount of compile errors?!
+//! \todo seems borked, resutls in gigantic amount of compile errors?!
 template< class StlSequence, class T >
 void fill_entirely(StlSequence& c, const T& value) {
   std::fill(c.begin(), c.end(), value);
@@ -125,7 +125,7 @@ struct wraparound_array
   } // []
 };
 
-// ! type safe (this will not compile for degraded-to-pointer arrays) way of getting array length
+//! type safe (this will not compile for degraded-to-pointer arrays) way of getting array length
 template< class T, size_t N >
 size_t arrayLength(T(&/*array*/)[N]) {
   return N;

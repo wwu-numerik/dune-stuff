@@ -16,7 +16,7 @@ namespace Stuff {
 
 namespace Fem {
 
-// ! Wrap a DiscreteFunction to a scalar function representing its two-norm
+//! Wrap a DiscreteFunction to a scalar function representing its two-norm
 template< class DiscreteFunctionImp, int polOrder = 3 >
 class MagnitudeFunction
 {
@@ -35,7 +35,7 @@ public:
   typedef Dune::AdaptiveDiscreteFunction< MagnitudeDiscreteFunctionSpaceType >
   MagnitudeDiscreteFunctionType;
 
-  // ! constructor taking discrete function
+  //! constructor taking discrete function
   MagnitudeFunction(const DiscreteFunctionType& discreteFunction)
     : magnitude_disretefunctionspace_( discreteFunction.space().gridPart() )
       , magnitude_disretefunction_(discreteFunction.name() + "-magnitude", magnitude_disretefunctionspace_) {
@@ -109,7 +109,7 @@ public:
     }
   }
 
-  // ! virtual destructor
+  //! virtual destructor
   virtual ~MagnitudeFunction() {}
 
   const MagnitudeDiscreteFunctionType& discreteFunction() const {

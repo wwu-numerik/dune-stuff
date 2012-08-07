@@ -203,7 +203,7 @@ public:
   } // ()
 };
 
-// ! print a tex representation of any given 2D grid leaf level to file
+//! print a tex representation of any given 2D grid leaf level to file
 template< class GridType >
 class PgfGrid
 {
@@ -225,7 +225,7 @@ private:
   const GridType& grid_;
 };
 
-// ! print a tex representation of any given 2D grid refine views to file
+//! print a tex representation of any given 2D grid refine views to file
 template< class GridType >
 class StackedPgfGrid
 {
@@ -271,7 +271,7 @@ private:
   GridType& grid_;
 };
 
-// ! print a tex representation of any given 2D grid refine views to file
+//! print a tex representation of any given 2D grid refine views to file
 template< class GridType >
 class RefineSeriesPgfGrid
 {

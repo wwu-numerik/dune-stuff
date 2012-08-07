@@ -32,11 +32,11 @@ public:
   typedef SparsityPattern
   ThisType;
 
-  // ! Type for saving the sparsity pattern.
+  //! Type for saving the sparsity pattern.
   typedef std::vector< std::set< unsigned int > >
   SparsityPatternContainerType;
 
-  // ! Type for iterating through a row.
+  //! Type for iterating through a row.
   typedef std::set< unsigned int >::const_iterator
   NonZeroColIterator;
 
@@ -128,10 +128,10 @@ public:
   }
 
 private:
-  // ! copy constructor
+  //! copy constructor
   SparsityPattern(const ThisType&);
 
-  // ! assignment operator
+  //! assignment operator
   ThisType& operator=(const ThisType&);
 
   SparsityPatternContainerType sparsityPattern_;
@@ -264,7 +264,7 @@ public:
   } // end method createPtr
 }; // end class ElementNeighborStencil
 
-// ! this should be smarter wrt code duplication ---^
+//! this should be smarter wrt code duplication ---^
 template< class AnsatzSpaceType, class TestSpaceType >
 class ElementStencil
 {
