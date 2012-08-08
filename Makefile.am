@@ -14,5 +14,6 @@ AUTOMAKE_OPTIONS = foreign 1.5
 # pass most important options when "make distcheck" is used
 DISTCHECK_CONFIGURE_FLAGS = --with-dune=$(DUNEROOT) CXX="$(CXX)" CC="$(CC)"
 
+
 include $(top_srcdir)/am/global-rules
 include $(top_srcdir)/am/top-rules

@@ -1,3 +1,5 @@
+SUBDIRS = gtest .
+
 GRIDTYPE=YASPGRID
 GRIDDIM=2
 
@@ -15,9 +17,9 @@ TESTS = $(NORMALTESTS)
 check_PROGRAMS = $(NORMALTESTS)
 
 
-LDFLAGS = -lboost_filesystem -lboost_system 
+LDFLAGS = -lboost_filesystem -lboost_system -lgtest -Lgtest/lib
 CXXFLAGS = $(BOOST_CPPFLAGS) $(DUNE_CPPFLAGS) \
-	-DGRIDDIM=$(GRIDDIM) -D$(GRIDTYPE)
+	-DGRIDDIM=$(GRIDDIM) -D$(GRIDTYPE) -Igtest/include
 
 common_parameter_validation_SOURCES = common_parameter_validation.cc
 common_logger_SOURCES = common_logger.cc
