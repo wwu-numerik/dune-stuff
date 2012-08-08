@@ -14,10 +14,11 @@
 #include <dune/common/tupleutility.hh>
 #include <dune/common/mpihelper.hh>
 
+#include <gtest/gtest.h>
+
 #include <random>
 
-#define MY_ASSERT(cond) \
-    if (! (cond)) { DUNE_THROW(Dune::Exception, #cond  " failed"  ); }
+#define MY_ASSERT(cond) EXPECT_TRUE(cond)
 
 template < typename, bool >
 struct Distribution {
