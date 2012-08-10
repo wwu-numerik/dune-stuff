@@ -17,6 +17,7 @@
 #include <gtest/gtest.h>
 
 #include <random>
+#include <sys/time.h>
 
 #define MY_ASSERT(cond) EXPECT_TRUE(cond)
 
@@ -51,6 +52,16 @@ struct TestRunner {
         fe.apply(v);
     }
 };
+
+//! where sleep only counts toward wall time, this wastes actual cpu time
+void busywait(int milliseconds)  {
+  timeval start, end;
+  gettimeofday(&start, NULL);
+  do  {
+   gettimeofday(&end, NULL);
+  } while( ((end.tv_sec - start.tv_sec )*1e6) + ((end.tv_usec - start.tv_usec)) < milliseconds * 1000 );
+}
+
 
 typedef Dune::tuple<double, float, //Dune::bigunsignedint,
   int, unsigned int, unsigned long, long long, char> BasicTypes;
