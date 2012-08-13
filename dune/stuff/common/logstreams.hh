@@ -220,7 +220,7 @@ public:
 
 namespace {
   int dev_null_logflag;
-  EmptyLogStream dev_null_(dev_null_logflag);
+  EmptyLogStream dev_null(dev_null_logflag);
 }
 
 } // namespace Common
