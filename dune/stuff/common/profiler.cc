@@ -7,9 +7,47 @@
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
 
+#include <dune/stuff/common/string.hh>
+
 namespace Dune {
 namespace Stuff {
 namespace Common {
+
+void Profiler::startTiming(const std::string section_name, const int i)
+{
+    const std::string section = section_name + String::convertTo(i);
+    startTiming(section);
+}
+
+long  Profiler::stopTiming(const std::string section_name, const int i)
+{
+    const std::string section = section_name + String::convertTo(i);
+    return stopTiming(section);
+}
+
+long  Profiler::getTiming(const std::string section_name, const int i) const
+{
+    const std::string section = section_name + String::convertTo(i);
+    return getTiming(section);
+}
+
+void Profiler::resetTiming(const std::string section_name, const int i)
+{
+    const std::string section = section_name + String::convertTo(i);
+    return resetTiming(section);
+}
+
+void Profiler::resetTiming(const std::string section_name)
+{
+    try {
+        stopTiming(section_name);
+    }
+    catch (Dune::RangeError) {
+        //ok, timer simply wasn't running
+    }
+    Datamap& current_data = datamaps_[current_run_number_];
+    current_data[section_name] = 0;
+}
 
 void Profiler::startTiming(const std::string section_name) {
   if ( current_run_number_ >= datamaps_.size() )
@@ -31,7 +69,7 @@ void Profiler::startTiming(const std::string section_name) {
   }
 } // StartTiming
 
-void Profiler::stopTiming(const std::string section_name) {
+long Profiler::stopTiming(const std::string section_name) {
   assert( current_run_number_ < datamaps_.size() );
   if ( known_timers_map_.find(section_name) == known_timers_map_.end() )
     DUNE_THROW(Dune::RangeError, "trying to stop timer " << section_name << " that wasn't started\n");
@@ -39,20 +77,21 @@ void Profiler::stopTiming(const std::string section_name) {
   known_timers_map_[section_name].first = false;//marks as not running
   TimingData& timing = known_timers_map_[section_name].second;
   timing.stop();
-  long long delta = timing.delta();
+  long delta = timing.delta();
   Datamap& current_data = datamaps_[current_run_number_];
   if ( current_data.find(section_name) == current_data.end() )
     current_data[section_name] = delta;
   else
     current_data[section_name] += delta;
+  return delta;
 } // StopTiming
 
 long Profiler::getTiming(const std::string section_name) const {
   assert( current_run_number_ < datamaps_.size() );
-  return getTiming(section_name, current_run_number_);
+  return getTimingIdx(section_name, current_run_number_);
 }
 
-long Profiler::getTiming(const std::string section_name, const int run_number) const {
+long Profiler::getTimingIdx(const std::string section_name, const int run_number) const {
   assert( run_number < int( datamaps_.size() ) );
   const Datamap& data = datamaps_[run_number];
   Datamap::const_iterator section = data.find(section_name);
@@ -196,7 +235,7 @@ void Profiler::outputCommon(const Profiler::InfoContainer& run_infos,
 
     for (Datamap::const_iterator it = data_map.begin(); it != data_map.end(); ++it)
     {
-      long clock_count = getTiming(it->first, idx);
+      long clock_count = getTimingIdx(it->first, idx);
       clock_count = long( comm.sum(clock_count) / double(scale_factor * numProce) );
       csv << clock_count << csv_sep;
     }

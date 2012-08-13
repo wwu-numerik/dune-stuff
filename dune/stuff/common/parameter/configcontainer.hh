@@ -27,7 +27,7 @@ namespace Stuff {
 namespace Common {
 namespace Parameter {
 
-//! use this to record defaults, placements and sof forth
+//! use this to record defaults, placements and so forth
 struct Request {
   const int line;
   const std::string file;
@@ -147,12 +147,19 @@ public:
       return get<std::string,Validator>(name, def, validator, useDbgStream);
     }
 
+
+    //! get variation with request recording
+    std::string get(std::string name, const char* def, Request req, bool useDbgStream = true) {
+      requests_map_[name].insert(req);
+      return get(name, std::string(def), ValidateAny< std::string >(), useDbgStream);
+    }
+
     template<class T>
     void set(const std::string key, const T value) {
       tree_[key] = value;
     }
 
-    printRequests(std::ostream& out) const {
+    void printRequests(std::ostream& out) const {
       out << "Config requests:";
       for( const auto& pair : requests_map_ ) {
         out << "Key: " << pair.first;
@@ -163,7 +170,7 @@ public:
       }
     }
 
-    printMismatchedDefaults(std::ostream& out) const {
+    void printMismatchedDefaults(std::ostream& out) const {
       for( const auto& pair : requests_map_ ) {
         typedef bool (*func)(const Request&,const Request&);
         std::set<Request,func> mismatched(&strictRequestCompare);
@@ -201,6 +208,9 @@ ConfigContainer& Config()  {
 
 #define DSC_CONFIG_GETV(key,def,validator) \
   DSC_CONFIG.get(key,def,Dune::Stuff::Common::Parameter::Request(__LINE__, __FILE__,key,Dune::Stuff::Common::String::convertTo(def), #validator ))
+
+#define DSC_CONFIG_GETB(key,def,use_logger) \
+  DSC_CONFIG.get(key,def,Dune::Stuff::Common::Parameter::Request(__LINE__, __FILE__,key,Dune::Stuff::Common::String::convertTo(def), "none" ), use_logger)
 
 #endif // DUNE_STUFF_CONFIGCONTAINER_HH_INCLUDED
 
