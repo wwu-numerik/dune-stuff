@@ -89,17 +89,33 @@ std::string whitespaceify( const std::string s, const char c = ' ' )
               token_compress_on --> empty tokens are discarded
  * \return all tokens in a vector, if msg contains no seperators, this'll contain msg as its only element
  **/
-template < class T = std::string>
+template < class T = std::string >
 inline std::vector<T> tokenize( const std::string& msg,
                              const std::string& seperators,
                              const boost::algorithm::token_compress_mode_type mode = boost::algorithm::token_compress_off )
 {
-    std::vector<T> strings;
+    std::vector<std::string> strings;
+    boost::algorithm::split( strings, msg, boost::algorithm::is_any_of(seperators),
+                             mode );
+    std::vector<T> ret(strings.size());
+    size_t i = 0;
+    //special case for empty strings to avoid non-default init
+    std::generate(std::begin(ret), std::end(ret), [&] (){ return strings[i++].empty() ? T() : convertFrom<T>(strings[i-1]); });
+    return ret;
+}
+
+template < >
+inline std::vector<std::string> tokenize( const std::string& msg,
+                             const std::string& seperators,
+                             const boost::algorithm::token_compress_mode_type mode )
+{
+    std::vector<std::string> strings;
     boost::algorithm::split( strings, msg, boost::algorithm::is_any_of(seperators),
                              mode );
     return strings;
 }
 
+//! returns string with local time in current locale's format
 inline std::string fromTime(time_t cur_time = time(NULL)) {
   return ctime(&cur_time);
 }
