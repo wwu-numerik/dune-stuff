@@ -74,9 +74,10 @@ protected:
     KnownTimersMap;
   //! section name -> seconds
   typedef std::map< std::string, long >
-    DataMap;
-  typedef std::vector< DataMap >
-    MapVector;
+    Datamap;
+  //! "Run idx" -> Datamap = section name -> seconds
+  typedef std::vector< Datamap >
+    DatamapVector;
 
 public:
   typedef std::vector< Dune::Stuff::Common::RunInfo > InfoContainer;
@@ -141,14 +142,13 @@ public:
   };
 
 private:
-  MapVector m_timings;
-  unsigned int m_cur_run_num;
-  unsigned int m_total_runs;
+  DatamapVector datamaps_;
+  unsigned int current_run_number_;
   //! runtime tables etc go there
-  std::string m_output_dir;
+  std::string output_dir_;
   // debug counter, only outputted in debug mode
-  std::map< int, int > m_count;
-  clock_t init_time_;
+  std::map< int, int > counters_;
+
   KnownTimersMap known_timers_map_;
   const std::string csv_sep;
 
