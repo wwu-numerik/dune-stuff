@@ -16,4 +16,17 @@
 
 #include "config.h"
 
+#if !HAVE_GRIDTYPE
+  #include <dune/grid/yaspgrid.hh>
+  namespace Dune
+  {
+    namespace GridSelector
+    {
+      const int dimgrid = GRIDDIM;
+      const int dimworld = GRIDDIM;
+      typedef Dune::YaspGrid< dimgrid > GridType;
+    }
+  }
+#endif
+
 #endif	/* DUNE_STUFF_CONFIG_H */
