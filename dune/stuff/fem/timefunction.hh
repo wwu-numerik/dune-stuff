@@ -11,7 +11,7 @@ namespace Stuff
 namespace Fem
 {
 
-// ! a dummy timeprovider for usage in Stuff::RuntimeFunction
+//! a dummy timeprovider for usage in Stuff::RuntimeFunction
 struct ConstTimeProvider
 {
   const double time_;

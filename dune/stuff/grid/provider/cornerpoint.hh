@@ -1,10 +1,10 @@
 /**
-  \file   dune/rb/grid/provider/cornerpoint.hh
-  \brief  dune/rb/grid/provider/cornerpoint.hh - Contains a class to construct a cornerpoint grid from file.
+  \file   dune/stuff/grid/provider/cornerpoint.hh
+  \brief  dune/stuff/grid/provider/cornerpoint.hh - Contains a class to construct a cornerpoint grid from file.
   **/
 
-#ifndef DUNE_HELPER_TOOLS_GRID_PROVIDER_CORNERPOINT_HH
-#define DUNE_HELPER_TOOLS_GRID_PROVIDER_CORNERPOINT_HH
+#ifndef DUNE_STUFF_GRID_PROVIDER_CORNERPOINT_HH
+#define DUNE_STUFF_GRID_PROVIDER_CORNERPOINT_HH
 
 #ifdef HAVE_DUNE_CORNERPOINT
 
@@ -143,4 +143,4 @@ private:
 
 #endif // HAVE_DUNE_CORNERPOINT
 
-#endif // DUNE_HELPER_TOOLS_GRID_PROVIDER_CORNERPOINT_HH
+#endif // DUNE_STUFF_GRID_PROVIDER_CORNERPOINT_HH

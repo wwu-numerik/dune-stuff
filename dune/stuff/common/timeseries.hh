@@ -392,11 +392,11 @@ private:
   std::map< RunInfoVectorMapKeyType, double > averaged_error_pressure_;
   std::map< RunInfoVectorMapKeyType, double > max_error_velocity_map_;
   std::map< RunInfoVectorMapKeyType, double > max_error_pressure_map_;
-  // !error - gridwith/dt pair
+  //!error - gridwith/dt pair
   std::vector< std::pair< double, double > > max_errors_velocity;
   std::vector< std::pair< double, double > > max_errors_pressure;
 
-  // ! L^2(t_0,T;L^2) errors
+  //! L^2(t_0,T;L^2) errors
   std::map< RunInfoVectorMapKeyType, double > avg_errors_velocity_map_;
   std::map< RunInfoVectorMapKeyType, double > avg_h1_errors_velocity_map_;
   std::map< RunInfoVectorMapKeyType, double > avg_errors_pressure_map_;

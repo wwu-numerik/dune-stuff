@@ -7,13 +7,11 @@
 
 #include <dune/stuff/common/misc.hh>
 #include <dune/stuff/common/string.hh>
+#include <dune/stuff/common/type_utils.hh>
 
 namespace Dune {
-
 namespace Stuff {
-
 namespace Common {
-
 namespace Parameter {
 
 /** \brief Base class for all Validators
@@ -43,7 +41,7 @@ protected:
   }
 };
 
-// ! a class usable as a default validator
+//! a class usable as a default validator
 template< class T >
 class ValidateAny
   : public ValidatorInterface< T, ValidateAny< T > >
@@ -64,7 +62,7 @@ public:
   }
 };
 
-// ! validates arg iff in given list
+//! validates arg iff in given list
 template< class T, class ListImp = std::vector< T > >
 class ValidateInList
   : public ValidatorInterface< T, ValidateInList< T, ListImp > >
@@ -185,11 +183,8 @@ private:
 };
 
 } //end namesapce Parameter
-
 } //end namesapce Common
-
 } //end namesapce Stuff
-
 } //end namesapce Dune
 
 template < class T, class Validator >

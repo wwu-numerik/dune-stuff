@@ -19,7 +19,7 @@ namespace Common {
 
 namespace Print {
 
-// ! ensure matlab output is done with highest precision possible, otherwise weird effects are bound to happen
+//! ensure matlab output is done with highest precision possible, otherwise weird effects are bound to happen
 static const unsigned int matlab_output_precision = std::numeric_limits< double >::digits10 + 1;
 
 /**
@@ -181,7 +181,7 @@ void printDoubleVectorMatlabStyle(const T* arg, const int size, const std::strin
   out << "];" << std::endl;
 } // printDoubleVectorMatlabStyle
 
-// ! simple vector to stream print
+//! simple vector to stream print
 template< class Type >
 void printDoubleVec(std::ostream& stream, const Type* vec, const unsigned int N) {
   stream << "\n [ " << std::setw(5);
@@ -191,7 +191,7 @@ void printDoubleVec(std::ostream& stream, const Type* vec, const unsigned int N)
   stream << " ] " << std::endl;
 } // printDoubleVec
 
-// ! simple discrete function to stream print
+//! simple discrete function to stream print
 template< class DiscFunc >
 void oneLinePrint(std::ostream& stream, const DiscFunc& func) {
   typedef typename DiscFunc::ConstDofIteratorType DofIteratorType;
@@ -348,7 +348,7 @@ void printFunctionMinMax(std::ostream& stream, const Function& func) {
          << "    max: " << std::sqrt(2.0) * max << std::endl;
 } // printFunctionMinMax
 
-// ! useful for visualizing sparsity patterns of matrices
+//! useful for visualizing sparsity patterns of matrices
 template< class Matrix >
 void matrixToGnuplotStream(const Matrix& matrix, std::ostream& stream) {
   unsigned long nz = 0;
@@ -366,7 +366,7 @@ void matrixToGnuplotStream(const Matrix& matrix, std::ostream& stream) {
   stream << "#total non zeros " << nz << " of " << matrix.rows() * matrix.cols() << " entries\n";
 } // matrixToGnuplotStream
 
-// ! proxy to Stuff::matrixToGnuplotStream that redirects its output to a file
+//! proxy to Stuff::matrixToGnuplotStream that redirects its output to a file
 template< class Matrix >
 void matrixToGnuplotFile(const Matrix& matrix, std::string filename) {
   std::string dir(Dune::Stuff::Common::Parameter::Parameters().getParam( "fem.io.datadir", std::string("data") ) + "/gnuplot/");

@@ -15,6 +15,7 @@
 #include <dune/stuff/common/math.hh>
 #include <dune/stuff/common/string.hh>
 #include <dune/common/deprecated.hh>
+#include <dune/common/fvector.hh>
 
 namespace Dune {
 
@@ -22,7 +23,7 @@ namespace Stuff {
 
 namespace Fem {
 
-// ! (inplace) multiplies given function with matrix diagonal
+//! (inplace) multiplies given function with matrix diagonal
 template< class Matrix, class Function >
 void DiagonalMult(const Matrix& matrix, Function& f) {
   Function diag( "temp", f.space() );
@@ -66,7 +67,7 @@ void getMinMaxOfDiscreteFunction(const FunctionType& function,
   }
 } // getMinMaxOfDiscreteFunction
 
-// ! count dofs of f1,f2 with abs(f1[i] - f2[i]) > tolerance
+//! count dofs of f1,f2 with abs(f1[i] - f2[i]) > tolerance
 template< class FunctionType >
 unsigned int getNumDiffDofs(const FunctionType& f1,
                             const FunctionType& f2,
@@ -98,7 +99,7 @@ void addScalarToFunc(Function& f, double sc) {
   return;
 } // addScalarToFunc
 
-// ! returns arithmetic mean of function's dofs
+//! returns arithmetic mean of function's dofs
 template< class Function >
 typename Function::FieldType getFuncAvg(const Function& f) {
   typedef typename Function::ConstDofIteratorType DofIteratorType;
@@ -111,7 +112,7 @@ typename Function::FieldType getFuncAvg(const Function& f) {
   return sum;
 } // getFuncAvg
 
-// ! inverts dof order
+//! inverts dof order
 template< class Function >
 void switchDofs(Function& f) {
   typedef typename Function::DofIteratorType DofIteratorType;
@@ -655,7 +656,7 @@ void invertFunctionDofs(DiscreteFunctionType& function) {
   return;
 } // invertFunctionDofs
 
-// ! return true if any dof is nan or inf
+//! return true if any dof is nan or inf
 template< class DiscreteFunctionType >
 bool FunctionContainsNanOrInf(const DiscreteFunctionType& function) {
   typedef typename DiscreteFunctionType::ConstDofIteratorType
@@ -680,7 +681,7 @@ bool FunctionContainsNanOrInf(const LeakPointerType function, size_t size) {
   return false;
 } // FunctionContainsNanOrInf
 
-// ! return true if any dof is nan or inf
+//! return true if any dof is nan or inf
 template< class DiscreteFunctionType >
 void divideFunctionDofs(DiscreteFunctionType& target, const DiscreteFunctionType& divider) {
   typedef typename DiscreteFunctionType::ConstDofIteratorType
@@ -696,7 +697,7 @@ void divideFunctionDofs(DiscreteFunctionType& target, const DiscreteFunctionType
   }
 } // divideFunctionDofs
 
-// ! return true if any entry is nan or inf
+//! return true if any entry is nan or inf
 template< class MatrixType >
 bool MatrixContainsNanOrInf(const MatrixType& matrix) {
   for (int row = 0; row < int( matrix.rows() ); ++row)
@@ -748,9 +749,13 @@ public:
   { ret = constant_; }
 
   //! this signature might be used by GRAPE
-  inline void evaluate(const DomainType& /*arg*/,const RangeFieldType,  RangeType& ret) const {
+  inline void evaluate(const DomainType& /*arg*/,const typename RangeType::value_type /*time*/,  RangeType& ret) const {
     ret = constant_;
   }
+  inline void evaluateJacobian(const DomainType& /*arg*/, typename BaseType::JacobianRangeType& jacobian) const {
+    jacobian = typename BaseType::JacobianRangeType(0);
+  }
+
 private:
   const RangeType constant_;
 };

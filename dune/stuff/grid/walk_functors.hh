@@ -9,7 +9,7 @@ namespace Dune {
 namespace Stuff {
 namespace Grid {
 
-// ! GridWalk functor that refines all entitites above given volume
+//! GridWalk functor that refines all entitites above given volume
 template< class GridType >
 struct MaximumEntityVolumeRefineFunctor
 {
@@ -30,7 +30,7 @@ struct MaximumEntityVolumeRefineFunctor
   GridType& grid_;
 };
 
-// ! refine entities until all have volume < size_factor * unrefined_minimum_volume
+//! refine entities until all have volume < size_factor * unrefined_minimum_volume
 template< class GridType >
 void EnforceMaximumEntityVolume(GridType& grid, const double size_factor) {
   namespace DSGI = Dune::Stuff::Grid::Information;

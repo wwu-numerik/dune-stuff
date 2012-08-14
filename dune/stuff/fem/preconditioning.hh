@@ -6,7 +6,7 @@ namespace Dune {
   namespace Stuff {
 
     namespace Fem {
-// ! allow any class fullfilling the Operator concept to be used as a preconditioner
+//! allow any class fullfilling the Operator concept to be used as a preconditioner
 template< class Operator, template< class T, class F > class Solver, class RangeDiscreteFunctionType >
 class OperatorBasedPreconditioner
 {
