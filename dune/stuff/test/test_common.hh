@@ -54,9 +54,9 @@ struct TestRunner {
 };
 
 //! where sleep only counts toward wall time, this wastes actual cpu time
-void busywait(int ms)  {
+void busywait(const int ms)  {
   // "round" up to next full 10 ms to align with native timer res
-  int milliseconds = (ms/10)*10 + 10;
+  const int milliseconds = (ms/10)*10 + 10;
   timeval start, end;
   gettimeofday(&start, NULL);
   do  {
