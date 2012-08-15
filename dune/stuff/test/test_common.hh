@@ -21,20 +21,6 @@
 
 #define MY_ASSERT(cond) EXPECT_TRUE(cond)
 
-template < typename, bool >
-struct Distribution {
-};
-template < typename T >
-struct Distribution<T,true> {
-    typedef std::uniform_int_distribution <T>
-        type;
-};
-template < typename T >
-struct Distribution<T,false> {
-    typedef std::uniform_real_distribution<T>
-        type;
-};
-
 template < template <class> class Test >
 struct TestRunner {
     struct Visitor {
