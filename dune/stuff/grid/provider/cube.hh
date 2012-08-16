@@ -177,6 +177,11 @@ public:
     return *grid_;
   }
 
+  //! access to shared ptr
+  Dune::shared_ptr<GridType> gridPtr() {
+    return grid_;
+  }
+
   const CoordinateType& lowerLeft() const
   {
     return lowerLeft_;
