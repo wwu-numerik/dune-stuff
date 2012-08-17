@@ -11,7 +11,7 @@ NORMALTESTS = common_parameter_validation common_logger common_color \
 	fem_error fem_projection
 
 # list of tests to run
-TESTS = $(NORMALTESTS)
+TESTS = $(NORMALTESTS) compile_pgf_output.sh
 
 # programs just to build when "make check" is used
 check_PROGRAMS = $(NORMALTESTS)
