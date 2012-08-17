@@ -15,63 +15,79 @@ namespace Dune {
 namespace Stuff {
 namespace Grid {
 
-//! Base class for Gridwalk Functors that don't want to reimplement pre/postWalk
-struct WalkFunctorDefault
-{
-  void preWalk() const {}
-  void postWalk() const {}
+/** \brief Useful dummy functor if you don't have anything to do on entities/intersections
+ **/
+struct GridWalkDummyFunctor {
+  template < class Entity >
+  void operator() ( const Entity&, const int) const
+  {}
+  template < class Entity, class Intersection >
+  void operator() ( const Entity&, const Intersection&) const
+  {}
 };
 
-/** \brief lets you apply a Functor to each entity
-   * \todo allow stacking of operators to save gridwalks
-   * \todo threadsafe maps (haha:P)
-   */
-template< class GridView >
-class Walk
-{
-private:
-  typedef typename GridView::template Codim< 0 >::Iterator
-  ElementIterator;
-  typedef typename GridView::IntersectionIterator
-  IntersectionIteratorType;
-  typedef typename IntersectionIteratorType::Intersection::EntityPointer
-  EntityPointer;
+namespace {
+  /** \brief global \ref GridWalkDummyFunctor instance
+   **/
+  const GridWalkDummyFunctor gridWalkDummyFunctor;
+}
 
+/** \brief applies Functors on each \ref Entity/\ref Intersection of a given \ref GridView
+ *  \todo allow stacking of functor to save gridwalks?
+ *  \tparam GridViewType any \ref GridView interface compliant type
+ *  \tparam codim determines the codim of the Entities that are iterated on
+ **/
+template < class GridViewType, int codim = 0 >
+class Walk {
 public:
-  Walk(const GridView& gp)
-    : gridView_(gp)
+  Walk ( const GridViewType& gp )
+    : gridView_( gp )
   {}
 
-  template< class Functor >
-  void operator()(Functor& f) const {
-    f.preWalk();
-    for (const auto& entity : ViewRange<GridView>(gridView_)) {
-      const int ent_idx = gridView_.indexSet().index(entity);
-      f(entity, entity, ent_idx, ent_idx);
-      for (const auto& intersection : IntersectionRange<GridView>(gridView_, entity)) {
-        if ( !intersection.boundary() )
-        {
-          const auto neighbour_ptr = intersection.outside();
-          const int neigh_idx = gridView_.indexSet().index(*neighbour_ptr);
-          f(entity, *neighbour_ptr, ent_idx, neigh_idx);
-        }
+  /** \param entityFunctor is applied on all codim 0 entities presented by \var gridView_
+   *  \param intersectionFunctor is applied on all Intersections of all codim 0 entities
+   *        presented by \var gridView_
+   *  \note only instantiable for codim == 0
+   */
+  template < class EntityFunctor, class IntersectionFunctor >
+  void operator () ( EntityFunctor& entityFunctor, IntersectionFunctor& intersectionFunctor ) const
+  {
+    dune_static_assert( codim == 0, "walking intersections is only possible for codim 0 entities" );
+    for (const auto& entity : ViewRange<GridViewType>(gridView_)) {
+      const int entityIndex = gridView_.indexSet().index(entity);
+      entityFunctor( entity, entityIndex);
+      for (const auto& intersection : IntersectionRange<GridViewType>(gridView_, entity)) {
+        intersectionFunctor( entity, intersection);
       }
     }
-    f.postWalk();
-  } // ()
+  }
+
+  /** \param entityFunctor is applied on all codim entities presented by \var gridView_
+   *  \note only instantiable for codim < GridView::dimension
+   */
+  template < class EntityFunctor >
+  void operator () ( EntityFunctor& entityFunctor ) const
+  {
+    dune_static_assert( codim <= GridViewType::dimension, "codim too high to walk" );
+    for (const auto& entity : ViewRange<GridViewType>(gridView_)) {
+      const int entityIndex = gridView_.indexSet().index(entity);
+      entityFunctor( entity, entityIndex);
+    }
+  }
 
   template< class Functor >
-  void walkCodim0(Functor& f) const {
-    for (const auto& entity : ViewRange<GridView>(gridView_)) {
-      const int ent_idx = gridView_.indexSet().index(entity);
-      f(entity, ent_idx);
-    }
-  } // walkCodim0
+  void walkCodim0(Functor& f) const DUNE_DEPRECATED_MSG("use operator()(Functor) instead ");
+
 
 private:
-  const GridView& gridView_;
+  const GridViewType& gridView_;
 };
 
+template< class V, int i >
+template< class Functor >
+void Walk<V,i>::walkCodim0(Functor& f) const {
+  this->operator()(f);
+}
 } // namespace Grid
 } // namespace Stud
 } // namespace Dune
