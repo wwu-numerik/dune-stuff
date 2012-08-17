@@ -19,8 +19,7 @@
 // dune-cornerpoint
 #include <dune/grid/CpGrid.hpp>
 
-namespace Dune
-{
+namespace Dune {
 
 //namespace Capabilities
 //{
@@ -36,14 +35,9 @@ namespace Dune
 
 //} // namespace Capabilities
 
-namespace Stuff
-{
-
-namespace Grid
-{
-
-namespace Provider
-{
+namespace Stuff {
+namespace Grid {
+namespace Provider {
 
 /**
   \brief  Creates a cornerpoint grid from a grdecl file.
@@ -134,11 +128,8 @@ private:
 #include "cornerpoint.cc"
 
 } // namespace Provider
-
 } // namespace Grid
-
 } // namespace Stuff
-
 } // namespace Dune
 
 #endif // HAVE_DUNE_CORNERPOINT

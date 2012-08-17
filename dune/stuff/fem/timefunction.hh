@@ -4,12 +4,9 @@
 #include <dune/fem/function/common/function.hh>
 #include <dune/common/bartonnackmanifcheck.hh>
 
-namespace Dune
-{
-namespace Stuff
-{
-namespace Fem
-{
+namespace Dune {
+namespace Stuff {
+namespace Fem {
 
 //! a dummy timeprovider for usage in Stuff::RuntimeFunction
 struct ConstTimeProvider
@@ -201,9 +198,7 @@ public:
 };
 
 } // namespace Fem
-
 } // namespace Stuff
-
 } // namespace Dune
 
 #endif // STUFF_TIMEFUNCTION_HH

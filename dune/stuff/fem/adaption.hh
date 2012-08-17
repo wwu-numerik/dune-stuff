@@ -7,9 +7,7 @@
 #include <boost/shared_ptr.hpp>
 
 namespace Dune {
-
 namespace Stuff {
-
 namespace Fem {
 
 /**
@@ -101,9 +99,7 @@ typename DiscreteOseenFunctionWrapperAdaptionManager< T >::RestrictProlongOperat
 DiscreteOseenFunctionWrapperAdaptionManager< T >::restrictOperator_Set_;
 
 } // namespace Fem
-
 } // namespace Stuff
-
 } // namespace Dune
 
 #endif // DUNE_STUFF_ADAPTION_HH

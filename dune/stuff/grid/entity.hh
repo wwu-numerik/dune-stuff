@@ -4,17 +4,10 @@
 // dune-stuff includes
 #include <dune/stuff/common/string.hh>
 
-namespace Dune
-{
-
-namespace Stuff
-{
-
-namespace Grid
-{
-
-namespace Entity
-{
+namespace Dune {
+namespace Stuff {
+namespace Grid {
+namespace Entity {
 
 template< class EntityType, class StreamType = std::ostream >
 void print( const EntityType& entity, StreamType& stream = std::cout, std::string prefix = "" )
@@ -103,11 +96,8 @@ double geometryDiameter(const Dune::Entity< 0, 3, GridImp, EntityImp >& entity) 
 } // geometryDiameter
 
 } // namespace Entity
-
 } // namespace Grid
-
 } // namespace Stuff
-
 } // namespace Dune
 
 #endif // DUNE_HELPER_TOOLS_GRID_ENTITY_HH

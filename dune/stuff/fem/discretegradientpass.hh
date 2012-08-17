@@ -24,9 +24,7 @@
 #endif
 
 namespace Dune {
-namespace Stuff
-{
-
+namespace Stuff {
 namespace Fem {
 
 // forward decraration
@@ -418,9 +416,7 @@ private:
 }; // end of DiscreteGradientPass
 
 } // namespace Fem
-
 } // namespace Stuff
-
 } // namespace Dune
 
 #endif // end of dicretegradientpass.hh DUNE_STUFF_DISCRETEGRADIENTPASS_HH

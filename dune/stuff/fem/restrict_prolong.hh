@@ -5,10 +5,8 @@
 #include <dune/fem/space/common/restrictprolonginterface.hh>
 
 namespace Dune {
-
-  namespace Stuff {
-
-    namespace Fem {
+namespace Stuff {
+namespace Fem {
 
 /** \brief an arbitrary size set of RestrictProlong operators of same type
    * This class is useful if you have more than a Pair of discrete functions that
@@ -101,9 +99,7 @@ protected:
 };
 
 } // namespace Fem
-
 } // namespace Stuff
-
 } // namespace Dune
 
 #endif // DUNE_STUFF_RESTRICT_PROLONG_HH

@@ -7,13 +7,9 @@
 // dune-stuff
 #include <dune/stuff/grid/intersection.hh>
 
-namespace Dune
-{
-namespace Stuff
-{
-
-namespace Projection
-{
+namespace Dune {
+namespace Stuff {
+namespace Projection {
 
 class Dirichlet
 {
@@ -146,9 +142,7 @@ private:
 }; // end class Dirichlet
 
 } // end namespace Projection
-
 } // end namespace Stuff
-
 } // end namespace Dune
 
 #endif // DUNE_HELPER_TOOLS_DISCRETEFUNCTIONSPACE_PROJECTION_DIRICHLET_HH

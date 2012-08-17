@@ -11,9 +11,7 @@
 #include <dune/stuff/fem/localmassmatrix.hh>
 
 namespace Dune {
-
 namespace Stuff {
-
 namespace Projection {
 
   /** A custom projection of an analytical function that uses a non-standard evalute signature:\n
@@ -395,11 +393,8 @@ public:
 };
 
 } // namespace Experimental
-
 } // namespace Projection
-
 } // namespace Stuff
-
 } // namespace Dune
 
 #endif // CUSTOMPROJECTION_HH

@@ -2,10 +2,9 @@
 #define DUNE_STUFF_PRECONDITIONING_HH
 
 namespace Dune {
+namespace Stuff {
+namespace Fem {
 
-  namespace Stuff {
-
-    namespace Fem {
 //! allow any class fullfilling the Operator concept to be used as a preconditioner
 template< class Operator, template< class T, class F > class Solver, class RangeDiscreteFunctionType >
 class OperatorBasedPreconditioner
@@ -48,9 +47,7 @@ public:
 };
 
 } // namespace Fem
-
 } // namespace Stuff
-
 } // namespace Dune
 
 #endif // DUNE_STUFF_PRECONDITIONING_HH

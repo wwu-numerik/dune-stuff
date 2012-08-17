@@ -23,14 +23,9 @@
 // local
 #include "expression/mathexpr.hh"
 
-namespace Dune
-{
-
-namespace Stuff
-{
-
-namespace Function
-{
+namespace Dune {
+namespace Stuff {
+namespace Function {
 
 /**
   \brief  Provides a function which evaluates a given mathematical expression at runtime.
@@ -232,9 +227,7 @@ template< class DomainFieldImp, int maxDimDomain, class RangeFieldImp, int maxDi
 const std::string Expression< DomainFieldImp, maxDimDomain, RangeFieldImp, maxDimRange >::id = "stuff.function.expression";
 
 } // namespace Function
-
 } // namespace Stuff
-
 } // namespace Dune
 
 #endif // DUNE_STUFF_FUNCTION_EXPRESSION_HH

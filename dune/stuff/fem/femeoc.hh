@@ -10,11 +10,8 @@
 #include <dune/fem/io/file/iointerface.hh>
 
 namespace Dune {
-
 namespace Stuff {
-
 namespace Fem {
-
 namespace Tex {
 /**
    *  @ingroup HelperClasses
@@ -372,11 +369,8 @@ public:
 };
 
 } // namespace Tex
-
 } // namespace Stuff
-
 } // namespace Fem
-
 } // namespace Dune
 
 #endif // ifndef DUNE_STUFF_FEMEOC_HH

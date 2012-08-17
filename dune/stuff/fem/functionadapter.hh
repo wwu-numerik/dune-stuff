@@ -10,9 +10,7 @@
 #include <dune/common/static_assert.hh>
 
 namespace Dune {
-
 namespace Stuff {
-
 namespace Fem {
 
 /** DiscreteFunction container \f$G\f$ that takes a \$f(dxd)\$f matrix valued function \f$f\f$ as input that splits
@@ -446,9 +444,7 @@ public:
 };
 
 } // namespace Fem
-
 } // namespace Stuff
-
 } // namespace Dune
 
 #endif // DUNE_STUFF_FUNCTIONADAPTER_HH

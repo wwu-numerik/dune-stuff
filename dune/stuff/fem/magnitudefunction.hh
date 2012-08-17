@@ -11,9 +11,7 @@
 #include "localmassmatrix.hh"
 
 namespace Dune {
-
 namespace Stuff {
-
 namespace Fem {
 
 //! Wrap a DiscreteFunction to a scalar function representing its two-norm
@@ -127,9 +125,7 @@ const typename MagnitudeFunction< DF, I >::MagnitudeSpaceType
 MagnitudeFunction< DF, I >::magnitude_space_ = typename MagnitudeFunction< DF, I >::MagnitudeSpaceType();
 
 } // namespace Fem
-
 } // namespace Stuff
-
 } // namespace Dune
 
 #endif // DUNE_STUFF_MAGNITUDEFUNCTION_HH

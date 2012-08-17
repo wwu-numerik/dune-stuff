@@ -7,9 +7,7 @@
 #include <utility>
 
 namespace Dune {
-
 namespace Stuff {
-
 namespace Fem {
 
 /** \brief Class that facilitates getting absolute and relative error of a pair of DisceteFunctions
@@ -73,9 +71,7 @@ public:
 };
 
 } // namespace Fem
-
 } // namespace Stuff
-
 } // namespace Dune
 
 #endif // DUNE_STUFF_ERROR_HH

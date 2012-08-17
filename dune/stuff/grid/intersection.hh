@@ -8,16 +8,10 @@
 // dune-stuff
 #include <dune/stuff/common/string.hh>
 
-namespace Dune
-{
-namespace Stuff
-{
-
-namespace Grid
-{
-
-namespace Intersection
-{
+namespace Dune {
+namespace Stuff {
+namespace Grid {
+namespace Intersection {
 
 /**
   \brief      prints some basic information about a Dune::Intersection, namely the number of its corners and the
@@ -138,11 +132,8 @@ bool contains( const IntersectionType& intersection, const Dune::FieldVector< Fi
 } // end function contains
 
 } // end namespace Intersection
-
 } // end namespace Grid
-
 } // end of namespace Stuff
-
 } // end namespace Dune
 
 #endif // DUNE_FEMTOOLS_GRID_INTERSECTION_HH

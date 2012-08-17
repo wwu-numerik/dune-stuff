@@ -18,9 +18,7 @@
 #include <dune/common/fvector.hh>
 
 namespace Dune {
-
 namespace Stuff {
-
 namespace Fem {
 
 //! (inplace) multiplies given function with matrix diagonal
@@ -841,9 +839,7 @@ private:
 };
 
 } // end namespace Fem
-
 } // end namespace Stuff
-
 } // end namespace Dune
 
 #define NULLFUNCTION_TP(classname) \
