@@ -1,5 +1,3 @@
-SUBDIRS = provider output
-
 grid_includedir = $(includedir)/dune/stuff/grid
 #common_include_HEADERS = color.hh
 

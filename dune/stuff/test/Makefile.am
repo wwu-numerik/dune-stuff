@@ -33,6 +33,7 @@ function_expression_SOURCES = function_expression.cc
 
 grid_provider_SOURCES = grid_provider.cc
 grid_information_SOURCES = grid_information.cc
+grid_output_pgf_SOURCES = grid_output_pgf.cc
 
 fem_error_SOURCES = fem_error.cc
 fem_projection_SOURCES = fem_projection.cc

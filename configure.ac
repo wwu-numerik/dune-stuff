@@ -23,6 +23,7 @@ AC_CONFIG_FILES([Makefile
 	dune/stuff/function/Makefile
 	dune/stuff/grid/Makefile
 	dune/stuff/grid/provider/Makefile
+	dune/stuff/grid/output/Makefile
 	dune/stuff/projection/Makefile
 	dune/stuff/test/Makefile
 	dune/stuff/test/gtest/Makefile
