@@ -1,6 +1,30 @@
 #ifndef DUNE_STUFF_RANGES_RANGES_HH
 #define DUNE_STUFF_RANGES_RANGES_HH
 
+#include <dune/grid/common/gridview.hh>
+
+namespace std {
+template < class GridViewTraits >
+auto begin( Dune::GridView<GridViewTraits>& view ) -> decltype(view.template begin< 0 >()) {
+  return view.template begin< 0 >();
+}
+
+template < class GridViewTraits >
+auto end( Dune::GridView<GridViewTraits>& view ) -> decltype(view.template end< 0 >()) {
+  return view.template end< 0 >();
+}
+
+template < class GridViewTraits >
+auto begin( const Dune::GridView<GridViewTraits>& view ) -> decltype(view.template begin< 0 >()) {
+  return view.template begin< 0 >();
+}
+
+template < class GridViewTraits >
+auto end( const Dune::GridView<GridViewTraits>& view ) -> decltype(view.template end< 0 >()) {
+  return view.template end< 0 >();
+}
+}
+
 namespace Dune {
 namespace Stuff {
 namespace Grid {
@@ -10,7 +34,7 @@ template < class GridViewType, int codim = 0>
 class ViewRange {
   const GridViewType& view_;
 public:
-  ViewRange(const GridViewType& view)
+  ViewRange(const GridViewType& view) DUNE_DEPRECATED_MSG("completely obsoleted with specialized std::begin/end")
     :view_(view)
   {}
 
