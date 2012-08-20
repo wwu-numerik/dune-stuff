@@ -7,9 +7,7 @@
 #include "math.hh"
 
 namespace Dune {
-
 namespace Stuff {
-
 namespace Common {
 
 //! a small proxy object that automagically prevents near-0 value fill-in
@@ -152,9 +150,7 @@ public:
 };
 
 } // namespace Common
-
 } // namespace Stuff
-
 } // namespace Dune
 
 #endif // LOCALMATRIX_PROXY_HH

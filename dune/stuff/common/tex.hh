@@ -12,11 +12,9 @@
 #include <boost/format.hpp>
 
 namespace Dune {
-
 namespace Stuff {
-
 namespace Common {
-
+//! this is all pretty dune{,-navier}-stokes specific ...
 namespace Tex {
 
 //! interface and base class for all out eoc tex output
@@ -482,11 +480,8 @@ public:
 };
 
 } // namespace Tex
-
 } // namespace Common
-
 } // namespace Stuff
-
 } // namespace Dune
 
 #endif // DUNE_STUFF_TEX_HH

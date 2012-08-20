@@ -10,9 +10,7 @@
 #include <boost/foreach.hpp>
 
 namespace Dune {
-
 namespace Stuff {
-
 namespace Common {
 
 /** \brief wrap any info that might be remotely interesting about a single run
@@ -178,9 +176,7 @@ void dumpRunInfoVectorToFile(const RunInfoVector& vec, const std::string fn = "r
 } // dumpRunInfoVectorToFile
 
 } // namespace Common
-
 } // namespace Stuff
-
 } // namespace Dune
 
 #endif // DUNE_STUFF_RUNINFO_HH

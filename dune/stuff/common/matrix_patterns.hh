@@ -7,12 +7,10 @@
 #include <dune/stuff/common/debug.hh>
 
 namespace Dune {
-
 namespace Stuff {
-
 namespace Common {
-
 namespace MatrixPatterns {
+
 /**
    * @brief Class for storing the sparsity pattern of a matrix. Copy from dune-detailed-discretisations.
    *
@@ -344,11 +342,8 @@ public:
 }; // end class ElementNeighborStencil
 
 } // namespace MatrixPatterns
-
 } // namespace Common
-
 } // namespace Stuff
-
 } // namespace Dune
 
 #endif // STUFF_MATRIX_PATTERNS_HH

@@ -5,9 +5,7 @@
 // #include <dune/fem/misc/femtuples.hh>
 
 namespace Dune {
-
 namespace Stuff {
-
 namespace Common {
 
   //! split our function wrapper into sep pointers for Datawriter input
@@ -98,9 +96,7 @@ Dune::Tuple< T1, T2 > makeTuple(T1& t1, T2& t2)
 { return Dune::tuple< T1, T2 >(t1, t2); }
 
 } // namespace Common
-
 } // namespace Stuff
-
 } // namespace Dune
 
 #endif // DUNE_STUFF_TUPLE_HH

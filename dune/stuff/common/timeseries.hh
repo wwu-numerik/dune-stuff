@@ -14,9 +14,7 @@
 #include <boost/typeof/typeof.hpp>
 
 namespace Dune {
-
 namespace Stuff {
-
 namespace Common {
 
 /** \brief nice tex graph output for a time dependent simulation
@@ -541,9 +539,7 @@ private:
 };
 
 } // namespace Common
-
 } // namespace Stuff
-
 } // namespace Dune
 
 #endif // DUNE_STUFF_TIMESERIES_HH

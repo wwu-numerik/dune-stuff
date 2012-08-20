@@ -17,17 +17,10 @@
 #endif // if HAVE_DUNE_ISTL
 #endif // THIS_WORKS
 
-namespace Dune
-{
-
-namespace Stuff
-{
-
-namespace Common
-{
-
-namespace Matrix
-{
+namespace Dune {
+namespace Stuff {
+namespace Common {
+namespace Matrix {
 
 // \todo doc
 template< class MatrixImp >
@@ -335,11 +328,8 @@ void forceTranspose(const M& arg, M& dest) {
 #endif // THIS_WORKS
 
 } // namespace Matrix
-
 } // namespace Common
-
 } // namespace Stuff
-
 } // namespace Dune
 
 #endif // DUNE_STUFF_COMMON_MATRIX_HH

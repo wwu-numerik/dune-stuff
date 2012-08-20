@@ -4,11 +4,12 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 namespace Dune {
-
 namespace Stuff {
-
 namespace Common {
 
+/**
+ * deprecate in favor of Profiler?
+ **/
 class ExecutionTimer
 {
 public:
@@ -53,9 +54,7 @@ boost::posix_time::ptime ExecutionTimer::stopt_;
   ( ExecutionTimer::startTimer(), command, ExecutionTimer::stopTimerMicroseconds() )
 
 } // namespace Common
-
 } // namespace Stuff
-
 } // namespace Dune
 
 #endif /* __EXECUTIONTIMER_HH__ */
