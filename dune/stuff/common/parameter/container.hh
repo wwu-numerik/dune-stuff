@@ -23,11 +23,8 @@
 #include <boost/format.hpp>
 
 namespace Dune {
-
 namespace Stuff {
-
 namespace Common {
-
 namespace Parameter {
 
 /**
@@ -222,11 +219,8 @@ std::string getFileinDatadir(const std::string& fn) {
 } // getFileinDatadir
 
 } // namespace Parameter
-
 } // namespace Common
-
 } // namespace Stuff
-
 } // namespace Dune
 
 #endif // end of PARAMETERHANDLER.HH
