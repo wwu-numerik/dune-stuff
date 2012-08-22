@@ -9,6 +9,7 @@
 
 #include <dune/fem/io/file/iointerface.hh>
 #include <boost/filesystem.hpp>
+#include <boost/filesystem/fstream.hpp>
 
 namespace Dune {
 namespace Stuff {
@@ -36,6 +37,18 @@ void testCreateDirectory(const std::string path) {
   std::string pathonly = pathOnly(path);
   if (!pathonly.empty())
     boost::filesystem::create_directories(pathonly);
+}
+
+boost::filesystem::ofstream* make_ofstream(const boost::filesystem::path& path,
+                                           const std::ios_base::openmode mode = std::ios_base::out ) {
+  testCreateDirectory(path.string());
+  return new boost::filesystem::ofstream(path, mode);
+}
+
+boost::filesystem::ifstream* make_ifstream(const boost::filesystem::path& path,
+                                           const std::ios_base::openmode mode = std::ios_base::in) {
+  testCreateDirectory(path.string());
+  return new boost::filesystem::ifstream(path, mode);
 }
 
 //! read a file and output all lines containing filter string to a stream
@@ -67,11 +80,8 @@ void meminfo(Dune::Stuff::Common::LogStream& stream) {
 } // meminfo
 
 } // namespace Filesystem
-
 } // namespace Common
-
 } // namespace Stuff
-
 } // namespace Dune
 
 #endif // DUNE_STUFF_FILESYSTEM_HH

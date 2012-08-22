@@ -26,7 +26,7 @@ struct Statistics {
     , numberOfBoundaryIntersections(0), maxGridWidth(0)
   {
     for (const auto& entity : gridView) {
-      for (const auto& intIt : IntersectionRange<GridViewType>(gridView, entity)) {
+      for (const auto& intIt : Dune::Stuff::intersectionRange(gridView, entity)) {
         ++numberOfIntersections;
         maxGridWidth = std::max(intIt.geometry().volume(), maxGridWidth);
         // if we are inside the grid
@@ -111,7 +111,7 @@ public:
     View;
     const auto& view = grid.leafView();
     GridDimensionsFunctor f(coord_limits, entity_volume);
-    Dune::Stuff::Grid::Walk< View >(view).walkCodim0(f);
+    Dune::Stuff::GridWalk< View >(view).walkCodim0(f);
   }
 };
 
