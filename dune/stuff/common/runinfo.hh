@@ -8,6 +8,7 @@
 #include <string>
 #include <boost/format.hpp>
 #include <boost/foreach.hpp>
+#include <dune/stuff/common/parameter/container.hh>
 
 namespace Dune {
 namespace Stuff {

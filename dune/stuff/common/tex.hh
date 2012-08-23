@@ -1,9 +1,14 @@
 #ifndef DUNE_STUFF_TEX_HH
 #define DUNE_STUFF_TEX_HH
 
+#ifdef HAVE_CMAKE_CONFIG
+ #include "cmake_config.h"
+#elif defined (HAVE_CONFIG_H)
+ #include <config.h>
+#endif // ifdef HAVE_CMAKE_CONFIG
+
 #include "misc.hh"
 #include "runinfo.hh"
-#include "grid.hh"
 #include <dune/common/static_assert.hh>
 
 #include <ostream>
@@ -132,7 +137,7 @@ public:
                 << "\\caption{"
                 << info_.problemIdentifier << ": "
                 << info_.gridname
-                << ( info_.bfg ? std::string(", BFG ($\\tau = ") + toString(info_.bfg_tau)
+                << ( info_.bfg ? std::string(", BFG ($\\tau = ") + Dune::Stuff::Common::String::convertTo(info_.bfg_tau)
          + std::string("$ ),") : std::string(", kein BFG,") )
                 << "\\\\"
                 << " Polorder (u,p,$ \\sigma $): (" << info_.polorder_velocity << ", " << info_.polorder_pressure
@@ -298,7 +303,8 @@ public:
                 << info_.grid_width << " & "
                 << info_.codim0 << " & "
                 << runtime.str() << " & "
-                << ( info_.bfg ? toString(info_.bfg_tau) : std::string("--") ) << " & " // don't output a num in
+                << ( info_.bfg ? Dune::Stuff::Common::String::convertTo(info_.bfg_tau)
+                               : std::string("--") ) << " & " // don't output a num in
                                                                                         //reference row
                 << info_.iterations_inner_avg << " & "
                 << info_.iterations_inner_min << " & "

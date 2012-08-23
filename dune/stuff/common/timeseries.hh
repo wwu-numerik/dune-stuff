@@ -2,14 +2,18 @@
 #define DUNE_STUFF_TIMESERIES_HH
 
 #ifdef HAVE_CMAKE_CONFIG
- #include "cmake_config.h"  // otherwise array has issues
-#endif
+ #include "cmake_config.h"
+#elif defined (HAVE_CONFIG_H)
+ #include <config.h>
+#endif // ifdef HAVE_CMAKE_CONFIG
+
 #include <cstdio>
 #include <algorithm>
 #include <set>
 
 #include <dune/stuff/common/misc.hh>
 #include <dune/stuff/common/logging.hh>
+#include <dune/stuff/common/runinfo.hh>
 #include <boost/format.hpp>
 #include <boost/typeof/typeof.hpp>
 

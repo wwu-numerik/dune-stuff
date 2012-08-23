@@ -7,6 +7,12 @@
 #ifndef PARAMETERCONTAINER_HH_INCLUDED
 #define PARAMETERCONTAINER_HH_INCLUDED
 
+#ifdef HAVE_CMAKE_CONFIG
+ #include "cmake_config.h"
+#elif defined (HAVE_CONFIG_H)
+ #include <config.h>
+#endif // ifdef HAVE_CMAKE_CONFIG
+
 #include <dune/common/deprecated.hh>
 #include <dune/fem/io/parameter.hh>
 

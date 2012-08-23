@@ -6,7 +6,7 @@
 #include <dune/common/deprecated.hh>
 #include <dune/stuff/common/math.hh>
 #include <dune/stuff/common/misc.hh>
-#include <dune/stuff/grid/ranges.hh>
+#include <dune/stuff/common/ranges.hh>
 #include <dune/grid/common/geometry.hh>
 #include <vector>
 #include <boost/format.hpp>
@@ -17,6 +17,8 @@ namespace Stuff {
 /** \brief Useful dummy functor if you don't have anything to do on entities/intersections
  **/
 struct GridWalkDummyFunctor {
+  GridWalkDummyFunctor(){}
+
   template < class Entity >
   void operator() ( const Entity&, const int) const
   {}
@@ -36,8 +38,9 @@ namespace {
  *  \tparam GridViewType any \ref GridView interface compliant type
  *  \tparam codim determines the codim of the Entities that are iterated on
  **/
-template < class GridViewType, int codim = 0 >
+template < class GridViewImp, int codim = 0 >
 class GridWalk {
+  typedef Dune::GridView<typename GridViewImp::Traits> GridViewType;
 public:
   GridWalk ( const GridViewType& gp )
     : gridView_( gp )
@@ -52,7 +55,7 @@ public:
   void operator () ( EntityFunctor& entityFunctor, IntersectionFunctor& intersectionFunctor ) const
   {
     dune_static_assert( codim == 0, "walking intersections is only possible for codim 0 entities" );
-    for (const auto& entity : gridView_) {
+    for (const auto& entity : viewRange(gridView_)) {
       const int entityIndex = gridView_.indexSet().index(entity);
       entityFunctor( entity, entityIndex);
       for (const auto& intersection : intersectionRange(gridView_, entity)) {
@@ -68,7 +71,7 @@ public:
   void operator () ( EntityFunctor& entityFunctor ) const
   {
     dune_static_assert( codim <= GridViewType::dimension, "codim too high to walk" );
-    for (const auto& entity : gridView_) {
+    for (const auto& entity : viewRange(gridView_)) {
       const int entityIndex = gridView_.indexSet().index(entity);
       entityFunctor( entity, entityIndex);
     }

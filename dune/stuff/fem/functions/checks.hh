@@ -1,6 +1,12 @@
 #ifndef STUFF_FUNCTIONS_HH_INCLUDED
 #define STUFF_FUNCTIONS_HH_INCLUDED
 
+#ifdef HAVE_CMAKE_CONFIG
+ #include "cmake_config.h"
+#elif defined (HAVE_CONFIG_H)
+ #include <config.h>
+#endif // ifdef HAVE_CMAKE_CONFIG
+
 #include <cmath>
 #include <fstream>
 #include <limits>
@@ -8,7 +14,7 @@
 #include <dune/fem/function/blockvectorfunction/blockvectorfunction.hh>
 
 #include <dune/fem/io/file/vtkio.hh>
-#include "localmassmatrix.hh"
+#include <dune/stuff/fem/localmassmatrix.hh>
 #include <dune/stuff/common/misc.hh>
 #include <dune/stuff/common/math.hh>
 #include <dune/stuff/common/string.hh>

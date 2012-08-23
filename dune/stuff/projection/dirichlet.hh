@@ -111,7 +111,7 @@ public:
             for( unsigned int i = 0; i < lagrangePointSet.nop(); ++i )
             {
               // if dof lies on the boundary intersection
-              if( Dune::HelperTools::Grid::Intersection::contains( intersection, lagrangePointsGlobal[i] ) )
+              if( Dune::Stuff::Grid::Intersection::contains( intersection, lagrangePointsGlobal[i] ) )
               {
                 // evaluate the boundary function
                 function.evaluate( lagrangePointsGlobal[i], tmpEvaluation );
