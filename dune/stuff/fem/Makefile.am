@@ -1,4 +1,4 @@
-SUBDIRS = 
+SUBDIRS = functions
 
 fem_includedir = $(includedir)/dune/stuff/fem
 #common_include_HEADERS = color.hh
