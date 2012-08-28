@@ -85,12 +85,7 @@ public:
   LogStream& dbg() DUNE_DEPRECATED_MSG("use debug() instead") { return getStream(LOG_DEBUG); }
   LogStream& debug() { return getStream(LOG_DEBUG); }
   LogStream& devnull() { return emptyLogStream_; }
-  LogStream& matlab() {
-    if(matlabLogStreamPtr)
-      return *matlabLogStreamPtr;
-    else
-      return emptyLogStream_;
-  }
+  LogStream& matlab() { return matlabLogStreamPtr ? *static_cast<LogStream*>(matlabLogStreamPtr) : emptyLogStream_; }
 
   //! flush all active streams
   void flush();
