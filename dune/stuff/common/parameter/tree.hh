@@ -61,7 +61,21 @@ void assertSub(const Dune::ParameterTree& paramTree, std::string sub, std::strin
     paramTree.report(msg);
     DUNE_THROW(Dune::InvalidStateException, msg.str());
   }
-} // void assert_sub(std::string "sub")
+} // void assertSub()
+
+void assertKey(const Dune::ParameterTree& paramTree, std::string key, std::string id = "")
+{
+  if (!paramTree.hasKey(key)) {
+    std::stringstream msg;
+    msg << "Error";
+    if (id != "") {
+      msg << " in " << id;
+    }
+    msg << ": key '" << key << "' not found in the following Dune::Parametertree" << std::endl;
+    paramTree.report(msg);
+    DUNE_THROW(Dune::InvalidStateException, msg.str());
+  }
+} // void assertKey()
 
 } // namespace Tree
 
