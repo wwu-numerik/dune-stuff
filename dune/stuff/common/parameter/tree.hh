@@ -15,20 +15,19 @@
 namespace Dune {
 namespace Stuff {
 namespace Common {
-namespace Parameter {
-namespace Tree {
+
 
 //! ParameterTree extension for nicer output
-class Extended : public Dune::ParameterTree {
+class ExtendedParameterTree : public Dune::ParameterTree {
 public:
-  Extended()
+  ExtendedParameterTree()
   {}
 
-  explicit Extended(const Dune::ParameterTree& other)
+  explicit ExtendedParameterTree(const Dune::ParameterTree& other)
     : Dune::ParameterTree(other)
   {}
 
-  Extended& operator=(const Dune::ParameterTree& other)
+  ExtendedParameterTree& operator=(const Dune::ParameterTree& other)
   {
     if (this != &other) {
       Dune::ParameterTree::operator=(other);
@@ -44,38 +43,38 @@ public:
 
     for(auto pair : subs)
     {
-      Extended sub(pair.second);
+      ExtendedParameterTree sub(pair.second);
       if (sub.getValueKeys().size())
         stream << "[ " << prefix + pair.first << " ]" << std::endl;
       sub.report(stream, prefix + pair.first + ".");
     }
   }
-};
 
-/**
-  \brief      Fills a Dune::ParameterTree given a parameter file or command line arguments.
-  \param[in]  argc
-              From \c main()
-  \param[in]  argv
-              From \c main()
-  \param[out] paramTree
-              The Dune::ParameterTree that is to be filled.
-  **/
-Extended init(int argc, char** argv, std::string filename)
-{
-  Extended paramTree;
-  if (argc == 1) {
-    Dune::ParameterTreeParser::readINITree(filename, paramTree);
-  } else if (argc == 2) {
-    Dune::ParameterTreeParser::readINITree(argv[1], paramTree);
-  } else {
-    Dune::ParameterTreeParser::readOptions(argc, argv, paramTree);
-  }
-  if (paramTree.hasKey("paramfile")) {
-    Dune::ParameterTreeParser::readINITree(paramTree.get< std::string >("paramfile"), paramTree, false);
-  }
-  return paramTree;
-} // Dune::ParameterTree init(int argc, char** argv, std::string filename)
+  /**
+    \brief      Fills a Dune::ParameterTree given a parameter file or command line arguments.
+    \param[in]  argc
+                From \c main()
+    \param[in]  argv
+                From \c main()
+    \param[out] paramTree
+                The Dune::ParameterTree that is to be filled.
+    **/
+  static ExtendedParameterTree init(int argc, char** argv, std::string filename)
+  {
+    ExtendedParameterTree paramTree;
+    if (argc == 1) {
+      Dune::ParameterTreeParser::readINITree(filename, paramTree);
+    } else if (argc == 2) {
+      Dune::ParameterTreeParser::readINITree(argv[1], paramTree);
+    } else {
+      Dune::ParameterTreeParser::readOptions(argc, argv, paramTree);
+    }
+    if (paramTree.hasKey("paramfile")) {
+      Dune::ParameterTreeParser::readINITree(paramTree.get< std::string >("paramfile"), paramTree, false);
+    }
+    return paramTree;
+  } // Dune::ParameterTree init(int argc, char** argv, std::string filename)
+};
 
 void assertSub(const Dune::ParameterTree& paramTree, std::string sub, std::string id = "")
 {
@@ -91,8 +90,6 @@ void assertSub(const Dune::ParameterTree& paramTree, std::string sub, std::strin
   }
 } // void assert_sub(std::string "sub")
 
-} // namespace Tree
-} // namespace Parameter
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune

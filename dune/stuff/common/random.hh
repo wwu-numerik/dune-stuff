@@ -7,7 +7,6 @@
 namespace Dune {
 namespace Stuff {
 namespace Common {
-namespace Math {
 
 template < typename T, bool = std::is_integral<T>::value >
 struct UniformDistributionSelector {
@@ -96,7 +95,6 @@ public:
 };
 
 
-} // namespace Math
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune

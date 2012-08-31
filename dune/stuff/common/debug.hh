@@ -76,7 +76,7 @@ public:
  #define ASSERT_EXCEPTION(cond, msg) \
   if ( !(cond) ) \
   { \
-    std::string rmsg( std::string(__FILE__) + std::string(":") + Stuff::Common::String::convertTo(__LINE__) + std::string( \
+    std::string rmsg( std::string(__FILE__) + std::string(":") + Stuff::Common::toString(__LINE__) + std::string( \
                         "\n") + std::string(msg) );  \
     throw assert_exception(rmsg); \
   }

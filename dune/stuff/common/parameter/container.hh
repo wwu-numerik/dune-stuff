@@ -31,7 +31,6 @@
 namespace Dune {
 namespace Stuff {
 namespace Common {
-namespace Parameter {
 
 /**
    *  \brief  class containing global parameters
@@ -39,7 +38,7 @@ namespace Parameter {
    *  ParameterContainer contains all the needed global parameters getting them via Dune::Parameter
    *
    **/
-class Container
+class ParameterContainer
 {
 public:
   /**
@@ -47,7 +46,7 @@ public:
      *
      *  doing nothing
      **/
-  ~Container()
+  ~ParameterContainer()
   {}
 
   /**
@@ -170,7 +169,7 @@ public:
   template< typename T >
   void setParam(std::string name, T val) {
     assert(all_set_up_);
-    return Dune::Parameter::append( name, Dune::Stuff::Common::String::convertTo(val) );
+    return Dune::Parameter::append( name, Dune::Stuff::Common::toString(val) );
   }
 
   //! extension to Fem::paramter that allows vector/list like paramteres from a single key
@@ -184,7 +183,7 @@ public:
     }
     std::string tokenstring = getParam( name, std::string("dummy") );
     std::string delimiter = getParam(std::string("parameterlist_delimiter"), std::string(";"), false);
-    return Dune::Stuff::Common::String::tokenize< T >(tokenstring, delimiter);
+    return Dune::Stuff::Common::tokenize< T >(tokenstring, delimiter);
   } // getList
 
 private:
@@ -196,9 +195,9 @@ private:
   /**
      *  \brief  constuctor
      *
-     *  \attention  call ReadCommandLine() to set up parameterContainer
+     *  \attention  call ReadCommandLine() to set up parameterParameterContainer
      **/
-  Container()
+  ParameterContainer()
     : all_set_up_(false)
       , warning_output_(true) {
     const std::string p[] = { "dgf_file_2d", "dgf_file_3d" };
@@ -206,12 +205,12 @@ private:
     mandatory_params_ = std::vector< std::string >( p, p + ( sizeof(p) / sizeof(p[0]) ) );
   }
 
-  friend Container& Parameters();
+  friend ParameterContainer& Parameters();
 };
 
 //! global ParameterContainer instance
-Container& DUNE_DEPRECATED_MSG("use the Dune::ParameterTree based ConfigContainer instead") Parameters() {
-  static Container parameters;
+ParameterContainer& DUNE_DEPRECATED_MSG("use the Dune::ParameterTree based ConfigParameterContainer instead") Parameters() {
+  static ParameterContainer parameters;
   return parameters;
 }
 
@@ -224,7 +223,6 @@ std::string getFileinDatadir(const std::string& fn) {
   return path.string();
 } // getFileinDatadir
 
-} // namespace Parameter
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune

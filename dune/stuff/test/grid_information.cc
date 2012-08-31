@@ -6,8 +6,8 @@
 #include <dune/stuff/common/math.hh>
 #include <dune/stuff/common/logstreams.hh>
 
-using namespace Dune::Stuff;
-using namespace Dune::Stuff::Grid::Information;
+using namespace Dune::Stuff::Common;
+using namespace Dune::Stuff::Grid;
 using namespace std;
 
 template < int i >
@@ -24,7 +24,7 @@ struct GridInfoTest : public ::testing::Test {
   typedef Dune::YaspGrid<griddim> GridType;
   Dune::shared_ptr<GridType> gridPtr;
   GridInfoTest()
-    :gridPtr(Grid::Provider::UnitCube<GridType>(level).gridPtr())
+    :gridPtr(UnitCubeProvider<GridType>(level).gridPtr())
   {}
 
   void check() {
@@ -36,7 +36,7 @@ struct GridInfoTest : public ::testing::Test {
     EXPECT_DOUBLE_EQ(dim.entity_volume.min(),dim.entity_volume.average());
     EXPECT_DOUBLE_EQ(1.0,dim.volumeRelation());
     const auto& dl = dim.coord_limits;
-    for( int i : Common::Math::range(griddim) )
+    for( int i : valueRange(griddim) )
     {
       EXPECT_DOUBLE_EQ(dl[i].max(),1.0);
       EXPECT_DOUBLE_EQ(dl[i].min(),0.0);
@@ -52,14 +52,14 @@ struct GridInfoTest : public ::testing::Test {
 
   void print(std::ostream& out) {
     const auto& gv = gridPtr->leafView();
-    ::print(gv, out);
+    printInfo(gv, out);
   }
 };
 
 TYPED_TEST_CASE(GridInfoTest, GridDims);
 TYPED_TEST(GridInfoTest, Misc) {
   this->check();
-  this->print(Common::dev_null);
+  this->print(dev_null);
 }
 
 int main(int argc, char** argv)

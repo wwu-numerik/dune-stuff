@@ -164,7 +164,7 @@ typedef std::map< RunInfoVectorMapKeyType, RunInfoTimeMap >
 RunInfoTimeMapMap;
 
 void dumpRunInfoVectorToFile(const RunInfoVector& vec, const std::string fn = "runinfos.csv") {
-  std::ofstream file( Dune::Stuff::Common::Parameter::getFileinDatadir(fn).c_str() );
+  std::ofstream file( Dune::Stuff::Common::getFileinDatadir(fn).c_str() );
 
   assert(vec.size() > 0);
   vec.front().tableHeader(file);

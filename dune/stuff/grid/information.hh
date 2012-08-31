@@ -12,7 +12,8 @@
 namespace Dune {
 namespace Stuff {
 namespace Grid {
-namespace Information {
+
+using namespace Dune::Stuff::Common;
 
 struct Statistics {
   int numberOfEntities;
@@ -26,7 +27,7 @@ struct Statistics {
     , numberOfBoundaryIntersections(0), maxGridWidth(0)
   {
     for (const auto& entity : viewRange(gridView)) {
-      for (const auto& intIt : Dune::Stuff::intersectionRange(gridView, entity)) {
+      for (const auto& intIt : intersectionRange(gridView, entity)) {
         ++numberOfIntersections;
         maxGridWidth = std::max(intIt.geometry().volume(), maxGridWidth);
         // if we are inside the grid
@@ -41,7 +42,7 @@ struct Statistics {
 /** \brief grid statistic output to given stream
    */
 template< class GridViewType >
-void print(const GridViewType& gridView, std::ostream& out) {
+void printInfo(const GridViewType& gridView, std::ostream& out) {
   const Statistics st(gridView);
   out << "found " << st.numberOfEntities << " entities," << std::endl;
   out << "found " << st.numberOfIntersections << " intersections," << std::endl;
@@ -72,10 +73,10 @@ template< class GridType >
 struct Dimensions
 {
   //! automatic running min/max
-  typedef Dune::Stuff::Common::Math::MinMaxAvg< typename GridType::ctype >
-  MinMaxAvgType;
+  typedef Dune::Stuff::Common::MinMaxAvg< typename GridType::ctype >
+    MinMaxAvgType;
   typedef Dune::array< MinMaxAvgType, GridType::dimensionworld >
-  CoordLimitsType;
+    CoordLimitsType;
   CoordLimitsType coord_limits;
   MinMaxAvgType entity_volume;
 
@@ -85,22 +86,22 @@ struct Dimensions
     CoordLimitsType& coord_limits_;
     MinMaxAvgType& entity_volume_;
 
-public:
-    GridDimensionsFunctor(CoordLimitsType& c, MinMaxAvgType& e)
-      : coord_limits_(c)
-        , entity_volume_(e) {}
+    public:
+      GridDimensionsFunctor(CoordLimitsType& c, MinMaxAvgType& e)
+        : coord_limits_(c)
+          , entity_volume_(e) {}
 
-    template< class Entity >
-    void operator()(const Entity& ent, const int /*ent_idx*/) {
-      const auto& geo = ent.geometry();
-      entity_volume_( geo.volume() );
-      for (int i = 0; i < geo.corners(); ++i)
-      {
-        const auto& corner( geo.corner(i) );
-        for (size_t k = 0; k < GridType::dimensionworld; ++k)
-          coord_limits_[k](corner[k]);
-      }
-    } // ()
+      template< class Entity >
+      void operator()(const Entity& ent, const int /*ent_idx*/) {
+        const auto& geo = ent.geometry();
+        entity_volume_( geo.volume() );
+        for (int i = 0; i < geo.corners(); ++i)
+        {
+          const auto& corner( geo.corner(i) );
+          for (size_t k = 0; k < GridType::dimensionworld; ++k)
+            coord_limits_[k](corner[k]);
+        }
+      } // ()
   };
 
   double volumeRelation() const
@@ -111,22 +112,20 @@ public:
     View;
     const auto& view = grid.leafView();
     GridDimensionsFunctor f(coord_limits, entity_volume);
-    Dune::Stuff::GridWalk< View >(view).walkCodim0(f);
+    GridWalk< View >(view).walkCodim0(f);
   }
 };
 
-
-} // namespace Information
 } // namespace Grid
 } // end of namespace Stuff
 } // namespace Dune
 
 template< class T >
 inline std::ostream& operator<<(std::ostream& s, 
-		const Dune::Stuff::Grid::Information::Dimensions< T >& d) {
+    const Dune::Stuff::Grid::Dimensions< T >& d) {
   for (size_t k = 0; k < T::dimensionworld; ++k)
   {
-    const typename Dune::Stuff::Grid::Information::Dimensions< T >::MinMaxAvgType& mma = d.coord_limits[k];
+    const typename Dune::Stuff::Grid::Dimensions< T >::MinMaxAvgType& mma = d.coord_limits[k];
     s << boost::format("x%d\tmin: %e\tavg: %e\tmax: %e\n")
 	    % k
 	    % mma.min()
@@ -142,3 +141,30 @@ inline std::ostream& operator<<(std::ostream& s,
   return s;
 } // <<
 #endif // DUNE_STUFF_GRID_INFORMATION_HH
+/** Copyright (c) 2012, Felix Albrecht, Rene Milk
+   * All rights reserved.
+   *
+   * Redistribution and use in source and binary forms, with or without
+   * modification, are permitted provided that the following conditions are met:
+   *
+   * 1. Redistributions of source code must retain the above copyright notice, this
+   *    list of conditions and the following disclaimer.
+   * 2. Redistributions in binary form must reproduce the above copyright notice,
+   *    this list of conditions and the following disclaimer in the documentation
+   *    and/or other materials provided with the distribution.
+   *
+   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+   * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+   * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+   * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+   * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+   * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+   * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+   * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+   * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+   *
+   * The views and conclusions contained in the software and documentation are those
+   * of the authors and should not be interpreted as representing official policies,
+   * either expressed or implied, of the FreeBSD Project.
+   **/
