@@ -56,7 +56,7 @@ class LoopTimer
   int iteration_;
   std::ostream& output_stream_;
   WeightType weight_;
-  Dune::Stuff::Common::Math::MovingAverage avg_time_per_iteration_;
+  Dune::Stuff::Common::MovingAverage avg_time_per_iteration_;
   Dune::ExecutionTimer step_timer_;
 
 public:

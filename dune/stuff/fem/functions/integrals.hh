@@ -1,8 +1,14 @@
 #ifndef DUNE_STUFF_INTEGRALS_HH
 #define DUNE_STUFF_INTEGRALS_HH
 
-#include "localmassmatrix.hh"
-#include <dune/stuff/grid/ranges.hh>
+#ifdef HAVE_CMAKE_CONFIG
+ #include "cmake_config.h"
+#else
+ #include "config.h"
+#endif // ifdef HAVE_CMAKE_CONFIG
+
+#include <dune/stuff/fem/localmassmatrix.hh>
+#include <dune/stuff/common/ranges.hh>
 #include <dune/fem/quadrature/cachingquadrature.hh>
 
 namespace Dune {

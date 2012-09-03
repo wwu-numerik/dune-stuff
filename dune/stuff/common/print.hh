@@ -13,8 +13,9 @@
 #include <cmath>
 #include <limits>
 #include <boost/format.hpp>
-#include <dune/stuff/common/parameter/container.hh>
+#include <dune/stuff/common/parameter/configcontainer.hh>
 #include <dune/stuff/fem/functions/checks.hh>
+#include <dune/stuff/common/filesystem.hh>
 //#include <dune/istl/bcrsmatrix.hh>
 
 namespace Dune {
@@ -98,7 +99,7 @@ void printFieldMatrix(T& arg, std::string name, stream& out, std::string prefix 
    **/
 template< class T, class stream >
 void printSparseRowMatrixMatlabStyle( const T& arg, std::string name, stream& out,
-                                      const double eps = Dune::Stuff::Common::Parameter::Parameters().getParam("eps", 1e-14) ) {
+                                      const double eps = Config().get("eps", 1e-14) ) {
   name = std::string("fem.") + name;
   const int I = arg.rows();
   const int J = arg.cols();
@@ -120,7 +121,7 @@ void printSparseRowMatrixMatlabStyle( const T& arg, std::string name, stream& ou
    **/
 template< class MatrixType, class stream >
 void printISTLMatrixMatlabStyle( const MatrixType& arg, std::string name, stream& out,
-                                 const double eps = Dune::Stuff::Common::Parameter::Parameters().getParam("eps", 1e-14) ) {
+                                 const double eps = Config().get("eps", 1e-14) ) {
   name = std::string("istl.") + name;
   const int I = arg.N();
   const int J = arg.M();
@@ -371,9 +372,9 @@ void matrixToGnuplotStream(const Matrix& matrix, std::ostream& stream) {
 //! proxy to Stuff::matrixToGnuplotStream that redirects its output to a file
 template< class Matrix >
 void matrixToGnuplotFile(const Matrix& matrix, std::string filename) {
-  std::string dir(Dune::Stuff::Common::Parameter::Parameters().getParam( "fem.io.datadir", std::string("data") ) + "/gnuplot/");
+  std::string dir(Config().get( "fem.io.datadir", std::string("data") ) + "/gnuplot/");
 
-  Dune::Stuff::Common::Filesystem::testCreateDirectory(dir);
+  testCreateDirectory(dir);
   std::ofstream file( (dir + filename).c_str() );
   matrixToGnuplotStream(matrix, file);
   file.flush();

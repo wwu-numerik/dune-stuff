@@ -1,6 +1,12 @@
 #ifndef DUNE_STUFF_COMMON_PARAMETER_TREE_HH
 #define DUNE_STUFF_COMMON_PARAMETER_TREE_HH
 
+#ifdef HAVE_CMAKE_CONFIG
+ #include "cmake_config.h"
+#else
+ #include "config.h"
+#endif // ifdef HAVE_CMAKE_CONFIG
+
 // system
 #include <sstream>
 #include <boost/algorithm/string/join.hpp>

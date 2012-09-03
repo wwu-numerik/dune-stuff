@@ -4,8 +4,8 @@
    *  \brief  containing class ParameterContainer
    **/
 
-#ifndef PARAMETERCONTAINER_HH_INCLUDED
-#define PARAMETERCONTAINER_HH_INCLUDED
+#ifndef DUNE_STUFF_PARAMETERCONTAINER_HH_INCLUDED
+#define DUNE_STUFF_PARAMETERCONTAINER_HH_INCLUDED
 
 #ifdef HAVE_CMAKE_CONFIG
  #include "cmake_config.h"
@@ -21,6 +21,7 @@
 #include <dune/stuff/common/misc.hh>
 #include <dune/stuff/common/parameter/validation.hh>
 #include <dune/stuff/common/string.hh>
+#include <dune/stuff/common/parameter/configcontainer.hh>
 
 #include <vector>
 #include <algorithm>
@@ -216,7 +217,7 @@ ParameterContainer& DUNE_DEPRECATED_MSG("use the Dune::ParameterTree based Confi
 
 //! get a path in datadir with existence guarantee (cannot be in filessytem.hh -- cyclic dep )
 std::string getFileinDatadir(const std::string& fn) {
-  boost::filesystem::path path( Parameters().getParam( "fem.io.datadir", std::string(".") ) );
+  boost::filesystem::path path( Config().get( "fem.io.datadir", std::string(".") ) );
 
   path /= fn;
   boost::filesystem::create_directories( path.parent_path() );
@@ -227,7 +228,7 @@ std::string getFileinDatadir(const std::string& fn) {
 } // namespace Stuff
 } // namespace Dune
 
-#endif // end of PARAMETERHANDLER.HH
+#endif // end of DUNE_STUFF_PARAMETERHANDLER.HH
 
 /** Copyright (c) 2012, Rene Milk
    * All rights reserved.

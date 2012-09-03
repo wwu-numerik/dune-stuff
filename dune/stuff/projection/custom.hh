@@ -9,6 +9,7 @@
 
 #include <dune/fem/quadrature/cachingquadrature.hh>
 #include <dune/fem/operator/common/operator.hh>
+#include <dune/fem/version.hh>
 #include <dune/fem/function/common/discretefunction.hh>
 #include <dune/fem/function/common/gridfunctionadapter.hh>
 
@@ -385,7 +386,7 @@ public:
         {
           typename DiscreteFunctionType::DiscreteFunctionSpaceType::RangeType phi(0.0);
           baseset.evaluate(i, quad[qP], phi);
-          self_local[i] += intel * ( Stuff::colonProduct(velocity_jacobian_eval, phi) );
+          self_local[i] += intel * ( Dune::Stuff::Common::colonProduct(velocity_jacobian_eval, phi) );
         }
       }
 

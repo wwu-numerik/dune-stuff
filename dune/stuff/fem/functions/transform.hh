@@ -85,7 +85,9 @@ void addScalarToFunc(Function& f, double sc) {
   return;
 } // addScalarToFunc
 
-
+} // namespace Dune {
+} // namespace Stuff {
+} // namespace Fem {
 
 #endif // STUFF_FUNCTION_TRANSFORM_HH
 

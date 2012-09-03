@@ -5,6 +5,7 @@
 #include <vector>
 
 #include <dune/stuff/common/debug.hh>
+#include <dune/common/unused.hh>
 
 namespace Dune {
 namespace Stuff {
@@ -199,7 +200,7 @@ public:
     ElementPointerType;
 
     const unsigned int ansatzSize = ansatzSpace.size();
-    const unsigned int testSize = testSpace.size();
+    const unsigned int DUNE_UNUSED(testSize) = testSpace.size();
 
     typedef SparsityPattern
     PatternType;
@@ -298,7 +299,7 @@ public:
     ElementPointerType;
 
     const unsigned int ansatzSize = ansatzSpace.size();
-    const unsigned int testSize = testSpace.size();
+    const unsigned int DUNE_UNUSED(testSize) = testSpace.size();
 
     typedef SparsityPattern
     PatternType;

@@ -111,7 +111,7 @@ public:
             for( unsigned int i = 0; i < lagrangePointSet.nop(); ++i )
             {
               // if dof lies on the boundary intersection
-              if( Dune::Stuff::Grid::Intersection::contains( intersection, lagrangePointsGlobal[i] ) )
+              if( Dune::Stuff::Grid::intersectionContains( intersection, lagrangePointsGlobal[i] ) )
               {
                 // evaluate the boundary function
                 function.evaluate( lagrangePointsGlobal[i], tmpEvaluation );
@@ -119,21 +119,16 @@ public:
                 localFunction[i] = tmpEvaluation;
 
               } // end if dof lies on the boundary intersection
-
             } // done loop over all lagrange points
-
           } // end if this is a boundary intersection
-
         } // done loop over all intersections
-
       } // end if this entity is a boundary entity
-
     } // done gridwalk
-
   } // end function project
 
 private:
 
+  //! this does what exactly??
   class LocalBoundaryFunction
   {
 

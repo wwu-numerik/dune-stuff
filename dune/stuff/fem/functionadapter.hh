@@ -1,8 +1,8 @@
 #ifndef DUNE_STUFF_FUNCTIONADAPTER_HH
 #define DUNE_STUFF_FUNCTIONADAPTER_HH
 
-#include "math.hh"
-#include "localmassmatrix.hh"
+#include <dune/stuff/common/math.hh>
+#include <dune/stuff/fem/localmassmatrix.hh>
 
 #include <vector>
 #include <boost/shared_ptr.hpp>
@@ -38,9 +38,9 @@ public:
     const size_t dim = DomainType::dimension;
     for (size_t d = 0; d < dim; ++d)
     {
-      PointerType p( new DiscreteFunctionType( ( boost::format("%s_%s") % gradient.name() % Stuff::dimToAxisName(d,
-                                                                                                                 true) )
-                                                 .str(),
+      PointerType p( new DiscreteFunctionType( ( boost::format("%s_%s")
+                                                 % gradient.name()
+                                                 % Dune::Stuff::Common::dimToAxisName(d, true) ).str(),
                                                space ) ); // never use temporary smart pointers
       push_back(p);
     }
@@ -183,7 +183,7 @@ struct ProductFunctorMatrices
 {
   template< class R1, class R2 >
   static double call(const R1& r1, const R2& r2) {
-    return Stuff::colonProduct(r1, r2);
+    return Dune::Stuff::Common::colonProduct(r1, r2);
   }
 };
 

@@ -1,6 +1,12 @@
 #ifndef DUNE_STUFF_ADAPTION_HH
 #define DUNE_STUFF_ADAPTION_HH
 
+#ifdef HAVE_CMAKE_CONFIG
+ #include "cmake_config.h"
+#else
+ #include "config.h"
+#endif // ifdef HAVE_CMAKE_CONFIG
+
 #include <dune/stuff/fem/restrict_prolong.hh>
 #include <dune/fem/space/dgspace/localrestrictprolong.hh>
 #include <dune/common/shared_ptr.hh>

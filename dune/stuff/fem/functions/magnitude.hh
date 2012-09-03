@@ -13,8 +13,8 @@
 #include <dune/fem/space/dgspace.hh>
 #include <dune/stuff/fem/customprojection.hh>
 #include <dune/stuff/common/debug.hh>
-
-#include "localmassmatrix.hh"
+#include <dune/stuff/fem/localmassmatrix.hh>
+#include <dune/fem/function/adaptivefunction.hh>
 
 namespace Dune {
 namespace Stuff {

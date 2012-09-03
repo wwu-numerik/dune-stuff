@@ -151,7 +151,7 @@ public:
          ++it)
     {
       const unsigned int refine = it->second.begin()->second.refine_level;
-      Logger().Info()
+      Logger().info()
       << boost::format(
         "Refine %d\tMax (Avg) L2 Error Velocity|Pressure\t %e (%e) | %e (%e)\n\t\tH1 Velocity %e \t total runtime: %d ")
       % refine

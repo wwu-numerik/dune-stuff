@@ -11,8 +11,6 @@
 #include <fstream>
 #include <limits>
 
-#include <dune/fem/function/blockvectorfunction/blockvectorfunction.hh>
-
 #include <dune/fem/io/file/vtkio.hh>
 #include <dune/stuff/fem/localmassmatrix.hh>
 #include <dune/stuff/common/misc.hh>
@@ -119,6 +117,11 @@ bool MatrixContainsNanOrInf(const MatrixType& matrix) {
   }
   return false;
 } // MatrixContainsNanOrInf
+
+} // namespace Dune {
+} // namespace Stuff {
+} // namespace Fem {
+
 
 #endif // includeguard
 /** Copyright (c) 2012, Felix Albrecht, Rene Milk

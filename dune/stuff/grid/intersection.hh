@@ -1,6 +1,12 @@
 #ifndef DUNE_HELPER_TOOLS_GRID_INTERSECTION_HH
 #define DUNE_FEMTOOLS_GRID_INTERSECTION_HH
 
+#ifdef HAVE_CMAKE_CONFIG
+ #include "cmake_config.h"
+#else
+ #include "config.h"
+#endif // ifdef HAVE_CMAKE_CONFIG
+
 // dune-common includes
 #include <dune/common/fvector.hh>
 #include <dune/common/static_assert.hh>
@@ -76,7 +82,7 @@ void printIntersection( const IntersectionType& intersection, std::ostream& stre
 } // end function print
 
 template< class IntersectionType, class FieldType, int size >
-bool intersectionContains( const IntersectionType& intersection, const Dune::FieldVector< FieldType, size >& globalPoint )
+bool intersectionContains( const IntersectionType& /*intersection*/, const Dune::FieldVector< FieldType, size >& /*globalPoint*/ )
 {
   dune_static_assert( size < 3, "Dune::FemTools::Grid::Intersection::contains() not implemented for more than 2 dimension!" );
   return false;

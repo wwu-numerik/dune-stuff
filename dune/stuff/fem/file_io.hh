@@ -1,6 +1,22 @@
 #ifndef DUNE_STUFF_FILE_IO_HH
 #define DUNE_STUFF_FILE_IO_HH
 
+#ifdef HAVE_CMAKE_CONFIG
+ #include "cmake_config.h"
+#else
+ #include "config.h"
+#endif // ifdef HAVE_CMAKE_CONFIG
+
+#include <string>
+#include <fstream>
+
+#include <dune/grid/common/grid.hh>
+#include <dune/stuff/common/string.hh>
+#include <dune/fem/gridpart/common/gridpart.hh>
+#include <dune/fem/io/file/vtkio.hh>
+#include <dune/common/deprecated.hh>
+#include <iostream>
+
 namespace Dune {
 namespace Stuff {
 namespace Fem {
@@ -150,7 +166,7 @@ int loadDiscreteFunction(const std::string loadFromfilenamePrefix,
               gridType = value;
               gridTypeRead = true;
             } else if (key == "refine_level") {
-              refineLevel = Dune::Stuff::Common::String::convertFrom< int >(value);
+              refineLevel = Dune::Stuff::Common::fromString< int >(value);
               refineLevelRead = true;
             }
           }
@@ -273,7 +289,7 @@ int readRefineLevelFromDGF(const std::string filename) {
               gridType = value;
               gridTypeRead = true;
             } else if (key == "refine_level") {
-              refineLevel = Dune::Stuff::Common::String::convertFrom< int >(value);
+              refineLevel = Dune::Stuff::Common::fromString< int >(value);
               refineLevelRead = true;
               return refineLevel;
             }
@@ -353,7 +369,7 @@ std::string readGridTypeFromDGF(const std::string filename) {
               gridType = value;
               gridTypeRead = true;
             } else if (key == "refine_level") {
-              refineLevel = Dune::Stuff::Common::String::convertFrom< int >(value);
+              refineLevel = Dune::Stuff::Common::fromString< int >(value);
               refineLevelRead = true;
             }
           }

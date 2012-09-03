@@ -229,7 +229,7 @@ void Profiler::outputCommon(const Profiler::InfoContainer& run_infos,
   csv << "Relative_total_time" << csv_sep << "compiler" << std::endl;
 
 // outputs column values
-  int idx = 0;
+  std::size_t idx = 0;
   for (const Datamap& data_map : datamaps_)
   {
     if(idx < run_infos.size()) {
@@ -259,7 +259,7 @@ void Profiler::setOutputdir(const std::string dir)
   Dune::Stuff::Common::testCreateDirectory( output_dir_ );
 }
 
-void Profiler::outputTimings(const std::string csv) const
+void Profiler::outputTimings(const std::string /*csv*/) const
 {
     const auto& comm = Dune::MPIHelper::getCollectiveCommunication();
     boost::filesystem::path filename(output_dir_);

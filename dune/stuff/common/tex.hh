@@ -10,6 +10,7 @@
 #include "misc.hh"
 #include "runinfo.hh"
 #include <dune/common/static_assert.hh>
+#include <dune/stuff/common/logging.hh>
 
 #include <ostream>
 #include <sstream>
@@ -137,7 +138,7 @@ public:
                 << "\\caption{"
                 << info_.problemIdentifier << ": "
                 << info_.gridname
-                << ( info_.bfg ? std::string(", BFG ($\\tau = ") + Dune::Stuff::Common::String::convertTo(info_.bfg_tau)
+                << ( info_.bfg ? std::string(", BFG ($\\tau = ") + toString(info_.bfg_tau)
          + std::string("$ ),") : std::string(", kein BFG,") )
                 << "\\\\"
                 << " Polorder (u,p,$ \\sigma $): (" << info_.polorder_velocity << ", " << info_.polorder_pressure
@@ -303,7 +304,7 @@ public:
                 << info_.grid_width << " & "
                 << info_.codim0 << " & "
                 << runtime.str() << " & "
-                << ( info_.bfg ? Dune::Stuff::Common::String::convertTo(info_.bfg_tau)
+                << ( info_.bfg ? toString(info_.bfg_tau)
                                : std::string("--") ) << " & " // don't output a num in
                                                                                         //reference row
                 << info_.iterations_inner_avg << " & "
