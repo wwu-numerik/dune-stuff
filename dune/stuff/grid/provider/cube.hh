@@ -16,15 +16,18 @@
 #include <dune/grid/utility/structuredgridfactory.hh>
 #include <dune/grid/yaspgrid.hh>
 #ifdef HAVE_ALUGRID
-  #include <dune/grid/alugrid.hh>
+#include <dune/grid/alugrid.hh>
 #endif
 #include <dune/grid/sgrid.hh>
 #include <dune/grid/common/mcmgmapper.hh>
 #include <dune/grid/io/file/vtk/vtkwriter.hh>
 
 namespace Dune {
+
 namespace Stuff {
+
 namespace Grid {
+
 namespace Provider {
 
 /**
@@ -184,13 +187,15 @@ public:
   }
 
   //! access to shared ptr
-  Dune::shared_ptr< GridType > gridPtr() {
+  Dune::shared_ptr< GridType > gridPtr()
+  {
     return grid_;
   }
 
-//  const Dune::shared_ptr< const GridType > gridPtr() {
-//    return grid_;
-//  }
+  const Dune::shared_ptr< const GridType > gridPtr() const
+  {
+    return grid_;
+  }
 
   const CoordinateType& lowerLeft() const
   {
