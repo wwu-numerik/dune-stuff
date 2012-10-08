@@ -4,8 +4,14 @@
    *  \brief  containing class ParameterContainer
    **/
 
-#ifndef PARAMETERCONTAINER_HH_INCLUDED
-#define PARAMETERCONTAINER_HH_INCLUDED
+#ifndef DUNE_STUFF_PARAMETERCONTAINER_HH_INCLUDED
+#define DUNE_STUFF_PARAMETERCONTAINER_HH_INCLUDED
+
+#ifdef HAVE_CMAKE_CONFIG
+ #include "cmake_config.h"
+#elif defined (HAVE_CONFIG_H)
+ #include <config.h>
+#endif // ifdef HAVE_CMAKE_CONFIG
 
 #include <dune/common/deprecated.hh>
 #include <dune/fem/io/parameter.hh>
@@ -15,6 +21,7 @@
 #include <dune/stuff/common/misc.hh>
 #include <dune/stuff/common/parameter/validation.hh>
 #include <dune/stuff/common/string.hh>
+#include <dune/stuff/common/parameter/configcontainer.hh>
 
 #include <vector>
 #include <algorithm>
@@ -23,12 +30,8 @@
 #include <boost/format.hpp>
 
 namespace Dune {
-
 namespace Stuff {
-
 namespace Common {
-
-namespace Parameter {
 
 /**
    *  \brief  class containing global parameters
@@ -36,7 +39,7 @@ namespace Parameter {
    *  ParameterContainer contains all the needed global parameters getting them via Dune::Parameter
    *
    **/
-class Container
+class ParameterContainer
 {
 public:
   /**
@@ -44,7 +47,7 @@ public:
      *
      *  doing nothing
      **/
-  ~Container()
+  ~ParameterContainer()
   {}
 
   /**
@@ -167,7 +170,7 @@ public:
   template< typename T >
   void setParam(std::string name, T val) {
     assert(all_set_up_);
-    return Dune::Parameter::append( name, Dune::Stuff::Common::String::convertTo(val) );
+    return Dune::Parameter::append( name, Dune::Stuff::Common::toString(val) );
   }
 
   //! extension to Fem::paramter that allows vector/list like paramteres from a single key
@@ -181,7 +184,7 @@ public:
     }
     std::string tokenstring = getParam( name, std::string("dummy") );
     std::string delimiter = getParam(std::string("parameterlist_delimiter"), std::string(";"), false);
-    return Dune::Stuff::Common::String::tokenize< T >(tokenstring, delimiter);
+    return Dune::Stuff::Common::tokenize< T >(tokenstring, delimiter);
   } // getList
 
 private:
@@ -193,9 +196,9 @@ private:
   /**
      *  \brief  constuctor
      *
-     *  \attention  call ReadCommandLine() to set up parameterContainer
+     *  \attention  call ReadCommandLine() to set up parameterParameterContainer
      **/
-  Container()
+  ParameterContainer()
     : all_set_up_(false)
       , warning_output_(true) {
     const std::string p[] = { "dgf_file_2d", "dgf_file_3d" };
@@ -203,33 +206,29 @@ private:
     mandatory_params_ = std::vector< std::string >( p, p + ( sizeof(p) / sizeof(p[0]) ) );
   }
 
-  friend Container& Parameters();
+  friend ParameterContainer& Parameters();
 };
 
 //! global ParameterContainer instance
-Container& DUNE_DEPRECATED_MSG("use the Dune::ParameterTree based ConfigContainer instead") Parameters() {
-  static Container parameters;
+ParameterContainer& DUNE_DEPRECATED_MSG("use the Dune::ParameterTree based ConfigParameterContainer instead") Parameters() {
+  static ParameterContainer parameters;
   return parameters;
 }
 
 //! get a path in datadir with existence guarantee (cannot be in filessytem.hh -- cyclic dep )
 std::string getFileinDatadir(const std::string& fn) {
-  boost::filesystem::path path( Parameters().getParam( "fem.io.datadir", std::string(".") ) );
+  boost::filesystem::path path( Config().get( "fem.io.datadir", std::string(".") ) );
 
   path /= fn;
   boost::filesystem::create_directories( path.parent_path() );
   return path.string();
 } // getFileinDatadir
 
-} // namespace Parameter
-
 } // namespace Common
-
 } // namespace Stuff
-
 } // namespace Dune
 
-#endif // end of PARAMETERHANDLER.HH
+#endif // end of DUNE_STUFF_PARAMETERHANDLER.HH
 
 /** Copyright (c) 2012, Rene Milk
    * All rights reserved.

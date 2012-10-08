@@ -10,6 +10,12 @@
 #ifndef DUNE_STUFF_DISCRETEGRADIENTPASS_HH
 #define DUNE_STUFF_DISCRETEGRADIENTPASS_HH
 
+#ifdef HAVE_CMAKE_CONFIG
+ #include "cmake_config.h"
+#else
+ #include "config.h"
+#endif // ifdef HAVE_CMAKE_CONFIG
+
 #include <dune/fem/pass/pass.hh>
 #include <dune/fem/space/dgspace.hh>
 
@@ -17,11 +23,8 @@
  #include <dune/stuff/common/print.hh>
  #include <dune/stuff/common/misc.hh>
  #include <dune/stuff/common/logging.hh>
+#include <dune/stuff/common/logstreams.hh>
 #endif // ifndef NLOG
-
-#if (POLORDER != 0)
- #warning "discrete gradient method is only defined for constant functions!"
-#endif
 
 namespace Dune {
 namespace Stuff {
@@ -177,11 +180,11 @@ public:
      *  \todo   doc
      **/
   virtual void apply(const DomainType& arg, RangeType& dest) const {
+    using namespace Dune::Stuff::Common;
     #ifndef NLOG
     // logging stuff
-    Logging::LogStream& infoStream = Logger().Info();
-    Logging::LogStream& debugStream = Logger().Dbg();
-    Logging::LogStream& errorStream = Logger().Err();
+    LogStream& infoStream = Logger().info();
+    LogStream& debugStream = Logger().debug();
     infoStream << "  - entering DiscreteGradientPass::apply()" << std::endl;
     #endif // ifndef NLOG
 
@@ -274,6 +277,9 @@ public:
     {
       // get some infos about the entity
       const EntityType& entity = *entityIt;
+      assert((discreteFunctionSpace_.order(entity) == 0)
+             && "discrete gradient method is only defined for constant functions!" );
+
       const EntityGeometryType& geometryEntity = entity.geometry();
       const double volumeEntity = geometryEntity.volume();
 
@@ -400,7 +406,7 @@ public:
      *  \name methods needed for interface compliance
      *  \{
      **/
-  virtual void compute(const TotalArgumentType& arg, DestinationType& dest) const
+  virtual void compute(const TotalArgumentType& /*arg*/, DestinationType& /*dest*/) const
   {}
 
   virtual void allocateLocalMemory()

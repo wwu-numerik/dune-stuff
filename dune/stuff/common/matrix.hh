@@ -1,6 +1,12 @@
 #ifndef DUNE_STUFF_COMMON_MATRIX_HH
 #define DUNE_STUFF_COMMON_MATRIX_HH
 
+#ifdef HAVE_CMAKE_CONFIG
+ #include "cmake_config.h"
+#else
+ #include "config.h"
+#endif // ifdef HAVE_CMAKE_CONFIG
+
 // dune-common
 #include <dune/common/densematrix.hh>
 
@@ -17,17 +23,10 @@
 #endif // if HAVE_DUNE_ISTL
 #endif // THIS_WORKS
 
-namespace Dune
-{
+namespace Dune {
+namespace Stuff {
+namespace Common {
 
-namespace Stuff
-{
-
-namespace Common
-{
-
-namespace Matrix
-{
 
 // \todo doc
 template< class MatrixImp >
@@ -334,12 +333,8 @@ void forceTranspose(const M& arg, M& dest) {
 } // forceTranspose
 #endif // THIS_WORKS
 
-} // namespace Matrix
-
 } // namespace Common
-
 } // namespace Stuff
-
 } // namespace Dune
 
 #endif // DUNE_STUFF_COMMON_MATRIX_HH

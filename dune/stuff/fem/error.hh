@@ -1,6 +1,12 @@
 #ifndef DUNE_STUFF_ERROR_HH
 #define DUNE_STUFF_ERROR_HH
 
+#ifdef HAVE_CMAKE_CONFIG
+ #include "cmake_config.h"
+#else
+ #include "config.h"
+#endif // ifdef HAVE_CMAKE_CONFIG
+
 #include <dune/fem/misc/l2norm.hh>
 #include <dune/fem/misc/h1norm.hh>
 #include <boost/format.hpp>

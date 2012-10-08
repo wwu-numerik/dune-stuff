@@ -1,23 +1,26 @@
 #ifndef DUNESTUFF_PRINTING_HH_INCLUDED
 #define DUNESTUFF_PRINTING_HH_INCLUDED
 
+#ifdef HAVE_CMAKE_CONFIG
+ #include "cmake_config.h"
+#elif defined (HAVE_CONFIG_H)
+ #include <config.h>
+#endif // ifdef HAVE_CMAKE_CONFIG
+
 #include <string>
 #include <iostream>
 #include <iomanip>
 #include <cmath>
 #include <limits>
 #include <boost/format.hpp>
-#include <dune/stuff/fem/functions.hh>
-#include <dune/stuff/common/parameter/container.hh>
-#include <dune/istl/bcrsmatrix.hh>
+#include <dune/stuff/common/parameter/configcontainer.hh>
+#include <dune/stuff/fem/functions/checks.hh>
+#include <dune/stuff/common/filesystem.hh>
+//#include <dune/istl/bcrsmatrix.hh>
 
 namespace Dune {
-
 namespace Stuff {
-
 namespace Common {
-
-namespace Print {
 
 //! ensure matlab output is done with highest precision possible, otherwise weird effects are bound to happen
 static const unsigned int matlab_output_precision = std::numeric_limits< double >::digits10 + 1;
@@ -96,7 +99,7 @@ void printFieldMatrix(T& arg, std::string name, stream& out, std::string prefix 
    **/
 template< class T, class stream >
 void printSparseRowMatrixMatlabStyle( const T& arg, std::string name, stream& out,
-                                      const double eps = Dune::Stuff::Common::Parameter::Parameters().getParam("eps", 1e-14) ) {
+                                      const double eps = Config().get("eps", 1e-14) ) {
   name = std::string("fem.") + name;
   const int I = arg.rows();
   const int J = arg.cols();
@@ -118,7 +121,7 @@ void printSparseRowMatrixMatlabStyle( const T& arg, std::string name, stream& ou
    **/
 template< class MatrixType, class stream >
 void printISTLMatrixMatlabStyle( const MatrixType& arg, std::string name, stream& out,
-                                 const double eps = Dune::Stuff::Common::Parameter::Parameters().getParam("eps", 1e-14) ) {
+                                 const double eps = Config().get("eps", 1e-14) ) {
   name = std::string("istl.") + name;
   const int I = arg.N();
   const int J = arg.M();
@@ -369,9 +372,9 @@ void matrixToGnuplotStream(const Matrix& matrix, std::ostream& stream) {
 //! proxy to Stuff::matrixToGnuplotStream that redirects its output to a file
 template< class Matrix >
 void matrixToGnuplotFile(const Matrix& matrix, std::string filename) {
-  std::string dir(Dune::Stuff::Common::Parameter::Parameters().getParam( "fem.io.datadir", std::string("data") ) + "/gnuplot/");
+  std::string dir(Config().get( "fem.io.datadir", std::string("data") ) + "/gnuplot/");
 
-  Dune::Stuff::Common::Filesystem::testCreateDirectory(dir);
+  testCreateDirectory(dir);
   std::ofstream file( (dir + filename).c_str() );
   matrixToGnuplotStream(matrix, file);
   file.flush();
@@ -387,12 +390,8 @@ std::string dimToAxisName(const unsigned int dim, const bool capitalize = false)
   return std::string() += c;
 } // dimToAxisName
 
-} // namespace Print
-
 } // namespace Common
-
 } // namespace Stuff
-
 } // namespace Dune
 
 #endif // ifndef DUNESTUFF_PRINTING_HH_INCLUDED

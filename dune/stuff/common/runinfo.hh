@@ -8,11 +8,10 @@
 #include <string>
 #include <boost/format.hpp>
 #include <boost/foreach.hpp>
+#include <dune/stuff/common/parameter/container.hh>
 
 namespace Dune {
-
 namespace Stuff {
-
 namespace Common {
 
 /** \brief wrap any info that might be remotely interesting about a single run
@@ -165,7 +164,7 @@ typedef std::map< RunInfoVectorMapKeyType, RunInfoTimeMap >
 RunInfoTimeMapMap;
 
 void dumpRunInfoVectorToFile(const RunInfoVector& vec, const std::string fn = "runinfos.csv") {
-  std::ofstream file( Dune::Stuff::Common::Parameter::getFileinDatadir(fn).c_str() );
+  std::ofstream file( Dune::Stuff::Common::getFileinDatadir(fn).c_str() );
 
   assert(vec.size() > 0);
   vec.front().tableHeader(file);
@@ -178,9 +177,7 @@ void dumpRunInfoVectorToFile(const RunInfoVector& vec, const std::string fn = "r
 } // dumpRunInfoVectorToFile
 
 } // namespace Common
-
 } // namespace Stuff
-
 } // namespace Dune
 
 #endif // DUNE_STUFF_RUNINFO_HH

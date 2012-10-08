@@ -5,14 +5,13 @@
 #include <vector>
 
 #include <dune/stuff/common/debug.hh>
+#include <dune/common/unused.hh>
 
 namespace Dune {
-
 namespace Stuff {
-
 namespace Common {
-
 namespace MatrixPatterns {
+
 /**
    * @brief Class for storing the sparsity pattern of a matrix. Copy from dune-detailed-discretisations.
    *
@@ -201,7 +200,7 @@ public:
     ElementPointerType;
 
     const unsigned int ansatzSize = ansatzSpace.size();
-    const unsigned int testSize = testSpace.size();
+    const unsigned int DUNE_UNUSED(testSize) = testSpace.size();
 
     typedef SparsityPattern
     PatternType;
@@ -300,7 +299,7 @@ public:
     ElementPointerType;
 
     const unsigned int ansatzSize = ansatzSpace.size();
-    const unsigned int testSize = testSpace.size();
+    const unsigned int DUNE_UNUSED(testSize) = testSpace.size();
 
     typedef SparsityPattern
     PatternType;
@@ -344,11 +343,8 @@ public:
 }; // end class ElementNeighborStencil
 
 } // namespace MatrixPatterns
-
 } // namespace Common
-
 } // namespace Stuff
-
 } // namespace Dune
 
 #endif // STUFF_MATRIX_PATTERNS_HH

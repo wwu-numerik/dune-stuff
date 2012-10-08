@@ -10,6 +10,7 @@
 namespace Dune {
 namespace Stuff {
 namespace Common {
+
 enum LogFlags
 {
   LOG_NONE = 1,
@@ -190,7 +191,7 @@ public:
     // flush buffer into stream
     std::cout << buffer_.str();
     std::cout.flush();
-    logfile_ << "\n" << Dune::Stuff::Common::String::fromTime()
+    logfile_ << "\n" << stringFromTime()
              << buffer_.str() << std::endl;
     logfileWoTime_ << buffer_.str();
     logfile_.flush();

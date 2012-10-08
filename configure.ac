@@ -20,6 +20,7 @@ AC_CONFIG_FILES([Makefile
 	dune/stuff/Makefile
 	dune/stuff/common/Makefile
 	dune/stuff/fem/Makefile
+	dune/stuff/fem/functions/Makefile
 	dune/stuff/function/Makefile
 	dune/stuff/grid/Makefile
 	dune/stuff/grid/provider/Makefile

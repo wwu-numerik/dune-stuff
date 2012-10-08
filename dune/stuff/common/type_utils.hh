@@ -37,7 +37,9 @@ std::string demangledTypeId(T& obj) {
 template< class T >
 void realTypeId(T& obj, std::string name = "", int maxlevel = 10000) {
   std::cout << name
-            << (name == "" ? "" : "'s type is ") << highlightTemplate(demangledTypeId(obj), maxlevel) << std::endl;
+            << (name == "" ? "" : "'s type is ")
+            << highlightTemplate(demangledTypeId(obj), maxlevel)
+            << std::endl;
 }
 
 //! an extensible mechanism to assign "cleartext" names to types
@@ -52,6 +54,11 @@ struct Typename {
     }
 };
 
+
+template < class T>
+std::string getTypename(const T&) {
+  return Typename<T>::value();
+}
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune

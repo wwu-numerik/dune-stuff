@@ -1,14 +1,20 @@
 #ifndef DUNE_STUFF_MAGNITUDEFUNCTION_HH
 #define DUNE_STUFF_MAGNITUDEFUNCTION_HH
 
+#ifdef HAVE_CMAKE_CONFIG
+ #include "cmake_config.h"
+#elif defined (HAVE_CONFIG_H)
+ #include <config.h>
+#endif // ifdef HAVE_CMAKE_CONFIG
+
 #include <dune/fem/function/common/function.hh>
 #include <dune/fem/function/common/gridfunctionadapter.hh>
 #include <dune/fem/space/common/functionspace.hh>
 #include <dune/fem/space/dgspace.hh>
 #include <dune/stuff/fem/customprojection.hh>
 #include <dune/stuff/common/debug.hh>
-
-#include "localmassmatrix.hh"
+#include <dune/stuff/fem/localmassmatrix.hh>
+#include <dune/fem/function/adaptivefunction.hh>
 
 namespace Dune {
 namespace Stuff {

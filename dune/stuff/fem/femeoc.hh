@@ -1,6 +1,12 @@
 #ifndef DUNE_STUFF_FEMEOC_HH
 #define DUNE_STUFF_FEMEOC_HH
 
+#ifdef HAVE_CMAKE_CONFIG
+ #include "cmake_config.h"
+#else
+ #include "config.h"
+#endif // ifdef HAVE_CMAKE_CONFIG
+
 #include <cassert>
 #include <sstream>
 #include <fstream>
@@ -8,11 +14,11 @@
 
 #include <dune/common/fvector.hh>
 #include <dune/fem/io/file/iointerface.hh>
+#include <boost/format.hpp>
 
 namespace Dune {
 namespace Stuff {
 namespace Fem {
-namespace Tex {
 /**
    *  @ingroup HelperClasses
    *  \brief Write a self contained tex table
@@ -120,27 +126,27 @@ class FemEoc
         {
           inputTex << (char) input.get();
         }
-        std::string input = inputTex.str();
-        int pos = input.find("DESCRIPTION", 0);
-        input.replace(pos, 11, "");
-        input.insert(pos, descript);
+        std::string input_str = inputTex.str();
+        int pos = input_str.find("DESCRIPTION", 0);
+        input_str.replace(pos, 11, "");
+        input_str.insert(pos, descript);
 
-        pos = input.find("BODYFILE", 0);
-        input.replace(pos, 8, "");
-        input.insert(pos, bodyfile);
+        pos = input_str.find("BODYFILE", 0);
+        input_str.replace(pos, 8, "");
+        input_str.insert(pos, bodyfile);
 
-        main << input;
+        main << input_str;
       }
       main.close();
     } else {
-      abort();
+      DUNE_THROW(Dune::InvalidStateException, "");
     }
   } // init
 
   template< class StrVectorType >
   size_t addentry(const StrVectorType& descript, size_t size) {
     if (!initial_)
-      abort();
+      DUNE_THROW(Dune::InvalidStateException, "");
     pos_.push_back( error_.size() );
     for (size_t i = 0; i < size; ++i)
     {
@@ -153,7 +159,7 @@ class FemEoc
 
   size_t addentry(const std::string& descript) {
     if (!initial_)
-      abort();
+      DUNE_THROW(Dune::InvalidStateException, "");
     pos_.push_back( error_.size() );
     error_.push_back(0);
     prevError_.push_back(0);
@@ -368,7 +374,6 @@ public:
   }
 };
 
-} // namespace Tex
 } // namespace Stuff
 } // namespace Fem
 } // namespace Dune

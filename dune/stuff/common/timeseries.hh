@@ -2,21 +2,23 @@
 #define DUNE_STUFF_TIMESERIES_HH
 
 #ifdef HAVE_CMAKE_CONFIG
- #include "cmake_config.h"  // otherwise array has issues
-#endif
+ #include "cmake_config.h"
+#elif defined (HAVE_CONFIG_H)
+ #include <config.h>
+#endif // ifdef HAVE_CMAKE_CONFIG
+
 #include <cstdio>
 #include <algorithm>
 #include <set>
 
 #include <dune/stuff/common/misc.hh>
 #include <dune/stuff/common/logging.hh>
+#include <dune/stuff/common/runinfo.hh>
 #include <boost/format.hpp>
 #include <boost/typeof/typeof.hpp>
 
 namespace Dune {
-
 namespace Stuff {
-
 namespace Common {
 
 /** \brief nice tex graph output for a time dependent simulation
@@ -149,7 +151,7 @@ public:
          ++it)
     {
       const unsigned int refine = it->second.begin()->second.refine_level;
-      Logger().Info()
+      Logger().info()
       << boost::format(
         "Refine %d\tMax (Avg) L2 Error Velocity|Pressure\t %e (%e) | %e (%e)\n\t\tH1 Velocity %e \t total runtime: %d ")
       % refine
@@ -541,9 +543,7 @@ private:
 };
 
 } // namespace Common
-
 } // namespace Stuff
-
 } // namespace Dune
 
 #endif // DUNE_STUFF_TIMESERIES_HH

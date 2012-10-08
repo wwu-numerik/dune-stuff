@@ -4,6 +4,12 @@
 #ifndef DUNE_STUFF_GRID_OUTPUT_PGF_HH
 #define DUNE_STUFF_GRID_OUTPUT_PGF_HH
 
+#ifdef HAVE_CMAKE_CONFIG
+ #include "cmake_config.h"
+#else
+ #include "config.h"
+#endif // ifdef HAVE_CMAKE_CONFIG
+
 #include <dune/common/fvector.hh>
 #include <dune/common/array.hh>
 #include <dune/stuff/grid/walk.hh>
@@ -18,7 +24,6 @@
 namespace Dune {
 namespace Stuff {
 namespace Grid {
-namespace Output {
 
 typedef std::array<std::string,7>
   TexColorArrayType;
@@ -59,21 +64,21 @@ public:
         DomainType;
     const typename Entity::Geometry& geo = ent.geometry();
 
-    for ( size_t i = 0; i < geo.corners(); ++i )
+    for ( std::size_t i = 0; i < geo.corners(); ++i )
     {
       const PgfCoordWrapper corner( geo.corner( i ) );
       char buffer[150] = {'\0'};
-      int c = std::snprintf(buffer, 150, "\\coordinate(C_%d_%d) at (%f,%f);\n",
+      int c = std::snprintf(buffer, 150, "\\coordinate(C_%d_%lu) at (%f,%f);\n",
                             ent_idx, i, corner[0], corner[1]);
       assert( c > 0 );
       file_ << buffer;
     }
     // \draw (A)--(B)--(C)--cycle;
     file_ << "\\draw ";
-    for ( size_t i = 0; i < geo.corners(); ++i )
+    for ( std::size_t i = 0; i < geo.corners(); ++i )
     {
       char buffer[50] = {'\0'};
-      std::snprintf(buffer, 50, "(C_%d_%d)--", ent_idx, i);
+      std::snprintf(buffer, 50, "(C_%d_%lu)--", ent_idx, i);
       file_ << buffer;
     }
     file_ << "cycle;\n ";
@@ -109,7 +114,7 @@ public:
   }
 
   template < class EntityType, class IntersectionType >
-  void operator() ( const EntityType& ent, const IntersectionType& intersection )
+  void operator() ( const EntityType& /*ent*/, const IntersectionType& intersection )
   {
     typedef typename IntersectionType::Geometry
         IntersectionGeometry;
@@ -196,9 +201,9 @@ private:
  *  \tparam GridType a \ref Grid implementation
  **/
 template < class GridType >
-class Pgf {
+class PgfOutput {
 public:
-  Pgf( GridType& grid )
+  PgfOutput( GridType& grid )
     :grid_(grid)
   {}
 
@@ -217,7 +222,7 @@ public:
     }
     else
       file <<	"\\begin{tikzpicture}\n";
-    Dune::Stuff::Grid::Walk<typename GridType::LeafGridView> gridWalk( grid_.leafView() );
+    GridWalk<typename GridType::LeafGridView> gridWalk( grid_.leafView() );
     PgfEntityFunctorIntersections pgf( file );
     gridWalk( pgf,pgf );
 
@@ -252,7 +257,7 @@ public:
       typedef typename GridType::LevelGridView
           ViewType;
       const ViewType& view = grid_.levelView(i);
-      Dune::Stuff::Grid::Walk<ViewType> gridWalk( view );
+      GridWalk<ViewType> gridWalk( view );
       PgfEntityFunctorIntersectionsWithShift pgf( file, texcolors_[std::min(i,int(texcolors_.size()))], i, true);
       gridWalk( pgf );
       file << "%%%%%%%%%%%%%%%" << view.size( 0 ) << "%%%%%%%%%%%%%%%%\n";
@@ -294,12 +299,12 @@ public:
         char buffer[80] = {'\0'};
         std::snprintf(buffer, 80, "\\subfloat[Level %d]{\n\\begin{tikzpicture}[scale=\\gridplotscale]\n", i);
         file << buffer;
-        Dune::Stuff::Grid::Walk<ViewType> gridWalk( view );
+        GridWalk<ViewType> gridWalk( view );
         PgfEntityFunctorIntersections thisLevel( file, "black", true);
         gridWalk( thisLevel, thisLevel );
       }
 
-      Dune::Stuff::Grid::Walk<typename GridType::LeafGridView> leafWalk( grid_.leafView() );
+      GridWalk<typename GridType::LeafGridView> leafWalk( grid_.leafView() );
       typedef typename GridType::LeafGridView::Traits::template Codim<0>::Entity
         EntityType;
       MinMaxCoordinateFunctor<EntityType> minMaxCoord;
@@ -348,7 +353,6 @@ private:
 
 } //namespace Stuff
 } //namespace Grid
-} //namespace Output
 } //namespace Dune
 
 #endif // DUNE_GRID_IO_LATEX_PGF_HH
