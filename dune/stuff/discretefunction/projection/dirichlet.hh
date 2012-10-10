@@ -83,7 +83,7 @@ void project(const BoundaryInfoType& boundaryInfo,
           for (unsigned int i = 0; i < lagrangePointSet.nop(); ++i )
           {
             // if dof lies on the boundary intersection
-            if (Dune::Stuff::Grid::Intersection::contains(intersection, lagrangePointsGlobal[i])) {
+            if (Dune::Stuff::Grid::intersectionContains(intersection, lagrangePointsGlobal[i])) {
               // evaluate the function
               function.evaluate(lagrangePointsGlobal[i], tmpEvaluation);
               // set the corresponding local dof
