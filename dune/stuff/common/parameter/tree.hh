@@ -14,23 +14,31 @@
 
 // dune-common
 #include <dune/common/exceptions.hh>
-#include <dune/stuff/common/parameter/tree.hh>
 #include <dune/common/parametertreeparser.hh>
 #include <dune/stuff/common/string.hh>
 
 namespace Dune {
+
 namespace Stuff {
+
 namespace Common {
 
-
 //! ParameterTree extension for nicer output
-class ExtendedParameterTree : public Dune::ParameterTree {
+//! \todo This should go into dune-common.
+class ExtendedParameterTree
+  : public Dune::ParameterTree {
 public:
+  typedef Dune::ParameterTree BaseType;
+
   ExtendedParameterTree()
   {}
 
-  explicit ExtendedParameterTree(const Dune::ParameterTree& other)
-    : Dune::ParameterTree(other)
+  ExtendedParameterTree(int argc, char** argv, std::string filename)
+    : BaseType(init(argc, argv, filename))
+  {}
+
+  ExtendedParameterTree(const Dune::ParameterTree& other)
+    : BaseType(other)
   {}
 
   ExtendedParameterTree& operator=(const Dune::ParameterTree& other)
@@ -39,6 +47,44 @@ public:
       Dune::ParameterTree::operator=(other);
     }
     return *this;
+  }
+
+  static void assertSub(const Dune::ParameterTree& paramTree, std::string sub, std::string id = "")
+  {
+    if (!paramTree.hasSub(sub)) {
+      std::stringstream msg;
+      msg << "Error";
+      if (id != "") {
+        msg << " in " << id;
+      }
+      msg << ": subTree '" << sub << "' not found in the following Dune::Parametertree" << std::endl;
+      paramTree.report(msg);
+      DUNE_THROW(Dune::InvalidStateException, msg.str());
+    }
+  } // static void assertSub(...)
+
+  void assertSub(const std::string sub, const std::string id = "") const
+  {
+    assertSub(*this, sub, id);
+  }
+
+  static void assertKey(const Dune::ParameterTree& paramTree, const std::string key, const std::string id = "")
+  {
+    if (!paramTree.hasKey(key)) {
+      std::stringstream msg;
+      msg << "Error";
+      if (id != "") {
+        msg << " in " << id;
+      }
+      msg << ": key '" << key << "' not found in the following Dune::Parametertree" << std::endl;
+      paramTree.report(msg);
+      DUNE_THROW(Dune::InvalidStateException, msg.str());
+    }
+  } // static void assertKey(...)
+
+  void assertKey(const std::string key, const std::string id = "") const
+  {
+    assertKey(*this, key, id);
   }
 
   void report(std::ostream& stream = std::cout,
@@ -79,39 +125,13 @@ public:
       Dune::ParameterTreeParser::readINITree(paramTree.get< std::string >("paramfile"), paramTree, false);
     }
     return paramTree;
-  } // Dune::ParameterTree init(int argc, char** argv, std::string filename)
+  } // static ExtendedParameterTree init(...)
 };
 
-void assertSub(const Dune::ParameterTree& paramTree, std::string sub, std::string id = "")
-{
-  if (!paramTree.hasSub(sub)) {
-    std::stringstream msg;
-    msg << "Error";
-    if (id != "") {
-      msg << " in " << id;
-    }
-    msg << ": subTree '" << sub << "' not found in the following Dune::Parametertree" << std::endl;
-    paramTree.report(msg);
-    DUNE_THROW(Dune::InvalidStateException, msg.str());
-  }
-} // void assertSub()
-
-void assertKey(const Dune::ParameterTree& paramTree, std::string key, std::string id = "")
-{
-  if (!paramTree.hasKey(key)) {
-    std::stringstream msg;
-    msg << "Error";
-    if (id != "") {
-      msg << " in " << id;
-    }
-    msg << ": key '" << key << "' not found in the following Dune::Parametertree" << std::endl;
-    paramTree.report(msg);
-    DUNE_THROW(Dune::InvalidStateException, msg.str());
-  }
-} // void assertKey()
-
 } // namespace Common
+
 } // namespace Stuff
+
 } // namespace Dune
 
 #endif // DUNE_STUFF_COMMON_PARAMETER_TREE_HH
