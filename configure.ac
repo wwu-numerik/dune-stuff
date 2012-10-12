@@ -29,6 +29,9 @@ AC_CONFIG_FILES([Makefile
 	dune/stuff/discretefunction/projection/Makefile
 	dune/stuff/test/Makefile
 	dune/stuff/test/gtest/Makefile
+  examples/Makefile
+  examples/grid/Makefile
+  examples/grid/provider/Makefile
 	dune-stuff.pc])
 
 have_pthreads=no
