@@ -41,7 +41,7 @@ void ensureParamFile(std::string filename)
     std::ofstream file;
     file.open(filename);
     file << "[" << id << "]" << std::endl;
-    file << "provider = stuff.grid.provider.cube" << std::endl;
+    file << "provider = stuff.grid.provider.gmsh" << std::endl;
     file << "[stuff.grid.provider.cube]" << std::endl;
     file << "level = 4" << std::endl;
     file << "filename = " << id << ".grid" << std::endl;
