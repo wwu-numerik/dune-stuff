@@ -23,6 +23,7 @@
 #include <dune/stuff/common/filesystem.hh>
 #include <dune/stuff/common/string.hh>
 #include <dune/stuff/grid/provider/cube.hh>
+#include <dune/stuff/grid/provider/gmsh.hh>
 
 const std::string id = "grid.providers";
 
@@ -41,15 +42,23 @@ void ensureParamFile(std::string filename)
     std::ofstream file;
     file.open(filename);
     file << "[" << id << "]" << std::endl;
-    file << "provider = stuff.grid.provider.gmsh" << std::endl;
+    file << "provider = stuff.grid.provider.cube" << std::endl;
     file << "[stuff.grid.provider.cube]" << std::endl;
     file << "level = 4" << std::endl;
+    file << "filename = " << id << ".grid" << std::endl;
+    file << "[stuff.grid.provider.gmsh]" << std::endl;
+    file << "mshfile = sample.msh" << std::endl;
     file << "filename = " << id << ".grid" << std::endl;
     file.close();
   } // only write param file if there is none
 } // void ensureParamFile()
 
-//template< class GridImp >
+/**
+ * \brief Creates a grid provider
+ *
+ * \param[in] paramTree
+ * \return A shared ptr to the created grid provider
+ */
 Dune::shared_ptr< Dune::Stuff::Grid::Provider::Interface<> >
   createProvider(const Dune::Stuff::Common::ExtendedParameterTree& paramTree)
 {
@@ -60,6 +69,11 @@ Dune::shared_ptr< Dune::Stuff::Grid::Provider::Interface<> >
   // choose provider
   if (providerId == "stuff.grid.provider.cube") {
     typedef Dune::Stuff::Grid::Provider::Cube<> DerivedType;
+    paramTree.assertSub(DerivedType::static_id, id);
+    Dune::shared_ptr< InterfaceType > provider(new DerivedType(paramTree.sub(DerivedType::static_id)));
+    return provider;
+  } else if (providerId == "stuff.grid.provider.gmsh") {
+    typedef Dune::Stuff::Grid::Provider::Gmsh<> DerivedType;
     paramTree.assertSub(DerivedType::static_id, id);
     Dune::shared_ptr< InterfaceType > provider(new DerivedType(paramTree.sub(DerivedType::static_id)));
     return provider;

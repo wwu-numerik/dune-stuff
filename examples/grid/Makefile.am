@@ -4,7 +4,7 @@ noinst_PROGRAMS = providers
 providers_SOURCES = providers.cc
 
 GRIDDIM=2
-GRIDTYPE=SGRID
+GRIDTYPE=ALUGRID_SIMPLEX
 CUSTOM_CPPFLAGS = -D$(GRIDTYPE) -DGRIDDIM=$(GRIDDIM) -Wall -O0 -DDEBUG -g -fdiagnostics-show-option -std=c++0x
 
 providers_CPPFLAGS = $(AM_CPPFLAGS) \
