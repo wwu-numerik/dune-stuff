@@ -69,13 +69,13 @@ Dune::shared_ptr< Dune::Stuff::Grid::Provider::Interface<> >
   // choose provider
   if (providerId == "stuff.grid.provider.cube") {
     typedef Dune::Stuff::Grid::Provider::Cube<> DerivedType;
-    paramTree.assertSub(DerivedType::static_id, id);
-    Dune::shared_ptr< InterfaceType > provider(new DerivedType(paramTree.sub(DerivedType::static_id)));
+    paramTree.assertSub(DerivedType::id(), id);
+    Dune::shared_ptr< InterfaceType > provider(new DerivedType(paramTree.sub(DerivedType::id())));
     return provider;
   } else if (providerId == "stuff.grid.provider.gmsh") {
     typedef Dune::Stuff::Grid::Provider::Gmsh<> DerivedType;
-    paramTree.assertSub(DerivedType::static_id, id);
-    Dune::shared_ptr< InterfaceType > provider(new DerivedType(paramTree.sub(DerivedType::static_id)));
+    paramTree.assertSub(DerivedType::id(), id);
+    Dune::shared_ptr< InterfaceType > provider(new DerivedType(paramTree.sub(DerivedType::id())));
     return provider;
   } else {
     std::stringstream msg;
