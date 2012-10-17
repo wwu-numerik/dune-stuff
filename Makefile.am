@@ -6,7 +6,7 @@ EXTRA_DIST=dune.module
 # possible options
 #LDADD = $(UG_LDFLAGS) $(AMIRAMESH_LDFLAGS) $(UG_LIBS) $(AMIRAMESH_LIBS)
 #AM_CPPFLAGS = $(UG_CPPFLAGS) $(AMIRAMESH_CPPFLAGS)
-SUBDIRS = dune examples
+SUBDIRS = dune examples m4
 
 # don't follow the full GNU-standard
 # we need automake 1.5
