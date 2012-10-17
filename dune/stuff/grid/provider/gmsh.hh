@@ -27,20 +27,23 @@
 #include "interface.hh"
 
 namespace Dune {
+
 namespace Stuff {
+
 namespace Grid {
+
 namespace Provider {
 
 /**
  * \brief   Gmsh grid provider
  */
 #if defined HAVE_CONFIG_H || defined HAVE_CMAKE_CONFIG
-template< class GridType = Dune::GridSelector::GridType >
+template< class GridImp = Dune::GridSelector::GridType >
 #else
-template< class GridType >
+template< class GridImp >
 #endif
 class Gmsh
-        : public Interface<GridImp>
+  : public Interface< GridImp >
 {
 public:
   //! Type of the provided grid.
@@ -56,7 +59,7 @@ public:
   {
     const std::string filename = paramTree.get("mshfile", "sample.msh");
     //read gmshfile
-    grid_ = Dune::shared_ptr<GridType> (GmshReader<GridType>::read(filename));
+    grid_ = Dune::shared_ptr< GridType > (GmshReader< GridType >::read(filename, true, false));
   }
 
   //! Unique identifier: \c stuff.grid.provider.gmsh
@@ -101,8 +104,11 @@ private:
 }; // class Gmsh
 
 } // namespace Provider
+
 } // namespace Grid
+
 } // namespace Stuff
+
 } // namespace Dune
 
 #endif // DUNE_STUFF_GRID_PROVIDER_GMSH_HH
