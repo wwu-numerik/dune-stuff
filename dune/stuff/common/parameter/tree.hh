@@ -18,9 +18,7 @@
 #include <dune/stuff/common/string.hh>
 
 namespace Dune {
-
 namespace Stuff {
-
 namespace Common {
 
 //! ParameterTree extension for nicer output
@@ -63,9 +61,9 @@ public:
     }
   } // static void assertSub(...)
 
-  void assertSub(const std::string sub, const std::string id = "") const
+  void assertSub(const std::string subTree, const std::string id = "") const
   {
-    assertSub(*this, sub, id);
+    assertSub(*this, subTree, id);
   }
 
   static void assertKey(const Dune::ParameterTree& paramTree, const std::string key, const std::string id = "")
@@ -95,10 +93,10 @@ public:
 
     for(auto pair : subs)
     {
-      ExtendedParameterTree sub(pair.second);
-      if (sub.getValueKeys().size())
+      ExtendedParameterTree subTree(pair.second);
+      if (subTree.getValueKeys().size())
         stream << "[ " << prefix + pair.first << " ]" << std::endl;
-      sub.report(stream, prefix + pair.first + ".");
+      subTree.report(stream, prefix + pair.first + ".");
     }
   }
 
@@ -129,9 +127,7 @@ public:
 };
 
 } // namespace Common
-
 } // namespace Stuff
-
 } // namespace Dune
 
 #endif // DUNE_STUFF_COMMON_PARAMETER_TREE_HH

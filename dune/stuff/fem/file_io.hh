@@ -307,9 +307,9 @@ int readRefineLevelFromDGF(const std::string filename) {
   return refineLevel;
 } // readRefineLevelFromDGF
 
-/** \todo FELIX needs to doc me **/
+
 std::string readGridTypeFromDGF(const std::string filename) DUNE_DEPRECATED_MSG(
-  "removing the darcy stuff from stokes soon");
+  "will be removed with dune-stuff 2.3");
 
 std::string readGridTypeFromDGF(const std::string filename) {
   std::string gridType("no_gridtype_found_in " + filename);

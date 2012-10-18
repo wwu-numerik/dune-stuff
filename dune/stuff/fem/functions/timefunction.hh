@@ -50,15 +50,15 @@ public:
   typedef TimeProviderImp
   TimeProviderType;
 
-  TimeFunction(const TimeProviderImp& timeProvider, const FunctionSpaceImp& /*space*/)
+  TimeFunction(const TimeProviderImp& timeProviderImp, const FunctionSpaceImp& /*space*/)
     : BaseType()
       , timeProviderPtr_(nullptr)
-      , timeProvider_(timeProvider)
+      , timeProvider_(timeProviderImp)
   {}
-  TimeFunction(const TimeProviderImp& timeProvider)
+  TimeFunction(const TimeProviderImp& timeProviderImp)
     : BaseType()
       , timeProviderPtr_(nullptr)
-      , timeProvider_(timeProvider)
+      , timeProvider_(timeProviderImp)
   {}
   explicit TimeFunction(double t)
     : BaseType()
@@ -139,9 +139,9 @@ public:
   typedef TimeProviderImp
   TimeProviderType;
 
-  IntersectionTimeFunction(const TimeProviderImp& timeProvider, const FunctionSpaceImp& /*space*/)
+  IntersectionTimeFunction(const TimeProviderImp& timeProviderImp, const FunctionSpaceImp& /*space*/)
     : BaseType()
-      , timeProvider_(timeProvider)
+      , timeProvider_(timeProviderImp)
   {}
 
   ~IntersectionTimeFunction()
