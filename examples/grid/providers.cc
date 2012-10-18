@@ -5,12 +5,16 @@
 #include <config.h>
 #endif // HAVE_CMAKE_CONFIG
 
-#ifndef HAVE_DUNE_GRID
-int main(void) {return 0;}
-#else
-
 // system
 #include <iostream>
+
+#ifndef HAVE_DUNE_GRID
+int main(void) {
+  std::cerr << "This grid provider example was compiled without DUNE-Grid present.\n";
+            << "aborting...";
+  return 0;
+}
+#else
 
 // boost
 #include <boost/filesystem.hpp>
