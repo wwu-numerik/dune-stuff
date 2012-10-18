@@ -59,21 +59,22 @@ void ensureParamFile(std::string filename)
  * \param[in] paramTree
  * \return A shared ptr to the created grid provider
  */
-Dune::shared_ptr< Dune::Stuff::Grid::Provider::Interface<> >
+template < class GridType >
+Dune::shared_ptr< Dune::Stuff::Grid::Provider::Interface<GridType> >
   createProvider(const Dune::Stuff::Common::ExtendedParameterTree& paramTree)
 {
   // prepare
   paramTree.assertKey(id + ".provider");
   const std::string providerId = paramTree.sub(id).get("provider", "default_value");
-  typedef Dune::Stuff::Grid::Provider::Interface<> InterfaceType;
+  typedef Dune::Stuff::Grid::Provider::Interface<GridType> InterfaceType;
   // choose provider
   if (providerId == "stuff.grid.provider.cube") {
-    typedef Dune::Stuff::Grid::Provider::Cube<> DerivedType;
+    typedef Dune::Stuff::Grid::Provider::Cube<GridType> DerivedType;
     paramTree.assertSub(DerivedType::static_id, id);
     Dune::shared_ptr< InterfaceType > provider(new DerivedType(paramTree.sub(DerivedType::static_id)));
     return provider;
   } else if (providerId == "stuff.grid.provider.gmsh") {
-    typedef Dune::Stuff::Grid::Provider::Gmsh<> DerivedType;
+    typedef Dune::Stuff::Grid::Provider::Gmsh<GridType> DerivedType;
     paramTree.assertSub(DerivedType::static_id, id);
     Dune::shared_ptr< InterfaceType > provider(new DerivedType(paramTree.sub(DerivedType::static_id)));
     return provider;
@@ -120,9 +121,13 @@ int main(int argc, char** argv)
     info << "setting up grid ";
     paramTree.assertSub(id, id);
     info << "using '" << paramTree.sub(id).get("provider", "default_value") << "' provider:" << std::endl;
-    typedef Dune::Stuff::Grid::Provider::Interface<> GridProviderType;
-    const Dune::shared_ptr< GridProviderType > gridProvider = createProvider(paramTree);
-    typedef GridProviderType::GridType GridType;
+    #if defined(HAVE_CMAKE_CONFIG) || defined(HAVE_CONFIG)
+      typedef Dune::GridSelector::GridType GridType;
+    #else
+      typedef Dune::YaspGrid<2> GridType;
+    #endif
+    typedef Dune::Stuff::Grid::Provider::Interface<GridType> GridProviderType;
+    const Dune::shared_ptr< GridProviderType > gridProvider = createProvider<GridType>(paramTree);
     const GridType& grid = gridProvider->grid();
     info << "  took " << timer.elapsed()
          << " sec (has " << grid.size(0) << " elements)" << std::endl;
