@@ -5,6 +5,10 @@
 #include <config.h>
 #endif // HAVE_CMAKE_CONFIG
 
+#ifndef HAVE_DUNE_GRID
+int main(void) {return 0;}
+#else
+
 // system
 #include <iostream>
 
@@ -152,3 +156,5 @@ int main(int argc, char** argv)
     std::cerr << "Unknown exception thrown!" << std::endl;
   } // try
 } // main
+
+#endif //ifndef HAVE_DUNE_GRID
