@@ -129,7 +129,7 @@ int main(int argc, char** argv)
     info << "setting up grid ";
     paramTree.assertSub(id, id);
     info << "using '" << paramTree.sub(id).get("provider", "default_value") << "' provider:" << std::endl;
-    #if defined(HAVE_CMAKE_CONFIG) || defined(HAVE_CONFIG)
+    #if defined(HAVE_CMAKE_CONFIG) || defined(HAVE_CONFIG_H)
       typedef Dune::GridSelector::GridType GridType;
     #else
       typedef Dune::YaspGrid<2> GridType;
