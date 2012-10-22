@@ -40,9 +40,9 @@ public:
   MagnitudeDiscreteFunctionType;
 
   //! constructor taking discrete function
-  MagnitudeFunction(const DiscreteFunctionType& discreteFunction)
-    : magnitude_disretefunctionspace_( discreteFunction.space().gridPart() )
-      , magnitude_disretefunction_(discreteFunction.name() + "-magnitude", magnitude_disretefunctionspace_) {
+  MagnitudeFunction(const DiscreteFunctionType& _discreteFunction)
+    : magnitude_disretefunctionspace_( _discreteFunction.space().gridPart() )
+      , magnitude_disretefunction_(_discreteFunction.name() + "-magnitude", magnitude_disretefunctionspace_) {
     typedef typename DiscreteFunctionImp::DiscreteFunctionSpaceType          DiscreteFunctionSpaceType;
     typedef typename MagnitudeDiscreteFunctionType::LocalFunctionType        LocalFuncType;
     typedef typename DiscreteFunctionSpaceType::Traits::GridPartType         GridPartType;
@@ -52,7 +52,7 @@ public:
 
     typename MagnitudeDiscreteFunctionSpaceType::RangeType ret(0.0);
     typename MagnitudeDiscreteFunctionSpaceType::RangeType phi(0.0);
-    const DiscreteFunctionSpaceType& space = discreteFunction.space();
+    const DiscreteFunctionSpaceType& space = _discreteFunction.space();
 
     // type of quadrature
     typedef Dune::CachingQuadrature< GridPartType, 0 > QuadratureType;
@@ -96,7 +96,7 @@ public:
                              quad.weight(qP) * geo.integrationElement( quad.point(qP) );    // general case
 
         typename DiscreteFunctionType::RangeType val;
-        discreteFunction.localFunction(en).evaluate(quad.point(qP), val);
+        _discreteFunction.localFunction(en).evaluate(quad.point(qP), val);
         ret = val.two_norm();
         for (int i = 0; i < numDofs; ++i)
         {

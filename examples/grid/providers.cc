@@ -72,11 +72,11 @@ Dune::shared_ptr< Dune::Stuff::Grid::Provider::Interface<> >
     paramTree.assertSub(DerivedType::id(), id);
     Dune::shared_ptr< InterfaceType > provider(new DerivedType(paramTree.sub(DerivedType::id())));
     return provider;
-  } else if (providerId == "stuff.grid.provider.gmsh") {
-    typedef Dune::Stuff::Grid::Provider::Gmsh<> DerivedType;
-    paramTree.assertSub(DerivedType::id(), id);
-    Dune::shared_ptr< InterfaceType > provider(new DerivedType(paramTree.sub(DerivedType::id())));
-    return provider;
+//  } else if (providerId == "stuff.grid.provider.gmsh") {
+//    typedef Dune::Stuff::Grid::Provider::Gmsh<> DerivedType;
+//    paramTree.assertSub(DerivedType::id(), id);
+//    Dune::shared_ptr< InterfaceType > provider(new DerivedType(paramTree.sub(DerivedType::id())));
+//    return provider;
   } else {
     std::stringstream msg;
     msg << std::endl << "Error in " << id << ": unknown provider ('" << providerId << "') given in the following Dune::Parametertree" << std::endl;
@@ -96,6 +96,9 @@ unsigned int measureTiming(const GridViewType& gridView)
   return elements;
 } // unsigned int measureTiming(const GridViewType& gridView)
 
+/**
+ * \todo  Move gmsh into seperate examples, since it does not compile with YaspGrid and SGrid!
+ */
 int main(int argc, char** argv)
 {
   try {

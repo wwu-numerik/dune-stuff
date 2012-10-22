@@ -57,16 +57,15 @@ expression.1: sin(x[1])*x[0]\endcode
 template< class DomainFieldImp, int maxDimDomain, class RangeFieldImp, int maxDimRange >
 class Expression
   : public Interface< DomainFieldImp, maxDimDomain, RangeFieldImp, maxDimRange >
-#ifdef HAVE_DUNE_FEM
-  , public Dune::Fem::Function< Dune::FunctionSpace< DomainFieldImp, RangeFieldImp, maxDimDomain, maxDimRange>,
-                                Expression< DomainFieldImp, maxDimDomain, RangeFieldImp, maxDimRange > >
-#endif
 {
 public:
   typedef DomainFieldImp DomainFieldType;
 
   typedef RangeFieldImp RangeFieldType;
 
+  static const std::string id;
+
+public:
   Expression(const Dune::ParameterTree& paramTree)
   {
     // assert dims

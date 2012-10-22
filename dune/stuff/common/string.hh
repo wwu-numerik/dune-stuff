@@ -64,6 +64,7 @@ std::string whitespaceify( const std::string s, const char c = ' ' )
   return ret;
 } // end function whitespaceify
 
+#if HAS_LAMBDA_FUNCTIONS && HAS_STD_BEGIN_END
 /** \brief convenience wrapper around boost::algorithm::split to split one string into a vector of strings
  * \param msg the spring to be split
  * \param seperators a list of seperaors, duh
@@ -85,8 +86,9 @@ inline std::vector<T> tokenize( const std::string& msg,
     std::generate(std::begin(ret), std::end(ret), [&] (){ return strings[i++].empty() ? T() : fromString<T>(strings[i-1]); });
     return ret;
 }
-
+//! if the compiler isn't recent enough we make tokenize avalilable for string only
 template < >
+#endif //HAS_LAMBDA_FUNCTIONS && HAS_STD_BEGIN_END
 inline std::vector<std::string> tokenize( const std::string& msg,
                              const std::string& seperators,
                              const boost::algorithm::token_compress_mode_type mode )
@@ -96,6 +98,7 @@ inline std::vector<std::string> tokenize( const std::string& msg,
                              mode );
     return strings;
 }
+
 
 //! returns string with local time in current locale's format
 inline std::string stringFromTime(time_t cur_time = time(NULL)) {

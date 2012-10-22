@@ -31,4 +31,8 @@
   }
 #endif
 
+// enable these when dropping autotools
+//#cmakedefine HAS_LAMBDA_FUNCTIONS 1
+//#cmakedefine HAS_STD_BEGIN_END 1
+
 #endif	/* DUNE_STUFF_CONFIG_H */

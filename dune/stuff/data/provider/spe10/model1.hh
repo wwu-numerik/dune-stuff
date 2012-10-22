@@ -1,6 +1,11 @@
-
 #ifndef DUNE_STUFF_DATA_PROVIDER_SPE10_HH
 #define DUNE_STUFF_DATA_PROVIDER_SPE10_HH
+
+#ifdef HAVE_CMAKE_CONFIG
+ #include "cmake_config.h"
+#else
+ #include "config.h"
+#endif // ifdef HAVE_CMAKE_CONFIG
 
 // system
 #include <iostream>
@@ -21,17 +26,13 @@
 // dune-stuff
 #include <dune/stuff/common/logging.hh>
 #include <dune/stuff/common/parameter/tree.hh>
+#include <dune/stuff/common/parameter/configcontainer.hh>
 
 namespace Dune {
-
 namespace Stuff {
-
 namespace Data {
-
 namespace Provider {
-
 namespace Spe10 {
-
 namespace Model1 {
 
 template< class DomainFieldImp, int domainDimension, class RangeFieldImp, int rangeDimension >
@@ -150,19 +151,19 @@ private:
                               unsigned int& numElementsX,
                               unsigned int& numElementsY) const
   {
-    Dune::Stuff::Common::Parameter::Tree::assertKey(paramTree, "filename", id);
+    Dune::Stuff::Common::ExtendedParameterTree::assertKey(paramTree, "filename", id);
     filename = paramTree.get("filename", "../../../../../data/spe10/model1/spe10_model1_permeability.dat");
-    Dune::Stuff::Common::Parameter::Tree::assertKey(paramTree, "lowerLeft.0", id);
+    Dune::Stuff::Common::ExtendedParameterTree::assertKey(paramTree, "lowerLeft.0", id);
     lowerLeftX = paramTree.get("lowerLeft.0", 0.0);
-    Dune::Stuff::Common::Parameter::Tree::assertKey(paramTree, "lowerLeft.1", id);
+    Dune::Stuff::Common::ExtendedParameterTree::assertKey(paramTree, "lowerLeft.1", id);
     lowerLeftY = paramTree.get("lowerLeft.1", 0.0);
-    Dune::Stuff::Common::Parameter::Tree::assertKey(paramTree, "upperRight.0", id);
+    Dune::Stuff::Common::ExtendedParameterTree::assertKey(paramTree, "upperRight.0", id);
     upperRightX = paramTree.get("upperRight.0", 762.0);
-    Dune::Stuff::Common::Parameter::Tree::assertKey(paramTree, "upperRight.1", id);
+    Dune::Stuff::Common::ExtendedParameterTree::assertKey(paramTree, "upperRight.1", id);
     upperRightY = paramTree.get("upperRight.1", 15.24);
-    Dune::Stuff::Common::Parameter::Tree::assertKey(paramTree, "numElements.0", id);
+    Dune::Stuff::Common::ExtendedParameterTree::assertKey(paramTree, "numElements.0", id);
     numElementsX = paramTree.get("numElements.0", 100);
-    Dune::Stuff::Common::Parameter::Tree::assertKey(paramTree, "numElements.1", id);
+    Dune::Stuff::Common::ExtendedParameterTree::assertKey(paramTree, "numElements.1", id);
     numElementsY = paramTree.get("numElements.1", 20);
     // make sure everything is all right
     bool kaboom = false;
@@ -189,12 +190,10 @@ private:
       msg << "- !(numElements.Y <= 20): !(" << numElementsY << " <= 20)" << std::endl;
     }
     // test if we can open the file
-    const std::ifstream file(filename.c_str());
-    if (!file) {
+    const bool can_open(std::ifstream(filename.c_str()).is_open());
+    if (!can_open) {
       kaboom = true;
       msg << "- could not open file given by 'filename': '" << filename << "'" << std::endl;
-    } else {
-      file.close();
     }
     // throw up if we have to
     if (kaboom) {
@@ -234,15 +233,10 @@ template< class DomainFieldType, class RangeFieldType >
 const std::string Permeability< DomainFieldType, 2, RangeFieldType, 1 >::id = "stuff.data.provider.spe10.model1.permeability";
 
 } // namespace Model1
-
 } // namespace Spe10
-
 } // namespace Provider
-
 } // namespace Data
-
 } // namespace Stuff
-
 } // namespace Dune
 
 #endif // DUNE_STUFF_DATA_PROVIDER_SPE10_HH

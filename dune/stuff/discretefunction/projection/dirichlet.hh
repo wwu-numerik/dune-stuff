@@ -1,6 +1,12 @@
 #ifndef DUNE_STUFF_DISCRETEFUNCTION_PROJECTION_DIRICHLET_HH
 #define DUNE_STUFF_DISCRETEFUNCTION_PROJECTION_DIRICHLET_HH
 
+#ifdef HAVE_CMAKE_CONFIG
+ #include "cmake_config.h"
+#else
+ #include "config.h"
+#endif // ifdef HAVE_CMAKE_CONFIG
+
 // system
 #include <vector>
 
@@ -17,13 +23,9 @@
 #include <dune/stuff/grid/intersection.hh>
 
 namespace Dune {
-
 namespace Stuff {
-
 namespace DiscreteFunction {
-
 namespace Projection {
-
 namespace Dirichlet {
 
 #ifdef HAVE_DUNE_DETAILED_DISCRETIZATIONS
@@ -98,13 +100,9 @@ void project(const BoundaryInfoType& boundaryInfo,
 #endif // HAVE_DUNE_DETAILED_DISCRETIZATIONS
 
 } // namespace Dirichlet
-
 } // namespace Projection
-
 } // namespace DiscreteFunction
-
 } // namespace Stuff
-
 } // namespace Dune
 
 #endif // DUNE_STUFF_DISCRETEFUNCTION_PROJECTION_DIRICHLET_HH
