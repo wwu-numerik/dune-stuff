@@ -1,5 +1,7 @@
 #include "test_common.hh"
 
+#if HAVE_DUNE_GRID
+
 #include <dune/stuff/grid/output/pgf.hh>
 #include <dune/grid/sgrid.hh>
 
@@ -30,6 +32,8 @@ TEST(PgfOutput, Sgrid){
   std::ofstream fileA("pgfoutput_leaf.tex");
   output.leaf(fileA, includable);
 }
+
+#endif //#if HAVE_DUNE_GRID
 
 int main(int argc, char** argv)
 {

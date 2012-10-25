@@ -1,5 +1,7 @@
 #include "test_common.hh"
 
+#if HAVE_DUNE_GRID
+
 // system
 #include <iostream>
 #include <fstream>
@@ -188,6 +190,8 @@ TEST(OLD, gnah){
   char* gnah[] = {"koko"};
   EXPECT_EQ(0, GNAH(1,gnah));
 }
+
+#endif // #if HAVE_DUNE_GRID
 
 int main(int argc, char** argv)
 {

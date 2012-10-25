@@ -1,1 +1,3 @@
-add_subdirectory(grid)
+if( grid_FOUND )
+	add_subdirectory(grid)
+endif( grid_FOUND )
