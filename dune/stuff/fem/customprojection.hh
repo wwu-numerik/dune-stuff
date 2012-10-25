@@ -7,6 +7,8 @@
  #include "config.h"
 #endif // ifdef HAVE_CMAKE_CONFIG
 
+#if HAVE_DUNE_FEM
+
 #include <dune/fem/quadrature/cachingquadrature.hh>
 #include <dune/fem/operator/common/operator.hh>
 #include <dune/fem/function/common/discretefunction.hh>
@@ -404,6 +406,8 @@ public:
 } // namespace Fem
 } // namespace Stuff
 } // namespace Dune
+
+#endif // #if HAVE_DUNE_FEM
 
 #endif // CUSTOMPROJECTION_HH
 
