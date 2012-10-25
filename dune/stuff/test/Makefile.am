@@ -11,8 +11,12 @@ NORMALTESTS = common_parameter_validation common_logger common_color \
 GTEST_SRC = gtest/gtest-all.cc
 
 LDFLAGS = $(BOOST_LDFLAGS) -lboost_timer -lboost_chrono -lboost_filesystem -lboost_system
-CXXFLAGS = $(BOOST_CPPFLAGS) $(DUNE_CPPFLAGS) \
-	-DGRIDDIM=$(GRIDDIM) -D$(GRIDTYPE) -I.
+CXXFLAGS = $(BOOST_CPPFLAGS) $(DUNE_CPPFLAGS) -I.
+CPPFLAGS = $(BOOST_CPPFLAGS) $(DUNE_CPPFLAGS)
+
+if HAVE_DUNE_GRID
+	CXXFLAGS += -DGRIDDIM=$(GRIDDIM) -D$(GRIDTYPE)
+endif
 
 common_parameter_validation_SOURCES = common_parameter_validation.cc ${GTEST_SRC}
 common_logger_SOURCES = common_logger.cc ${GTEST_SRC}
