@@ -101,7 +101,7 @@ public:
 #endif // HAVE_EIGEN
 
   private:
-    const DomainFieldType lowerLeftX_,;
+    const DomainFieldType lowerLeftX_;
     const DomainFieldType lowerLeftY_;
     const DomainFieldType upperRightX_;
     const DomainFieldType upperRightY_;
