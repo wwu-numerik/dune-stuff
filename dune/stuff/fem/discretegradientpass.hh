@@ -16,6 +16,8 @@
  #include "config.h"
 #endif // ifdef HAVE_CMAKE_CONFIG
 
+#if HAVE_DUNE_FEM
+
 #include <dune/fem/pass/pass.hh>
 #include <dune/fem/space/dgspace.hh>
 
@@ -424,6 +426,8 @@ private:
 } // namespace Fem
 } // namespace Stuff
 } // namespace Dune
+
+#endif // #if HAVE_DUNE_FEM
 
 #endif // end of dicretegradientpass.hh DUNE_STUFF_DISCRETEGRADIENTPASS_HH
 /** Copyright (c) 2012, Rene Milk

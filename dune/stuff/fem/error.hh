@@ -7,6 +7,8 @@
  #include "config.h"
 #endif // ifdef HAVE_CMAKE_CONFIG
 
+#if HAVE_DUNE_FEM
+
 #include <dune/fem/misc/l2norm.hh>
 #include <dune/fem/misc/h1norm.hh>
 #include <boost/format.hpp>
@@ -79,6 +81,8 @@ public:
 } // namespace Fem
 } // namespace Stuff
 } // namespace Dune
+
+#endif // #if HAVE_DUNE_FEM
 
 #endif // DUNE_STUFF_ERROR_HH
 

@@ -7,6 +7,8 @@
  #include "config.h"
 #endif // ifdef HAVE_CMAKE_CONFIG
 
+#if HAVE_DUNE_FEM
+
 #include <dune/stuff/fem/restrict_prolong.hh>
 #include <dune/fem/space/dgspace/localrestrictprolong.hh>
 #include <dune/common/shared_ptr.hh>
@@ -107,6 +109,8 @@ DiscreteOseenFunctionWrapperAdaptionManager< T >::restrictOperator_Set_;
 } // namespace Fem
 } // namespace Stuff
 } // namespace Dune
+
+#endif // #if HAVE_DUNE_FEM
 
 #endif // DUNE_STUFF_ADAPTION_HH
 /** Copyright (c) 2012, Rene Milk

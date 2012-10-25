@@ -7,6 +7,8 @@
  #include <config.h>
 #endif // ifdef HAVE_CMAKE_CONFIG
 
+#if HAVE_DUNE_FEM
+
 #include <dune/fem/function/common/function.hh>
 #include <dune/fem/function/common/gridfunctionadapter.hh>
 #include <dune/fem/space/common/functionspace.hh>
@@ -133,6 +135,8 @@ MagnitudeFunction< DF, I >::magnitude_space_ = typename MagnitudeFunction< DF, I
 } // namespace Fem
 } // namespace Stuff
 } // namespace Dune
+
+#endif // #if HAVE_DUNE_FEM
 
 #endif // DUNE_STUFF_MAGNITUDEFUNCTION_HH
 /** Copyright (c) 2012, Rene Milk
