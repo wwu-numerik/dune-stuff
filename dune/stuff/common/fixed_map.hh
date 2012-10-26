@@ -8,11 +8,13 @@
 #include <boost/iterator/iterator_facade.hpp>
 #include <boost/assign/list_of.hpp>
 #include <dune/common/exceptions.hh>
+#include <dune/common/nullptr.hh>
 
 namespace Dune {
 namespace Stuff {
 namespace Common {
 
+//! custom iterator for \ref FixedMap
 template <class FixedMapType>
 class FixedMapIterator
     : public boost::iterator_facade< FixedMapIterator<FixedMapType>
@@ -47,6 +49,7 @@ private:
   FixedMapType* const map_;
 };
 
+//! custom const iterator for \ref FixedMap
 template <class FixedMapType>
 class ConstFixedMapIterator
     : public boost::iterator_facade< ConstFixedMapIterator<FixedMapType>
@@ -81,7 +84,7 @@ private:
   const FixedMapType * const map_;
 };
 
-//! a std::map like container that prevent map size change
+//! a std::map like container that prevents map size change
 template <class key_imp, class T, std::size_t nin>
 class FixedMap {
 public:
