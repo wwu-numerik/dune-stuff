@@ -1,9 +1,10 @@
 #! /bin/bash
 # $Id$
 # Process this file with autoconf to produce a configure script.
+AC_PREREQ(2.50)
 DUNE_AC_INIT # gets module version from dune.module file
-AM_INIT_AUTOMAKE
-AC_CONFIG_SRCDIR([])
+
+AC_CONFIG_SRCDIR([dune/stuff/exists.hh])
 AM_CONFIG_HEADER([config.h])
 
 # check all dune-module stuff
@@ -11,6 +12,7 @@ DUNE_CHECK_ALL
 
 
 # preset variable to path such that #include <dune/...> works
+AC_SUBST([DUNE_STUFF_ROOT], '$(top_builddir)')
 AC_SUBST([AM_CPPFLAGS], '$(DUNE_CPPFLAGS) -I$(top_srcdir)')
 AC_SUBST([AM_LDFLAGS], '$(DUNE_LDFLAGS) $(DUNE_LIBS)')
 AC_SUBST([LOCAL_LIBS], '')
