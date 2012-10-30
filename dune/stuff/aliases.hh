@@ -1,6 +1,17 @@
 #ifndef DUNE_STUFF_ALIASES_HH
 #define DUNE_STUFF_ALIASES_HH
 
+namespace Dune {
+namespace Stuff {
+
+namespace Common {}
+namespace Grid {}
+namespace Fem {}
+namespace Function {}
+
+}
+}
+
 namespace DSC = Dune::Stuff::Common;
 namespace DSG = Dune::Stuff::Grid;
 namespace DSFe = Dune::Stuff::Fem;
