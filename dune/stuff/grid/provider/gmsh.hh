@@ -46,7 +46,7 @@ template< class GridImp = Dune::GridSelector::GridType >
 template< class GridImp = Dune::SGrid< 2, 2 > >
 #endif // defined HAVE_CONFIG_H || defined HAVE_CMAKE_CONFIG
 class Gmsh
-  : public Interface< GridImp >
+        : public Interface<GridImp>
 {
 public:
   //! Type of the provided grid.

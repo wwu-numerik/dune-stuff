@@ -47,7 +47,7 @@ void ensureParamFile(std::string filename)
     file << "level = 4" << std::endl;
     file << "filename = " << id << ".grid" << std::endl;
     file << "[stuff.grid.provider.gmsh]" << std::endl;
-    file << "mshfile = sample.msh" << std::endl;
+    file << "mshfile = curved2d.msh" << std::endl;
     file << "filename = " << id << ".grid" << std::endl;
     file.close();
   } // only write param file if there is none
@@ -72,11 +72,11 @@ Dune::shared_ptr< Dune::Stuff::Grid::Provider::Interface<> >
     paramTree.assertSub(DerivedType::id(), id);
     Dune::shared_ptr< InterfaceType > provider(new DerivedType(paramTree.sub(DerivedType::id())));
     return provider;
-//  } else if (providerId == "stuff.grid.provider.gmsh") {
-//    typedef Dune::Stuff::Grid::Provider::Gmsh<> DerivedType;
-//    paramTree.assertSub(DerivedType::id(), id);
-//    Dune::shared_ptr< InterfaceType > provider(new DerivedType(paramTree.sub(DerivedType::id())));
-//    return provider;
+  } else if (providerId == "stuff.grid.provider.gmsh") {
+    typedef Dune::Stuff::Grid::Provider::Gmsh<> DerivedType;
+    paramTree.assertSub(DerivedType::id(), id);
+    Dune::shared_ptr< InterfaceType > provider(new DerivedType(paramTree.sub(DerivedType::id())));
+    return provider;
   } else {
     std::stringstream msg;
     msg << std::endl << "Error in " << id << ": unknown provider ('" << providerId << "') given in the following Dune::Parametertree" << std::endl;
