@@ -7,6 +7,7 @@ GRIDDIM=2
 NORMALTESTS = common_parameter_validation common_logger common_color \
 	common_math common_profiler common_string common_typenames \
 	function_expression 
+	common_tuple 
 
 GTEST_SRC = gtest/gtest-all.cc
 
@@ -25,6 +26,7 @@ common_profiler_SOURCES = common_profiler.cc ${GTEST_SRC}
 common_string_SOURCES = common_string.cc ${GTEST_SRC}
 common_typenames_SOURCES = common_typenames.cc ${GTEST_SRC}
 common_color_SOURCES = common_color.cc ${GTEST_SRC}
+common_tuple_SOURCES = common_tuple.cc ${GTEST_SRC}
 
 
 SOURCES = $(common_parameter_validation_SOURCES) $(common_logger_SOURCES)
