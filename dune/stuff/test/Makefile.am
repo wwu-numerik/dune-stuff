@@ -6,12 +6,11 @@ GRIDDIM=2
 # tests where program to build and program to run are equal
 NORMALTESTS = common_parameter_validation common_logger common_color \
 	common_math common_profiler common_string common_typenames \
-	function_expression 
 	common_tuple 
 
 GTEST_SRC = gtest/gtest-all.cc
 
-LDFLAGS = $(BOOST_LDFLAGS) -lboost_timer -lboost_chrono -lboost_filesystem -lboost_system
+LDFLAGS = $(BOOST_LDFLAGS) -lboost_timer -lboost_chrono -lboost_filesystem -lboost_system -lpthread
 CXXFLAGS = $(BOOST_CPPFLAGS) $(DUNE_CPPFLAGS) -I.
 CPPFLAGS = $(BOOST_CPPFLAGS) $(DUNE_CPPFLAGS)
 

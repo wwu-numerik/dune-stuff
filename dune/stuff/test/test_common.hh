@@ -17,6 +17,7 @@
 #include <gtest/gtest.h>
 
 #include <random>
+#include <fstream>
 #include <sys/time.h>
 
 #define MY_ASSERT(cond) EXPECT_TRUE(cond)
