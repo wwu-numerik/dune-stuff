@@ -73,6 +73,10 @@ std::ostream& operator <<(std::ostream& out, const Request& r) {
   return out;
 }
 
+class InvalidParameter
+    : public Dune::Exception
+{};
+
 class ConfigContainer {
 private:
   typedef std::map<std::string, std::set<Request> >
@@ -87,7 +91,7 @@ private:
             return val;
         std::stringstream ss;
         validator.print(ss);
-        DUNE_THROW(Dune::ParameterInvalid, ss.str());
+        DUNE_THROW(InvalidParameter, ss.str());
     }
 
     //! return a set of Request objects for keys that have been queried with non-matching default values
