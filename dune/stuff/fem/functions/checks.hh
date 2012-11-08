@@ -18,10 +18,33 @@
 #include <dune/stuff/common/string.hh>
 #include <dune/common/deprecated.hh>
 #include <dune/common/fvector.hh>
+#include <dune/common/math.hh>
 
 namespace Dune {
 namespace Stuff {
 namespace Fem {
+
+/**
+   *  \brief  gets min, avg and max of a Dune::DiscreteFunction
+   *
+   *          or compatible in terms of iterators
+   *  \attention  works only for constant base function = sqrt(2) atm
+   **/
+template< class FunctionType >
+Dune::Stuff::Common::MinMaxAvg<typename FunctionType::RangeFieldType>
+getMinMaxOfDiscreteFunction(const FunctionType& function)
+{
+  Dune::Stuff::Common::MinMaxAvg<typename FunctionType::RangeFieldType> mm;
+  typedef typename FunctionType::ConstDofIteratorType
+  ConstDofIteratorType;
+  ConstDofIteratorType itEnd = function.dend();
+  // find minimum and maximum
+  for (ConstDofIteratorType it = function.dbegin(); it != itEnd; ++it)
+  {
+    mm(*it);
+  }
+  return mm;
+}
 
 /**
    *  \brief  gets min and max of a Dune::DiscreteFunction
@@ -33,19 +56,12 @@ template< class FunctionType >
 void getMinMaxOfDiscreteFunction(const FunctionType& function,
                                  double& min,
                                  double& max) {
-  // preparations
-  min = std::numeric_limits< double >::max();
-  max = std::numeric_limits< double >::min();
-  typedef typename FunctionType::ConstDofIteratorType
-  ConstDofIteratorType;
-  ConstDofIteratorType itEnd = function.dend();
-  // find minimum and maximum
-  for (ConstDofIteratorType it = function.dbegin(); it != itEnd; ++it)
-  {
-    min = *it < min ? *it : min;
-    max = *it > max ? *it : max;
-  }
+  auto mm = getMinMaxOfDiscreteFunction(function);
+  min = mm.min();
+  max = mm.max();
+
 } // getMinMaxOfDiscreteFunction
+
 
 //! count dofs of f1,f2 with abs(f1[i] - f2[i]) > tolerance
 template< class FunctionType >

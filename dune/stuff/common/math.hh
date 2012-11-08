@@ -195,7 +195,6 @@ protected:
   StatsType;
   boost::accumulators::accumulator_set< ElementType, StatsType > acc_;
 
-  MinMaxAvg(const ThisType& other);
 };
 
 //! bound \param var in [\param min,\param max]
