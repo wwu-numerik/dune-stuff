@@ -183,7 +183,7 @@ public:
     acc_(el);
   }
 
-  void output(std::ofstream& stream) {
+  void output(std::ostream& stream) {
     stream << boost::format("min: %e\tmax: %e\tavg: %e\n") % min() % max() % average();
   }
 
