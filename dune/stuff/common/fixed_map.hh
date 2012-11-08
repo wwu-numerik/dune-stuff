@@ -40,7 +40,7 @@ private:
 
   bool equal(ThisType const& other) const
   {
-      return this->map_ == other.map_;
+    return this->map_ && (index_ == other.index_) && (this->map_ == other.map_);
   }
 
   typename FixedMapType::value_type& dereference() const { return map_->map_[index_]; }
@@ -75,7 +75,7 @@ private:
 
   bool equal(ThisType const& other) const
   {
-      return this->map_ == other.map_;
+    return this->map_ && (index_ == other.index_) && (this->map_ == other.map_);
   }
 
   const typename FixedMapType::value_type& dereference() const { return map_->map_[index_]; }
@@ -163,6 +163,10 @@ public:
 
   const_iterator end() const {
     return const_iterator(this, N);
+  }
+
+  std::size_t size() const {
+    return N;
   }
 
   void print(std::ostream& out) const {
