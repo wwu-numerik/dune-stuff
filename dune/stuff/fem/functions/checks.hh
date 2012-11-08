@@ -46,6 +46,15 @@ getMinMaxOfDiscreteFunction(const FunctionType& function)
   return mm;
 }
 
+template< class FunctionType >
+void
+getMinMaxOfDiscreteFunction(const FunctionType& function, const std::string name, std::ostream& out)
+{
+  auto mm = getMinMaxOfDiscreteFunction(function);
+  out << name << " ";
+  mm.output(out);
+  out << std::endl;
+}
 /**
    *  \brief  gets min and max of a Dune::DiscreteFunction
    *
@@ -59,7 +68,6 @@ void getMinMaxOfDiscreteFunction(const FunctionType& function,
   auto mm = getMinMaxOfDiscreteFunction(function);
   min = mm.min();
   max = mm.max();
-
 } // getMinMaxOfDiscreteFunction
 
 
