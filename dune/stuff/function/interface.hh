@@ -14,19 +14,31 @@ namespace Stuff {
 namespace Function {
 
 #ifdef HAVE_DUNE_FEM
-
-template< class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDim >
-class Interface : public Dune::Fem::Function< Dune::FunctionSpace< DomainFieldImp, RangeFieldImp, domainDim, rangeDim>,
+template< class DomainFieldImp, int domainDim, class RangeFieldImp,  int rangeDim >
+class Interface
+  : public Dune::Fem::Function< Dune::FunctionSpace< DomainFieldImp, RangeFieldImp, domainDim, rangeDim>,
                                 Interface< DomainFieldImp, domainDim, RangeFieldImp, rangeDim > >
 {
-  typedef Dune::Fem::Function< Dune::FunctionSpace< DomainFieldImp, RangeFieldImp, domainDim, rangeDim>,
+  typedef Dune::Fem::Function<  Dune::FunctionSpace< DomainFieldImp, RangeFieldImp, domainDim, rangeDim>,
                                 Interface< DomainFieldImp, domainDim, RangeFieldImp, rangeDim > >
       BaseType;
 public:
   typedef typename BaseType::DomainFieldType DomainFieldType;
+
+  static const int dimDomain = domainDim;
+
   typedef typename BaseType::DomainType DomainType;
+
+  static const int dimRange = rangeDim;
+
   typedef typename BaseType::RangeFieldType RangeFieldType;
+
   typedef typename BaseType::RangeType RangeType;
+
+  static const std::string id()
+  {
+    return "stuff.function";
+  }
 
   virtual void evaluate(const DomainType&, RangeType&) const = 0;
 };
@@ -54,7 +66,7 @@ public:
 
   static const std::string id()
   {
-    return "stuff.function.interface";
+    return "stuff.function";
   }
 
   virtual void evaluate(const DomainType&, RangeType&) const = 0;
