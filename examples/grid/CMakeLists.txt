@@ -1,2 +1,2 @@
-ADD_EXECUTABLE( providers "providers.cc" ${COMMON_HEADERS} )
-TARGET_LINK_LIBRARIES( providers "dunegrid" "dunecommon"  ${CCGNU_LIBRARIES} "boost_filesystem" "boost_system")
+ADD_EXECUTABLE( examples_grid_providers "providers.cc" ${COMMON_HEADER} )
+TARGET_LINK_LIBRARIES( examples_grid_providers ${COMMON_LIBS} )
