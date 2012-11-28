@@ -8,13 +8,20 @@
 #endif // ifdef HAVE_CMAKE_CONFIG
 
 // system
+#include <cstring>
 #include <sstream>
+#include <vector>
+
+// boost
 #include <boost/algorithm/string/join.hpp>
+#include <boost/algorithm/string.hpp>
 #include <boost/format.hpp>
 
 // dune-common
 #include <dune/common/exceptions.hh>
 #include <dune/common/parametertreeparser.hh>
+
+// dune-stuff
 #include <dune/stuff/common/string.hh>
 
 namespace Dune {
@@ -56,7 +63,7 @@ public:
         msg << " in " << id;
       }
       msg << ": subTree '" << sub << "' not found in the following Dune::Parametertree" << std::endl;
-      paramTree.report(msg);
+      ExtendedParameterTree(paramTree).report(msg);
       DUNE_THROW(Dune::InvalidStateException, msg.str());
     }
   } // static void assertSub(...)
@@ -75,7 +82,7 @@ public:
         msg << " in " << id;
       }
       msg << ": key '" << key << "' not found in the following Dune::Parametertree" << std::endl;
-      paramTree.report(msg);
+      ExtendedParameterTree(paramTree).report(msg);
       DUNE_THROW(Dune::InvalidStateException, msg.str());
     }
   } // static void assertKey(...)
@@ -85,8 +92,7 @@ public:
     assertKey(*this, key, id);
   }
 
-  void report(std::ostream& stream = std::cout,
-              const std::string& prefix = "") const
+  void report(std::ostream& stream = std::cout, const std::string& prefix = "") const
   {
     for(auto pair : values)
           stream << pair.first << " = \"" << pair.second << "\"" << std::endl;
@@ -100,6 +106,52 @@ public:
     }
   }
 
+  bool hasVector(const std::string& vector) const
+  {
+    if (hasKey(vector)) {
+      const std::string str = get< std::string >(vector, "default_value");
+      if (Dune::Stuff::Common::String::equal(str.substr(0, 1), "[")
+          && Dune::Stuff::Common::String::equal(str.substr(str.size() - 1, 1), "]"))
+        return true;
+    }
+    return false;
+  } // bool hasVector(const std::string& vector) const
+
+  void assertVector(const std::string vector, const std::string id = "") const
+  {
+    if (!hasVector(vector)) {
+      std::stringstream msg;
+      msg << "Error";
+      if (id != "") {
+        msg << " in " << id;
+      }
+      msg << ": vector '" << vector << "' not found in the following Dune::Parametertree" << std::endl;
+      report(msg);
+      DUNE_THROW(Dune::InvalidStateException, msg.str());
+    }
+  } // void assertVector(...)
+
+  template< class T >
+  std::vector< T > getVector(const std::string& key, const T def) const
+  {
+    std::vector< T > ret;
+    if (!hasKey(key))
+      ret.push_back(def);
+    else {
+      const std::string str = get< std::string >(key, "default_value");
+      // the dune parametertree strips any leading and trailing whitespace
+      // so we can be sure that the first and last have to be the brackets []
+      assert(Dune::Stuff::Common::String::equal(str.substr(0, 1), "[")
+             && "Vectors have to be of the form '[entry_0; entry_1; ... ]'!");
+      assert(Dune::Stuff::Common::String::equal(str.substr(str.size() - 1, 1), "]")
+             && "Vectors have to be of the form '[entry_0; entry_1; ... ]'!");
+      const std::vector< std::string > tokens = Dune::Stuff::Common::tokenize< std::string >(str.substr(1, str.size() - 2), ";");
+      for (unsigned int i = 0; i < tokens.size(); ++i)
+        ret.push_back(Dune::Stuff::Common::fromString< T >(boost::algorithm::trim_copy(tokens[i])));
+    }
+    return ret;
+  } // std::vector< T > getVector(const std::string& key, const T def) const
+
   /**
     \brief      Fills a Dune::ParameterTree given a parameter file or command line arguments.
     \param[in]  argc
@@ -111,7 +163,7 @@ public:
     **/
   static ExtendedParameterTree init(int argc, char** argv, std::string filename)
   {
-    ExtendedParameterTree paramTree;
+    Dune::ParameterTree paramTree;
     if (argc == 1) {
       Dune::ParameterTreeParser::readINITree(filename, paramTree);
     } else if (argc == 2) {
