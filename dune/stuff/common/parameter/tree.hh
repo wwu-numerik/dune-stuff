@@ -132,22 +132,28 @@ public:
   } // void assertVector(...)
 
   template< class T >
-  std::vector< T > getVector(const std::string& key, const T def) const
+  std::vector< T > getVector(const std::string& key, const T def, const unsigned int minSize = 1) const
   {
     std::vector< T > ret;
     if (!hasKey(key))
-      ret.push_back(def);
+      ret = std::vector< T >(minSize, def);
     else {
       const std::string str = get< std::string >(key, "default_value");
       // the dune parametertree strips any leading and trailing whitespace
-      // so we can be sure that the first and last have to be the brackets []
-      assert(Dune::Stuff::Common::String::equal(str.substr(0, 1), "[")
-             && "Vectors have to be of the form '[entry_0; entry_1; ... ]'!");
-      assert(Dune::Stuff::Common::String::equal(str.substr(str.size() - 1, 1), "]")
-             && "Vectors have to be of the form '[entry_0; entry_1; ... ]'!");
-      const std::vector< std::string > tokens = Dune::Stuff::Common::tokenize< std::string >(str.substr(1, str.size() - 2), ";");
-      for (unsigned int i = 0; i < tokens.size(); ++i)
-        ret.push_back(Dune::Stuff::Common::fromString< T >(boost::algorithm::trim_copy(tokens[i])));
+      // so we can be sure that the first and last have to be the brackets [] if this is a vector
+      if (Dune::Stuff::Common::String::equal(str.substr(0, 1), "[")
+          && Dune::Stuff::Common::String::equal(str.substr(str.size() - 1, 1), "]")) {
+        const std::vector< std::string > tokens = Dune::Stuff::Common::tokenize< std::string >(str.substr(1, str.size() - 2), ";");
+        for (unsigned int i = 0; i < tokens.size(); ++i)
+          ret.push_back(Dune::Stuff::Common::fromString< T >(boost::algorithm::trim_copy(tokens[i])));
+        for (unsigned int i = ret.size(); i <= minSize; ++i)
+          ret.push_back(def);
+      } else if (Dune::Stuff::Common::String::equal(str.substr(0, 1), "[")
+                 || Dune::Stuff::Common::String::equal(str.substr(str.size() - 1, 1), "]")) {
+          DUNE_THROW(Dune::InvalidStateException, "Vectors have to be of the form '[entry_0; entry_1; ... ]'!");
+      } else {
+        ret = std::vector< T >(minSize, Dune::Stuff::Common::fromString< T >(boost::algorithm::trim_copy(str)));
+      }
     }
     return ret;
   } // std::vector< T > getVector(const std::string& key, const T def) const
@@ -176,7 +182,7 @@ public:
     }
     return paramTree;
   } // static ExtendedParameterTree init(...)
-};
+}; // class ExtendedParameterTree
 
 } // namespace Common
 } // namespace Stuff
