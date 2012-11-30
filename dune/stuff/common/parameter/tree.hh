@@ -2,26 +2,22 @@
 #define DUNE_STUFF_COMMON_PARAMETER_TREE_HH
 
 #ifdef HAVE_CMAKE_CONFIG
- #include "cmake_config.h"
+  #include "cmake_config.h"
 #else
- #include "config.h"
+  #include "config.h"
 #endif // ifdef HAVE_CMAKE_CONFIG
 
-// system
 #include <cstring>
 #include <sstream>
 #include <vector>
 
-// boost
 #include <boost/algorithm/string/join.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/format.hpp>
 
-// dune-common
 #include <dune/common/exceptions.hh>
 #include <dune/common/parametertreeparser.hh>
 
-// dune-stuff
 #include <dune/stuff/common/string.hh>
 
 namespace Dune {
@@ -54,44 +50,6 @@ public:
     return *this;
   } // ExtendedParameterTree& operator=(const Dune::ParameterTree& other)
 
-//  static void assertSub(const Dune::ParameterTree& paramTree, std::string sub, std::string id = "")
-//  {
-//    if (!paramTree.hasSub(sub)) {
-//      std::stringstream msg;
-//      msg << "Error";
-//      if (id != "") {
-//        msg << " in " << id;
-//      }
-//      msg << ": subTree '" << sub << "' not found in the following Dune::Parametertree" << std::endl;
-//      ExtendedParameterTree(paramTree).report(msg);
-//      DUNE_THROW(Dune::InvalidStateException, msg.str());
-//    }
-//  } // static void assertSub(...)
-
-//  void assertSub(const std::string subTree, const std::string id = "") const
-//  {
-//    assertSub(*this, subTree, id);
-//  }
-
-//  static void assertKey(const Dune::ParameterTree& paramTree, const std::string key, const std::string id = "")
-//  {
-//    if (!paramTree.hasKey(key)) {
-//      std::stringstream msg;
-//      msg << "Error";
-//      if (id != "") {
-//        msg << " in " << id;
-//      }
-//      msg << ": key '" << key << "' not found in the following Dune::Parametertree" << std::endl;
-//      ExtendedParameterTree(paramTree).report(msg);
-//      DUNE_THROW(Dune::InvalidStateException, msg.str());
-//    }
-//  } // static void assertKey(...)
-
-//  void assertKey(const std::string key, const std::string id = "") const
-//  {
-//    assertKey(*this, key, id);
-//  }
-
   void report(std::ostream& stream = std::cout, const std::string& prefix = "") const
   {
     for(auto pair : values)
@@ -116,20 +74,6 @@ public:
     }
     return false;
   } // bool hasVector(const std::string& vector) const
-
-//  void assertVector(const std::string vector, const std::string id = "") const
-//  {
-//    if (!hasVector(vector)) {
-//      std::stringstream msg;
-//      msg << "Error";
-//      if (id != "") {
-//        msg << " in " << id;
-//      }
-//      msg << ": vector '" << vector << "' not found in the following Dune::Parametertree" << std::endl;
-//      report(msg);
-//      DUNE_THROW(Dune::InvalidStateException, msg.str());
-//    }
-//  } // void assertVector(...)
 
   template< class T >
   std::vector< T > getVector(const std::string& key, const T def, const unsigned int minSize = 1) const
