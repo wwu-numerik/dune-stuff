@@ -1,29 +1,24 @@
-
 #ifdef HAVE_CMAKE_CONFIG
-#include "cmake_config.h"
+  #include "cmake_config.h"
 #elif defined (HAVE_CONFIG_H)
-#include <config.h>
+  #include <config.h>
 #endif // HAVE_CMAKE_CONFIG
 
-// system
 #include <iostream>
 
-// boost
 #include <boost/filesystem.hpp>
 
-// dune-common
 #include <dune/common/exceptions.hh>
 #include <dune/common/shared_ptr.hh>
 #include <dune/common/mpihelper.hh>
 #include <dune/common/timer.hh>
 
-// dune-stuff
 #include <dune/stuff/common/parameter/tree.hh>
 #include <dune/stuff/common/logging.hh>
 #include <dune/stuff/common/filesystem.hh>
 #include <dune/stuff/common/string.hh>
 #include <dune/stuff/grid/provider/cube.hh>
-#include <dune/stuff/grid/provider/gmsh.hh>
+//#include <dune/stuff/grid/provider/gmsh.hh>
 
 const std::string id = "grid.providers";
 
@@ -43,40 +38,35 @@ void ensureParamFile(std::string filename)
     file.open(filename);
     file << "[" << id << "]" << std::endl;
     file << "provider = stuff.grid.provider.cube" << std::endl;
+    file << "filename = " << id << ".grid"<< std::endl;
     file << "[stuff.grid.provider.cube]" << std::endl;
-    file << "level = 4" << std::endl;
-    file << "filename = " << id << ".grid" << std::endl;
+    file << "lowerLeft = [0.0; 0.0; 0.0]" << std::endl;
+    file << "upperRight = [1.0; 1.0; 1.0]" << std::endl;
+    file << "numElements = [4; 4; 4]" << std::endl;
     file << "[stuff.grid.provider.gmsh]" << std::endl;
-    file << "mshfile = curved2d.msh" << std::endl;
-    file << "filename = " << id << ".grid" << std::endl;
+    file << "filename = curved2d.msh" << std::endl;
     file.close();
   } // only write param file if there is none
 } // void ensureParamFile()
 
-/**
- * \brief Creates a grid provider
- *
- * \param[in] paramTree
- * \return A shared ptr to the created grid provider
- */
-Dune::shared_ptr< Dune::Stuff::Grid::Provider::Interface<> >
-  createProvider(const Dune::Stuff::Common::ExtendedParameterTree& paramTree)
+Dune::Stuff::Grid::Provider::Interface<>* createProvider(const Dune::Stuff::Common::ExtendedParameterTree& paramTree)
 {
   // prepare
-  paramTree.assertKey(id + ".provider");
-  const std::string providerId = paramTree.sub(id).get("provider", "default_value");
+  if (!paramTree.hasKey(id + ".provider"))
+    DUNE_THROW(Dune::RangeError,
+               "\nMissing key '" << id << ".provider' in the following Dune::ParameterTree:\n" << paramTree.reportString("  "));
+  const std::string providerId = paramTree.get(id + ".provider", "meaningless_default_value");
   typedef Dune::Stuff::Grid::Provider::Interface<> InterfaceType;
   // choose provider
   if (providerId == "stuff.grid.provider.cube") {
     typedef Dune::Stuff::Grid::Provider::Cube<> DerivedType;
-    paramTree.assertSub(DerivedType::id(), id);
-    Dune::shared_ptr< InterfaceType > provider(new DerivedType(paramTree.sub(DerivedType::id())));
+    DerivedType* provider = new DerivedType(DerivedType::createFromParamTree(paramTree));
     return provider;
-  } else if (providerId == "stuff.grid.provider.gmsh") {
-    typedef Dune::Stuff::Grid::Provider::Gmsh<> DerivedType;
-    paramTree.assertSub(DerivedType::id(), id);
-    Dune::shared_ptr< InterfaceType > provider(new DerivedType(paramTree.sub(DerivedType::id())));
-    return provider;
+//  } else if (providerId == "stuff.grid.provider.gmsh") {
+//    typedef Dune::Stuff::Grid::Provider::Gmsh<> DerivedType;
+//    paramTree.assertSub(DerivedType::id(), id);
+//    Dune::shared_ptr< InterfaceType > provider(new DerivedType(paramTree.sub(DerivedType::id())));
+//    return provider;
   } else {
     std::stringstream msg;
     msg << std::endl << "Error in " << id << ": unknown provider ('" << providerId << "') given in the following Dune::Parametertree" << std::endl;
@@ -109,6 +99,9 @@ int main(int argc, char** argv)
     const std::string filename = id + ".param";
     ensureParamFile(filename);
     Dune::Stuff::Common::ExtendedParameterTree paramTree(argc, argv, filename);
+    if (!paramTree.hasSub(id))
+      DUNE_THROW(Dune::RangeError,
+                 "\nMissing sub '" << id << "' in the following Dune::ParameterTree:\n" << paramTree.reportString("  "));
 
     // logger
     Dune::Stuff::Common::Logger().create(Dune::Stuff::Common::LOG_INFO |
@@ -120,24 +113,21 @@ int main(int argc, char** argv)
     Dune::Timer timer;
 
     // grid
-    info << "setting up grid ";
-    paramTree.assertSub(id, id);
-    info << "using '" << paramTree.sub(id).get("provider", "default_value") << "' provider:" << std::endl;
+    info << "setting up grid... ";
     typedef Dune::Stuff::Grid::Provider::Interface<> GridProviderType;
-    const Dune::shared_ptr< GridProviderType > gridProvider = createProvider(paramTree);
+    const GridProviderType* gridProvider = createProvider(paramTree);
     typedef GridProviderType::GridType GridType;
-    const GridType& grid = gridProvider->grid();
-    info << "  took " << timer.elapsed()
-         << " sec (has " << grid.size(0) << " elements)" << std::endl;
+    const Dune::shared_ptr< const GridType > grid = gridProvider->grid();
+    info << "  done (has " << grid->size(0) << " elements, took " << timer.elapsed() << " sec)" << std::endl;
 
     info << "visualizing grid... " << std::flush;
     timer.reset();
-    gridProvider->visualize(paramTree.sub(gridProvider->id()).get("filename", id + ".grid"));
+    gridProvider->visualize(paramTree.sub(id).get("filename", id + ".grid"));
     info << " done (took " << timer.elapsed() << " sek)" << std::endl;
 
     info << "walking leaf grid view... " << std::flush;
     timer.reset();
-    const unsigned int leafElements = measureTiming(grid.leafView());
+    const unsigned int leafElements = measureTiming(grid->leafView());
     info << " done (has " << leafElements << " elements, took " << timer.elapsed() << " sek)" << std::endl;
 
     // if we came that far we can as well be happy about it
