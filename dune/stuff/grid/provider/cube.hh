@@ -2,45 +2,37 @@
 #define DUNE_STUFF_GRID_PROVIDER_CUBE_HH
 
 #ifdef HAVE_CMAKE_CONFIG
- #include "cmake_config.h"
+  #include "cmake_config.h"
 #elif defined (HAVE_CONFIG_H)
- #include <config.h>
+  #include <config.h>
 #endif // ifdef HAVE_CMAKE_CONFIG
 
-#ifdef HAVE_DUNE_GRID
+#if HAVE_DUNE_GRID
 
-// system
 #include <sstream>
 #include <type_traits>
 #include <boost/assign/list_of.hpp>
 
-// dune-common
 #include <dune/common/parametertree.hh>
 #include <dune/common/shared_ptr.hh>
 #include <dune/common/exceptions.hh>
 #include <dune/common/fvector.hh>
 #include <dune/common/static_assert.hh>
 
-// dune-grid
 #include <dune/grid/utility/structuredgridfactory.hh>
 #include <dune/grid/yaspgrid.hh>
 #ifdef HAVE_ALUGRID
-#include <dune/grid/alugrid.hh>
+  #include <dune/grid/alugrid.hh>
 #endif
 #include <dune/grid/sgrid.hh>
 
-// dune-stuff
 #include <dune/stuff/common/parameter/tree.hh>
 
-// local
 #include "interface.hh"
 
 namespace Dune {
-
 namespace Stuff {
-
 namespace Grid {
-
 namespace Provider {
 
 /**
@@ -388,11 +380,8 @@ private:
 }; // class UnitCube
 
 } // namespace Provider
-
 } // namespace Grid
-
 } // namespace Stuff
-
 } // namespace Dune
 
 #endif // HAVE_DUNE_GRID
