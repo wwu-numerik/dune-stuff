@@ -52,17 +52,15 @@ public:
 
   void report(std::ostream& stream = std::cout, const std::string& prefix = "") const
   {
-    for(auto pair : values)
-          stream << pair.first << " = \"" << pair.second << "\"" << std::endl;
+    reportAsSub(stream, prefix, "");
+  } // void report(std::ostream& stream = std::cout, const std::string& prefix = "") const
 
-    for(auto pair : subs)
-    {
-      ExtendedParameterTree subTree(pair.second);
-      if (subTree.getValueKeys().size())
-        stream << "[ " << prefix + pair.first << " ]" << std::endl;
-      subTree.report(stream, prefix + pair.first + ".");
-    }
-  }
+  std::string reportString(const std::string& prefix = "") const
+  {
+    std::stringstream stream;
+    report(stream, prefix);
+    return stream.str();
+  } // std::stringstream reportString(const std::string& prefix = "") const
 
   bool hasVector(const std::string& vector) const
   {
@@ -111,7 +109,7 @@ public:
     \param[out] paramTree
                 The Dune::ParameterTree that is to be filled.
     **/
-  static ExtendedParameterTree init(int argc, char** argv, std::string filename)
+  static ParameterTree init(int argc, char** argv, std::string filename)
   {
     Dune::ParameterTree paramTree;
     if (argc == 1) {
@@ -126,6 +124,20 @@ public:
     }
     return paramTree;
   } // static ExtendedParameterTree init(...)
+
+private:
+  void reportAsSub(std::ostream& stream, const std::string& prefix, const std::string& subPath) const
+  {
+    for (auto pair : values)
+      stream << prefix << pair.first << " = " << pair.second << std::endl;
+//      stream << prefix << pair.first << " = \"" << pair.second << "\"" << std::endl;
+    for (auto pair : subs) {
+      ExtendedParameterTree subTree(pair.second);
+      if (subTree.getValueKeys().size())
+        stream << prefix << "[ " << subPath << pair.first << " ]" << std::endl;
+      subTree.reportAsSub(stream, prefix, subPath + pair.first + ".");
+    }
+  } // void report(std::ostream& stream = std::cout, const std::string& prefix = "") const
 }; // class ExtendedParameterTree
 
 } // namespace Common
