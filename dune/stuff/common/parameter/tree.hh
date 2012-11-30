@@ -138,7 +138,7 @@ public:
     if (!hasKey(key))
       ret = std::vector< T >(minSize, def);
     else {
-      const std::string str = get< std::string >(key, "default_value");
+      const std::string str = BaseType::get< std::string >(key, "default_value");
       // the dune parametertree strips any leading and trailing whitespace
       // so we can be sure that the first and last have to be the brackets [] if this is a vector
       if (Dune::Stuff::Common::String::equal(str.substr(0, 1), "[")
@@ -146,7 +146,7 @@ public:
         const std::vector< std::string > tokens = Dune::Stuff::Common::tokenize< std::string >(str.substr(1, str.size() - 2), ";");
         for (unsigned int i = 0; i < tokens.size(); ++i)
           ret.push_back(Dune::Stuff::Common::fromString< T >(boost::algorithm::trim_copy(tokens[i])));
-        for (unsigned int i = ret.size(); i <= minSize; ++i)
+        for (unsigned int i = ret.size(); i < minSize; ++i)
           ret.push_back(def);
       } else if (Dune::Stuff::Common::String::equal(str.substr(0, 1), "[")
                  || Dune::Stuff::Common::String::equal(str.substr(str.size() - 1, 1), "]")) {
