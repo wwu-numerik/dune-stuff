@@ -18,7 +18,7 @@
 #include <dune/stuff/common/filesystem.hh>
 #include <dune/stuff/common/string.hh>
 #include <dune/stuff/grid/provider/cube.hh>
-//#include <dune/stuff/grid/provider/gmsh.hh>
+#include <dune/stuff/grid/provider/gmsh.hh>
 
 const std::string id = "grid.providers";
 
@@ -59,20 +59,16 @@ Dune::Stuff::Grid::Provider::Interface<>* createProvider(const Dune::Stuff::Comm
   typedef Dune::Stuff::Grid::Provider::Interface<> InterfaceType;
   // choose provider
   if (providerId == "stuff.grid.provider.cube") {
-    typedef Dune::Stuff::Grid::Provider::Cube<> DerivedType;
-    DerivedType* provider = new DerivedType(DerivedType::createFromParamTree(paramTree));
-    return provider;
-//  } else if (providerId == "stuff.grid.provider.gmsh") {
-//    typedef Dune::Stuff::Grid::Provider::Gmsh<> DerivedType;
-//    paramTree.assertSub(DerivedType::id(), id);
-//    Dune::shared_ptr< InterfaceType > provider(new DerivedType(paramTree.sub(DerivedType::id())));
-//    return provider;
-  } else {
-    std::stringstream msg;
-    msg << std::endl << "Error in " << id << ": unknown provider ('" << providerId << "') given in the following Dune::Parametertree" << std::endl;
-    paramTree.report(msg);
-    DUNE_THROW(Dune::InvalidStateException, msg.str());
-  } // choose provider
+    typedef Dune::Stuff::Grid::Provider::Cube<> CubeProviderType;
+    CubeProviderType* cubeProvider = new CubeProviderType(CubeProviderType::createFromParamTree(paramTree));
+    return cubeProvider;
+  } else if (providerId == "stuff.grid.provider.gmsh") {
+    typedef Dune::Stuff::Grid::Provider::Gmsh<> GmshProviderType;
+    GmshProviderType* gmshProvider = new GmshProviderType(GmshProviderType::createFromParamTree(paramTree));
+    return gmshProvider;
+  } else
+    DUNE_THROW(Dune::RangeError,
+               "\nError: unknown provider ('" << providerId << "') given in the following Dune::Parametertree:\n" << paramTree.reportString("  "));
 } // ... createProvider(...)
 
 template< class GridViewType >
