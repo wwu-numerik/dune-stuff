@@ -68,8 +68,7 @@ private:
   typedef typename GridType::LeafGridView GridViewType;
 
 public:
-  //! Dimension of the provided grid.
-  static const unsigned int dim = GridType::dimension;
+  static const unsigned int dim = BaseType::dim;
 
   //! Type of the grids coordinates.
   typedef typename GridType::ctype ctype;
@@ -147,6 +146,12 @@ public:
     std::copy(numElements.begin(), numElements.end(), tmpNumElements.begin());
     buildGrid(tmpNumElements);
   }
+
+  GenericCube(ThisType& other)
+    : lowerLeft_(other.lowerLeft_)
+    , upperRight_(other.upperRight_)
+    , grid_(other.grid_)
+  {}
 
   GenericCube(const ThisType& other)
     : lowerLeft_(other.lowerLeft_)
