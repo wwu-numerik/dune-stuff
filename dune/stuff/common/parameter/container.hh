@@ -13,6 +13,8 @@
  #include <config.h>
 #endif // ifdef HAVE_CMAKE_CONFIG
 
+#if HAVE_DUNE_FEM
+
 #include <dune/common/deprecated.hh>
 #include <dune/fem/io/parameter.hh>
 
@@ -227,6 +229,8 @@ std::string getFileinDatadir(const std::string& fn) {
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
+
+#endif //HAVE_DUNE_FEM
 
 #endif // end of DUNE_STUFF_PARAMETERHANDLER.HH
 
