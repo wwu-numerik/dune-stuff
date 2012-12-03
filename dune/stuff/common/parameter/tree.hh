@@ -50,6 +50,11 @@ public:
     return *this;
   } // ExtendedParameterTree& operator=(const Dune::ParameterTree& other)
 
+  ExtendedParameterTree sub(const std::string& sub) const
+  {
+    return ExtendedParameterTree(BaseType::sub(sub));
+  }
+
   void report(std::ostream& stream = std::cout, const std::string& prefix = "") const
   {
     reportAsSub(stream, prefix, "");
