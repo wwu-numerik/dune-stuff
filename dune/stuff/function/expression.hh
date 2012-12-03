@@ -139,7 +139,7 @@ public:
 
   unsigned int dimRange() const
   {
-    return actualDimRange_;
+    return std::min(int(actualDimRange_), maxDimRange);
   }
 
   //! needed for Interface
@@ -202,7 +202,7 @@ private:
     // set expressions
     if (_expressions.size() < 1)
       DUNE_THROW(Dune::InvalidStateException,"\nError: Given 'expressions'-vector is empty!");
-    actualDimRange_ = _expressions.size();
+    actualDimRange_ = std::min(int(_expressions.size()), maxDimRange);
     expressions_ = _expressions;
     // set variable (i.e. "x")
     variable_ = _variable;
