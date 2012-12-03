@@ -56,7 +56,6 @@ Dune::Stuff::Grid::Provider::Interface<>* createProvider(const Dune::Stuff::Comm
     DUNE_THROW(Dune::RangeError,
                "\nMissing key '" << id << ".provider' in the following Dune::ParameterTree:\n" << paramTree.reportString("  "));
   const std::string providerId = paramTree.get(id + ".provider", "meaningless_default_value");
-  typedef Dune::Stuff::Grid::Provider::Interface<> InterfaceType;
   // choose provider
   if (providerId == "stuff.grid.provider.cube") {
     typedef Dune::Stuff::Grid::Provider::Cube<> CubeProviderType;
