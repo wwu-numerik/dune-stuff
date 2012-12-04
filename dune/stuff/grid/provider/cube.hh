@@ -174,7 +174,7 @@ public:
   static ThisType createFromParamTree(const Dune::ParameterTree& paramTree, const std::string subName = id())
   {
     // get correct paramTree
-    Dune::Stuff::Common::ExtendedParameterTree extendedParamTree;
+    Dune::Stuff::Common::ParameterTreeX extendedParamTree;
     if (paramTree.hasSub(subName))
       extendedParamTree = paramTree.sub(subName);
     else
@@ -182,7 +182,7 @@ public:
     // get lower left
     std::vector< ctype > lowerLefts;
     if (extendedParamTree.hasVector("lowerLeft")) {
-      lowerLefts = extendedParamTree.getVector("lowerLeft", ctype(0));
+      lowerLefts = extendedParamTree.getVector("lowerLeft", ctype(0), dim);
       assert(lowerLefts.size() >= dim && "Given vector too short!");
     } else if (extendedParamTree.hasKey("lowerLeft")) {
         const ctype lowerLeft = extendedParamTree.get("lowerLeft", ctype(0));
@@ -194,7 +194,7 @@ public:
     // get upper right
     std::vector< ctype > upperRights;
     if (extendedParamTree.hasVector("upperRight")) {
-      upperRights = extendedParamTree.getVector("upperRight", ctype(1));
+      upperRights = extendedParamTree.getVector("upperRight", ctype(1), dim);
       assert(upperRights.size() >= dim && "Given vector too short!");
     } else if (extendedParamTree.hasKey("upperRight")) {
         const ctype upperRight = extendedParamTree.get("upperRight", ctype(1));
@@ -206,7 +206,7 @@ public:
     // get number of elements
     std::vector< unsigned int > tmpNumElements;
     if (extendedParamTree.hasVector("numElements")) {
-      tmpNumElements = extendedParamTree.getVector("numElements", 1u);
+      tmpNumElements = extendedParamTree.getVector("numElements", 1u, dim);
       assert(tmpNumElements.size() >= dim && "Given vector too short!");
     } else if (extendedParamTree.hasKey("numElements")) {
         const unsigned int numElement = extendedParamTree.get("numElements", 1u);
