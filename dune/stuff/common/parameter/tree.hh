@@ -26,36 +26,36 @@ namespace Common {
 
 //! ParameterTree extension for nicer output
 //! \todo TODO The report method should go into dune-common
-class ParameterTreeX
+class ExtendedParameterTree
   : public Dune::ParameterTree {
 public:
   typedef Dune::ParameterTree BaseType;
 
-  ParameterTreeX()
+  ExtendedParameterTree()
   {}
 
-  ParameterTreeX(int argc, char** argv, std::string filename)
+  ExtendedParameterTree(int argc, char** argv, std::string filename)
     : BaseType(init(argc, argv, filename))
   {}
 
-  ParameterTreeX(const Dune::ParameterTree& other)
+  ExtendedParameterTree(const Dune::ParameterTree& other)
     : BaseType(other)
   {}
 
-  ParameterTreeX& operator=(const Dune::ParameterTree& other)
+  ExtendedParameterTree& operator=(const Dune::ParameterTree& other)
   {
     if (this != &other) {
       BaseType::operator=(other);
     }
     return *this;
-  } // ParameterTreeX& operator=(const Dune::ParameterTree& other)
+  } // ExtendedParameterTree& operator=(const Dune::ParameterTree& other)
 
-  ParameterTreeX sub(const std::string& _sub) const
+  ExtendedParameterTree sub(const std::string& _sub) const
   {
     if (!hasSub(_sub))
         DUNE_THROW(Dune::RangeError,
                    "\nERROR: sub '" << _sub << "' missing in the following Dune::ParameterTree:\n" << reportString("  "));
-    return ParameterTreeX(BaseType::sub(_sub));
+    return ExtendedParameterTree(BaseType::sub(_sub));
   }
 
   void report(std::ostream& stream = std::cout, const std::string& prefix = "") const
@@ -235,7 +235,7 @@ public:
       Dune::ParameterTreeParser::readINITree(paramTree.get< std::string >("paramfile"), paramTree, false);
     }
     return paramTree;
-  } // static ParameterTreeX init(...)
+  } // static ExtendedParameterTree init(...)
 
 private:
   void reportAsSub(std::ostream& stream, const std::string& prefix, const std::string& subPath) const
@@ -244,16 +244,16 @@ private:
       stream << prefix << pair.first << " = " << pair.second << std::endl;
 //      stream << prefix << pair.first << " = \"" << pair.second << "\"" << std::endl;
     for (auto pair : subs) {
-      ParameterTreeX subTree(pair.second);
+      ExtendedParameterTree subTree(pair.second);
       if (subTree.getValueKeys().size())
         stream << prefix << "[ " << subPath << pair.first << " ]" << std::endl;
       subTree.reportAsSub(stream, prefix, subPath + pair.first + ".");
     }
   } // void report(std::ostream& stream = std::cout, const std::string& prefix = "") const
-}; // class ParameterTreeX
+}; // class ExtendedParameterTree
 
 //! \todo TODO Remove this!
-typedef ParameterTreeX ExtendedParameterTree;
+typedef ExtendedParameterTree ParameterTreeX;
 
 } // namespace Common
 } // namespace Stuff
