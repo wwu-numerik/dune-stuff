@@ -25,7 +25,7 @@ namespace Stuff {
 namespace Common {
 
 //! ParameterTree extension for nicer output
-//! \todo This should go into dune-common.
+//! \todo TODO The report method should go into dune-common
 class ExtendedParameterTree
   : public Dune::ParameterTree {
 public:
@@ -45,14 +45,17 @@ public:
   ExtendedParameterTree& operator=(const Dune::ParameterTree& other)
   {
     if (this != &other) {
-      Dune::ParameterTree::operator=(other);
+      BaseType::operator=(other);
     }
     return *this;
   } // ExtendedParameterTree& operator=(const Dune::ParameterTree& other)
 
-  ExtendedParameterTree sub(const std::string& sub) const
+  ExtendedParameterTree sub(const std::string& _sub) const
   {
-    return ExtendedParameterTree(BaseType::sub(sub));
+    if (!hasSub(_sub))
+        DUNE_THROW(Dune::RangeError,
+                   "\nError: sub '" << _sub << "' missing in the following Dune::ParameterTree:\n" << reportString("  "));
+    return ExtendedParameterTree(BaseType::sub(_sub));
   }
 
   void report(std::ostream& stream = std::cout, const std::string& prefix = "") const
@@ -67,10 +70,55 @@ public:
     return stream.str();
   } // std::stringstream reportString(const std::string& prefix = "") const
 
-  bool hasVector(const std::string& vector) const
+  std::string get(const std::string& _key, const std::string& defaultValue) const
   {
-    if (hasKey(vector)) {
-      const std::string str = get< std::string >(vector, "default_value");
+    if (!BaseType::hasKey(_key))
+      std::cout << "Warning: missing key '" << _key << "' is replaced by given default value '" << defaultValue << "'!";
+    return BaseType::get< std::string >(_key, defaultValue);
+  }
+
+  std::string get(const std::string& _key, const char* defaultValue) const
+  {
+    if (!BaseType::hasKey(_key))
+      std::cout << "Warning: missing key '" << _key << "' is replaced by given default value '" << defaultValue << "'!";
+    return BaseType::get< std::string >(_key, defaultValue);
+  }
+
+  int get(const std::string& _key, int defaultValue) const
+  {
+    if (!BaseType::hasKey(_key))
+      std::cout << "Warning: missing key '" << _key << "' is replaced by given default value '" << defaultValue << "'!";
+    return BaseType::get< int >(_key, defaultValue);
+  }
+
+  double get(const std::string& _key, double defaultValue) const
+  {
+    if (!BaseType::hasKey(_key))
+      std::cout << "Warning: missing key '" << _key << "' is replaced by given default value '" << defaultValue << "'!";
+    return BaseType::get< double >(_key, defaultValue);
+  }
+
+  template< typename T >
+  T get(const std::string& _key, const T& defaultValue) const
+  {
+    if (!BaseType::hasKey(_key))
+      std::cout << "Warning: missing key '" << _key << "' is replaced by given default value!";
+    return BaseType::get< T >(_key, defaultValue);
+  }
+
+  template< class T >
+  T get(const std::string& _key) const
+  {
+    if (!BaseType::hasKey(_key))
+      DUNE_THROW(Dune::RangeError,
+                 "\nError: key '" << _key << "' missing  in the following Dune::ParameterTree:\n" << reportString("  "));
+    return BaseType::get< T >(_key);
+  }
+
+  bool hasVector(const std::string& _key) const
+  {
+    if (hasKey(_key)) {
+      const std::string str = BaseType::get< std::string >(_key, "meaningless_default_value");
       if (Dune::Stuff::Common::String::equal(str.substr(0, 1), "[")
           && Dune::Stuff::Common::String::equal(str.substr(str.size() - 1, 1), "]"))
         return true;
@@ -79,13 +127,14 @@ public:
   } // bool hasVector(const std::string& vector) const
 
   template< class T >
-  std::vector< T > getVector(const std::string& key, const T def, const unsigned int minSize = 1) const
+  std::vector< T > getVector(const std::string& _key, const T& def, const unsigned int minSize = 1) const
   {
-    std::vector< T > ret;
-    if (!hasKey(key))
-      ret = std::vector< T >(minSize, def);
-    else {
-      const std::string str = BaseType::get< std::string >(key, "default_value");
+    if (!hasKey(_key)) {
+      std::cout << "Warning: missing key '" << _key << "' is replaced by given default value!";
+      return std::vector< T >(minSize, def);
+    } else {
+      std::vector< T > ret;
+      const std::string str = get(_key, "meaningless_default_value");
       // the dune parametertree strips any leading and trailing whitespace
       // so we can be sure that the first and last have to be the brackets [] if this is a vector
       if (Dune::Stuff::Common::String::equal(str.substr(0, 1), "[")
@@ -97,13 +146,54 @@ public:
           ret.push_back(def);
       } else if (Dune::Stuff::Common::String::equal(str.substr(0, 1), "[")
                  || Dune::Stuff::Common::String::equal(str.substr(str.size() - 1, 1), "]")) {
-          DUNE_THROW(Dune::InvalidStateException, "Vectors have to be of the form '[entry_0; entry_1; ... ]'!");
+          DUNE_THROW(Dune::RangeError, "Vectors have to be of the form '[entry_0; entry_1; ... ]'!");
       } else {
         ret = std::vector< T >(minSize, Dune::Stuff::Common::fromString< T >(boost::algorithm::trim_copy(str)));
       }
+      return ret;
     }
-    return ret;
   } // std::vector< T > getVector(const std::string& key, const T def) const
+
+  template< class T >
+  std::vector< T > getVector(const std::string& _key, const unsigned int desiredSize) const
+  {
+    if (!hasKey(_key)) {
+      DUNE_THROW(Dune::RangeError,
+                 "\nError: key '" << _key << "' missing  in the following Dune::ParameterTree:\n" << reportString("  "));
+    } else {
+      std::vector< T > ret;
+      const std::string str = get(_key, "meaningless_default_value");
+      // the dune parametertree strips any leading and trailing whitespace
+      // so we can be sure that the first and last have to be the brackets [] if this is a vector
+      if (Dune::Stuff::Common::String::equal(str.substr(0, 1), "[")
+          && Dune::Stuff::Common::String::equal(str.substr(str.size() - 1, 1), "]")) {
+        const std::vector< std::string > tokens = Dune::Stuff::Common::tokenize< std::string >(str.substr(1, str.size() - 2), ";");
+        for (unsigned int i = 0; i < tokens.size(); ++i)
+          ret.push_back(Dune::Stuff::Common::fromString< T >(boost::algorithm::trim_copy(tokens[i])));
+      } else
+          DUNE_THROW(Dune::RangeError, "Vectors have to be of the form '[entry_0; entry_1; ... ]'!");
+      if (ret.size() != desiredSize)
+        DUNE_THROW(Dune::RangeError,
+                   "\nError: vector '" << _key
+                   << "' does not have the desired size (is " << ret.size() << ", should be " << desiredSize
+                   << ") in the following Dune::ParameterTree :\n" << reportString("  "));
+      return ret;
+    }
+  } // std::vector< T > getVector(const std::string& key, const T def) const
+
+  void assertKey(const std::string& _key) const
+  {
+    if (!BaseType::hasKey(_key))
+      DUNE_THROW(Dune::RangeError,
+                 "\nError: key '" << _key << "' missing  in the following Dune::ParameterTree:\n" << reportString("  "));
+  }
+
+  void assertSub(const std::string& _sub) const
+  {
+    if (!BaseType::hasSub(_sub))
+      DUNE_THROW(Dune::RangeError,
+                 "\nError: sub '" << _sub << "' missing  in the following Dune::ParameterTree:\n" << reportString("  "));
+  }
 
   /**
     \brief      Fills a Dune::ParameterTree given a parameter file or command line arguments.
