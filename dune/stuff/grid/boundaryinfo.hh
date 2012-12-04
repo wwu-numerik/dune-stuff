@@ -1,27 +1,23 @@
-
 #ifndef DUNE_STUFF_GRID_BOUNDARYINFO_HH
 #define DUNE_STUFF_GRID_BOUNDARYINFO_HH
 
 #ifdef HAVE_CMAKE_CONFIG
- #include "cmake_config.h"
+  #include "cmake_config.h"
 #elif defined (HAVE_CONFIG_H)
- #include <config.h>
+  #include <config.h>
 #endif // ifdef HAVE_CMAKE_CONFIG
 
-// system
 #include <map>
 #include <set>
 #include <string>
 
-// dune-common
 #include <dune/common/shared_ptr.hh>
 
+#include <dune/stuff/common/parameter/tree.hh>
+
 namespace Dune {
-
 namespace Stuff {
-
 namespace Grid {
-
 namespace BoundaryInfo {
 
 class AllDirichlet
@@ -65,17 +61,67 @@ public:
 class IdBased
 {
 public:
+  typedef IdBased ThisType;
+
   typedef int IdType;
 
   typedef std::set< IdType > IdSetType;
 
   typedef std::map< std::string, IdSetType > IdSetMapType;
 
-  IdBased(const Dune::shared_ptr< const IdSetMapType > boundaryInfoMap)
-    : boundaryInfoMap_(boundaryInfoMap)
-    , hasDirichlet_(boundaryInfoMap_->find("dirichlet") != boundaryInfoMap_->end())
-    , hasNeumann_(boundaryInfoMap_->find("neumann") != boundaryInfoMap_->end())
+  static const std::string id()
+  {
+    return "stuff.boundaryinfo.idbased";
+  }
+
+  IdBased(const Dune::shared_ptr< const IdSetMapType > _boundaryInfoMap)
+    : boundaryInfoMap_(_boundaryInfoMap)
   {}
+
+  IdBased(const ThisType& other)
+    : boundaryInfoMap_(other.boundaryInfoMap_)
+    , hasDirichlet_(other.hasDirichlet_)
+    , hasNeumann_(other.hasNeumann_)
+  {}
+
+  static ThisType createFromParamTree(const Dune::ParameterTree& paramTree, const std::string subName = id())
+  {
+    // get correct paramTree
+    Common::ParameterTreeX paramTreeX;
+    if (paramTree.hasSub(subName))
+      paramTreeX = paramTree.sub(subName);
+    else
+      paramTreeX = paramTree;
+    // get dirichlet
+    const std::vector< int > dirichletIds = paramTreeX.getVector< int >("dirichlet", 0, 0);
+    IdSetType dirichletSet;
+    for (unsigned int i = 0; i < dirichletIds.size(); ++i)
+      dirichletSet.insert(dirichletIds[i]);
+    // get neumann
+    const std::vector< int > neumannIds = paramTreeX.getVector< int >("neumann", 0, 0);
+    IdSetType neumannSet;
+    for (unsigned int i = 0; i < neumannIds.size(); ++i)
+      neumannSet.insert(neumannIds[i]);
+    // create map and return
+    shared_ptr< IdSetMapType > idSetMap(new IdSetMapType());
+    idSetMap->insert(std::pair< std::string, IdSetType >("dirichlet", dirichletSet));
+    idSetMap->insert(std::pair< std::string, IdSetType >("neumann", neumannSet));
+    return ThisType(idSetMap);
+  }
+
+  ThisType& operator=(ThisType& other)
+  {
+    if (this != &other) {
+      boundaryInfoMap_ = other.boundaryInfoMap();
+      setup();
+    }
+    return *this;
+  }
+
+  const Dune::shared_ptr< const IdSetMapType > boundaryInfoMap()
+  {
+    return boundaryInfoMap_;
+  }
 
   template< class IntersectionType >
   bool dirichlet(const IntersectionType& intersection) const
@@ -106,18 +152,22 @@ public:
     } else
       return false;
   } // bool neumann(const IntersectionType& intersection) const
+
 private:
-  const Dune::shared_ptr< const IdSetMapType > boundaryInfoMap_;
-  const bool hasDirichlet_;
-  const bool hasNeumann_;
+  void setup()
+  {
+    hasDirichlet_ = boundaryInfoMap_->find("dirichlet") != boundaryInfoMap_->end();
+    hasNeumann_ = boundaryInfoMap_->find("neumann") != boundaryInfoMap_->end();
+  }
+
+  Dune::shared_ptr< const IdSetMapType > boundaryInfoMap_;
+  bool hasDirichlet_;
+  bool hasNeumann_;
 }; // class IdBased
 
 } // namespace BoundaryInfo
-
 } // namespace Grid
-
 } // namespace Stuff
-
 } // namespace Dune
 
 #endif // DUNE_STUFF_GRID_BOUNDARYINFO_HH
