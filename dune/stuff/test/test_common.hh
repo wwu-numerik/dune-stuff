@@ -13,6 +13,7 @@
 #include <dune/common/tuples.hh>
 #include <dune/common/tupleutility.hh>
 #include <dune/common/mpihelper.hh>
+#include <dune/stuff/aliases.hh>
 
 #include <gtest/gtest.h>
 
