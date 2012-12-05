@@ -179,7 +179,7 @@ public:
                  "\nERROR: key '" << _key << "' missing  in the following Dune::ParameterTree:\n" << reportString("  "));
     } else {
       std::vector< T > ret;
-      const std::string str = get(_key, "meaningless_default_value");
+      const std::string str = BaseType::get< std::string >(_key, "meaningless_default_value");
       // the dune parametertree strips any leading and trailing whitespace
       // so we can be sure that the first and last have to be the brackets [] if this is a vector
       if (Dune::Stuff::Common::String::equal(str.substr(0, 1), "[")
@@ -187,7 +187,9 @@ public:
         const std::vector< std::string > tokens = Dune::Stuff::Common::tokenize< std::string >(str.substr(1, str.size() - 2), ";");
         for (unsigned int i = 0; i < tokens.size(); ++i)
           ret.push_back(Dune::Stuff::Common::fromString< T >(boost::algorithm::trim_copy(tokens[i])));
-      } else
+      } else if (minSize == 1)
+        ret.push_back(str);
+      else
           DUNE_THROW(Dune::RangeError, "Vectors have to be of the form '[entry_0; entry_1; ... ]'!");
       if (ret.size() < minSize)
         DUNE_THROW(Dune::RangeError,
