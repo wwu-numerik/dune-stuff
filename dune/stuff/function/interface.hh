@@ -46,9 +46,16 @@ public:
   {
     DUNE_THROW(Dune::InvalidStateException, "I should have been implemented!");
   }
+
+  virtual Eigen::VectorXd evaluate(const Eigen::VectorXd& arg) const
+  {
+    Eigen::VectorXd ret;
+    evaluate(arg, ret);
+    return ret;
+  }
 #endif // HAVE_EIGEN
 
-  RangeType evaluate(const DomainType& arg) const
+  virtual RangeType evaluate(const DomainType& arg) const
   {
     RangeType ret;
     evaluate(arg, ret);
@@ -84,9 +91,16 @@ public:
   {
     DUNE_THROW(Dune::InvalidStateException, "I should have been implemented!");
   }
+
+  virtual Eigen::VectorXd evaluate(const Eigen::VectorXd& arg) const
+  {
+    Eigen::VectorXd ret;
+    evaluate(arg, ret);
+    return ret;
+  }
 #endif // HAVE_EIGEN
 
-  RangeType evaluate(const DomainType& arg) const
+  virtual RangeType evaluate(const DomainType& arg) const
   {
     RangeType ret;
     evaluate(arg, ret);
