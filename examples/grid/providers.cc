@@ -17,8 +17,7 @@
 #include <dune/stuff/common/logging.hh>
 #include <dune/stuff/common/filesystem.hh>
 #include <dune/stuff/common/string.hh>
-#include <dune/stuff/grid/provider/cube.hh>
-#include <dune/stuff/grid/provider/gmsh.hh>
+#include <dune/stuff/grid/provider.hh>
 
 const std::string id = "grid.providers";
 
@@ -37,7 +36,7 @@ void ensureParamFile(std::string filename)
     std::ofstream file;
     file.open(filename);
     file << "[" << id << "]" << std::endl;
-    file << "provider = stuff.grid.provider.cube" << std::endl;
+    file << "grid = stuff.grid.provider.cube" << std::endl;
     file << "filename = " << id << ".grid"<< std::endl;
     file << "[stuff.grid.provider.cube]" << std::endl;
     file << "lowerLeft = [0.0; 0.0; 0.0]" << std::endl;
@@ -48,27 +47,6 @@ void ensureParamFile(std::string filename)
     file.close();
   } // only write param file if there is none
 } // void ensureParamFile()
-
-Dune::Stuff::Grid::Provider::Interface<>* createProvider(const Dune::Stuff::Common::ExtendedParameterTree& paramTree)
-{
-  // prepare
-  if (!paramTree.hasKey(id + ".provider"))
-    DUNE_THROW(Dune::RangeError,
-               "\nMissing key '" << id << ".provider' in the following Dune::ParameterTree:\n" << paramTree.reportString("  "));
-  const std::string providerId = paramTree.get(id + ".provider", "meaningless_default_value");
-  // choose provider
-  if (providerId == "stuff.grid.provider.cube") {
-    typedef Dune::Stuff::Grid::Provider::Cube<> CubeProviderType;
-    CubeProviderType* cubeProvider = new CubeProviderType(CubeProviderType::createFromParamTree(paramTree));
-    return cubeProvider;
-  } else if (providerId == "stuff.grid.provider.gmsh") {
-    typedef Dune::Stuff::Grid::Provider::Gmsh<> GmshProviderType;
-    GmshProviderType* gmshProvider = new GmshProviderType(GmshProviderType::createFromParamTree(paramTree));
-    return gmshProvider;
-  } else
-    DUNE_THROW(Dune::RangeError,
-               "\nError: unknown provider ('" << providerId << "') given in the following Dune::Parametertree:\n" << paramTree.reportString("  "));
-} // ... createProvider(...)
 
 template< class GridViewType >
 unsigned int measureTiming(const GridViewType& gridView)
@@ -110,7 +88,9 @@ int main(int argc, char** argv)
     // grid
     info << "setting up grid... ";
     typedef Dune::Stuff::Grid::Provider::Interface<> GridProviderType;
-    const GridProviderType* gridProvider = createProvider(paramTree);
+    const GridProviderType* gridProvider =
+        Dune::Stuff::Grid::Provider::create<>(paramTree.get(id + ".grid", "stuff.grid.provider.cube"),
+                                              paramTree);
     typedef GridProviderType::GridType GridType;
     const Dune::shared_ptr< const GridType > grid = gridProvider->grid();
     info << "  done (has " << grid->size(0) << " elements, took " << timer.elapsed() << " sec)" << std::endl;
