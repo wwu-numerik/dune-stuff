@@ -15,6 +15,10 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/format.hpp>
 
+#if HAVE_EIGEN
+  #include <Eigen/Core>
+#endif // HAVE_EIGEN
+
 #include <dune/common/exceptions.hh>
 #include <dune/common/parametertreeparser.hh>
 
@@ -188,7 +192,7 @@ public:
         for (unsigned int i = 0; i < tokens.size(); ++i)
           ret.push_back(Dune::Stuff::Common::fromString< T >(boost::algorithm::trim_copy(tokens[i])));
       } else if (minSize == 1)
-        ret.push_back(str);
+        ret.push_back(Dune::Stuff::Common::fromString< T >(str));
       else
           DUNE_THROW(Dune::RangeError, "Vectors have to be of the form '[entry_0; entry_1; ... ]'!");
       if (ret.size() < minSize)
@@ -199,6 +203,34 @@ public:
       return ret;
     }
   } // std::vector< T > getVector(const std::string& key, const T def) const
+
+#if HAVE_EIGEN
+  template< class T >
+  Eigen::Matrix< T, Eigen::Dynamic, 1 > getEigenVector(const std::string& _key,
+                                                       const T& def,
+                                                       const unsigned int minSize) const
+  {
+    // get correspongin vector
+    std::vector< T > vec = getVector< T >(_key, def, minSize);
+    // create eigen vector and return
+    Eigen::Matrix< T, Eigen::Dynamic, 1 > ret(vec.size());
+    for (unsigned int i = 0; i < vec.size(); ++i)
+      ret(i) = vec[i];
+    return ret;
+  }
+
+  template< class T >
+  Eigen::Matrix< T, Eigen::Dynamic, 1 > getEigenVector(const std::string& _key, const unsigned int minSize) const
+  {
+    // get correspongin vector
+    std::vector< T > vec = getVector< T >(_key, minSize);
+    // create eigen vector and return
+    Eigen::Matrix< T, Eigen::Dynamic, 1 > ret(vec.size());
+    for (unsigned int i = 0; i < vec.size(); ++i)
+      ret(i) = vec[i];
+    return ret;
+  }
+#endif // HAVE_EIGEN
 
   void assertKey(const std::string& _key) const
   {
