@@ -2,23 +2,19 @@
 #define DUNE_STUFF_DISCRETEFUNCTION_PROJECTION_DIRICHLET_HH
 
 #ifdef HAVE_CMAKE_CONFIG
- #include "cmake_config.h"
+  #include "cmake_config.h"
 #else
- #include "config.h"
+  #include "config.h"
 #endif // ifdef HAVE_CMAKE_CONFIG
 
-// system
 #include <vector>
 
-// dune-common
 #include <dune/common/shared_ptr.hh>
 
 #ifdef HAVE_DUNE_DETAILED_DISCRETIZATIONS
-// dune-detailed-discretizations
-#include <dune/detailed/discretizations/discretefunction/default.hh>
+  #include <dune/detailed/discretizations/discretefunction/default.hh>
 #endif // HAVE_DUNE_DETAILED_DISCRETIZATIONS
 
-// dune-stuff
 #include <dune/stuff/grid/boundaryinfo.hh>
 #include <dune/stuff/grid/intersection.hh>
 
@@ -29,16 +25,14 @@ namespace Projection {
 namespace Dirichlet {
 
 #ifdef HAVE_DUNE_DETAILED_DISCRETIZATIONS
-template< class BoundaryInfoType,
-          class FunctionType,
-          class DiscreteFunctionSpaceImp, class VectorBackendImp >
-void project(const BoundaryInfoType& boundaryInfo,
+template< class FunctionType,
+          class DiscreteFunctionSpaceType, class VectorType >
+void project(const Dune::Stuff::Grid::BoundaryInfo::Interface< typename DiscreteFunctionSpaceType::GridViewType >& boundaryInfo,
              const FunctionType& function,
-             Dune::Detailed::Discretizations::DiscreteFunction::Default< DiscreteFunctionSpaceImp, VectorBackendImp >& discreteFunction)
+             Dune::Detailed::Discretizations::DiscreteFunction::Default< DiscreteFunctionSpaceType, VectorType >& discreteFunction)
 {
   // some types
-  typedef Dune::Detailed::Discretizations::DiscreteFunction::Default< DiscreteFunctionSpaceImp, VectorBackendImp > DiscreteFunctionType;
-  typedef typename DiscreteFunctionType::DiscreteFunctionSpaceType DiscreteFunctionSpaceType;
+  typedef Dune::Detailed::Discretizations::DiscreteFunction::Default< DiscreteFunctionSpaceType, VectorType > DiscreteFunctionType;
   typedef typename DiscreteFunctionSpaceType::GridPartType GridPartType;
   typedef typename GridPartType::template Codim< 0 >::IteratorType EntityIteratorType;
   typedef typename GridPartType::template Codim< 0 >::EntityType EntityType;
@@ -47,8 +41,9 @@ void project(const BoundaryInfoType& boundaryInfo,
   typedef typename IntersectionIteratorType::Intersection IntersectionType;
   typedef typename DiscreteFunctionSpaceType::BaseFunctionSetType BaseFunctionSetType;
   typedef typename DiscreteFunctionType::LocalFunctionType LocalFunctionType;
-  typedef typename DiscreteFunctionSpaceType::DomainType DomainType;
-  typedef typename DiscreteFunctionSpaceType::RangeType RangeType;
+  typedef typename DiscreteFunctionSpaceType::FunctionSpaceType FunctionSpaceType;
+  typedef typename FunctionSpaceType::DomainType DomainType;
+  typedef typename FunctionSpaceType::RangeType RangeType;
   // preparations
   RangeType tmpEvaluation(0.0);
   const DiscreteFunctionSpaceType& space = discreteFunction.space();
