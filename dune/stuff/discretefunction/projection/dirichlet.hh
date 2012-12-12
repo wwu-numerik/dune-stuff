@@ -11,7 +11,7 @@
 
 #include <dune/common/shared_ptr.hh>
 
-#ifdef HAVE_DUNE_DETAILED_DISCRETIZATIONS
+#if HAVE_DUNE_DETAILED_DISCRETIZATIONS
   #include <dune/detailed/discretizations/discretefunction/default.hh>
 #endif // HAVE_DUNE_DETAILED_DISCRETIZATIONS
 
@@ -24,7 +24,7 @@ namespace DiscreteFunction {
 namespace Projection {
 namespace Dirichlet {
 
-#ifdef HAVE_DUNE_DETAILED_DISCRETIZATIONS
+#if HAVE_DUNE_DETAILED_DISCRETIZATIONS
 template< class FunctionType,
           class DiscreteFunctionSpaceType, class VectorType >
 void project(const Dune::Stuff::Grid::BoundaryInfo::Interface< typename DiscreteFunctionSpaceType::GridViewType >& boundaryInfo,
