@@ -1,7 +1,7 @@
 #ifndef DUNE_STUFF_LA_SOLVER_SPARSE_EIGEN_HH
 #define DUNE_STUFF_LA_SOLVER_SPARSE_EIGEN_HH
 
-//#ifdef HAVE_EIGEN
+#ifdef HAVE_EIGEN
 
 #include <Eigen/Eigen>
 
@@ -245,6 +245,6 @@ Interface< ElementType >* create(const std::string type = "eigen.bicgstab.incomp
 } // namespace Stuff
 } // namespace Dune
 
-//#endif // HAVE_EIGEN
+#endif // HAVE_EIGEN
 
 #endif // DUNE_STUFF_LA_SOLVER_SPARSE_EIGEN_HH
