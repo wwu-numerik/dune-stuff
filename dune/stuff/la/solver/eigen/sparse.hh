@@ -1,7 +1,7 @@
 #ifndef DUNE_STUFF_LA_SOLVER_SPARSE_EIGEN_HH
 #define DUNE_STUFF_LA_SOLVER_SPARSE_EIGEN_HH
 
-#ifdef HAVE_EIGEN
+//#ifdef HAVE_EIGEN
 
 #include <Eigen/Eigen>
 
@@ -59,111 +59,152 @@ public:
     const ::Eigen::ComputationInfo info = solver.info();
     return (info == ::Eigen::Success);
   } // virtual bool apply(...)
-}; // struct BicgstabIlut
+}; // class BicgstabIlut
 
-//struct BicgstabDiagonal
-//{
-//public:
-//  static const std::string id;
 
-//  template< class MatrixType, class SolutionType, class RhsType >
-//  static void apply(MatrixType& matrix, SolutionType& solution, RhsType& rhs, unsigned int maxIter = 5000, double precision = 1e-12)
-//  {
-//    typedef typename MatrixType::EntryType EntryType;
-//    typedef typename MatrixType::StorageType EigenMatrixType;
-//    typedef ::Eigen::DiagonalPreconditioner< EntryType > PreconditionerType;
-//    typedef ::Eigen::BiCGSTAB< EigenMatrixType, PreconditionerType > SolverType;
-//    SolverType solver;
-//    solver.setMaxIterations(maxIter);
-//    solver.setTolerance(precision);
-//    solver.compute(*(matrix.storage()));
-//    *(solution.storage()) = solver.solve(*(rhs.storage()));
-//  }
-//}; // struct BicgstabDiagonal
+template< class ElementType = double >
+class BicgstabDiagonal
+  : public Interface< ElementType >
+{
+public:
+  typedef Interface< ElementType > BaseType;
 
-//const std::string BicgstabDiagonal::id = "eigen.bicgstab.diagonal";
+  typedef typename BaseType::SparseMatrixType SparseMatrixType;
 
-//struct CgDiagonalUpper
-//{
-//public:
-//  static const std::string id;
+  typedef typename BaseType::DenseVectorType DenseVectorType;
 
-//  template< class MatrixType, class SolutionType, class RhsType >
-//  static void apply(MatrixType& matrix, SolutionType& solution, RhsType& rhs, unsigned int maxIter = 5000, double precision = 1e-12)
-//  {
-//    typedef typename MatrixType::EntryType EntryType;
-//    typedef typename MatrixType::StorageType EigenMatrixType;
-//    typedef ::Eigen::DiagonalPreconditioner< EntryType > PreconditionerType;
-//    typedef ::Eigen::ConjugateGradient< EigenMatrixType, ::Eigen::Upper, PreconditionerType > SolverType;
-//    SolverType solver;
-//    solver.setMaxIterations(maxIter);
-//    solver.setTolerance(precision);
-//    solver.compute(*(matrix.storage()));
-//    *(solution.storage()) = solver.solve(*(rhs.storage()));
-//  }
-//}; // struct CgDiagonalUpper
+  virtual bool apply(const SparseMatrixType& systemMatrix,
+                     const DenseVectorType& rhsVector,
+                     DenseVectorType& solutionVector,
+                     unsigned int maxIter = 5000,
+                     double precision = 1e-12) const
+  {
+    typedef ::Eigen::DiagonalPreconditioner< ElementType > PreconditionerType;
+    typedef ::Eigen::BiCGSTAB< SparseMatrixType, PreconditionerType > SolverType;
+    SolverType solver;
+    solver.setMaxIterations(maxIter);
+    solver.setTolerance(precision);
+    solver.compute(systemMatrix.base());
+    solutionVector.base() = solver.solve(rhsVector.base());
+    const ::Eigen::ComputationInfo info = solver.info();
+    return (info == ::Eigen::Success);
+  }
+}; // class BicgstabDiagonal
 
-//const std::string CgDiagonalUpper::id = "eigen.cg.diagonal.upper";
 
-//struct CgDiagonalLower
-//{
-//public:
-//  static const std::string id;
+template< class ElementType = double >
+class CgDiagonalUpper
+    : public Interface< ElementType >
+{
+public:
+  typedef Interface< ElementType > BaseType;
 
-//  template< class MatrixType, class SolutionType, class RhsType >
-//  static void apply(MatrixType& matrix, SolutionType& solution, RhsType& rhs, unsigned int maxIter = 5000, double precision = 1e-12)
-//  {
-//    typedef typename MatrixType::EntryType EntryType;
-//    typedef typename MatrixType::StorageType EigenMatrixType;
-//    typedef ::Eigen::DiagonalPreconditioner< EntryType > PreconditionerType;
-//    typedef ::Eigen::ConjugateGradient< EigenMatrixType, ::Eigen::Lower, PreconditionerType > SolverType;
-//    SolverType solver;
-//    solver.setMaxIterations(maxIter);
-//    solver.setTolerance(precision);
-//    solver.compute(*(matrix.storage()));
-//    *(solution.storage()) = solver.solve(*(rhs.storage()));
-//  }
-//}; // struct CgDiagonalLower
+  typedef typename BaseType::SparseMatrixType SparseMatrixType;
 
-//const std::string CgDiagonalLower::id = "eigen.cg.diagonal.lower";
+  typedef typename BaseType::DenseVectorType DenseVectorType;
 
-//struct SimplicialcholeskyUpper
-//{
-//public:
-//  static const std::string id;
+  virtual bool apply(const SparseMatrixType& systemMatrix,
+                     const DenseVectorType& rhsVector,
+                     DenseVectorType& solutionVector,
+                     unsigned int maxIter = 5000,
+                     double precision = 1e-12) const
+  {
+    typedef ::Eigen::DiagonalPreconditioner< ElementType > PreconditionerType;
+    typedef ::Eigen::ConjugateGradient< SparseMatrixType, ::Eigen::Upper, PreconditionerType > SolverType;
+    SolverType solver;
+    solver.setMaxIterations(maxIter);
+    solver.setTolerance(precision);
+    solver.compute(systemMatrix.base());
+    solutionVector.base() = solver.solve(rhsVector.base());
+    const ::Eigen::ComputationInfo info = solver.info();
+    return (info == ::Eigen::Success);
+  }
+}; // class CgDiagonalUpper
 
-//  template< class MatrixType, class SolutionType, class RhsType >
-//  static void apply(MatrixType& matrix, SolutionType& solution, RhsType& rhs, unsigned int maxIter = 5000, double precision = 1e-12)
-//  {
-//    typedef typename MatrixType::EntryType EntryType;
-//    typedef typename MatrixType::StorageType EigenMatrixType;
-//    typedef ::Eigen::SimplicialCholesky< EigenMatrixType, ::Eigen::Upper > SolverType;
-//    SolverType solver;
-//    solver.compute(*(matrix.storage()));
-//    *(solution.storage()) = solver.solve(*(rhs.storage()));
-//  }
-//}; // struct SimplicialcholeskyUpper
 
-//const std::string SimplicialcholeskyUpper::id = "eigen.simplicialcholesky.upper";
+template< class ElementType = double >
+class CgDiagonalLower
+    : public Interface< ElementType >
+{
+public:
+  typedef Interface< ElementType > BaseType;
 
-//struct SimplicialcholeskyLower
-//{
-//public:
-//  static const std::string id;
+  typedef typename BaseType::SparseMatrixType SparseMatrixType;
 
-//  template< class MatrixType, class SolutionType, class RhsType >
-//  static void apply(MatrixType& matrix, SolutionType& solution, RhsType& rhs, unsigned int maxIter = 5000, double precision = 1e-12)
-//  {
-//    typedef typename MatrixType::EntryType EntryType;
-//    typedef typename MatrixType::StorageType EigenMatrixType;
-//    typedef ::Eigen::SimplicialCholesky< EigenMatrixType, ::Eigen::Lower > SolverType;
-//    SolverType solver;
-//    solver.compute(*(matrix.storage()));
-//    *(solution.storage()) = solver.solve(*(rhs.storage()));
-//  }
-//}; // struct SimplicialcholeskyLower
+  typedef typename BaseType::DenseVectorType DenseVectorType;
 
-//const std::string SimplicialcholeskyLower::id = "eigen.simplicialcholesky.lower";
+  virtual bool apply(const SparseMatrixType& systemMatrix,
+                     const DenseVectorType& rhsVector,
+                     DenseVectorType& solutionVector,
+                     unsigned int maxIter = 5000,
+                     double precision = 1e-12) const
+  {
+    typedef ::Eigen::DiagonalPreconditioner< ElementType > PreconditionerType;
+    typedef ::Eigen::ConjugateGradient< SparseMatrixType, ::Eigen::Lower, PreconditionerType > SolverType;
+    SolverType solver;
+    solver.setMaxIterations(maxIter);
+    solver.setTolerance(precision);
+    solver.compute(systemMatrix.base());
+    solutionVector.base() = solver.solve(rhsVector.base());
+    const ::Eigen::ComputationInfo info = solver.info();
+    return (info == ::Eigen::Success);
+  }
+}; // class CgDiagonalLower
+
+
+template< class ElementType = double >
+class SimplicialcholeskyUpper
+    : public Interface< ElementType >
+{
+public:
+  typedef Interface< ElementType > BaseType;
+
+  typedef typename BaseType::SparseMatrixType SparseMatrixType;
+
+  typedef typename BaseType::DenseVectorType DenseVectorType;
+
+  virtual bool apply(const SparseMatrixType& systemMatrix,
+                     const DenseVectorType& rhsVector,
+                     DenseVectorType& solutionVector,
+                     unsigned int DUNE_UNUSED(maxIter) = 5000,
+                     double DUNE_UNUSED(precision) = 1e-12) const
+  {
+    typedef ::Eigen::SimplicialCholesky< SparseMatrixType, ::Eigen::Upper > SolverType;
+    SolverType solver;
+    solver.compute(systemMatrix.base());
+    solutionVector.base() = solver.solve(rhsVector.base());
+    const ::Eigen::ComputationInfo info = solver.info();
+    return (info == ::Eigen::Success);
+  }
+}; // class SimplicialcholeskyUpper
+
+
+template< class ElementType = double >
+class SimplicialcholeskyLower
+    : public Interface< ElementType >
+{
+public:
+  typedef Interface< ElementType > BaseType;
+
+  typedef typename BaseType::SparseMatrixType SparseMatrixType;
+
+  typedef typename BaseType::DenseVectorType DenseVectorType;
+
+  virtual bool apply(const SparseMatrixType& systemMatrix,
+                     const DenseVectorType& rhsVector,
+                     DenseVectorType& solutionVector,
+                     unsigned int DUNE_UNUSED(maxIter) = 5000,
+                     double DUNE_UNUSED(precision) = 1e-12) const
+  {
+    typedef ::Eigen::SimplicialCholesky< SparseMatrixType, ::Eigen::Lower > SolverType;
+    SolverType solver;
+    solver.compute(systemMatrix.base());
+    solutionVector.base() = solver.solve(rhsVector.base());
+    const ::Eigen::ComputationInfo info = solver.info();
+    return (info == ::Eigen::Success);
+  }
+}; // class SimplicialcholeskyLower
+
 
 template< class ElementType = double >
 Interface< ElementType >* create(const std::string type = "eigen.bicgstab.incompletelut")
@@ -172,11 +213,30 @@ Interface< ElementType >* create(const std::string type = "eigen.bicgstab.incomp
     typedef BicgstabIlut< ElementType > BicgstabIlutType;
     BicgstabIlutType* bicgstabIlut = new BicgstabIlutType;
     return bicgstabIlut;
+  } else if (type == "eigen.bicgstab.diagonal") {
+    typedef BicgstabDiagonal< ElementType > BicgstabDiagonalType;
+    BicgstabDiagonalType* bicgstabDiagonal = new BicgstabDiagonalType;
+    return bicgstabDiagonal;
+  } else if (type == "eigen.cg.diagonal.upper") {
+    typedef CgDiagonalUpper< ElementType > CgDiagonalUpperType;
+    CgDiagonalUpperType* cgDiagonalUpper = new CgDiagonalUpperType;
+    return cgDiagonalUpper;
+  } else if (type == "eigen.cg.diagonal.lower") {
+    typedef CgDiagonalLower< ElementType > CgDiagonalLowerType;
+    CgDiagonalLowerType* cgDiagonalLower = new CgDiagonalLowerType;
+    return cgDiagonalLower;
+  } else if (type == "eigen.simplicialcholesky.upper") {
+    typedef SimplicialcholeskyUpper< ElementType > SimplicialcholeskyUpperType;
+    SimplicialcholeskyUpperType* simplicialcholeskyUpper = new SimplicialcholeskyUpperType;
+    return simplicialcholeskyUpper;
+  } else if (type == "eigen.simplicialcholesky.lower") {
+    typedef SimplicialcholeskyLower< ElementType > SimplicialcholeskyLowerType;
+    SimplicialcholeskyLowerType* simplicialcholeskyLower = new SimplicialcholeskyLowerType;
+    return simplicialcholeskyLower;
   } else
     DUNE_THROW(Dune::RangeError,
-               "\nERROR: unknown solver '" << type << "' requested!");
+               "\nERROR: unknown linear solver '" << type << "' requested!");
 } // Interface< ElementType >* create(const std::string type = "eigen.bicgstab.incompletelut")
-
 
 } // namespace Sparse
 } // namespace Eigen
@@ -185,6 +245,6 @@ Interface< ElementType >* create(const std::string type = "eigen.bicgstab.incomp
 } // namespace Stuff
 } // namespace Dune
 
-#endif // HAVE_EIGEN
+//#endif // HAVE_EIGEN
 
 #endif // DUNE_STUFF_LA_SOLVER_SPARSE_EIGEN_HH
