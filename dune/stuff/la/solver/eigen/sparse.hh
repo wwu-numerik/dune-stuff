@@ -1,9 +1,7 @@
 #ifndef DUNE_STUFF_LA_SOLVER_SPARSE_EIGEN_HH
 #define DUNE_STUFF_LA_SOLVER_SPARSE_EIGEN_HH
 
-#ifdef HAVE_EIGEN
-
-#include <Eigen/Eigen>
+#if HAVE_EIGEN
 
 #include <dune/common/exceptions.hh>
 
