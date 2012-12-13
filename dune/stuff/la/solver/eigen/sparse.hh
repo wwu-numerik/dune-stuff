@@ -78,7 +78,7 @@ public:
                      double precision = 1e-12) const
   {
     typedef ::Eigen::DiagonalPreconditioner< ElementType > PreconditionerType;
-    typedef ::Eigen::BiCGSTAB< SparseMatrixType, PreconditionerType > SolverType;
+    typedef ::Eigen::BiCGSTAB< typename SparseMatrixType::BaseType, PreconditionerType > SolverType;
     SolverType solver;
     solver.setMaxIterations(maxIter);
     solver.setTolerance(precision);
@@ -108,7 +108,7 @@ public:
                      double precision = 1e-12) const
   {
     typedef ::Eigen::DiagonalPreconditioner< ElementType > PreconditionerType;
-    typedef ::Eigen::ConjugateGradient< SparseMatrixType, ::Eigen::Upper, PreconditionerType > SolverType;
+    typedef ::Eigen::ConjugateGradient< typename SparseMatrixType::BaseType, ::Eigen::Upper, PreconditionerType > SolverType;
     SolverType solver;
     solver.setMaxIterations(maxIter);
     solver.setTolerance(precision);
@@ -138,7 +138,7 @@ public:
                      double precision = 1e-12) const
   {
     typedef ::Eigen::DiagonalPreconditioner< ElementType > PreconditionerType;
-    typedef ::Eigen::ConjugateGradient< SparseMatrixType, ::Eigen::Lower, PreconditionerType > SolverType;
+    typedef ::Eigen::ConjugateGradient< typename SparseMatrixType::BaseType, ::Eigen::Lower, PreconditionerType > SolverType;
     SolverType solver;
     solver.setMaxIterations(maxIter);
     solver.setTolerance(precision);
