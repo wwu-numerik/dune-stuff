@@ -150,58 +150,58 @@ public:
 }; // class CgDiagonalLower
 
 
-template< class ElementType = double >
-class SimplicialcholeskyUpper
-    : public Interface< ElementType >
-{
-public:
-  typedef Interface< ElementType > BaseType;
+//template< class ElementType = double >
+//class SimplicialcholeskyUpper
+//    : public Interface< ElementType >
+//{
+//public:
+//  typedef Interface< ElementType > BaseType;
 
-  typedef typename BaseType::SparseMatrixType SparseMatrixType;
+//  typedef typename BaseType::SparseMatrixType SparseMatrixType;
 
-  typedef typename BaseType::DenseVectorType DenseVectorType;
+//  typedef typename BaseType::DenseVectorType DenseVectorType;
 
-  virtual bool apply(const SparseMatrixType& systemMatrix,
-                     const DenseVectorType& rhsVector,
-                     DenseVectorType& solutionVector,
-                     unsigned int DUNE_UNUSED(maxIter) = 5000,
-                     double DUNE_UNUSED(precision) = 1e-12) const
-  {
-    typedef ::Eigen::SimplicialCholesky< SparseMatrixType, ::Eigen::Upper > SolverType;
-    SolverType solver;
-    solver.compute(systemMatrix.base());
-    solutionVector.base() = solver.solve(rhsVector.base());
-    const ::Eigen::ComputationInfo info = solver.info();
-    return (info == ::Eigen::Success);
-  }
-}; // class SimplicialcholeskyUpper
+//  virtual bool apply(const SparseMatrixType& systemMatrix,
+//                     const DenseVectorType& rhsVector,
+//                     DenseVectorType& solutionVector,
+//                     unsigned int DUNE_UNUSED(maxIter) = 5000,
+//                     double DUNE_UNUSED(precision) = 1e-12) const
+//  {
+//    typedef ::Eigen::SimplicialCholesky< typename SparseMatrixType::BaseType, ::Eigen::Upper > SolverType;
+//    SolverType solver;
+//    solver.compute(systemMatrix.base());
+//    solutionVector.base() = solver.solve(rhsVector.base());
+//    const ::Eigen::ComputationInfo info = solver.info();
+//    return (info == ::Eigen::Success);
+//  }
+//}; // class SimplicialcholeskyUpper
 
 
-template< class ElementType = double >
-class SimplicialcholeskyLower
-    : public Interface< ElementType >
-{
-public:
-  typedef Interface< ElementType > BaseType;
+//template< class ElementType = double >
+//class SimplicialcholeskyLower
+//    : public Interface< ElementType >
+//{
+//public:
+//  typedef Interface< ElementType > BaseType;
 
-  typedef typename BaseType::SparseMatrixType SparseMatrixType;
+//  typedef typename BaseType::SparseMatrixType SparseMatrixType;
 
-  typedef typename BaseType::DenseVectorType DenseVectorType;
+//  typedef typename BaseType::DenseVectorType DenseVectorType;
 
-  virtual bool apply(const SparseMatrixType& systemMatrix,
-                     const DenseVectorType& rhsVector,
-                     DenseVectorType& solutionVector,
-                     unsigned int DUNE_UNUSED(maxIter) = 5000,
-                     double DUNE_UNUSED(precision) = 1e-12) const
-  {
-    typedef ::Eigen::SimplicialCholesky< SparseMatrixType, ::Eigen::Lower > SolverType;
-    SolverType solver;
-    solver.compute(systemMatrix.base());
-    solutionVector.base() = solver.solve(rhsVector.base());
-    const ::Eigen::ComputationInfo info = solver.info();
-    return (info == ::Eigen::Success);
-  }
-}; // class SimplicialcholeskyLower
+//  virtual bool apply(const SparseMatrixType& systemMatrix,
+//                     const DenseVectorType& rhsVector,
+//                     DenseVectorType& solutionVector,
+//                     unsigned int DUNE_UNUSED(maxIter) = 5000,
+//                     double DUNE_UNUSED(precision) = 1e-12) const
+//  {
+//    typedef ::Eigen::SimplicialCholesky< typename SparseMatrixType::BaseType, ::Eigen::Lower > SolverType;
+//    SolverType solver;
+//    solver.compute(systemMatrix.base());
+//    solutionVector.base() = solver.solve(rhsVector.base());
+//    const ::Eigen::ComputationInfo info = solver.info();
+//    return (info == ::Eigen::Success);
+//  }
+//}; // class SimplicialcholeskyLower
 
 
 template< class ElementType = double >
@@ -223,14 +223,14 @@ Interface< ElementType >* create(const std::string type = "eigen.bicgstab.incomp
     typedef CgDiagonalLower< ElementType > CgDiagonalLowerType;
     CgDiagonalLowerType* cgDiagonalLower = new CgDiagonalLowerType;
     return cgDiagonalLower;
-  } else if (type == "eigen.simplicialcholesky.upper") {
-    typedef SimplicialcholeskyUpper< ElementType > SimplicialcholeskyUpperType;
-    SimplicialcholeskyUpperType* simplicialcholeskyUpper = new SimplicialcholeskyUpperType;
-    return simplicialcholeskyUpper;
-  } else if (type == "eigen.simplicialcholesky.lower") {
-    typedef SimplicialcholeskyLower< ElementType > SimplicialcholeskyLowerType;
-    SimplicialcholeskyLowerType* simplicialcholeskyLower = new SimplicialcholeskyLowerType;
-    return simplicialcholeskyLower;
+//  } else if (type == "eigen.simplicialcholesky.upper") {
+//    typedef SimplicialcholeskyUpper< ElementType > SimplicialcholeskyUpperType;
+//    SimplicialcholeskyUpperType* simplicialcholeskyUpper = new SimplicialcholeskyUpperType;
+//    return simplicialcholeskyUpper;
+//  } else if (type == "eigen.simplicialcholesky.lower") {
+//    typedef SimplicialcholeskyLower< ElementType > SimplicialcholeskyLowerType;
+//    SimplicialcholeskyLowerType* simplicialcholeskyLower = new SimplicialcholeskyLowerType;
+//    return simplicialcholeskyLower;
   } else
     DUNE_THROW(Dune::RangeError,
                "\nERROR: unknown linear solver '" << type << "' requested!");
