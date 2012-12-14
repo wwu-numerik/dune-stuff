@@ -17,7 +17,7 @@ namespace Stuff {
 namespace Common {
 
 /**
- * @brief namespace to define color constants that can be 
+ * @brief namespace to define color constants that can be
  * used to print colored text in an output stream.
  *
  * * \todo this could go into libdune-stuff
@@ -106,7 +106,7 @@ int templateColorChooser(int i) {
 
 /**
  * @brief Highlights templates depending on the "template"-level.
- * 
+ *
  * @param str The string containing the template string
  * @param maxlevel The maximal template-level the string is reduced to.
  * @returns A colored template string.
@@ -151,7 +151,8 @@ std::string highlightTemplate(std::string str, int maxlevel = 10000) {
  * @returns The highlighted string.
  */
 std::string highlightString(std::string str, int colornr = 0) {
-  return "\033[38;5;" + toString(colornr % 256) + "m" + str + "\033[38;5;0m";
+  return "\033[38;5;" + toString(colornr % 256) + "m" + str + "\033[0m"; //"\033[38;5;0m";
+}
 
 std::string highlightString(const std::string string, const std::string color = Colors::red)
 {
