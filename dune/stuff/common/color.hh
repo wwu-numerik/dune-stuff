@@ -152,6 +152,10 @@ std::string highlightTemplate(std::string str, int maxlevel = 10000) {
  */
 std::string highlightString(std::string str, int colornr = 0) {
   return "\033[38;5;" + toString(colornr % 256) + "m" + str + "\033[38;5;0m";
+
+std::string highlightString(const std::string string, const std::string color = Colors::red)
+{
+  return color + string + "\033[0m";
 }
 
 /**
