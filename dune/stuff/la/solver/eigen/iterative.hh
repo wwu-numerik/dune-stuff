@@ -16,7 +16,7 @@
 
 #include <dune/stuff/la/container/eigen.hh>
 
-#include "interface.hh"
+#include "../interface.hh"
 
 namespace Dune {
 namespace Stuff {
