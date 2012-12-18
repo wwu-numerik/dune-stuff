@@ -66,6 +66,7 @@ void Logging::create( int logflags,
   logflags_ = logflags;
   path logdir = path(datadir) / _logdir;
   filename_ = logdir / (log_fn % logfile % ".log").str();
+  testCreateDirectory(filename_.string());
   if ( (logflags_ & LOG_FILE) != 0 )
   {
     logfile_.open(filename_);
