@@ -20,15 +20,15 @@ namespace Solver {
 namespace Eigen {
 
 
-template< class MatrixImp >
+template< class MatrixImp, class VectorImp >
 class Interface
 {
 public:
-  typedef MatrixImp MatrixType;
+  typedef typename Dune::Stuff::LA::Container::Eigen::MatrixInterface< typename MatrixImp::Traits > MatrixType;
 
   typedef typename MatrixType::ElementType ElementType;
 
-  typedef typename Dune::Stuff::LA::Container::Eigen::DenseVector< ElementType > VectorType;
+  typedef typename Dune::Stuff::LA::Container::Eigen::VectorInterface< typename VectorImp::Traits > VectorType;
 
   typedef typename MatrixType::size_type size_type;
 
