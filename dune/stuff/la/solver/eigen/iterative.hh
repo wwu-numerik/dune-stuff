@@ -25,12 +25,20 @@ namespace Solver {
 namespace Eigen {
 
 
-template< class MatrixImp >
-class BicgstabDiagonal
-  : public Interface< MatrixImp >
+template< class MatrixImp, class VectorImp >
+class BicgstabDiagonal;
+
+
+template< class ElementImp >
+class BicgstabDiagonal< Container::Eigen::RowMajorSparseMatrix< ElementImp >,
+                        Container::Eigen::DenseVector< ElementImp > >
+  : public Interface< Container::Eigen::RowMajorSparseMatrix< ElementImp >,
+                      Container::Eigen::DenseVector< ElementImp > >
 {
 public:
-  typedef Interface< MatrixImp > BaseType;
+  typedef Interface<  Container::Eigen::RowMajorSparseMatrix< ElementImp >,
+                      Container::Eigen::DenseVector< ElementImp > >
+      BaseType;
 
   typedef typename BaseType::MatrixType MatrixType;
 
@@ -78,12 +86,20 @@ private:
 }; // class BicgstabDiagonal
 
 
-template< class MatrixImp >
-class BicgstabIncompleteLUT
-  : public Interface< MatrixImp >
+template< class MatrixImp, class VectorImp >
+class BicgstabIncompleteLUT;
+
+
+template< class ElementImp >
+class BicgstabIncompleteLUT<  Container::Eigen::RowMajorSparseMatrix< ElementImp >,
+                              Container::Eigen::DenseVector< ElementImp > >
+  : public Interface< Container::Eigen::RowMajorSparseMatrix< ElementImp >,
+                      Container::Eigen::DenseVector< ElementImp > >
 {
 public:
-  typedef Interface< MatrixImp > BaseType;
+  typedef Interface<  Container::Eigen::RowMajorSparseMatrix< ElementImp >,
+                      Container::Eigen::DenseVector< ElementImp > >
+      BaseType;
 
   typedef typename BaseType::MatrixType MatrixType;
 
@@ -131,12 +147,20 @@ private:
 }; // class BicgstabIncompleteLUT
 
 
-template< class MatrixImp >
-class CgDiagonal
-  : public Interface< MatrixImp >
+template< class MatrixImp, class VectorImp >
+class CG;
+
+
+template< class ElementImp >
+class CG< Container::Eigen::RowMajorSparseMatrix< ElementImp >,
+          Container::Eigen::DenseVector< ElementImp > >
+  : public Interface< Container::Eigen::RowMajorSparseMatrix< ElementImp >,
+                      Container::Eigen::DenseVector< ElementImp > >
 {
 public:
-  typedef Interface< MatrixImp > BaseType;
+  typedef Interface<  Container::Eigen::RowMajorSparseMatrix< ElementImp >,
+                      Container::Eigen::DenseVector< ElementImp > >
+      BaseType;
 
   typedef typename BaseType::MatrixType MatrixType;
 
@@ -146,13 +170,8 @@ public:
 
   typedef typename BaseType::size_type size_type;
 
-private:
-  typedef ::Eigen::DiagonalPreconditioner< ElementType > PreconditionerType;
-
-  typedef ::Eigen::ConjugateGradient< typename MatrixType::BaseType, ::Eigen::Lower, PreconditionerType > SolverType;
-
 public:
-  CgDiagonal()
+  CG()
     : initialized_(false)
   {}
 
@@ -160,7 +179,7 @@ public:
   {
     if (initialized_)
       DUNE_THROW(Dune::InvalidStateException, "\nERROR: init() may only be called once!");
-    solver_ = new SolverType(systemMatrix.base());
+    assert(false);
     initialized_ = true;
   } // virtual void init(...)
 
@@ -171,70 +190,123 @@ public:
   {
     if (!initialized_)
       DUNE_THROW(Dune::InvalidStateException, "\nERROR: please call init() before calling apply()!");
-    solver_->setMaxIterations(maxIter);
-    solver_->setTolerance(precision);
-    solutionVector.base() = solver_->solve(rhsVector.base());
-    const ::Eigen::ComputationInfo info = solver_->info();
-    return (info == ::Eigen::Success);
+    assert(false);
+//    solver_->setMaxIterations(maxIter);
+//    solver_->setTolerance(precision);
+//    solutionVector.base() = solver_->solve(rhsVector.base());
+//    const ::Eigen::ComputationInfo info = solver_->info();
+//    return (info == ::Eigen::Success);
   } // virtual bool apply(...)
 
 private:
   bool initialized_;
-  SolverType* solver_;
-}; // class CgDiagonal
+}; // class CG
 
 
-template< class MatrixImp >
-class CgIncompleteLUT
-  : public Interface< MatrixImp >
-{
-public:
-  typedef Interface< MatrixImp > BaseType;
+//template< class MatrixImp >
+//class CgDiagonal
+//  : public Interface< MatrixImp >
+//{
+//public:
+//  typedef Interface< MatrixImp > BaseType;
 
-  typedef typename BaseType::MatrixType MatrixType;
+//  typedef typename BaseType::MatrixType MatrixType;
 
-  typedef typename BaseType::VectorType VectorType;
+//  typedef typename BaseType::VectorType VectorType;
 
-  typedef typename BaseType::ElementType ElementType;
+//  typedef typename BaseType::ElementType ElementType;
 
-  typedef typename BaseType::size_type size_type;
+//  typedef typename BaseType::size_type size_type;
 
-private:
-  typedef ::Eigen::IncompleteLUT< ElementType > PreconditionerType;
+//private:
+//  typedef ::Eigen::DiagonalPreconditioner< ElementType > PreconditionerType;
 
-  typedef ::Eigen::ConjugateGradient< typename MatrixType::BaseType, ::Eigen::Lower, PreconditionerType > SolverType;
+//  typedef ::Eigen::ConjugateGradient< typename MatrixType::BaseType, ::Eigen::Lower, PreconditionerType > SolverType;
 
-public:
-  CgIncompleteLUT()
-    : initialized_(false)
-  {}
+//public:
+//  CgDiagonal()
+//    : initialized_(false)
+//  {}
 
-  virtual void init(const MatrixType& systemMatrix)
-  {
-    if (initialized_)
-      DUNE_THROW(Dune::InvalidStateException, "\nERROR: init() may only be called once!");
-    solver_ = new SolverType(systemMatrix.base());
-    initialized_ = true;
-  } // virtual void init(...)
+//  virtual void init(const MatrixType& systemMatrix)
+//  {
+//    if (initialized_)
+//      DUNE_THROW(Dune::InvalidStateException, "\nERROR: init() may only be called once!");
+//    solver_ = new SolverType(systemMatrix.base());
+//    initialized_ = true;
+//  } // virtual void init(...)
 
-  virtual bool apply(const VectorType& rhsVector,
-                     VectorType& solutionVector,
-                     const size_type maxIter = 5000,
-                     const ElementType precision = 1e-12) const
-  {
-    if (!initialized_)
-      DUNE_THROW(Dune::InvalidStateException, "\nERROR: please call init() before calling apply()!");
-    solver_->setMaxIterations(maxIter);
-    solver_->setTolerance(precision);
-    solutionVector.base() = solver_->solve(rhsVector.base());
-    const ::Eigen::ComputationInfo info = solver_->info();
-    return (info == ::Eigen::Success);
-  } // virtual bool apply(...)
+//  virtual bool apply(const VectorType& rhsVector,
+//                     VectorType& solutionVector,
+//                     const size_type maxIter = 5000,
+//                     const ElementType precision = 1e-12) const
+//  {
+//    if (!initialized_)
+//      DUNE_THROW(Dune::InvalidStateException, "\nERROR: please call init() before calling apply()!");
+//    solver_->setMaxIterations(maxIter);
+//    solver_->setTolerance(precision);
+//    solutionVector.base() = solver_->solve(rhsVector.base());
+//    const ::Eigen::ComputationInfo info = solver_->info();
+//    return (info == ::Eigen::Success);
+//  } // virtual bool apply(...)
 
-private:
-  bool initialized_;
-  SolverType* solver_;
-}; // class CgIncompleteLUT
+//private:
+//  bool initialized_;
+//  SolverType* solver_;
+//}; // class CgDiagonal
+
+
+//template< class MatrixImp >
+//class CgIncompleteLUT
+//  : public Interface< MatrixImp >
+//{
+//public:
+//  typedef Interface< MatrixImp > BaseType;
+
+//  typedef typename BaseType::MatrixType MatrixType;
+
+//  typedef typename BaseType::VectorType VectorType;
+
+//  typedef typename BaseType::ElementType ElementType;
+
+//  typedef typename BaseType::size_type size_type;
+
+//private:
+//  typedef ::Eigen::IncompleteLUT< ElementType > PreconditionerType;
+
+//  typedef ::Eigen::ConjugateGradient< typename MatrixType::BaseType, ::Eigen::Lower, PreconditionerType > SolverType;
+
+//public:
+//  CgIncompleteLUT()
+//    : initialized_(false)
+//  {}
+
+//  virtual void init(const MatrixType& systemMatrix)
+//  {
+//    if (initialized_)
+//      DUNE_THROW(Dune::InvalidStateException, "\nERROR: init() may only be called once!");
+//    solver_ = new SolverType(systemMatrix.base());
+//    initialized_ = true;
+//  } // virtual void init(...)
+
+//  virtual bool apply(const VectorType& rhsVector,
+//                     VectorType& solutionVector,
+//                     const size_type maxIter = 5000,
+//                     const ElementType precision = 1e-12) const
+//  {
+//    if (!initialized_)
+//      DUNE_THROW(Dune::InvalidStateException, "\nERROR: please call init() before calling apply()!");
+//    solver_->setMaxIterations(maxIter);
+//    solver_->setTolerance(precision);
+//    solutionVector.base() = solver_->solve(rhsVector.base());
+//    const ::Eigen::ComputationInfo info = solver_->info();
+//    return (info == ::Eigen::Success);
+//  } // virtual bool apply(...)
+
+//private:
+//  bool initialized_;
+//  SolverType* solver_;
+//}; // class CgIncompleteLUT
 
 
 } // namespace Eigen
