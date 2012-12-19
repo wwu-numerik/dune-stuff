@@ -162,12 +162,14 @@ public:
     auto& x_i = solutionVector.base();
     const auto& b = rhsVector.base();
     const auto& A = systemMatrix_->base();
+    const int cols = A.cols();
     size_type iteration(1);
-    ElementType rho, rho_prev, beta, alpha;
-
+    ElementType rho(0), rho_prev(1), beta, alpha;
+    const ElementType tolerance = precision * precision * b.squaredNorm();
     typename VectorType::BaseType residuum = b - A * x_i;
-    typename VectorType::BaseType correction_p, correction_q;
-    rho = residuum.dot(residuum);
+    typename VectorType::BaseType correction_p(cols);
+    typename VectorType::BaseType correction_q(cols);
+    rho = residuum.squaredNorm();
     while (iteration <= maxIter) {
       if (iteration == 1) {
           correction_p = residuum;
@@ -176,12 +178,12 @@ public:
           beta = rho / rho_prev;
           correction_p = residuum + beta * correction_p;
       }
-      correction_q = A * correction_p;
+      correction_q.noalias() = A * correction_p;
       alpha = rho / correction_p.dot(correction_q);
       x_i += alpha * correction_p;
       residuum -= alpha * correction_q;
-      rho = residuum.dot(residuum);
-      if (rho < precision)
+      rho = residuum.squaredNorm();
+      if (rho < tolerance)
           return true;
       rho_prev = rho;
     }
