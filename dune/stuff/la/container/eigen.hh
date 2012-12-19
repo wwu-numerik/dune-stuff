@@ -79,6 +79,10 @@ public:
 
   typedef typename Traits::size_type size_type;
 
+  RowMajorSparseMatrix()
+    : BaseType()
+  {}
+
   RowMajorSparseMatrix(const size_type _rows,
                        const size_type _cols,
                        const Dune::Stuff::LA::Container::Pattern::Default& _pattern)
