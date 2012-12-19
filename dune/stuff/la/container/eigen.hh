@@ -18,6 +18,32 @@ namespace Container {
 namespace Eigen {
 
 
+template< class Traits >
+class Base
+{
+public:
+  typedef typename Traits::derived_type derived_type;
+}; // class Base
+
+
+template< class Traits >
+class MatrixBase
+  : public Base< Traits >
+{
+public:
+  typedef typename Base< Traits >::derived_type derived_type;
+}; // class MatrixBase
+
+
+template< class Traits >
+class VectorBase
+  : public Base< Traits >
+{
+public:
+  typedef typename Base< Traits >::derived_type derived_type;
+}; // class VectorBase
+
+
 template< class ElementType >
 class RowMajorSparseMatrix;
 
@@ -40,6 +66,7 @@ template< class ElementImp = double >
 class RowMajorSparseMatrix
   : public MatrixInterface< RowMajorSparseMatrixTraits< ElementImp > >
   , virtual public RowMajorSparseMatrixTraits< ElementImp >::BaseType
+  , public MatrixBase< RowMajorSparseMatrixTraits< ElementImp > >
 {
 public:
   typedef RowMajorSparseMatrixTraits< ElementImp > Traits;
@@ -134,6 +161,7 @@ template< class ElementImp = double >
 class DenseMatrix
   : public MatrixInterface< DenseMatrixTraits< ElementImp > >
   , virtual public DenseMatrixTraits< ElementImp >::BaseType
+  , public MatrixBase< DenseMatrixTraits< ElementImp > >
 {
 public:
   typedef DenseMatrixTraits< ElementImp > Traits;
@@ -209,6 +237,7 @@ template< class ElementImp = double>
 class DenseVector
   : public VectorInterface< DenseVectorTraits< ElementImp > >
   , virtual public DenseVectorTraits< ElementImp >::BaseType
+  , public VectorBase< DenseVectorTraits< ElementImp > >
 {
 public:
   typedef DenseVectorTraits< ElementImp > Traits;
