@@ -24,8 +24,13 @@ namespace LA {
 namespace Solver {
 namespace Eigen {
 
+//! provide a Dummy preconditioner that fits the expectatations below
+template <class Dummy>
+class IdentityPreconditioner : public ::Eigen::IdentityPreconditioner
+{};
 
-template< class MatrixImp, class VectorImp, template < class ElementImp > class Preconditioner >
+
+template< class MatrixImp, class VectorImp, template < class ElementImp > class Preconditioner = IdentityPreconditioner>
 class Bicgstab;
 
 
