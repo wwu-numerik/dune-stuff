@@ -150,7 +150,7 @@ private:
 template< class MatrixImp, class VectorImp >
 class CG;
 
-
+//! CG implementation following "van der Vorst - Iterative Methods for Large Linear Systems (2002)" p.44
 template< class ElementImp >
 class CG< Container::Eigen::RowMajorSparseMatrix< ElementImp >,
           Container::Eigen::DenseVector< ElementImp > >
@@ -173,13 +173,12 @@ public:
 public:
   CG()
     : initialized_(false)
+    , systemMatrix_(nullptr)
   {}
 
   virtual void init(const MatrixType& systemMatrix)
   {
-    if (initialized_)
-      DUNE_THROW(Dune::InvalidStateException, "\nERROR: init() may only be called once!");
-    assert(false);
+    systemMatrix_ = &(systemMatrix);
     initialized_ = true;
   } // virtual void init(...)
 
@@ -190,16 +189,39 @@ public:
   {
     if (!initialized_)
       DUNE_THROW(Dune::InvalidStateException, "\nERROR: please call init() before calling apply()!");
-    assert(false);
-//    solver_->setMaxIterations(maxIter);
-//    solver_->setTolerance(precision);
-//    solutionVector.base() = solver_->solve(rhsVector.base());
-//    const ::Eigen::ComputationInfo info = solver_->info();
-//    return (info == ::Eigen::Success);
+    assert(systemMatrix_);
+    auto& x_i = solutionVector.base();
+    const auto& b = rhsVector.base();
+    const auto& A = systemMatrix_->base();
+    size_type iteration(1);
+    ElementType rho, rho_prev, beta, alpha;
+
+    typename VectorType::BaseType residuum = b - A * x_i;
+    typename VectorType::BaseType correction_p, correction_q;
+    rho = residuum.dot(residuum);
+    while (iteration <= maxIter) {
+      if (iteration == 1) {
+          correction_p = residuum;
+      }
+      else {
+          beta = rho / rho_prev;
+          correction_p = residuum + beta * correction_p;
+      }
+      correction_q = A * correction_p;
+      alpha = rho / correction_p.dot(correction_q);
+      x_i += alpha * correction_p;
+      residuum -= alpha * correction_q;
+      rho = residuum.dot(residuum);
+      if (rho < precision)
+          return true;
+      rho_prev = rho;
+    }
+    return false;
   } // virtual bool apply(...)
 
 private:
   bool initialized_;
+  const MatrixType* systemMatrix_;
 }; // class CG
 
 
