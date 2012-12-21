@@ -28,7 +28,8 @@ int saveDiscreteFunction(const DiscreteFunctionType& discreteFunction,
                          const int refineLevel,
                          const std::string dgfFilename,
                          const std::string saveToFilenamePrefix,
-                         std::ostream& error) {
+                         std::ostream& error) DUNE_DEPRECATED_MSG("To be removed by 2012's end")
+{
   int errorState(0);
 
   error.flush();
@@ -105,7 +106,8 @@ int saveDiscreteFunction(const DiscreteFunctionType& discreteFunction,
 /** \todo FELIX needs to doc me **/
 template< class DiscreteFunctionType >
 int loadDiscreteFunction(const std::string loadFromfilenamePrefix,
-                         std::ostream& error) {
+                         std::ostream& error) DUNE_DEPRECATED_MSG("To be removed by 2012's end")
+{
   int errorState(0);
 
   error.flush();
