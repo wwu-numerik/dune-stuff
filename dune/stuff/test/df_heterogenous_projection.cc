@@ -6,6 +6,7 @@
 #include <fstream>
 #include <utility>
 #include <boost/filesystem.hpp>
+#include <boost/format.hpp>
 
 #include <dune/common/mpihelper.hh>
 #include <dune/common/parametertreeparser.hh>
@@ -14,6 +15,7 @@
 #include <dune/stuff/discretefunction/projection/heterogenous.hh>
 #include <dune/stuff/function/expression.hh>
 #include <dune/stuff/fem/customprojection.hh>
+#include <dune/stuff/common/profiler.hh>
 
 using namespace Dune;
 
@@ -64,14 +66,17 @@ void vtk_out(const GridPart& part, const DF& df) {
   vtkWriter.write( vtkWriterFilename.c_str() );
 }
 
-void ptest() {
-  const int macro_elements = 4;
+void ptest(const int macro_elements = 4) {
+
   typedef Traits<SourceGrid> SourceTraits;
   typedef Traits<TargetGrid> TargetTraits;
   auto source_cube = Stuff::Grid::Provider::Cube<SourceGrid>(0,1,macro_elements).grid();
-  auto target_cube = Stuff::Grid::Provider::Cube<TargetGrid>(0,1,macro_elements * 3).grid();
+  auto target_cube = Stuff::Grid::Provider::Cube<TargetGrid>(0,1,macro_elements*2).grid();
   source_cube->globalRefine(2);
-  target_cube->globalRefine(3);
+  target_cube->globalRefine(4);
+
+  std::cout << (boost::format("\n\nProjecting from %d source elements to %d target elements\n")
+                   % source_cube->size(0) % target_cube->size(0)).str();
   typename SourceTraits::GridPart source_part(*source_cube);
   typename TargetTraits::GridPart target_part(*target_cube);
 
@@ -81,20 +86,30 @@ void ptest() {
   typename SourceTraits::DiscreteFunction source_df("source", source_space);
   typename TargetTraits::DiscreteFunction target_df("target", target_space);
 
-
-  typedef Dune::Stuff::Function::Expression< SourceGrid::ctype, SourceGrid::dimension, SourceGrid::ctype, 1 > ScalarFunctionType;
+  typedef Dune::Stuff::Function::Expression< SourceGrid::ctype,
+      SourceGrid::dimension, SourceGrid::ctype, 1 > ScalarFunctionType;
   ScalarFunctionType scalar_f("x", "x[0] + x[1]");
   Dune::LagrangeInterpolation<typename SourceTraits::DiscreteFunction>::apply(scalar_f, source_df);
-//  Dune::Stuff::Fem::BetterL2Projection::project(scalar_f, source_df);
 
-  Stuff::HeterogenousProjection<>::project(source_df, target_df);
+  DSC_PROFILER.startTiming("DefaultSearchStrategy");
+  Stuff::HeterogenousProjection<Stuff::DefaultSearchStrategy>::project(source_df, target_df);
+  DSC_PROFILER.stopTiming("DefaultSearchStrategy");
+  DSC_PROFILER.startTiming("NaiveSearchStrategy");
+  Stuff::HeterogenousProjection<Stuff::NaiveSearchStrategy>::project(source_df, target_df);
+  DSC_PROFILER.stopTiming("NaiveSearchStrategy");
 
   vtk_out(source_part, source_df);
   vtk_out(target_part, target_df);
 }
 
 TEST(Projection, Cubes){
-  ptest();
+  DSC_PROFILER.reset(3);
+  ptest(2);
+  DSC_PROFILER.nextRun();
+  ptest(4);
+  DSC_PROFILER.nextRun();
+  ptest(8);
+  DSC_PROFILER.outputTimingsAll();
 }
 
 #endif //#if HAVE_DUNE_FEM
@@ -103,9 +118,8 @@ TEST(Projection, Cubes){
 
 int main(int argc, char** argv)
 {
-//  testing::InitGoogleTest(&argc, argv);
+  testing::InitGoogleTest(&argc, argv);
   Dune::MPIManager::initialize(argc,argv);
 
-//  return RUN_ALL_TESTS();
-  ptest();
+  return RUN_ALL_TESTS();
 }
