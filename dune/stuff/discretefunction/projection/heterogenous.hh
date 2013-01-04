@@ -41,6 +41,7 @@ public:
   typedef typename ViewTraits::template Codim<0>::Entity EntityType;
   typedef typename EntityType::Geometry::LocalCoordinate LocalCoordinateType;
   typedef typename EntityType::Geometry::GlobalCoordinate GlobalCoordinateType;
+  typedef std::vector<typename EntityType::EntityPointer> EntityPointerVector;
 
 protected:
   template <template<int,int,class> class ForeignEntityImp, class ForeignGridImp>
@@ -83,15 +84,13 @@ public:
   {}
 
   template <template<int,int,class> class ForeignEntityImp, class ForeignGridImp>
-  std::vector<typename BaseType::EntityType::EntityPointer>
+  typename BaseType::EntityPointerVector
   operator() (const Dune::Entity<BaseType::EntityType::codimension, BaseType::EntityType::dimension, ForeignGridImp, ForeignEntityImp>& other) const
   {
     std::vector<typename BaseType::EntityType::EntityPointer> ret;
     for(const auto& entity : DSC::viewRange(gridview_)) {
-      const auto &geometry = entity.geometry();
-
-      const auto &refElement = RefElementType::general(geometry.type());
-
+      const auto& geometry = entity.geometry();
+      const auto& refElement = RefElementType::general(geometry.type());
       for(const auto& corner : BaseType::getCorners(other)) {
         if(refElement.checkInside(geometry.local(corner)))
         {
@@ -109,22 +108,23 @@ private:
 
 template <class ViewTraits>
 class DefaultSearchStrategy : public StrategyBase<ViewTraits> {
- typedef StrategyBase<ViewTraits> BaseType;
-
+  typedef StrategyBase<ViewTraits> BaseType;
 
   const Dune::GridView<ViewTraits>& gridview_;
+  const int start_level_;
 
 public:
-
   DefaultSearchStrategy(const Dune::GridView<ViewTraits>& gridview)
     : gridview_(gridview)
+    , start_level_(0)
   {}
 
   template <template<int,int,class> class ForeignEntityImp, class ForeignGridImp>
-  std::vector<typename BaseType::EntityType::EntityPointer>
+  typename BaseType::EntityPointerVector
   operator() (const Dune::Entity<BaseType::EntityType::codimension, BaseType::EntityType::dimension, ForeignGridImp, ForeignEntityImp>& other) const
   {
-    auto range = DSC::viewRange(gridview_.grid().levelView(0));
+    auto level = std::min(gridview_.grid().maxLevel(), start_level_);
+    auto range = DSC::viewRange(gridview_.grid().levelView(level));
     return process(other, range);
   }
 
@@ -148,7 +148,7 @@ private:
         else {
           const auto h_end = my_ent.hend(my_level+1);
           const auto h_begin = my_ent.hbegin(my_level+1);
-          auto h_range = boost::make_iterator_range(h_begin, h_end);
+          const auto h_range = boost::make_iterator_range(h_begin, h_end);
           const auto kids = process(other, h_range);
           ret.insert(ret.end(), kids.begin(), kids.end());
         }
@@ -171,11 +171,6 @@ class HeterogenousProjection {
     }
     return -1;
   }
-
-//  template < class SourceDF, class TargetDF >
-//  void project(const SourceDF& /*source*/, const TargetDF& /*target*/)
-//  {
-//  }
 
 public:
   template < class SourceDFImp, class TargetDFImp >
