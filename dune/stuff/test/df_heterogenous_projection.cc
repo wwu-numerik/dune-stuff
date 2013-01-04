@@ -16,6 +16,7 @@
 #include <dune/stuff/function/expression.hh>
 #include <dune/stuff/fem/customprojection.hh>
 #include <dune/stuff/common/profiler.hh>
+#include <dune/stuff/common/ranges.hh>
 
 using namespace Dune;
 
@@ -58,22 +59,44 @@ struct Traits {
   typedef Fem::AdaptiveDiscreteFunction<DiscreteSpace> DiscreteFunction;
 };
 
-template<class GridPart, class DF>
-void vtk_out(const GridPart& part, const DF& df) {
-  Dune::VTKIO<GridPart> vtkWriter(part);
+template<class DF>
+void vtk_out(const DF& df) {
+  Dune::VTKIO<typename DF::GridPartType> vtkWriter(df.space().gridPart());
   const std::string vtkWriterFilename = std::string("df_hetereogenous_projection_data_") + df.name();
   vtkWriter.addVertexData(df);
   vtkWriter.write( vtkWriterFilename.c_str() );
 }
 
-void ptest(const int macro_elements = 4) {
+/** we use this class to "hide" the discrete function from the lagrange interpolation
+ * thereby forcing the usage of the global evaluate method we're actually interested in comparing
+ * with our het. search strategies
+ **/
+template <class DiscreteFunctionImp>
+class DiscretefunctionShroud : public Fem::Function<typename DiscreteFunctionImp::FunctionSpaceType,
+                                                    DiscretefunctionShroud<DiscreteFunctionImp> >
+{
+  const DiscreteFunctionImp& func_;
+  typedef Fem::Function<typename DiscreteFunctionImp::FunctionSpaceType,
+                        DiscretefunctionShroud<DiscreteFunctionImp> >
+    BaseType;
+public:
+  DiscretefunctionShroud(const DiscreteFunctionImp& func)
+    : func_(func)
+  {}
 
+  void evaluate ( const typename BaseType::DomainType &x, typename BaseType::RangeType &ret ) const
+  {
+    func_.evaluate(x, ret);
+  }
+};
+
+void ptest(const int macro_elements = 4, const int target_factor = 2) {
   typedef Traits<SourceGrid> SourceTraits;
   typedef Traits<TargetGrid> TargetTraits;
   auto source_cube = Stuff::Grid::Provider::Cube<SourceGrid>(0,1,macro_elements).grid();
-  auto target_cube = Stuff::Grid::Provider::Cube<TargetGrid>(0,1,macro_elements*2).grid();
+  auto target_cube = Stuff::Grid::Provider::Cube<TargetGrid>(0,1,macro_elements*target_factor).grid();
   source_cube->globalRefine(2);
-  target_cube->globalRefine(4);
+  target_cube->globalRefine(2*target_factor);
 
   std::cout << (boost::format("\n\nProjecting from %d source elements to %d target elements\n")
                    % source_cube->size(0) % target_cube->size(0)).str();
@@ -85,6 +108,7 @@ void ptest(const int macro_elements = 4) {
 
   typename SourceTraits::DiscreteFunction source_df("source", source_space);
   typename TargetTraits::DiscreteFunction target_df("target", target_space);
+  typename TargetTraits::DiscreteFunction fem_target_df("target", target_space);
 
   typedef Dune::Stuff::Function::Expression< SourceGrid::ctype,
       SourceGrid::dimension, SourceGrid::ctype, 1 > ScalarFunctionType;
@@ -94,21 +118,26 @@ void ptest(const int macro_elements = 4) {
   DSC_PROFILER.startTiming("DefaultSearchStrategy");
   Stuff::HeterogenousProjection<Stuff::DefaultSearchStrategy>::project(source_df, target_df);
   DSC_PROFILER.stopTiming("DefaultSearchStrategy");
+  vtk_out(source_df);
+  vtk_out(target_df);
   DSC_PROFILER.startTiming("NaiveSearchStrategy");
   Stuff::HeterogenousProjection<Stuff::NaiveSearchStrategy>::project(source_df, target_df);
   DSC_PROFILER.stopTiming("NaiveSearchStrategy");
-
-  vtk_out(source_part, source_df);
-  vtk_out(target_part, target_df);
+  DiscretefunctionShroud<typename SourceTraits::DiscreteFunction> shrouded_source_df(source_df);
+  DSC_PROFILER.startTiming("FemProjection");
+  LagrangeInterpolation<typename TargetTraits::DiscreteFunction>::apply(shrouded_source_df, fem_target_df);
+  DSC_PROFILER.stopTiming("FemProjection");
+  vtk_out(fem_target_df);
 }
 
 TEST(Projection, Cubes){
-  DSC_PROFILER.reset(3);
-  ptest(2);
-  DSC_PROFILER.nextRun();
-  ptest(4);
-  DSC_PROFILER.nextRun();
-  ptest(8);
+  const int rf = 2;
+  const int runs = 2;
+  DSC_PROFILER.reset(runs);
+  for (auto i : DSC::valueRange(runs)) {
+    ptest(std::pow(2, i+1), rf);
+    DSC_PROFILER.nextRun();
+  }
   DSC_PROFILER.outputTimingsAll();
 }
 
