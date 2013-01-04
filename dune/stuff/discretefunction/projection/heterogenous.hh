@@ -35,13 +35,47 @@
 namespace Dune {
 namespace Stuff {
 
-
 template <class ViewTraits>
-class NaiveSearchStrategy {
-
+class StrategyBase {
+public:
   typedef typename ViewTraits::template Codim<0>::Entity EntityType;
   typedef typename EntityType::Geometry::LocalCoordinate LocalCoordinateType;
   typedef typename EntityType::Geometry::GlobalCoordinate GlobalCoordinateType;
+
+protected:
+  template <template<int,int,class> class ForeignEntityImp, class ForeignGridImp>
+  static inline std::vector<GlobalCoordinateType>
+  getCorners(const Dune::Entity<EntityType::codimension, EntityType::dimension, ForeignGridImp, ForeignEntityImp>& other)
+  {
+    std::vector<GlobalCoordinateType> ret;
+    for(int i = 0;i < other.geometry().corners(); ++i) {
+      ret.emplace_back(other.geometry().corner(i));
+    }
+    return ret;
+  }
+
+  static inline
+  int countInside(const std::vector<GlobalCoordinateType>& corners,
+                  const EntityType& entity) {
+    int ret = 0;
+    const auto& geometry = entity.geometry();
+    const auto& refElement
+      = GenericReferenceElements< typename LocalCoordinateType::value_type,
+                                  LocalCoordinateType::dimension >::general(geometry.type());
+    for(const auto corner : corners) {
+      const auto xlocal = geometry.local(corner);
+      ret += refElement.checkInside(xlocal);
+    }
+    return ret;
+  }
+};
+
+template <class ViewTraits>
+class NaiveSearchStrategy : public StrategyBase<ViewTraits> {
+  typedef StrategyBase<ViewTraits> BaseType;
+  typedef GenericReferenceElements< typename  BaseType::LocalCoordinateType::value_type,
+                                              BaseType::LocalCoordinateType::dimension >
+        RefElementType;
 
 public:
   NaiveSearchStrategy(const Dune::GridView<ViewTraits>& gridview)
@@ -49,12 +83,24 @@ public:
   {}
 
   template <template<int,int,class> class ForeignEntityImp, class ForeignGridImp>
-  std::vector<typename EntityType::EntityPointer>
-  operator() (const Dune::Entity<EntityType::codimension, EntityType::dimension, ForeignGridImp, ForeignEntityImp>& other) const
+  std::vector<typename BaseType::EntityType::EntityPointer>
+  operator() (const Dune::Entity<BaseType::EntityType::codimension, BaseType::EntityType::dimension, ForeignGridImp, ForeignEntityImp>& other) const
   {
-    for(const auto& my_ent : range) {
+    std::vector<typename BaseType::EntityType::EntityPointer> ret;
+    for(const auto& entity : DSC::viewRange(gridview_)) {
+      const auto &geometry = entity.geometry();
 
+      const auto &refElement = RefElementType::general(geometry.type());
+
+      for(const auto& corner : BaseType::getCorners(other)) {
+        if(refElement.checkInside(geometry.local(corner)))
+        {
+          ret.emplace_back(entity);
+          break;
+        }
+      }
     }
+    return ret;
   }
 
 private:
@@ -62,24 +108,9 @@ private:
 };
 
 template <class ViewTraits>
-class DefaultSearchStrategy {
+class DefaultSearchStrategy : public StrategyBase<ViewTraits> {
+ typedef StrategyBase<ViewTraits> BaseType;
 
-  typedef typename ViewTraits::template Codim<0>::Entity EntityType;
-  typedef typename EntityType::Geometry::LocalCoordinate LocalCoordinateType;
-  typedef typename EntityType::Geometry::GlobalCoordinate GlobalCoordinateType;
-
-  int countInside(const std::vector<GlobalCoordinateType>& corners,
-                  const EntityType& entity) const {
-    int ret = 0;
-    const auto& geometry = entity.geometry();
-    const auto& refElement
-      = GenericReferenceElements< typename LocalCoordinateType::value_type, LocalCoordinateType::dimension >::general(geometry.type());
-    for(const auto corner : corners) {
-      const auto xlocal = geometry.local(corner);
-      ret += refElement.checkInside(xlocal);
-    }
-    return ret;
-  }
 
   const Dune::GridView<ViewTraits>& gridview_;
 
@@ -90,32 +121,22 @@ public:
   {}
 
   template <template<int,int,class> class ForeignEntityImp, class ForeignGridImp>
-  std::vector<typename EntityType::EntityPointer>
-  operator() (const Dune::Entity<EntityType::codimension, EntityType::dimension, ForeignGridImp, ForeignEntityImp>& other) const
+  std::vector<typename BaseType::EntityType::EntityPointer>
+  operator() (const Dune::Entity<BaseType::EntityType::codimension, BaseType::EntityType::dimension, ForeignGridImp, ForeignEntityImp>& other) const
   {
     auto range = DSC::viewRange(gridview_.grid().levelView(0));
     return process(other, range);
   }
 
 private:
-  template <template<int,int,class> class ForeignEntityImp, class ForeignGridImp>
-  static std::vector<GlobalCoordinateType>
-  getCorners(const Dune::Entity<EntityType::codimension, EntityType::dimension, ForeignGridImp, ForeignEntityImp>& other) {
-    std::vector<GlobalCoordinateType> ret;
-    for(int i = 0;i < other.geometry().corners(); ++i) {
-      auto c = other.geometry().corner(i);
-      ret.push_back(c);
-    }
-    return ret;
-  }
 
   template <template<int,int,class> class ForeignEntityImp, class ForeignGridImp, class RangeType>
-  std::vector<typename EntityType::EntityPointer>
-  process(const Dune::Entity<EntityType::codimension, EntityType::dimension, ForeignGridImp, ForeignEntityImp>& other,
+  std::vector<typename BaseType::EntityType::EntityPointer>
+  process(const Dune::Entity<BaseType::EntityType::codimension, BaseType::EntityType::dimension, ForeignGridImp, ForeignEntityImp>& other,
           const RangeType& range) const
   {
-    std::vector<typename EntityType::EntityPointer> ret;
-    auto corners = getCorners(other);
+    std::vector<typename BaseType::EntityType::EntityPointer> ret;
+    auto corners = BaseType::getCorners(other);
     for(const auto& my_ent : range) {
       const int my_level = my_ent.level();
       const int inside = countInside(corners, my_ent);
@@ -170,26 +191,22 @@ public:
   typedef typename DiscreteFunctionSpaceType::Traits::GridPartType GridPartType;
   typedef typename DiscreteFunctionSpaceType::Traits::IteratorType Iterator;
   typedef typename DiscreteFunctionSpaceType::BaseFunctionSetType BaseFunctionSetType ;
+  typedef typename TargetDFImp::DofType DofType;
   typedef typename TargetDFImp::GridType GridType;
-
+  typedef Dune::CachingQuadrature<GridPartType,0> QuadratureType;
+  typedef typename GridPartType::template Codim<0>::EntityType  EntityType ;
+  static const int dimRange = DiscreteFunctionSpaceType::dimRange;
+  typedef typename EntityType::Geometry::LocalCoordinate LocalCoordinateType;
+  typedef GenericReferenceElements< typename LocalCoordinateType::value_type,
+      LocalCoordinateType::dimension > RefElementType;
 
   const auto& space =  target.space();
-
-  // type of quadrature
-  typedef Dune::CachingQuadrature<GridPartType,0> QuadratureType;
-  // type of local mass matrix
-  typedef Dune::LocalMassMatrix< DiscreteFunctionSpaceType, QuadratureType > LocalMassMatrixType;
-
   const int quadOrd = (polOrd == -1) ? (2 * space.order()) : polOrd;
 
-  // create local mass matrix object
-  LocalMassMatrixType massMatrix(space, quadOrd);
-
-  // clear destination
-  target.clear();
-
-  // extract types from grid part
-  typedef typename GridPartType::template Codim<0>::EntityType  EntityType ;
+  // set all DoFs to infinity
+  const auto dend = target.dend();
+  for( auto dit = target.dbegin(); dit != dend; ++dit )
+    *dit = std::numeric_limits< DofType >::infinity();
 
   const Iterator endit = space.end();
   for(Iterator it = space.begin(); it != endit ; ++it)
@@ -201,45 +218,43 @@ public:
     const auto& geo = en.geometry();
 
     // get quadrature
-    QuadratureType quad(en, quadOrd);
+    const QuadratureType quad(en, quadOrd);
 
     // get local function of destination
-    LocalFuncType lf = target.localFunction(en);
+    LocalFuncType target_lf = target.localFunction(en);
 
     const int quadNop = quad.nop();
 
     typename DiscreteFunctionSpaceType :: RangeType value ;
-
+    int k = 0;
     for(int qP = 0; qP < quadNop ; ++qP)
     {
-      const auto point = quad.point(qP);
-      const double intel =
-           quad.weight(qP) * geo.integrationElement(point);
+      if( target_lf[ k ] == std::numeric_limits< DofType >::infinity() )
+      {
+        const auto point = quad.point(qP);
+        const auto global_point = geo.global(point);
 
-      const auto local_point = quad[ qP ];
-      const auto global_point = geo.global(point);
-      typedef typename EntityType::Geometry::LocalCoordinate LocalCoordinateType;
-      // evaluate source function
-      for(const auto& ent_p : possible_entities) {
-        const auto& p_geometry = ent_p->geometry();
-        const auto p_local = p_geometry.local(global_point);
-        const auto& p_refElement
-          = GenericReferenceElements< typename LocalCoordinateType::value_type, LocalCoordinateType::dimension >::general(p_geometry.type());
-        if (p_refElement.checkInside(p_local)) {
-          const auto p_local_function = source.localFunction(*ent_p);
-          p_local_function.evaluate(p_local, value );
-          value /= geo.volume();
-          break;
+        // evaluate source function
+        bool evaluated = false;
+        for(const auto& ent_p : possible_entities) {
+          const auto& p_geometry = ent_p->geometry();
+          const auto p_local = p_geometry.local(global_point);
+          const auto& p_refElement = RefElementType::general(p_geometry.type());
+          if (p_refElement.checkInside(p_local)) {
+            const auto p_local_function = source.localFunction(*ent_p);
+            p_local_function.evaluate(p_local, value );
+            for( int i = 0; i < dimRange; ++i, ++k )
+              target_lf[ k ] = value[ i ];
+            evaluated = true;
+            break;
+          }
         }
+        if(not evaluated)
+          DUNE_THROW(InvalidStateException, "did not eval in quad point");
       }
-
-      // apply weight
-      value *= intel;
-
-      // add to local function
-      lf.axpy( quad[ qP ], value );
+      else
+        k += dimRange;
     }
-//    massMatrix.applyInverse( en, lf );
   }
 }
 };
