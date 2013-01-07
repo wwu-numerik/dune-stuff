@@ -108,21 +108,22 @@ void ptest(const int macro_elements = 4, const int target_factor = 2) {
 
   typename SourceTraits::DiscreteFunction source_df("source", source_space);
   typename TargetTraits::DiscreteFunction target_df("target", target_space);
-  typename TargetTraits::DiscreteFunction fem_target_df("target", target_space);
+  typename TargetTraits::DiscreteFunction fem_target_df("fem_target", target_space);
 
   typedef Dune::Stuff::Function::Expression< SourceGrid::ctype,
       SourceGrid::dimension, SourceGrid::ctype, 1 > ScalarFunctionType;
   ScalarFunctionType scalar_f("x", "x[0] + x[1]");
   Dune::LagrangeInterpolation<typename SourceTraits::DiscreteFunction>::apply(scalar_f, source_df);
 
-  DSC_PROFILER.startTiming("DefaultSearchStrategy");
-  Stuff::HeterogenousProjection<Stuff::DefaultSearchStrategy>::project(source_df, target_df);
-  DSC_PROFILER.stopTiming("DefaultSearchStrategy");
-  vtk_out(source_df);
-  vtk_out(target_df);
+//  DSC_PROFILER.startTiming("DefaultSearchStrategy");
+//  Stuff::HeterogenousProjection<Stuff::DefaultSearchStrategy>::project(source_df, target_df);
+//  DSC_PROFILER.stopTiming("DefaultSearchStrategy");
+
   DSC_PROFILER.startTiming("NaiveSearchStrategy");
   Stuff::HeterogenousProjection<Stuff::NaiveSearchStrategy>::project(source_df, target_df);
   DSC_PROFILER.stopTiming("NaiveSearchStrategy");
+  vtk_out(source_df);
+  vtk_out(target_df);
   DiscretefunctionShroud<typename SourceTraits::DiscreteFunction> shrouded_source_df(source_df);
   DSC_PROFILER.startTiming("FemProjection");
   LagrangeInterpolation<typename TargetTraits::DiscreteFunction>::apply(shrouded_source_df, fem_target_df);
@@ -132,7 +133,7 @@ void ptest(const int macro_elements = 4, const int target_factor = 2) {
 
 TEST(Projection, Cubes){
   const int rf = 2;
-  const int runs = 2;
+  const int runs = 3;
   DSC_PROFILER.reset(runs);
   for (auto i : DSC::valueRange(runs)) {
     ptest(std::pow(2, i+1), rf);
@@ -147,8 +148,16 @@ TEST(Projection, Cubes){
 
 int main(int argc, char** argv)
 {
-  testing::InitGoogleTest(&argc, argv);
+//  testing::InitGoogleTest(&argc, argv);
   Dune::MPIManager::initialize(argc,argv);
 
-  return RUN_ALL_TESTS();
+//  return RUN_ALL_TESTS();
+  const int rf = 1;
+  const int runs = 6;
+  DSC_PROFILER.reset(runs);
+  for (auto i : DSC::valueRange(runs)) {
+    ptest(std::pow(2, i+1), rf);
+    DSC_PROFILER.nextRun();
+  }
+  DSC_PROFILER.outputTimingsAll();
 }

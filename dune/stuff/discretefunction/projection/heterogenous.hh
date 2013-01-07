@@ -42,33 +42,6 @@ public:
   typedef typename EntityType::Geometry::LocalCoordinate LocalCoordinateType;
   typedef typename EntityType::Geometry::GlobalCoordinate GlobalCoordinateType;
   typedef std::vector<typename EntityType::EntityPointer> EntityPointerVector;
-
-protected:
-  template <template<int,int,class> class ForeignEntityImp, class ForeignGridImp>
-  static inline std::vector<GlobalCoordinateType>
-  getCorners(const Dune::Entity<EntityType::codimension, EntityType::dimension, ForeignGridImp, ForeignEntityImp>& other)
-  {
-    std::vector<GlobalCoordinateType> ret;
-    for(int i = 0;i < other.geometry().corners(); ++i) {
-      ret.emplace_back(other.geometry().corner(i));
-    }
-    return ret;
-  }
-
-  static inline
-  int countInside(const std::vector<GlobalCoordinateType>& corners,
-                  const EntityType& entity) {
-    int ret = 0;
-    const auto& geometry = entity.geometry();
-    const auto& refElement
-      = GenericReferenceElements< typename LocalCoordinateType::value_type,
-                                  LocalCoordinateType::dimension >::general(geometry.type());
-    for(const auto corner : corners) {
-      const auto xlocal = geometry.local(corner);
-      ret += refElement.checkInside(xlocal);
-    }
-    return ret;
-  }
 };
 
 template <class ViewTraits>
@@ -77,33 +50,67 @@ class NaiveSearchStrategy : public StrategyBase<ViewTraits> {
   typedef GenericReferenceElements< typename  BaseType::LocalCoordinateType::value_type,
                                               BaseType::LocalCoordinateType::dimension >
         RefElementType;
+  typedef typename Dune::GridView<ViewTraits>::template Codim< 0 >::Iterator IteratorType;
 
+
+  inline bool check_add(const typename BaseType::EntityType& entity,
+                        const typename BaseType::GlobalCoordinateType& point,
+                        typename BaseType::EntityPointerVector& ret) const {
+    const auto& geometry = entity.geometry();
+    const auto& refElement = RefElementType::general(geometry.type());
+    if(refElement.checkInside(geometry.local(point)))
+    {
+      ret.emplace_back(entity);
+      return true;
+    }
+    return false;
+  }
 public:
   NaiveSearchStrategy(const Dune::GridView<ViewTraits>& gridview)
     : gridview_(gridview)
+    , it_last_(gridview_.template begin< 0 >())
   {}
 
-  template <template<int,int,class> class ForeignEntityImp, class ForeignGridImp>
-  typename BaseType::EntityPointerVector
-  operator() (const Dune::Entity<BaseType::EntityType::codimension, BaseType::EntityType::dimension, ForeignGridImp, ForeignEntityImp>& other) const
+  template <class QuadpointContainerType>
+  typename BaseType::EntityPointerVector operator() (const QuadpointContainerType& quad_points)
   {
+    const auto max_size = quad_points.size();
+
+    const IteratorType begin = gridview_.template begin< 0 >();
+    const IteratorType end = gridview_.template end< 0 >();
     std::vector<typename BaseType::EntityType::EntityPointer> ret;
-    for(const auto& entity : DSC::viewRange(gridview_)) {
-      const auto& geometry = entity.geometry();
-      const auto& refElement = RefElementType::general(geometry.type());
-      for(const auto& corner : BaseType::getCorners(other)) {
-        if(refElement.checkInside(geometry.local(corner)))
-        {
-          ret.emplace_back(entity);
+    for(const auto& point : quad_points)
+    {
+      IteratorType it_current = it_last_;
+      bool it_reset = true;
+      for(; it_current != end && ret.size() < max_size; ++it_current)
+      {
+        if(check_add(*it_current, point, ret)) {
+          it_reset = false;
+          it_last_ = it_current;
           break;
         }
       }
+      if(!it_reset)
+        continue;
+      for(it_current = begin;
+          it_current != it_last_ && ret.size() < max_size;
+          ++it_current)
+      {
+        if(check_add(*it_current, point, ret)) {
+          it_reset = false;
+          it_last_ = it_current;
+          break;
+        }
+      }
+      assert(!it_reset);
     }
     return ret;
   }
 
 private:
   const Dune::GridView<ViewTraits>& gridview_;
+  IteratorType it_last_;
 };
 
 template <class ViewTraits>
@@ -119,38 +126,45 @@ public:
     , start_level_(0)
   {}
 
-  template <template<int,int,class> class ForeignEntityImp, class ForeignGridImp>
+  template <class QuadpointContainerType>
   typename BaseType::EntityPointerVector
-  operator() (const Dune::Entity<BaseType::EntityType::codimension, BaseType::EntityType::dimension, ForeignGridImp, ForeignEntityImp>& other) const
+  operator() (const QuadpointContainerType& quad_points) const
   {
     auto level = std::min(gridview_.grid().maxLevel(), start_level_);
     auto range = DSC::viewRange(gridview_.grid().levelView(level));
-    return process(other, range);
+    return process(quad_points, range);
   }
 
 private:
 
-  template <template<int,int,class> class ForeignEntityImp, class ForeignGridImp, class RangeType>
+  template <class QuadpointContainerType, class RangeType>
   std::vector<typename BaseType::EntityType::EntityPointer>
-  process(const Dune::Entity<BaseType::EntityType::codimension, BaseType::EntityType::dimension, ForeignGridImp, ForeignEntityImp>& other,
+  process(const QuadpointContainerType& quad_points,
           const RangeType& range) const
   {
+    typedef GenericReferenceElements< typename BaseType::LocalCoordinateType::value_type,
+        BaseType::LocalCoordinateType::dimension > RefElementType;
     std::vector<typename BaseType::EntityType::EntityPointer> ret;
-    auto corners = BaseType::getCorners(other);
+
     for(const auto& my_ent : range) {
       const int my_level = my_ent.level();
-      const int inside = countInside(corners, my_ent);
-      if (inside > 0) {
-        //if I cannot descend further add this entity even if it's not my view
-        if(gridview_.grid().maxLevel() <= my_level || gridview_.contains(my_ent)) {
-          ret.emplace_back(my_ent);
-        }
-        else {
-          const auto h_end = my_ent.hend(my_level+1);
-          const auto h_begin = my_ent.hbegin(my_level+1);
-          const auto h_range = boost::make_iterator_range(h_begin, h_end);
-          const auto kids = process(other, h_range);
-          ret.insert(ret.end(), kids.begin(), kids.end());
+      const auto& geometry = my_ent.geometry();
+      const auto& refElement = RefElementType::general(geometry.type());
+      for(const auto& point : quad_points)
+      {
+        if(refElement.checkInside(geometry.local(point)))
+        {
+          //if I cannot descend further add this entity even if it's not my view
+          if(gridview_.grid().maxLevel() <= my_level || gridview_.contains(my_ent)) {
+            ret.emplace_back(my_ent);
+          }
+          else {
+            const auto h_end = my_ent.hend(my_level+1);
+            const auto h_begin = my_ent.hbegin(my_level+1);
+            const auto h_range = boost::make_iterator_range(h_begin, h_end);
+            const auto kids = process(QuadpointContainerType(1, point), h_range);
+            ret.insert(ret.end(), kids.begin(), kids.end());
+          }
         }
       }
     }
@@ -161,22 +175,10 @@ private:
 template <template <class> class SearchStrategy = DefaultSearchStrategy>
 class HeterogenousProjection {
 
-  template <class T, int I, class EntityType>
-  int selectEntity(const Dune::FieldVector<T,I>& point, const std::vector<EntityType>& entities)
-  {
-    for(int i = 0; i < entities.size(); ++i) {
-      const auto& entity = entities[i];
-      if(entity.geometry().checkInside(point))
-        return i;
-    }
-    return -1;
-  }
-
 public:
   template < class SourceDFImp, class TargetDFImp >
   static void project(const Dune::DiscreteFunctionInterface<SourceDFImp>& source,
-                      Dune::DiscreteFunctionInterface<TargetDFImp>& target,
-                      const int polOrd = -1)
+                      Dune::DiscreteFunctionInterface<TargetDFImp>& target)
 {
   typedef typename SourceDFImp::GridType::LeafGridView SourceLeafGridView;
   SearchStrategy<typename SourceLeafGridView::Traits> search(source.gridPart().grid().leafView());
@@ -194,9 +196,10 @@ public:
   typedef typename EntityType::Geometry::LocalCoordinate LocalCoordinateType;
   typedef GenericReferenceElements< typename LocalCoordinateType::value_type,
       LocalCoordinateType::dimension > RefElementType;
-
+  //! type of Lagrange point set
+  typedef typename TargetDFImp::DiscreteFunctionSpaceType::LagrangePointSetType
+    LagrangePointSetType;
   const auto& space =  target.space();
-  const int quadOrd = (polOrd == -1) ? (2 * space.order()) : polOrd;
 
   // set all DoFs to infinity
   const auto dend = target.dend();
@@ -208,44 +211,40 @@ public:
   {
     // get entity
     const EntityType& en = *it;
-    const auto possible_entities = search(en);
+
     // get geometry
     const auto& geo = en.geometry();
-
-    // get quadrature
-    const QuadratureType quad(en, quadOrd);
 
     // get local function of destination
     LocalFuncType target_lf = target.localFunction(en);
 
-    const int quadNop = quad.nop();
+    const LagrangePointSetType& lagrangePointSet = space.lagrangePointSet(*it);
+    const int quadNop = lagrangePointSet.nop();
 
-    typename DiscreteFunctionSpaceType :: RangeType value ;
+    typename DiscreteFunctionSpaceType::RangeType value;
+
+    std::vector<typename DiscreteFunctionSpaceType::DomainType> global_quads(quadNop);
+    for(int qP = 0; qP < quadNop ; ++qP) {
+      global_quads[qP] = geo.global(lagrangePointSet.point(qP));
+    }
+    const auto possible_entities = search(global_quads);
+    assert(possible_entities.size() == global_quads.size());
+
     int k = 0;
     for(int qP = 0; qP < quadNop ; ++qP)
     {
-      if( target_lf[ k ] == std::numeric_limits< DofType >::infinity() )
+      if(target_lf[ k ] == std::numeric_limits< DofType >::infinity())
       {
-        const auto point = quad.point(qP);
-        const auto global_point = geo.global(point);
+        const auto& global_point = global_quads[qP];
 
         // evaluate source function
-        bool evaluated = false;
-        for(const auto& ent_p : possible_entities) {
-          const auto& p_geometry = ent_p->geometry();
-          const auto p_local = p_geometry.local(global_point);
-          const auto& p_refElement = RefElementType::general(p_geometry.type());
-          if (p_refElement.checkInside(p_local)) {
-            const auto p_local_function = source.localFunction(*ent_p);
-            p_local_function.evaluate(p_local, value );
-            for( int i = 0; i < dimRange; ++i, ++k )
-              target_lf[ k ] = value[ i ];
-            evaluated = true;
-            break;
-          }
-        }
-        if(not evaluated)
-          DUNE_THROW(InvalidStateException, "did not eval in quad point");
+        const auto ent_p = possible_entities[qP];
+        const auto& p_geometry = ent_p->geometry();
+        const auto& p_local = p_geometry.local(global_point);
+        const auto& p_local_function = source.localFunction(*ent_p);
+        p_local_function.evaluate(p_local, value);
+        for(int i = 0; i < dimRange; ++i, ++k)
+          target_lf[k] = value[i];
       }
       else
         k += dimRange;
