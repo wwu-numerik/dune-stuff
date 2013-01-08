@@ -8,10 +8,10 @@
 #endif // HAVE_CMAKE_CONFIG
 
 // dune-geometry
-//#if HAVE_DUNE_GEOMETRY
+#if HAVE_DUNE_GEOMETRY
 #include <dune/geometry/quadraturerules.hh>
 
-//#if HAVE_DUNE_DETAILED_DISCRETIZATIONS
+#if HAVE_DUNE_DETAILED_DISCRETIZATIONS
 // dune-grid-multiscale
 #include <dune/grid/part/interface.hh>
 
@@ -19,7 +19,7 @@
 #include <dune/detailed/discretizations/discretefunction/local.hh>
 #include <dune/detailed/discretizations/discretefunction/default.hh>
 #include <dune/detailed/discretizations/discretefunction/multiscale.hh>
-//#endif // HAVE_DUNE_DETAILED_DISCRETIZATIONS
+
 
 // dune-stuff
 #include <dune/stuff/function/interface.hh>
@@ -27,11 +27,11 @@
 namespace Dune {
 namespace Stuff {
 namespace DiscreteFunction {
-namespace Norm {
-
+class Norm {
+public:
 //#if HAVE_DUNE_DETAILED_DISCRETIZATIONS
 template< class GridPartTraits, class DomainFieldType, int dimDomain, class RangeFieldType, int dimRange >
-RangeFieldType L2_squared(const Dune::grid::Part::Interface< GridPartTraits >& gridPart,
+static RangeFieldType L2_squared(const Dune::grid::Part::Interface< GridPartTraits >& gridPart,
                                    const Dune::Stuff::Function::Interface< DomainFieldType, dimDomain, RangeFieldType, dimRange >& function,
                                    const unsigned int functionOrder)
 {
@@ -75,7 +75,7 @@ RangeFieldType L2_squared(const Dune::grid::Part::Interface< GridPartTraits >& g
 } // ... L2_squared(...)
 
 template< class GridPartTraits, class DomainFieldType, int dimDomain, class RangeFieldType, int dimRange >
-RangeFieldType L2(const Dune::grid::Part::Interface< GridPartTraits >& gridPart,
+static RangeFieldType L2(const Dune::grid::Part::Interface< GridPartTraits >& gridPart,
                   const Dune::Stuff::Function::Interface< DomainFieldType, dimDomain, RangeFieldType, dimRange >& function,
                   const unsigned int functionOrder)
 {
@@ -83,7 +83,7 @@ RangeFieldType L2(const Dune::grid::Part::Interface< GridPartTraits >& gridPart,
 }
 
 template< class DiscreteFunctionType >
-typename DiscreteFunctionType::RangeFieldType L2_squared(const Dune::Detailed::Discretizations::DiscreteFunction::LocalConst< DiscreteFunctionType >& localFunction)
+static DiscreteFunctionType::RangeFieldType L2_squared(const Dune::Detailed::Discretizations::DiscreteFunction::LocalConst< DiscreteFunctionType >& localFunction)
 {
   // preparations
   typedef typename DiscreteFunctionType::DomainType DomainType;
@@ -119,13 +119,13 @@ typename DiscreteFunctionType::RangeFieldType L2_squared(const Dune::Detailed::D
 } // ... L2_squared(...)
 
 template< class DiscreteFunctionType >
-typename DiscreteFunctionType::RangeFieldType L2(const Dune::Detailed::Discretizations::DiscreteFunction::LocalConst< DiscreteFunctionType >& localFunction)
+static typename DiscreteFunctionType::RangeFieldType L2(const Dune::Detailed::Discretizations::DiscreteFunction::LocalConst< DiscreteFunctionType >& localFunction)
 {
   return std::sqrt(L2_squared(localFunction));
 }
 
 template< class DiscreteFunctionSpaceType, class VectorBackendType >
-typename DiscreteFunctionSpaceType::RangeFieldType L2_squared(const Dune::Detailed::Discretizations::DiscreteFunction::Default< DiscreteFunctionSpaceType, VectorBackendType >& discreteFunction)
+static typename DiscreteFunctionSpaceType::RangeFieldType L2_squared(const Dune::Detailed::Discretizations::DiscreteFunction::Default< DiscreteFunctionSpaceType, VectorBackendType >& discreteFunction)
 {
   // preparations
   typedef typename DiscreteFunctionSpaceType::RangeFieldType RangeFieldType;
@@ -147,13 +147,13 @@ typename DiscreteFunctionSpaceType::RangeFieldType L2_squared(const Dune::Detail
 } // ... L2_squared(...)
 
 template< class DiscreteFunctionSpaceType, class VectorBackendType >
-typename DiscreteFunctionSpaceType::RangeFieldType L2(const Dune::Detailed::Discretizations::DiscreteFunction::Default< DiscreteFunctionSpaceType, VectorBackendType >& discreteFunction)
+static typename DiscreteFunctionSpaceType::RangeFieldType L2(const Dune::Detailed::Discretizations::DiscreteFunction::Default< DiscreteFunctionSpaceType, VectorBackendType >& discreteFunction)
 {
   return std::sqrt(L2_squared(discreteFunction));
 }
 
 template< class MsGridType, class LocalDiscreteFunctionType >
-typename LocalDiscreteFunctionType::RangeFieldType L2_squared(const Dune::Detailed::Discretizations::DiscreteFunction::Multiscale< MsGridType, LocalDiscreteFunctionType >& multiscaleDiscreteFunction)
+static typename LocalDiscreteFunctionType::RangeFieldType L2_squared(const Dune::Detailed::Discretizations::DiscreteFunction::Multiscale< MsGridType, LocalDiscreteFunctionType >& multiscaleDiscreteFunction)
 {
   // preparations
   typedef typename LocalDiscreteFunctionType::RangeFieldType RangeFieldType;
@@ -175,13 +175,13 @@ typename LocalDiscreteFunctionType::RangeFieldType L2_squared(const Dune::Detail
 } // ... L2_squared(...)
 
 template< class MsGridType, class LocalDiscreteFunctionType >
-typename LocalDiscreteFunctionType::RangeFieldType L2(const Dune::Detailed::Discretizations::DiscreteFunction::Multiscale< MsGridType, LocalDiscreteFunctionType >& multiscaleDiscreteFunction)
+static typename LocalDiscreteFunctionType::RangeFieldType L2(const Dune::Detailed::Discretizations::DiscreteFunction::Multiscale< MsGridType, LocalDiscreteFunctionType >& multiscaleDiscreteFunction)
 {
   return std::sqrt(L2_squared(multiscaleDiscreteFunction));
 }
 
 template< class DomainFieldType, int dimDomain, class RangeFieldType, int dimRange, class DiscreteFunctionSpaceType, class VectorBackendType >
-RangeFieldType L2_difference_squared(const Dune::Stuff::Function::Interface< DomainFieldType, dimDomain, RangeFieldType, dimRange >& function,
+static RangeFieldType L2_difference_squared(const Dune::Stuff::Function::Interface< DomainFieldType, dimDomain, RangeFieldType, dimRange >& function,
                                      const unsigned int functionOrder,
                                      const Dune::Detailed::Discretizations::DiscreteFunction::Default< DiscreteFunctionSpaceType, VectorBackendType >& discreteFunction)
 {
@@ -235,7 +235,7 @@ RangeFieldType L2_difference_squared(const Dune::Stuff::Function::Interface< Dom
 } // ... L2_difference_squared(...)
 
 template< class DomainFieldType, int dimDomain, class RangeFieldType, int dimRange, class DiscreteFunctionSpaceType, class VectorBackendType >
-RangeFieldType L2_difference(const Dune::Stuff::Function::Interface< DomainFieldType, dimDomain, RangeFieldType, dimRange >& function,
+static RangeFieldType L2_difference(const Dune::Stuff::Function::Interface< DomainFieldType, dimDomain, RangeFieldType, dimRange >& function,
                              const unsigned int functionOrder,
                              const Dune::Detailed::Discretizations::DiscreteFunction::Default< DiscreteFunctionSpaceType, VectorBackendType >& discreteFunction)
 {
@@ -243,7 +243,7 @@ RangeFieldType L2_difference(const Dune::Stuff::Function::Interface< DomainField
 }
 
 template< class DomainFieldType, int dimDomain, class RangeFieldType, int dimRange, class MsGridType, class LocalDiscreteFunctionType >
-RangeFieldType L2_difference_squared(const Dune::Stuff::Function::Interface< DomainFieldType, dimDomain, RangeFieldType, dimRange >& function,
+static RangeFieldType L2_difference_squared(const Dune::Stuff::Function::Interface< DomainFieldType, dimDomain, RangeFieldType, dimRange >& function,
                                      const unsigned int functionOrder,
                                      const Dune::Detailed::Discretizations::DiscreteFunction::Multiscale< MsGridType, LocalDiscreteFunctionType >& multiscaleDiscreteFunction)
 {
@@ -297,7 +297,7 @@ RangeFieldType L2_difference_squared(const Dune::Stuff::Function::Interface< Dom
 } // ... L2_difference_squared(...)
 
 template< class DomainFieldType, int dimDomain, class RangeFieldType, int dimRange, class MsGridType, class LocalDiscreteFunctionType >
-RangeFieldType L2_difference(const Dune::Stuff::Function::Interface< DomainFieldType, dimDomain, RangeFieldType, dimRange >& function,
+static RangeFieldType L2_difference(const Dune::Stuff::Function::Interface< DomainFieldType, dimDomain, RangeFieldType, dimRange >& function,
                              const unsigned int functionOrder,
                              const Dune::Detailed::Discretizations::DiscreteFunction::Multiscale< MsGridType, LocalDiscreteFunctionType >& multiscaleDiscreteFunction)
 {
@@ -305,7 +305,7 @@ RangeFieldType L2_difference(const Dune::Stuff::Function::Interface< DomainField
 }
 
 template< class DiscreteFunctionType_1, class DiscreteFunctionType_2 >
-typename DiscreteFunctionType_1::RangeFieldType L2_difference_squared(const Dune::Detailed::Discretizations::DiscreteFunction::LocalConst< DiscreteFunctionType_1 >& localFunction_1,
+static typename DiscreteFunctionType_1::RangeFieldType L2_difference_squared(const Dune::Detailed::Discretizations::DiscreteFunction::LocalConst< DiscreteFunctionType_1 >& localFunction_1,
                                                                       const Dune::Detailed::Discretizations::DiscreteFunction::LocalConst< DiscreteFunctionType_2 >& localFunction_2)
 {
   // preparations
@@ -348,14 +348,14 @@ typename DiscreteFunctionType_1::RangeFieldType L2_difference_squared(const Dune
 } // ... L2_difference_squared(...)
 
 template< class DiscreteFunctionType_1, class DiscreteFunctionType_2 >
-typename DiscreteFunctionType_1::RangeFieldType L2_difference(const Dune::Detailed::Discretizations::DiscreteFunction::LocalConst< DiscreteFunctionType_1 >& localFunction_1,
+static typename DiscreteFunctionType_1::RangeFieldType L2_difference(const Dune::Detailed::Discretizations::DiscreteFunction::LocalConst< DiscreteFunctionType_1 >& localFunction_1,
                                                               const Dune::Detailed::Discretizations::DiscreteFunction::LocalConst< DiscreteFunctionType_2 >& localFunction_2)
 {
   return std::sqrt(L2_difference_squared(localFunction_1, localFunction_2));
 }
 
 template< class DiscreteFunctionSpaceType, class VectorBackendType, class MsGridType, class LocalDiscreteFunctionType >
-typename DiscreteFunctionSpaceType::RangeFieldType L2_difference_squared(const Dune::Detailed::Discretizations::DiscreteFunction::Default< DiscreteFunctionSpaceType, VectorBackendType >& discreteFunction,
+static typename DiscreteFunctionSpaceType::RangeFieldType L2_difference_squared(const Dune::Detailed::Discretizations::DiscreteFunction::Default< DiscreteFunctionSpaceType, VectorBackendType >& discreteFunction,
                                                                          const Dune::Detailed::Discretizations::DiscreteFunction::Multiscale< MsGridType, LocalDiscreteFunctionType >& multiscaleDiscreteFunction)
 {
 //  // test for "equal" grid parts
@@ -383,14 +383,14 @@ typename DiscreteFunctionSpaceType::RangeFieldType L2_difference_squared(const D
 } // ... L2_difference_squared(...)
 
 template< class DiscreteFunctionSpaceType, class VectorBackendType, class MsGridType, class LocalDiscreteFunctionType >
-typename DiscreteFunctionSpaceType::RangeFieldType L2_difference(const Dune::Detailed::Discretizations::DiscreteFunction::Default< DiscreteFunctionSpaceType, VectorBackendType >& discreteFunction,
+static typename DiscreteFunctionSpaceType::RangeFieldType L2_difference(const Dune::Detailed::Discretizations::DiscreteFunction::Default< DiscreteFunctionSpaceType, VectorBackendType >& discreteFunction,
                                                                  const Dune::Detailed::Discretizations::DiscreteFunction::Multiscale< MsGridType, LocalDiscreteFunctionType >& multiscaleDiscreteFunction)
 {
   return std::sqrt(L2_difference_squared(discreteFunction, multiscaleDiscreteFunction));
 }
 
 template< class DiscreteFunctionType >
-typename DiscreteFunctionType::RangeFieldType h1_squared(const Dune::Detailed::Discretizations::DiscreteFunction::LocalConst< DiscreteFunctionType >& localFunction)
+static typename DiscreteFunctionType::RangeFieldType h1_squared(const Dune::Detailed::Discretizations::DiscreteFunction::LocalConst< DiscreteFunctionType >& localFunction)
 {
   // preparations
   typedef typename DiscreteFunctionType::DomainType DomainType;
@@ -429,13 +429,13 @@ typename DiscreteFunctionType::RangeFieldType h1_squared(const Dune::Detailed::D
 } // ... h1_squared(...)
 
 template< class DiscreteFunctionType >
-typename DiscreteFunctionType::RangeFieldType h1(const Dune::Detailed::Discretizations::DiscreteFunction::LocalConst< DiscreteFunctionType >& localFunction)
+static typename DiscreteFunctionType::RangeFieldType h1(const Dune::Detailed::Discretizations::DiscreteFunction::LocalConst< DiscreteFunctionType >& localFunction)
 {
   return std::sqrt(h1_squared(localFunction));
 }
 
 template< class DiscreteFunctionSpaceType, class VectorBackendType >
-typename DiscreteFunctionSpaceType::RangeFieldType h1_squared(const Dune::Detailed::Discretizations::DiscreteFunction::Default< DiscreteFunctionSpaceType, VectorBackendType >& discreteFunction)
+static typename DiscreteFunctionSpaceType::RangeFieldType h1_squared(const Dune::Detailed::Discretizations::DiscreteFunction::Default< DiscreteFunctionSpaceType, VectorBackendType >& discreteFunction)
 {
   // preparations
   typedef typename DiscreteFunctionSpaceType::RangeFieldType RangeFieldType;
@@ -457,13 +457,13 @@ typename DiscreteFunctionSpaceType::RangeFieldType h1_squared(const Dune::Detail
 } // ... h1_squared(...)
 
 template< class DiscreteFunctionSpaceType, class VectorBackendType >
-typename DiscreteFunctionSpaceType::RangeFieldType h1(const Dune::Detailed::Discretizations::DiscreteFunction::Default< DiscreteFunctionSpaceType, VectorBackendType >& discreteFunction)
+static typename DiscreteFunctionSpaceType::RangeFieldType h1(const Dune::Detailed::Discretizations::DiscreteFunction::Default< DiscreteFunctionSpaceType, VectorBackendType >& discreteFunction)
 {
   return std::sqrt(h1_squared(discreteFunction));
 }
 
 template< class MsGridType, class LocalDiscreteFunctionType >
-typename LocalDiscreteFunctionType::RangeFieldType h1_squared(const Dune::Detailed::Discretizations::DiscreteFunction::Multiscale< MsGridType, LocalDiscreteFunctionType >& multiscaleDiscreteFunction)
+static typename LocalDiscreteFunctionType::RangeFieldType h1_squared(const Dune::Detailed::Discretizations::DiscreteFunction::Multiscale< MsGridType, LocalDiscreteFunctionType >& multiscaleDiscreteFunction)
 {
   // preparations
   typedef typename LocalDiscreteFunctionType::RangeFieldType RangeFieldType;
@@ -485,13 +485,13 @@ typename LocalDiscreteFunctionType::RangeFieldType h1_squared(const Dune::Detail
 } // ... h1_squared(...)
 
 template< class MsGridType, class LocalDiscreteFunctionType >
-typename LocalDiscreteFunctionType::RangeFieldType h1(const Dune::Detailed::Discretizations::DiscreteFunction::Multiscale< MsGridType, LocalDiscreteFunctionType >& multiscaleDiscreteFunction)
+static typename LocalDiscreteFunctionType::RangeFieldType h1(const Dune::Detailed::Discretizations::DiscreteFunction::Multiscale< MsGridType, LocalDiscreteFunctionType >& multiscaleDiscreteFunction)
 {
   return std::sqrt(h1_squared(multiscaleDiscreteFunction));
 }
 
 template< class DiscreteFunctionType_1, class DiscreteFunctionType_2 >
-typename DiscreteFunctionType_1::RangeFieldType h1_difference_squared(const Dune::Detailed::Discretizations::DiscreteFunction::LocalConst< DiscreteFunctionType_1 >& localFunction_1,
+static typename DiscreteFunctionType_1::RangeFieldType h1_difference_squared(const Dune::Detailed::Discretizations::DiscreteFunction::LocalConst< DiscreteFunctionType_1 >& localFunction_1,
                                                                       const Dune::Detailed::Discretizations::DiscreteFunction::LocalConst< DiscreteFunctionType_2 >& localFunction_2)
 {
   // preparations
@@ -536,14 +536,14 @@ typename DiscreteFunctionType_1::RangeFieldType h1_difference_squared(const Dune
 } // ... L2_difference_squared(...)
 
 template< class DiscreteFunctionType_1, class DiscreteFunctionType_2 >
-typename DiscreteFunctionType_1::RangeFieldType h1_difference(const Dune::Detailed::Discretizations::DiscreteFunction::LocalConst< DiscreteFunctionType_1 >& localFunction_1,
+static typename DiscreteFunctionType_1::RangeFieldType h1_difference(const Dune::Detailed::Discretizations::DiscreteFunction::LocalConst< DiscreteFunctionType_1 >& localFunction_1,
                                                               const Dune::Detailed::Discretizations::DiscreteFunction::LocalConst< DiscreteFunctionType_2 >& localFunction_2)
 {
   return std::sqrt(h1_difference_squared(localFunction_1, localFunction_2));
 }
 
 template< class DiscreteFunctionSpaceType, class VectorBackendType, class MsGridType, class LocalDiscreteFunctionType >
-typename DiscreteFunctionSpaceType::RangeFieldType h1_difference_squared(const Dune::Detailed::Discretizations::DiscreteFunction::Default< DiscreteFunctionSpaceType, VectorBackendType >& discreteFunction,
+static typename DiscreteFunctionSpaceType::RangeFieldType h1_difference_squared(const Dune::Detailed::Discretizations::DiscreteFunction::Default< DiscreteFunctionSpaceType, VectorBackendType >& discreteFunction,
                                                                          const Dune::Detailed::Discretizations::DiscreteFunction::Multiscale< MsGridType, LocalDiscreteFunctionType >& multiscaleDiscreteFunction)
 {
 //  // test for "equal" grid parts
@@ -571,18 +571,18 @@ typename DiscreteFunctionSpaceType::RangeFieldType h1_difference_squared(const D
 } // ... h1_difference_squared(...)
 
 template< class DiscreteFunctionSpaceType, class VectorBackendType, class MsGridType, class LocalDiscreteFunctionType >
-typename DiscreteFunctionSpaceType::RangeFieldType h1_difference(const Dune::Detailed::Discretizations::DiscreteFunction::Default< DiscreteFunctionSpaceType, VectorBackendType >& discreteFunction,
+static typename DiscreteFunctionSpaceType::RangeFieldType h1_difference(const Dune::Detailed::Discretizations::DiscreteFunction::Default< DiscreteFunctionSpaceType, VectorBackendType >& discreteFunction,
                                                                  const Dune::Detailed::Discretizations::DiscreteFunction::Multiscale< MsGridType, LocalDiscreteFunctionType >& multiscaleDiscreteFunction)
 {
   return std::sqrt(h1_difference_squared(discreteFunction, multiscaleDiscreteFunction));
 }
-//#endif // HAVE_DUNE_DETAILED_DISCRETIZATIONS
 
-} // namespace Norm
+}; // class Norm
+
 } // namespace DiscreteFunction
 } // namespace Stuff
 } // namespace Dune
 
-//#endif // HAVE_DUNE_GEOMETRY
-
+#endif // HAVE_DUNE_GEOMETRY
+#endif // HAVE_DUNE_DETAILED_DISCRETIZATIONS
 #endif // DUNE_STUFF_DISCRETEFUNCTION_NORM_HH
