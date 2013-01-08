@@ -45,7 +45,7 @@ public:
 };
 
 template <class ViewTraits>
-class NaiveSearchStrategy : public StrategyBase<ViewTraits> {
+class InlevelSearchStrategy : public StrategyBase<ViewTraits> {
   typedef StrategyBase<ViewTraits> BaseType;
   typedef GenericReferenceElements< typename  BaseType::LocalCoordinateType::value_type,
                                               BaseType::LocalCoordinateType::dimension >
@@ -66,7 +66,7 @@ class NaiveSearchStrategy : public StrategyBase<ViewTraits> {
     return false;
   }
 public:
-  NaiveSearchStrategy(const Dune::GridView<ViewTraits>& gridview)
+  InlevelSearchStrategy(const Dune::GridView<ViewTraits>& gridview)
     : gridview_(gridview)
     , it_last_(gridview_.template begin< 0 >())
   {}
@@ -114,14 +114,14 @@ private:
 };
 
 template <class ViewTraits>
-class DefaultSearchStrategy : public StrategyBase<ViewTraits> {
+class HierarchicSearchStrategy : public StrategyBase<ViewTraits> {
   typedef StrategyBase<ViewTraits> BaseType;
 
   const Dune::GridView<ViewTraits>& gridview_;
   const int start_level_;
 
 public:
-  DefaultSearchStrategy(const Dune::GridView<ViewTraits>& gridview)
+  HierarchicSearchStrategy(const Dune::GridView<ViewTraits>& gridview)
     : gridview_(gridview)
     , start_level_(0)
   {}
@@ -172,7 +172,7 @@ private:
   }
 };
 
-template <template <class> class SearchStrategy = DefaultSearchStrategy>
+template <template <class> class SearchStrategy = InlevelSearchStrategy>
 class HeterogenousProjection {
 
 public:
@@ -180,74 +180,55 @@ public:
   static void project(const Dune::DiscreteFunctionInterface<SourceDFImp>& source,
                       Dune::DiscreteFunctionInterface<TargetDFImp>& target)
 {
-  typedef typename SourceDFImp::GridType::LeafGridView SourceLeafGridView;
-  SearchStrategy<typename SourceLeafGridView::Traits> search(source.gridPart().grid().leafView());
+  typedef SearchStrategy<typename SourceDFImp::GridType::LeafGridView::Traits> SearchStrategyType;
+  typedef typename TargetDFImp::DiscreteFunctionSpaceType TargetDiscreteFunctionSpaceType;
+  typedef typename TargetDFImp::DofType TargetDofType;
+  static const int target_dimRange = TargetDiscreteFunctionSpaceType::dimRange;
 
-  typedef typename TargetDFImp::DiscreteFunctionSpaceType DiscreteFunctionSpaceType;
-  typedef typename TargetDFImp::LocalFunctionType LocalFuncType;
-  typedef typename DiscreteFunctionSpaceType::Traits::GridPartType GridPartType;
-  typedef typename DiscreteFunctionSpaceType::Traits::IteratorType Iterator;
-  typedef typename DiscreteFunctionSpaceType::BaseFunctionSetType BaseFunctionSetType ;
-  typedef typename TargetDFImp::DofType DofType;
-  typedef typename TargetDFImp::GridType GridType;
-  typedef Dune::CachingQuadrature<GridPartType,0> QuadratureType;
-  typedef typename GridPartType::template Codim<0>::EntityType  EntityType ;
-  static const int dimRange = DiscreteFunctionSpaceType::dimRange;
-  typedef typename EntityType::Geometry::LocalCoordinate LocalCoordinateType;
-  typedef GenericReferenceElements< typename LocalCoordinateType::value_type,
-      LocalCoordinateType::dimension > RefElementType;
-  //! type of Lagrange point set
-  typedef typename TargetDFImp::DiscreteFunctionSpaceType::LagrangePointSetType
-    LagrangePointSetType;
   const auto& space =  target.space();
+  const auto infinity = std::numeric_limits< TargetDofType >::infinity();
 
   // set all DoFs to infinity
   const auto dend = target.dend();
   for( auto dit = target.dbegin(); dit != dend; ++dit )
-    *dit = std::numeric_limits< DofType >::infinity();
+    *dit = infinity;
 
-  const Iterator endit = space.end();
-  for(Iterator it = space.begin(); it != endit ; ++it)
+  SearchStrategyType search(source.gridPart().grid().leafView());
+  const auto endit = space.end();
+  for(auto it = space.begin(); it != endit ; ++it)
   {
-    // get entity
-    const EntityType& en = *it;
+    const auto& target_entity = *it;
+    const auto& target_geometry = target_entity.geometry();
+    auto target_local_function = target.localFunction(target_entity);
+    const auto& target_lagrangepoint_set = space.lagrangePointSet(target_entity);
+    const int quadNop = target_lagrangepoint_set.nop();
 
-    // get geometry
-    const auto& geo = en.geometry();
+    typename TargetDiscreteFunctionSpaceType::RangeType source_value;
 
-    // get local function of destination
-    LocalFuncType target_lf = target.localFunction(en);
-
-    const LagrangePointSetType& lagrangePointSet = space.lagrangePointSet(*it);
-    const int quadNop = lagrangePointSet.nop();
-
-    typename DiscreteFunctionSpaceType::RangeType value;
-
-    std::vector<typename DiscreteFunctionSpaceType::DomainType> global_quads(quadNop);
+    std::vector<typename TargetDiscreteFunctionSpaceType::DomainType> global_quads(quadNop);
     for(int qP = 0; qP < quadNop ; ++qP) {
-      global_quads[qP] = geo.global(lagrangePointSet.point(qP));
+      global_quads[qP] = target_geometry.global(target_lagrangepoint_set.point(qP));
     }
-    const auto possible_entities = search(global_quads);
-    assert(possible_entities.size() == global_quads.size());
+    const auto evaluation_entities = search(global_quads);
+    assert(evaluation_entities.size() == global_quads.size());
 
     int k = 0;
     for(int qP = 0; qP < quadNop ; ++qP)
     {
-      if(target_lf[ k ] == std::numeric_limits< DofType >::infinity())
+      if(target_local_function[ k ] == infinity)
       {
         const auto& global_point = global_quads[qP];
-
         // evaluate source function
-        const auto ent_p = possible_entities[qP];
-        const auto& p_geometry = ent_p->geometry();
-        const auto& p_local = p_geometry.local(global_point);
-        const auto& p_local_function = source.localFunction(*ent_p);
-        p_local_function.evaluate(p_local, value);
-        for(int i = 0; i < dimRange; ++i, ++k)
-          target_lf[k] = value[i];
+        const auto source_entity = evaluation_entities[qP];
+        const auto& source_geometry = source_entity->geometry();
+        const auto& source_local_point = source_geometry.local(global_point);
+        const auto& source_local_function = source.localFunction(*source_entity);
+        source_local_function.evaluate(source_local_point, source_value);
+        for(int i = 0; i < target_dimRange; ++i, ++k)
+          target_local_function[k] = source_value[i];
       }
       else
-        k += dimRange;
+        k += target_dimRange;
     }
   }
 }

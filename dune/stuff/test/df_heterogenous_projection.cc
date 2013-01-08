@@ -17,6 +17,7 @@
 #include <dune/stuff/fem/customprojection.hh>
 #include <dune/stuff/common/profiler.hh>
 #include <dune/stuff/common/ranges.hh>
+#include <dune/stuff/common/parameter/configcontainer.hh>
 
 using namespace Dune;
 
@@ -115,25 +116,34 @@ void ptest(const int macro_elements = 4, const int target_factor = 2) {
   ScalarFunctionType scalar_f("x", "x[0] + x[1]");
   Dune::LagrangeInterpolation<typename SourceTraits::DiscreteFunction>::apply(scalar_f, source_df);
 
-//  DSC_PROFILER.startTiming("DefaultSearchStrategy");
-//  Stuff::HeterogenousProjection<Stuff::DefaultSearchStrategy>::project(source_df, target_df);
-//  DSC_PROFILER.stopTiming("DefaultSearchStrategy");
+//  DSC_PROFILER.startTiming("HierarchicSearchStrategy");
+//  Stuff::HeterogenousProjection<Stuff::HierarchicSearchStrategy>::project(source_df, target_df);
+//  DSC_PROFILER.stopTiming("HierarchicSearchStrategy");
 
-  DSC_PROFILER.startTiming("NaiveSearchStrategy");
-  Stuff::HeterogenousProjection<Stuff::NaiveSearchStrategy>::project(source_df, target_df);
-  DSC_PROFILER.stopTiming("NaiveSearchStrategy");
+  DSC_PROFILER.startTiming("InlevelSearchStrategy ST");
+  Stuff::HeterogenousProjection<Stuff::InlevelSearchStrategy>::project(source_df, target_df);
+  DSC_PROFILER.stopTiming("InlevelSearchStrategy ST");
   vtk_out(source_df);
   vtk_out(target_df);
+  DSC_PROFILER.startTiming("InlevelSearchStrategy TS");
+  Stuff::HeterogenousProjection<Stuff::InlevelSearchStrategy>::project(source_df, target_df);
+  DSC_PROFILER.stopTiming("InlevelSearchStrategy TS");
+
   DiscretefunctionShroud<typename SourceTraits::DiscreteFunction> shrouded_source_df(source_df);
-  DSC_PROFILER.startTiming("FemProjection");
+  DSC_PROFILER.startTiming("FemProjection ST");
   LagrangeInterpolation<typename TargetTraits::DiscreteFunction>::apply(shrouded_source_df, fem_target_df);
-  DSC_PROFILER.stopTiming("FemProjection");
+  DSC_PROFILER.stopTiming("FemProjection ST");
   vtk_out(fem_target_df);
+
+  DiscretefunctionShroud<typename TargetTraits::DiscreteFunction> shrouded_target_df(target_df);
+  DSC_PROFILER.startTiming("FemProjection TS");
+  LagrangeInterpolation<typename SourceTraits::DiscreteFunction>::apply(shrouded_target_df, source_df);
+  DSC_PROFILER.stopTiming("FemProjection TS");
 }
 
 TEST(Projection, Cubes){
-  const int rf = 2;
-  const int runs = 3;
+  const int rf = DSC_CONFIG_GET("rf", 2);
+  const int runs = DSC_CONFIG_GET("runs", 3);
   DSC_PROFILER.reset(runs);
   for (auto i : DSC::valueRange(runs)) {
     ptest(std::pow(2, i+1), rf);
@@ -148,16 +158,9 @@ TEST(Projection, Cubes){
 
 int main(int argc, char** argv)
 {
-//  testing::InitGoogleTest(&argc, argv);
+  DSC_CONFIG.readOptions(argc, argv);
+  testing::InitGoogleTest(&argc, argv);
   Dune::MPIManager::initialize(argc,argv);
 
-//  return RUN_ALL_TESTS();
-  const int rf = 1;
-  const int runs = 6;
-  DSC_PROFILER.reset(runs);
-  for (auto i : DSC::valueRange(runs)) {
-    ptest(std::pow(2, i+1), rf);
-    DSC_PROFILER.nextRun();
-  }
-  DSC_PROFILER.outputTimingsAll();
+  return RUN_ALL_TESTS();
 }
