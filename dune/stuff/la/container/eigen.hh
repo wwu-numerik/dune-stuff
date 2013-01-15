@@ -18,6 +18,9 @@ namespace Container {
 namespace Eigen {
 
 
+/**
+ *  \todo add base()
+ */
 template< class Traits >
 class Base
 {
@@ -82,6 +85,12 @@ public:
   RowMajorSparseMatrix()
     : BaseType()
   {}
+
+  RowMajorSparseMatrix(const BaseType& _other)
+    : BaseType(_other.rows(), _other.cols())
+  {
+    base() = _other;
+  }
 
   RowMajorSparseMatrix(const size_type _rows,
                        const size_type _cols,
@@ -258,6 +267,12 @@ public:
     : BaseType(_size)
   {
     BaseType::setZero();
+  }
+
+  DenseVector(const BaseType& _other)
+    : BaseType(_other.size())
+  {
+    base() = _other;
   }
 
   size_type size() const
