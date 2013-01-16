@@ -9,6 +9,15 @@ AC_DEFUN([DUNE_STUFF_CHECKS],[
   AC_REQUIRE([LAMBDAS_CHECK])
   AC_REQUIRE([STD_BEGIN_END_CHECK])
   AC_REQUIRE([CONSTEXPR_CHECK])
+  PKG_CHECK_MODULES([EIGEN],
+                    [eigen3],
+                    [AC_DEFINE([HAVE_EIGEN],
+                               [1],
+                               [Define wether the eigen includes were found.])],
+                               [AC_MSG_RESULT([No package 'eigen3' found
+
+Consider adjusting the PKG_CONFIG_PATH environment variable if you
+installed 'eigen3' in a non-standard prefix.])])
 ])
 
 AC_DEFUN([DUNE_STUFF_CHECK_MODULE],
