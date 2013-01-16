@@ -1,6 +1,9 @@
 AC_DEFUN([DUNE_STUFF_CHECKS],[
-  DUNE_BOOST_BASE([1.48.0], [ DUNE_BOOST_SYSTEM ] ,
-								[AC_MSG_ERROR([Boost 1.48 is required])] )
+  AX_BOOST_BASE([1.48.0],
+                [AC_DEFINE([HAVE_BOOST],
+                           [],
+                           [Define wether boost was found.])],
+                           [AC_MSG_ERROR([Boost 1.48 is required])])
   AC_REQUIRE([GXX0X])
   AC_REQUIRE([LAMBDAS_CHECK])
   AC_REQUIRE([STD_BEGIN_END_CHECK])
