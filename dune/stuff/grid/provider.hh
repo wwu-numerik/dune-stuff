@@ -12,6 +12,7 @@
 #include "provider/interface.hh"
 #include "provider/cube.hh"
 #include "provider/gmsh.hh"
+#include "provider/starcd.hh"
 
 namespace Dune {
 namespace Stuff {
@@ -38,6 +39,10 @@ Interface< GridType >* create(const std::string& type = "stuff.grid.provider.cub
     return gmshProvider;
 #endif // defined ALUGRID_CONFORM || defined ALUGRID_CUBE || defined ALUGRID_SIMPLEX || defined ALBERTAGRID || defined UGGRID
 #endif // HAVE_ALUGRID || HAVE_ALBERTA || HAVE_UG
+  } else if (type == "stuff.grid.provider.starcd") {
+    typedef Dune::Stuff::Grid::Provider::StarCD< GridType > StarCDProviderType;
+    StarCDProviderType* starCDProvider = new StarCDProviderType(StarCDProviderType::createFromParamTree(paramTree));
+    return starCDProvider;
   } else
     DUNE_THROW(Dune::RangeError,
                "\nERROR: unknown grid provider '" << type << "' requested!");

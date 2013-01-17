@@ -38,6 +38,7 @@ void ensureParamFile(std::string filename)
     file << "[" << id << "]" << std::endl;
     file << "grid = stuff.grid.provider.cube" << std::endl;
     file << "       stuff.grid.provider.gmsh" << std::endl;
+    file << "       stuff.grid.provider.starcd" << std::endl;
     file << "filename = " << id << ".grid"<< std::endl;
     file << "[stuff.grid.provider.cube]" << std::endl;
     file << "lowerLeft = [0.0; 0.0; 0.0]" << std::endl;
@@ -45,6 +46,8 @@ void ensureParamFile(std::string filename)
     file << "numElements = [4; 4; 4]" << std::endl;
     file << "[stuff.grid.provider.gmsh]" << std::endl;
     file << "filename = curved2d.msh" << std::endl;
+    file << "[stuff.grid.provider.starcd]" << std::endl;
+    file << "filename = meshExport10" << std::endl;
     file.close();
   } // only write param file if there is none
 } // void ensureParamFile()
