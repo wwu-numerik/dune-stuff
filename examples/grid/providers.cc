@@ -37,6 +37,7 @@ void ensureParamFile(std::string filename)
     file.open(filename);
     file << "[" << id << "]" << std::endl;
     file << "grid = stuff.grid.provider.cube" << std::endl;
+    file << "       stuff.grid.provider.gmsh" << std::endl;
     file << "filename = " << id << ".grid"<< std::endl;
     file << "[stuff.grid.provider.cube]" << std::endl;
     file << "lowerLeft = [0.0; 0.0; 0.0]" << std::endl;
@@ -59,9 +60,6 @@ unsigned int measureTiming(const GridViewType& gridView)
   return elements;
 } // unsigned int measureTiming(const GridViewType& gridView)
 
-/**
- * \todo  Move gmsh into seperate examples, since it does not compile with YaspGrid and SGrid!
- */
 int main(int argc, char** argv)
 {
   try {
