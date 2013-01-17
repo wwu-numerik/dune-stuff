@@ -17,7 +17,7 @@ AC_DEFUN([DUNE_STUFF_CHECKS],[
                                [AC_MSG_RESULT([Package 'eigen3' was not found in the pkg-config search path.
 Perhaps you should add the directory containing `eigen3.pc'
 to the PKG_CONFIG_PATH environment variable.])])
-  CFLAGS="$CFLAGS $EIGEN_CFLAGS"
+  DUNE_CPPFLAGS="$DUNE_CPPFLAGS $EIGEN_CFLAGS"
 ])
 
 AC_DEFUN([DUNE_STUFF_CHECK_MODULE],
