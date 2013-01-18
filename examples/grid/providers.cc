@@ -1,19 +1,17 @@
-#include <dune/stuff/common/header/disable_warnings.hh>
-  #ifdef HAVE_CMAKE_CONFIG
-    #include "cmake_config.h"
-  #elif defined (HAVE_CONFIG_H)
-    #include <config.h>
-  #endif // HAVE_CMAKE_CONFIG
+#ifdef HAVE_CMAKE_CONFIG
+  #include "cmake_config.h"
+#elif defined (HAVE_CONFIG_H)
+  #include <config.h>
+#endif // HAVE_CMAKE_CONFIG
 
-  #include <iostream>
+#include <iostream>
 
-  #include <boost/filesystem.hpp>
+#include <boost/filesystem.hpp>
 
-  #include <dune/common/exceptions.hh>
-  #include <dune/common/shared_ptr.hh>
-  #include <dune/common/mpihelper.hh>
-  #include <dune/common/timer.hh>
-#include <dune/stuff/common/header/reenable_warnings.hh>
+#include <dune/common/exceptions.hh>
+#include <dune/common/shared_ptr.hh>
+#include <dune/common/mpihelper.hh>
+#include <dune/common/timer.hh>
 
 #include <dune/stuff/common/parameter/tree.hh>
 #include <dune/stuff/common/logging.hh>
