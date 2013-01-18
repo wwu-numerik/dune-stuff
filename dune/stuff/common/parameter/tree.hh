@@ -1,26 +1,28 @@
 #ifndef DUNE_STUFF_COMMON_PARAMETER_TREE_HH
 #define DUNE_STUFF_COMMON_PARAMETER_TREE_HH
 
-#ifdef HAVE_CMAKE_CONFIG
-  #include "cmake_config.h"
-#else
-  #include "config.h"
-#endif // ifdef HAVE_CMAKE_CONFIG
+#include <dune/stuff/common/header/disable_warnings.hh>
+  #ifdef HAVE_CMAKE_CONFIG
+    #include "cmake_config.h"
+  #else
+    #include "config.h"
+  #endif // ifdef HAVE_CMAKE_CONFIG
 
-#include <cstring>
-#include <sstream>
-#include <vector>
+  #include <cstring>
+  #include <sstream>
+  #include <vector>
 
-#include <boost/algorithm/string/join.hpp>
-#include <boost/algorithm/string.hpp>
-#include <boost/format.hpp>
+  #include <boost/algorithm/string/join.hpp>
+  #include <boost/algorithm/string.hpp>
+  #include <boost/format.hpp>
 
-#if HAVE_EIGEN
-  #include <Eigen/Core>
-#endif // HAVE_EIGEN
+  #if HAVE_EIGEN
+    #include <Eigen/Core>
+  #endif // HAVE_EIGEN
 
-#include <dune/common/exceptions.hh>
-#include <dune/common/parametertreeparser.hh>
+  #include <dune/common/exceptions.hh>
+  #include <dune/common/parametertreeparser.hh>
+#include <dune/stuff/common/header/reenable_warnings.hh>
 
 #include <dune/stuff/common/string.hh>
 #include <dune/stuff/common/color.hh>
