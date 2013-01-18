@@ -1,8 +1,4 @@
-#pragma GCC diagnostic warning "-Wdeprecated-declarations"
-#pragma GCC diagnostic warning "-Wunused-parameter"
-#pragma GCC diagnostic warning "-Wextra"
-#pragma GCC diagnostic warning "-Wignored-qualifiers"
-#pragma GCC diagnostic warning "-Wtype-limits"
+#pragma GCC diagnostic pop
 
 /** Copyright (c) 2012, Rene Milk
    * All rights reserved.
