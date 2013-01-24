@@ -34,7 +34,7 @@ template< class MatrixImp, class VectorImp, template < class ElementImp > class 
 class Bicgstab;
 
 
-template< class ElementImp, template < class ElementImp > class Preconditioner >
+template< class ElementImp, template < class T > class Preconditioner >
 class Bicgstab< Container::Eigen::RowMajorSparseMatrix< ElementImp >,
                 Container::Eigen::DenseVector< ElementImp >,
                 Preconditioner>
