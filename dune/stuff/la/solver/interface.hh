@@ -27,9 +27,8 @@ public:
 
   typedef typename MatrixType::size_type size_type;
 
-  virtual void init(const MatrixType& /*systemMatrix*/) = 0;
-
-  virtual bool apply(const VectorType& /*rhsVector*/,
+  virtual bool apply(const MatrixType& /*systemMatrix*/,
+                     const VectorType& /*rhsVector*/,
                      VectorType& /*solutionVector*/,
                      const size_type /*maxIter*/,
                      const ElementType /*precision*/) const = 0;

@@ -25,19 +25,21 @@ namespace Solver {
 namespace Eigen {
 
 //! provide a Dummy preconditioner that fits the expectatations below
-template <class Dummy>
-class IdentityPreconditioner : public ::Eigen::IdentityPreconditioner
+template< class Dummy >
+class IdentityPreconditioner
+  : public ::Eigen::IdentityPreconditioner
 {};
 
-
-template< class MatrixImp, class VectorImp, template < class ElementImp > class Preconditioner = IdentityPreconditioner>
+template< class MatrixImp,
+          class VectorImp,
+          template < class ElementImp > class Preconditioner = IdentityPreconditioner >
 class Bicgstab;
 
 
 template< class ElementImp, template < class T > class Preconditioner >
 class Bicgstab< Container::Eigen::RowMajorSparseMatrix< ElementImp >,
                 Container::Eigen::DenseVector< ElementImp >,
-                Preconditioner>
+                Preconditioner >
   : public Interface< Container::Eigen::RowMajorSparseMatrix< ElementImp >,
                       Container::Eigen::DenseVector< ElementImp > >
 {
@@ -54,41 +56,23 @@ public:
 
   typedef typename BaseType::size_type size_type;
 
-private:
-  typedef Preconditioner< ElementType > PreconditionerType;
-
-  typedef ::Eigen::BiCGSTAB< typename MatrixType::BaseType, PreconditionerType > SolverType;
-
-public:
   Bicgstab()
-    : initialized_(false)
   {}
 
-  virtual void init(const MatrixType& systemMatrix)
-  {
-    if (initialized_)
-      DUNE_THROW(Dune::InvalidStateException, "\nERROR: init() may only be called once!");
-    solver_ = new SolverType(systemMatrix.base());
-    initialized_ = true;
-  } // virtual void init(...)
-
-  virtual bool apply(const VectorType& rhsVector,
+  virtual bool apply(const MatrixType& systemMatrix,
+                     const VectorType& rhsVector,
                      VectorType& solutionVector,
                      const size_type maxIter = 5000,
                      const ElementType precision = 1e-12) const
   {
-    if (!initialized_)
-      DUNE_THROW(Dune::InvalidStateException, "\nERROR: please call init() before calling apply()!");
-    solver_->setMaxIterations(maxIter);
-    solver_->setTolerance(precision);
-    solutionVector.base() = solver_->solve(rhsVector.base());
-    const ::Eigen::ComputationInfo info = solver_->info();
+    typedef ::Eigen::BiCGSTAB< typename MatrixType::BaseType, Preconditioner< ElementType > > EigenSolverType;
+    EigenSolverType eigenSolver(systemMatrix.base());
+    eigenSolver.setMaxIterations(maxIter);
+    eigenSolver.setTolerance(precision);
+    solutionVector.base() = eigenSolver.solve(rhsVector.base());
+    const ::Eigen::ComputationInfo info = eigenSolver.info();
     return (info == ::Eigen::Success);
   } // virtual bool apply(...)
-
-private:
-  bool initialized_;
-  SolverType* solver_;
 }; // class BicgstabDiagonal
 
 
@@ -139,29 +123,18 @@ public:
 
   typedef typename BaseType::size_type size_type;
 
-public:
   CG()
-    : initialized_(false)
-    , systemMatrix_(nullptr)
   {}
 
-  virtual void init(const MatrixType& systemMatrix)
-  {
-    systemMatrix_ = &(systemMatrix);
-    initialized_ = true;
-  } // virtual void init(...)
-
-  virtual bool apply(const VectorType& rhsVector,
+  virtual bool apply(const MatrixType& systemMatrix,
+                     const VectorType& rhsVector,
                      VectorType& solutionVector,
                      const size_type maxIter = 5000,
                      const ElementType precision = 1e-12) const
   {
-    if (!initialized_)
-      DUNE_THROW(Dune::InvalidStateException, "\nERROR: please call init() before calling apply()!");
-    assert(systemMatrix_);
     auto& x_i = solutionVector.base();
     const auto& b = rhsVector.base();
-    const auto& A = systemMatrix_->base();
+    const auto& A = systemMatrix.base();
     const int cols = A.cols();
     size_type iteration(1);
     ElementType rho(0), rho_prev(1), beta, alpha;
@@ -189,10 +162,6 @@ public:
     }
     return false;
   } // virtual bool apply(...)
-
-private:
-  bool initialized_;
-  const MatrixType* systemMatrix_;
 }; // class CG
 
 
