@@ -84,7 +84,7 @@ void project(const Dune::Stuff::Grid::BoundaryInfo::Interface< typename Discrete
               // evaluate the function
               function.evaluate(lagrangePointsGlobal[i], tmpEvaluation);
               // set the corresponding local dof
-              localFunction[i] = tmpEvaluation;
+              localFunction.set(i, tmpEvaluation);
             } // if dof lies on the boundary intersection
           } // loop over all lagrange points
         } // only consider dirichlet boundary intersection
