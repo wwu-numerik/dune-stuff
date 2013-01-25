@@ -75,39 +75,16 @@ public:
     return stream.str();
   } // std::stringstream reportString(const std::string& prefix = "") const
 
-  std::string get(const std::string& _key, const std::string& defaultValue) const
-  {
-    if (!BaseType::hasKey(_key))
-      std::cout << Dune::Stuff::Common::colorString("WARNING:") << " missing key '" << _key << "' is replaced by given default value '" << defaultValue << "'!" << std::endl;
-    return BaseType::get< std::string >(_key, defaultValue);
-  }
-
   std::string get(const std::string& _key, const char* defaultValue) const
   {
-    if (!BaseType::hasKey(_key))
-      std::cout << Dune::Stuff::Common::colorString("WARNING:") << " missing key '" << _key << "' is replaced by given default value '" << defaultValue << "'!" << std::endl;
-    return BaseType::get< std::string >(_key, defaultValue);
-  }
-
-  int get(const std::string& _key, int defaultValue) const
-  {
-    if (!BaseType::hasKey(_key))
-      std::cout << Dune::Stuff::Common::colorString("WARNING:") << " missing key '" << _key << "' is replaced by given default value '" << defaultValue << "'!" << std::endl;
-    return BaseType::get< int >(_key, defaultValue);
-  }
-
-  double get(const std::string& _key, double defaultValue) const
-  {
-    if (!BaseType::hasKey(_key))
-      std::cout << Dune::Stuff::Common::colorString("WARNING:") << " missing key '" << _key << "' is replaced by given default value '" << defaultValue << "'!" << std::endl;
-    return BaseType::get< double >(_key, defaultValue);
+    return this->get< std::string >(_key, std::string(defaultValue));
   }
 
   template< typename T >
   T get(const std::string& _key, const T& defaultValue) const
   {
     if (!BaseType::hasKey(_key))
-      std::cout << Dune::Stuff::Common::colorString("WARNING:") << " missing key '" << _key << "' is replaced by given default value!" << std::endl;
+      std::cout << Dune::Stuff::Common::highlightString("WARNING:", Dune::Stuff::Common::Colors::brown) << " missing key '" << _key << "' is replaced by given default value!" << std::endl;
     return BaseType::get< T >(_key, defaultValue);
   }
 
@@ -124,9 +101,8 @@ public:
   {
     if (hasKey(_key)) {
       const std::string str = BaseType::get< std::string >(_key, "meaningless_default_value");
-      if (Dune::Stuff::Common::String::equal(str.substr(0, 1), "[")
-          && Dune::Stuff::Common::String::equal(str.substr(str.size() - 1, 1), "]"))
-        return true;
+      return (Dune::Stuff::Common::String::equal(str.substr(0, 1), "[")
+          && Dune::Stuff::Common::String::equal(str.substr(str.size() - 1, 1), "]"));
     }
     return false;
   } // bool hasVector(const std::string& vector) const
@@ -135,19 +111,19 @@ public:
   std::vector< T > getVector(const std::string& _key, const T& def, const unsigned int minSize) const
   {
     if (!hasKey(_key)) {
-      std::cout << Dune::Stuff::Common::colorString("WARNING:") << " missing key '" << _key << "' is replaced by given default value!" << std::endl;
+      std::cout << Dune::Stuff::Common::highlightString("WARNING:", Dune::Stuff::Common::Colors::brown) << " missing key '" << _key << "' is replaced by given default value!" << std::endl;
       return std::vector< T >(minSize, def);
     } else {
       const std::string str = BaseType::get(_key, "meaningless_default_value");
       if (Dune::Stuff::Common::String::equal(str, "")) {
         if (minSize > 0)
-          std::cout << Dune::Stuff::Common::colorString("WARNING:") << " vector '" << _key << "' was too small (0) and has been enlarged to size " << minSize << "!" << std::endl;
+          std::cout << Dune::Stuff::Common::highlightString("WARNING:", Dune::Stuff::Common::Colors::brown) << " vector '" << _key << "' was too small (0) and has been enlarged to size " << minSize << "!" << std::endl;
         return std::vector< T >(minSize, def);
       } else if (str.size() < 3) {
         std::vector< T > ret;
         ret.push_back(Dune::Stuff::Common::fromString< T >(str));
         if (ret.size() < minSize) {
-          std::cout << Dune::Stuff::Common::colorString("WARNING:") << " vector '" << _key << "' was too small (" << ret.size() << ") and has been enlarged to size " << minSize << "!" << std::endl;
+          std::cout << Dune::Stuff::Common::highlightString("WARNING:", Dune::Stuff::Common::Colors::brown) << " vector '" << _key << "' was too small (" << ret.size() << ") and has been enlarged to size " << minSize << "!" << std::endl;
           for (unsigned int i = ret.size(); i < minSize; ++i)
             ret.push_back(def);
         }
