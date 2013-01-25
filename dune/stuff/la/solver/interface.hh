@@ -7,6 +7,8 @@
   #include "config.h"
 #endif // ifdef HAVE_CMAKE_CONFIG
 
+#include <dune/common/exceptions.hh>
+
 #include <dune/stuff/la/container/interface.hh>
 
 namespace Dune {
@@ -27,12 +29,72 @@ public:
 
   typedef typename MatrixType::size_type size_type;
 
-  virtual bool apply(const MatrixType& /*systemMatrix*/,
-                     const VectorType& /*rhsVector*/,
-                     VectorType& /*solutionVector*/,
-                     const size_type /*maxIter*/,
-                     const ElementType /*precision*/) const = 0;
+  virtual bool apply(const MatrixType& /*_systemMatrix*/,
+                     const VectorType& /*_rhsVector*/,
+                     VectorType& /*_solutionVector*/,
+                     const size_type /*_maxIter*/,
+                     const ElementType /*_precision*/) const = 0;
 }; // class Interface
+
+
+template< class MatrixImp, class VectorImp >
+class SolverNotImplementedForThisMatrixVectorCombination
+  : public Interface< MatrixImp, VectorImp >
+{
+public:
+  typedef typename Interface< MatrixImp, VectorImp >::MatrixType   MatrixType;
+  typedef typename Interface< MatrixImp, VectorImp >::VectorType   VectorType;
+  typedef typename Interface< MatrixImp, VectorImp >::ElementType  ElementType;
+  typedef typename Interface< MatrixImp, VectorImp >::size_type    size_type;
+
+  SolverNotImplementedForThisMatrixVectorCombination(const std::string msg = "\nERROR: this solver is not implemented for this matrix/vector combination")
+  {
+    DUNE_THROW(Dune::NotImplemented, msg);
+  }
+
+  virtual bool apply(const MatrixType& /*_systemMatrix*/,
+                     const VectorType& /*_rhsVector*/,
+                     VectorType& /*_solutionVector*/,
+                     const size_type /*_maxIter*/ = 0,
+                     const ElementType /*_precision*/ = 0) const
+  {}
+}; // class SolverNotImplementedForThisMatrixVectorCombination
+
+
+template< class MatrixImp, class VectorImp >
+class Cg
+  : public SolverNotImplementedForThisMatrixVectorCombination< MatrixImp, VectorImp >
+{};
+
+template< class MatrixImp, class VectorImp >
+class CgDiagonal
+  : public SolverNotImplementedForThisMatrixVectorCombination< MatrixImp, VectorImp >
+{};
+
+template< class MatrixImp, class VectorImp >
+class Bicgstab
+  : public SolverNotImplementedForThisMatrixVectorCombination< MatrixImp, VectorImp >
+{};
+
+template< class MatrixImp, class VectorImp >
+class BicgstabDiagonal
+  : public SolverNotImplementedForThisMatrixVectorCombination< MatrixImp, VectorImp >
+{};
+
+template< class MatrixImp, class VectorImp >
+class BicgstabILUT
+  : public SolverNotImplementedForThisMatrixVectorCombination< MatrixImp, VectorImp >
+{};
+
+template< class MatrixImp, class VectorImp >
+class SimplicialLLT
+  : public SolverNotImplementedForThisMatrixVectorCombination< MatrixImp, VectorImp >
+{};
+
+template< class MatrixImp, class VectorImp >
+class SimplicialLDLT
+  : public SolverNotImplementedForThisMatrixVectorCombination< MatrixImp, VectorImp >
+{};
 
 
 } // namespace Solver
