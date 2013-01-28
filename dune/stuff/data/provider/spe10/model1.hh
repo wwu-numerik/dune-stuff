@@ -142,7 +142,7 @@ public:
   } // const Dune::shared_ptr< const Function > create() const
 
 private:
-  void readAndAssertParamTree(const Dune::ParameterTree& paramTree,
+  void readAndAssertParamTree(const Dune::ParameterTree& _paramTree,
                               std::string& filename,
                               DomainFieldType& lowerLeftX,
                               DomainFieldType& lowerLeftY,
@@ -151,19 +151,20 @@ private:
                               unsigned int& numElementsX,
                               unsigned int& numElementsY) const
   {
-    Dune::Stuff::Common::ExtendedParameterTree::assertKey(paramTree, "filename", id);
+    Dune::Stuff::Common::ExtendedParameterTree paramTree(_paramTree);
+    paramTree.assertKey(paramTree, "filename", id);
     filename = paramTree.get("filename", "../../../../../data/spe10/model1/spe10_model1_permeability.dat");
-    Dune::Stuff::Common::ExtendedParameterTree::assertKey(paramTree, "lowerLeft.0", id);
+    paramTree.assertKey(paramTree, "lowerLeft.0", id);
     lowerLeftX = paramTree.get("lowerLeft.0", 0.0);
-    Dune::Stuff::Common::ExtendedParameterTree::assertKey(paramTree, "lowerLeft.1", id);
+    paramTree.assertKey(paramTree, "lowerLeft.1", id);
     lowerLeftY = paramTree.get("lowerLeft.1", 0.0);
-    Dune::Stuff::Common::ExtendedParameterTree::assertKey(paramTree, "upperRight.0", id);
+    paramTree.assertKey(paramTree, "upperRight.0", id);
     upperRightX = paramTree.get("upperRight.0", 762.0);
-    Dune::Stuff::Common::ExtendedParameterTree::assertKey(paramTree, "upperRight.1", id);
+    paramTree.assertKey(paramTree, "upperRight.1", id);
     upperRightY = paramTree.get("upperRight.1", 15.24);
-    Dune::Stuff::Common::ExtendedParameterTree::assertKey(paramTree, "numElements.0", id);
+    paramTree.assertKey(paramTree, "numElements.0", id);
     numElementsX = paramTree.get("numElements.0", 100);
-    Dune::Stuff::Common::ExtendedParameterTree::assertKey(paramTree, "numElements.1", id);
+    paramTree.assertKey(paramTree, "numElements.1", id);
     numElementsY = paramTree.get("numElements.1", 20);
     // make sure everything is all right
     bool kaboom = false;
