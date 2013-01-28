@@ -19,14 +19,8 @@ namespace Container {
 
 template< class Traits >
 class EigenInterface
-{
-public:
-  typedef typename Traits::BackendType BackendType;
-
-  virtual BackendType& base() = 0;
-
-  virtual const BackendType& base() const = 0;
-}; // class EigenInterface
+  : public Interface< Traits >
+{}; // class EigenInterface
 
 
 template< class Traits >
@@ -49,11 +43,8 @@ class EigenRowMajorSparseMatrixTraits
 {
 public:
   typedef ElementImp ElementType;
-
   typedef EigenRowMajorSparseMatrix< ElementType > derived_type;
-
   typedef typename ::Eigen::SparseMatrix< ElementType, ::Eigen::RowMajor > BackendType;
-
   typedef typename BackendType::Index size_type;
 }; // class RowMajorSparseMatrixTraits
 
@@ -65,20 +56,16 @@ class EigenRowMajorSparseMatrix
 {
 public:
   typedef EigenRowMajorSparseMatrix< ElementImp > ThisType;
-
   typedef EigenRowMajorSparseMatrixTraits< ElementImp > Traits;
-
   typedef typename Traits::BackendType BackendType;
-
   typedef typename Traits::ElementType ElementType;
-
   typedef typename Traits::size_type size_type;
 
   EigenRowMajorSparseMatrix()
   {}
 
   EigenRowMajorSparseMatrix(const ThisType& _other)
-    : eigenMatrix_(_other.base())
+    : eigenMatrix_(_other.backend())
   {}
 
   EigenRowMajorSparseMatrix(const BackendType& _otherEigenMatrix)
@@ -87,7 +74,7 @@ public:
 
   ThisType& operator=(const ThisType& _other)
   {
-    eigenMatrix_ = _other.base();
+    eigenMatrix_ = _other.backend();
     return *this;
   }
 
@@ -99,11 +86,11 @@ public:
 
   EigenRowMajorSparseMatrix(const size_type _rows,
                             const size_type _cols,
-                            const Dune::Stuff::LA::Container::Pattern::Default& _pattern)
+                            const Dune::Stuff::LA::Container::SparsityPatternDefault& _pattern)
     : eigenMatrix_(_rows, _cols)
   {
     assert(size_type(_pattern.size()) == _rows && "Given pattern too short!");
-    typedef Dune::Stuff::LA::Container::Pattern::Default PatternType;
+    typedef Dune::Stuff::LA::Container::SparsityPatternDefault PatternType;
     typedef PatternType::SetType ColumnsType;
     for (size_type row = 0; row < size_type(_pattern.size()); ++row) {
       eigenMatrix_.startVec(row);
@@ -145,12 +132,12 @@ public:
     return eigenMatrix_.coeff(i, j);
   }
 
-  BackendType& base()
+  BackendType& backend()
   {
     return eigenMatrix_;
   }
 
-  const BackendType& base() const
+  const BackendType& backend() const
   {
     return eigenMatrix_;
   }
@@ -169,11 +156,8 @@ class EigenDenseMatrixTraits
 {
 public:
   typedef ElementImp ElementType;
-
   typedef EigenDenseMatrix< ElementType > derived_type;
-
   typedef typename ::Eigen::Matrix< ElementType, ::Eigen::Dynamic, ::Eigen::Dynamic > BackendType;
-
   typedef typename BackendType::Index size_type;
 }; // class DenseMatrixTraits
 
@@ -185,20 +169,16 @@ class EigenDenseMatrix
 {
 public:
   typedef EigenDenseMatrix< ElementImp > ThisType;
-
   typedef EigenDenseMatrixTraits< ElementImp > Traits;
-
   typedef typename Traits::BackendType BackendType;
-
   typedef typename Traits::ElementType ElementType;
-
   typedef typename Traits::size_type size_type;
 
   EigenDenseMatrix()
   {}
 
   EigenDenseMatrix(const ThisType& _other)
-    : eigenMatrix_(_other.base())
+    : eigenMatrix_(_other.backend())
   {}
 
   EigenDenseMatrix(const BackendType& _otherEigenMatrix)
@@ -211,7 +191,7 @@ public:
 
   ThisType& operator=(const ThisType& _other)
   {
-    eigenMatrix_ = _other.base();
+    eigenMatrix_ = _other.backend();
     return *this;
   }
 
@@ -246,12 +226,12 @@ public:
     return eigenMatrix_(i, j);
   }
 
-  BackendType& base()
+  BackendType& backend()
   {
     return eigenMatrix_;
   }
 
-  const BackendType& base() const
+  const BackendType& backend() const
   {
     return eigenMatrix_;
   }
@@ -270,11 +250,8 @@ class EigenDenseVectorTraits
 {
 public:
   typedef ElementImp ElementType;
-
   typedef EigenDenseVector< ElementType > derived_type;
-
   typedef typename ::Eigen::Matrix< ElementType, ::Eigen::Dynamic, 1 > BackendType;
-
   typedef typename BackendType::Index size_type;
 }; // class DenseVectorTraits
 
@@ -286,20 +263,16 @@ class EigenDenseVector
 {
 public:
   typedef EigenDenseVector< ElementImp > ThisType;
-
   typedef EigenDenseVectorTraits< ElementImp > Traits;
-
   typedef typename Traits::BackendType BackendType;
-
   typedef typename Traits::ElementType ElementType;
-
   typedef typename Traits::size_type size_type;
 
   EigenDenseVector()
   {}
 
   EigenDenseVector(const ThisType& _other)
-    : eigenVector_(_other.base())
+    : eigenVector_(_other.backend())
   {}
 
   EigenDenseVector(const BackendType& _otherEigenVector)
@@ -312,7 +285,7 @@ public:
 
   ThisType& operator=(const ThisType& _other)
   {
-    eigenVector_ = _other.base();
+    eigenVector_ = _other.backend();
     return *this;
   }
 
@@ -342,12 +315,12 @@ public:
     return eigenVector_(i);
   }
 
-  BackendType& base()
+  BackendType& backend()
   {
     return eigenVector_;
   }
 
-  const BackendType& base() const
+  const BackendType& backend() const
   {
     return eigenVector_;
   }
