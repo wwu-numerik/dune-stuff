@@ -20,18 +20,27 @@ namespace Container {
 template< class Traits >
 class EigenInterface
   : public Interface< Traits >
-{}; // class EigenInterface
+{
+public:
+  typedef typename Traits::derived_type derived_type;
+}; // class EigenInterface
 
 
 template< class Traits >
 class EigenMatrixInterface
   : public EigenInterface< Traits >
-{}; // class EigenMatrixInterface
+{
+public:
+  typedef typename Traits::derived_type derived_type;
+}; // class EigenMatrixInterface
 
 
 template< class Traits >
 class EigenVectorInterface
-{}; // class EigenVectorInterface
+{
+public:
+  typedef typename Traits::derived_type derived_type;
+}; // class EigenVectorInterface
 
 
 template< class ElementType >
