@@ -54,15 +54,13 @@ static RangeFieldType L2_squared(const Dune::grid::Part::Interface< GridPartTrai
     const unsigned int order = functionOrder + functionOrder;
     const QuadratureType& quadrature = Quadrature::rule(entity.type(), 2*order + 1);
     // loop over all quadrature points
-    for (typename QuadratureType::const_iterator quadPoint = quadrature.begin();
-         quadPoint != quadrature.end();
-         ++quadPoint) {
+    for (const auto& quadPoint : quadrature) {
       // global coordinate
-      const DomainType xLocal = quadPoint->position();
+      const DomainType xLocal = quadPoint.position();
       const DomainType xGlobal = entity.geometry().global(xLocal);
       // integration factors
       const RangeFieldType integrationFactor = entity.geometry().integrationElement(xLocal);
-      const RangeFieldType quadratureWeight = quadPoint->weight();
+      const RangeFieldType quadratureWeight = quadPoint.weight();
       // evaluate
       function.evaluate(xGlobal, tmp);
       // compute
@@ -83,7 +81,7 @@ static RangeFieldType L2(const Dune::grid::Part::Interface< GridPartTraits >& gr
 }
 
 template< class DiscreteFunctionType >
-static DiscreteFunctionType::RangeFieldType L2_squared(const Dune::Detailed::Discretizations::DiscreteFunction::LocalConst< DiscreteFunctionType >& localFunction)
+static typename DiscreteFunctionType::RangeFieldType L2_squared(const Dune::Detailed::Discretizations::DiscreteFunction::LocalConst< DiscreteFunctionType >& localFunction)
 {
   // preparations
   typedef typename DiscreteFunctionType::DomainType DomainType;
@@ -100,14 +98,12 @@ static DiscreteFunctionType::RangeFieldType L2_squared(const Dune::Detailed::Dis
   const unsigned int order = localFunction.order() + localFunction.order();
   const QuadratureType& quadrature = Quadrature::rule(entity.type(), 2*order + 1);
   // loop over all quadrature points
-  for (typename QuadratureType::const_iterator quadPoint = quadrature.begin();
-       quadPoint != quadrature.end();
-       ++quadPoint) {
+  for (const auto& quadPoint : quadrature) {
     // local coordinate
-    const DomainType x = quadPoint->position();
+    const DomainType x = quadPoint.position();
     // integration factors
     const RangeFieldType integrationFactor = entity.geometry().integrationElement(x);
-    const RangeFieldType quadratureWeight = quadPoint->weight();
+    const RangeFieldType quadratureWeight = quadPoint.weight();
     // evaluate
     localFunction.evaluate(x, tmp);
     // compute
