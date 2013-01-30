@@ -96,6 +96,7 @@ public:
     int numberOfVertices = 0;
     Dune::FieldVector<double,dim> position;
 
+    std::cout << "Reading " << vertexFileName << " ...   " << std::flush;
     while(std::getline(vertexFile,line))
     {
         numberOfVertices++;
@@ -105,8 +106,7 @@ public:
           position[ii] = items[ii + 1];
         factory.insertVertex(position);
     }
-    std::cout << numberOfVertices << " vertices read." << std::endl;
-
+    std::cout << "done: " << numberOfVertices << " vertices read." << std::endl;
 
     // set the name of the element file
     std::string elementFileName = filename + ".cel";
@@ -134,6 +134,7 @@ public:
     std::vector<unsigned int> prismVertices(numberOfVerticesPrism);
     std::string firstLine;
     std::string secondLine;
+    std::cout << "Reading " << elementFileName << " ...   " << std::flush;
     while(std::getline(elementFile, firstLine))
     {
         if (!std::getline(elementFile, secondLine))
@@ -178,8 +179,8 @@ public:
     if (!numberOfElements == (numberOfCubes + numberOfPrisms))
       DUNE_THROW(Dune::IOError, "Number of Elements (" << numberOfElements << ") is not equal to number of cubes (" << numberOfCubes << ") and number of prisms (" << numberOfPrisms << ").");
 
-    std::cout << numberOfElements << " elements read: "
-              << numberOfPrisms << " prisms and "          << numberOfCubes << " cubes." << std::endl;
+    std::cout << "done: " << numberOfElements << " elements read ("
+              << numberOfPrisms << " prisms and " << numberOfCubes << " cubes)." << std::endl;
 
     // finish off the construction of the grid object
     std::cout << "Starting createGrid() ... " << std::endl;
