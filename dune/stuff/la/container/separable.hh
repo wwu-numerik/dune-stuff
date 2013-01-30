@@ -102,7 +102,7 @@ public:
     // since we are parametric, at leas one coefficient has to exist
     ParamType coefficient = BaseType::coefficients()[0]->evaluate(mu);
     assert(coefficient.size() == 1);
-    ret->backend() *= coefficient;
+    ret->backend() *= coefficient[0];
     size_type qq = 1;
     for (; qq < BaseType::numCoefficients(); ++qq) {
       coefficient = BaseType::coefficients()[qq]->evaluate(mu);
@@ -110,16 +110,17 @@ public:
       ret->backend() += BaseType::components()[qq]->backend() * coefficient[0];
     }
     if (BaseType::numComponents() > qq)
-      ret->backend() += BaseType::components()[qq + 1]->base();
+      ret->backend() += BaseType::components()[qq + 1]->backend();
     return ret;
   } // Dune::shared_ptr< ComponentType > fix(const ParamType& mu) const
 
-  Dune::shared_ptr< const ComponentType > fix() const
+  Dune::shared_ptr< ComponentType > fix() const
   {
     assert(BaseType::paramSize() == 0);
     assert(BaseType::numComponents() == 1);
     assert(BaseType::numCoefficients() == 0);
-    return BaseType::components()[0];
+    Dune::shared_ptr< ComponentType > ret(new ComponentType(*(BaseType::components()[0])));
+    return ret;
   }
 
 private:
