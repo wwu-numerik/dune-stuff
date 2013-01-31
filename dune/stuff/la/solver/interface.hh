@@ -29,11 +29,11 @@ public:
 
   typedef typename MatrixType::size_type size_type;
 
-  virtual bool apply(const MatrixType& /*_systemMatrix*/,
-                     const VectorType& /*_rhsVector*/,
-                     VectorType& /*_solutionVector*/,
-                     const size_type /*_maxIter*/,
-                     const ElementType /*_precision*/) const = 0;
+  virtual size_type apply(const MatrixType& /*_systemMatrix*/,
+                          const VectorType& /*_rhsVector*/,
+                          VectorType& /*_solutionVector*/,
+                          const size_type /*_maxIter*/,
+                          const ElementType /*_precision*/) const = 0;
 }; // class Interface
 
 
@@ -52,11 +52,11 @@ public:
     DUNE_THROW(Dune::NotImplemented, msg);
   }
 
-  virtual bool apply(const MatrixType& /*_systemMatrix*/,
-                     const VectorType& /*_rhsVector*/,
-                     VectorType& /*_solutionVector*/,
-                     const size_type /*_maxIter*/ = 0,
-                     const ElementType /*_precision*/ = 0) const
+  virtual size_type apply(const MatrixType& /*_systemMatrix*/,
+                          const VectorType& /*_rhsVector*/,
+                          VectorType& /*_solutionVector*/,
+                          const size_type /*_maxIter*/ = 0,
+                          const ElementType /*_precision*/ = 0) const
   {}
 }; // class SolverNotImplementedForThisMatrixVectorCombination
 
