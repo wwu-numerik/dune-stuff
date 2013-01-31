@@ -25,7 +25,7 @@ void gramSchmidt(ContainerType& /*_columnVectors*/)
 }
 
 
-//#if HAVE_EIGEN
+#if HAVE_EIGEN
 template< class ElementType >
 void gramSchmidt(Dune::Stuff::LA::Container::EigenDenseVector< ElementType >& /*_columnVectors*/)
 {
@@ -97,17 +97,18 @@ void gramSchmidt(Dune::Stuff::LA::Container::EigenRowMajorSparseMatrix< ElementT
   dune_static_assert((Dune::AlwaysFalse< ElementType >::value),
                      "ERROR: not implemeneted for EigenRowMajorSparseMatrix!");
 }
-//#endif // HAVE_EIGEN
+#endif // HAVE_EIGEN
 
 
 template< class ScalarProductType, class ContainerType >
 void gramSchmidt(const ScalarProductType& /*scalarProduct*/, ContainerType& /*_columnVectors*/)
 {
   dune_static_assert((Dune::AlwaysFalse< ScalarProductType >::value || Dune::AlwaysFalse< ContainerType >::value),
-                     "ERROR: not implemeneted for this ContainerType!");
+                     "ERROR: not implemeneted for this combination of ScalarProductType/ContainerType!");
 }
 
 
+#if HAVE_EIGEN
 template< class ElementType >
 void gramSchmidt(const Dune::Stuff::LA::Container::EigenDenseMatrix< ElementType >& /*_scalarProduct*/,
                  Dune::Stuff::LA::Container::EigenDenseVector< ElementType >& /*_columnVectors*/)
@@ -167,8 +168,54 @@ void gramSchmidt(const Dune::Stuff::LA::Container::EigenDenseMatrix< ElementType
     } // this is a matrix, check how to interpret it
   } // if this is an empty matrix, throw up
 } // void normalize(Dune::Stuff::LA::Container::EigenDenseMatrix< ElementType >& _matrix)
+#endif // HAVE_EIGEN
 
 
+template< class ScalarProductType, class BasisVectorsType, class ContainerType >
+void gramSchmidt(const ScalarProductType& /*scalarProduct*/,
+                 const BasisVectorsType& /*_columnBasisVectors*/,
+                 ContainerType& /*_columnVectors*/)
+{
+  dune_static_assert((Dune::AlwaysFalse< ScalarProductType >::value || Dune::AlwaysFalse< ContainerType >::value),
+                     "ERROR: not implemeneted for this combination of ScalarProductType/BasisVectorsType/ContainerType!");
+}
+
+
+#if HAVE_EIGEN
+template< class ElementType >
+bool gramSchmidt(const Dune::Stuff::LA::Container::EigenRowMajorSparseMatrix< ElementType >& _scalarProduct,
+                 const Dune::Stuff::LA::Container::EigenDenseMatrix< ElementType >& _columnBasisVectors,
+                 Dune::Stuff::LA::Container::EigenDenseVector< ElementType >& _vector,
+                 const ElementType epsilon = 1e-10)
+{
+  // if this is an empty vector, throw up
+  if (_vector.size() == 0)
+    DUNE_THROW(Dune::MathError,
+               "\nERROR: '_vector' is empty!");
+  else {
+    // check sizes
+    assert(_scalarProduct.rows() == _vector.size());
+    assert(_scalarProduct.cols() == _vector.size());
+    assert(_columnBasisVectors.rows() == _vector.size());
+    typedef typename Dune::Stuff::LA::Container::EigenDenseMatrix< ElementType >::size_type size_type;
+    // orthonormalize _vector wrt all columns in _columnBasisVectors
+    for (size_type jj = 0; jj < _columnBasisVectors.cols(); ++ jj) {
+      // therefore, subtract its projection onto the jjth basis vector
+      const ElementType factor = _vector.backend().transpose() * _scalarProduct.backend() * _columnBasisVectors.backend().col(jj);
+      const ElementType norm = _columnBasisVectors.backend().col(jj).transpose() * _scalarProduct.backend() * _columnBasisVectors.backend().col(jj);
+      _vector.backend() -= (factor/norm) * _columnBasisVectors.backend().col(jj);
+    }
+    // and normalize it
+    const ElementType norm = std::sqrt(_vector.backend().transpose() * _scalarProduct.backend() * _vector.backend());
+    if (norm < epsilon)
+      return false;
+    else {
+      _vector.backend() /= norm;
+      return true;
+    }
+  } // if this is an empty matrix, throw up
+} // void normalize(Dune::Stuff::LA::Container::EigenDenseVector< ElementType >& _vector)
+#endif // HAVE_EIGEN
 
 } // namespace Algorithm
 } // namespace LA
