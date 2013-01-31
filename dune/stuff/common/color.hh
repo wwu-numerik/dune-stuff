@@ -114,7 +114,7 @@ int templateColorChooser(int i) {
 std::string highlightTemplate(std::string str, int maxlevel = 10000) {
   if (maxlevel < 0)
     maxlevel = 0;
-  int startindex = 0;
+  size_t startindex = 0;
   int level = 0;
   for (size_t i = 0; i < str.size(); i++)
   {
@@ -132,7 +132,7 @@ std::string highlightTemplate(std::string str, int maxlevel = 10000) {
       str.insert(++i, dummy);
       if (level + 1 == maxlevel)
       {
-        int size = i - startindex - 1;
+        auto size = i - startindex - 1;
         str.erase(startindex, size);
         i = startindex + 1;
       }
@@ -173,9 +173,9 @@ std::string colorStringRed(const std::string _string)
  * @returns The highlighted string.
  */
 std::string highlightSearchString(std::string str, std::string substr, int colornr = 0) {
-  int index = str.find(substr, 0);
+  long index = long(str.find(substr, 0));
 
-  while ( index != int(std::string::npos) )
+  while ( index != long(std::string::npos) )
   {
     std::string dummy = "\033[38;5;" + toString(colornr % 256) + "m";
     std::string dummy2 = "\033[38;5;0m";

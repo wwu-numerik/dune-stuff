@@ -56,9 +56,9 @@ class RandomStrings : public RNG<std::string,
 {
     typedef RNG<std::string, std::uniform_int_distribution<int>, std::mt19937 >
         BaseType;
-    const int length;
+    const size_t length;
 public:
-    RandomStrings(int l)
+    RandomStrings(size_t l)
         : BaseType(std::mt19937(std::random_device()()),
                    std::uniform_int_distribution<int>(0,alphanums.size() - 1))
         , length(l)
@@ -89,7 +89,7 @@ template < >
 class DefaultRNG<std::string> : public RandomStrings
 {
 public:
-    DefaultRNG(int ilength = 12)
+    DefaultRNG(size_t ilength = 12)
         : RandomStrings(ilength)
     {}
 };

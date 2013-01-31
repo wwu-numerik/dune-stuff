@@ -177,7 +177,10 @@ public:
 
   ElementType min() const { return boost::accumulators::min(acc_); }
   ElementType max() const { return boost::accumulators::max(acc_); }
-  ElementType average() const { return boost::accumulators::mean(acc_); }
+  ElementType average() const {
+    // for integer ElementType this just truncates from floating-point
+    return ElementType(boost::accumulators::mean(acc_));
+  }
 
   void operator()(const ElementType& el) {
     acc_(el);

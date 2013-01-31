@@ -124,7 +124,7 @@ public:
         ret.push_back(Dune::Stuff::Common::fromString< T >(str));
         if (ret.size() < minSize) {
           std::cout << Dune::Stuff::Common::colorString("WARNING:") << " vector '" << _key << "' was too small (" << ret.size() << ") and has been enlarged to size " << minSize << "!" << std::endl;
-          for (unsigned int i = ret.size(); i < minSize; ++i)
+          for (auto i = ret.size(); i < minSize; ++i)
             ret.push_back(def);
         }
         return ret;
@@ -139,7 +139,7 @@ public:
             tokens = Dune::Stuff::Common::tokenize< std::string >(str.substr(1, str.size() - 2), ";");
           for (unsigned int i = 0; i < tokens.size(); ++i)
             ret.push_back(Dune::Stuff::Common::fromString< T >(boost::algorithm::trim_copy(tokens[i])));
-          for (unsigned int i = ret.size(); i < minSize; ++i)
+          for (auto i = ret.size(); i < minSize; ++i)
             ret.push_back(def);
         } else if (Dune::Stuff::Common::String::equal(str.substr(0, 1), "[")
                    || Dune::Stuff::Common::String::equal(str.substr(str.size() - 1, 1), "]")) {

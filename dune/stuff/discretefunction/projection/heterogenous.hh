@@ -201,21 +201,21 @@ public:
     const auto& target_geometry = target_entity.geometry();
     auto target_local_function = target.localFunction(target_entity);
     const auto& target_lagrangepoint_set = space.lagrangePointSet(target_entity);
-    const int quadNop = target_lagrangepoint_set.nop();
+    const auto quadNop = target_lagrangepoint_set.nop();
 
     typename TargetDiscreteFunctionSpaceType::RangeType source_value;
 
     std::vector<typename TargetDiscreteFunctionSpaceType::DomainType> global_quads(quadNop);
-    for(int qP = 0; qP < quadNop ; ++qP) {
+    for(size_t qP = 0; qP < quadNop ; ++qP) {
       global_quads[qP] = target_geometry.global(target_lagrangepoint_set.point(qP));
     }
     const auto evaluation_entities = search(global_quads);
     assert(evaluation_entities.size() == global_quads.size());
 
     int k = 0;
-    for(int qP = 0; qP < quadNop ; ++qP)
+    for(size_t qP = 0; qP < quadNop ; ++qP)
     {
-      if(target_local_function[ k ] == infinity)
+      if(std::isinf(target_local_function[ k ]))
       {
         const auto& global_point = global_quads[qP];
         // evaluate source function

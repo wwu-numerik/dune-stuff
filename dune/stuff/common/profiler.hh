@@ -52,7 +52,7 @@ public:
   /** \return time elapsed since object construction in milliseconds
    *  \note since typical resolutions for user+system time are 10-15ms the nanosecond results are scaled accordingly
    **/
-  boost::timer::nanosecond_type delta() const { return (timer_->elapsed().user + timer_->elapsed().system) / 1e6; }
+  boost::timer::nanosecond_type delta() const { return (timer_->elapsed().user + timer_->elapsed().system) / boost::timer::nanosecond_type(1e6); }
 };
 
 /** \brief simple inline profiling class

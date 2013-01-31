@@ -51,14 +51,14 @@ public:
     // process input
     assert(arg.size() == dimDomain);
     DomainType arg_fvector;
-    for (int i = 0; i < dimDomain; ++i)
+    for (size_t i = 0; i < dimDomain; ++i)
       arg_fvector[i] = arg(i);
     // evaluate
     RangeType ret_fvector;
     evaluate(arg_fvector, ret_fvector);
     // process output
     assert(ret.size() == dimRange);
-    for (int i = 0; i < dimRange; ++i)
+    for (size_t i = 0; i < dimRange; ++i)
       ret(i) = ret_fvector[i];
   }
 
@@ -76,7 +76,7 @@ public:
     evaluate(arg, ret_fvector);
     // process output
     assert(ret.size() == dimRange);
-    for (int i = 0; i < dimRange; ++i)
+    for (size_t i = 0; i < dimRange; ++i)
       ret(i) = ret_fvector[i];
   }
 
@@ -85,7 +85,7 @@ public:
     // process input
     assert(arg.size() == dimDomain);
     DomainType arg_fvector;
-    for (int i = 0; i < dimDomain; ++i)
+    for (size_t i = 0; i < dimDomain; ++i)
       arg_fvector[i] = arg(i);
     // evaluate
     RangeType ret_fvector;

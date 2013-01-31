@@ -36,9 +36,9 @@ const char* rightPathLimiter(const char* path, int depth = 2) {
  #define LOGIC_ERROR
 #endif // ifndef NDEBUG
 
-char* copy(const char* s) { int l = strlen(s) + 1;
+char* copy(const char* s) { size_t l = strlen(s) + 1;
                             char* t = new char[l];
-                            for (int i = 0; i < l; i++)
+                            for (size_t i = 0; i < l; i++)
                             {
                               t[i] = s[i];
                             }
