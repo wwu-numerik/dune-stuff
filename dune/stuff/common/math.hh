@@ -200,7 +200,7 @@ protected:
 
 };
 
-//! bound \param var in [\param min,\param max]
+//! \return var bounded in [min, max]
 template< typename T >
 T clamp(const T var, const T min, const T max) {
   return (var < min) ? min : (var > max) ? max : var;

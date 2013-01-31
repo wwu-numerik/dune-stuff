@@ -229,8 +229,7 @@ public:
                 From \c main()
     \param[in]  argv
                 From \c main()
-    \param[out] paramTree
-                The Dune::ParameterTree that is to be filled.
+    \return     The Dune::ParameterTree that is to be filled.
     **/
   static ParameterTree init(int argc, char** argv, std::string filename)
   {
