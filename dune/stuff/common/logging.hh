@@ -71,10 +71,8 @@ public:
      */
 
   LogStream& getStream(int streamId);
-  LogStream& err() DUNE_DEPRECATED_MSG("use error() instead")  { return getStream(LOG_ERROR); }
   LogStream& error() { return getStream(LOG_ERROR); }
   LogStream& info() { return getStream(LOG_INFO); }
-  LogStream& dbg() DUNE_DEPRECATED_MSG("use debug() instead") { return getStream(LOG_DEBUG); }
   LogStream& debug() { return getStream(LOG_DEBUG); }
   LogStream& devnull() { return emptyLogStream_; }
 

@@ -135,9 +135,9 @@ LogStream& Logging::getStream(int streamId) {
 }
 
 void Logging::flush() {
-  BOOST_FOREACH(auto pair, streammap_)
+  for(auto pair : streammap_)
   {
-      assert(pair.second);
+    assert(pair.second);
     pair.second->flush();
   }
 } // Flush
@@ -153,7 +153,7 @@ int Logging::addStream(int flags) {
 } // AddStream
 
 void Logging::resume(LogStream::PriorityType prio) {
-  BOOST_FOREACH(auto pair, streammap_)
+  for(auto pair : streammap_)
   {
     pair.second->resume(prio);
   }
