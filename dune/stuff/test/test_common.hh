@@ -15,7 +15,7 @@
 #include <dune/common/mpihelper.hh>
 #include <dune/stuff/aliases.hh>
 
-#include <gtest/gtest.h>
+#include <gtest.h>
 
 #include <random>
 #include <fstream>
