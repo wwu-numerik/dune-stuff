@@ -75,19 +75,8 @@ public:
   }   // Resume
 
 protected:
-  virtual std::streamsize xsputn( const char_type* s, std::streamsize count ) {
-    if (enabled())
-      return BaseType::xsputn(s, count);
-    //pretend everything was written
-    return std::streamsize(count);
-  }
-
-  virtual int_type overflow( int_type ch = traits_type::eof() ) {
-    if (enabled())
-      return BaseType::overflow(ch);
-    //anything not equal to traits::eof is considered a success
-    return traits_type::eof() + 1;
-  }
+  virtual std::streamsize xsputn( const char_type* s, std::streamsize count );
+  virtual int_type overflow( int_type ch = traits_type::eof() );
 
 private:
   inline bool enabled() const {
@@ -103,6 +92,19 @@ private:
   PriorityType suspend_priority_;
 };
 
+std::streamsize SuspendableStrBuffer::xsputn(const char_type* s, std::streamsize count) {
+  if (enabled())
+    return BaseType::xsputn(s, count);
+  //pretend everything was written
+  return std::streamsize(count);
+}
+
+SuspendableStrBuffer::int_type SuspendableStrBuffer::overflow(SuspendableStrBuffer::int_type ch) {
+  if (enabled())
+    return BaseType::overflow(ch);
+  //anything not equal to traits::eof is considered a success
+  return traits_type::eof() + 1;
+}
 
 class LogStream
   : public std::basic_ostream< char, std::char_traits<char> >
@@ -131,11 +133,7 @@ public:
   }
 
   //! dump buffer into file/stream and clear it
-  virtual LogStream& flush() {
-    assert(buffer_);
-    buffer_->pubsync();
-    return *this;
-  }
+  virtual LogStream& flush();
 
   /** \brief forwards suspend to buffer
      * the suspend_priority_ mechanism provides a way to silence streams from 'higher' modules
@@ -144,7 +142,7 @@ public:
   void suspend(PriorityType priority = default_suspend_priority) {
     assert(buffer_);
     buffer_->suspend(priority);
-  }   // Suspend
+  }
 
   /** \brief start accepting input into the buffer again
      * no-op if not suspended
@@ -156,8 +154,13 @@ public:
 
 private:
   SuspendableStrBuffer* buffer_;
-
 }; // LogStream
+
+LogStream& LogStream::flush() {
+  assert(buffer_);
+  buffer_->pubsync();
+  return *this;
+}
 
 //! ostream compatible class wrapping file and console output
 class FileLogStream
@@ -174,15 +177,7 @@ private:
   private:
     std::ofstream& logfile_;
   protected:
-    virtual int sync() {
-      // flush buffer into stream
-      std::cout << str();
-      std::cout.flush();
-      logfile_ << str();
-      logfile_.flush();
-      str("");
-      return 0;
-    }
+    virtual int sync();
   };
 
 public:
@@ -197,6 +192,16 @@ private:
   FileBuffer logBuffer_;
 }; // class FileLogStream
 
+int FileLogStream::FileBuffer::sync() {
+  // flush buffer into stream
+  std::cout << str();
+  std::cout.flush();
+  logfile_ << str();
+  logfile_.flush();
+  str("");
+  return 0;
+}
+
 //! /dev/null
 class EmptyLogStream
   : public LogStream
@@ -210,10 +215,7 @@ private:
     {}
 
   protected:
-    virtual int sync() {
-      str("");
-      return 0;
-    }
+    virtual int sync();
   };
 public:
   EmptyLogStream(int& logflags)
@@ -226,6 +228,11 @@ public:
 private:
   EmptyBuffer logBuffer_;
 }; // class EmptyLogStream
+
+int EmptyLogStream::EmptyBuffer::sync() {
+  str("");
+  return 0;
+}
 
 namespace {
   int dev_null_logflag;
