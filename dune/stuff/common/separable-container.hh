@@ -11,7 +11,7 @@ namespace Stuff {
 namespace Common {
 
 
-template< class ComponentImp, class CoefficientImp, class size_t = unsigned int >
+template< class ComponentImp, class CoefficientImp, class size_t = std::size_t >
 class SeparableContainer
 {
 public:
@@ -28,13 +28,34 @@ public:
     , components_(_components)
     , coefficients_(_coefficients)
   {
-    assert(components_.size() == coefficients_.size() || components_.size() == coefficients_.size() + 1);
+    // sanity checks
+    if (components_.size() < 1)
+      DUNE_THROW(Dune::RangeError,
+                 "\nERROR: not enough '_components' given!");
+    if (!(coefficients_.size() == components_.size()
+          || coefficients_.size() == (components_.size() - 1)))
+      DUNE_THROW(Dune::RangeError,
+                 "\nERROR: wrong number of 'coefficients_' given!");
+    if (coefficients_.size() == 0) {
+      if (paramSize_ > 0)
+        DUNE_THROW(Dune::RangeError,
+                   "\nERROR: '_paramSize' has to be zero!");
+    } else {
+      if (paramSize_ < 1)
+        DUNE_THROW(Dune::RangeError,
+                   "\nERROR: '_paramSize' has to be positive!");
+    }
   }
 
-  SeparableContainer(const size_type _paramSize, const Dune::shared_ptr< const ComponentType > _component)
-    : paramSize_(_paramSize)
+  SeparableContainer(const Dune::shared_ptr< const ComponentType > _component)
+    : paramSize_(0)
   {
     components_.push_back(_component);
+  }
+
+  bool parametric() const
+  {
+    return numCoefficients() > 0;
   }
 
   const size_type paramSize() const
