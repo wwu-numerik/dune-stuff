@@ -147,22 +147,22 @@ public:
     return name_;
   }
 
-//  void report(const std::string name = "stuff.function.expression",
-//              std::ostream& stream = std::cout,
-//              const std::string& prefix = "") const
-//  {
-//    const std::string tmp = name + "(" + variable() + ") = ";
-//    stream << prefix << tmp;
-//    if (expression().size() == 1)
-//        stream << expression()[0] << std::endl;
-//    else {
-//      stream << "[ " << expression()[0] << ";" << std::endl;
-//      const std::string whitespace = Dune::Stuff::Common::whitespaceify(tmp + "[ ");
-//      for (unsigned int i = 1; i < expression().size() - 1; ++i)
-//        stream << prefix << whitespace << expression()[i] << ";" << std::endl;
-//      stream << prefix << whitespace << expression()[expression().size() -1] << " ]" << std::endl;
-//    }
-//  } // void report(const std::string, std::ostream&, const std::string&) const
+  void report(const std::string _name = "function.nonparametric.expression",
+              std::ostream& _stream = std::cout,
+              const std::string& _prefix = "") const
+  {
+    const std::string tmp = _name + "(" + variable() + ") = ";
+    _stream << _prefix << tmp;
+    if (expression().size() == 1)
+        _stream << expression()[0] << std::endl;
+    else {
+      _stream << "[ " << expression()[0] << ";" << std::endl;
+      const std::string whitespace = Dune::Stuff::Common::whitespaceify(tmp + "[ ");
+      for (unsigned int i = 1; i < expression().size() - 1; ++i)
+        _stream << _prefix << whitespace << expression()[i] << ";" << std::endl;
+      _stream << _prefix << whitespace << expression()[expression().size() -1] << " ]" << std::endl;
+    }
+  } // void report(const std::string, std::ostream&, const std::string&) const
 
   std::string variable() const
   {
