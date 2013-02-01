@@ -59,7 +59,8 @@ public:
   {
     if (!hasSub(_sub))
         DUNE_THROW(Dune::RangeError,
-                   "\nERROR: sub '" << _sub << "' missing in the following Dune::ParameterTree:\n" << reportString("  "));
+                   "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
+                   << " sub '" << _sub << "' missing in the following Dune::ParameterTree:\n" << reportString("  "));
     return ExtendedParameterTree(BaseType::sub(_sub));
   }
 
@@ -157,7 +158,8 @@ public:
   {
     if (!hasKey(_key)) {
       DUNE_THROW(Dune::RangeError,
-                 "\nERROR: key '" << _key << "' missing  in the following Dune::ParameterTree:\n" << reportString("  "));
+                 "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
+                 << " key '" << _key << "' missing  in the following Dune::ParameterTree:\n" << reportString("  "));
     } else {
       std::vector< T > ret;
       const std::string str = BaseType::get< std::string >(_key, "meaningless_default_value");
@@ -174,7 +176,8 @@ public:
           DUNE_THROW(Dune::RangeError, "Vectors have to be of the form '[entry_0; entry_1; ... ]'!");
       if (ret.size() < minSize)
         DUNE_THROW(Dune::RangeError,
-                   "\nERROR: vector '" << _key
+                   "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
+                   << " vector '" << _key
                    << "' too short (is " << ret.size() << ", should be at least " << minSize
                    << ") in the following Dune::ParameterTree :\n" << reportString("  "));
       return ret;
@@ -213,14 +216,16 @@ public:
   {
     if (!BaseType::hasKey(_key))
       DUNE_THROW(Dune::RangeError,
-                 "\nERROR: key '" << _key << "' missing  in the following Dune::ParameterTree:\n" << reportString("  "));
+                 "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
+                 << " key '" << _key << "' missing  in the following Dune::ParameterTree:\n" << reportString("  "));
   }
 
   void assertSub(const std::string& _sub) const
   {
     if (!BaseType::hasSub(_sub))
       DUNE_THROW(Dune::RangeError,
-                 "\nERROR: sub '" << _sub << "' missing  in the following Dune::ParameterTree:\n" << reportString("  "));
+                 "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
+                 << " sub '" << _sub << "' missing  in the following Dune::ParameterTree:\n" << reportString("  "));
   }
 
   /**
