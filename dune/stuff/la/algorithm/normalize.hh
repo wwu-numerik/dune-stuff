@@ -93,7 +93,7 @@ void normalize(const ScalarProductType& /*scalarProduct*/, ContainerType& /*_col
 //#if HAVE_EIGEN
 template< class ElementType >
 void normalize(const Dune::Stuff::LA::Container::EigenDenseMatrix< ElementType >& /*_scalarProduct*/,
-                 Dune::Stuff::LA::Container::EigenDenseVector< ElementType >& /*_columnVectors*/)
+               Dune::Stuff::LA::Container::EigenDenseVector< ElementType >& /*_columnVectors*/)
 {
   dune_static_assert((Dune::AlwaysFalse< ElementType >::value),
                      "ERROR: not implemeneted yet!");
