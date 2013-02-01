@@ -32,17 +32,11 @@ class Coefficient;
 template< class DomainFieldImp, int domainDim,
           class RangeFieldImp, int rangeDim,
           class ParamFieldImp = double, int maxParamDim = 0 >
-class Interface;
-
-
-template< class DomainFieldImp, int domainDim,
-          class RangeFieldImp,
-          class ParamFieldImp, int maxParamDim >
-class Interface< DomainFieldImp, domainDim, RangeFieldImp, 1, ParamFieldImp, maxParamDim >
+class Interface
 {
 public:
   typedef Interface<  DomainFieldImp, domainDim,
-                      RangeFieldImp, 1,
+                      RangeFieldImp, rangeDim,
                       ParamFieldImp, maxParamDim > ThisType;
 
   typedef DomainFieldImp                                  DomainFieldType;
@@ -50,7 +44,7 @@ public:
   typedef Dune::FieldVector< DomainFieldType, dimDomain > DomainType;
 
   typedef RangeFieldImp                                 RangeFieldType;
-  static const int                                      dimRange = 1;
+  static const int                                      dimRange = rangeDim;
   typedef Dune::FieldVector< RangeFieldType, dimRange > RangeType;
 
   typedef ParamFieldImp                         ParamFieldType;
