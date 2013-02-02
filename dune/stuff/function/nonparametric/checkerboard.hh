@@ -3,55 +3,52 @@
 
 #include <vector>
 
-#include "interface.hh"
+#include "../interface.hh"
 
 namespace Dune {
 namespace Stuff {
 namespace Function {
 
+
 template< class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDim >
-class Checkerboard
-  : public Interface< DomainFieldImp, domainDim, RangeFieldImp, rangeDim >
+class NonparametricCheckerboard;
+
+
+template< class DomainFieldImp, int domainDim, class RangeFieldImp >
+class NonparametricCheckerboard< DomainFieldImp, domainDim, RangeFieldImp, 1 >
+  : public Interface< DomainFieldImp, domainDim, RangeFieldImp, 1 >
 {
 public:
-  typedef DomainFieldImp DomainFieldType;
+  typedef Interface< DomainFieldImp, domainDim, RangeFieldImp, 1 >                  BaseType;
+  typedef NonparametricCheckerboard< DomainFieldImp, domainDim, RangeFieldImp, 1 >  ThisType;
 
-  static const int dimDomain = domainDim;
+  typedef typename BaseType::DomainType     DomainType;
+  static const int                          dimDomain = domainDim;
+  typedef typename BaseType::RangeFieldType RangeFieldType;
+  typedef typename BaseType::RangeType      RangeType;
 
-  typedef RangeFieldImp RangeFieldType;
-
-  static const int dimRange = rangeDim;
-
-  typedef Interface< DomainFieldType, dimDomain, RangeFieldType, dimRange > BaseType;
-
-  typedef Checkerboard< DomainFieldType, dimDomain, RangeFieldType, dimRange > ThisType;
-
-  typedef typename BaseType::DomainType DomainType;
-
-  typedef typename BaseType::RangeType RangeType;
-
-  Checkerboard(const DomainType lowerLeft,
-               const DomainType upperRight,
-               const std::vector< unsigned int > numElements,
-               const std::vector< RangeFieldType > components)
-    : lowerLeft_(lowerLeft)
-    , upperRight_(upperRight)
-    , numElements_(numElements)
-    , components_(components)
+  NonparametricCheckerboard(const DomainType _lowerLeft,
+                            const DomainType _upperRight,
+                            const std::vector< unsigned int > _numElements,
+                            const std::vector< RangeFieldType > _values)
+    : lowerLeft_(_lowerLeft)
+    , upperRight_(_upperRight)
+    , numElements_(_numElements)
+    , values_(_values)
   {
     // get total number of subdomains
     unsigned int totalSubdomains = 1;
     for (int d = 0; d < dimDomain; ++d) {
       totalSubdomains *= numElements_[d];
     }
-    assert(totalSubdomains <= components_.size() && "Please provide at least as many components as subdomains!");
+    assert(totalSubdomains <= values_.size() && "Please provide at least as many components as subdomains!");
   }
 
-  Checkerboard(const ThisType& other)
-    : lowerLeft_(other.lowerLeft_)
-    , upperRight_(other.upperRight_)
-    , numElements_(other.numElements_)
-    , components_(other.components_)
+  NonparametricCheckerboard(const ThisType& _other)
+    : lowerLeft_(_other.lowerLeft_)
+    , upperRight_(_other.upperRight_)
+    , numElements_(_other.numElements_)
+    , values_(_other.values_)
   {
     // no cheks necessary, since they have been carried out in the constructor of other
   }
@@ -62,7 +59,7 @@ public:
       lowerLeft_ = other.lowerLeft();
       upperRight_ = other.upperRight();
       numElements_ = other.numElements();
-      components_ = other.components();
+      values_ = other.values();
     }
     return this;
   }
@@ -79,12 +76,27 @@ public:
 
   const std::vector< unsigned int >& numElements() const
   {
-    return numElements_();
+    return numElements_;
   }
 
-  const std::vector< RangeFieldType >& components() const
+  const std::vector< RangeFieldType >& values() const
   {
-    return components_();
+    return values_;
+  }
+
+  virtual bool parametric() const
+  {
+    return false;
+  }
+
+  virtual std::string name() const
+  {
+    return "function.nonparametric.checkerboard";
+  }
+
+  virtual int order() const
+  {
+    return 0;
   }
 
   virtual void evaluate(const DomainType& x, RangeType& ret) const
@@ -107,14 +119,14 @@ public:
       DUNE_THROW(Dune::NotImplemented, "\nError: not implemented for grid dimensions other than 1, 2 or 3!");
     } // decide on the subdomain the point x belongs to
     // return the component that belongs to the subdomain of x
-    ret = components_[subdomain];
+    ret = values_[subdomain];
   } // virtual void evaluate(const DomainType& x, RangeType& ret) const
 
 private:
   DomainType lowerLeft_;
   DomainType upperRight_;
   std::vector< unsigned int > numElements_;
-  std::vector< RangeFieldType > components_;
+  std::vector< RangeFieldType > values_;
 }; // class Checkerboard
 
 } // namespace Function
