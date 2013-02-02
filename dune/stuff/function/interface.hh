@@ -58,8 +58,6 @@ public:
   /** \defgroup purevirtual-type ´´These methods have to be implemented and determine the type of the function (and also, which of the below methods have to be implemented).'' */
   /* @{ */
   virtual bool parametric() const = 0;
-
-  virtual bool separable() const = 0;
   /* @} */
 
   /** \defgroup purevirtual ´´These methods have to be implemented.'' */
@@ -88,6 +86,12 @@ public:
 
   /** \defgroup parametric-must ´´These methods have to be implemented, if parametric() == true.'' */
   /* @{ */
+  virtual bool separable() const
+  {
+    DUNE_THROW(Dune::NotImplemented,
+               "\n" << Dune::Stuff::Common::colorStringRed("ERROR:") << " implement me if parametric() == true!");
+  }
+
   virtual size_type paramSize() const
   {
     DUNE_THROW(Dune::NotImplemented,
