@@ -132,11 +132,6 @@ public:
     return false;
   }
 
-  virtual bool separable() const
-  {
-    return false;
-  }
-
   virtual int order() const
   {
     return order_;
