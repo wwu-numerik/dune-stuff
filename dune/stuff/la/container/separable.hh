@@ -5,8 +5,8 @@
 #include <dune/common/shared_ptr.hh>
 
 #include <dune/stuff/la/container/eigen.hh>
-#include <dune/stuff/function/nonparametric/expression.hh>
-#include <dune/stuff/common/separable-container.hh>
+#include <dune/stuff/common/parameter.hh>
+#include <dune/stuff/function/parametric/separable/coefficient.hh>
 
 namespace Dune {
 namespace Stuff {
@@ -15,51 +15,63 @@ namespace Container {
 
 
 #if HAVE_EIGEN
-template< class EigenContainerImp, class ParamFieldImp, int maxNumParams >
+template< class EigenContainerImp >
 class Separable
-  : public Common::SeparableContainer<  EigenContainerImp,
-                                        Dune::Stuff::Function::Coefficient< ParamFieldImp,
-                                                                            maxNumParams,
-                                                                            typename EigenContainerImp::ElementType >,
-                                        typename EigenContainerImp::size_type >
 {
 public:
-  typedef Common::SeparableContainer< EigenContainerImp,
-                                      Dune::Stuff::Function::Coefficient< ParamFieldImp,
-                                                                          maxNumParams,
-                                                                          typename EigenContainerImp::ElementType >,
-                                      typename EigenContainerImp::size_type >
-                                                                      BaseType;
-  typedef Separable< EigenContainerImp, ParamFieldImp, maxNumParams > ThisType;
+  typedef Separable< EigenContainerImp >  ThisType;
 
   typedef typename LA::Container::EigenInterface< typename EigenContainerImp::Traits >::derived_type  ComponentType;
-  typedef Dune::Stuff::Function::Coefficient< ParamFieldImp,
-                                              maxNumParams,
-                                              typename EigenContainerImp::ElementType > CoefficientType;
-  typedef typename CoefficientType::ParamType ParamType;
-  typedef typename CoefficientType::size_type size_type;
+  typedef Stuff::Function::Coefficient< typename EigenContainerImp::ElementType >                     CoefficientType;
 
-private:
-  static std::vector< Dune::shared_ptr< const ComponentType > > constify_vector(std::vector< Dune::shared_ptr< ComponentType > > _vector)
-  {
-    std::vector< Dune::shared_ptr< const ComponentType > > ret(_vector.size());
-    for (typename std::vector< Dune::shared_ptr< ComponentType > >::size_type ii = 0; ii < _vector.size(); ++ii)
-      ret[ii] = _vector[ii];
-    return ret;
-  }
+  typedef typename Stuff::Common::Parameter::Type ParamType;
 
 public:
-  Separable(const size_type _paramSize,
-            std::vector< Dune::shared_ptr< ComponentType > > _components,
-            const std::vector< Dune::shared_ptr< const CoefficientType > > _coefficients)
-    : BaseType(_paramSize, constify_vector(_components), _coefficients)
+  Separable(const size_t _paramSize,
+            std::vector< Dune::shared_ptr< ComponentType > >& _components,
+            const std::vector< Dune::shared_ptr< const CoefficientType > >& _coefficients)
+    : paramSize_(_paramSize)
     , components_(_components)
-  {}
+    , coefficients_(_coefficients)
+  {
+    // sanity checks
+    if (components_.size() < 1)
+      DUNE_THROW(Dune::RangeError,
+                 "\nERROR: not enough '_components' given!");
+    if (!(coefficients_.size() == components_.size()
+          || coefficients_.size() == (components_.size() - 1)))
+      DUNE_THROW(Dune::RangeError,
+                 "\nERROR: wrong number of 'coefficients_' given!");
+    if (coefficients_.size() == 0) {
+      if (paramSize_ > 0)
+        DUNE_THROW(Dune::RangeError,
+                   "\nERROR: '_paramSize' has to be zero!");
+    } else {
+      if (paramSize_ < 1)
+        DUNE_THROW(Dune::RangeError,
+                   "\nERROR: '_paramSize' has to be positive!");
+    }
+  }
 
   Separable(Dune::shared_ptr< ComponentType > _component)
-    : BaseType(_component)
+    : paramSize_(0)
   {
     components_.push_back(_component);
+  }
+
+  bool parametric() const
+  {
+    return numCoefficients() > 0;
+  }
+
+  const size_t paramSize() const
+  {
+    return paramSize_;
+  }
+
+  const size_t numComponents() const
+  {
+    return components_.size();
   }
 
   std::vector< Dune::shared_ptr< ComponentType > > components()
@@ -67,7 +79,20 @@ public:
     return components_;
   }
 
-  using BaseType::components;
+  const std::vector< Dune::shared_ptr< ComponentType > >& components() const
+  {
+    return components_;
+  }
+
+  const size_t numCoefficients() const
+  {
+    return coefficients_.size();
+  }
+
+  const std::vector< Dune::shared_ptr< const CoefficientType > >& coefficients() const
+  {
+    return coefficients_;
+  }
 
   Dune::shared_ptr< ComponentType > fix(const ParamType& _mu) const
   {
@@ -79,7 +104,7 @@ public:
 //    ParamType coefficient = BaseType::coefficients()[0]->evaluate(mu);
 //    assert(coefficient.size() == 1);
 //    ret->backend() *= coefficient[0];
-//    size_type qq = 1;
+//    size_t qq = 1;
 //    for (; qq < BaseType::numCoefficients(); ++qq) {
 //      coefficient = BaseType::coefficients()[qq]->evaluate(mu);
 //      assert(coefficient.size() == 1);
@@ -90,16 +115,10 @@ public:
 //    return ret;
   } // Dune::shared_ptr< ComponentType > fix(const ParamType& mu) const
 
-//  Dune::shared_ptr< ComponentType > fix() const
-//  {
-//    assert(BaseType::paramSize() == 0);
-//    assert(BaseType::numComponents() == 1);
-//    assert(BaseType::numCoefficients() == 0);
-//    return Dune::make_shared< ComponentType >(*(BaseType::components()[0]));
-//  }
-
 private:
+  const size_t paramSize_;
   std::vector< Dune::shared_ptr< ComponentType > > components_;
+  const std::vector< Dune::shared_ptr< const CoefficientType > > coefficients_;
 }; // class Separable
 #endif // HAVE_EIGEN
 
