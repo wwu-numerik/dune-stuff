@@ -7,9 +7,6 @@
   #include "config.h"
 #endif // ifdef HAVE_CMAKE_CONFIG
 
-#include <sstream>
-#include <vector>
-
 #include <dune/common/dynvector.hh>
 #include <dune/common/fvector.hh>
 
@@ -30,10 +27,11 @@ class Coefficient
   : public ExpressionBase< Common::Parameter::FieldType, Common::Parameter::maxDim, RangeFieldImp, 1 >
 {
 public:
-  typedef Coefficient< RangeFieldImp >                                                ThisType;
+  typedef Coefficient< RangeFieldImp >                                                                ThisType;
   typedef ExpressionBase< Common::Parameter::FieldType, Common::Parameter::maxDim, RangeFieldImp, 1 > BaseType;
 
   typedef Common::Parameter::Type ParamType;
+  typedef RangeFieldImp           RangeFieldType;
 
   static std::string id()
   {
@@ -44,22 +42,21 @@ public:
     : BaseType("mu", _expression)
   {}
 
-  Coefficient(const std::vector< std::string > _expressions)
-    : BaseType("mu", _expressions)
-  {}
-
   Coefficient(const ThisType& other)
     : BaseType(other)
   {}
 
-  static ThisType createFromDescription(const Dune::ParameterTree& _description)
+  void evaluate(const ParamType& _mu, RangeFieldType& _ret) const
   {
-    const Dune::Stuff::Common::ExtendedParameterTree description(_description);
-    // get necessary
-    const std::vector< std::string > _expressions = description.getVector< std::string >("expression", 1);
-    // create and return
-    return ThisType(_expressions);
-  } // static ThisType createFromDescription(const Dune::ParameterTree& _description)
+    BaseType::evaluate(_mu, _ret);
+  }
+
+  RangeFieldType evaluate(const ParamType& _mu) const
+  {
+    RangeFieldType ret;
+    BaseType::evaluate(_mu, ret);
+    return ret;
+  }
 }; // class Coefficient
 
 
