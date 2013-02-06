@@ -135,16 +135,22 @@ public:
     return *this;
   } // ThisType& operator=(ThisType& other)
 
-  static Dune::ParameterTree createSampleDescription(const std::string prefix = "")
+  static Dune::ParameterTree createSampleDescription(const std::string subName = "")
   {
     Dune::ParameterTree description;
-    description[prefix + "lowerLeft"] = "[0.0; 0.0; 0.0]";
-    description[prefix + "upperRight"] = "[1.0; 1.0; 1.0]";
-    description[prefix + "numElements"] = "[2; 2; 2]";
-    description[prefix + "paramMin"] = "[1.0; 2.0; 3.0; 4.0; 5.0; 6.0; 7.0; 8.0]";
-    description[prefix + "paramMax"] = "[10.0; 20.0; 30.0; 40.0; 50.0; 60.0; 70.0; 80.0]";
-    description[prefix + "name"] = id();
-    return description;
+    description["lowerLeft"] = "[0.0; 0.0; 0.0]";
+    description["upperRight"] = "[1.0; 1.0; 1.0]";
+    description["numElements"] = "[2; 2; 2]";
+    description["paramMin"] = "[1.0; 2.0; 3.0; 4.0; 5.0; 6.0; 7.0; 8.0]";
+    description["paramMax"] = "[10.0; 20.0; 30.0; 40.0; 50.0; 60.0; 70.0; 80.0]";
+    description["name"] = id();
+    if (subName.empty())
+      return description;
+    else {
+      Dune::Stuff::Common::ExtendedParameterTree extendedDescription;
+      extendedDescription.add(description, subName);
+      return extendedDescription;
+    }
   }
 
   static ThisType createFromDescription(const Dune::ParameterTree _description)
@@ -152,6 +158,7 @@ public:
     // get correct paramTree
     Stuff::Common::ExtendedParameterTree description(_description);
     // get data
+    const std::string _name = description.get< std::string >("name", id());
     const std::vector< DomainFieldType > lowerLefts = description.getVector("lowerLeft", DomainFieldType(0), dimDomain);
     const std::vector< DomainFieldType > upperRights = description.getVector("upperRight",
                                                                              DomainFieldType(1),
@@ -186,7 +193,7 @@ public:
     paramRange.push_back(paramMin);
     paramRange.push_back(paramMax);
     // create and return
-    return ThisType(lowerLeft, upperRight, numElements, paramRange);
+    return ThisType(lowerLeft, upperRight, numElements, paramRange, _name);
   } // static ThisType createFromParamTree(const Dune::ParameterTree paramTree)
 
   virtual bool parametric() const
