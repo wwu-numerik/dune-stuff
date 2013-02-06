@@ -249,12 +249,9 @@ public:
     assert(_mu.size() == paramSize());
     _ret = RangeFieldType(0);
     RangeType tmpComponentValue;
-    RangeType tmpCoefficientValue;
     for (unsigned int qq = 0; qq < paramSize_; ++qq) {
       components_[qq]->evaluate(_x, tmpComponentValue);
-      coefficients_[qq]->evaluate(_mu, tmpCoefficientValue);
-      assert(tmpCoefficientValue.size() == 1);
-      tmpComponentValue *= tmpCoefficientValue[0];
+      tmpComponentValue *= coefficients_[qq]->evaluate(_mu);
       _ret += tmpComponentValue;
     }
   } // virtual void evaluate(const DomainType& x, const ParamType& mu, RangeType& ret) const
