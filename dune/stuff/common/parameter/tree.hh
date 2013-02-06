@@ -55,6 +55,38 @@ public:
     return *this;
   } // ExtendedParameterTree& operator=(const Dune::ParameterTree& other)
 
+  /**
+   *  \brief adds another Dune::ParameterTree
+   */
+  void add(const Dune::ParameterTree& _other, const std::string _subName = "")
+  {
+    if (_subName.empty()) {
+      // copy each key/value pair and append subName
+      const Dune::ParameterTree::KeyVector& keyVector = _other.getValueKeys();
+      for (size_t ii = 0; ii < keyVector.size(); ++ii) {
+        const std::string key = keyVector[ii];
+        if (BaseType::hasKey(key))
+          DUNE_THROW(Dune::InvalidStateException,
+                     "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
+                     << " key '" << key << "' already exists in the follingDune::ParameterTree:\n"
+                     << reportString("  "));
+        BaseType::operator[](key) = _other.get< std::string >(key);
+      }
+    } else {
+      if (BaseType::hasKey(_subName))
+        DUNE_THROW(Dune::InvalidStateException,
+                   "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
+                   << " key '" << _subName << "' already exists in the follingDune::ParameterTree:\n"
+                   << reportString("  "));
+      else if (BaseType::hasSub(_subName)) {
+        ExtendedParameterTree _sub = BaseType::sub(_subName);
+        _sub.add(_other);
+        BaseType::sub(_subName) = _sub;
+      } else
+        BaseType::sub(_subName) = _other;
+    }
+  } // ... add(...)
+
   ExtendedParameterTree sub(const std::string& _sub) const
   {
     if (!hasSub(_sub))
