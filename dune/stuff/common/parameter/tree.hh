@@ -21,6 +21,7 @@
 
 #include <dune/common/exceptions.hh>
 #include <dune/common/parametertreeparser.hh>
+#include <dune/common/dynvector.hh>
 
 #include <dune/stuff/common/string.hh>
 #include <dune/stuff/common/color.hh>
@@ -141,6 +142,16 @@ public:
   } // bool hasVector(const std::string& vector) const
 
   template< class T >
+  Dune::DynamicVector< T > getDynVector(const std::string& _key, const T& def, const size_t minSize) const
+  {
+    const std::vector< T > vector = getVector< T >(_key, def, minSize);
+    Dune::DynamicVector< T > ret(vector.size());
+    for (size_t ii = 0; ii < vector.size(); ++ii)
+      ret[ii] = vector[ii];
+    return ret;
+  }
+
+  template< class T >
   std::vector< T > getVector(const std::string& _key, const T& def, const unsigned int minSize) const
   {
     if (!hasKey(_key)) {
@@ -184,6 +195,16 @@ public:
       }
     }
   } // std::vector< T > getVector(const std::string& key, const T def) const
+
+  template< class T >
+  Dune::DynamicVector< T > getDynVector(const std::string& _key, const size_t minSize) const
+  {
+    const std::vector< T > vector = getVector< T >(_key, minSize);
+    Dune::DynamicVector< T > ret(vector.size());
+    for (size_t ii = 0; ii < vector.size(); ++ii)
+      ret[ii] = vector[ii];
+    return ret;
+  }
 
   template< class T >
   std::vector< T > getVector(const std::string& _key, const unsigned int minSize) const
