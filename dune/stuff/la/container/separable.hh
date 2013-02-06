@@ -94,25 +94,24 @@ public:
     return coefficients_;
   }
 
-  Dune::shared_ptr< ComponentType > fix(const ParamType& _mu) const
+  Dune::shared_ptr< ComponentType > fix(const ParamType _mu = ParamType()) const
   {
-    assert(false && "Implement me!");
-//    assert(parametric() && "Call fix() instead of fix(mu) for nonparametric container!");
-//    assert(mu.size() == BaseType::paramSize());
-//    Dune::shared_ptr< ComponentType > ret = Dune::make_shared< ComponentType >(*(BaseType::components()[0]));
-//    // since we are parametric, at leas one coefficient has to exist
-//    ParamType coefficient = BaseType::coefficients()[0]->evaluate(mu);
-//    assert(coefficient.size() == 1);
-//    ret->backend() *= coefficient[0];
-//    size_t qq = 1;
-//    for (; qq < BaseType::numCoefficients(); ++qq) {
-//      coefficient = BaseType::coefficients()[qq]->evaluate(mu);
-//      assert(coefficient.size() == 1);
-//      ret->backend() += BaseType::components()[qq]->backend() * coefficient[0];
-//    }
-//    if (BaseType::numComponents() > qq)
-//      ret->backend() += BaseType::components()[qq + 1]->backend();
-//    return ret;
+    // in any case, there exists at least one component
+    Dune::shared_ptr< ComponentType > ret = Dune::make_shared< ComponentType >(*(components_[0]));
+    // if we are parametric, we have to do some more
+    if (parametric()) {
+      assert(_mu.size() == paramSize());
+      // since we are parametric, at least one coefficient has to exist as well
+      ret->backend() *= coefficients_[0]->evaluate(_mu);
+      // sum over the rest of the component/coefficient combinations
+      size_t qq = 1;
+      for (; qq < numCoefficients(); ++qq)
+        ret->backend() += components_[qq]->backend() * coefficients_[qq]->evaluate(_mu);
+      // add the last lonely component if necesarry
+      if (numComponents() > qq)
+        ret->backend() += components_[qq + 1]->backend();
+    } // if (parametric())
+    return ret;
   } // Dune::shared_ptr< ComponentType > fix(const ParamType& mu) const
 
 private:
