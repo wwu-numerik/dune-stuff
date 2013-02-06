@@ -13,8 +13,10 @@
 
 #include <dune/stuff/common/parameter.hh>
 #include <dune/stuff/common/string.hh>
+#include <dune/stuff/common/color.hh>
+#include <dune/stuff/common/parameter/tree.hh>
 
-#include "../../interface.hh"
+#include <dune/stuff/function.hh>
 #include "coefficient.hh"
 
 namespace Dune {
@@ -27,28 +29,35 @@ class SeparableDefault
   : public Interface< DomainFieldImp, domainDim, RangeFieldImp, rangeDim >
 {
 public:
-  typedef SeparableDefault< DomainFieldImp, domainDim, RangeFieldImp, rangeDim >   ThisType;
-  typedef Interface< DomainFieldImp, domainDim, RangeFieldImp, rangeDim > BaseType;
+  typedef SeparableDefault< DomainFieldImp, domainDim, RangeFieldImp, rangeDim >  ThisType;
+  typedef Interface< DomainFieldImp, domainDim, RangeFieldImp, rangeDim >         BaseType;
 
-  typedef typename BaseType::DomainType     DomainType;
-  typedef typename BaseType::RangeFieldType RangeFieldType;
-  typedef typename BaseType::RangeType      RangeType;
-  typedef typename BaseType::ParamType      ParamType;
+  typedef typename BaseType::DomainFieldType  DomainFieldType;
+  static const int                            dimDomain = BaseType::dimDomain;
+  typedef typename BaseType::DomainType       DomainType;
+  typedef typename BaseType::RangeFieldType   RangeFieldType;
+  static const int                            dimRange = BaseType::dimRange;
+  typedef typename BaseType::RangeType        RangeType;
+  typedef typename BaseType::ParamFieldType   ParamFieldType;
+  typedef typename BaseType::ParamType        ParamType;
 
   typedef typename BaseType::ComponentType    ComponentType;
   typedef typename BaseType::CoefficientType  CoefficientType;
 
+  static const std::string id()
+  {
+    return "function.parametric.separable.default";
+  }
+
   SeparableDefault(const size_t _paramSize,
-          const std::vector< ParamType > _paramRange,
-          const std::vector< Dune::shared_ptr< const ComponentType > > _components,
-          const std::vector< Dune::shared_ptr< const CoefficientType > > _coefficients,
-          const std::vector< std::string > _parameterExplanation = std::vector< std::string >(),
-          const int _order = -1,
-          const std::string _name = "function.parametric.separable.SeparableDefault")
+                   const std::vector< ParamType > _paramRange,
+                   const std::vector< Dune::shared_ptr< const ComponentType > > _components,
+                   const std::vector< Dune::shared_ptr< const CoefficientType > > _coefficients,
+                   const std::vector< std::string > _parameterExplanation = std::vector< std::string >(),
+                   const int _order = -1,
+                   const std::string _name = "function.parametric.separable.default")
     : paramSize_(_paramSize)
     , paramRange_(_paramRange)
-    , numComponents_(_components.size())
-    , numCoefficients_(_coefficients.size())
     , components_(_components)
     , coefficients_(_coefficients)
     , order_(_order)
@@ -56,21 +65,50 @@ public:
   {
     // some checks
     assert(paramSize_ > 0);
-    assert(numComponents_ > 0);
-    assert(numCoefficients_ > 0);
-    assert((numComponents_ == numCoefficients_)
-           || (numComponents_ == numCoefficients_ + 1));
+    assert(components_.size() > 0);
+    assert(coefficients_.size() > 0);
+    assert((components_.size() == coefficients_.size())
+           || (components_.size() == coefficients_.size() + 1));
     assert(paramRange_.size() == 2 && "Vector has wrong size!");
     assert(paramRange_[0].size() == paramSize_ && "Vector has wrong size!");
     assert(paramRange_[1].size() == paramSize_ && "Vector has wrong size!");
-    for (unsigned int qq = 0; qq < paramSize_; ++qq)
+    for (size_t qq = 0; qq < paramSize_; ++qq)
       assert(paramRange_[0][qq] <= paramRange_[1][qq]
           && "Given minimum parameter has to be piecewise <= maximum parameter!");
+    for (size_t qq = 0; qq < components_.size(); ++qq)
+      if (components_[qq]->parametric())
+        DUNE_THROW(Dune::RangeError,
+                   "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
+                   << " component " << qq << " is parametric!");
     // process parameter explanation
-    for (unsigned int qq = 0; qq < std::min(paramSize_, _parameterExplanation.size()); ++qq)
+    for (size_t qq = 0; qq < std::min(paramSize_, _parameterExplanation.size()); ++qq)
       parameterExplanation_.push_back(_parameterExplanation[qq]);
-    for (unsigned int qq = std::min(paramSize_, _parameterExplanation.size()); qq < paramSize_; ++qq)
+    for (size_t qq = std::min(paramSize_, _parameterExplanation.size()); qq < paramSize_; ++qq)
       parameterExplanation_.push_back("parameter_component_" + Dune::Stuff::Common::toString(qq));
+  }
+
+  SeparableDefault(const ThisType& other)
+    : paramSize_(other.paramSize_)
+    , paramRange_(other.paramRange_)
+    , components_(other.components_)
+    , coefficients_(other.coefficients_)
+    , order_(other.order_)
+    , name_(other.name_)
+    , parameterExplanation_(other.parameterExplanation_)
+  {}
+
+  ThisType& operator=(const ThisType& other)
+  {
+    if (this != &other) {
+      paramSize_ = other.paramSize();
+      paramRange_ = other.paramRange();
+      components_ = other.components();
+      coefficients_ = other.coefficients();
+      order_ = other.order();
+      name_ = other.name();
+      parameterExplanation_ = other.parameterExplanation();
+    }
+    return this;
   }
 
   virtual bool parametric() const
@@ -110,12 +148,12 @@ public:
 
   virtual size_t numComponents() const
   {
-    return numComponents_;
+    return components_.size();
   }
 
   virtual size_t numCoefficients() const
   {
-    return numCoefficients_;
+    return coefficients_.size();
   }
 
   virtual const std::vector< Dune::shared_ptr< const ComponentType > >& components() const
@@ -133,16 +171,13 @@ public:
     assert(_mu.size() == paramSize_);
     _ret = RangeFieldType(0);
     RangeType tmpComponentValue;
-    RangeType tmpCoefficientValue;
-    for (unsigned int qq = 0; qq < numComponents_; ++qq) {
+    for (size_t qq = 0; qq < numCoefficients(); ++qq) {
       components_[qq]->evaluate(_x, tmpComponentValue);
-      coefficients_[qq]->evaluate(_mu, tmpCoefficientValue);
-      assert(tmpCoefficientValue.size() == 1);
-      tmpComponentValue *= tmpCoefficientValue[0];
+      tmpComponentValue *= coefficients_[qq]->evaluate(_mu);
       _ret += tmpComponentValue;
     }
-    if (numComponents_ > numCoefficients_) {
-      components_[numComponents_]->evaluate(_x, tmpComponentValue);
+    if (numComponents() > numCoefficients()) {
+      components_[numCoefficients()]->evaluate(_x, tmpComponentValue);
       _ret += tmpComponentValue;
     }
   } // virtual void evaluate(const DomainType& _x, const ParamType& _mu, RangeType& _ret) const
@@ -150,8 +185,6 @@ public:
 private:
   size_t paramSize_;
   std::vector< ParamType > paramRange_;
-  size_t numComponents_;
-  size_t numCoefficients_;
   std::vector< Dune::shared_ptr< const ComponentType > > components_;
   std::vector< Dune::shared_ptr< const CoefficientType > > coefficients_;
   const int order_;
