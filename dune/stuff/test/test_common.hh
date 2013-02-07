@@ -41,6 +41,11 @@ struct TestRunner {
     }
 };
 
+template < int i >
+struct Int {
+  static const int value = i;
+};
+
 //! where sleep only counts toward wall time, this wastes actual cpu time
 void busywait(const int ms)  {
   // "round" up to next full 10 ms to align with native timer res
