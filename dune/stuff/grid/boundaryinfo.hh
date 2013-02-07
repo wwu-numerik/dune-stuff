@@ -86,7 +86,7 @@ public:
     return BaseType::id() + ".allneumann";
   }
 
-  virtual bool dirichlet(const IntersectionType& intersection) const
+  virtual bool dirichlet(const IntersectionType& /*intersection*/) const
   {
     return false;
   }

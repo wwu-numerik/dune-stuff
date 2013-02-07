@@ -24,6 +24,7 @@ void DiagonalMult(const Matrix& matrix, Function& f) {
   }
   return;
 } // DiagonalMult
+
 //! return true if any dof is nan or inf
 template< class DiscreteFunctionType >
 void divideFunctionDofs(DiscreteFunctionType& target, const DiscreteFunctionType& divider) {

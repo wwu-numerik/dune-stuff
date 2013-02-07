@@ -7,6 +7,8 @@
  #include "config.h"
 #endif // ifdef HAVE_CMAKE_CONFIG
 
+#if HAVE_DUNE_FEM
+
 #include <dune/fem/function/common/function.hh>
 #include <dune/common/bartonnackmanifcheck.hh>
 
@@ -207,6 +209,7 @@ public:
 } // namespace Stuff
 } // namespace Dune
 
+#endif //HAVE_DUNE_FEM
 #endif // STUFF_TIMEFUNCTION_HH
 /** Copyright (c) 2012, Rene Milk
    * All rights reserved.
