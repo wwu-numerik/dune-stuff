@@ -197,7 +197,20 @@ public:
     : grid_(other.grid_)
   {}
 
-  static ThisType createFromParamTree(const Dune::ParameterTree& paramTree, const std::string subName = id())
+  static Dune::ParameterTree createSampleDescription(const std::string subName = "")
+  {
+    Dune::ParameterTree description;
+    description["filename"] = "path_to_starcd_filename_prefix";
+    if (subName.empty())
+      return description;
+    else {
+      Dune::Stuff::Common::ExtendedParameterTree extendedDescription;
+      extendedDescription.add(description, subName);
+      return extendedDescription;
+    }
+  }
+
+  static ThisType createFromDescription(const Dune::ParameterTree& paramTree, const std::string subName = id())
   {
     // get correct paramTree
     Dune::Stuff::Common::ExtendedParameterTree extendedParamTree;
