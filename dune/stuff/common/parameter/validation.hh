@@ -63,7 +63,6 @@ public:
 };
 
 
-
 //! validates arg iff in given list
 template< class T, class ListImp = std::vector< T > >
 class ValidateInList

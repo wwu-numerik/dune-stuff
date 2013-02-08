@@ -7,54 +7,16 @@
 
 #define SEGFAULT { int* J = 0; * J = 9; }
 
-//! from right/bottom limiter for file paths
-const char* rightPathLimiter(const char* path, int depth = 2) {
-  char* c = new char[255];
-
-  strcpy(c, path);
-  const char* p = strtok(c, "/");
-  int i = 0;
-  while (p && i < depth)
-  {
-    p = strtok(NULL, "/");
-  }
-  p = strtok(NULL, "\0");
-  return p;
-} // rightPathLimiter
-
-#ifndef NDEBUG
- #ifndef LOGIC_ERROR
-  #include <stdexcept>
-  #include <sstream>
-  #define LOGIC_ERROR \
-  { \
-    std::stringstream ss; ss << __FILE__ << ":" << __LINE__ << " should never be called"; \
-    throw std::logic_error( ss.str() ); \
-  }
- #endif // ifndef LOGIC_ERROR
-#else // ifndef NDEBUG
- #define LOGIC_ERROR
-#endif // ifndef NDEBUG
-
-char* copy(const char* s) { size_t l = strlen(s) + 1;
+char* charcopy(const char* s) { size_t l = strlen(s) + 1;
                             char* t = new char[l];
                             for (size_t i = 0; i < l; i++)
                             {
                               t[i] = s[i];
                             }
                             return t; } // copy
-#define __CLASS__ strtok(copy(__PRETTY_FUNCTION__), "<(")
 
-#ifndef NDEBUG
- #define NEEDS_IMPLEMENTATION \
-  { \
-    std::stringstream ss; ss << " implementation missing: " << __CLASS__ << " -- " << rightPathLimiter(__FILE__) \
-                             << ":" << __LINE__; \
-    std::cerr << ss.str() << std::endl; \
-  }
-#else // ifndef NDEBUG
- #define NEEDS_IMPLEMENTATION
-#endif // NDEBUG
+#define __CLASS__ strtok(charcopy(__PRETTY_FUNCTION__), "<(")
+
 
 class assert_exception
   : public std::runtime_error
@@ -72,17 +34,6 @@ public:
     : std::runtime_error(msg) {}
 };
 
-#ifndef NDEBUG
- #define ASSERT_EXCEPTION(cond, msg) \
-  if ( !(cond) ) \
-  { \
-    std::string rmsg( std::string(__FILE__) + std::string(":") + Stuff::Common::toString(__LINE__) + std::string( \
-                        "\n") + std::string(msg) );  \
-    throw assert_exception(rmsg); \
-  }
-#else // ifndef NDEBUG
- #define ASSERT_EXCEPTION(cond, msg)
-#endif // ifndef NDEBUG
 
 #define UNUSED(identifier)  /* identifier */
 
@@ -93,14 +44,19 @@ public:
  #define UNUSED_UNLESS_DEBUG(param) UNUSED(param)
 #endif // ifndef NDEBUG
 
+#ifndef ASSERT_LT
 #define ASSERT_LT(expt, actual) \
   BOOST_ASSERT_MSG( (expt < actual), \
                     (boost::format( \
                        "assertion %1% < %2% failed: %3% >= %4%") % # expt % # actual % expt % actual).str().c_str() )
+#endif
+
+#ifndef ASSERT_EQ
 #define ASSERT_EQ(expt, actual) \
   BOOST_ASSERT_MSG( (expt == actual), \
                     (boost::format( \
                        "assertion %1% == %2% failed: %3% != %4%") % # expt % # actual % expt % actual).str().c_str() )
+#endif
 
 #endif // DUNE_STUFF_DEBUG_HH
 

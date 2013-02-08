@@ -8,7 +8,7 @@
 
 namespace Dune {
 namespace Stuff {
-namespace Common {
+namespace Fem {
 
 //! a small proxy object that automagically prevents near-0 value fill-in
 template< class MatrixPointerType >
@@ -149,7 +149,7 @@ public:
   unsigned int cols() const { return cols_; }
 };
 
-} // namespace Common
+} // namespace Fem
 } // namespace Stuff
 } // namespace Dune
 

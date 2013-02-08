@@ -86,7 +86,7 @@ public:
           {
             f.evaluate(faceQuadrature.point(qP), ret, *intIt);
 
-            for (int i = 0; i < baseFunctionset.numBaseFunctions(); ++i)
+            for (size_t i = 0; i < baseFunctionset.size(); ++i)
             {
               baseFunctionset.evaluate(i, faceQuadrature[qP], phi);
               lf[i] += intel * (ret * phi);

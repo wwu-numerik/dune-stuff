@@ -7,23 +7,20 @@
  #include "config.h"
 #endif // ifdef HAVE_CMAKE_CONFIG
 
-// system
 #include <iostream>
 #include <sstream>
+#include <memory>
 
-// eigen
 #ifdef HAVE_EIGEN
 #include <Eigen/Core>
 #endif // HAVE_EIGEN
 
-// dune-common
 #include <dune/common/exceptions.hh>
 #include <dune/common/shared_ptr.hh>
 #include <dune/common/parametertree.hh>
 #include <dune/common/dynmatrix.hh>
 #include <dune/common/densevector.hh>
 
-// dune-stuff
 #include <dune/stuff/common/logging.hh>
 #include <dune/stuff/common/parameter/tree.hh>
 #include <dune/stuff/common/parameter/configcontainer.hh>

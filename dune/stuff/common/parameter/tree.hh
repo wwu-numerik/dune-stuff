@@ -331,9 +331,6 @@ private:
   } // void report(std::ostream& stream = std::cout, const std::string& prefix = "") const
 }; // class ExtendedParameterTree
 
-//! \todo TODO Remove this!
-typedef ExtendedParameterTree ParameterTreeX;
-
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune

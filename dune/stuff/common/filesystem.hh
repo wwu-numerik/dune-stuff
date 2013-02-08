@@ -35,6 +35,7 @@ void testCreateDirectory(const std::string _path) {
     boost::filesystem::create_directories(pathonly);
 }
 
+//! pure c++ emulation of system's touch binary
 bool touch(const std::string& _path) {
   return std::ofstream(_path.c_str()).is_open();
 }
@@ -54,11 +55,9 @@ boost::filesystem::ifstream* make_ifstream(const boost::filesystem::path& path,
 //! read a file and output all lines containing filter string to a stream
 void fileToStreamFiltered(std::ostream& stream, std::string filename, std::string filter) {
   std::ifstream file(filename.c_str(), std::ifstream::in);
-
-  ASSERT_EXCEPTION( file.good(), filename.c_str() );
+  std::string line;
   while ( file.good() )
   {
-    std::string line;
     std::getline(file, line);
     if (line.find(filter) != std::string::npos)
       stream << line << "\n";
