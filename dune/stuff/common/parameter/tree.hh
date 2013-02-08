@@ -41,6 +41,10 @@ public:
   ExtendedParameterTree()
   {}
 
+  ExtendedParameterTree(const std::string filename)
+    : BaseType(init(filename))
+  {}
+
   ExtendedParameterTree(int argc, char** argv, std::string filename)
     : BaseType(init(argc, argv, filename))
   {}
@@ -305,6 +309,13 @@ public:
     if (paramTree.hasKey("paramfile")) {
       Dune::ParameterTreeParser::readINITree(paramTree.get< std::string >("paramfile"), paramTree, false);
     }
+    return paramTree;
+  } // static ExtendedParameterTree init(...)
+
+  static ParameterTree init(const std::string filename)
+  {
+    Dune::ParameterTree paramTree;
+    Dune::ParameterTreeParser::readINITree(filename, paramTree);
     return paramTree;
   } // static ExtendedParameterTree init(...)
 
