@@ -133,7 +133,7 @@ public:
   {
     if (!BaseType::hasKey(_key))
       DUNE_THROW(Dune::RangeError,
-                 "\nERROR: key '" << _key << "' missing  in the following Dune::ParameterTree:\n" << reportString("  "));
+                 "\n" << Dune::Stuff::Common::colorStringRed("ERROR:") << " key '" << _key << "' missing  in the following Dune::ParameterTree:\n" << reportString("  "));
     return BaseType::get< T >(_key);
   }
 
