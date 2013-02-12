@@ -155,9 +155,9 @@ public:
             DUNE_THROW(Dune::IOError,
                        "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
                        << " can not create a 'function.parametric.separable.default' inside itself!");
-          _components.push_back(Dune::Stuff::Function::create<  DomainFieldType, dimDomain,
+          _components.push_back(Dune::shared_ptr< const ComponentType >(Dune::Stuff::Function::create<  DomainFieldType, dimDomain,
                                                                 RangeFieldType, dimRange >(type,
-                                                                                           componentDescription));
+                                                                                           componentDescription)));
         } else {
           // since it does not have a type, treat it as an expression function
           if (!(componentDescription.hasKey("expression") || componentDescription.hasSub("expression")))
@@ -172,9 +172,9 @@ public:
             componentDescription["name"] = _name;
           if (!componentDescription.hasKey("order"))
             componentDescription["order"] = Dune::Stuff::Common::toString(_order);
-          _components.push_back(Dune::Stuff::Function::create<  DomainFieldType, dimDomain,
+          _components.push_back(Dune::shared_ptr< const ComponentType >(Dune::Stuff::Function::create<  DomainFieldType, dimDomain,
                                                                 RangeFieldType, dimRange >("function.expression",
-                                                                                           componentDescription));
+                                                                                           componentDescription)));
         } // if (componentDescription.hasKey("type"))
       } else if (description.hasKey(key)) {
         // there is only one key, interpret it as an entry for an expression function with variable x
@@ -183,9 +183,9 @@ public:
         componentDescription["order"] = Dune::Stuff::Common::toString(_order);
         componentDescription["variable"] = "x";
         componentDescription["expression"] = description.get< std::string >(key);
-        _components.push_back(Dune::Stuff::Function::create<  DomainFieldType, dimDomain,
+        _components.push_back(Dune::shared_ptr< const ComponentType >(Dune::Stuff::Function::create<  DomainFieldType, dimDomain,
                                                               RangeFieldType, dimRange >("function.expression",
-                                                                                         componentDescription));
+                                                                                         componentDescription)));
       } else {
         // stop the search
         continue_search = false;
