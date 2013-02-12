@@ -53,7 +53,7 @@ public:
   static const int range_dim = RangeDim::value;
   static const int pol_order = 1;
 
-  typedef Dune::Stuff::Grid::Provider::Cube<Dune::SGrid< GridDim::value, GridDim::value >> GridProviderType;
+  typedef Dune::Stuff::Grid::Provider::GenericCube<Dune::SGrid< GridDim::value, GridDim::value >> GridProviderType;
   typedef typename GridProviderType::GridType GridType;
   typedef Dune::Stuff::Function::Expression< double, GridType::dimension, double, range_dim > FunctionType;
   typedef typename FunctionType::FunctionSpaceType FunctionSpaceType;

@@ -94,8 +94,8 @@ public:
 void ptest(const int macro_elements = 4, const int target_factor = 2) {
   typedef Traits<SourceGrid> SourceTraits;
   typedef Traits<TargetGrid> TargetTraits;
-  auto source_cube = Stuff::Grid::Provider::Cube<SourceGrid>(0,1,macro_elements).grid();
-  auto target_cube = Stuff::Grid::Provider::Cube<TargetGrid>(0,1,macro_elements*target_factor).grid();
+  auto source_cube = Stuff::Grid::Provider::GenericCube<SourceGrid>(0,1,macro_elements).grid();
+  auto target_cube = Stuff::Grid::Provider::GenericCube<TargetGrid>(0,1,macro_elements*target_factor).grid();
   source_cube->globalRefine(2);
   target_cube->globalRefine(2*target_factor);
 
