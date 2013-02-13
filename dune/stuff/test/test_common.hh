@@ -14,6 +14,7 @@
 #include <dune/common/tupleutility.hh>
 #include <dune/common/mpihelper.hh>
 #include <dune/stuff/aliases.hh>
+#include <dune/stuff/common/logging.hh>
 
 #include <gtest.h>
 

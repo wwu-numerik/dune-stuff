@@ -161,6 +161,6 @@ int main(int argc, char** argv)
   DSC_CONFIG.readOptions(argc, argv);
   testing::InitGoogleTest(&argc, argv);
   Dune::MPIManager::initialize(argc,argv);
-
+  DSC::Logger().create(DSC::LOG_CONSOLE | DSC::LOG_ERROR);
   return RUN_ALL_TESTS();
 }
