@@ -128,10 +128,10 @@ public:
 
 private:
   //! copy constructor
-  SparsityPattern(const ThisType&);
+  SparsityPattern(const ThisType&) = delete;
 
   //! assignment operator
-  ThisType& operator=(const ThisType&);
+  ThisType& operator=(const ThisType&) = delete;
 
   SparsityPatternContainerType sparsityPattern_;
   unsigned int sizeN_;
@@ -184,40 +184,22 @@ public:
     typedef typename AnsatzSpaceType::GridPartType
     GridPartType;
 
-    typedef typename GridPartType::template Codim< 0 >::IteratorType
-    ElementIteratorType;
-
-    typedef typename GridPartType::GridType::template Codim< 0 >::Entity
-    ElementType;
-
     typedef typename GridPartType::IntersectionIteratorType
     IntersectionIteratorType;
 
     typedef typename IntersectionIteratorType::Intersection
     IntersectionType;
 
-    typedef typename IntersectionType::EntityPointer
-    ElementPointerType;
-
     const unsigned int ansatzSize = ansatzSpace.size();
     const unsigned int DUNE_UNUSED(testSize) = testSpace.size();
 
-    typedef SparsityPattern
-    PatternType;
-
-    PatternType sPattern(ansatzSize / MatrixType::block_type::rows);
+    SparsityPattern sPattern(ansatzSize / MatrixType::block_type::rows);
 
     // compute sparsity pattern
     // \todo precompile this in linear subspace
     // \todo use constraints for sparsity pattern
-    const ElementIteratorType lastElement = ansatzSpace.end();
-
-    for (ElementIteratorType elementIterator = ansatzSpace.begin();
-         elementIterator != lastElement;
-         ++elementIterator)
+    for (const auto& element : ansatzSpace)
     {
-      const ElementType& element = *elementIterator;
-
       const int elRowIndex = ansatzSpace.blockMapper().mapToGlobal(element, 0);
       sPattern.insert(elRowIndex, elRowIndex);
       // do loop over all intersections

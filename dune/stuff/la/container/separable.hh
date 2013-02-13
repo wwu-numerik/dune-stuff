@@ -97,7 +97,7 @@ public:
   Dune::shared_ptr< ComponentType > fix(const ParamType _mu = ParamType()) const
   {
     // in any case, there exists at least one component
-    Dune::shared_ptr< ComponentType > ret = Dune::make_shared< ComponentType >(*(components_[0]));
+    auto ret = Dune::make_shared< ComponentType >(*(components_[0]));
     // if we are parametric, we have to do some more
     if (parametric()) {
       assert(_mu.size() == paramSize());

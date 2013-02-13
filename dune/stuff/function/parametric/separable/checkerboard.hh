@@ -84,10 +84,8 @@ public:
     for (size_t ii = 0; ii < paramSize_; ++ii) {
       std::vector< RangeFieldType > indicator(paramSize_, RangeFieldType(0));
       indicator[ii] = RangeFieldType(1);
-      const Dune::shared_ptr< const NonparametricType > indicatorFunction
-          = Dune::make_shared< NonparametricType >(_lowerLeft, _upperRight, _numElements, indicator);
-      components_.push_back(indicatorFunction);
-      coefficients_.push_back(Dune::make_shared< CoefficientType >("mu[" + Dune::Stuff::Common::toString(ii) + "]"));
+      components_.emplace_back(new NonparametricType(_lowerLeft, _upperRight, _numElements, indicator));
+      coefficients_.emplace_back(new CoefficientType("mu[" + DSC::toString(ii) + "]"));
     } // create the coefficients and components
     parameterExplanation_ = std::vector< std::string >(paramSize_, "");
     // create the explanations

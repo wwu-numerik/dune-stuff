@@ -20,26 +20,17 @@ template< class FunctionType, class DiscreteFunctionSpaceType >
 std::pair< typename FunctionType::RangeType, double > integralAndVolume(const FunctionType& function,
                                                                         const DiscreteFunctionSpaceType& space,
                                                                         const int polOrd = -1) {
-  typename FunctionType::RangeType integral_value = typename FunctionType::RangeType(0);
-  double total_volume = 0;
-  typedef typename DiscreteFunctionSpaceType::Traits::GridPartType GridPartType;
-  typedef typename DiscreteFunctionSpaceType::Traits::IteratorType Iterator;
-  typedef typename DiscreteFunctionSpaceType::BaseFunctionSetType  BaseFunctionSetType;
-  typedef typename GridPartType::GridType                          GridType;
-
-  typename DiscreteFunctionSpaceType::RangeType ret(0.0);
-
-  typedef Dune::CachingQuadrature< GridPartType, 0 > QuadratureType;
-
+  typedef Dune::CachingQuadrature< typename DiscreteFunctionSpaceType::Traits::GridPartType, 0 > QuadratureType;
   typedef Dune::Stuff::Fem::LocalMassMatrix< DiscreteFunctionSpaceType, QuadratureType > LocalMassMatrixType;
 
-  const int quadOrd = std::max(2 * space.order() + 2, polOrd);
+  typename FunctionType::RangeType integral_value = typename FunctionType::RangeType(0);
+  double total_volume = 0;
+  typename DiscreteFunctionSpaceType::RangeType ret(0.0);
 
-  const Iterator endit = space.end();
-  for (Iterator it = space.begin(); it != endit; ++it)
+  const int quadOrd = std::max(2 * space.order() + 2, polOrd);
+  for (const auto& en : space)
   {
-    const typename GridType::template Codim< 0 >::Entity& en = *it;
-    const typename GridType::template Codim< 0 >::Geometry& geo = en.geometry();
+    const auto& geo = en.geometry();
     total_volume += geo.volume();
     const QuadratureType quad(en, quadOrd);
     const int quadNop = quad.nop();
@@ -49,7 +40,7 @@ std::pair< typename FunctionType::RangeType, double > integralAndVolume(const Fu
                            * geo.integrationElement( quad.point(qP) ); // general case
       // evaluate function
       typename DiscreteFunctionSpaceType::RangeType dummy;
-      typename DiscreteFunctionSpaceType::DomainType xWorld = geo.global( quad.point(qP) );
+      const auto xWorld = geo.global( quad.point(qP) );
       function.evaluate(xWorld, dummy);
       ret = dummy;
       ret *= intel;
@@ -76,37 +67,25 @@ typename FunctionType::RangeType meanValue(const FunctionType& function,
 /** \todo RENE needs to doc me **/
 template< class FunctionType, class DiscreteFunctionSpaceType >
 double boundaryIntegral(const FunctionType& function, const DiscreteFunctionSpaceType& space, const int polOrd = -1) {
-  double integral_value = 0;
-  double total_volume = 0;
-
   typedef typename DiscreteFunctionSpaceType::Traits::GridPartType GridPartType;
-  typedef typename DiscreteFunctionSpaceType::Traits::IteratorType Iterator;
-  typedef typename DiscreteFunctionSpaceType::BaseFunctionSetType  BaseFunctionSetType;
-  typedef typename GridPartType::GridType                          GridType;
-
-  typename DiscreteFunctionSpaceType::RangeType ret(0.0);
-
   typedef Dune::CachingQuadrature< GridPartType, 1 > QuadratureType;
   typedef Dune::Stuff::Fem::LocalMassMatrix< DiscreteFunctionSpaceType,
                                   Dune::CachingQuadrature< GridPartType, 0 > > LocalMassMatrixType;
-
+  double integral_value = 0;
+  double total_volume = 0;
+  typename DiscreteFunctionSpaceType::RangeType ret(0.0);
   const int quadOrd = std::max(2 * space.order() + 2, polOrd);
-
   // create local mass matrix object
   LocalMassMatrixType massMatrix(space, quadOrd);
-
   // check whether geometry mappings are affine or not
   const bool affineMapping = massMatrix.affine();
-
-  const Iterator endit = space.end();
-  for (Iterator it = space.begin(); it != endit; ++it)
+  for (const auto& entity : space)
   {
-    const typename GridType::template Codim< 0 >::Entity& entity = *it;
-    const typename GridType::template Codim< 0 >::Geometry& geo = entity.geometry();
+    const auto& geo = entity.geometry();
     total_volume += geo.volume();
 
-    typename GridPartType::IntersectionIteratorType intItEnd = space.gridPart().iend(entity);
-    for (typename GridPartType::IntersectionIteratorType intIt = space.gridPart().ibegin(entity);
+    const auto intItEnd = space.gridPart().iend(entity);
+    for (auto intIt = space.gridPart().ibegin(entity);
          intIt != intItEnd;
          ++intIt)
     {
@@ -124,14 +103,11 @@ double boundaryIntegral(const FunctionType& function, const DiscreteFunctionSpac
                                quad.weight(qP) * geo.integrationElement( quad.point(qP) ); // general case
 
           // evaluate function
-          typename DiscreteFunctionSpaceType::RangeType
-          dummy;
-          typename DiscreteFunctionSpaceType::DomainType
-          xWorld = geo.global( quad.point(qP) );
+          typename DiscreteFunctionSpaceType::RangeType dummy;
+          const auto xWorld = geo.global( quad.point(qP) );
           function.evaluate(xWorld, dummy, *intIt);
           ret = dummy;
           ret *= intel;
-
           integral_value += ret * intIt->unitOuterNormal( quad.localPoint(qP) );
         }
       }

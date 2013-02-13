@@ -21,50 +21,33 @@ namespace Fem {
    **/
 template< class DiscreteFunctionType, class DiscreteGradientFunctionType >
 class GradientSplitterFunction
-  : public std::vector< boost::shared_ptr< DiscreteFunctionType > >
+  : public std::vector< std::shared_ptr< DiscreteFunctionType > >
 {
   typedef std::vector< DiscreteFunctionType >
-  BaseType;
+    BaseType;
   typedef GradientSplitterFunction< DiscreteFunctionType, DiscreteGradientFunctionType >
-  ThisType;
-  typedef typename boost::shared_ptr< DiscreteFunctionType >
-  PointerType;
+    ThisType;
+  typedef typename std::shared_ptr< DiscreteFunctionType >
+    PointerType;
 
 public:
   GradientSplitterFunction(const typename DiscreteFunctionType::FunctionSpaceType& space,
                            const DiscreteGradientFunctionType& gradient) {
-    typedef typename DiscreteFunctionType::FunctionSpaceType::DomainType
-    DomainType;
     const size_t dim = DomainType::dimension;
     for (size_t d = 0; d < dim; ++d)
     {
-      PointerType p( new DiscreteFunctionType( ( boost::format("%s_%s")
+      PointerType p = std::make_shared<DiscreteFunctionType>(( boost::format("%s_%s")
                                                  % gradient.name()
                                                  % Dune::Stuff::Common::dimToAxisName(d, true) ).str(),
-                                               space ) ); // never use temporary smart pointers
+                                               space); // never use temporary smart pointers
       push_back(p);
     }
 
     typedef typename DiscreteFunctionType::FunctionSpaceType
-    DiscreteFunctionSpaceType;
-    typedef typename DiscreteGradientFunctionType::FunctionSpaceType
-    DiscreteGradientFunctionSpaceType;
-    typedef typename DiscreteFunctionType::LocalFunctionType
-    LocalFunctionType;
-    typedef std::vector< LocalFunctionType >
-    LocalFunctionVectorType;
-    typedef typename DiscreteGradientFunctionType::LocalFunctionType
-    LocalGradientFunctionType;
+      DiscreteFunctionSpaceType;
     typedef typename DiscreteFunctionSpaceType::Traits::GridPartType
-    GridPartType;
-    typedef typename DiscreteFunctionSpaceType::Traits::IteratorType
-    Iterator;
-    typedef typename DiscreteFunctionSpaceType::BaseFunctionSetType
-    BaseFunctionSetType;
-    typedef typename GridPartType::IntersectionIteratorType
-    IntersectionIteratorType;
+      GridPartType;
 
-    const GridPartType& gridPart = space.gridPart();
     // type of quadrature
     typedef Dune::CachingQuadrature< GridPartType, 0 > VolumeQuadratureType;
     typedef Dune::CachingQuadrature< GridPartType, 1 > FaceQuadratureType;
@@ -74,57 +57,32 @@ public:
     const int quadOrd = ( 2 * space.order() );
 
     // create local mass matrix object
-    LocalMassMatrixType massMatrix(space, quadOrd);
+    const LocalMassMatrixType massMatrix(space, quadOrd);
 
     // check whether geometry mappings are affine or not
     const bool affineMapping = massMatrix.affine();
-
-    const Iterator endit = space.end();
-    for (Iterator it = space.begin(); it != endit; ++it)
+    for (auto entity : space)
     {
-      // get entity
-      const typename DiscreteFunctionType::GridType::template Codim< 0 >::Entity& entity = *it;
-      // get geometry
-      typedef  typename DiscreteFunctionType::GridType::template Codim< 0 >::Geometry
-      Geometry;
-      const Geometry& geo = entity.geometry();
-
-      // get quadrature
-      VolumeQuadratureType quad(entity, quadOrd);
-
-      // get local function of destination
-
-      // get local function of argument
-      const LocalGradientFunctionType gradient_local = gradient.localFunction(entity);
-
+      const auto& geo = entity.geometry();
+      const VolumeQuadratureType quad(entity, quadOrd);
+      const auto gradient_local = gradient.localFunction(entity);
       for (size_t d = 0; d < dim; ++d)
       {
-        LocalFunctionType local_function = this->at(d)->localFunction(entity);
-
-        const BaseFunctionSetType& baseset = local_function.baseFunctionSet();
-
+        auto local_function = this->at(d)->localFunction(entity);
+        const auto& baseset = local_function.baseFunctionSet();
         const int quadNop = quad.nop();
         const int numDofs = local_function.numDofs();
-
         // volume part
         for (int qP = 0; qP < quadNop; ++qP)
         {
-          const typename DiscreteFunctionSpaceType::DomainType xLocal = quad.point(qP);
-
+          const auto xLocal = quad.point(qP);
           const double intel = (affineMapping) ?
                                quad.weight(qP) : // affine case
                                quad.weight(qP) * geo.integrationElement(xLocal); // general case
 
-          typename DiscreteFunctionSpaceType::DomainType
-          xWorld = geo.global(xLocal);
-
-          // evaluate function
-          typename DiscreteGradientFunctionType::RangeType
-          gradient_eval;
+          typename DiscreteGradientFunctionType::RangeType gradient_eval;
           gradient_local.evaluate(quad[qP], gradient_eval);
-
-          typename DiscreteFunctionSpaceType::RangeType
-          jacobian_row;
+          typename DiscreteFunctionSpaceType::RangeType jacobian_row;
           for (size_t e = 0; e < dim; ++e)
           {
             jacobian_row[e] = gradient_eval(d, e);
@@ -137,7 +95,6 @@ public:
             local_function[i] += intel * (jacobian_row * phi);
           }
         }
-
         // in case of non-linear mapping apply inverse
         if (!affineMapping)
         {
@@ -215,84 +172,49 @@ public:
   GradientAdapterFunction(const DiscreteVelocityFunctionType& velocity,
                           SigmaFunctionType& dummy,
                           int polOrd = -1)
-    : BaseType( "grad", dummy.space() ) {
-    typedef SigmaFunctionType
-    DiscreteFunctionType;
-    typedef typename SigmaFunctionType::DiscreteFunctionSpaceType
-    DiscreteFunctionSpaceType;
-    typedef typename DiscreteFunctionType::LocalFunctionType
-    LocalFuncType;
-    typedef typename DiscreteFunctionSpaceType::Traits::GridPartType
-    GridPartType;
-    typedef typename DiscreteFunctionSpaceType::Traits::IteratorType
-    Iterator;
-    typedef typename DiscreteFunctionSpaceType::BaseFunctionSetType
-    BaseFunctionSetType;
-    typedef typename GridPartType::IntersectionIteratorType
-    IntersectionIteratorType;
-    typedef typename DiscreteVelocityFunctionType::LocalFunctionType
-    LocalFType;
+    : BaseType( "grad", dummy.space() )
+  {
+    typedef SigmaFunctionType DiscreteFunctionType;
+    typedef typename SigmaFunctionType::DiscreteFunctionSpaceType DiscreteFunctionSpaceType;
+    typedef typename DiscreteFunctionSpaceType::Traits::GridPartType GridPartType;
 
     const DiscreteFunctionSpaceType space( velocity.space().gridPart() );
     // type of quadrature
     typedef Dune::CachingQuadrature< GridPartType, 0 > VolumeQuadratureType;
     typedef Dune::CachingQuadrature< GridPartType, 1 > FaceQuadratureType;
     // type of local mass matrix
-    typedef Dune::Stuff::Fem::LocalMassMatrix< DiscreteFunctionSpaceType, VolumeQuadratureType > LocalMassMatrixType;
-
+    typedef DSFe::LocalMassMatrix< DiscreteFunctionSpaceType, VolumeQuadratureType > LocalMassMatrixType;
     const int quadOrd = std::max(2 * space.order() + 2, polOrd);
-
-    // create local mass matrix object
-    LocalMassMatrixType massMatrix(space, quadOrd);
-
-    // check whether geometry mappings are affine or not
+    const LocalMassMatrixType massMatrix(space, quadOrd);
     const bool affineMapping = massMatrix.affine();
-
     // clear destination
     BaseType::clear();
 
-    const Iterator endit = space.end();
-    for (Iterator it = space.begin(); it != endit; ++it)
+    for (auto entity : space)
     {
-      // get entity
-      const typename DiscreteVelocityFunctionType::GridType::template Codim< 0 >::Entity& entity = *it;
-      // get geometry
-      typedef  typename DiscreteVelocityFunctionType::GridType::template Codim< 0 >::Geometry
-      Geometry;
-      const Geometry& geo = entity.geometry();
-
-      // get quadrature
-      VolumeQuadratureType quad(entity, quadOrd);
-
-      // get local function of destination
-      LocalFuncType self_local = BaseType::localFunction(entity);
-      // get local function of argument
-      const LocalFType velocity_local = velocity.localFunction(entity);
-
-      // get base function set
-      const BaseFunctionSetType& baseset = self_local.baseFunctionSet();
-
+      const auto& geo = entity.geometry();
+      const VolumeQuadratureType quad(entity, quadOrd);
+      auto self_local = BaseType::localFunction(entity);
+      const auto velocity_local = velocity.localFunction(entity);
+      const auto& baseset = self_local.baseFunctionSet();
       const int quadNop = quad.nop();
       const int numDofs = self_local.numDofs();
 
       // volume part
       for (int qP = 0; qP < quadNop; ++qP)
       {
-        const typename DiscreteFunctionSpaceType::DomainType xLocal = quad.point(qP);
-
+        const auto xLocal = quad.point(qP);
         const double intel = (affineMapping) ?
                              quad.weight(qP) : // affine case
                              quad.weight(qP) * geo.integrationElement(xLocal); // general case
 
         // evaluate function
         typename DiscreteVelocityFunctionType::DiscreteFunctionSpaceType::RangeType
-        velocity_eval;
+          velocity_eval;
         velocity_local.evaluate(quad[qP], velocity_eval);
-
         typename DiscreteVelocityFunctionType::DiscreteFunctionSpaceType::JacobianRangeType
-        velocity_jacobian_eval;
+          velocity_jacobian_eval;
         velocity_local.jacobian(quad[qP], velocity_jacobian_eval);
-
         // do projection
         for (int i = 0; i < numDofs; ++i)
         {
@@ -323,15 +245,15 @@ protected:
   typedef LaplaceAdapterFunction< DiscreteVelocityFunctionType,
                                   SigmaFunctionType,
                                   ProductFunctor >
-  ThisType;
-  typedef DiscreteVelocityFunctionType
-  BaseType;
+    ThisType;
+  typedef DiscreteVelocityFunctionType BaseType;
 
 public:
   LaplaceAdapterFunction(const DiscreteVelocityFunctionType& velocity,
                          SigmaFunctionType& dummy,
                          int polOrd = -1)
-    : BaseType( "grad", velocity.space() ) {
+    : BaseType( "grad", velocity.space() )
+  {
     GradientAdapterFunction< DiscreteVelocityFunctionType,
                              SigmaFunctionType,
                              ProductFunctor >
@@ -339,89 +261,47 @@ public:
     init(gradient, polOrd);
   }
 
-// LaplaceAdapterFunction( const SigmaFunctionType& gradient )
-// : BaseType( "grad" , velocity.space())
-// {
-// init( gradient, -1 );
-// }
-
-  void init(const SigmaFunctionType& gradient, int polOrd) {
-    typedef DiscreteVelocityFunctionType
-    DiscreteFunctionType;
-    typedef typename DiscreteFunctionType::DiscreteFunctionSpaceType
-    DiscreteFunctionSpaceType;
-    typedef typename DiscreteFunctionType::LocalFunctionType
-    LocalFuncType;
-    typedef typename DiscreteFunctionSpaceType::Traits::GridPartType
-    GridPartType;
-    typedef typename DiscreteFunctionSpaceType::Traits::IteratorType
-    Iterator;
-    typedef typename DiscreteFunctionSpaceType::BaseFunctionSetType
-    BaseFunctionSetType;
-    typedef typename GridPartType::IntersectionIteratorType
-    IntersectionIteratorType;
-    typedef typename SigmaFunctionType::LocalFunctionType
-    LocalFType;
+  void init(const SigmaFunctionType& gradient, int polOrd)
+  {
+    typedef DiscreteVelocityFunctionType DiscreteFunctionType;
+    typedef typename DiscreteFunctionType::DiscreteFunctionSpaceType DiscreteFunctionSpaceType;
+    typedef typename DiscreteFunctionSpaceType::Traits::GridPartType GridPartType;
 
     const DiscreteFunctionSpaceType& space = BaseType::space();
-    // type of quadrature
     typedef Dune::CachingQuadrature< GridPartType, 0 > VolumeQuadratureType;
     typedef Dune::CachingQuadrature< GridPartType, 1 > FaceQuadratureType;
-    // type of local mass matrix
     typedef Dune::Stuff::Fem::LocalMassMatrix< DiscreteFunctionSpaceType, VolumeQuadratureType > LocalMassMatrixType;
-
     const int quadOrd = std::max(2 * space.order() + 2, polOrd);
-
-    // create local mass matrix object
-    LocalMassMatrixType massMatrix(space, quadOrd);
-
-    // check whether geometry mappings are affine or not
+    const LocalMassMatrixType massMatrix(space, quadOrd);
     const bool affineMapping = massMatrix.affine();
-
-    // clear destination
     BaseType::clear();
 
-    const Iterator endit = space.end();
-    for (Iterator it = space.begin(); it != endit; ++it)
+    for (auto entity : space)
     {
-      // get entity
-      const typename DiscreteVelocityFunctionType::GridType::template Codim< 0 >::Entity& entity = *it;
-      // get geometry
-      typedef  typename DiscreteVelocityFunctionType::GridType::template Codim< 0 >::Geometry
-      Geometry;
-      const Geometry& geo = entity.geometry();
-
-      // get quadrature
-      VolumeQuadratureType quad(entity, quadOrd);
-
-      // get local function of destination
-      LocalFuncType self_local = BaseType::localFunction(entity);
-      // get local function of argument
-      const LocalFType gradient_local = gradient.localFunction(entity);
-
-      // get base function set
-      const BaseFunctionSetType& baseset = self_local.baseFunctionSet();
-
+      const auto& geo = entity.geometry();
+      const VolumeQuadratureType quad(entity, quadOrd);
+      auto self_local = BaseType::localFunction(entity);
+      const auto gradient_local = gradient.localFunction(entity);
+      const auto& baseset = self_local.baseFunctionSet();
       const int quadNop = quad.nop();
       const int numDofs = self_local.numDofs();
 
       // volume part
       for (int qP = 0; qP < quadNop; ++qP)
       {
-        const typename DiscreteFunctionSpaceType::DomainType xLocal = quad.point(qP);
-
+        const auto xLocal = quad.point(qP);
         const double intel = (affineMapping) ?
                              quad.weight(qP) : // affine case
                              quad.weight(qP) * geo.integrationElement(xLocal); // general case
 
         typename SigmaFunctionType::DiscreteFunctionSpaceType::JacobianRangeType
-        gradient_jacobian_eval;
+          gradient_jacobian_eval;
         gradient_local.jacobian(quad[qP], gradient_jacobian_eval);
 
         GradientJacobianToLaplacian< DiscreteFunctionType::RangeType::dimension,
                                      typename DiscreteFunctionType::RangeType,
                                      typename SigmaFunctionType::JacobianRangeType >
-        velocity_real_laplacian(gradient_jacobian_eval);
+          velocity_real_laplacian(gradient_jacobian_eval);
 
         // do projection
         for (int i = 0; i < numDofs; ++i)

@@ -27,17 +27,16 @@ class RestrictProlongOperatorSet
 {
 public:
   typedef typename RestrictProlongOperatorPointerType::element_type::DomainFieldType
-  DomainFieldType;
+    DomainFieldType;
+
   RestrictProlongOperatorSet()
     : pair_set_( SetType() )
   {}
 
   void setFatherChildWeight(const DomainFieldType& val) const {
-    for (SetConstIteratorType it = pair_set_.begin();
-         it != pair_set_.end();
-         ++it)
+    for (auto el : pair_set_)
     {
-      (*it)->setFatherChildWeight(val);
+      el->setFatherChildWeight(val);
     }
   } // setFatherChildWeight
 
@@ -46,11 +45,9 @@ public:
   void restrictLocal(EntityType& father,
                      EntityType& son,
                      bool initialize) const {
-    for (SetConstIteratorType it = pair_set_.begin();
-         it != pair_set_.end();
-         ++it)
+    for (auto el : pair_set_)
     {
-      (*it)->restrictLocal(father, son, initialize);
+      el->restrictLocal(father, son, initialize);
     }
   } // restrictLocal
 
@@ -59,24 +56,18 @@ public:
   void prolongLocal(EntityType& father,
                     EntityType& son,
                     bool initialize) const {
-    for (SetConstIteratorType it = pair_set_.begin();
-         it != pair_set_.end();
-         ++it)
+    for (auto el : pair_set_)
     {
-      (*it)->prolongLocal(father, son, initialize);
+      el->prolongLocal(father, son, initialize);
     }
   } // prolongLocal
 
   //! prolong data to children
   template< class CommunicatorImp >
   void addToList(CommunicatorImp& comm) {
-    for (typename SetType::iterator it = pair_set_.begin();
-         it != pair_set_.end();
-         ++it)
+    for (auto el : pair_set_)
     {
-      RestrictProlongOperatorPointerType k = (*it);
-
-      k->addToList(comm);
+      el->addToList(comm);
     }
   } // addToList
 
@@ -86,7 +77,7 @@ public:
 
   bool remove(RestrictProlongOperatorPointerType rpair) {
     // we use this erase signature so that only one of possibly multiple instances gets remvod
-    SetIteratorType it = pair_set_.find(rpair);
+    auto it = pair_set_.find(rpair);
     bool found = it != pair_set_.end();
 
     if (found)
@@ -95,12 +86,7 @@ public:
   } // remove
 
 protected:
-  typedef std::set< RestrictProlongOperatorPointerType >
-  SetType;
-  typedef typename SetType::iterator
-  SetIteratorType;
-  typedef typename SetType::const_iterator
-  SetConstIteratorType;
+  typedef std::set< RestrictProlongOperatorPointerType > SetType;
   SetType pair_set_;
 };
 
