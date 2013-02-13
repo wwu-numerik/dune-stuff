@@ -46,11 +46,11 @@ typedef testing::Types< Dune::YaspGrid< dim >
 #include <dune/fem/operator/lagrangeinterpolation.hh>
 
 #if HAVE_ALUGRID
-typedef Dune::ALUConformGrid< dim, dim > SourceGrid;
+typedef ALUConformGrid< dim, dim > SourceGrid;
 #else
-typedef Dune::SGrid<dim,dim> SourceGrid;
+typedef SGrid<dim,dim> SourceGrid;
 #endif
-typedef Dune::YaspGrid<dim> TargetGrid;
+typedef YaspGrid<dim> TargetGrid;
 
 template <class Grid>
 struct Traits {
@@ -94,8 +94,8 @@ public:
 void ptest(const int macro_elements = 4, const int target_factor = 2) {
   typedef Traits<SourceGrid> SourceTraits;
   typedef Traits<TargetGrid> TargetTraits;
-  auto source_cube = Stuff::Grid::Provider::GenericCube<SourceGrid>(0,1,macro_elements).grid();
-  auto target_cube = Stuff::Grid::Provider::GenericCube<TargetGrid>(0,1,macro_elements*target_factor).grid();
+  auto source_cube = DSG::Provider::GenericCube<SourceGrid>(0,1,macro_elements).grid();
+  auto target_cube = DSG::Provider::GenericCube<TargetGrid>(0,1,macro_elements*target_factor).grid();
   source_cube->globalRefine(2);
   target_cube->globalRefine(2*target_factor);
 
@@ -111,10 +111,10 @@ void ptest(const int macro_elements = 4, const int target_factor = 2) {
   typename TargetTraits::DiscreteFunction target_df("target", target_space);
   typename TargetTraits::DiscreteFunction fem_target_df("fem_target", target_space);
 
-  typedef Dune::Stuff::Function::Expression< SourceGrid::ctype,
+  typedef DSFu::Expression< SourceGrid::ctype,
       SourceGrid::dimension, SourceGrid::ctype, 1 > ScalarFunctionType;
   ScalarFunctionType scalar_f("x", "x[0] + x[1]");
-  Dune::LagrangeInterpolation<typename SourceTraits::DiscreteFunction>::apply(scalar_f, source_df);
+  LagrangeInterpolation<typename SourceTraits::DiscreteFunction>::apply(scalar_f, source_df);
 
 //  DSC_PROFILER.startTiming("HierarchicSearchStrategy");
 //  Stuff::HeterogenousProjection<Stuff::HierarchicSearchStrategy>::project(source_df, target_df);

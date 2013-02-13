@@ -28,8 +28,6 @@ void normalize(Dune::Stuff::LA::Container::EigenDenseVector< ElementType >& _vec
 {
   // if this is an empty vector report and do nothing
   if (_vector.size() == 0) {
-    if (!Dune::Stuff::Common::Logger().created())
-      Dune::Stuff::Common::Logger().create(Dune::Stuff::Common::LOG_CONSOLE | Dune::Stuff::Common::LOG_DEBUG);
     Dune::Stuff::Common::LogStream& debug = Dune::Stuff::Common::Logger().debug();
     debug << "\n" << Dune::Stuff::Common::colorString("WARNING:")
           << " Dune::Stuff::LA::Algorithm::normalize() called with an empty '_vector'!" << std::endl;
@@ -47,8 +45,6 @@ void normalize(Dune::Stuff::LA::Container::EigenDenseMatrix< ElementType >& _mat
 {
   // if this is an empty matrix report and do nothing
   if (_matrix.rows() == 0 || _matrix.cols() == 0) {
-    if (!Dune::Stuff::Common::Logger().created())
-      Dune::Stuff::Common::Logger().create(Dune::Stuff::Common::LOG_CONSOLE | Dune::Stuff::Common::LOG_DEBUG);
     Dune::Stuff::Common::LogStream& debug = Dune::Stuff::Common::Logger().debug();
     debug << "\n" << Dune::Stuff::Common::colorString("WARNING:")
           << " Dune::Stuff::LA::Algorithm::normalize() called with an empty '_matrix'!" << std::endl;
@@ -106,8 +102,6 @@ void normalize(const Dune::Stuff::LA::Container::EigenDenseMatrix< ElementType >
 {
   // if this is an empty matrix, report and do nothing
   if (_matrix.rows() == 0 || _matrix.cols() == 0) {
-    if (!Dune::Stuff::Common::Logger().created())
-      Dune::Stuff::Common::Logger().create(Dune::Stuff::Common::LOG_CONSOLE | Dune::Stuff::Common::LOG_DEBUG);
     Dune::Stuff::Common::LogStream& debug = Dune::Stuff::Common::Logger().debug();
     debug << "\n" << Dune::Stuff::Common::colorString("WARNING:")
           << " Dune::Stuff::LA::Algorithm::normalize() called with an empty '_matrix'!" << std::endl;
@@ -145,8 +139,6 @@ bool normalize(const Dune::Stuff::LA::Container::EigenRowMajorSparseMatrix< Elem
 {
   // if this is an empty vector, report and do nothing
   if (_vector.size() == 0) {
-    if (!Dune::Stuff::Common::Logger().created())
-      Dune::Stuff::Common::Logger().create(Dune::Stuff::Common::LOG_CONSOLE | Dune::Stuff::Common::LOG_DEBUG);
     Dune::Stuff::Common::LogStream& debug = Dune::Stuff::Common::Logger().debug();
     debug << "\n" << Dune::Stuff::Common::colorString("WARNING:")
           << " Dune::Stuff::LA::Algorithm::normalize() called with an empty '_vector'!" << std::endl;
