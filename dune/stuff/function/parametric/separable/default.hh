@@ -133,9 +133,8 @@ public:
     return extendedDescription;
   }
 
-  static ThisType createFromDescription(const Dune::ParameterTree _description)
+  static ThisType createFromDescription(const Stuff::Common::ExtendedParameterTree description)
   {
-    Stuff::Common::ExtendedParameterTree description(_description);
     // first of all, read the optional stuff
     const std::string _name = description.get< std::string >("name", id());
     const int _order = description.get< int >("order", -1);
