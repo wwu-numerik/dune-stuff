@@ -226,7 +226,7 @@ public:
       const std::string str = BaseType::get< std::string >(_key, "meaningless_default_value");
       // the dune parametertree strips any leading and trailing whitespace
       // so we can be sure that the first and last have to be the brackets [] if this is a vector
-      if (DSC::String::equal(str.substr(0, 1), "[")
+      if (str.substr(0, 1) == "[")
           && DSC::String::equal(str.substr(str.size() - 1, 1), "]")) {
         const std::vector< std::string > tokens = DSC::tokenize< std::string >(str.substr(1, str.size() - 2), ";");
         for (unsigned int i = 0; i < tokens.size(); ++i)
