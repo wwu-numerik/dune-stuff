@@ -19,13 +19,13 @@ class ConstantFunction
 {
 public:
   typedef ConstantFunction< FunctionSpaceImp >
-  ThisType;
+    ThisType;
   typedef Dune::Fem::Function< FunctionSpaceImp, ThisType >
-  BaseType;
+    BaseType;
   typedef typename BaseType::DomainType
-  DomainType;
+    DomainType;
   typedef typename BaseType::RangeType
-  RangeType;
+    RangeType;
 
   ConstantFunction(const FunctionSpaceImp& /*space*/,
                    const double constant = 0.0)
@@ -44,7 +44,9 @@ public:
   inline void evaluate(const double /*time*/, const DomainType& /*arg*/, RangeType& ret) const {
     ret = constant_;
   }
+
   inline void evaluate(const DomainType& /*arg*/, RangeType& ret) const { ret = RangeType(constant_); }
+
   template< class IntersectionIteratorType >
   inline void evaluate(const double /*time*/, const DomainType& /*arg*/,
                        RangeType& ret, const IntersectionIteratorType /*it*/) const
@@ -54,6 +56,7 @@ public:
   inline void evaluate(const DomainType& /*arg*/,const typename RangeType::value_type /*time*/,  RangeType& ret) const {
     ret = constant_;
   }
+
   inline void evaluateJacobian(const DomainType& /*arg*/, typename BaseType::JacobianRangeType& jacobian) const {
     jacobian = typename BaseType::JacobianRangeType(0);
   }
@@ -69,13 +72,13 @@ class ConstantFunctionTP
 {
 public:
   typedef ConstantFunctionTP< FunctionSpaceImp, TimeProviderImp >
-  ThisType;
+    ThisType;
   typedef TimeFunction< FunctionSpaceImp, ThisType, TimeProviderImp >
-  BaseType;
+    BaseType;
   typedef typename BaseType::DomainType
-  DomainType;
+    DomainType;
   typedef typename BaseType::RangeType
-  RangeType;
+    RangeType;
 
   ConstantFunctionTP(const TimeProviderImp& timeprovider,
                      const FunctionSpaceImp& space,
@@ -101,13 +104,13 @@ class ConstantIntersectionTimeFunction
 {
 public:
   typedef ConstantIntersectionTimeFunction< FunctionSpaceImp, TimeProviderImp >
-  ThisType;
+    ThisType;
   typedef IntersectionTimeFunction< FunctionSpaceImp, ThisType, TimeProviderImp >
-  BaseType;
+    BaseType;
   typedef typename BaseType::DomainType
-  DomainType;
+    DomainType;
   typedef typename BaseType::RangeType
-  RangeType;
+    RangeType;
 
   /**
      *  \brief  constructor

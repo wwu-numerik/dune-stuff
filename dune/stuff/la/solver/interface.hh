@@ -22,11 +22,8 @@ class Interface
 {
 public:
   typedef typename Dune::Stuff::LA::Container::MatrixInterface< typename MatrixImp::Traits > MatrixType;
-
   typedef typename MatrixType::ElementType ElementType;
-
   typedef typename Dune::Stuff::LA::Container::VectorInterface< typename VectorImp::Traits > VectorType;
-
   typedef typename MatrixType::size_type size_type;
 
   virtual size_type apply(const MatrixType& /*_systemMatrix*/,

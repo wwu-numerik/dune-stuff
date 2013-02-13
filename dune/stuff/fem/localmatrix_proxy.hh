@@ -14,16 +14,11 @@ namespace Fem {
 template< class MatrixPointerType >
 class LocalMatrixProxy
 {
-  typedef typename MatrixPointerType::element_type
-  MatrixObjectType;
-  typedef typename MatrixObjectType::LocalMatrixType
-  LocalMatrixType;
-  typedef typename MatrixObjectType::DomainSpaceType::GridType
-  GridType;
-  typedef typename GridType::template Codim< 0 >::Entity
-  EntityType;
-  typedef typename MatrixObjectType::MatrixType::Ttype
-  FieldType;
+  typedef typename MatrixPointerType::element_type MatrixObjectType;
+  typedef typename MatrixObjectType::LocalMatrixType LocalMatrixType;
+  typedef typename MatrixObjectType::DomainSpaceType::GridType GridType;
+  typedef typename GridType::template Codim< 0 >::Entity EntityType;
+  typedef typename MatrixObjectType::MatrixType::Ttype FieldType;
   LocalMatrixType local_matrix_;
   const double eps_;
   const unsigned int rows_;
@@ -33,10 +28,10 @@ class LocalMatrixProxy
 public:
   LocalMatrixProxy(MatrixPointerType& object, const EntityType& self, const EntityType& neigh, const double eps)
     : local_matrix_( object->localMatrix(self, neigh) )
-      , eps_(eps)
-      , rows_( local_matrix_.rows() )
-      , cols_( local_matrix_.columns() )
-      , entries_( rows_ * cols_, FieldType(0.0) )
+    , eps_(eps)
+    , rows_( local_matrix_.rows() )
+    , cols_( local_matrix_.columns() )
+    , entries_( rows_ * cols_, FieldType(0.0) )
   {}
 
   inline void add(const unsigned int row, const unsigned int col, const FieldType val) {
@@ -65,18 +60,12 @@ public:
 template< class MatrixPointerType >
 class ISTLLocalMatrixProxy
 {
-  typedef typename MatrixPointerType::element_type
-  MatrixObjectType;
-  typedef typename MatrixObjectType::LocalMatrixType
-  LocalMatrixType;
-  typedef typename MatrixObjectType::MatrixType::block_type
-  block_type;
-  typedef typename MatrixObjectType::DomainSpaceType::GridType
-  GridType;
-  typedef typename GridType::template Codim< 0 >::Entity
-  EntityType;
-  typedef typename MatrixObjectType::MatrixType::Ttype
-  FieldType;
+  typedef typename MatrixPointerType::element_type MatrixObjectType;
+  typedef typename MatrixObjectType::LocalMatrixType LocalMatrixType;
+  typedef typename MatrixObjectType::MatrixType::block_type block_type;
+  typedef typename MatrixObjectType::DomainSpaceType::GridType GridType;
+  typedef typename GridType::template Codim< 0 >::Entity EntityType;
+  typedef typename MatrixObjectType::MatrixType::Ttype FieldType;
   // LocalMatrixType local_matrix_;
   MatrixPointerType matrix_pointer_;
   const EntityType& self_;
@@ -92,14 +81,14 @@ class ISTLLocalMatrixProxy
 
 public:
   ISTLLocalMatrixProxy(MatrixPointerType& pointer, const EntityType& self, const EntityType& neigh, const double eps)
-    :     // local_matrix_( object->localMatrix(self,neigh) ),
-      matrix_pointer_(pointer)
-      , self_(self)
-      , neigh_(neigh)
-      , eps_(eps)
-      , rows_(block_type::rows)
-      , cols_(block_type::cols)
-      , entries_( rows_ * cols_, FieldType(0.0) ) {
+    : matrix_pointer_(pointer)
+    , self_(self)
+    , neigh_(neigh)
+    , eps_(eps)
+    , rows_(block_type::rows)
+    , cols_(block_type::cols)
+    , entries_( rows_ * cols_, FieldType(0.0) )
+  {
     const auto& domainSpace = matrix_pointer_->rowSpace();
     const auto& rangeSpace = matrix_pointer_->colSpace();
 

@@ -28,9 +28,8 @@ void normalize(Dune::Stuff::LA::Container::EigenDenseVector< ElementType >& _vec
 {
   // if this is an empty vector report and do nothing
   if (_vector.size() == 0) {
-    Dune::Stuff::Common::LogStream& debug = Dune::Stuff::Common::Logger().debug();
-    debug << "\n" << Dune::Stuff::Common::colorString("WARNING:")
-          << " Dune::Stuff::LA::Algorithm::normalize() called with an empty '_vector'!" << std::endl;
+    DSC_LOG_DEBUG << "\n" << Dune::Stuff::Common::colorString("WARNING:")
+                  << " Dune::Stuff::LA::Algorithm::normalize() called with an empty '_vector'!" << std::endl;
   } else {
     // compute L2-norm
     const ElementType norm = std::sqrt(_vector.backend().transpose() * _vector.backend());
@@ -45,9 +44,8 @@ void normalize(Dune::Stuff::LA::Container::EigenDenseMatrix< ElementType >& _mat
 {
   // if this is an empty matrix report and do nothing
   if (_matrix.rows() == 0 || _matrix.cols() == 0) {
-    Dune::Stuff::Common::LogStream& debug = Dune::Stuff::Common::Logger().debug();
-    debug << "\n" << Dune::Stuff::Common::colorString("WARNING:")
-          << " Dune::Stuff::LA::Algorithm::normalize() called with an empty '_matrix'!" << std::endl;
+    DSC_LOG_DEBUG << "\n" << Dune::Stuff::Common::colorString("WARNING:")
+                  << " Dune::Stuff::LA::Algorithm::normalize() called with an empty '_matrix'!" << std::endl;
   } else {
     // this is a matrix, check how to interpret it
     if (_matrix.rows() == 1) {
@@ -102,9 +100,8 @@ void normalize(const Dune::Stuff::LA::Container::EigenDenseMatrix< ElementType >
 {
   // if this is an empty matrix, report and do nothing
   if (_matrix.rows() == 0 || _matrix.cols() == 0) {
-    Dune::Stuff::Common::LogStream& debug = Dune::Stuff::Common::Logger().debug();
-    debug << "\n" << Dune::Stuff::Common::colorString("WARNING:")
-          << " Dune::Stuff::LA::Algorithm::normalize() called with an empty '_matrix'!" << std::endl;
+    DSC_LOG_DEBUG << "\n" << Dune::Stuff::Common::colorString("WARNING:")
+                  << " Dune::Stuff::LA::Algorithm::normalize() called with an empty '_matrix'!" << std::endl;
   } else {
     // this is a matrix, check how to interpret it
     if (_matrix.rows() == 1) {
@@ -139,9 +136,8 @@ bool normalize(const Dune::Stuff::LA::Container::EigenRowMajorSparseMatrix< Elem
 {
   // if this is an empty vector, report and do nothing
   if (_vector.size() == 0) {
-    Dune::Stuff::Common::LogStream& debug = Dune::Stuff::Common::Logger().debug();
-    debug << "\n" << Dune::Stuff::Common::colorString("WARNING:")
-          << " Dune::Stuff::LA::Algorithm::normalize() called with an empty '_vector'!" << std::endl;
+    DSC_LOG_DEBUG << "\n" << Dune::Stuff::Common::colorString("WARNING:")
+                  << " Dune::Stuff::LA::Algorithm::normalize() called with an empty '_vector'!" << std::endl;
   } else {
     // this is a vector, noramlize it
     // therefore, check sizes,

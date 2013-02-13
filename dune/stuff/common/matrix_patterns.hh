@@ -29,15 +29,15 @@ class SparsityPattern
 {
 public:
   typedef SparsityPattern
-  ThisType;
+    ThisType;
 
   //! Type for saving the sparsity pattern.
   typedef std::vector< std::set< unsigned int > >
-  SparsityPatternContainerType;
+    SparsityPatternContainerType;
 
   //! Type for iterating through a row.
   typedef std::set< unsigned int >::const_iterator
-  NonZeroColIterator;
+    NonZeroColIterator;
 
   /**
      * @brief Constructor storing the row size.
@@ -46,7 +46,7 @@ public:
      */
   SparsityPattern(unsigned int rowSize)
     : sparsityPattern_(rowSize)
-      , sizeN_(rowSize)
+    , sizeN_(rowSize)
   {}
 
   /**
