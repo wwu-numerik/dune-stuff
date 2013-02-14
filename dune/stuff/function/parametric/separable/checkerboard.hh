@@ -150,10 +150,8 @@ public:
     }
   }
 
-  static ThisType createFromDescription(const Dune::ParameterTree _description)
+  static ThisType* createFromDescription(const DSC::ExtendedParameterTree description)
   {
-    // get correct paramTree
-    Stuff::Common::ExtendedParameterTree description(_description);
     // get data
     const std::string _name = description.get< std::string >("name", id());
     const std::vector< DomainFieldType > lowerLefts = description.getVector("lowerLeft", DomainFieldType(0), dimDomain);
@@ -190,7 +188,7 @@ public:
     paramRange.push_back(paramMin);
     paramRange.push_back(paramMax);
     // create and return
-    return ThisType(lowerLeft, upperRight, numElements, paramRange, _name);
+    return new ThisType(lowerLeft, upperRight, numElements, paramRange, _name);
   } // static ThisType createFromParamTree(const Dune::ParameterTree paramTree)
 
   virtual bool parametric() const

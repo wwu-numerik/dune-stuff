@@ -133,7 +133,7 @@ public:
     return extendedDescription;
   }
 
-  static ThisType createFromDescription(const Stuff::Common::ExtendedParameterTree description)
+  static ThisType* createFromDescription(const DSC::ExtendedParameterTree description)
   {
     // first of all, read the optional stuff
     const std::string _name = description.get< std::string >("name", id());
@@ -241,7 +241,7 @@ public:
       _paramExplanation = description.getVector< std::string >("paramExplanation", 1);
     else if (description.hasKey("paramExplanation"))
       _paramExplanation.push_back(description.get< std::string >("paramExplanation"));
-    return ThisType(_paramSize, _paramRange, _components, _coefficients, _paramExplanation, _order, _name);
+    return new ThisType(_paramSize, _paramRange, _components, _coefficients, _paramExplanation, _order, _name);
   }
 
   virtual bool parametric() const
