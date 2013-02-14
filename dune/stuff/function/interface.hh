@@ -48,6 +48,8 @@ public:
   typedef ThisType                      ComponentType;
   typedef Coefficient< RangeFieldType > CoefficientType;
 
+  virtual ~Interface() {}
+
   static const std::string id()
   {
     return "function";
