@@ -94,8 +94,8 @@ public:
    *              number of elements.
    **/
   GenericCube(const double _lowerLeft = 0.0, const double _upperRight = 1.0, const unsigned int numElements = 1u)
-    : lowerLeft_(_lowerLeft),
-      upperRight_(_upperRight)
+    : lowerLeft_(_lowerLeft)
+    , upperRight_(_upperRight)
   {
     Dune::array< unsigned int, dim > tmpNumElements;
     std::fill(tmpNumElements.begin(), tmpNumElements.end(), numElements);
@@ -112,8 +112,8 @@ public:
    *              number of elements.
    **/
   GenericCube(const CoordinateType& _lowerLeft, const CoordinateType& _upperRight, const unsigned int numElements = 1u)
-    : lowerLeft_(_lowerLeft),
-      upperRight_(_upperRight)
+    : lowerLeft_(_lowerLeft)
+    , upperRight_(_upperRight)
   {
     Dune::array< unsigned int, dim > tmpNumElements;
     std::fill(tmpNumElements.begin(), tmpNumElements.end(), numElements);
@@ -149,27 +149,6 @@ public:
     buildGrid(tmpNumElements);
   }
 
-  GenericCube(ThisType& other)
-    : lowerLeft_(other.lowerLeft_)
-    , upperRight_(other.upperRight_)
-    , grid_(other.grid_)
-  {}
-
-  GenericCube(const ThisType& other)
-    : lowerLeft_(other.lowerLeft_)
-    , upperRight_(other.upperRight_)
-    , grid_(other.grid_)
-  {}
-
-  ThisType& operator=(const ThisType& other)
-  {
-    if (this != &other) {
-      lowerLeft_ = other.lowerLeft();
-      upperRight_ = other.upperRight();
-      grid_ = other.grid();
-    }
-    return this;
-  }
 
   static Dune::ParameterTree createSampleDescription(const std::string subName = "")
   {
@@ -259,16 +238,6 @@ public:
     }
     return new ThisType(lowerLeft, upperRight, numElements);
   } // static ThisType createFromParamTree(const Dune::ParameterTree& paramTree, const std::string subName = id())
-
-  ThisType& operator=(ThisType& other)
-  {
-    if (this != &other) {
-      lowerLeft_ = other.lowerLeft();
-      upperRight_ = other.upperRight();
-      grid_ = other.grid();
-    }
-    return this;
-  } // ThisType& operator=(ThisType& other)
 
   //! access to shared ptr
   virtual Dune::shared_ptr< GridType > grid()
