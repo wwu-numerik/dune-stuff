@@ -142,8 +142,8 @@ void ptest(const int macro_elements = 4, const int target_factor = 2) {
 }
 
 TEST(Projection, Cubes){
-  const int rf = DSC_CONFIG_GET("rf", 2);
-  const int runs = DSC_CONFIG_GET("runs", 3);
+  const int rf = DSC_CONFIG_GET("rf", 1);
+  const int runs = DSC_CONFIG_GET("runs", 2);
   DSC_PROFILER.reset(runs);
   for (auto i : DSC::valueRange(runs)) {
     ptest(std::pow(2, i+1), rf);

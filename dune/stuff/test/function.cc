@@ -66,9 +66,7 @@ struct SeparableTest
   void check() const
   {
     const std::unique_ptr< InterfaceType > function(
-          Function::create<  DomainFieldType, dimDomain,
-                                          RangeFieldType, dimRange >(FunctionType::id(),
-                                                                     FunctionType::createSampleDescription()));
+          FunctionType::createFromDescription(FunctionType::createSampleDescription()));
     if (!function->parametric())
       DUNE_THROW(Dune::InvalidStateException, "ERROR: separable function returned parametric() == false!");
     if (!function->separable())
