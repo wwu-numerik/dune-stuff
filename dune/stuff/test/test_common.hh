@@ -22,8 +22,6 @@
 #include <fstream>
 #include <sys/time.h>
 
-#define MY_ASSERT(cond) EXPECT_TRUE(cond)
-
 template < template <class> class Test >
 struct TestRunner {
     struct Visitor {
