@@ -4,8 +4,10 @@
 #include <set>
 #include <vector>
 
-#include <dune/stuff/common/debug.hh>
 #include <dune/common/unused.hh>
+#include <dune/stuff/common/debug.hh>
+#include <dune/stuff/aliases.hh>
+#include <dune/stuff/common/ranges.hh>
 
 namespace Dune {
 namespace Stuff {
@@ -180,18 +182,7 @@ public:
      */
   template< class MatrixType >
   static void create(const AnsatzSpaceType& ansatzSpace, const TestSpaceType& testSpace, MatrixType* matrix) {
-    // some types
-    typedef typename AnsatzSpaceType::GridPartType
-    GridPartType;
-
-    typedef typename GridPartType::IntersectionIteratorType
-    IntersectionIteratorType;
-
-    typedef typename IntersectionIteratorType::Intersection
-    IntersectionType;
-
     const unsigned int ansatzSize = ansatzSpace.size();
-    const unsigned int DUNE_UNUSED(testSize) = testSpace.size();
 
     SparsityPattern sPattern(ansatzSize / MatrixType::block_type::rows);
 
@@ -203,16 +194,14 @@ public:
       const int elRowIndex = ansatzSpace.blockMapper().mapToGlobal(element, 0);
       sPattern.insert(elRowIndex, elRowIndex);
       // do loop over all intersections
-      const IntersectionIteratorType lastIntersection = ansatzSpace.gridPart().iend(element);
-      for (IntersectionIteratorType intIt = ansatzSpace.gridPart().ibegin(element); intIt != lastIntersection; ++intIt)
+      for (const auto& intersection : DSC::intersectionRange(ansatzSpace.gridPart(), element))
       {
-        const IntersectionType& intersection = *intIt;
         // if inner intersection
         if ( intersection.neighbor() && !intersection.boundary() )
         {
           // get neighbouring entity
-          const ElementPointerType neighbourPtr = intersection.outside();
-          const ElementType& neighbour = *neighbourPtr;
+          const auto neighbourPtr = intersection.outside();
+          const auto& neighbour = *neighbourPtr;
 
           const int nbColIndex = testSpace.blockMapper().mapToGlobal(neighbour, 0);
           const int nbRowIndex = ansatzSpace.blockMapper().mapToGlobal(neighbour, 0);
@@ -233,7 +222,7 @@ public:
     for (unsigned int i = 0; i < sPattern.size(); ++i)
     {
       typedef SparsityPattern::NonZeroColIterator
-      ColIterator;
+        ColIterator;
       ColIterator sit = sPattern.begin(i);
       const ColIterator e = sPattern.end(i);
       for ( ; sit != e; ++sit)

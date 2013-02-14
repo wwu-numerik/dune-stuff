@@ -207,7 +207,7 @@ public:
       // lets see if there is a coefficient with this index
       const std::string key = "coefficient." + DSC::toString(_coefficients.size());
       if (description.hasKey(key)) {
-        _coefficients.push_back(Dune::make_shared< CoefficientType >(description.get< std::string >(key)));
+        _coefficients.emplace_back(new CoefficientType(description.get< std::string >(key)));
       } else
         continue_search = false;
     } // while (continue_search)

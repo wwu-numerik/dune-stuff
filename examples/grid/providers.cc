@@ -31,7 +31,7 @@ const std::string id = "grid.providers";
   **/
 void ensureParamFile(std::string filename)
 {
-  Dune::Stuff::Common::testCreateDirectory(filename);
+  DSC::testCreateDirectory(filename);
   if (!boost::filesystem::exists(filename)) {
     std::ofstream file;
     file.open(filename);
@@ -72,16 +72,16 @@ int main(int argc, char** argv)
     // parameter
     const std::string filename = id + ".param";
     ensureParamFile(filename);
-    Dune::Stuff::Common::ExtendedParameterTree paramTree(argc, argv, filename);
+    DSC::ExtendedParameterTree paramTree(argc, argv, filename);
     if (!paramTree.hasSub(id))
       DUNE_THROW(Dune::RangeError,
                  "\nMissing sub '" << id << "' in the following Dune::ParameterTree:\n" << paramTree.reportString("  "));
 
     // logger
-    Dune::Stuff::Common::Logger().create(Dune::Stuff::Common::LOG_INFO |
-                                         Dune::Stuff::Common::LOG_CONSOLE |
-                                         Dune::Stuff::Common::LOG_DEBUG);
-    Dune::Stuff::Common::LogStream& info = Dune::Stuff::Common::Logger().info();
+    DSC::Logger().create(DSC::LOG_INFO |
+                                         DSC::LOG_CONSOLE |
+                                         DSC::LOG_DEBUG);
+    DSC::LogStream& info = DSC::Logger().info();
 
     // timer
     Dune::Timer timer;

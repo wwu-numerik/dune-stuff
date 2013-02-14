@@ -13,10 +13,11 @@
 #include <dune/fem/function/common/gridfunctionadapter.hh>
 #include <dune/fem/space/common/functionspace.hh>
 #include <dune/fem/space/dgspace.hh>
+#include <dune/fem/function/adaptivefunction.hh>
 #include <dune/stuff/fem/customprojection.hh>
 #include <dune/stuff/common/debug.hh>
 #include <dune/stuff/fem/localmassmatrix.hh>
-#include <dune/fem/function/adaptivefunction.hh>
+#include <dune/stuff/aliases.hh>
 
 namespace Dune {
 namespace Stuff {
@@ -42,12 +43,12 @@ public:
   //! constructor taking discrete function
   MagnitudeFunction(const DiscreteFunctionType& _discreteFunction)
     : magnitude_disretefunctionspace_( _discreteFunction.space().gridPart() )
-      , magnitude_disretefunction_(_discreteFunction.name() + "-magnitude", magnitude_disretefunctionspace_) {
-    typedef typename DiscreteFunctionSpaceType::Traits::GridPartType         GridPartType;
-
+    , magnitude_disretefunction_(_discreteFunction.name() + "-magnitude", magnitude_disretefunctionspace_)
+  {
+    typedef Dune::CachingQuadrature< GridPartType, 0 > QuadratureType;
     typename MagnitudeDiscreteFunctionSpaceType::RangeType ret(0.0);
     typename MagnitudeDiscreteFunctionSpaceType::RangeType phi(0.0);
-    const DiscreteFunctionSpaceType& space = _discreteFunction.space();
+    const auto& space = _discreteFunction.space();
 
     const int quadOrd = 2 * space.order() + 2;
     DSFe::LocalMassMatrix< MagnitudeDiscreteFunctionSpaceType, QuadratureType > massMatrix(magnitude_disretefunctionspace_, quadOrd);
@@ -57,8 +58,8 @@ public:
     for (const auto& en : space)
     {
       const auto& geo = en.geometry();
-      const Dune::CachingQuadrature< GridPartType, 0 > quad(en, quadOrd);
-      LocalFuncType lf = magnitude_disretefunction_.localFunction(en);
+      const QuadratureType quad(en, quadOrd);
+      auto lf = magnitude_disretefunction_.localFunction(en);
       const auto& baseset = lf.baseFunctionSet();
       const int quadNop = quad.nop();
       const int numDofs = lf.numDofs();
