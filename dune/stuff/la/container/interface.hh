@@ -16,6 +16,7 @@ public:
   typedef typename Traits::BackendType BackendType;
 
   virtual BackendType& backend() = 0;
+  virtual ~Interface() {}
 
   virtual const BackendType& backend() const = 0;
 }; // class Interface
