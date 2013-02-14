@@ -118,17 +118,15 @@ private:
   FlagMap flagmap_;
   typedef std::map< int, LogStream* > StreamMap;
   StreamMap streammap_;
-  typedef std::vector< int >                 IdVec;
-  typedef std::vector< int >::const_iterator IdVecCIter;
+  typedef std::vector< int > IdVec;
   IdVec streamIDs_;
   int logflags_;
   EmptyLogStream emptyLogStream_;
 
   friend Logging& Logger();
   // satisfy stricter warnings wrt copying
-  Logging(const Logging&);
-  Logging& operator=(const Logging&);
-  bool created_;
+  Logging(const Logging&) = delete;
+  Logging& operator=(const Logging&) = delete;
 };
 
 //!global Logging instance

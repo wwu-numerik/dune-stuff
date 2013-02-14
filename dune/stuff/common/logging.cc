@@ -25,13 +25,14 @@ namespace Stuff {
 namespace Common {
 
 Logging::Logging()
-    : logflags_(LOG_NONE),
-      emptyLogStream_(logflags_)
-    , created_(false)
+    : logflags_(LOG_NONE)
+    , emptyLogStream_(logflags_)
 {
     streamIDs_.push_back(LOG_ERROR);
     streamIDs_.push_back(LOG_DEBUG);
     streamIDs_.push_back(LOG_INFO);
+    for (auto id : streamIDs_)
+      streammap_[id] = new EmptyLogStream(logflags_);
 }
 
 void Logging::deinit()
@@ -76,11 +77,12 @@ void Logging::create( int logflags,
     logfile_.open(filename_);
     assert( logfile_.is_open() );
   }
-  IdVecCIter it = streamIDs_.begin();
-  for ( ; it != streamIDs_.end(); ++it)
+
+  for (auto id : streamIDs_)
   {
-    flagmap_[*it] = logflags;
-    streammap_[*it] = new FileLogStream(*it, flagmap_[*it], logfile_);
+    flagmap_[id] = logflags;
+    delete streammap_[id];
+    streammap_[id] = new FileLogStream(id, flagmap_[id], logfile_);
   }
 } // Create
 
