@@ -184,9 +184,7 @@ public:
       paramMin[qq] = paramMins[qq];
       paramMax[qq] = paramMaxs[qq];
     }
-    std::vector< ParamType > paramRange;
-    paramRange.push_back(paramMin);
-    paramRange.push_back(paramMax);
+    const std::vector< ParamType > paramRange = {paramMin, paramMax};
     // create and return
     return new ThisType(lowerLeft, upperRight, numElements, paramRange, _name);
   } // static ThisType createFromParamTree(const Dune::ParameterTree paramTree)

@@ -7,8 +7,12 @@
   #include "config.h"
 #endif // ifdef HAVE_CMAKE_CONFIG
 
-#include <dune/common/exceptions.hh>
+#if HAVE_EIGEN
+  #include <Eigen/Core>
+  #include <Eigen/IterativeLinearSolvers>
+#endif
 
+#include <dune/common/exceptions.hh>
 #include <dune/stuff/la/container/interface.hh>
 
 namespace Dune {
@@ -31,6 +35,17 @@ public:
                           VectorType& /*_solutionVector*/,
                           const size_type /*_maxIter*/,
                           const ElementType /*_precision*/) const = 0;
+#if HAVE_EIGEN
+  size_type translateInfo(const ::Eigen::ComputationInfo& info)
+  {
+    switch (info) {
+      case ::Eigen::Success: return 0;
+      case ::Eigen::NoConvergence: return 1;
+      case ::Eigen::NumericalIssue: return 2;
+      default: return 3;
+    }
+  }
+#endif
 }; // class Interface
 
 

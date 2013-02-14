@@ -3,8 +3,7 @@
 
 #include <vector>
 #include <assert.h>
-#include "debug.hh"
-#include "math.hh"
+#include <dune/stuff/common/math.hh>
 
 namespace Dune {
 namespace Stuff {
