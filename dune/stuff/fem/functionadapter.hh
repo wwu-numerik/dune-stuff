@@ -33,7 +33,7 @@ class GradientSplitterFunction
 public:
   GradientSplitterFunction(const typename DiscreteFunctionType::FunctionSpaceType& space,
                            const DiscreteGradientFunctionType& gradient) {
-    const size_t dim = DomainType::dimension;
+    const size_t dim = DiscreteFunctionType::DomainType::dimension;
     for (size_t d = 0; d < dim; ++d)
     {
       PointerType p = std::make_shared<DiscreteFunctionType>(( boost::format("%s_%s")

@@ -1,6 +1,12 @@
 #ifndef DUNE_STUFF_LA_ALGORITHM_NORMALIZE_HH
 #define DUNE_STUFF_LA_ALGORITHM_NORMALIZE_HH
 
+#ifdef HAVE_CMAKE_CONFIG
+  #include "cmake_config.h"
+#elif defined (HAVE_CONFIG_H)
+  #include <config.h>
+#endif // ifdef HAVE_CMAKE_CONFIG
+
 #include <dune/common/typetraits.hh>
 #include <dune/common/static_assert.hh>
 
@@ -22,7 +28,7 @@ void normalize(ContainerType& /*_vector*/)
 }
 
 
-//#if HAVE_EIGEN
+#if HAVE_EIGEN
 template< class ElementType >
 void normalize(Dune::Stuff::LA::Container::EigenDenseVector< ElementType >& _vector)
 {
@@ -73,7 +79,7 @@ void normalize(Dune::Stuff::LA::Container::EigenRowMajorSparseMatrix< ElementTyp
   dune_static_assert((Dune::AlwaysFalse< ElementType >::value),
                      "ERROR: not implemeneted for EigenRowMajorSparseMatrix!");
 }
-//#endif // HAVE_EIGEN
+#endif // HAVE_EIGEN
 
 
 template< class ScalarProductType, class ContainerType >
@@ -84,7 +90,7 @@ void normalize(const ScalarProductType& /*scalarProduct*/, ContainerType& /*_col
 }
 
 
-//#if HAVE_EIGEN
+#if HAVE_EIGEN
 template< class ElementType >
 void normalize(const Dune::Stuff::LA::Container::EigenDenseMatrix< ElementType >& /*_scalarProduct*/,
                Dune::Stuff::LA::Container::EigenDenseVector< ElementType >& /*_columnVectors*/)
@@ -163,7 +169,7 @@ void normalize(const Dune::Stuff::LA::Container::EigenRowMajorSparseMatrix< Elem
   dune_static_assert((Dune::AlwaysFalse< ElementType >::value),
                      "ERROR: not implemeneted yet!");
 } // void normalize(Dune::Stuff::LA::Container::EigenDenseVector< ElementType >& _vector)
-//#endif // HAVE_EIGEN
+#endif // HAVE_EIGEN
 
 
 } // namespace Algorithm

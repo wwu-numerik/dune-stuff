@@ -48,32 +48,32 @@ template< class CounterType, class WeightType = IdentityWeights >
 class LoopTimer
 {
   typedef LoopTimer< CounterType, WeightType >
-  ThisType;
+    ThisType;
   CounterType& counter_;
   const int iteration_count_;
   int iteration_;
   std::ostream& output_stream_;
   WeightType weight_;
-  MovingAverage avg_time_per_iteration_;
+  MinMaxAvg<double> avg_time_per_iteration_;
   TimingData step_timer_;
 
 public:
   LoopTimer( CounterType& counter, const int iteration_count, std::ostream& output_stream = std::cout,
              WeightType weight = WeightType() )
     : counter_(counter)
-      , iteration_count_(iteration_count)
-      , iteration_(0)
-      , output_stream_(output_stream)
-      , weight_(weight)
+    , iteration_count_(iteration_count)
+    , iteration_(0)
+    , output_stream_(output_stream)
+    , weight_(weight)
   {}
 
   ThisType& operator++() {
     ++iteration_;
     step_timer_.stop();
-    avg_time_per_iteration_ += weight_.apply(std::abs( step_timer_.delta() ), iteration_, iteration_count_);
+    avg_time_per_iteration_(weight_.apply(std::abs( step_timer_.delta() ), iteration_, iteration_count_));
     const long remaining_steps = iteration_count_ - iteration_;
-    const double remaining_ms = remaining_steps * double(avg_time_per_iteration_);
-    boost::posix_time::time_duration diff = boost::posix_time::microseconds(remaining_ms);
+    const double remaining_ms = remaining_steps * avg_time_per_iteration_.average();
+    const boost::posix_time::time_duration diff = boost::posix_time::microseconds(remaining_ms);
     boost::posix_time::ptime target = boost::posix_time::second_clock::local_time();
     target += diff;
     output_stream_ << boost::format("\n---\n Total Time remaining: %s -- %s (%f %%)\n---\n")
