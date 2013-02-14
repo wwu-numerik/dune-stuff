@@ -158,9 +158,6 @@ TEST(Projection, Cubes){
 
 int main(int argc, char** argv)
 {
-  DSC_CONFIG.readOptions(argc, argv);
-  testing::InitGoogleTest(&argc, argv);
-  Dune::MPIManager::initialize(argc,argv);
-  DSC::Logger().create(DSC::LOG_CONSOLE | DSC::LOG_ERROR);
+  test_init(argc, argv);
   return RUN_ALL_TESTS();
 }
