@@ -115,33 +115,33 @@ public:
     return stream.str();
   } // std::stringstream reportString(const std::string& prefix = "") const
 
-  std::string get(const std::string& _key, const char* defaultValue) const
+  std::string get(const std::string& key, const char* defaultValue) const
   {
-    return this->get< std::string >(_key, std::string(defaultValue));
+    return this->get< std::string >(key, std::string(defaultValue));
   }
 
   template< typename T >
-  T get(const std::string& _key, const T& defaultValue) const
+  T get(const std::string& key, const T& defaultValue) const
   {
-    if (!BaseType::hasKey(_key)) {
-      DSC::Logger().debug() << DSC::colorString("WARNING:") << " missing key '" << _key << "' is replaced by given default value!" << std::endl;
+    if (!BaseType::hasKey(key)) {
+      DSC::Logger().debug() << DSC::colorString("WARNING:") << " missing key '" << key << "' is replaced by given default value!" << std::endl;
     }
-    return BaseType::get< T >(_key, defaultValue);
+    return BaseType::get< T >(key, defaultValue);
   }
 
   template< class T >
-  T get(const std::string& _key) const
+  T get(const std::string& key) const
   {
-    if (!BaseType::hasKey(_key))
+    if (!BaseType::hasKey(key))
       DUNE_THROW(Dune::RangeError,
-                 "\nERROR: key '" << _key << "' missing  in the following Dune::ParameterTree:\n" << reportString("  "));
-    return BaseType::get< T >(_key);
+                 "\nERROR: key '" << key << "' missing  in the following Dune::ParameterTree:\n" << reportString("  "));
+    return BaseType::get< T >(key);
   }
 
-  bool hasVector(const std::string& _key) const
+  bool hasVector(const std::string& key) const
   {
-    if (hasKey(_key)) {
-      const std::string str = BaseType::get< std::string >(_key, "meaningless_default_value");
+    if (hasKey(key)) {
+      const std::string str = BaseType::get< std::string >(key, "meaningless_default_value");
       return (DSC::String::equal(str.substr(0, 1), "[")
           && DSC::String::equal(str.substr(str.size() - 1, 1), "]"));
     }
@@ -149,9 +149,9 @@ public:
   } // bool hasVector(const std::string& vector) const
 
   template< class T >
-  Dune::DynamicVector< T > getDynVector(const std::string& _key, const T& def, const size_t minSize) const
+  Dune::DynamicVector< T > getDynVector(const std::string& key, const T& def, const size_t minSize) const
   {
-    const std::vector< T > vector = getVector< T >(_key, def, minSize);
+    const std::vector< T > vector = getVector< T >(key, def, minSize);
     Dune::DynamicVector< T > ret(vector.size());
     for (size_t ii = 0; ii < vector.size(); ++ii)
       ret[ii] = vector[ii];
@@ -159,23 +159,23 @@ public:
   }
 
   template< class T >
-  std::vector< T > getVector(const std::string& _key, const T& def, const unsigned int minSize) const
+  std::vector< T > getVector(const std::string& key, const T& def, const unsigned int minSize) const
   {
-    if (!hasKey(_key)) {
-      DSC::Logger().debug() << DSC::colorString("WARNING:") << " missing key '" << _key << "' is replaced by given default value!" << std::endl;
+    if (!hasKey(key)) {
+      DSC::Logger().debug() << DSC::colorString("WARNING:") << " missing key '" << key << "' is replaced by given default value!" << std::endl;
       return std::vector< T >(minSize, def);
     } else {
-      const std::string str = BaseType::get(_key, "meaningless_default_value");
+      const std::string str = BaseType::get(key, "meaningless_default_value");
       if (DSC::String::equal(str, "")) {
         if (minSize > 0) {
-          DSC::Logger().debug() << DSC::colorString("WARNING:") << " vector '" << _key << "' was too small (0) and has been enlarged to size " << minSize << "!" << std::endl;
+          DSC::Logger().debug() << DSC::colorString("WARNING:") << " vector '" << key << "' was too small (0) and has been enlarged to size " << minSize << "!" << std::endl;
         }
         return std::vector< T >(minSize, def);
       } else if (str.size() < 3) {
         std::vector< T > ret;
         ret.push_back(DSC::fromString< T >(str));
         if (ret.size() < minSize) {
-          DSC::Logger().debug() << DSC::colorString("WARNING:") << " vector '" << _key << "' was too small (" << ret.size() << ") and has been enlarged to size " << minSize << "!" << std::endl;
+          DSC::Logger().debug() << DSC::colorString("WARNING:") << " vector '" << key << "' was too small (" << ret.size() << ") and has been enlarged to size " << minSize << "!" << std::endl;
           for (auto i = ret.size(); i < minSize; ++i)
             ret.push_back(def);
         }
@@ -205,9 +205,9 @@ public:
   } // std::vector< T > getVector(const std::string& key, const T def) const
 
   template< class T >
-  Dune::DynamicVector< T > getDynVector(const std::string& _key, const size_t minSize) const
+  Dune::DynamicVector< T > getDynVector(const std::string& key, const size_t minSize) const
   {
-    const std::vector< T > vector = getVector< T >(_key, minSize);
+    const std::vector< T > vector = getVector< T >(key, minSize);
     Dune::DynamicVector< T > ret(vector.size());
     for (size_t ii = 0; ii < vector.size(); ++ii)
       ret[ii] = vector[ii];
@@ -215,15 +215,15 @@ public:
   }
 
   template< class T >
-  std::vector< T > getVector(const std::string& _key, const unsigned int minSize) const
+  std::vector< T > getVector(const std::string& key, const unsigned int minSize) const
   {
-    if (!hasKey(_key)) {
+    if (!hasKey(key)) {
       DUNE_THROW(Dune::RangeError,
                  "\n" << DSC::colorStringRed("ERROR:")
-                 << " key '" << _key << "' missing  in the following Dune::ParameterTree:\n" << reportString("  "));
+                 << " key '" << key << "' missing  in the following Dune::ParameterTree:\n" << reportString("  "));
     } else {
       std::vector< T > ret;
-      const std::string str = BaseType::get< std::string >(_key, "meaningless_default_value");
+      const std::string str = BaseType::get< std::string >(key, "meaningless_default_value");
       // the dune parametertree strips any leading and trailing whitespace
       // so we can be sure that the first and last have to be the brackets [] if this is a vector
       if (str.substr(0, 1) == "[" && str.substr(str.size() - 1, 1) == "]") {
@@ -237,7 +237,7 @@ public:
       if (ret.size() < minSize)
         DUNE_THROW(Dune::RangeError,
                    "\n" << DSC::colorStringRed("ERROR:")
-                   << " vector '" << _key
+                   << " vector '" << key
                    << "' too short (is " << ret.size() << ", should be at least " << minSize
                    << ") in the following Dune::ParameterTree :\n" << reportString("  "));
       return ret;
@@ -246,12 +246,12 @@ public:
 
 #if HAVE_EIGEN
   template< class T >
-  Eigen::Matrix< T, Eigen::Dynamic, 1 > getEigenVector(const std::string& _key,
+  Eigen::Matrix< T, Eigen::Dynamic, 1 > getEigenVector(const std::string& key,
                                                        const T& def,
                                                        const unsigned int minSize) const
   {
     // get correspongin vector
-    std::vector< T > vec = getVector< T >(_key, def, minSize);
+    std::vector< T > vec = getVector< T >(key, def, minSize);
     // create eigen vector and return
     Eigen::Matrix< T, Eigen::Dynamic, 1 > ret(vec.size());
     for (unsigned int i = 0; i < vec.size(); ++i)
@@ -260,10 +260,10 @@ public:
   }
 
   template< class T >
-  Eigen::Matrix< T, Eigen::Dynamic, 1 > getEigenVector(const std::string& _key, const unsigned int minSize) const
+  Eigen::Matrix< T, Eigen::Dynamic, 1 > getEigenVector(const std::string& key, const unsigned int minSize) const
   {
     // get correspongin vector
-    std::vector< T > vec = getVector< T >(_key, minSize);
+    std::vector< T > vec = getVector< T >(key, minSize);
     // create eigen vector and return
     Eigen::Matrix< T, Eigen::Dynamic, 1 > ret(vec.size());
     for (unsigned int i = 0; i < vec.size(); ++i)
@@ -272,12 +272,12 @@ public:
   }
 #endif // HAVE_EIGEN
 
-  void assertKey(const std::string& _key) const
+  void assertKey(const std::string& key) const
   {
-    if (!BaseType::hasKey(_key))
+    if (!BaseType::hasKey(key))
       DUNE_THROW(Dune::RangeError,
                  "\n" << DSC::colorStringRed("ERROR:")
-                 << " key '" << _key << "' missing  in the following Dune::ParameterTree:\n" << reportString("  "));
+                 << " key '" << key << "' missing  in the following Dune::ParameterTree:\n" << reportString("  "));
   }
 
   void assertSub(const std::string& _sub) const
