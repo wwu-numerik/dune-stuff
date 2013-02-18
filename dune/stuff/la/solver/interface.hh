@@ -96,6 +96,11 @@ class SimplicialLDLT
   : public SolverNotImplementedForThisMatrixVectorCombination< MatrixImp, VectorImp >
 {};
 
+//template< class MatrixImp, class VectorImp >
+//class Fasp
+//  : public SolverNotImplementedForThisMatrixVectorCombination< MatrixImp, VectorImp >
+//{};
+
 
 } // namespace Solver
 } // namespace LA
