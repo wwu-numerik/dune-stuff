@@ -37,7 +37,7 @@ SOURCES = $(common_parameter_validation_SOURCES) $(common_logger_SOURCES) \
 	$(fem_error_SOURCES) $(fem_projection_SOURCES) 
 
 LDFLAGS = $(BOOST_LDFLAGS) -lboost_timer -lboost_chrono -lboost_filesystem -lboost_system -lpthread
-CXXFLAGS = $(BOOST_CPPFLAGS) $(DUNE_CPPFLAGS) -I. $(GRID_FLAGS)
+CXXFLAGS = $(BOOST_CPPFLAGS) $(DUNE_CPPFLAGS) -I./gtest $(GRID_FLAGS)
 CPPFLAGS = $(BOOST_CPPFLAGS) $(DUNE_CPPFLAGS)
 
 # tests where program to build and program to run are equal
