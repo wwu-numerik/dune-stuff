@@ -22,8 +22,9 @@
 #include <dune/stuff/function/parametric/separable/coefficient.hh>
 
 template <int dimDomain, int rangeDim>
-struct CustomFunction : public Dune::Stuff::Function::Interface< double, dimDomain, double, rangeDim > {
-  typedef Dune::Stuff::Function::Interface< double, dimDomain, double, rangeDim > Base;
+struct CustomFunction : public DSFu::Interface< double, dimDomain, double, rangeDim > {
+  typedef DSFu::Interface< double, dimDomain, double, rangeDim > Base;
+  using Base::evaluate;
 
   template <class IntersectionType>
   void evaluate( const typename Base::DomainType& /*arg*/, typename Base::RangeType& ret, const IntersectionType& face ) const
@@ -33,8 +34,9 @@ struct CustomFunction : public Dune::Stuff::Function::Interface< double, dimDoma
 };
 
 template <int dimDomain, int rangeDim>
-struct CustomFunctionT : public Dune::Stuff::Function::Interface< double, dimDomain, double, rangeDim > {
-  typedef Dune::Stuff::Function::Interface< double, dimDomain, double, rangeDim > Base;
+struct CustomFunctionT : public DSFu::Interface< double, dimDomain, double, rangeDim > {
+  typedef DSFu::Interface< double, dimDomain, double, rangeDim > Base;
+  using Base::evaluate;
 
   void evaluate( const double time, const typename Base::DomainType& /*arg*/,typename  Base::RangeType& ret ) const
   {
@@ -53,9 +55,9 @@ public:
   static const int range_dim = RangeDim::value;
   static const int pol_order = 1;
 
-  typedef Dune::Stuff::Grid::Provider::Cube<Dune::SGrid< GridDim::value, GridDim::value >> GridProviderType;
+  typedef DSG::Provider::GenericCube<Dune::SGrid< GridDim::value, GridDim::value >> GridProviderType;
   typedef typename GridProviderType::GridType GridType;
-  typedef Dune::Stuff::Function::Expression< double, GridType::dimension, double, range_dim > FunctionType;
+  typedef DSFu::Expression< double, GridType::dimension, double, range_dim > FunctionType;
   typedef typename FunctionType::FunctionSpaceType FunctionSpaceType;
   typedef Dune::AdaptiveLeafGridPart< GridType > GridPartType;
   typedef Dune::DiscontinuousGalerkinSpace< FunctionSpaceType,
@@ -124,8 +126,6 @@ TYPED_TEST(ProjectionTest, All) {
 
 int main(int argc, char** argv)
 {
-  testing::InitGoogleTest(&argc, argv);
-  Dune::MPIHelper::instance(argc, argv);
-
+  test_init(argc, argv);
   return RUN_ALL_TESTS();
 }

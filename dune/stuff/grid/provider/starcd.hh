@@ -210,7 +210,7 @@ public:
     }
   }
 
-  static ThisType createFromDescription(const Dune::ParameterTree& paramTree, const std::string subName = id())
+  static ThisType* createFromDescription(const Dune::ParameterTree& paramTree, const std::string subName = id())
   {
     // get correct paramTree
     Dune::Stuff::Common::ExtendedParameterTree extendedParamTree;
@@ -223,7 +223,7 @@ public:
       DUNE_THROW(Dune::RangeError,
                  "\nMissing key 'filename' in the following Dune::ParameterTree:\n" << extendedParamTree.reportString("  "));
     const std::string filename = extendedParamTree.get("filename", "meaningless_default_value");
-    return StarCD(filename);
+    return new ThisType(filename);
   }
 
   ThisType& operator=(ThisType& other)

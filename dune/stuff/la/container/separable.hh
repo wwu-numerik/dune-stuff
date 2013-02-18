@@ -1,6 +1,12 @@
 ﻿#ifndef DUNE_STUFF_LA_CONTAINER_SEPARABLE_HH
 #define DUNE_STUFF_LA_CONTAINER_SEPARABLE_HH
 
+#ifdef HAVE_CMAKE_CONFIG
+  #include "cmake_config.h"
+#elif defined (HAVE_CONFIG_H)
+  #include <config.h>
+#endif // ifdef HAVE_CMAKE_CONFIG
+
 #include <dune/common/exceptions.hh>
 #include <dune/common/shared_ptr.hh>
 
@@ -97,7 +103,7 @@ public:
   Dune::shared_ptr< ComponentType > fix(const ParamType _mu = ParamType()) const
   {
     // in any case, there exists at least one component
-    Dune::shared_ptr< ComponentType > ret = Dune::make_shared< ComponentType >(*(components_[0]));
+    auto ret = Dune::make_shared< ComponentType >(*(components_[0]));
     // if we are parametric, we have to do some more
     if (parametric()) {
       assert(_mu.size() == paramSize());

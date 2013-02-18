@@ -13,10 +13,11 @@
 #include <dune/fem/function/common/gridfunctionadapter.hh>
 #include <dune/fem/space/common/functionspace.hh>
 #include <dune/fem/space/dgspace.hh>
+#include <dune/fem/function/adaptivefunction.hh>
 #include <dune/stuff/fem/customprojection.hh>
 #include <dune/stuff/common/debug.hh>
 #include <dune/stuff/fem/localmassmatrix.hh>
-#include <dune/fem/function/adaptivefunction.hh>
+#include <dune/stuff/aliases.hh>
 
 namespace Dune {
 namespace Stuff {
@@ -31,64 +32,35 @@ public:
                                double,
                                DiscreteFunctionImp::FunctionSpaceType::dimDomain,
                                1 >
-  MagnitudeSpaceType;
-  typedef DiscreteFunctionImp
-  DiscreteFunctionType;
-  typedef typename DiscreteFunctionType::DiscreteFunctionSpaceType::GridPartType
-  GridPartType;
+      MagnitudeSpaceType;
+  typedef DiscreteFunctionImp DiscreteFunctionType;
+  typedef typename DiscreteFunctionType::DiscreteFunctionSpaceType::GridPartType GridPartType;
   typedef Dune::DiscontinuousGalerkinSpace< MagnitudeSpaceType, GridPartType, polOrder >
-  MagnitudeDiscreteFunctionSpaceType;
+    MagnitudeDiscreteFunctionSpaceType;
   typedef Dune::AdaptiveDiscreteFunction< MagnitudeDiscreteFunctionSpaceType >
-  MagnitudeDiscreteFunctionType;
+    MagnitudeDiscreteFunctionType;
 
   //! constructor taking discrete function
   MagnitudeFunction(const DiscreteFunctionType& _discreteFunction)
     : magnitude_disretefunctionspace_( _discreteFunction.space().gridPart() )
-      , magnitude_disretefunction_(_discreteFunction.name() + "-magnitude", magnitude_disretefunctionspace_) {
-    typedef typename DiscreteFunctionImp::DiscreteFunctionSpaceType          DiscreteFunctionSpaceType;
-    typedef typename MagnitudeDiscreteFunctionType::LocalFunctionType        LocalFuncType;
-    typedef typename DiscreteFunctionSpaceType::Traits::GridPartType         GridPartType;
-    typedef typename DiscreteFunctionSpaceType::Traits::IteratorType         Iterator;
-    typedef typename MagnitudeDiscreteFunctionSpaceType::BaseFunctionSetType BaseFunctionSetType;
-    typedef typename GridPartType::GridType                                  GridType;
-
+    , magnitude_disretefunction_(_discreteFunction.name() + "-magnitude", magnitude_disretefunctionspace_)
+  {
+    typedef Dune::CachingQuadrature< GridPartType, 0 > QuadratureType;
     typename MagnitudeDiscreteFunctionSpaceType::RangeType ret(0.0);
     typename MagnitudeDiscreteFunctionSpaceType::RangeType phi(0.0);
-    const DiscreteFunctionSpaceType& space = _discreteFunction.space();
-
-    // type of quadrature
-    typedef Dune::CachingQuadrature< GridPartType, 0 > QuadratureType;
-    // type of local mass matrix
-    typedef Dune::Stuff::Fem::LocalMassMatrix< MagnitudeDiscreteFunctionSpaceType, QuadratureType > LocalMassMatrixType;
+    const auto& space = _discreteFunction.space();
 
     const int quadOrd = 2 * space.order() + 2;
-
-    // create local mass matrix object
-    LocalMassMatrixType massMatrix(magnitude_disretefunctionspace_, quadOrd);
-
-    // check whether geometry mappings are affine or not
+    DSFe::LocalMassMatrix< MagnitudeDiscreteFunctionSpaceType, QuadratureType > massMatrix(magnitude_disretefunctionspace_, quadOrd);
     const bool affineMapping = massMatrix.affine();
-
-    // clear destination
     magnitude_disretefunction_.clear();
 
-    const Iterator endit = space.end();
-    for (Iterator it = space.begin(); it != endit; ++it)
+    for (const auto& en : space)
     {
-      // get entity
-      const typename GridType::template Codim< 0 >::Entity& en = *it;
-      // get geometry
-      const typename GridType::template Codim< 0 >::Geometry& geo = en.geometry();
-
-      // get quadrature
-      QuadratureType quad(en, quadOrd);
-
-      // get local function of destination
-      LocalFuncType lf = magnitude_disretefunction_.localFunction(en);
-
-      // get base function set
-      const BaseFunctionSetType& baseset = lf.baseFunctionSet();
-
+      const auto& geo = en.geometry();
+      const QuadratureType quad(en, quadOrd);
+      auto lf = magnitude_disretefunction_.localFunction(en);
+      const auto& baseset = lf.baseFunctionSet();
       const int quadNop = quad.nop();
       const int numDofs = lf.numDofs();
       for (int qP = 0; qP < quadNop; ++qP)
@@ -115,7 +87,7 @@ public:
     }
   }
 
-  //! virtual destructor
+
   virtual ~MagnitudeFunction() {}
 
   const MagnitudeDiscreteFunctionType& discreteFunction() const {

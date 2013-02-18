@@ -8,6 +8,7 @@
 #include <dune/stuff/grid/intersection.hh>
 #include <dune/stuff/common/ranges.hh>
 #include <dune/stuff/grid/walk.hh>
+#include <dune/stuff/aliases.hh>
 
 namespace Dune {
 namespace Stuff {
@@ -89,7 +90,7 @@ struct Dimensions
     public:
       GridDimensionsFunctor(CoordLimitsType& c, MinMaxAvgType& e)
         : coord_limits_(c)
-          , entity_volume_(e) {}
+        , entity_volume_(e) {}
 
       template< class Entity >
       void operator()(const Entity& ent, const int /*ent_idx*/) {
@@ -108,8 +109,7 @@ struct Dimensions
   { return entity_volume.min() != 0.0 ? entity_volume.max() / entity_volume.min() : -1; }
 
   Dimensions(const GridType& grid) {
-    typedef typename GridType::LeafGridView
-    View;
+    typedef typename GridType::LeafGridView View;
     const auto& view = grid.leafView();
     GridDimensionsFunctor f(coord_limits, entity_volume);
     GridWalk< View >(view).walkCodim0(f);
@@ -121,11 +121,10 @@ struct Dimensions
 } // namespace Dune
 
 template< class T >
-inline std::ostream& operator<<(std::ostream& s, 
-    const Dune::Stuff::Grid::Dimensions< T >& d) {
+inline std::ostream& operator<<(std::ostream& s, const DSG::Dimensions< T >& d) {
   for (size_t k = 0; k < T::dimensionworld; ++k)
   {
-    const typename Dune::Stuff::Grid::Dimensions< T >::MinMaxAvgType& mma = d.coord_limits[k];
+    const auto& mma = d.coord_limits[k];
     s << boost::format("x%d\tmin: %e\tavg: %e\tmax: %e\n")
 	    % k
 	    % mma.min()

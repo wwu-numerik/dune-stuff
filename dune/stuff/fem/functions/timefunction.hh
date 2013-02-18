@@ -36,12 +36,13 @@ class TimeFunction
 {
 protected:
   typedef TimeFunction< FunctionSpaceImp, FunctionImp, TimeProviderImp >
-  ThisType;
+    ThisType;
   typedef Dune::Fem::Function< FunctionSpaceImp, ThisType >
-  BaseType;
+    BaseType;
   typedef BartonNackmanInterface< ThisType, FunctionImp >
-  Interface;
+    Interface;
 
+  //!TODO having both here is just plain weird
   TimeProviderImp* timeProviderPtr_;          // in case we cosntruct our own
   const TimeProviderImp& timeProvider_;
 
@@ -54,18 +55,18 @@ public:
 
   TimeFunction(const TimeProviderImp& timeProviderImp, const FunctionSpaceImp& /*space*/)
     : BaseType()
-      , timeProviderPtr_(nullptr)
-      , timeProvider_(timeProviderImp)
+    , timeProviderPtr_(nullptr)
+    , timeProvider_(timeProviderImp)
   {}
   TimeFunction(const TimeProviderImp& timeProviderImp)
     : BaseType()
-      , timeProviderPtr_(nullptr)
-      , timeProvider_(timeProviderImp)
+    , timeProviderPtr_(nullptr)
+    , timeProvider_(timeProviderImp)
   {}
   explicit TimeFunction(double t)
     : BaseType()
-      , timeProviderPtr_( new TimeProviderType(t) )
-      , timeProvider_(*timeProviderPtr_)
+    , timeProviderPtr_( new TimeProviderType(t) )
+    , timeProvider_(*timeProviderPtr_)
   {}
 
   virtual ~TimeFunction() {
@@ -126,11 +127,11 @@ class IntersectionTimeFunction
 {
 protected:
   typedef IntersectionTimeFunction< FunctionSpaceImp, FunctionImp, TimeProviderImp >
-  ThisType;
+    ThisType;
   typedef Dune::Fem::Function< FunctionSpaceImp, ThisType >
-  BaseType;
+    BaseType;
   typedef BartonNackmanInterface< ThisType, FunctionImp >
-  Interface;
+    Interface;
 
   const TimeProviderImp& timeProvider_;
 

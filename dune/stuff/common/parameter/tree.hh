@@ -26,6 +26,7 @@
 #include <dune/stuff/common/string.hh>
 #include <dune/stuff/common/color.hh>
 #include <dune/stuff/common/logging.hh>
+#include <dune/stuff/aliases.hh>
 
 namespace Dune {
 namespace Stuff {
@@ -73,7 +74,7 @@ public:
         const std::string key = keyVector[ii];
         if (BaseType::hasKey(key))
           DUNE_THROW(Dune::InvalidStateException,
-                     "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
+                     "\n" << DSC::colorStringRed("ERROR:")
                      << " key '" << key << "' already exists in the follingDune::ParameterTree:\n"
                      << reportString("  "));
         BaseType::operator[](key) = _other.get< std::string >(key);
@@ -81,7 +82,7 @@ public:
     } else {
       if (BaseType::hasKey(_subName))
         DUNE_THROW(Dune::InvalidStateException,
-                   "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
+                   "\n" << DSC::colorStringRed("ERROR:")
                    << " key '" << _subName << "' already exists in the follingDune::ParameterTree:\n"
                    << reportString("  "));
       else if (BaseType::hasSub(_subName)) {
@@ -97,7 +98,7 @@ public:
   {
     if (!hasSub(_sub))
         DUNE_THROW(Dune::RangeError,
-                   "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
+                   "\n" << DSC::colorStringRed("ERROR:")
                    << " sub '" << _sub << "' missing in the following Dune::ParameterTree:\n" << reportString("  "));
     return ExtendedParameterTree(BaseType::sub(_sub));
   }
@@ -114,43 +115,43 @@ public:
     return stream.str();
   } // std::stringstream reportString(const std::string& prefix = "") const
 
-  std::string get(const std::string& _key, const char* defaultValue) const
+  std::string get(const std::string& key, const char* defaultValue) const
   {
-    return this->get< std::string >(_key, std::string(defaultValue));
+    return this->get< std::string >(key, std::string(defaultValue));
   }
 
   template< typename T >
-  T get(const std::string& _key, const T& defaultValue) const
+  T get(const std::string& key, const T& defaultValue) const
   {
-    if (!BaseType::hasKey(_key)) {
-      Dune::Stuff::Common::Logger().debug() << Dune::Stuff::Common::colorString("WARNING:") << " missing key '" << _key << "' is replaced by given default value!" << std::endl;
+    if (!BaseType::hasKey(key)) {
+      DSC::Logger().debug() << DSC::colorString("WARNING:") << " missing key '" << key << "' is replaced by given default value!" << std::endl;
     }
-    return BaseType::get< T >(_key, defaultValue);
+    return BaseType::get< T >(key, defaultValue);
   }
 
   template< class T >
-  T get(const std::string& _key) const
+  T get(const std::string& key) const
   {
-    if (!BaseType::hasKey(_key))
+    if (!BaseType::hasKey(key))
       DUNE_THROW(Dune::RangeError,
                  "\n" << Dune::Stuff::Common::colorStringRed("ERROR:") << " key '" << _key << "' missing  in the following Dune::ParameterTree:\n" << reportString("  "));
-    return BaseType::get< T >(_key);
+    return BaseType::get< T >(key);
   }
 
-  bool hasVector(const std::string& _key) const
+  bool hasVector(const std::string& key) const
   {
-    if (hasKey(_key)) {
-      const std::string str = BaseType::get< std::string >(_key, "meaningless_default_value");
-      return (Dune::Stuff::Common::String::equal(str.substr(0, 1), "[")
-          && Dune::Stuff::Common::String::equal(str.substr(str.size() - 1, 1), "]"));
+    if (hasKey(key)) {
+      const std::string str = BaseType::get< std::string >(key, "meaningless_default_value");
+      return (DSC::String::equal(str.substr(0, 1), "[")
+          && DSC::String::equal(str.substr(str.size() - 1, 1), "]"));
     }
     return false;
   } // bool hasVector(const std::string& vector) const
 
   template< class T >
-  Dune::DynamicVector< T > getDynVector(const std::string& _key, const T& def, const size_t minSize) const
+  Dune::DynamicVector< T > getDynVector(const std::string& key, const T& def, const size_t minSize) const
   {
-    const std::vector< T > vector = getVector< T >(_key, def, minSize);
+    const std::vector< T > vector = getVector< T >(key, def, minSize);
     Dune::DynamicVector< T > ret(vector.size());
     for (size_t ii = 0; ii < vector.size(); ++ii)
       ret[ii] = vector[ii];
@@ -158,23 +159,23 @@ public:
   }
 
   template< class T >
-  std::vector< T > getVector(const std::string& _key, const T& def, const unsigned int minSize) const
+  std::vector< T > getVector(const std::string& key, const T& def, const unsigned int minSize) const
   {
-    if (!hasKey(_key)) {
-      Dune::Stuff::Common::Logger().debug() << Dune::Stuff::Common::colorString("WARNING:") << " missing key '" << _key << "' is replaced by given default value!" << std::endl;
+    if (!hasKey(key)) {
+      DSC::Logger().debug() << DSC::colorString("WARNING:") << " missing key '" << key << "' is replaced by given default value!" << std::endl;
       return std::vector< T >(minSize, def);
     } else {
-      const std::string str = BaseType::get(_key, "meaningless_default_value");
-      if (Dune::Stuff::Common::String::equal(str, "")) {
+      const std::string str = BaseType::get(key, "meaningless_default_value");
+      if (DSC::String::equal(str, "")) {
         if (minSize > 0) {
-          Dune::Stuff::Common::Logger().debug() << Dune::Stuff::Common::colorString("WARNING:") << " vector '" << _key << "' was too small (0) and has been enlarged to size " << minSize << "!" << std::endl;
+          DSC::Logger().debug() << DSC::colorString("WARNING:") << " vector '" << key << "' was too small (0) and has been enlarged to size " << minSize << "!" << std::endl;
         }
         return std::vector< T >(minSize, def);
       } else if (str.size() < 3) {
         std::vector< T > ret;
-        ret.push_back(Dune::Stuff::Common::fromString< T >(str));
+        ret.push_back(DSC::fromString< T >(str));
         if (ret.size() < minSize) {
-          Dune::Stuff::Common::Logger().debug() << Dune::Stuff::Common::colorString("WARNING:") << " vector '" << _key << "' was too small (" << ret.size() << ") and has been enlarged to size " << minSize << "!" << std::endl;
+          DSC::Logger().debug() << DSC::colorString("WARNING:") << " vector '" << key << "' was too small (" << ret.size() << ") and has been enlarged to size " << minSize << "!" << std::endl;
           for (auto i = ret.size(); i < minSize; ++i)
             ret.push_back(def);
         }
@@ -183,20 +184,20 @@ public:
         // the dune parametertree strips any leading and trailing whitespace
         // so we can be sure that the first and last have to be the brackets [] if this is a vector
         std::vector< T > ret;
-        if (Dune::Stuff::Common::String::equal(str.substr(0, 1), "[")
-            && Dune::Stuff::Common::String::equal(str.substr(str.size() - 1, 1), "]")) {
+        if (DSC::String::equal(str.substr(0, 1), "[")
+            && DSC::String::equal(str.substr(str.size() - 1, 1), "]")) {
           std::vector< std::string > tokens;
           if (str.size() > 2)
-            tokens = Dune::Stuff::Common::tokenize< std::string >(str.substr(1, str.size() - 2), ";");
+            tokens = DSC::tokenize< std::string >(str.substr(1, str.size() - 2), ";");
           for (unsigned int i = 0; i < tokens.size(); ++i)
-            ret.push_back(Dune::Stuff::Common::fromString< T >(boost::algorithm::trim_copy(tokens[i])));
+            ret.push_back(DSC::fromString< T >(boost::algorithm::trim_copy(tokens[i])));
           for (auto i = ret.size(); i < minSize; ++i)
             ret.push_back(def);
-        } else if (Dune::Stuff::Common::String::equal(str.substr(0, 1), "[")
-                   || Dune::Stuff::Common::String::equal(str.substr(str.size() - 1, 1), "]")) {
+        } else if (DSC::String::equal(str.substr(0, 1), "[")
+                   || DSC::String::equal(str.substr(str.size() - 1, 1), "]")) {
             DUNE_THROW(Dune::RangeError, "Vectors have to be of the form '[entry_0; entry_1; ... ]'!");
         } else {
-          ret = std::vector< T >(minSize, Dune::Stuff::Common::fromString< T >(boost::algorithm::trim_copy(str)));
+          ret = std::vector< T >(minSize, DSC::fromString< T >(boost::algorithm::trim_copy(str)));
         }
         return ret;
       }
@@ -214,30 +215,29 @@ public:
   }
 
   template< class T >
-  std::vector< T > getVector(const std::string& _key, const unsigned int minSize) const
+  std::vector< T > getVector(const std::string& key, const unsigned int minSize) const
   {
-    if (!hasKey(_key)) {
+    if (!hasKey(key)) {
       DUNE_THROW(Dune::RangeError,
-                 "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
-                 << " key '" << _key << "' missing  in the following Dune::ParameterTree:\n" << reportString("  "));
+                 "\n" << DSC::colorStringRed("ERROR:")
+                 << " key '" << key << "' missing  in the following Dune::ParameterTree:\n" << reportString("  "));
     } else {
       std::vector< T > ret;
-      const std::string str = BaseType::get< std::string >(_key, "meaningless_default_value");
+      const std::string str = BaseType::get< std::string >(key, "meaningless_default_value");
       // the dune parametertree strips any leading and trailing whitespace
       // so we can be sure that the first and last have to be the brackets [] if this is a vector
-      if (Dune::Stuff::Common::String::equal(str.substr(0, 1), "[")
-          && Dune::Stuff::Common::String::equal(str.substr(str.size() - 1, 1), "]")) {
-        const std::vector< std::string > tokens = Dune::Stuff::Common::tokenize< std::string >(str.substr(1, str.size() - 2), ";");
+      if (str.substr(0, 1) == "[" && str.substr(str.size() - 1, 1) == "]") {
+        const std::vector< std::string > tokens = DSC::tokenize< std::string >(str.substr(1, str.size() - 2), ";");
         for (unsigned int i = 0; i < tokens.size(); ++i)
-          ret.push_back(Dune::Stuff::Common::fromString< T >(boost::algorithm::trim_copy(tokens[i])));
+          ret.push_back(DSC::fromString< T >(boost::algorithm::trim_copy(tokens[i])));
       } else if (minSize == 1)
-        ret.push_back(Dune::Stuff::Common::fromString< T >(str));
+        ret.push_back(DSC::fromString< T >(str));
       else
           DUNE_THROW(Dune::RangeError, "Vectors have to be of the form '[entry_0; entry_1; ... ]'!");
       if (ret.size() < minSize)
         DUNE_THROW(Dune::RangeError,
-                   "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
-                   << " vector '" << _key
+                   "\n" << DSC::colorStringRed("ERROR:")
+                   << " vector '" << key
                    << "' too short (is " << ret.size() << ", should be at least " << minSize
                    << ") in the following Dune::ParameterTree :\n" << reportString("  "));
       return ret;
@@ -246,12 +246,12 @@ public:
 
 #if HAVE_EIGEN
   template< class T >
-  Eigen::Matrix< T, Eigen::Dynamic, 1 > getEigenVector(const std::string& _key,
+  Eigen::Matrix< T, Eigen::Dynamic, 1 > getEigenVector(const std::string& key,
                                                        const T& def,
                                                        const unsigned int minSize) const
   {
     // get correspongin vector
-    std::vector< T > vec = getVector< T >(_key, def, minSize);
+    std::vector< T > vec = getVector< T >(key, def, minSize);
     // create eigen vector and return
     Eigen::Matrix< T, Eigen::Dynamic, 1 > ret(vec.size());
     for (unsigned int i = 0; i < vec.size(); ++i)
@@ -260,10 +260,10 @@ public:
   }
 
   template< class T >
-  Eigen::Matrix< T, Eigen::Dynamic, 1 > getEigenVector(const std::string& _key, const unsigned int minSize) const
+  Eigen::Matrix< T, Eigen::Dynamic, 1 > getEigenVector(const std::string& key, const unsigned int minSize) const
   {
     // get correspongin vector
-    std::vector< T > vec = getVector< T >(_key, minSize);
+    std::vector< T > vec = getVector< T >(key, minSize);
     // create eigen vector and return
     Eigen::Matrix< T, Eigen::Dynamic, 1 > ret(vec.size());
     for (unsigned int i = 0; i < vec.size(); ++i)
@@ -272,19 +272,19 @@ public:
   }
 #endif // HAVE_EIGEN
 
-  void assertKey(const std::string& _key) const
+  void assertKey(const std::string& key) const
   {
-    if (!BaseType::hasKey(_key))
+    if (!BaseType::hasKey(key))
       DUNE_THROW(Dune::RangeError,
-                 "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
-                 << " key '" << _key << "' missing  in the following Dune::ParameterTree:\n" << reportString("  "));
+                 "\n" << DSC::colorStringRed("ERROR:")
+                 << " key '" << key << "' missing  in the following Dune::ParameterTree:\n" << reportString("  "));
   }
 
   void assertSub(const std::string& _sub) const
   {
     if (!BaseType::hasSub(_sub))
       DUNE_THROW(Dune::RangeError,
-                 "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
+                 "\n" << DSC::colorStringRed("ERROR:")
                  << " sub '" << _sub << "' missing  in the following Dune::ParameterTree:\n" << reportString("  "));
   }
 
@@ -339,3 +339,31 @@ private:
 } // namespace Dune
 
 #endif // DUNE_STUFF_COMMON_PARAMETER_TREE_HH
+
+/** Copyright (c) 2012, Rene Milk, Felix Albrecht
+   * All rights reserved.
+   *
+   * Redistribution and use in source and binary forms, with or without
+   * modification, are permitted provided that the following conditions are met:
+   *
+   * 1. Redistributions of source code must retain the above copyright notice, this
+   *    list of conditions and the following disclaimer.
+   * 2. Redistributions in binary form must reproduce the above copyright notice,
+   *    this list of conditions and the following disclaimer in the documentation
+   *    and/or other materials provided with the distribution.
+   *
+   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+   * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+   * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+   * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+   * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+   * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+   * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+   * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+   * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+   *
+   * The views and conclusions contained in the software and documentation are those
+   * of the authors and should not be interpreted as representing official policies,
+   * either expressed or implied, of the FreeBSD Project.
+   **/

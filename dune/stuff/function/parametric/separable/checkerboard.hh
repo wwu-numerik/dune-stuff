@@ -23,11 +23,9 @@ namespace Dune {
 namespace Stuff {
 namespace Function {
 
-
 template< class DomainFieldImp, int domainDim,
           class RangeFieldImp, int rangeDim >
 class SeparableCheckerboard;
-
 
 template< class DomainFieldImp, int domainDim,
           class RangeFieldImp >
@@ -76,36 +74,35 @@ public:
     assert(_paramRange.size() == 2 && "Vector has wrong size!");
     assert(_paramRange[0].size() == paramSize_ && "Vector has wrong size!");
     assert(_paramRange[1].size() == paramSize_ && "Vector has wrong size!");
-    for (size_t qq = 0; qq < paramSize_; ++qq)
+    for (size_t qq = 0; qq < paramSize_; ++qq) {
       assert(paramRange_[0][qq] <= paramRange_[1][qq]
           && "Given minimal parameter has to be piecewise <= maximum parameter!");
+    }
     // create the coefficients and components
     typedef Function::Checkerboard< DomainFieldType, dimDomain, RangeFieldType, dimRange > NonparametricType;
     for (size_t ii = 0; ii < paramSize_; ++ii) {
       std::vector< RangeFieldType > indicator(paramSize_, RangeFieldType(0));
       indicator[ii] = RangeFieldType(1);
-      const Dune::shared_ptr< const NonparametricType > indicatorFunction
-          = Dune::make_shared< NonparametricType >(_lowerLeft, _upperRight, _numElements, indicator);
-      components_.push_back(indicatorFunction);
-      coefficients_.push_back(Dune::make_shared< CoefficientType >("mu[" + Dune::Stuff::Common::toString(ii) + "]"));
+      components_.emplace_back(new NonparametricType(_lowerLeft, _upperRight, _numElements, indicator));
+      coefficients_.emplace_back(new CoefficientType("mu[" + DSC::toString(ii) + "]"));
     } // create the coefficients and components
     parameterExplanation_ = std::vector< std::string >(paramSize_, "");
     // create the explanations
     for (size_t ii = 0; ii < _numElements[0]; ++ii) {
       if (dimDomain == 1)
-        parameterExplanation_[ii] = "value_in_subdomain_" + Dune::Stuff::Common::toString(ii);
+        parameterExplanation_[ii] = "value_in_subdomain_" + DSC::toString(ii);
       else
         for (unsigned int jj = 0; jj < _numElements[1]; ++jj) {
           if (dimDomain == 2)
             parameterExplanation_[ii + jj*_numElements[0]] = "value_in_subdomain_"
-                + Dune::Stuff::Common::toString(ii)
-                + "_" + Dune::Stuff::Common::toString(jj);
+                + DSC::toString(ii)
+                + "_" + DSC::toString(jj);
           else
             for (unsigned int kk = 0; kk < _numElements[2]; ++kk) {
               parameterExplanation_[ii + jj*_numElements[0] + kk*_numElements[0]*_numElements[1]] = "value_in_subdomain_"
-                  + Dune::Stuff::Common::toString(ii)
-                  + "_" + Dune::Stuff::Common::toString(jj)
-                  + "_" + Dune::Stuff::Common::toString(kk);
+                  + DSC::toString(ii)
+                  + "_" + DSC::toString(jj)
+                  + "_" + DSC::toString(kk);
             }
         }
     }
@@ -147,16 +144,14 @@ public:
     if (subName.empty())
       return description;
     else {
-      Dune::Stuff::Common::ExtendedParameterTree extendedDescription;
+      DSC::ExtendedParameterTree extendedDescription;
       extendedDescription.add(description, subName);
       return extendedDescription;
     }
   }
 
-  static ThisType createFromDescription(const Dune::ParameterTree _description)
+  static ThisType* createFromDescription(const DSC::ExtendedParameterTree description)
   {
-    // get correct paramTree
-    Stuff::Common::ExtendedParameterTree description(_description);
     // get data
     const std::string _name = description.get< std::string >("name", id());
     const std::vector< DomainFieldType > lowerLefts = description.getVector("lowerLeft", DomainFieldType(0), dimDomain);
@@ -189,11 +184,9 @@ public:
       paramMin[qq] = paramMins[qq];
       paramMax[qq] = paramMaxs[qq];
     }
-    std::vector< ParamType > paramRange;
-    paramRange.push_back(paramMin);
-    paramRange.push_back(paramMax);
+    const std::vector< ParamType > paramRange = {paramMin, paramMax};
     // create and return
-    return ThisType(lowerLeft, upperRight, numElements, paramRange, _name);
+    return new ThisType(lowerLeft, upperRight, numElements, paramRange, _name);
   } // static ThisType createFromParamTree(const Dune::ParameterTree paramTree)
 
   virtual bool parametric() const

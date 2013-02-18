@@ -34,40 +34,20 @@ class CustomProjection
 public:
   template< class OriginFunctionType, class DestinationFunctionType >
   static void project(const OriginFunctionType& f, DestinationFunctionType& discFunc) {
-    typedef typename DestinationFunctionType::DiscreteFunctionSpaceType
-    DiscreteFunctionSpace;
-    typedef typename DiscreteFunctionSpace::GridPartType
-    GridPart;
-    typedef typename GridPart::template Codim< 0 >::IteratorType
-    EntityIteratorType;
-    typedef typename GridPart::GridType::template Codim< 0 >::Entity
-    EntityType;
-    typedef typename GridPart::IntersectionIteratorType
-    IntersectionIteratorType;
-    typedef typename IntersectionIteratorType::Intersection::EntityPointer
-    EntityPointer;
-    typedef typename DestinationFunctionType::LocalFunctionType
-    LocalFunctionType;
-    typedef Dune::CachingQuadrature< GridPart, 1 >
-    FaceQuadratureType;
-    typedef typename DiscreteFunctionSpace::BaseFunctionSetType
-    BaseFunctionSetType;
-    typedef typename DiscreteFunctionSpace::RangeType
-    RangeType;
-    const DiscreteFunctionSpace& space_ = discFunc.space();
-    const GridPart& gridPart_ = space_.gridPart();
-    RangeType phi(0.0);
-    EntityIteratorType entityItEndLog = space_.end();
-    for (EntityIteratorType it = space_.begin();
-         it != entityItEndLog;
-         ++it)
+    typedef Dune::CachingQuadrature< typename DestinationFunctionType::DiscreteFunctionSpaceType::GridPartType, 1 >
+        FaceQuadratureType;
+
+    const auto& space_ = discFunc.space();
+    const auto& gridPart_ = space_.gridPart();
+    typename DestinationFunctionType::DiscreteFunctionSpaceType::RangeType phi(0.0);
+
+    for (const auto& e : space_)
     {
-      const EntityType& e = *it;
-      LocalFunctionType lf = discFunc.localFunction(e);
-      BaseFunctionSetType baseFunctionset = space_.baseFunctionSet(*it);
+      auto lf = discFunc.localFunction(e);
+      auto baseFunctionset = space_.baseFunctionSet(e);
       unsigned int intersection_count = 0;
-      IntersectionIteratorType intItEnd = gridPart_.iend(*it);
-      for (IntersectionIteratorType intIt = gridPart_.ibegin(*it);
+      const auto intItEnd = gridPart_.iend(e);
+      for (auto intIt = gridPart_.ibegin(e);
            intIt != intItEnd;
            ++intIt)
       {
@@ -174,70 +154,39 @@ protected:
                             DiscreteFunctionImp& discFunc,
                             int polOrd = -1) {
     typedef typename DiscreteFunctionImp::DiscreteFunctionSpaceType  DiscreteFunctionSpaceType;
-    typedef typename DiscreteFunctionImp::LocalFunctionType          LocalFuncType;
     typedef typename DiscreteFunctionSpaceType::Traits::GridPartType GridPartType;
-    typedef typename DiscreteFunctionSpaceType::Traits::IteratorType Iterator;
-    typedef typename DiscreteFunctionSpaceType::BaseFunctionSetType  BaseFunctionSetType;
-    typedef typename GridPartType::GridType                          GridType;
+    typedef CachingQuadrature< GridPartType, 0 > QuadratureType;
 
     typename DiscreteFunctionSpaceType::RangeType ret(0.0);
     typename DiscreteFunctionSpaceType::RangeType phi(0.0);
-    const DiscreteFunctionSpaceType& space = discFunc.space();
-
-    // type of quadrature
-    typedef CachingQuadrature< GridPartType, 0 > QuadratureType;
-    // type of local mass matrix
-    typedef LocalMassMatrix< DiscreteFunctionSpaceType, QuadratureType > LocalMassMatrixType;
-
+    const auto& space = discFunc.space();
     const int quadOrd = std::max(2 * space.order() + 2, polOrd);
-
-    // create local mass matrix object
-    LocalMassMatrixType massMatrix(space, quadOrd);
-
-    // check whether geometry mappings are affine or not
+    const LocalMassMatrix< DiscreteFunctionSpaceType, QuadratureType > massMatrix(space, quadOrd);
     const bool affineMapping = massMatrix.affine();
-
-    // clear destination
     discFunc.clear();
 
-    const Iterator endit = space.end();
-    for (Iterator it = space.begin(); it != endit; ++it)
+    for (const auto& en : space)
     {
-      // get entity
-      const typename GridType::template Codim< 0 >::Entity& en = *it;
-      // get geometry
-      const typename GridType::template Codim< 0 >::Geometry& geo = en.geometry();
-
-      // get quadrature
-      QuadratureType quad(en, quadOrd);
-
-      // get local function of destination
-      LocalFuncType lf = discFunc.localFunction(en);
-
-      // get base function set
-      const BaseFunctionSetType& baseset = lf.baseFunctionSet();
-
+      const auto& geo = en.geometry();
+      const QuadratureType quad(en, quadOrd);
+      auto lf = discFunc.localFunction(en);
+      const auto& baseset = lf.baseFunctionSet();
       const int quadNop = quad.nop();
       const int numDofs = lf.numDofs();
-
       for (int qP = 0; qP < quadNop; ++qP)
       {
         const double intel = (affineMapping) ?
                              quad.weight(qP) : // affine case
                              quad.weight(qP) * geo.integrationElement( quad.point(qP) ); // general case
 
-        // evaluate function
-        typename DiscreteFunctionSpaceType::DomainType x = geo.global( quad.point(qP) );
+        const auto x = geo.global( quad.point(qP) );
         evalutionFunctor.evaluate(x, ret);
-
-        // do projection
         for (int i = 0; i < numDofs; ++i)
         {
           baseset.evaluate(i, quad[qP], phi);
           lf[i] += intel * (ret * phi);
         }
       }
-
       // in case of non-linear mapping apply inverse
       if (!affineMapping)
       {

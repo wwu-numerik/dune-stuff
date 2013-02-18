@@ -9,13 +9,9 @@ namespace Fem {
 template< class Matrix, class Function >
 void DiagonalMult(const Matrix& matrix, Function& f) {
   Function diag( "temp", f.space() );
-
   matrix.getDiag(diag);
-
-  typedef typename Function::DofIteratorType DofIteratorType;
-  DofIteratorType diag_it = diag.dbegin();
-  DofIteratorType f_it = f.dbegin();
-
+  auto diag_it = diag.dbegin();
+  auto f_it = f.dbegin();
   for (int row = 0; row < matrix.size(0); row++)
   {
     (*f_it) *= (*diag_it);
@@ -28,13 +24,8 @@ void DiagonalMult(const Matrix& matrix, Function& f) {
 //! return true if any dof is nan or inf
 template< class DiscreteFunctionType >
 void divideFunctionDofs(DiscreteFunctionType& target, const DiscreteFunctionType& divider) {
-  typedef typename DiscreteFunctionType::ConstDofIteratorType
-  CDofIteratorType;
-  typedef typename DiscreteFunctionType::DofIteratorType
-  DofIteratorType;
-
-  DofIteratorType it = target.dbegin();
-  CDofIteratorType cit = divider.dbegin();
+  auto it = target.dbegin();
+  auto cit = divider.dbegin();
   for ( ; it != target.dend(); ++it, ++cit)
   {
     *it /= *cit;
@@ -44,10 +35,7 @@ void divideFunctionDofs(DiscreteFunctionType& target, const DiscreteFunctionType
 /** \todo RENE needs to doc me **/
 template< class DiscreteFunctionType >
 void invertFunctionDofs(DiscreteFunctionType& function) {
-  typedef typename DiscreteFunctionType::DofIteratorType
-  DofIteratorType;
-
-  DofIteratorType it = function.dbegin();
+  auto it = function.dbegin();
   for ( ; it != function.dend(); ++it)
   {
     if (*it != 0.0)
@@ -59,13 +47,12 @@ void invertFunctionDofs(DiscreteFunctionType& function) {
 //! inverts dof order
 template< class Function >
 void switchDofs(Function& f) {
-  typedef typename Function::DofIteratorType DofIteratorType;
-  DofIteratorType front = f.dbegin();
-  DofIteratorType back = f.dend();
+  auto front = f.dbegin();
+  auto back = f.dend();
   const unsigned int numdofs = f.size();
   for (unsigned int i = 0; i < numdofs / 2; ++i)
   {
-    double tmp = *back;
+    auto tmp = *back;
     *back = *front;
     *front = tmp;
   }
@@ -79,8 +66,7 @@ void switchDofs(Function& f) {
    **/
 template< class Function >
 void addScalarToFunc(Function& f, double sc) {
-  typedef typename Function::DofIteratorType DofIteratorType;
-  DofIteratorType it = f.dbegin();
+  auto it = f.dbegin();
   for ( ; it != f.dend(); ++it)
     *it += sc;
   return;

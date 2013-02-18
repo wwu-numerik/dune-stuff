@@ -12,24 +12,20 @@
 #include <dune/geometry/quadraturerules.hh>
 
 #if HAVE_DUNE_DETAILED_DISCRETIZATIONS
-// dune-grid-multiscale
-#include <dune/grid/part/interface.hh>
 
-// dune-detailed-discretizations
+#include <dune/grid/part/interface.hh>
 #include <dune/detailed/discretizations/discretefunction/local.hh>
 #include <dune/detailed/discretizations/discretefunction/default.hh>
 #include <dune/detailed/discretizations/discretefunction/multiscale.hh>
-
-
-// dune-stuff
 #include <dune/stuff/function/interface.hh>
 
 namespace Dune {
 namespace Stuff {
 namespace DiscreteFunction {
+
 class Norm {
 public:
-//#if HAVE_DUNE_DETAILED_DISCRETIZATIONS
+
 template< class GridPartTraits, class DomainFieldType, int dimDomain, class RangeFieldType, int dimRange >
 static RangeFieldType L2_squared(const Dune::grid::Part::Interface< GridPartTraits >& gridPart,
                                    const Dune::Stuff::Function::Interface< DomainFieldType, dimDomain, RangeFieldType, dimRange >& function,

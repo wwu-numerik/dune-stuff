@@ -16,13 +16,14 @@ using namespace std;
 typedef testing::Types< Int<1>, Int<2>, Int<3> > GridDims;
 
 template < class T >
-struct GridInfoTest : public ::testing::Test {
+struct GridInfoTest : public ::testing::Test
+{
   static const int griddim  = T::value;
-  static const int level = 1;
-  typedef Dune::YaspGrid<griddim> GridType;
-  Dune::shared_ptr<GridType> gridPtr;
+  static const unsigned int level = 1;
+  typedef Dune::SGrid<griddim,griddim> GridType;
+  std::shared_ptr<GridType> gridPtr;
   GridInfoTest()
-    :gridPtr(Provider::Cube<GridType>(level).grid())
+    :gridPtr(Provider::GenericCube<GridType>(0.f,1.f,level).grid())
   {}
 
   void check() {
@@ -42,7 +43,7 @@ struct GridInfoTest : public ::testing::Test {
     }
     const Statistics st(gv);
     const int line = std::pow(2,level);
-    EXPECT_EQ(std::pow(line,griddim-1)*2*griddim, st.numberOfBoundaryIntersections);
+    EXPECT_EQ(line*(griddim), st.numberOfBoundaryIntersections);
     EXPECT_EQ(entities*(2*griddim), st.numberOfIntersections);
     EXPECT_EQ(st.numberOfIntersections - st.numberOfBoundaryIntersections, st.numberOfInnerIntersections );
     EXPECT_EQ(griddim*2, maxNumberOfNeighbors(gv));
@@ -64,7 +65,6 @@ TYPED_TEST(GridInfoTest, Misc) {
 
 int main(int argc, char** argv)
 {
-  testing::InitGoogleTest(&argc, argv);
-  Dune::MPIHelper::instance(argc, argv);
+  test_init(argc, argv);
   return RUN_ALL_TESTS();
 }

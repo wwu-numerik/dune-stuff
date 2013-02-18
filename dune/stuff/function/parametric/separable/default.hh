@@ -72,19 +72,21 @@ public:
     assert(paramRange_.size() == 2 && "Vector has wrong size!");
     assert(paramRange_[0].size() == paramSize_ && "Vector has wrong size!");
     assert(paramRange_[1].size() == paramSize_ && "Vector has wrong size!");
-    for (size_t qq = 0; qq < paramSize_; ++qq)
+    for (size_t qq = 0; qq < paramSize_; ++qq) {
       assert(paramRange_[0][qq] <= paramRange_[1][qq]
           && "Given minimum parameter has to be piecewise <= maximum parameter!");
-    for (size_t qq = 0; qq < components_.size(); ++qq)
+    }
+    for (size_t qq = 0; qq < components_.size(); ++qq) {
       if (components_[qq]->parametric())
         DUNE_THROW(Dune::RangeError,
-                   "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
+                   "\n" << DSC::colorStringRed("ERROR:")
                    << " component " << qq << " is parametric!");
+    }
     // process parameter explanation
     for (size_t qq = 0; qq < std::min(paramSize_, _parameterExplanation.size()); ++qq)
       parameterExplanation_.push_back(_parameterExplanation[qq]);
     for (size_t qq = std::min(paramSize_, _parameterExplanation.size()); qq < paramSize_; ++qq)
-      parameterExplanation_.push_back("parameter_component_" + Dune::Stuff::Common::toString(qq));
+      parameterExplanation_.push_back("parameter_component_" + DSC::toString(qq));
   }
 
   SeparableDefault(const ThisType& other)
@@ -125,16 +127,14 @@ public:
     description["paramExplanation"] = "[first_parameter; second_parameter]";
     if (subName.empty())
       return description;
-    else {
-      Dune::Stuff::Common::ExtendedParameterTree extendedDescription;
-      extendedDescription.add(description, subName);
-      return extendedDescription;
-    }
+
+    DSC::ExtendedParameterTree extendedDescription;
+    extendedDescription.add(description, subName);
+    return extendedDescription;
   }
 
-  static ThisType createFromDescription(const Dune::ParameterTree _description)
+  static ThisType* createFromDescription(const DSC::ExtendedParameterTree description)
   {
-    Stuff::Common::ExtendedParameterTree description(_description);
     // first of all, read the optional stuff
     const std::string _name = description.get< std::string >("name", id());
     const int _order = description.get< int >("order", -1);
@@ -144,7 +144,7 @@ public:
     bool continue_search = true;
     while (continue_search) {
       // lets see if there is a component with this index
-      const std::string key = "component." + Dune::Stuff::Common::toString(_components.size());
+      const std::string key = "component." + DSC::toString(_components.size());
       if (description.hasSub(key)) {
         // there is a sub
         Dune::ParameterTree componentDescription = description.sub(key);
@@ -153,16 +153,15 @@ public:
           const std::string type = componentDescription.get< std::string >("type");
           if (type == "function.parametric.separable.default")
             DUNE_THROW(Dune::IOError,
-                       "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
+                       "\n" << DSC::colorStringRed("ERROR:")
                        << " can not create a 'function.parametric.separable.default' inside itself!");
-          _components.push_back(Dune::shared_ptr< const ComponentType >(Dune::Stuff::Function::create<  DomainFieldType, dimDomain,
-                                                                RangeFieldType, dimRange >(type,
-                                                                                           componentDescription)));
+          _components.emplace_back(DSFu::create<  DomainFieldType, dimDomain,
+                                                  RangeFieldType, dimRange >(type,componentDescription));
         } else {
           // since it does not have a type, treat it as an expression function
           if (!(componentDescription.hasKey("expression") || componentDescription.hasSub("expression")))
             DUNE_THROW(Dune::IOError,
-                       "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
+                       "\n" << DSC::colorStringRed("ERROR:")
                        << " could not interpret component." << _components.size()
                        << "in the following Dune::ParameterTree:\n"
                        << description.reportString("  "));
@@ -171,21 +170,21 @@ public:
           if (!componentDescription.hasKey("name"))
             componentDescription["name"] = _name;
           if (!componentDescription.hasKey("order"))
-            componentDescription["order"] = Dune::Stuff::Common::toString(_order);
-          _components.push_back(Dune::shared_ptr< const ComponentType >(Dune::Stuff::Function::create<  DomainFieldType, dimDomain,
-                                                                RangeFieldType, dimRange >("function.expression",
-                                                                                           componentDescription)));
+            componentDescription["order"] = DSC::toString(_order);
+          _components.emplace_back(DSFu::create<  DomainFieldType, dimDomain,
+                                                  RangeFieldType, dimRange >("function.expression",
+                                                                              componentDescription));
         } // if (componentDescription.hasKey("type"))
       } else if (description.hasKey(key)) {
         // there is only one key, interpret it as an entry for an expression function with variable x
         Dune::ParameterTree componentDescription;
         componentDescription["name"] = _name;
-        componentDescription["order"] = Dune::Stuff::Common::toString(_order);
+        componentDescription["order"] = DSC::toString(_order);
         componentDescription["variable"] = "x";
         componentDescription["expression"] = description.get< std::string >(key);
-        _components.push_back(Dune::shared_ptr< const ComponentType >(Dune::Stuff::Function::create<  DomainFieldType, dimDomain,
-                                                              RangeFieldType, dimRange >("function.expression",
-                                                                                         componentDescription)));
+        _components.emplace_back(DSFu::create<  DomainFieldType, dimDomain,
+                                                RangeFieldType, dimRange >("function.expression",
+                                                                          componentDescription));
       } else {
         // stop the search
         continue_search = false;
@@ -193,33 +192,33 @@ public:
     } // while (continue_search)
     if (_components.size() == 0)
       DUNE_THROW(Dune::IOError,
-                 "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
+                 "\n" << DSC::colorStringRed("ERROR:")
                  << " no 'component' found in the following description:\n" << description.reportString("  "));
     // check that all components are nonparametric
     for (size_t qq = 0; qq < _components.size(); ++qq)
       if (_components[qq]->parametric())
         DUNE_THROW(Dune::RangeError,
-                   "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
+                   "\n" << DSC::colorStringRed("ERROR:")
                    << " component " << qq << " is parametric!");
     // * coefficients
     std::vector< Dune::shared_ptr< const CoefficientType > > _coefficients;
     continue_search = true;
     while (continue_search) {
       // lets see if there is a coefficient with this index
-      const std::string key = "coefficient." + Dune::Stuff::Common::toString(_coefficients.size());
+      const std::string key = "coefficient." + DSC::toString(_coefficients.size());
       if (description.hasKey(key)) {
-        _coefficients.push_back(Dune::make_shared< CoefficientType >(description.get< std::string >(key)));
+        _coefficients.emplace_back(new CoefficientType(description.get< std::string >(key)));
       } else
         continue_search = false;
     } // while (continue_search)
     if (_coefficients.size() == 0)
       DUNE_THROW(Dune::IOError,
-                 "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
+                 "\n" << DSC::colorStringRed("ERROR:")
                  << " no 'coefficient' found in the following description:\n" << description.reportString("  "));
     else if (!(_coefficients.size() == _components.size()
              || _coefficients.size() == (_components.size() - 1)))
       DUNE_THROW(Dune::IOError,
-                 "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
+                 "\n" << DSC::colorStringRed("ERROR:")
                  << " wrong number of 'coefficient' found in the following description:\n"
                  << description.reportString("  "));
     // * paramSize
@@ -242,7 +241,7 @@ public:
       _paramExplanation = description.getVector< std::string >("paramExplanation", 1);
     else if (description.hasKey("paramExplanation"))
       _paramExplanation.push_back(description.get< std::string >("paramExplanation"));
-    return ThisType(_paramSize, _paramRange, _components, _coefficients, _paramExplanation, _order, _name);
+    return new ThisType(_paramSize, _paramRange, _components, _coefficients, _paramExplanation, _order, _name);
   }
 
   virtual bool parametric() const

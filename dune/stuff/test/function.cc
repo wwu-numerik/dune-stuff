@@ -5,12 +5,13 @@
 
 #include <dune/stuff/function.hh>
 
+using namespace Dune::Stuff;
 
-typedef testing::Types< Dune::Stuff::Function::Expression< double, 1, double, 1 >,
-                        Dune::Stuff::Function::Checkerboard< double, 1, double, 1 > > NonparametricFunctions;
+typedef testing::Types< Function::Expression< double, 1, double, 1 >,
+                        Function::Checkerboard< double, 1, double, 1 > > NonparametricFunctions;
 
-typedef testing::Types< Dune::Stuff::Function::SeparableCheckerboard< double, 1, double, 1 >,
-                        Dune::Stuff::Function::SeparableDefault< double, 1, double, 1 > > SeparableFunctions;
+typedef testing::Types< Function::SeparableCheckerboard< double, 1, double, 1 >,
+                        Function::SeparableDefault< double, 1, double, 1 > > SeparableFunctions;
 
 
 template< class T >
@@ -24,14 +25,14 @@ struct NonparametricTest
   typedef typename FunctionType::RangeFieldType   RangeFieldType;
   static const int                                dimRange = FunctionType::dimRange;
   typedef typename FunctionType::RangeType        RangeType;
-  typedef Dune::Stuff::Function::Interface< DomainFieldType, dimDomain, RangeFieldType, dimRange > InterfaceType;
+  typedef Function::Interface< DomainFieldType, dimDomain, RangeFieldType, dimRange > InterfaceType;
 
   void check() const
   {
-    const Dune::shared_ptr< InterfaceType > function
-        = Dune::Stuff::Function::create<  DomainFieldType, dimDomain,
+    const std::unique_ptr< InterfaceType > function(
+          Function::create<  DomainFieldType, dimDomain,
                                           RangeFieldType, dimRange >(FunctionType::id(),
-                                                                     FunctionType::createSampleDescription());
+                                                                     FunctionType::createSampleDescription()));
     DomainType x(1);
     RangeType ret;
     if (function->parametric())
@@ -55,19 +56,17 @@ struct SeparableTest
   static const int                                dimRange = FunctionType::dimRange;
   typedef typename FunctionType::RangeType        RangeType;
 
-  typedef Dune::Stuff::Function::Interface< DomainFieldType, dimDomain, RangeFieldType, dimRange > InterfaceType;
-  typedef Dune::Stuff::Function::SeparableDefault< DomainFieldType, dimDomain, RangeFieldType, dimRange > DefaultType;
+  typedef Function::Interface< DomainFieldType, dimDomain, RangeFieldType, dimRange > InterfaceType;
+  typedef Function::SeparableDefault< DomainFieldType, dimDomain, RangeFieldType, dimRange > DefaultType;
 
-  typedef Dune::Stuff::Common::Parameter::FieldType ParamFieldType;
-  static const int                                  maxParamDim = Dune::Stuff::Common::Parameter::maxDim;
-  typedef Dune::Stuff::Common::Parameter::Type      ParamType;
+  typedef Common::Parameter::FieldType ParamFieldType;
+  static const int                                  maxParamDim = Common::Parameter::maxDim;
+  typedef Common::Parameter::Type      ParamType;
 
   void check() const
   {
-    const Dune::shared_ptr< InterfaceType > function
-        = Dune::Stuff::Function::create<  DomainFieldType, dimDomain,
-                                          RangeFieldType, dimRange >(FunctionType::id(),
-                                                                     FunctionType::createSampleDescription());
+    const std::unique_ptr< InterfaceType > function(
+          FunctionType::createFromDescription(FunctionType::createSampleDescription()));
     if (!function->parametric())
       DUNE_THROW(Dune::InvalidStateException, "ERROR: separable function returned parametric() == false!");
     if (!function->separable())
@@ -116,6 +115,6 @@ TYPED_TEST(SeparableTest, Separable) {
 
 int main(int argc, char** argv)
 {
-  testing::InitGoogleTest(&argc, argv);
+  test_init(argc, argv);
   return RUN_ALL_TESTS();
 }

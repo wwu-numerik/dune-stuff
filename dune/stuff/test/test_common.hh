@@ -14,14 +14,16 @@
 #include <dune/common/tupleutility.hh>
 #include <dune/common/mpihelper.hh>
 #include <dune/stuff/aliases.hh>
-
+#include <dune/stuff/common/parameter/configcontainer.hh>
+#include <dune/stuff/common/logging.hh>
+#ifdef HAVE_DUNE_FEM
+  #include <dune/fem/misc/mpimanager.hh>
+#endif
 #include <gtest.h>
 
 #include <random>
 #include <fstream>
 #include <sys/time.h>
-
-#define MY_ASSERT(cond) EXPECT_TRUE(cond)
 
 template < template <class> class Test >
 struct TestRunner {
@@ -60,5 +62,18 @@ void busywait(const int ms)  {
 
 typedef Dune::tuple<double, float, //Dune::bigunsignedint,
   int, unsigned int, unsigned long, long long, char> BasicTypes;
+
+
+void test_init(int argc, char** argv)
+{
+  testing::InitGoogleTest(&argc, argv);
+  DSC_CONFIG.readOptions(argc, argv);
+#ifdef HAVE_DUNE_FEM
+  Dune::MPIManager::initialize(argc, argv);
+#else
+  Dune::MPIHelper::instance(argc, argv);
+#endif
+  DSC::Logger().create(DSC::LOG_CONSOLE | DSC::LOG_ERROR);
+}
 
 #endif // DUNE_STUFF_TEST_TOOLS_HH

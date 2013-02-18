@@ -78,11 +78,9 @@ unsigned int getNumDiffDofs(const FunctionType& f1,
                             const double tolerance) {
   assert( f1.size() == f2.size() ); // should be implicit cause they're of the same type...
   unsigned int numDiffs = 0;
-  typedef typename FunctionType::ConstDofIteratorType
-  ConstDofIteratorType;
-  ConstDofIteratorType itEnd = f1.dend();
-  ConstDofIteratorType f2it = f2.dbegin();
-  for (ConstDofIteratorType f1it = f1.dbegin(); f1it != itEnd; ++f1it, ++f2it)
+  auto itEnd = f1.dend();
+  auto f2it = f2.dbegin();
+  for (auto f1it = f1.dbegin(); f1it != itEnd; ++f1it, ++f2it)
   {
     numDiffs += (std::fabs(*f1it - *f2it) > tolerance);
   }
@@ -93,8 +91,7 @@ unsigned int getNumDiffDofs(const FunctionType& f1,
 //! returns arithmetic mean of function's dofs
 template< class Function >
 typename Function::FieldType getFuncAvg(const Function& f) {
-  typedef typename Function::ConstDofIteratorType DofIteratorType;
-  DofIteratorType it = f.dbegin();
+  auto it = f.dbegin();
   const unsigned int numdofs = f.size();
   typename Function::FieldType sum = 0;
   for ( ; it != f.dend(); ++it)
@@ -106,10 +103,7 @@ typename Function::FieldType getFuncAvg(const Function& f) {
 //! return true if any dof is nan or inf
 template< class DiscreteFunctionType >
 bool FunctionContainsNanOrInf(const DiscreteFunctionType& function) {
-  typedef typename DiscreteFunctionType::ConstDofIteratorType
-  DofIteratorType;
-
-  DofIteratorType it = function.dbegin();
+  auto it = function.dbegin();
   for ( ; it != function.dend(); ++it)
   {
     if ( boost::math::isnan(*it) || boost::math::isinf(*it) )

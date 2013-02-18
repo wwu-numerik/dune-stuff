@@ -7,8 +7,12 @@
   #include "config.h"
 #endif // ifdef HAVE_CMAKE_CONFIG
 
-#include <dune/common/exceptions.hh>
+#if HAVE_EIGEN
+  #include <Eigen/Core>
+  #include <Eigen/IterativeLinearSolvers>
+#endif
 
+#include <dune/common/exceptions.hh>
 #include <dune/stuff/la/container/interface.hh>
 
 namespace Dune {
@@ -22,11 +26,8 @@ class Interface
 {
 public:
   typedef typename Dune::Stuff::LA::Container::MatrixInterface< typename MatrixImp::Traits > MatrixType;
-
   typedef typename MatrixType::ElementType ElementType;
-
   typedef typename Dune::Stuff::LA::Container::VectorInterface< typename VectorImp::Traits > VectorType;
-
   typedef typename MatrixType::size_type size_type;
 
   virtual size_type apply(const MatrixType& /*_systemMatrix*/,
@@ -34,6 +35,17 @@ public:
                           VectorType& /*_solutionVector*/,
                           const size_type /*_maxIter*/,
                           const ElementType /*_precision*/) const = 0;
+#if HAVE_EIGEN
+  size_type translateInfo(const ::Eigen::ComputationInfo& info)
+  {
+    switch (info) {
+      case ::Eigen::Success: return 0;
+      case ::Eigen::NoConvergence: return 1;
+      case ::Eigen::NumericalIssue: return 2;
+      default: return 3;
+    }
+  }
+#endif
 }; // class Interface
 
 

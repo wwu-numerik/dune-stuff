@@ -12,8 +12,7 @@ class OperatorBasedPreconditioner
   Operator& operator_;
   const typename RangeDiscreteFunctionType::FunctionSpaceType & range_space_;
   const bool right_preconditioning_;
-  typedef Solver< RangeDiscreteFunctionType, Operator >
-  SolverType;
+  typedef Solver< RangeDiscreteFunctionType, Operator > SolverType;
   SolverType solver_;
 
 public:
@@ -22,13 +21,13 @@ public:
                               const bool right_preconditioning = false,
                               double solver_accuracy = 1e-7)
     : operator_(op)
-      , range_space_(range_space)
-      , right_preconditioning_(right_preconditioning)
-      , solver_(operator_,
-                solver_accuracy /*rel limit*/,
-                solver_accuracy /*abs limit*/,
-                1 /*not working iteration limit*/,
-                false /*verbose*/)
+    , range_space_(range_space)
+    , right_preconditioning_(right_preconditioning)
+    , solver_(operator_,
+              solver_accuracy /*rel limit*/,
+              solver_accuracy /*abs limit*/,
+              1 /*not working iteration limit*/,
+              false /*verbose*/)
   {}
 
   template< class VecType >

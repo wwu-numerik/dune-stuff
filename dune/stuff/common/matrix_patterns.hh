@@ -4,8 +4,10 @@
 #include <set>
 #include <vector>
 
-#include <dune/stuff/common/debug.hh>
 #include <dune/common/unused.hh>
+#include <dune/stuff/common/debug.hh>
+#include <dune/stuff/aliases.hh>
+#include <dune/stuff/common/ranges.hh>
 
 namespace Dune {
 namespace Stuff {
@@ -29,15 +31,15 @@ class SparsityPattern
 {
 public:
   typedef SparsityPattern
-  ThisType;
+    ThisType;
 
   //! Type for saving the sparsity pattern.
   typedef std::vector< std::set< unsigned int > >
-  SparsityPatternContainerType;
+    SparsityPatternContainerType;
 
   //! Type for iterating through a row.
   typedef std::set< unsigned int >::const_iterator
-  NonZeroColIterator;
+    NonZeroColIterator;
 
   /**
      * @brief Constructor storing the row size.
@@ -46,7 +48,7 @@ public:
      */
   SparsityPattern(unsigned int rowSize)
     : sparsityPattern_(rowSize)
-      , sizeN_(rowSize)
+    , sizeN_(rowSize)
   {}
 
   /**
@@ -128,10 +130,10 @@ public:
 
 private:
   //! copy constructor
-  SparsityPattern(const ThisType&);
+  SparsityPattern(const ThisType&) = delete;
 
   //! assignment operator
-  ThisType& operator=(const ThisType&);
+  ThisType& operator=(const ThisType&) = delete;
 
   SparsityPatternContainerType sparsityPattern_;
   unsigned int sizeN_;
@@ -180,57 +182,26 @@ public:
      */
   template< class MatrixType >
   static void create(const AnsatzSpaceType& ansatzSpace, const TestSpaceType& testSpace, MatrixType* matrix) {
-    // some types
-    typedef typename AnsatzSpaceType::GridPartType
-    GridPartType;
-
-    typedef typename GridPartType::template Codim< 0 >::IteratorType
-    ElementIteratorType;
-
-    typedef typename GridPartType::GridType::template Codim< 0 >::Entity
-    ElementType;
-
-    typedef typename GridPartType::IntersectionIteratorType
-    IntersectionIteratorType;
-
-    typedef typename IntersectionIteratorType::Intersection
-    IntersectionType;
-
-    typedef typename IntersectionType::EntityPointer
-    ElementPointerType;
-
     const unsigned int ansatzSize = ansatzSpace.size();
-    const unsigned int DUNE_UNUSED(testSize) = testSpace.size();
 
-    typedef SparsityPattern
-    PatternType;
-
-    PatternType sPattern(ansatzSize / MatrixType::block_type::rows);
+    SparsityPattern sPattern(ansatzSize / MatrixType::block_type::rows);
 
     // compute sparsity pattern
     // \todo precompile this in linear subspace
     // \todo use constraints for sparsity pattern
-    const ElementIteratorType lastElement = ansatzSpace.end();
-
-    for (ElementIteratorType elementIterator = ansatzSpace.begin();
-         elementIterator != lastElement;
-         ++elementIterator)
+    for (const auto& element : ansatzSpace)
     {
-      const ElementType& element = *elementIterator;
-
       const int elRowIndex = ansatzSpace.blockMapper().mapToGlobal(element, 0);
       sPattern.insert(elRowIndex, elRowIndex);
       // do loop over all intersections
-      const IntersectionIteratorType lastIntersection = ansatzSpace.gridPart().iend(element);
-      for (IntersectionIteratorType intIt = ansatzSpace.gridPart().ibegin(element); intIt != lastIntersection; ++intIt)
+      for (const auto& intersection : DSC::intersectionRange(ansatzSpace.gridPart(), element))
       {
-        const IntersectionType& intersection = *intIt;
         // if inner intersection
         if ( intersection.neighbor() && !intersection.boundary() )
         {
           // get neighbouring entity
-          const ElementPointerType neighbourPtr = intersection.outside();
-          const ElementType& neighbour = *neighbourPtr;
+          const auto neighbourPtr = intersection.outside();
+          const auto& neighbour = *neighbourPtr;
 
           const int nbColIndex = testSpace.blockMapper().mapToGlobal(neighbour, 0);
           const int nbRowIndex = ansatzSpace.blockMapper().mapToGlobal(neighbour, 0);
@@ -251,7 +222,7 @@ public:
     for (unsigned int i = 0; i < sPattern.size(); ++i)
     {
       typedef SparsityPattern::NonZeroColIterator
-      ColIterator;
+        ColIterator;
       ColIterator sit = sPattern.begin(i);
       const ColIterator e = sPattern.end(i);
       for ( ; sit != e; ++sit)
