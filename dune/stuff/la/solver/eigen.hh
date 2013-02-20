@@ -123,7 +123,7 @@ public:
     eigenSolver.setMaxIterations(maxIter);
     eigenSolver.setTolerance(precision);
     solutionVector.backend() = eigenSolver.solve(rhsVector.backend());
-    return translateInfo(eigenSolver.info());
+    return BaseType::translateInfo(eigenSolver.info());
   } // virtual bool apply(...)
 }; // class CgDiagonal
 
@@ -155,7 +155,7 @@ public:
     eigenSolver.setMaxIterations(maxIter);
     eigenSolver.setTolerance(precision);
     solutionVector.backend() = eigenSolver.solve(rhsVector.backend());
-    return translateInfo(eigenSolver.info());
+    return BaseType::translateInfo(eigenSolver.info());
   } // virtual bool apply(...)
 }; // class Bicgstab
 
@@ -187,7 +187,7 @@ public:
     eigenSolver.setMaxIterations(maxIter);
     eigenSolver.setTolerance(precision);
     solutionVector.backend() = eigenSolver.solve(rhsVector.backend());
-    return translateInfo(eigenSolver.info());
+    return BaseType::translateInfo(eigenSolver.info());
   } // virtual bool apply(...)static_assert
 }; // class BicgstabDiagonal
 
@@ -219,7 +219,7 @@ public:
     eigenSolver.setMaxIterations(maxIter);
     eigenSolver.setTolerance(precision);
     solutionVector.backend() = eigenSolver.solve(rhsVector.backend());
-    return translateInfo(eigenSolver.info());
+    return BaseType::translateInfo(eigenSolver.info());
   } // virtual bool apply(...)
 }; // class BicgstabILUT
 

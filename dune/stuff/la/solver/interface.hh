@@ -36,7 +36,7 @@ public:
                           const size_type /*_maxIter*/,
                           const ElementType /*_precision*/) const = 0;
 #if HAVE_EIGEN
-  size_type translateInfo(const ::Eigen::ComputationInfo& info)
+  size_type translateInfo(const ::Eigen::ComputationInfo& info) const
   {
     switch (info) {
       case ::Eigen::Success: return 0;
