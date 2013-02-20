@@ -108,10 +108,12 @@ class SimplicialLDLT
   : public SolverNotImplementedForThisMatrixVectorCombination< MatrixImp, VectorImp >
 {};
 
-//template< class MatrixImp, class VectorImp >
-//class Fasp
-//  : public SolverNotImplementedForThisMatrixVectorCombination< MatrixImp, VectorImp >
-//{};
+#if HAVE_FASP
+template< class MatrixImp, class VectorImp >
+class AmgFasp
+  : public SolverNotImplementedForThisMatrixVectorCombination< MatrixImp, VectorImp >
+{};
+#endif // HAVE_FASP
 
 
 } // namespace Solver

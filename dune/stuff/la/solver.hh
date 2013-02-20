@@ -15,7 +15,7 @@
 
 #include "solver/interface.hh"
 #include "solver/eigen.hh"
-//#include "solver/fasp.hh"
+#include "solver/fasp.hh"
 
 namespace Dune {
 namespace Stuff {
@@ -25,10 +25,18 @@ namespace Solver {
 
 std::vector< std::string > types()
 {
-  return {"bicgstab.diagonal", "bicgstab", "bicgstab.ilut",
-          "cg", "cg.diagonal", "simplicialllt", "simplicialldlt"};
-//  return {"bicgstab.diagonal", "bicgstab", "bicgstab.ilut",
-//          "cg", "cg.diagonal", "simplicialllt", "simplicialldlt", "fasp"};
+  return {
+      "bicgstab.ilut"
+      , "bicgstab.diagonal"
+      , "bicgstab"
+      , "cg"
+      , "cg.diagonal"
+      , "simplicialllt"
+      , "simplicialldlt"
+#if HAVE_FASP
+      , "amg.fasp"
+#endif // FAVE_FASP
+  };
 } // std::vector< std::string > types()
 
 
@@ -42,7 +50,7 @@ Dune::ParameterTree createSampleDescription()
 
 
 template< class MatrixType, class VectorType >
-Interface< MatrixType, VectorType >* create(const std::string type = "bicgstab.diagonal")
+Interface< MatrixType, VectorType >* create(const std::string type = types()[0])
 {
   if (type == "cg") {
     return new Dune::Stuff::LA::Solver::Cg< MatrixType, VectorType >();
@@ -58,8 +66,10 @@ Interface< MatrixType, VectorType >* create(const std::string type = "bicgstab.d
     return new Dune::Stuff::LA::Solver::SimplicialLLT< MatrixType, VectorType >();
   } else if (type == "simplicialldlt") {
     return new Dune::Stuff::LA::Solver::SimplicialLDLT< MatrixType, VectorType >();
-//  } else if (type == "fasp") {
-//    return new Dune::Stuff::LA::Solver::Fasp< MatrixType, VectorType >();
+#if HAVE_FASP
+  } else if (type == "amg.fasp") {
+    return new Dune::Stuff::LA::Solver::AmgFasp< MatrixType, VectorType >();
+#endif // HAVE_FASP
   } else
     DUNE_THROW(Dune::RangeError,
                "\n"
