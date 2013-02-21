@@ -13,6 +13,7 @@
 #endif
 
 #include <dune/common/exceptions.hh>
+#include <dune/common/parametertree.hh>
 #include <dune/stuff/la/container/interface.hh>
 
 namespace Dune {
@@ -34,7 +35,8 @@ public:
                           const VectorType& /*_rhsVector*/,
                           VectorType& /*_solutionVector*/,
                           const size_type /*_maxIter*/,
-                          const ElementType /*_precision*/) const = 0;
+                          const ElementType /*_precision*/,
+                          const Dune::ParameterTree /*description*/ = Dune::ParameterTree()) const = 0;
 #if HAVE_EIGEN
   size_type translateInfo(const ::Eigen::ComputationInfo& info) const
   {
@@ -68,7 +70,8 @@ public:
                           const VectorType& /*_rhsVector*/,
                           VectorType& /*_solutionVector*/,
                           const size_type /*_maxIter*/ = 0,
-                          const ElementType /*_precision*/ = 0) const
+                          const ElementType /*_precision*/ = 0,
+                          const Dune::ParameterTree /*description*/ = Dune::ParameterTree()) const
   {}
 }; // class SolverNotImplementedForThisMatrixVectorCombination
 
