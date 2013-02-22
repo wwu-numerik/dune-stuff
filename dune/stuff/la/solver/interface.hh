@@ -31,11 +31,14 @@ public:
   typedef typename Dune::Stuff::LA::Container::VectorInterface< typename VectorImp::Traits > VectorType;
   typedef typename MatrixType::size_type size_type;
 
+  virtual ~Interface()
+  {}
+
   virtual size_type apply(const MatrixType& /*_systemMatrix*/,
                           const VectorType& /*_rhsVector*/,
                           VectorType& /*_solutionVector*/,
-                          const size_type /*_maxIter*/,
-                          const ElementType /*_precision*/,
+                          const size_type /*_maxIter*/ = 5000,
+                          const ElementType /*_precision*/ = 1e-12,
                           const Dune::ParameterTree /*description*/ = Dune::ParameterTree()) const = 0;
 #if HAVE_EIGEN
   size_type translateInfo(const ::Eigen::ComputationInfo& info) const
