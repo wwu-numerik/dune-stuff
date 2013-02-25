@@ -49,7 +49,7 @@ public:
 
   virtual ~FunctionInterface() {}
 
-  static const std::string id()
+  static std::string id()
   {
     return "function";
   }
