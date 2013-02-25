@@ -1,6 +1,8 @@
 #ifndef DUNE_STUFF_COMMON_PARAMETER_HH
 #define DUNE_STUFF_COMMON_PARAMETER_HH
 
+#include <sstream>
+
 #include <dune/common/dynvector.hh>
 
 namespace Dune {
@@ -22,6 +24,18 @@ public:
   static const int                          maxDim = 50;
 #endif
   typedef Dune::DynamicVector< FieldType >  Type;
+
+  static std::string report(const Type& mu)
+  {
+    std::stringstream ret;
+    ret << "[";
+    for (size_t ii = 0; ii < mu.size() - 1; ++ii)
+      ret << mu[ii] << "; ";
+    if (mu.size() > 1)
+      ret << mu[mu.size() - 1];
+    ret << "]";
+    return ret.str();
+  }
 };
 
 
