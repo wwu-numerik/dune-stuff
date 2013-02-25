@@ -3,21 +3,23 @@
 
 #include <vector>
 #include <assert.h>
-#include <dune/stuff/common/math.hh>
+#include <dune/common/float_cmp.hh>
 
 namespace Dune {
 namespace Stuff {
 namespace Fem {
 
 //! a small proxy object that automagically prevents near-0 value fill-in
-template< class MatrixPointerType >
+template< class MatrixObjectType >
 class LocalMatrixProxy
 {
-  typedef typename MatrixPointerType::element_type MatrixObjectType;
   typedef typename MatrixObjectType::LocalMatrixType LocalMatrixType;
   typedef typename MatrixObjectType::DomainSpaceType::GridType GridType;
-  typedef typename GridType::template Codim< 0 >::Entity EntityType;
-  typedef typename MatrixObjectType::MatrixType::Ttype FieldType;
+  typedef typename MatrixObjectType::DomainSpaceType::EntityType DomainEntityType;
+  typedef typename MatrixObjectType::RangeSpaceType::EntityType RangeEntityType;
+  typedef typename MatrixObjectType::RangeSpaceType::RangeFieldType FieldType;
+  typedef Dune::FloatCmpOps<FieldType> CompareType;
+  typedef Dune::FloatCmp::DefaultEpsilon<typename CompareType::EpsilonType, CompareType::cstyle> DefaultEpsilon;
   LocalMatrixType local_matrix_;
   const double eps_;
   const unsigned int rows_;
@@ -25,8 +27,9 @@ class LocalMatrixProxy
   std::vector< FieldType > entries_;
 
 public:
-  LocalMatrixProxy(MatrixPointerType& object, const EntityType& self, const EntityType& neigh, const double eps)
-    : local_matrix_( object->localMatrix(self, neigh) )
+  LocalMatrixProxy(MatrixObjectType& object, const DomainEntityType& self, const RangeEntityType& neigh,
+                   const double eps = DefaultEpsilon::value())
+    : local_matrix_( object.localMatrix(self, neigh) )
     , eps_(eps)
     , rows_( local_matrix_.rows() )
     , cols_( local_matrix_.columns() )
@@ -39,13 +42,22 @@ public:
     entries_[row * cols_ + col] += val;
   }
 
+  auto domainBaseFunctionSet() const -> decltype(local_matrix_.domainBaseFunctionSet()) {
+    return local_matrix_.domainBaseFunctionSet();
+  }
+
+  auto rangeBaseFunctionSet() const -> decltype(local_matrix_.rangeBaseFunctionSet()) {
+    return local_matrix_.rangeBaseFunctionSet();
+  }
+
   ~LocalMatrixProxy() {
+    auto comp = CompareType(eps_);
     for (unsigned int i = 0; i < rows_; ++i)
     {
       for (unsigned int j = 0; j < cols_; ++j)
       {
         const FieldType& i_j = entries_[i * cols_ + j];
-        if ( !aboutEqual(i_j, 0.0) )
+        if ( comp.ne(i_j, 0.0) )
           local_matrix_.add(i, j, i_j);
       }
     }
@@ -56,17 +68,16 @@ public:
 };
 
 //! a small proxy object that automagically prevents near-0 value fill-in
-template< class MatrixPointerType >
+template< class MatrixObjectType >
 class ISTLLocalMatrixProxy
 {
-  typedef typename MatrixPointerType::element_type MatrixObjectType;
   typedef typename MatrixObjectType::LocalMatrixType LocalMatrixType;
   typedef typename MatrixObjectType::MatrixType::block_type block_type;
   typedef typename MatrixObjectType::DomainSpaceType::GridType GridType;
   typedef typename GridType::template Codim< 0 >::Entity EntityType;
   typedef typename MatrixObjectType::MatrixType::Ttype FieldType;
   // LocalMatrixType local_matrix_;
-  MatrixPointerType matrix_pointer_;
+  MatrixObjectType matrix_pointer_;
   const EntityType& self_;
   const EntityType& neigh_;
   const double eps_;
@@ -79,7 +90,7 @@ class ISTLLocalMatrixProxy
   std::vector< int > colMap_;
 
 public:
-  ISTLLocalMatrixProxy(MatrixPointerType& pointer, const EntityType& self, const EntityType& neigh, const double eps)
+  ISTLLocalMatrixProxy(MatrixObjectType& pointer, const EntityType& self, const EntityType& neigh, const double eps)
     : matrix_pointer_(pointer)
     , self_(self)
     , neigh_(neigh)
