@@ -39,10 +39,11 @@ public:
     : wrappedFunction_(parametricFunction)
     , fixedParam_(fixedParameter)
   {
-    DUNE_THROW(Dune::InvalidStateException,
-               "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
-               << " given parameter has wrong size (is " << fixedParam_.size()
-               << ", should be " << wrappedFunction_->paramSize() << ")!");
+    if (fixedParam_.size() != wrappedFunction_->paramSize())
+      DUNE_THROW(Dune::InvalidStateException,
+                 "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
+                 << " given parameter has wrong size (is " << fixedParam_.size()
+                 << ", should be " << wrappedFunction_->paramSize() << ")!");
   }
 
   virtual bool parametric() const
