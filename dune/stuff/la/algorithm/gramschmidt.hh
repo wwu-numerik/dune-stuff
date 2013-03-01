@@ -215,6 +215,41 @@ bool gramSchmidt(const Dune::Stuff::LA::Container::EigenRowMajorSparseMatrix< El
     }
   } // if this is an empty matrix, throw up
 } // void normalize(Dune::Stuff::LA::Container::EigenDenseVector< ElementType >& _vector)
+
+
+template< class ElementType >
+bool gramSchmidt(const Dune::Stuff::LA::Container::EigenRowMajorSparseMatrix< ElementType >& _scalarProduct,
+                 const Dune::Stuff::LA::Container::EigenDenseVector< ElementType >& _columnBasisVector,
+                 Dune::Stuff::LA::Container::EigenDenseVector< ElementType >& _vector,
+                 const ElementType epsilon = 1e-10)
+{
+  // if this is an empty vector, throw up
+  if (_vector.size() == 0)
+    DUNE_THROW(Dune::MathError,
+               "\nERROR: '_vector' is empty!");
+  else {
+    // check sizes
+    assert(_scalarProduct.rows() == _vector.size());
+    assert(_scalarProduct.cols() == _vector.size());
+    assert(_columnBasisVector.size() == _vector.size());
+//    typedef typename Dune::Stuff::LA::Container::EigenDenseMatrix< ElementType >::size_type size_type;
+//    // orthonormalize _vector wrt all columns in _columnBasisVectors
+//    for (size_type jj = 0; jj < _columnBasisVectors.cols(); ++ jj) {
+      // therefore, subtract its projection onto the jjth basis vector
+      const ElementType factor = _vector.backend().transpose() * _scalarProduct.backend() * _columnBasisVector.backend();
+      ElementType norm = _columnBasisVector.backend().transpose() * _scalarProduct.backend() * _columnBasisVector.backend();
+      _vector.backend() -= (factor/norm) * _columnBasisVector.backend();
+//    }
+    // and normalize it
+    norm = std::sqrt(_vector.backend().transpose() * _scalarProduct.backend() * _vector.backend());
+    if (norm < epsilon)
+      return false;
+    else {
+      _vector.backend() /= norm;
+      return true;
+    }
+  } // if this is an empty matrix, throw up
+} // void normalize(Dune::Stuff::LA::Container::EigenDenseVector< ElementType >& _vector)
 #endif // HAVE_EIGEN
 
 } // namespace Algorithm
