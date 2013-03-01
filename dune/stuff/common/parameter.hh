@@ -36,6 +36,17 @@ public:
     ret << "]";
     return ret.str();
   }
+
+  static std::string reportWOwhitespace(const Type& mu)
+  {
+    std::stringstream ret;
+    for (size_t ii = 0; ii < mu.size() - 1; ++ii)
+      ret << mu[ii] << "_";
+    if (mu.size() > 1)
+      ret << mu[mu.size() - 1];
+    return ret.str();
+  }
+
 };
 
 
