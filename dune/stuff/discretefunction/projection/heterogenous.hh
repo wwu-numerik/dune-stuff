@@ -1,5 +1,5 @@
-#ifndef DUNE_STUFF_DISCRETEFUNCTION_PROJECTION_DIRICHLET_HH
-#define DUNE_STUFF_DISCRETEFUNCTION_PROJECTION_DIRICHLET_HH
+#ifndef DUNE_STUFF_DISCRETEFUNCTION_PROJECTION_HETEROGENOUS_HH
+#define DUNE_STUFF_DISCRETEFUNCTION_PROJECTION_HETEROGENOUS_HH
 
 #ifdef HAVE_CMAKE_CONFIG
  #include "cmake_config.h"
@@ -29,6 +29,14 @@
 #include <dune/fem/quadrature/cachingquadrature.hh>
 #include <dune/fem/space/dgspace/localdgmassmatrix.hh>
 //#endif
+
+#if HAVE_DUNE_DETAILED_DISCRETIZATIONS
+  #include <dune/detailed/discretizations/discretefunction/default.hh>
+  #include <dune/detailed/discretizations/discretefunction/multiscale.hh>
+  namespace DD = Dune::Detailed::Discretizations;
+#endif // HAVE_DUNE_DETAILED_DISCRETIZATIONS
+
+#include <dune/grid/io/file/vtk/function.hh>
 
 #include <boost/range/iterator_range.hpp>
 
@@ -233,9 +241,70 @@ public:
     }
   } // ... project(...)
 
+#if HAVE_DUNE_DETAILED_DISCRETIZATIONS
+  template< class SourceMsGridType,
+            class SourceLocaDiscreteFunctionType,
+            class TargetDiscreteFunctionSpaceType,
+            class TargetVectorType >
+  static void project(const DD::DiscreteFunction::Multiscale< SourceMsGridType, SourceLocaDiscreteFunctionType >& source,
+                      DD::DiscreteFunction::Default< TargetDiscreteFunctionSpaceType, TargetVectorType >& target)
+  {
+    typedef DD::DiscreteFunction::Multiscale< SourceMsGridType, SourceLocaDiscreteFunctionType >
+        SourceFunctionType;
+    typedef DD::DiscreteFunction::Default< TargetDiscreteFunctionSpaceType, TargetVectorType >
+        TargetFunctionType;
+    typedef SearchStrategy< typename SourceFunctionType::MsGridType::GlobalGridViewType::Traits > SearchStrategyType;
+    typedef typename TargetFunctionType::RangeFieldType TargetDofType;
+    static const int target_dimRange = TargetFunctionType::dimRange;
+
+    const auto infinity = std::numeric_limits< TargetDofType >::infinity();
+
+    // set all DoFs to infinity
+    for(size_t ii = 0; ii < target.vector()->size(); ++ii)
+      target.vector()->set(ii, infinity);
+
+    SearchStrategyType search(*(source.msGrid().globalGridView()));
+    for(auto it = target.space().gridPart().template begin< 0 >(); it != target.space().gridPart().template end< 0 >(); ++it)
+    {
+      const auto& target_entity = *it;
+      const auto& target_geometry = target_entity.geometry();
+      auto target_local_function = target.localFunction(target_entity);
+      const auto& target_lagrangepoint_set = target.space().map().lagrangePointSet(target_entity);
+      const auto quadNop = target_lagrangepoint_set.nop();
+
+      typename TargetFunctionType::RangeType source_value;
+
+      std::vector< typename TargetFunctionType::DomainType > global_quads(quadNop);
+      for(size_t qP = 0; qP < quadNop ; ++qP) {
+        global_quads[qP] = target_geometry.global(target_lagrangepoint_set.point(qP));
+      }
+      const auto evaluation_entities = search(global_quads);
+      assert(evaluation_entities.size() == global_quads.size());
+
+      int k = 0;
+      for(size_t qP = 0; qP < quadNop ; ++qP)
+      {
+        if(std::isinf(target_local_function.get(k)))
+        {
+          const auto& global_point = global_quads[qP];
+          // evaluate source function
+          const auto source_entity = evaluation_entities[qP];
+          const auto& source_geometry = source_entity->geometry();
+          const auto& source_local_point = source_geometry.local(global_point);
+          const auto& source_local_function = source.localFunction(*source_entity);
+          source_local_function.evaluate(source_local_point, source_value);
+          for(int i = 0; i < target_dimRange; ++i, ++k)
+            target_local_function.set(k, source_value[i]);
+        }
+        else
+          k += target_dimRange;
+      }
+    }
+  } // ... project(...)
+#endif // HAVE_DUNE_DETAILED_DISCRETIZATIONS
 };
 
 } // namespace Stuff
 } // namespace Dune
 
-#endif // DUNE_STUFF_DISCRETEFUNCTION_PROJECTION_DIRICHLET_HH
+#endif // DUNE_STUFF_DISCRETEFUNCTION_PROJECTION_HETEROGENOUS_HH
