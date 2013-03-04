@@ -22,9 +22,9 @@ namespace DiscreteFunction {
 namespace Projection {
 namespace Lagrange {
 
+#if HAVE_DUNE_DETAILED_DISCRETIZATIONS
 namespace DD = Dune::Detailed::Discretizations;
 
-#if HAVE_DUNE_DETAILED_DISCRETIZATIONS
 template< class SourceGridViewType,
           class TargetDiscreteFunctionSpaceType,
           class TargetVectorType >
