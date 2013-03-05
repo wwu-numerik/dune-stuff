@@ -68,10 +68,19 @@ public:
              ? (leftFactor_->order() + rightFactor_->order())
              : -1)
   {
+    // sanity checks
     if (leftParametric_ && rightParametric_)
       DUNE_THROW(Dune::InvalidStateException,
                  "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
                  << " only one factor may be parametric!");
+    // build up components
+    if (leftSeparable_) {
+      for (size_t qq = 0; qq < leftFactor_->numComponents(); ++qq)
+        components_.push_back(Dune::make_shared< ThisType >(leftFactor_->components()[qq], rightFactor_));
+    } else if (rightSeparable_) {
+      for (size_t qq = 0; qq < rightFactor_->numComponents(); ++qq)
+        components_.push_back(Dune::make_shared< ThisType >(leftFactor_, rightFactor_->components()[qq]));
+    }
   } // Product
 
   Dune::shared_ptr< const LeftFactorType >  leftFactor() const
@@ -182,10 +191,7 @@ public:
       DUNE_THROW(Dune::InvalidStateException,
                  "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
                  << " numComponents() called for a nonseparable function!");
-    if (leftSeparable_)
-      return leftFactor_->numComponents();
-    else
-      return rightFactor_->numComponents();
+    return components_.size();
   } // ... numComponents(...)
 
   virtual const std::vector< Dune::shared_ptr< const ComponentType > >& components() const
@@ -194,10 +200,7 @@ public:
       DUNE_THROW(Dune::InvalidStateException,
                  "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
                  << " components() called for a nonseparable function!");
-    if (leftSeparable_)
-      return leftFactor_->components();
-    else
-      return rightFactor_->components();
+    return components_;
   } // ... components(...)
 
   virtual size_t numCoefficients() const
@@ -233,6 +236,7 @@ private:
   const bool rightSeparable_;
   const std::string name_;
   const int order_;
+  std::vector< Dune::shared_ptr< const ComponentType > > components_;
 }; // class Product< ..., ... >
 
 } // namespace Function
