@@ -23,8 +23,13 @@ namespace Function {
 
 std::vector< std::string > types()
 {
-  return {"function.checkerboard", "function.expression",
-      "function.separable.default", "function.separable.checkerboard"};
+  return {
+      "function.checkerboard",
+      "function.expression",
+      "function.spe10.model1",
+      "function.separable.default",
+      "function.separable.checkerboard"
+  };
 } // std::vector< std::string > types()
 
 
@@ -35,6 +40,8 @@ template< class D, int d, class R, int r >
 class Checkerboard;
 template< class D, int d, class R, int r >
 class Expression;
+template< class D, int d, class R, int r >
+class Spe10Model1;
 template< class D, int d, class R, int r >
 class SeparableDefault;
 template< class D, int d, class R, int r >
@@ -49,6 +56,8 @@ Dune::ParameterTree createSampleDescription(const std::string type)
     return FunctionType::createSampleDescription();
   } else if (type == "function.expression") {
     typedef Stuff::Function::Expression< D, d, R, r > FunctionType;
+  } else if (type == "function.spe10.model1") {
+    typedef Stuff::Function::Spe10Model1< D, d, R, r > FunctionType;
     return FunctionType::createSampleDescription();
   } else if (type == "function.separable.default") {
     typedef Stuff::Function::SeparableDefault< D, d, R, r > FunctionType;
@@ -69,13 +78,15 @@ Interface< D, d, R, r >* create(const std::string type,
 {
   using namespace DSFu;
   if (type == "function.checkerboard") {
-    return Checkerboard<D,d,R,r>::createFromDescription(description);
+    return Checkerboard< D, d, R, r >::createFromDescription(description);
   } else if (type == "function.expression") {
-    return Expression<D,d,R,r>::createFromDescription(description);
+    return Expression< D, d, R, r >::createFromDescription(description);
+  } else if (type == "function.spe10.model1") {
+    return Spe10Model1< D, d, R, r >::createFromDescription(description);
   } else if (type == "function.separable.default") {
-    return SeparableDefault<D,d,R,r>::createFromDescription(description);
+    return SeparableDefault< D, d, R, r >::createFromDescription(description);
   } else if (type == "function.separable.checkerboard") {
-    return SeparableCheckerboard<D,d,R,r>::createFromDescription(description);
+    return SeparableCheckerboard< D, d, R, r >::createFromDescription(description);
   } else
     DUNE_THROW(Dune::RangeError,
                "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
@@ -90,6 +101,7 @@ Interface< D, d, R, r >* create(const std::string type,
 #include "function/interface.hh"
 #include "function/checkerboard.hh"
 #include "function/expression.hh"
+#include "function/spe10.hh"
 #include "function/parametric/separable/default.hh"
 #include "function/parametric/separable/checkerboard.hh"
 
