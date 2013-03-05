@@ -14,22 +14,26 @@ namespace Function {
 
 
 // forward, to allow for specialization
-template< class LeftFactorType, class RightFactorType >
-class Product;
+template< class LeftFactorDomainFieldImp, int dimDomainLeftFactor, class LeftFactorRangeFieldImp, int dimRangeLeftFactor,
+          class RightFactorDomainFieldImp, int dimDomainRightFactor, class RightFactorRangeFieldImp, int dimRangeRightFactor >
+class Product{
+public:
+  Product() = delete;
+};
 
 
 template< class DomainFieldImp, int domainDim, class RangeFieldImp >
-class Product<  Interface< DomainFieldImp, domainDim, RangeFieldImp, 1 >,
-                Interface< DomainFieldImp, domainDim, RangeFieldImp, 1 > >
-  : Interface< DomainFieldImp, domainDim, RangeFieldImp, 1 >
+class Product<  DomainFieldImp, domainDim, RangeFieldImp, 1,
+                DomainFieldImp, domainDim, RangeFieldImp, 1 >
+  : public Interface< DomainFieldImp, domainDim, RangeFieldImp, 1 >
 {
 public:
-  typedef Product<  Interface< DomainFieldImp, domainDim, RangeFieldImp, 1 >,
-                    Interface< DomainFieldImp, domainDim, RangeFieldImp, 1 > >  ThisType;
-  typedef Interface< DomainFieldImp, domainDim, RangeFieldImp, 1 >              BaseType;
+  typedef Product<  DomainFieldImp, domainDim, RangeFieldImp, 1,
+                    DomainFieldImp, domainDim, RangeFieldImp, 1 >  ThisType;
+  typedef Interface< DomainFieldImp, domainDim, RangeFieldImp, 1 >  BaseType;
 
-  typedef Interface< DomainFieldImp, domainDim, RangeFieldImp, 1 >              LeftFactorType;
-  typedef Interface< DomainFieldImp, domainDim, RangeFieldImp, 1 >              RightFactorType;
+  typedef Interface< DomainFieldImp, domainDim, RangeFieldImp, 1 >  LeftFactorType;
+  typedef Interface< DomainFieldImp, domainDim, RangeFieldImp, 1 >  RightFactorType;
 
   typedef typename BaseType::DomainFieldType  DomainFieldType;
   static const int                            dimDomain = BaseType::dimDomain;
