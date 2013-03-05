@@ -115,7 +115,7 @@ public:
         ret->backend() += components_[qq]->backend() * coefficients_[qq]->evaluate(_mu);
       // add the last lonely component if necesarry
       if (numComponents() > qq)
-        ret->backend() += components_[qq + 1]->backend();
+        ret->backend() += components_[qq]->backend();
     } // if (parametric())
     return ret;
   } // Dune::shared_ptr< ComponentType > fix(const ParamType& mu) const
