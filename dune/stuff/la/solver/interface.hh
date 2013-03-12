@@ -75,7 +75,9 @@ public:
                           const size_type /*_maxIter*/ = 0,
                           const ElementType /*_precision*/ = 0,
                           const Dune::ParameterTree /*description*/ = Dune::ParameterTree()) const
-  {}
+  {
+    return size_type(3);
+  }
 }; // class SolverNotImplementedForThisMatrixVectorCombination
 
 
