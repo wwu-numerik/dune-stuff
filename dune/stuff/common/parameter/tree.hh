@@ -142,8 +142,8 @@ public:
   {
     if (hasKey(key)) {
       const std::string str = BaseType::get< std::string >(key, "meaningless_default_value");
-      return (DSC::String::equal(str.substr(0, 1), "[")
-          && DSC::String::equal(str.substr(str.size() - 1, 1), "]"));
+      return (str.substr(0, 1) ==  "["
+          && str.substr(str.size() - 1, 1) == "]");
     }
     return false;
   } // bool hasVector(const std::string& vector) const
@@ -166,7 +166,7 @@ public:
       return std::vector< T >(minSize, def);
     } else {
       const std::string str = BaseType::get(key, "meaningless_default_value");
-      if (DSC::String::equal(str, "")) {
+      if (str.empty()) {
         if (minSize > 0) {
           DSC::Logger().debug() << DSC::colorString("WARNING:") << " vector '" << key << "' was too small (0) and has been enlarged to size " << minSize << "!" << std::endl;
         }
@@ -184,8 +184,8 @@ public:
         // the dune parametertree strips any leading and trailing whitespace
         // so we can be sure that the first and last have to be the brackets [] if this is a vector
         std::vector< T > ret;
-        if (DSC::String::equal(str.substr(0, 1), "[")
-            && DSC::String::equal(str.substr(str.size() - 1, 1), "]")) {
+        if (str.substr(0, 1) == "["
+            && str.substr(str.size() - 1, 1) == "]") {
           std::vector< std::string > tokens;
           if (str.size() > 2)
             tokens = DSC::tokenize< std::string >(str.substr(1, str.size() - 2), ";");
@@ -193,8 +193,8 @@ public:
             ret.push_back(DSC::fromString< T >(boost::algorithm::trim_copy(tokens[i])));
           for (auto i = ret.size(); i < minSize; ++i)
             ret.push_back(def);
-        } else if (DSC::String::equal(str.substr(0, 1), "[")
-                   || DSC::String::equal(str.substr(str.size() - 1, 1), "]")) {
+        } else if (str.substr(0, 1) == "["
+                   || str.substr(str.size() - 1, 1) == "]") {
             DUNE_THROW(Dune::RangeError, "Vectors have to be of the form '[entry_0; entry_1; ... ]'!");
         } else {
           ret = std::vector< T >(minSize, DSC::fromString< T >(boost::algorithm::trim_copy(str)));
