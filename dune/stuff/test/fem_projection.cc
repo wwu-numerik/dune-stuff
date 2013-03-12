@@ -19,7 +19,7 @@
 #include <dune/stuff/fem/customprojection.hh>
 #include <dune/stuff/grid/provider/cube.hh>
 #include <dune/stuff/function/expression.hh>
-#include <dune/stuff/function/parametric/separable/coefficient.hh>
+#include <dune/stuff/function/affineparametric/coefficient.hh>
 
 template <int dimDomain, int rangeDim>
 struct CustomFunction : public DSFu::Interface< double, dimDomain, double, rangeDim > {
