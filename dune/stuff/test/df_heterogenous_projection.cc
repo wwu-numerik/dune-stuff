@@ -94,8 +94,8 @@ public:
 void ptest(const int macro_elements = 4, const int target_factor = 2) {
   typedef Traits<SourceGrid> SourceTraits;
   typedef Traits<TargetGrid> TargetTraits;
-  auto source_cube = DSG::Provider::GenericCube<SourceGrid>(0,1,macro_elements).grid();
-  auto target_cube = DSG::Provider::GenericCube<TargetGrid>(0,1,macro_elements*target_factor).grid();
+  auto source_cube = Stuff::GridProviderCube<SourceGrid>(0,1,macro_elements).grid();
+  auto target_cube = Stuff::GridProviderCube<TargetGrid>(0,1,macro_elements*target_factor).grid();
   source_cube->globalRefine(2);
   target_cube->globalRefine(2*target_factor);
 
@@ -111,7 +111,7 @@ void ptest(const int macro_elements = 4, const int target_factor = 2) {
   typename TargetTraits::DiscreteFunction target_df("target", target_space);
   typename TargetTraits::DiscreteFunction fem_target_df("fem_target", target_space);
 
-  typedef DSFu::Expression< SourceGrid::ctype,
+  typedef Stuff::FunctionExpression< SourceGrid::ctype,
       SourceGrid::dimension, SourceGrid::ctype, 1 > ScalarFunctionType;
   ScalarFunctionType scalar_f("x", "x[0] + x[1]");
   LagrangeInterpolation<typename SourceTraits::DiscreteFunction>::apply(scalar_f, source_df);
