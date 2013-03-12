@@ -36,17 +36,17 @@ void ensureParamFile(std::string filename)
     std::ofstream file;
     file.open(filename);
     file << "[" << id << "]" << std::endl;
-    file << "grid = stuff.grid.provider.cube" << std::endl;
-    file << "       stuff.grid.provider.gmsh" << std::endl;
-    file << "       stuff.grid.provider.starcd" << std::endl;
+    file << "gridprovider = gridprovider.cube" << std::endl;
+    file << "               gridprovider.gmsh" << std::endl;
+    file << "               gridprovider.starcd" << std::endl;
     file << "filename = " << id << ".grid"<< std::endl;
-    file << "[stuff.grid.provider.cube]" << std::endl;
+    file << "[gridprovider.cube]" << std::endl;
     file << "lowerLeft = [0.0; 0.0; 0.0]" << std::endl;
     file << "upperRight = [1.0; 1.0; 1.0]" << std::endl;
     file << "numElements = [4; 4; 4]" << std::endl;
-    file << "[stuff.grid.provider.gmsh]" << std::endl;
+    file << "[gridprovider.gmsh]" << std::endl;
     file << "filename = curved2d.msh" << std::endl;
-    file << "[stuff.grid.provider.starcd]" << std::endl;
+    file << "[gridprovider.starcd]" << std::endl;
     file << "filename = meshExport10" << std::endl;
     file.close();
   } // only write param file if there is none
@@ -88,9 +88,9 @@ int main(int argc, char** argv)
 
     // grid
     info << "setting up grid... ";
-    typedef Dune::Stuff::Grid::Provider::Interface<> GridProviderType;
+    typedef Dune::Stuff::GridProviderInterface<> GridProviderType;
     const GridProviderType* gridProvider =
-        Dune::Stuff::Grid::Provider::create<>(paramTree.get(id + ".grid", "stuff.grid.provider.cube"),
+        Dune::Stuff::createGridProvider<>(paramTree.get(id + ".gridprovider", "gridprovider.cube"),
                                               paramTree);
     typedef GridProviderType::GridType GridType;
     const Dune::shared_ptr< const GridType > grid = gridProvider->grid();
@@ -107,6 +107,7 @@ int main(int argc, char** argv)
     info << " done (has " << leafElements << " elements, took " << timer.elapsed() << " sek)" << std::endl;
 
     // if we came that far we can as well be happy about it
+    delete gridProvider;
     return 0;
   } catch(Dune::Exception& e) {
     std::cerr << "Dune reported error: " << e.what() << std::endl;
