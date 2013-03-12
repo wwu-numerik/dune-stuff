@@ -33,8 +33,6 @@
 
 namespace Dune {
 namespace Stuff {
-namespace Grid {
-namespace Provider {
 
 template< typename GridType >
 struct ElementVariant;
@@ -57,16 +55,16 @@ struct ElementVariant;
  *          <li>2: simplices</ul>
  **/
 template< typename GridImp, int variant = ElementVariant<GridImp>::id>
-class Cube
-  : public Interface< GridImp >
+class GridProviderCube
+  : public GridProviderInterface< GridImp >
 {
 public:
   //! Type of the provided grid.
   typedef GridImp GridType;
 
-  typedef Interface< GridType > BaseType;
+  typedef GridProviderInterface< GridType > BaseType;
 
-  typedef Cube< GridType, variant > ThisType;
+  typedef GridProviderCube< GridType, variant > ThisType;
 
 private:
   typedef typename GridType::LeafGridView GridViewType;
@@ -93,7 +91,7 @@ public:
    *  \param[in]  numElements (optional)
    *              number of elements.
    **/
-  Cube(const double _lowerLeft = 0.0, const double _upperRight = 1.0, const unsigned int numElements = 1u)
+  GridProviderCube(const double _lowerLeft = 0.0, const double _upperRight = 1.0, const unsigned int numElements = 1u)
     : lowerLeft_(_lowerLeft)
     , upperRight_(_upperRight)
   {
@@ -111,7 +109,7 @@ public:
    *  \param[in]  numElements (optional)
    *              number of elements.
    **/
-  Cube(const CoordinateType& _lowerLeft, const CoordinateType& _upperRight, const unsigned int numElements = 1u)
+  GridProviderCube(const CoordinateType& _lowerLeft, const CoordinateType& _upperRight, const unsigned int numElements = 1u)
     : lowerLeft_(_lowerLeft)
     , upperRight_(_upperRight)
   {
@@ -132,7 +130,7 @@ public:
     \tparam ContainerType some sequence type that functions with std::begin/end
     **/
   template< class ContainerType  >
-  Cube(const CoordinateType& _lowerLeft, const CoordinateType& _upperRight,
+  GridProviderCube(const CoordinateType& _lowerLeft, const CoordinateType& _upperRight,
               const ContainerType numElements
                 = boost::assign::list_of< typename ContainerType::value_type>().repeat(dim,
                                                                                        typename ContainerType::value_type(1u)))
@@ -149,7 +147,6 @@ public:
     buildGrid(tmpNumElements);
   }
 
-
   static Dune::ParameterTree createSampleDescription(const std::string subName = "")
   {
     Dune::ParameterTree description;
@@ -163,7 +160,7 @@ public:
       extendedDescription.add(description, subName);
       return extendedDescription;
     }
-  }
+  } // ... createSampleDescription(...)
 
   /**
    *  \brief      Creates a cube.
@@ -177,7 +174,7 @@ public:
    *              <li> \c numElements: \a int or vector to denote the number of elements.
    *              </ul>
    **/
-  static ThisType* createFromDescription(const Dune::ParameterTree& paramTree, const std::string subName = id())
+  static ThisType* create(const Dune::ParameterTree& paramTree, const std::string subName = id())
   {
     // get correct paramTree
     Dune::Stuff::Common::ExtendedParameterTree extendedParamTree;
@@ -237,7 +234,7 @@ public:
       numElements[d] = tmpNumElements[d];
     }
     return new ThisType(lowerLeft, upperRight, numElements);
-  } // static ThisType createFromParamTree(const Dune::ParameterTree& paramTree, const std::string subName = id())
+  } // ... create(...)
 
   //! access to shared ptr
   virtual Dune::shared_ptr< GridType > grid()
@@ -278,7 +275,7 @@ private:
   CoordinateType lowerLeft_;
   CoordinateType upperRight_;
   Dune::shared_ptr< GridType > grid_;
-}; // class Cube
+}; // class GridProviderCube
 
 template< typename GridType >
 struct ElementVariant {
@@ -296,15 +293,13 @@ struct ElementVariant< Dune::SGrid< dim, dim > > {
 };
 
 #if HAVE_ALUGRID
-template< int dim >
-struct ElementVariant< Dune::ALUCubeGrid< dim, dim > > {
-  static const int id = 1;
-};
+  template< int dim >
+  struct ElementVariant< Dune::ALUCubeGrid< dim, dim > > {
+    static const int id = 1;
+  };
 #endif // HAVE_ALUGRID
 
 
-} // namespace Provider
-} // namespace Grid
 } // namespace Stuff
 } // namespace Dune
 

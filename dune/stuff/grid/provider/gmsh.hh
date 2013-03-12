@@ -31,27 +31,26 @@
 
 namespace Dune {
 namespace Stuff {
-namespace Grid {
-namespace Provider {
+
 
 /**
  * \brief   Gmsh grid provider
  */
 #if defined HAVE_CONFIG_H || defined HAVE_CMAKE_CONFIG
 template< class GridImp = Dune::GridSelector::GridType >
-#else // defined HAVE_CONFIG_H || defined HAVE_CMAKE_CONFIG
+#else
 template< class GridImp = Dune::SGrid< 2, 2 > >
-#endif // defined HAVE_CONFIG_H || defined HAVE_CMAKE_CONFIG
-class Gmsh
-  : public Interface< GridImp >
+#endif
+class GridProviderGmsh
+  : public GridProviderInterface< GridImp >
 {
 public:
   //! Type of the provided grid.
   typedef GridImp GridType;
 
-  typedef Interface< GridType > BaseType;
+  typedef GridProviderInterface< GridType > BaseType;
 
-  typedef Gmsh< GridType > ThisType;
+  typedef GridProviderGmsh< GridType > ThisType;
 
   //! Dimension of the provided grid.
   static const unsigned int dim = BaseType::dim;
@@ -65,18 +64,18 @@ public:
     return BaseType::id() + ".gmsh";
   }
 
-  Gmsh(const std::string filename)
+  GridProviderGmsh(const std::string filename)
   {
     dune_static_assert(!(Dune::is_same< GridType, Dune::YaspGrid< dim > >::value), "GmshReader does not work with YaspGrid!");
     dune_static_assert(!(Dune::is_same< GridType, Dune::SGrid< 2, 2 > >::value), "GmshReader does not work with SGrid!");
     grid_ = Dune::shared_ptr< GridType >(GmshReader< GridType >::read(filename));
   }
 
-  Gmsh(ThisType& other)
+  GridProviderGmsh(ThisType& other)
     : grid_(other.grid_)
   {}
 
-  Gmsh(const ThisType& other)
+  GridProviderGmsh(const ThisType& other)
     : grid_(other.grid_)
   {}
 
@@ -91,9 +90,9 @@ public:
       extendedDescription.add(description, subName);
       return extendedDescription;
     }
-  }
+  } // ... createSampleDescription(...)
 
-  static ThisType* createFromDescription(const Dune::ParameterTree& paramTree, const std::string subName = id())
+  static ThisType* create(const Dune::ParameterTree& paramTree, const std::string subName = id())
   {
     // get correct paramTree
     Dune::Stuff::Common::ExtendedParameterTree extendedParamTree;
@@ -131,10 +130,9 @@ public:
 
 private:
   Dune::shared_ptr< GridType > grid_;
-}; // class Gmsh
+}; // class GridProviderGmsh
 
-} // namespace Provider
-} // namespace Grid
+
 } // namespace Stuff
 } // namespace Dune
 
