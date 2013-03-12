@@ -1,5 +1,5 @@
-﻿#ifndef DUNE_STUFF_LA_CONTAINER_SEPARABLE_HH
-#define DUNE_STUFF_LA_CONTAINER_SEPARABLE_HH
+﻿#ifndef DUNE_STUFF_LA_CONTAINER_AFFINEPARAMETRIC_HH
+#define DUNE_STUFF_LA_CONTAINER_AFFINEPARAMETRIC_HH
 
 #ifdef HAVE_CMAKE_CONFIG
   #include "cmake_config.h"
@@ -12,7 +12,7 @@
 
 #include <dune/stuff/la/container/eigen.hh>
 #include <dune/stuff/common/parameter.hh>
-#include <dune/stuff/function/parametric/separable/coefficient.hh>
+#include <dune/stuff/function/affineparametric/coefficient.hh>
 
 namespace Dune {
 namespace Stuff {
@@ -22,20 +22,20 @@ namespace Container {
 
 #if HAVE_EIGEN
 template< class EigenContainerImp >
-class Separable
+class AffineParametric
 {
 public:
-  typedef Separable< EigenContainerImp >  ThisType;
+  typedef AffineParametric< EigenContainerImp >  ThisType;
 
   typedef typename LA::Container::EigenInterface< typename EigenContainerImp::Traits >::derived_type  ComponentType;
-  typedef Stuff::Function::Coefficient< typename EigenContainerImp::ElementType >                     CoefficientType;
+  typedef Stuff::FunctionAffineSeparablCoefficient< typename EigenContainerImp::ElementType >         CoefficientType;
 
   typedef typename Stuff::Common::Parameter::Type ParamType;
 
 public:
-  Separable(const size_t _paramSize,
-            std::vector< Dune::shared_ptr< ComponentType > >& _components,
-            const std::vector< Dune::shared_ptr< const CoefficientType > >& _coefficients)
+  AffineParametric(const size_t _paramSize,
+                   std::vector< Dune::shared_ptr< ComponentType > >& _components,
+                   const std::vector< Dune::shared_ptr< const CoefficientType > >& _coefficients)
     : paramSize_(_paramSize)
     , components_(_components)
     , coefficients_(_coefficients)
@@ -57,9 +57,9 @@ public:
         DUNE_THROW(Dune::RangeError,
                    "\nERROR: '_paramSize' has to be positive!");
     }
-  }
+  } // AffineParametric(...)
 
-  Separable(Dune::shared_ptr< ComponentType > _component)
+  AffineParametric(Dune::shared_ptr< ComponentType > _component)
     : paramSize_(0)
   {
     components_.push_back(_component);
@@ -70,12 +70,12 @@ public:
     return numCoefficients() > 0;
   }
 
-  const size_t paramSize() const
+  size_t paramSize() const
   {
     return paramSize_;
   }
 
-  const size_t numComponents() const
+  size_t numComponents() const
   {
     return components_.size();
   }
@@ -90,7 +90,7 @@ public:
     return components_;
   }
 
-  const size_t numCoefficients() const
+  size_t numCoefficients() const
   {
     return coefficients_.size();
   }
@@ -133,4 +133,4 @@ private:
 } // namespace Stuff
 } // namespace Dune
 
-#endif // DUNE_STUFF_LA_CONTAINER_SEPARABLE_HH
+#endif // DUNE_STUFF_LA_CONTAINER_AFFINEPARAMETRIC_HH
