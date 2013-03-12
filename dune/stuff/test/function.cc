@@ -69,8 +69,8 @@ struct SeparableTest
           FunctionType::create(FunctionType::createSampleDescription()));
     if (!function->parametric())
       DUNE_THROW(Dune::InvalidStateException, "ERROR: separable function returned parametric() == false!");
-    if (!function->separable())
-      DUNE_THROW(Dune::InvalidStateException, "ERROR: separable function returned separable() == false!");
+    if (!function->affineparametric())
+      DUNE_THROW(Dune::InvalidStateException, "ERROR: separable function returned affineparametric() == false!");
     const std::string name = function->name();
     const int order = function->order();
     const size_t paramSize = function->paramSize();

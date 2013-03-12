@@ -150,10 +150,10 @@ public:
         // lets see if it has a type
         if (componentDescription.hasKey("type")) {
           const std::string type = componentDescription.get< std::string >("type");
-          if (type == "function.parametric.separable.default")
+          if (type == "function.affineparametric.default")
             DUNE_THROW(Dune::IOError,
                        "\n" << DSC::colorStringRed("ERROR:")
-                       << " can not create a 'function.parametric.separable.default' inside itself!");
+                       << " can not create a 'function.affineparametric.default' inside itself!");
           _components.emplace_back(createFunction<  DomainFieldType, dimDomain,
                                                     RangeFieldType, dimRange >(type, componentDescription));
         } else {
@@ -248,7 +248,7 @@ public:
     return true;
   }
 
-  virtual bool separable() const
+  virtual bool affineparametric() const
   {
     return true;
   }

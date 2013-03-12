@@ -53,7 +53,7 @@ public:
 
   static const std::string id()
   {
-    return BaseType::id() + ".parametric.separable.checkerboard";
+    return BaseType::id() + ".affineparametric.checkerboard";
   }
 
   FunctionAffineParametricCheckerboard(const DomainType& _lowerLeft,
@@ -196,7 +196,7 @@ public:
     return true;
   }
 
-  virtual bool separable() const
+  virtual bool affineparametric() const
   {
     return true;
   }
