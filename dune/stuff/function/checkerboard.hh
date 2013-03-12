@@ -12,21 +12,21 @@
 
 namespace Dune {
 namespace Stuff {
-namespace Function {
 
 
+// forward, to allow for specialization
 template< class DomainFieldImp, int domainDim,
           class RangeFieldImp, int rangeDim >
-class Checkerboard;
+class FunctionCheckerboard;
 
 
 template< class DomainFieldImp, int domainDim, class RangeFieldImp >
-class Checkerboard< DomainFieldImp, domainDim, RangeFieldImp, 1 >
-  : public Interface< DomainFieldImp, domainDim, RangeFieldImp, 1 >
+class FunctionCheckerboard< DomainFieldImp, domainDim, RangeFieldImp, 1 >
+  : public FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, 1 >
 {
 public:
-  typedef Checkerboard< DomainFieldImp, domainDim, RangeFieldImp, 1 > ThisType;
-  typedef Interface< DomainFieldImp, domainDim, RangeFieldImp, 1 >    BaseType;
+  typedef FunctionCheckerboard< DomainFieldImp, domainDim, RangeFieldImp, 1 > ThisType;
+  typedef FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, 1 >    BaseType;
 
   typedef typename BaseType::DomainFieldType  DomainFieldType;
   static const int                            dimDomain = BaseType::dimDomain;
@@ -37,14 +37,14 @@ public:
 
   static const std::string id()
   {
-    return "function.checkerboard";
+    return BaseType::id() + ".checkerboard";
   }
 
-  Checkerboard(const DomainType _lowerLeft,
-               const DomainType _upperRight,
-               const std::vector< size_t > _numElements,
-               const std::vector< RangeFieldType > _values,
-               const std::string _name = id())
+  FunctionCheckerboard(const DomainType _lowerLeft,
+                       const DomainType _upperRight,
+                       const std::vector< size_t > _numElements,
+                       const std::vector< RangeFieldType > _values,
+                       const std::string _name = id())
     : lowerLeft_(_lowerLeft)
     , upperRight_(_upperRight)
     , numElements_(_numElements)
@@ -64,7 +64,7 @@ public:
       DUNE_THROW(Dune::InvalidStateException,
                  "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
                  << " please provide at least as many '_values' as subdomains given by '_numElements'!");
-  }
+  } // FunctionCheckerboard(...)
 
   static Dune::ParameterTree createSampleDescription(const std::string subName = "")
   {
@@ -81,9 +81,9 @@ public:
       extendedDescription.add(description, subName);
       return extendedDescription;
     }
-  }
+  } // ... createSampleDescription(...)
 
-  static ThisType* createFromDescription(const DSC::ExtendedParameterTree description)
+  static ThisType* create(const DSC::ExtendedParameterTree description)
   {
     // get data
     const std::vector< DomainFieldType > lowerLefts = description.getVector("lowerLeft", DomainFieldType(0), dimDomain);
@@ -104,7 +104,7 @@ public:
     }
     // create and return
     return new ThisType(lowerLeft, upperRight, numElements, values);
-  } // static ThisType createFromParamTree(const Dune::ParameterTree paramTree)
+  } // ... create(...)
 
 
   const DomainType& lowerLeft() const
@@ -164,9 +164,8 @@ private:
   std::vector< size_t > numElements_;
   std::vector< RangeFieldType > values_;
   std::string name_;
-}; // class Checkerboard
+}; // class FunctionCheckerboard
 
-} // namespace Function
 } // namespace Stuff
 } // namespace Dune
 

@@ -1,5 +1,5 @@
-#ifndef DUNE_STUFF_FUNCTION_PARAMETRIC_SEPARABLE_CHECKERBOARD_HH
-#define DUNE_STUFF_FUNCTION_PARAMETRIC_SEPARABLE_CHECKERBOARD_HH
+#ifndef DUNE_STUFF_FUNCTION_AFFINEPARAMETRIC_CHECKERBOARD_HH
+#define DUNE_STUFF_FUNCTION_AFFINEPARAMETRIC_CHECKERBOARD_HH
 
 #ifdef HAVE_CMAKE_CONFIG
   #include "cmake_config.h"
@@ -16,25 +16,27 @@
 #include <dune/stuff/common/string.hh>
 #include <dune/stuff/function/checkerboard.hh>
 
-#include "../../interface.hh"
-#include "../../checkerboard.hh"
+#include "../interface.hh"
+#include "../checkerboard.hh"
 
 namespace Dune {
 namespace Stuff {
-namespace Function {
 
+
+// forward, to allow for specialization
 template< class DomainFieldImp, int domainDim,
           class RangeFieldImp, int rangeDim >
-class SeparableCheckerboard;
+class FunctionAffineParametricCheckerboard;
+
 
 template< class DomainFieldImp, int domainDim,
           class RangeFieldImp >
-class SeparableCheckerboard< DomainFieldImp, domainDim, RangeFieldImp, 1 >
-  : public Interface< DomainFieldImp, domainDim, RangeFieldImp, 1 >
+class FunctionAffineParametricCheckerboard< DomainFieldImp, domainDim, RangeFieldImp, 1 >
+  : public FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, 1 >
 {
 public:
-  typedef SeparableCheckerboard< DomainFieldImp, domainDim, RangeFieldImp, 1 > ThisType;
-  typedef Interface< DomainFieldImp, domainDim, RangeFieldImp, 1 >    BaseType;
+  typedef FunctionAffineParametricCheckerboard< DomainFieldImp, domainDim, RangeFieldImp, 1 > ThisType;
+  typedef FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, 1 >                    BaseType;
 
   typedef typename BaseType::DomainFieldType  DomainFieldType;
   static const int                            dimDomain = BaseType::dimDomain;
@@ -51,14 +53,14 @@ public:
 
   static const std::string id()
   {
-    return "function.parametric.separable.checkerboard";
+    return BaseType::id() + ".parametric.separable.checkerboard";
   }
 
-  SeparableCheckerboard(const DomainType& _lowerLeft,
-                        const DomainType& _upperRight,
-                        const std::vector< size_t >& _numElements,
-                        const std::vector< ParamType >& _paramRange,
-                        const std::string _name = id())
+  FunctionAffineParametricCheckerboard(const DomainType& _lowerLeft,
+                                       const DomainType& _upperRight,
+                                       const std::vector< size_t >& _numElements,
+                                       const std::vector< ParamType >& _paramRange,
+                                       const std::string _name = id())
     : paramSize_(1u)
     , paramRange_(_paramRange)
     , name_(_name)
@@ -79,7 +81,7 @@ public:
           && "Given minimal parameter has to be piecewise <= maximum parameter!");
     }
     // create the coefficients and components
-    typedef Function::Checkerboard< DomainFieldType, dimDomain, RangeFieldType, dimRange > NonparametricType;
+    typedef FunctionCheckerboard< DomainFieldType, dimDomain, RangeFieldType, dimRange > NonparametricType;
     for (size_t ii = 0; ii < paramSize_; ++ii) {
       std::vector< RangeFieldType > indicator(paramSize_, RangeFieldType(0));
       indicator[ii] = RangeFieldType(1);
@@ -106,9 +108,9 @@ public:
             }
         }
     }
-  } // SeparableCheckerboard(...)
+  } // FunctionAffineParametricCheckerboard(...)
 
-  SeparableCheckerboard(const ThisType& other)
+  FunctionAffineParametricCheckerboard(const ThisType& other)
     : paramSize_(other.paramSize_)
     , paramRange_(other.paramRange_)
     , name_(other.name_)
@@ -148,9 +150,9 @@ public:
       extendedDescription.add(description, subName);
       return extendedDescription;
     }
-  }
+  } // ... createSampleDescription(...)
 
-  static ThisType* createFromDescription(const DSC::ExtendedParameterTree description)
+  static ThisType* create(const DSC::ExtendedParameterTree description)
   {
     // get data
     const std::string _name = description.get< std::string >("name", id());
@@ -187,7 +189,7 @@ public:
     const std::vector< ParamType > paramRange = {paramMin, paramMax};
     // create and return
     return new ThisType(lowerLeft, upperRight, numElements, paramRange, _name);
-  } // static ThisType createFromParamTree(const Dune::ParameterTree paramTree)
+  } // ... create(...)
 
   virtual bool parametric() const
   {
@@ -263,11 +265,10 @@ private:
   std::vector< std::string > parameterExplanation_;
   std::vector< shared_ptr< const ComponentType > > components_;
   std::vector< shared_ptr< const CoefficientType > > coefficients_;
-}; // class SeparableCheckerboard
+}; // class FunctionAffineParametricCheckerboard
 
 
-} // namespace Function
 } // namespace Stuff
 } // namespace Dune
 
-#endif // DUNE_STUFF_FUNCTION_PARAMETRIC_SEPARABLE_CHECKERBOARD_HH
+#endif // DUNE_STUFF_FUNCTION_AFFINEPARAMETRIC_CHECKERBOARD_HH

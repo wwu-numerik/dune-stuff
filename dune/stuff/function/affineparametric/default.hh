@@ -1,5 +1,5 @@
-#ifndef DUNE_STUFF_FUNCTION_PARAMETRIC_SEPARABLE_DEFAULT_HH
-#define DUNE_STUFF_FUNCTION_PARAMETRIC_SEPARABLE_DEFAULT_HH
+#ifndef DUNE_STUFF_FUNCTION_AFFINEPARAMETRIC_DEFAULT_HH
+#define DUNE_STUFF_FUNCTION_AFFINEPARAMETRIC_DEFAULT_HH
 
 #ifdef HAVE_CMAKE_CONFIG
   #include "cmake_config.h"
@@ -21,16 +21,15 @@
 
 namespace Dune {
 namespace Stuff {
-namespace Function {
 
 
 template< class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDim >
-class SeparableDefault
-  : public Interface< DomainFieldImp, domainDim, RangeFieldImp, rangeDim >
+class FunctionAffineParametricDefault
+  : public FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDim >
 {
 public:
-  typedef SeparableDefault< DomainFieldImp, domainDim, RangeFieldImp, rangeDim >  ThisType;
-  typedef Interface< DomainFieldImp, domainDim, RangeFieldImp, rangeDim >         BaseType;
+  typedef FunctionAffineParametricDefault< DomainFieldImp, domainDim, RangeFieldImp, rangeDim > ThisType;
+  typedef FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDim >               BaseType;
 
   typedef typename BaseType::DomainFieldType  DomainFieldType;
   static const int                            dimDomain = BaseType::dimDomain;
@@ -46,16 +45,16 @@ public:
 
   static const std::string id()
   {
-    return "function.parametric.separable.default";
+    return BaseType::id() + ".affineparametric.default";
   }
 
-  SeparableDefault(const size_t _paramSize,
-                   const std::vector< ParamType > _paramRange,
-                   const std::vector< Dune::shared_ptr< const ComponentType > > _components,
-                   const std::vector< Dune::shared_ptr< const CoefficientType > > _coefficients,
-                   const std::vector< std::string > _parameterExplanation = std::vector< std::string >(),
-                   const int _order = -1,
-                   const std::string _name = "function.parametric.separable.default")
+  FunctionAffineParametricDefault(const size_t _paramSize,
+                                  const std::vector< ParamType > _paramRange,
+                                  const std::vector< Dune::shared_ptr< const ComponentType > > _components,
+                                  const std::vector< Dune::shared_ptr< const CoefficientType > > _coefficients,
+                                  const std::vector< std::string > _parameterExplanation = std::vector< std::string >(),
+                                  const int _order = -1,
+                                  const std::string _name = id())
     : paramSize_(_paramSize)
     , paramRange_(_paramRange)
     , components_(_components)
@@ -87,9 +86,9 @@ public:
       parameterExplanation_.push_back(_parameterExplanation[qq]);
     for (size_t qq = std::min(paramSize_, _parameterExplanation.size()); qq < paramSize_; ++qq)
       parameterExplanation_.push_back("parameter_component_" + DSC::toString(qq));
-  }
+  } // FunctionAffineParametricDefault(...)
 
-  SeparableDefault(const ThisType& other)
+  FunctionAffineParametricDefault(const ThisType& other)
     : paramSize_(other.paramSize_)
     , paramRange_(other.paramRange_)
     , components_(other.components_)
@@ -131,9 +130,9 @@ public:
     DSC::ExtendedParameterTree extendedDescription;
     extendedDescription.add(description, subName);
     return extendedDescription;
-  }
+  } // ... createSampleDescription(...)
 
-  static ThisType* createFromDescription(const DSC::ExtendedParameterTree description)
+  static ThisType* create(const DSC::ExtendedParameterTree description)
   {
     // first of all, read the optional stuff
     const std::string _name = description.get< std::string >("name", id());
@@ -155,8 +154,8 @@ public:
             DUNE_THROW(Dune::IOError,
                        "\n" << DSC::colorStringRed("ERROR:")
                        << " can not create a 'function.parametric.separable.default' inside itself!");
-          _components.emplace_back(DSFu::create<  DomainFieldType, dimDomain,
-                                                  RangeFieldType, dimRange >(type,componentDescription));
+          _components.emplace_back(createFunction<  DomainFieldType, dimDomain,
+                                                    RangeFieldType, dimRange >(type, componentDescription));
         } else {
           // since it does not have a type, treat it as an expression function
           if (!(componentDescription.hasKey("expression") || componentDescription.hasSub("expression")))
@@ -171,9 +170,9 @@ public:
             componentDescription["name"] = _name;
           if (!componentDescription.hasKey("order"))
             componentDescription["order"] = DSC::toString(_order);
-          _components.emplace_back(DSFu::create<  DomainFieldType, dimDomain,
-                                                  RangeFieldType, dimRange >("function.expression",
-                                                                              componentDescription));
+          _components.emplace_back(createFunction<  DomainFieldType, dimDomain,
+                                                    RangeFieldType, dimRange >("function.expression",
+                                                                               componentDescription));
         } // if (componentDescription.hasKey("type"))
       } else if (description.hasKey(key)) {
         // there is only one key, interpret it as an entry for an expression function with variable x
@@ -182,9 +181,9 @@ public:
         componentDescription["order"] = DSC::toString(_order);
         componentDescription["variable"] = "x";
         componentDescription["expression"] = description.get< std::string >(key);
-        _components.emplace_back(DSFu::create<  DomainFieldType, dimDomain,
-                                                RangeFieldType, dimRange >("function.expression",
-                                                                          componentDescription));
+        _components.emplace_back(createFunction<  DomainFieldType, dimDomain,
+                                                  RangeFieldType, dimRange >("function.expression",
+                                                                             componentDescription));
       } else {
         // stop the search
         continue_search = false;
@@ -242,7 +241,7 @@ public:
     else if (description.hasKey("paramExplanation"))
       _paramExplanation.push_back(description.get< std::string >("paramExplanation"));
     return new ThisType(_paramSize, _paramRange, _components, _coefficients, _paramExplanation, _order, _name);
-  }
+  } // ... create(...)
 
   virtual bool parametric() const
   {
@@ -323,10 +322,10 @@ private:
   const int order_;
   const std::string name_;
   std::vector< std::string > parameterExplanation_;
-}; // class SeparableDefault
+}; // class FunctionAffineParametricDefault
 
-} // namespace Function
+
 } // namespace Stuff
 } // namespace Dune
 
-#endif // DUNE_STUFF_FUNCTION_PARAMETRIC_SEPARABLE_DEFAULT_HH
+#endif // DUNE_STUFF_FUNCTION_AFFINEPARAMETRIC_DEFAULT_HH
