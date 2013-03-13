@@ -30,9 +30,9 @@ struct NonparametricTest
   void check() const
   {
     const std::unique_ptr< InterfaceType > function(
-          createFunction< DomainFieldType, dimDomain,
-                          RangeFieldType, dimRange >(FunctionType::id(),
-                                                     FunctionType::createSampleDescription()));
+          Functions< DomainFieldType, dimDomain,
+                          RangeFieldType, dimRange >::create(FunctionType::id(),
+                                                             FunctionType::createSampleDescription()));
     DomainType x(1);
     RangeType ret;
     if (function->parametric())
