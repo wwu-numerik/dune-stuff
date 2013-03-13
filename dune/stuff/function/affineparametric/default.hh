@@ -154,8 +154,8 @@ public:
             DUNE_THROW(Dune::IOError,
                        "\n" << DSC::colorStringRed("ERROR:")
                        << " can not create a 'function.affineparametric.default' inside itself!");
-          _components.emplace_back(createFunction<  DomainFieldType, dimDomain,
-                                                    RangeFieldType, dimRange >(type, componentDescription));
+          _components.emplace_back(Functions< DomainFieldType, dimDomain,
+                                              RangeFieldType, dimRange >::create(type, componentDescription));
         } else {
           // since it does not have a type, treat it as an expression function
           if (!(componentDescription.hasKey("expression") || componentDescription.hasSub("expression")))
@@ -170,8 +170,8 @@ public:
             componentDescription["name"] = _name;
           if (!componentDescription.hasKey("order"))
             componentDescription["order"] = DSC::toString(_order);
-          _components.emplace_back(createFunction<  DomainFieldType, dimDomain,
-                                                    RangeFieldType, dimRange >("function.expression",
+          _components.emplace_back(Functions< DomainFieldType, dimDomain,
+                                              RangeFieldType, dimRange >::create("function.expression",
                                                                                componentDescription));
         } // if (componentDescription.hasKey("type"))
       } else if (description.hasKey(key)) {
@@ -181,8 +181,8 @@ public:
         componentDescription["order"] = DSC::toString(_order);
         componentDescription["variable"] = "x";
         componentDescription["expression"] = description.get< std::string >(key);
-        _components.emplace_back(createFunction<  DomainFieldType, dimDomain,
-                                                  RangeFieldType, dimRange >("function.expression",
+        _components.emplace_back(Functions< DomainFieldType, dimDomain,
+                                            RangeFieldType, dimRange >::create("function.expression",
                                                                              componentDescription));
       } else {
         // stop the search
