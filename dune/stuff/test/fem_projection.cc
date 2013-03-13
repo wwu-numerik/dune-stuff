@@ -22,8 +22,8 @@
 #include <dune/stuff/function/affineparametric/coefficient.hh>
 
 template <int dimDomain, int rangeDim>
-struct CustomFunction : public DSFu::Interface< double, dimDomain, double, rangeDim > {
-  typedef DSFu::Interface< double, dimDomain, double, rangeDim > Base;
+struct CustomFunction : public Dune::Stuff::FunctionInterface< double, dimDomain, double, rangeDim > {
+  typedef Dune::Stuff::FunctionInterface< double, dimDomain, double, rangeDim > Base;
   using Base::evaluate;
 
   template <class IntersectionType>
@@ -34,8 +34,8 @@ struct CustomFunction : public DSFu::Interface< double, dimDomain, double, range
 };
 
 template <int dimDomain, int rangeDim>
-struct CustomFunctionT : public DSFu::Interface< double, dimDomain, double, rangeDim > {
-  typedef DSFu::Interface< double, dimDomain, double, rangeDim > Base;
+struct CustomFunctionT : public Dune::Stuff::FunctionInterface< double, dimDomain, double, rangeDim > {
+  typedef Dune::Stuff::FunctionInterface< double, dimDomain, double, rangeDim > Base;
   using Base::evaluate;
 
   void evaluate( const double time, const typename Base::DomainType& /*arg*/,typename  Base::RangeType& ret ) const
@@ -55,9 +55,9 @@ public:
   static const int range_dim = RangeDim::value;
   static const int pol_order = 1;
 
-  typedef DSG::Provider::GenericCube<Dune::SGrid< GridDim::value, GridDim::value >> GridProviderType;
+  typedef Dune::Stuff::GridProviderCube< Dune::SGrid< GridDim::value, GridDim::value > > GridProviderType;
   typedef typename GridProviderType::GridType GridType;
-  typedef DSFu::Expression< double, GridType::dimension, double, range_dim > FunctionType;
+  typedef Dune::Stuff::FunctionExpression< double, GridType::dimension, double, range_dim > FunctionType;
   typedef typename FunctionType::FunctionSpaceType FunctionSpaceType;
   typedef Dune::AdaptiveLeafGridPart< GridType > GridPartType;
   typedef Dune::DiscontinuousGalerkinSpace< FunctionSpaceType,
