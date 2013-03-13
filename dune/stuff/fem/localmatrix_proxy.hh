@@ -4,6 +4,7 @@
 #include <vector>
 #include <assert.h>
 #include <dune/common/float_cmp.hh>
+#include <dune/stuff/common/debug.hh>
 
 namespace Dune {
 namespace Stuff {
