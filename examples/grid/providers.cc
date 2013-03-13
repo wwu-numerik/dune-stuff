@@ -90,8 +90,8 @@ int main(int argc, char** argv)
     info << "setting up grid... ";
     typedef Dune::Stuff::GridProviderInterface<> GridProviderType;
     const GridProviderType* gridProvider =
-        Dune::Stuff::createGridProvider<>(paramTree.get(id + ".gridprovider", "gridprovider.cube"),
-                                              paramTree);
+        Dune::Stuff::GridProviders<>::create(paramTree.get(id + ".gridprovider", "gridprovider.cube"),
+                                             paramTree);
     typedef GridProviderType::GridType GridType;
     const Dune::shared_ptr< const GridType > grid = gridProvider->grid();
     info << "  done (has " << grid->size(0) << " elements, took " << timer.elapsed() << " sec)" << std::endl;
