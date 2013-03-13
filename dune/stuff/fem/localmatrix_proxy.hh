@@ -65,6 +65,7 @@ public:
 
   unsigned int rows() const { return rows_; }
   unsigned int cols() const { return cols_; }
+  unsigned int columns() const { return cols_; }
 };
 
 //! a small proxy object that automagically prevents near-0 value fill-in
