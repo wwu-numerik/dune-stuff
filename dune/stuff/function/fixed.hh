@@ -1,25 +1,26 @@
 #ifndef DUNE_STUFF_FUNCTION_FIXED_HH
 #define DUNE_STUFF_FUNCTION_FIXED_HH
 
-#include <dune/common/shared_ptr.hh>
+#include <memory>
+
 #include <dune/common/exceptions.hh>
 
-#include "interface.hh"
 #include <dune/stuff/common/parameter.hh>
 #include <dune/stuff/common/color.hh>
 
+#include "interface.hh"
+
 namespace Dune {
 namespace Stuff {
-namespace Function {
 
 
 template< class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDim >
-class Fixed
-  : public Interface< DomainFieldImp, domainDim, RangeFieldImp, rangeDim >
+class FunctionFixed
+  : public FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDim >
 {
 public:
-  typedef Fixed< DomainFieldImp, domainDim, RangeFieldImp, rangeDim >     ThisType;
-  typedef Interface< DomainFieldImp, domainDim, RangeFieldImp, rangeDim > BaseType;
+  typedef FunctionFixed< DomainFieldImp, domainDim, RangeFieldImp, rangeDim >     ThisType;
+  typedef FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDim > BaseType;
 
   typedef typename BaseType::DomainFieldType  DomainFieldType;
   static const int                            dimDomain = BaseType::dimDomain;
@@ -34,8 +35,8 @@ public:
     return BaseType::id() + ".fixed";
   }
 
-  Fixed(const Dune::shared_ptr< const BaseType > parametricFunction,
-        const ParamType fixedParameter = ParamType())
+  FunctionFixed(const std::shared_ptr< const BaseType > parametricFunction,
+                const ParamType fixedParameter = ParamType())
     : wrappedFunction_(parametricFunction)
     , fixedParam_(fixedParameter)
   {
@@ -67,12 +68,11 @@ public:
   }
 
 private:
-  const Dune::shared_ptr< const BaseType > wrappedFunction_;
+  const std::shared_ptr< const BaseType > wrappedFunction_;
   const ParamType fixedParam_;
-}; // class Fixed
+}; // class FunctionFixed
 
 
-} // namespace Function
 } // namespace Stuff
 } // namespace Dune
 
