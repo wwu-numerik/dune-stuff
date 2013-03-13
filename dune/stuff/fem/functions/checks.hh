@@ -7,6 +7,8 @@
  #include <config.h>
 #endif // ifdef HAVE_CMAKE_CONFIG
 
+#ifdef HAVE_DUNE_FEM
+
 #include <cmath>
 #include <fstream>
 #include <limits>
@@ -140,6 +142,7 @@ bool MatrixContainsNanOrInf(const MatrixType& matrix) {
 } // namespace Stuff {
 } // namespace Fem {
 
+#endif // HAVE_DUNE_FEM
 
 #endif // includeguard
 /** Copyright (c) 2012, Felix Albrecht, Rene Milk

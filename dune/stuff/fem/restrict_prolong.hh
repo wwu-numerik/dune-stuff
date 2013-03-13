@@ -7,6 +7,8 @@
  #include "config.h"
 #endif // ifdef HAVE_CMAKE_CONFIG
 
+#ifdef HAVE_DUNE_FEM
+
 #include <set>
 #include <dune/fem/space/common/restrictprolonginterface.hh>
 
@@ -93,6 +95,8 @@ protected:
 } // namespace Fem
 } // namespace Stuff
 } // namespace Dune
+
+#endif // HAVE_DUNE_FEM
 
 #endif // DUNE_STUFF_RESTRICT_PROLONG_HH
 

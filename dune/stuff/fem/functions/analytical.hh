@@ -7,6 +7,8 @@
  #include "config.h"
 #endif // ifdef HAVE_CMAKE_CONFIG
 
+#ifdef HAVE_DUNE_FEM
+
 #include "timefunction.hh"
 
 namespace Dune {
@@ -180,6 +182,8 @@ private:
     : public Dune::Stuff::Fem::ConstantFunction< T > \
   { classname() \
       : Dune::Stuff::Fem::ConstantFunction< T >(typename T::RangeType(constant)) {} };
+
+#endif // HAVE_DUNE_FEM
 
 #endif // DUNE_STUFF_ANALYTICAL_HH
 

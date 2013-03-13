@@ -7,6 +7,8 @@
  #include "config.h"
 #endif // ifdef HAVE_CMAKE_CONFIG
 
+#ifdef HAVE_DUNE_FEM
+
 #include <cassert>
 #include <sstream>
 #include <fstream>
@@ -377,6 +379,8 @@ public:
 } // namespace Stuff
 } // namespace Fem
 } // namespace Dune
+
+#endif // HAVE_DUNE_FEM
 
 #endif // ifndef DUNE_STUFF_FEMEOC_HH
 /** Copyright (c) 2012, Rene Milk

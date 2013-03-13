@@ -7,7 +7,7 @@
  #include "config.h"
 #endif // ifdef HAVE_CMAKE_CONFIG
 
-#if HAVE_DUNE_FEM
+#ifdef HAVE_DUNE_FEM
 
 #include <dune/fem/misc/l2norm.hh>
 #include <dune/fem/misc/h1norm.hh>

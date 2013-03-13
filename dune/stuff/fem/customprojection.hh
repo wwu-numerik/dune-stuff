@@ -7,7 +7,7 @@
  #include "config.h"
 #endif // ifdef HAVE_CMAKE_CONFIG
 
-#if HAVE_DUNE_FEM
+#ifdef HAVE_DUNE_FEM
 
 #include <dune/fem/quadrature/cachingquadrature.hh>
 #include <dune/fem/operator/common/operator.hh>

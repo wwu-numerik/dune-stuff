@@ -1,6 +1,8 @@
 #ifndef DUNE_STUFF_FUNCTIONADAPTER_HH
 #define DUNE_STUFF_FUNCTIONADAPTER_HH
 
+#ifdef HAVE_DUNE_FEM
+
 #include <dune/stuff/common/math.hh>
 #include <dune/stuff/fem/localmassmatrix.hh>
 
@@ -326,6 +328,8 @@ public:
 } // namespace Fem
 } // namespace Stuff
 } // namespace Dune
+
+#endif // HAVE_DUNE_FEM
 
 #endif // DUNE_STUFF_FUNCTIONADAPTER_HH
 /** Copyright (c) 2012, Rene Milk

@@ -5,7 +5,9 @@
  #include "cmake_config.h"
 #else
  #include "config.h"
-#endif // ifdef HAVE_CMAKE_CONFIG
+#endif
+
+#ifdef HAVE_DUNE_FEM
 
 #include <dune/stuff/fem/localmassmatrix.hh>
 #include <dune/stuff/common/ranges.hh>
@@ -120,6 +122,8 @@ double boundaryIntegral(const FunctionType& function, const DiscreteFunctionSpac
 } // end namespace Fem
 } // end namespace Stuff
 } // end namespace Dune
+
+#endif // HAVE_DUNE_FEM
 
 #endif // DUNE_STUFF_INTEGRALS_HH
 

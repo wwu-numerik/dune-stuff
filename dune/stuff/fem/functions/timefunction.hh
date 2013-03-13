@@ -7,7 +7,7 @@
  #include "config.h"
 #endif // ifdef HAVE_CMAKE_CONFIG
 
-#if HAVE_DUNE_FEM
+#ifdef HAVE_DUNE_FEM
 
 #include <dune/fem/function/common/function.hh>
 #include <dune/common/bartonnackmanifcheck.hh>

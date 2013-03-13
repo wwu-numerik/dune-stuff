@@ -24,11 +24,11 @@
 #include <dune/stuff/common/ranges.hh>
 #include <dune/stuff/aliases.hh>
 
-//#ifdef HAVE_DUNE_FEM
-#include <dune/fem/function/common/discretefunction.hh>
-#include <dune/fem/quadrature/cachingquadrature.hh>
-#include <dune/fem/space/dgspace/localdgmassmatrix.hh>
-//#endif
+#ifdef HAVE_DUNE_FEM
+  #include <dune/fem/function/common/discretefunction.hh>
+  #include <dune/fem/quadrature/cachingquadrature.hh>
+  #include <dune/fem/space/dgspace/localdgmassmatrix.hh>
+#endif
 
 #if HAVE_DUNE_DETAILED_DISCRETIZATIONS
   #include <dune/detailed/discretizations/discretefunction/default.hh>
@@ -181,9 +181,10 @@ private:
 };
 
 template <template <class> class SearchStrategy = InlevelSearchStrategy>
-class HeterogenousProjection {
-
+class HeterogenousProjection
+{
 public:
+#ifdef HAVE_DUNE_FEM
   template < class SourceDFImp, class TargetDFImp >
   static void project(const Dune::DiscreteFunctionInterface<SourceDFImp>& source,
                       Dune::DiscreteFunctionInterface<TargetDFImp>& target)
@@ -240,6 +241,7 @@ public:
       }
     }
   } // ... project(...)
+#endif // HAVE_DUNE_FEM
 
 #if HAVE_DUNE_DETAILED_DISCRETIZATIONS
   template< class SourceMsGridType,
@@ -302,7 +304,7 @@ public:
     }
   } // ... project(...)
 #endif // HAVE_DUNE_DETAILED_DISCRETIZATIONS
-};
+}; // class HeterogenousProjection
 
 } // namespace Stuff
 } // namespace Dune

@@ -1,7 +1,7 @@
 #ifndef DUNE_STUFF_MATRIX_OBJECT_HH
 #define DUNE_STUFF_MATRIX_OBJECT_HH
 
-#if HAVE_FEM && HAVE_EIGEN
+#if defined HAVE_DUNE_FEM && HAVE_EIGEN
 
 #include <dune/fem/function/adaptivefunction/adaptivefunction.hh>
 #include <dune/fem/solver/oemsolver.hh>
@@ -455,6 +455,6 @@ public:
 } // namespace Stuff
 } // namespace Dune
 
-#endif //HAVE_FEM && HAVE_EIGEN
+#endif // defined HAVE_DUNE_FEM && HAVE_EIGEN
 
 #endif // DUNE_STUFF_MATRIX_OBJECT_HH
