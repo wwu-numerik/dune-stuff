@@ -27,7 +27,7 @@ namespace Dirichlet {
 #if HAVE_DUNE_DETAILED_DISCRETIZATIONS
 template< class FunctionType,
           class DiscreteFunctionSpaceType, class VectorType >
-void project(const Dune::Stuff::Grid::BoundaryInfo::Interface< typename DiscreteFunctionSpaceType::GridViewType >& boundaryInfo,
+void project(const Dune::Stuff::GridboundaryInterface< typename DiscreteFunctionSpaceType::GridViewType >& boundaryInfo,
              const FunctionType& function,
              Dune::Detailed::Discretizations::DiscreteFunction::Default< DiscreteFunctionSpaceType, VectorType >& discreteFunction)
 {
