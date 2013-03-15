@@ -108,6 +108,19 @@ public:
     reportAsSub(stream, prefix, "");
   } // void report(std::ostream& stream = std::cout, const std::string& prefix = "") const
 
+  void reportNicely(std::ostream& stream = std::cout) const
+  {
+    if (valueKeys.size() == 0 || subKeys.size() == 0) {
+      const std::string commonPrefix = findCommonPrefix(*this);
+      if (!commonPrefix.empty()) {
+        stream << "[" << commonPrefix << "]" << std::endl;
+        const ExtendedParameterTree& commonSub = sub(commonPrefix);
+        reportFlatly(commonSub, "", stream);
+      }
+    } else
+      reportAsSub(stream, "", "");
+  }
+
   std::string reportString(const std::string& prefix = "") const
   {
     std::stringstream stream;
@@ -328,10 +341,40 @@ private:
     for (auto pair : subs) {
       ExtendedParameterTree subTree(pair.second);
       if (subTree.getValueKeys().size())
-        stream << prefix << "[ " << subPath << pair.first << " ]" << std::endl;
+        stream << prefix << "[" << subPath << pair.first << "]" << std::endl;
       subTree.reportAsSub(stream, prefix, subPath + pair.first + ".");
     }
   } // void report(std::ostream& stream = std::cout, const std::string& prefix = "") const
+
+  std::string findCommonPrefix(const BaseType& sub, const std::string previousPrefix = "") const
+  {
+    const auto& valuekeys = sub.getValueKeys();
+    const auto& subkeys = sub.getSubKeys();
+    if (valuekeys.size() == 0 && subkeys.size() == 1) {
+      // we append the subs name
+      if (previousPrefix.empty())
+        return findCommonPrefix(sub.sub(subkeys[0]), subkeys[0]);
+      else
+        return findCommonPrefix(sub.sub(subkeys[0]), previousPrefix + "." + subkeys[0]);
+    } else {
+      // end of the recursion, return the previous prefix
+      return previousPrefix;
+    }
+  }
+
+  void reportFlatly(const BaseType& sub, const std::string& prefix = "", std::ostream& stream = std::cout) const
+  {
+    // report all the keys
+    for (auto key : sub.getValueKeys())
+      stream << prefix << key << " = " << sub[key] << std::endl;
+    // report all the subs
+    for (auto subkey : sub.getSubKeys()) {
+      if (prefix.empty())
+        reportFlatly(sub.sub(subkey), subkey + ".", stream);
+      else
+        reportFlatly(sub.sub(subkey), prefix + subkey+ "." , stream);
+    }
+  }
 }; // class ExtendedParameterTree
 
 } // namespace Common
