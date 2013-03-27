@@ -40,6 +40,9 @@ namespace Stuff {
 
 /**
  * \brief   StarCD grid provider
+ *
+ *          Implemented for dimensions 1, 2, and 3.
+ *
  */
 #if defined HAVE_CONFIG_H || defined HAVE_CMAKE_CONFIG
 template< class GridImp = Dune::GridSelector::GridType >
@@ -156,11 +159,13 @@ public:
           {
             cubeVertices[k] = items2[k+1] - 1;
           }
-          std::swap(cubeVertices[2], cubeVertices[3]);
-          std::swap(cubeVertices[6], cubeVertices[7]);
+          if(dim>1)
+            std::swap(cubeVertices[2], cubeVertices[3]);
+          if(dim==3)
+            std::swap(cubeVertices[6], cubeVertices[7]);
           factory.insertElement(Dune::GeometryType(Dune::GeometryType::cube,dim), cubeVertices);
         }
-        else if (items2.size() == numberOfVerticesPrism + 1) //prism
+        else if ((items2.size() == numberOfVerticesPrism + 1) && (dim==3)) //prism
         {
           numberOfPrisms++;
           for (unsigned int k = 0; k < numberOfVerticesPrism; k++)

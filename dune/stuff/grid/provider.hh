@@ -17,8 +17,10 @@
 
 #include "provider/interface.hh"
 #include "provider/cube.hh"
-#ifdef HAVE_UNSTRUCTURED_GRIDFACTORY
+#if HAVE_ALUGRID || HAVE_ALBERTA || HAVE_UG
+#if defined ALUGRID_CONFORM || defined ALUGRID_CUBE || defined ALUGRID_SIMPLEX || defined ALBERTAGRID || defined UGGRID
   #include "provider/gmsh.hh"
+#endif
 #endif
 #include "provider/starcd.hh"
 
@@ -38,8 +40,10 @@ public:
   {
     return {
         "gridprovider.cube"
-#ifdef HAVE_UNSTRUCTURED_GRIDFACTORY
+#if HAVE_ALUGRID || HAVE_ALBERTA || HAVE_UG
+#if defined ALUGRID_CONFORM || defined ALUGRID_CUBE || defined ALUGRID_SIMPLEX || defined ALBERTAGRID || defined UGGRID
       , "gridprovider.gmsh"
+#endif
 #endif
       , "gridprovider.starcd"
     };
@@ -49,9 +53,11 @@ public:
   {
     if (type == "gridprovider.cube") {
       return GridProviderCube< GridType >::createSampleDescription(subname);
-#ifdef HAVE_UNSTRUCTURED_GRIDFACTORY
+#if HAVE_ALUGRID || HAVE_ALBERTA || HAVE_UG
+#if defined ALUGRID_CONFORM || defined ALUGRID_CUBE || defined ALUGRID_SIMPLEX || defined ALBERTAGRID || defined UGGRID
     } else if (type == "gridprovider.gmsh") {
       return GridProviderGmsh< GridType >::createSampleDescription(subname);
+#endif
 #endif
     } else if (type == "gridprovider.starcd") {
       return GridProviderStarCD< GridType >::createSampleDescription(subname);
@@ -65,9 +71,11 @@ static GridProviderInterface< GridType >* create(const std::string& type = avail
   {
     if (type == "gridprovider.cube")
       return GridProviderCube< GridType >::create(description);
-#ifdef HAVE_UNSTRUCTURED_GRIDFACTORY
+#if HAVE_ALUGRID || HAVE_ALBERTA || HAVE_UG
+#if defined ALUGRID_CONFORM || defined ALUGRID_CUBE || defined ALUGRID_SIMPLEX || defined ALBERTAGRID || defined UGGRID
     else if (type == "gridprovider.gmsh")
       return GridProviderGmsh< GridType >::create(description);
+#endif
 #endif
     else if (type == "gridprovider.starcd")
       return GridProviderStarCD< GridType >::create(description);
