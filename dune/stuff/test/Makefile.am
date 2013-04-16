@@ -36,7 +36,7 @@ SOURCES = $(common_parameter_validation_SOURCES) $(common_logger_SOURCES) \
 	$(grid_provider_SOURCES) $(grid_information_SOURCES) $(grid_output_pgf_SOURCES) \
 	$(fem_error_SOURCES) $(fem_projection_SOURCES) 
 
-LDFLAGS = $(BOOST_LDFLAGS) -lboost_timer -lboost_chrono -lboost_filesystem -lboost_system -lpthread
+LDFLAGS = $(BOOST_LDFLAGS) $(BOOST_FILESYSTEM_LIB) $(BOOST_SYSTEM_LIB) $(BOOST_TIMER_LIB) $(BOOST_CHRONO_LIB) -lpthread
 CXXFLAGS = $(BOOST_CPPFLAGS) $(DUNE_CPPFLAGS) -I./gtest $(GRID_FLAGS)
 CPPFLAGS = $(BOOST_CPPFLAGS) $(DUNE_CPPFLAGS)
 

@@ -34,7 +34,7 @@ struct RNG {
       , distribution(d)
   {}
 
-  T operator()() {
+  inline T operator()() {
       return distribution(generator);
   }
 };
@@ -64,7 +64,7 @@ public:
         , length(l)
     {}
 
-    std::string operator ()() {
+    inline std::string operator ()() {
         std::string ret(length,'\0');
         std::generate(std::begin(ret), std::end(ret), [=] () { return alphanums[distribution(generator)]; });
         return ret;

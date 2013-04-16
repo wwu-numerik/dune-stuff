@@ -54,120 +54,11 @@ class FemEoc
   double prevh_;
   bool initial_;
   std::vector< int > pos_;
-  FemEoc()
-    : outputFile_()
-      , level_(0)
-      , prevError_(0)
-      , error_(0)
-      , description_(0)
-      , prevh_(0)
-      , initial_(true)
-      , pos_(0)
-  {}
 
-  ~FemEoc() {
-    outputFile_.close();
-  }
-
+  FemEoc();
   void init(const std::string& path,
-            const std::string& name, const std::string& descript, const std::string& inputFile) {
-    if ( !Dune::directoryExists(path) && !Dune::createDirectory(path) )
-      DUNE_THROW( Dune::IOError, (boost::format("couldn't create directory") % path).str() );
-    init(path + "/" + name, descript, path + "/" + inputFile);
-  }
-
-  void init(const std::string& name, const std::string& descript, const std::string& inputFile) {
-    if ( !outputFile_.is_open() )
-    {
-      std::ofstream main( (name + "_main.tex").c_str() );
-      std::ifstream input( inputFile.c_str() );
-      if (!main)
-      {
-        std::cerr << "Could not open file : "
-                  << (name + "_main.tex").c_str()
-                  << " ... ABORTING" << std::endl;
-        abort();
-      }
-
-      std::ostringstream filestreamBody;
-      filestreamBody << name << "_body.tex";
-      outputFile_.open(filestreamBody.str().c_str(), std::ios::out);
-      std::string bodyfile = filestreamBody.str().substr(filestreamBody.str().find(
-                                                           '/') != std::string::npos ? filestreamBody.str().find(
-                                                           '/') + 1 : 0);
-
-      if (!input)
-      {
-        std::cerr << "Could not open file : "
-                  << inputFile
-                  << " ... using default template" << std::endl;
-        main << "\\documentclass[10pt,english]{article}\n"
-             << "\\usepackage{fontenc}\n"
-             << "\\usepackage{vmargin}\n"
-             << "\\usepackage{longtable}\n"
-             << "\\setpapersize[landscape]{A4}\n"
-             << "\\usepackage[latin1]{inputenc}\n"
-             << "\\usepackage{setspace}\n"
-             << "\\onehalfspacing\n"
-             << "\\makeatletter\n"
-             << "\\providecommand{\\boldsymbol}[1]{\\mbox{\\boldmath $#1$}}\n"
-             << "\\providecommand{\\tabularnewline}{\\\\}\n"
-             << "\\usepackage{babel}\n"
-             << "\\makeatother\n"
-             << "\\begin{document}\n"
-             << "\\begin{center}\\large\n"
-             << descript
-             << "\n\\end{center}\n\n"
-             << "\\input{"
-             << bodyfile
-             << "}\n"
-             << "\\end{document}\n" << std::endl;
-      } else {
-        std::stringstream inputTex;
-        while ( input.good() )
-        {
-          inputTex << (char) input.get();
-        }
-        std::string input_str = inputTex.str();
-        int pos = input_str.find("DESCRIPTION", 0);
-        input_str.replace(pos, 11, "");
-        input_str.insert(pos, descript);
-
-        pos = input_str.find("BODYFILE", 0);
-        input_str.replace(pos, 8, "");
-        input_str.insert(pos, bodyfile);
-
-        main << input_str;
-      }
-      main.close();
-    } else {
-      DUNE_THROW(Dune::InvalidStateException, "");
-    }
-  } // init
-
-  template< class StrVectorType >
-  size_t addentry(const StrVectorType& descript, size_t size) {
-    if (!initial_)
-      DUNE_THROW(Dune::InvalidStateException, "");
-    pos_.push_back( error_.size() );
-    for (size_t i = 0; i < size; ++i)
-    {
-      error_.push_back(0);
-      prevError_.push_back(0);
-      description_.push_back(descript[i]);
-    }
-    return pos_.size() - 1;
-  } // addentry
-
-  size_t addentry(const std::string& descript) {
-    if (!initial_)
-      DUNE_THROW(Dune::InvalidStateException, "");
-    pos_.push_back( error_.size() );
-    error_.push_back(0);
-    prevError_.push_back(0);
-    description_.push_back(descript);
-    return pos_.size() - 1;
-  } // addentry
+            const std::string& name, const std::string& descript, const std::string& inputFile);
+  void init(const std::string& name, const std::string& descript, const std::string& inputFile);
 
   template< class VectorType >
   void seterrors(size_t id, const VectorType& err, size_t size) {
@@ -185,59 +76,8 @@ class FemEoc
       error_[pos + i] = err[i];
   }
 
-  void seterrors(size_t id, const double& err) {
-    int pos = pos_[id];
-
-    error_[pos] = err;
-  }
-
-  void writeerr(double h, double size, double time, int counter) {
-    if (initial_)
-    {
-      outputFile_ << "\\begin{tabular}{|c|c|c|c|c|";
-      for (unsigned int i = 0; i < error_.size(); i++)
-      {
-        outputFile_ << "|cc|";
-      }
-      outputFile_ << "}\n"
-                  << "\\hline \n"
-                  << "level & h & size & CPU-time & counter";
-      for (unsigned int i = 0; i < error_.size(); i++)
-      {
-        outputFile_ << " & " << description_[i]
-                    << " & EOC ";
-      }
-      outputFile_ << "\n \\tabularnewline\n"
-                  << "\\hline\n"
-                  << "\\hline\n";
-    }
-    outputFile_ << "\\hline \n"
-                << level_ << " & "
-                << h << " & "
-                << size << " & "
-                << time << " & "
-                << counter;
-    for (unsigned int i = 0; i < error_.size(); ++i)
-    {
-      outputFile_ << " & " << error_[i] << " & ";
-      if (initial_)
-      {
-        outputFile_ << " --- ";
-      } else {
-        double factor = prevh_ / h;
-        outputFile_ << log(prevError_[i] / error_[i]) / log(factor);
-      }
-      prevError_[i] = error_[i];
-      error_[i] = -1;  // uninitialized
-    }
-    outputFile_ << "\n"
-                << "\\tabularnewline\n"
-                << "\\hline \n";
-    outputFile_.flush();
-    prevh_ = h;
-    level_++;
-    initial_ = false;
-  } // writeerr
+  void seterrors(size_t id, const double& err);
+  void writeerr(double h, double size, double time, int counter);
 
   template< class Writer >
   void writeerr(Writer& writer, bool last) {
@@ -265,10 +105,27 @@ class FemEoc
     initial_ = false;
   } // writeerr
 
+  template< class StrVectorType >
+  size_t addentry(const StrVectorType& descript, size_t size) {
+    if (!initial_)
+      DUNE_THROW(Dune::InvalidStateException, "");
+    pos_.push_back( error_.size() );
+    for (size_t i = 0; i < size; ++i)
+    {
+      error_.push_back(0);
+      prevError_.push_back(0);
+      description_.push_back(descript[i]);
+    }
+    return pos_.size() - 1;
+  } // addentry
+
+  size_t addentry(const std::string& descript);
+
 public:
+  ~FemEoc();
+
   static FemEoc& instance() {
     static FemEoc instance_;
-
     return instance_;
   }
 

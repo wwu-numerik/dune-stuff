@@ -29,14 +29,11 @@ namespace MatrixPatterns {
    */
 class SparsityPattern
 {
-public:
-  typedef SparsityPattern
-    ThisType;
-
   //! Type for saving the sparsity pattern.
   typedef std::vector< std::set< unsigned int > >
     SparsityPatternContainerType;
 
+public:
   //! Type for iterating through a row.
   typedef std::set< unsigned int >::const_iterator
     NonZeroColIterator;
@@ -57,7 +54,7 @@ public:
      * @param row The row number for the nonzero entry.
      * @param col The column number for the nonzero entry.
      */
-  void insert(unsigned int row, unsigned int col) {
+  inline void insert(unsigned int row, unsigned int col) {
     ASSERT_LT( row, sparsityPattern_.size() );
     sparsityPattern_[row].insert(col);
   }
@@ -68,7 +65,7 @@ public:
      * @param row The row number for the nonzero entry.
      * @param col The column number for the nonzero entry.
      */
-  void erase(unsigned int row, unsigned int col) {
+  inline void erase(unsigned int row, unsigned int col) {
     ASSERT_LT( row, sparsityPattern_.size() );
     sparsityPattern_[row].erase(col);
   }
@@ -79,7 +76,7 @@ public:
      * @param row The row number.
      * @param col The column number.
      */
-  bool isZero(unsigned int row, unsigned int col) {
+  inline bool isZero(unsigned int row, unsigned int col) {
     ASSERT_LT( row, sparsityPattern_.size() );
     return sparsityPattern_[row].count(col) == 0;
   }
@@ -89,7 +86,7 @@ public:
      *
      * @param row The row number in the matrix, where we want to count the nonzero entries.
      */
-  unsigned int countNonZeros(unsigned int row) {
+  inline unsigned int countNonZeros(unsigned int row) {
     ASSERT_LT( row, sparsityPattern_.size() );
     return sparsityPattern_[row].size();
   }
@@ -97,14 +94,14 @@ public:
   /**
      * @brief Returns the number of rows (counted in blocks).
      */
-  unsigned int size() const {
+  inline unsigned int size() const {
     return sizeN_;
   }
 
   /**
      * @brief Returns the number of rows (counted in blocks).
      */
-  unsigned int N() const {
+  inline unsigned int N() const {
     return sizeN_;
   }
 
@@ -113,7 +110,7 @@ public:
      *
      *  @param row The row number.
      */
-  NonZeroColIterator begin(unsigned int row) {
+  inline NonZeroColIterator begin(unsigned int row) {
     assert( row < sparsityPattern_.size() );
     return sparsityPattern_[row].begin();
   }
@@ -123,7 +120,7 @@ public:
      *
      *  @param row The row number.
      */
-  NonZeroColIterator end(unsigned int row) {
+  inline NonZeroColIterator end(unsigned int row) {
     assert( row < sparsityPattern_.size() );
     return sparsityPattern_[row].end();
   }

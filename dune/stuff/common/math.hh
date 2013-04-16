@@ -116,7 +116,7 @@ template < class T >
 const T Epsilon<T,true>::value = 1;
 template < class T >
 const T Epsilon<T,false >::value = std::numeric_limits<T>::epsilon();
-const std::string Epsilon<std::string,false >::value = "a";
+
 
 /**
    *  \brief  dyadic product
@@ -202,7 +202,7 @@ T clamp(const T var, const T min, const T max) {
 }
 
 //! no-branch sign function
-long sign(long x) { return long(x != 0) | (long(x >= 0) - 1);  }
+inline long sign(long x) { return long(x != 0) | (long(x >= 0) - 1);  }
 
 } // namespace Common
 } // namespace Stuff

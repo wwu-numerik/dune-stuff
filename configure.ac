@@ -18,6 +18,7 @@ AC_SUBST([AM_LDFLAGS], '$(DUNE_LDFLAGS) $(DUNE_LIBS)')
 AC_SUBST([LOCAL_LIBS], '')
 
 AC_CONFIG_FILES([Makefile
+	lib/Makefile
 	dune/Makefile
 	dune/stuff/Makefile
 	dune/stuff/common/Makefile

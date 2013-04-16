@@ -52,7 +52,7 @@ struct PgfCoordWrapper : FieldVector<double,2>{
 class PgfEntityFunctor {
 public:
   PgfEntityFunctor( std::ostream& output )
-    :file_(output)
+    : file_(output)
   {}
 
   template <class Entity>
@@ -97,9 +97,9 @@ public:
   PgfEntityFunctorIntersections(std::ostream& file,
                                 const std::string color = "black",
                                 const bool printEntityIndex = false)
-    :file_(file),
-      color_(color),
-      printEntityIndex_(printEntityIndex)
+    : file_(file)
+      , color_(color)
+      , printEntityIndex_(printEntityIndex)
   {}
 
   template < class EntityType >
