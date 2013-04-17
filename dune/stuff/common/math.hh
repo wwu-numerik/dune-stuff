@@ -1,5 +1,5 @@
-#ifndef DUNE_STUFF_MATH_HH
-#define DUNE_STUFF_MATH_HH
+#ifndef DUNE_STUFF_COMMON_MATH_HH
+#define DUNE_STUFF_COMMON_MATH_HH
 
 #ifdef HAVE_CMAKE_CONFIG
  #include "cmake_config.h"
@@ -208,7 +208,7 @@ inline long sign(long x) { return long(x != 0) | (long(x >= 0) - 1);  }
 } // namespace Stuff
 } // namespace Dune
 
-#endif // DUNE_STUFF_MATH_HH
+#endif // DUNE_STUFF_COMMON_MATH_HH
 
 /** Copyright (c) 2012, Rene Milk
    * All rights reserved.
