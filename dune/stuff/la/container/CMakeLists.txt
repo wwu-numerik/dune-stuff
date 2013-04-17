@@ -1,3 +1,5 @@
+#if(EIGEN_FOUND)
+
 find_package(PythonLibs)
 find_package(PythonInterp)
 include(CheckPythonModule)
@@ -8,8 +10,8 @@ if( PYTHONLIBS_FOUND AND PYTHONINTERP_FOUND AND python_pybindgen_FOUND AND pytho
     message( STATUS "Python bindings will be created" )
 
     set(pythonTarget           dunecontainermanager)
-    set(pythonWrapperGenerator "${CMAKE_CURRENT_SOURCE_DIR}/binding_generator.py")
-    set(pythonWrapperTest      "${CMAKE_CURRENT_SOURCE_DIR}/binding_test.py")
+    set(pythonWrapperGenerator "${CMAKE_CURRENT_SOURCE_DIR}/eigenmanager_bindings_generator.py")
+    set(pythonWrapperTest      "${CMAKE_CURRENT_SOURCE_DIR}/eigenmanager_bindings_test.py")
     set(pythonWrapperCpp       "${CMAKE_CURRENT_BINARY_DIR}/dunecontainermanager.cc")
     set_source_files_properties( "${pythonWrapperCpp}" PROPERTIES GENERATED TRUE)
 
@@ -18,7 +20,7 @@ if( PYTHONLIBS_FOUND AND PYTHONINTERP_FOUND AND python_pybindgen_FOUND AND pytho
             "${pythonWrapperCpp}"
         COMMAND
             "${PYTHON_EXECUTABLE}" "${pythonWrapperGenerator}"
-            "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_CURRENT_BINARY_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}" "${DUNE_MODULE_DIRS}"
+            "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_CURRENT_BINARY_DIR}" "${CMAKE_SOURCE_DIR};${DUNE_MODULE_DIRS}"
         DEPENDS
             "${pythonWrapperGenerator}"
         WORKING_DIRECTORY
@@ -35,11 +37,11 @@ if( PYTHONLIBS_FOUND AND PYTHONINTERP_FOUND AND python_pybindgen_FOUND AND pytho
             "${CMAKE_CURRENT_BINARY_DIR}"
     )
 
-    add_library( dunestufflacontainermanager STATIC "manager.cc" )
+    add_library( dunestuff-eigencontainermanager STATIC "eigenmanager.cc" )
     include_directories( ${PYTHON_INCLUDE_DIRS} "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}")
     add_library( ${pythonTarget} MODULE "${pythonWrapperCpp}" )
     set_target_properties( ${pythonTarget} PROPERTIES PREFIX "" )
-    target_link_libraries( ${pythonTarget} dunestufflacontainermanager ${COMMON_LIBS} )
+    target_link_libraries( ${pythonTarget} dunestuff-eigencontainermanager ${COMMON_LIBS} )
 
 else  (PYTHONLIBS_FOUND AND PYTHONINTERP_FOUND AND python_pybindgen_FOUND AND python_pygccxml_FOUND)
     message(STATUS "Python bindings will NOT be created")
@@ -56,3 +58,5 @@ else  (PYTHONLIBS_FOUND AND PYTHONINTERP_FOUND AND python_pybindgen_FOUND AND py
         message( STATUS "\t because pygccxml was not found" )
     endif( NOT python_pygccxml_FOUND )
 endif( PYTHONLIBS_FOUND AND PYTHONINTERP_FOUND AND python_pybindgen_FOUND AND python_pygccxml_FOUND )
+
+#endif(EIGEN_FOUND)
