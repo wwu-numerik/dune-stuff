@@ -13,7 +13,8 @@ libstuff_la_SOURCES = \
 	common/parameter/configcontainer.cc \
 	common/parameter/tree.cc \
 	common/signals.cc \
-	fem/femeoc.cc 
+	fem/femeoc.cc \
+  function/expression/mathexpr.cc
 	
 libstuff_la_LIBADD = common $(BOOST_FILESYSTEM_LIB) $(BOOST_SYSTEM_LIB) \
 	$(BOOST_TIMER_LIB) $(BOOST_CHRONO_LIB) 
