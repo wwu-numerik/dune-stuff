@@ -1,11 +1,7 @@
 ﻿#ifndef DUNE_STUFF_LA_CONTAINER_AFFINEPARAMETRIC_HH
 #define DUNE_STUFF_LA_CONTAINER_AFFINEPARAMETRIC_HH
 
-#ifdef HAVE_CMAKE_CONFIG
-  #include "cmake_config.h"
-#elif defined (HAVE_CONFIG_H)
-  #include <config.h>
-#endif // ifdef HAVE_CMAKE_CONFIG
+#include <memory>
 
 #include <dune/common/exceptions.hh>
 #include <dune/common/shared_ptr.hh>
@@ -34,8 +30,8 @@ public:
 
 public:
   AffineParametric(const size_t _paramSize,
-                   std::vector< Dune::shared_ptr< ComponentType > >& _components,
-                   const std::vector< Dune::shared_ptr< const CoefficientType > >& _coefficients)
+                   std::vector< std::shared_ptr< ComponentType > >& _components,
+                   const std::vector< std::shared_ptr< const CoefficientType > >& _coefficients)
     : paramSize_(_paramSize)
     , components_(_components)
     , coefficients_(_coefficients)
@@ -43,23 +39,23 @@ public:
     // sanity checks
     if (components_.size() < 1)
       DUNE_THROW(Dune::RangeError,
-                 "\nERROR: not enough '_components' given!");
+                 "\nERROR: not enough 'components' given!");
     if (!(coefficients_.size() == components_.size()
           || coefficients_.size() == (components_.size() - 1)))
       DUNE_THROW(Dune::RangeError,
-                 "\nERROR: wrong number of 'coefficients_' given!");
+                 "\nERROR: wrong number of 'coefficients' given!");
     if (coefficients_.size() == 0) {
       if (paramSize_ > 0)
         DUNE_THROW(Dune::RangeError,
-                   "\nERROR: '_paramSize' has to be zero!");
+                   "\nERROR: 'paramSize' has to be zero!");
     } else {
       if (paramSize_ < 1)
         DUNE_THROW(Dune::RangeError,
-                   "\nERROR: '_paramSize' has to be positive!");
+                   "\nERROR: 'paramSize' has to be positive!");
     }
   } // AffineParametric(...)
 
-  AffineParametric(Dune::shared_ptr< ComponentType > _component)
+  AffineParametric(std::shared_ptr< ComponentType > _component)
     : paramSize_(0)
   {
     components_.push_back(_component);
@@ -80,12 +76,12 @@ public:
     return components_.size();
   }
 
-  std::vector< Dune::shared_ptr< ComponentType > > components()
+  std::vector< std::shared_ptr< ComponentType > > components()
   {
     return components_;
   }
 
-  const std::vector< Dune::shared_ptr< ComponentType > >& components() const
+  const std::vector< std::shared_ptr< ComponentType > >& components() const
   {
     return components_;
   }
@@ -95,15 +91,15 @@ public:
     return coefficients_.size();
   }
 
-  const std::vector< Dune::shared_ptr< const CoefficientType > >& coefficients() const
+  const std::vector< std::shared_ptr< const CoefficientType > >& coefficients() const
   {
     return coefficients_;
   }
 
-  Dune::shared_ptr< ComponentType > fix(const ParamType _mu = ParamType()) const
+  std::shared_ptr< ComponentType > fix(const ParamType _mu = ParamType()) const
   {
     // in any case, there exists at least one component
-    auto ret = Dune::make_shared< ComponentType >(*(components_[0]));
+    auto ret = std::make_shared< ComponentType >(*(components_[0]));
     // if we are parametric, we have to do some more
     if (parametric()) {
       assert(_mu.size() == paramSize());
@@ -118,12 +114,12 @@ public:
         ret->backend() += components_[qq]->backend();
     } // if (parametric())
     return ret;
-  } // Dune::shared_ptr< ComponentType > fix(const ParamType& mu) const
+  } // std::shared_ptr< ComponentType > fix(const ParamType& mu) const
 
 private:
   const size_t paramSize_;
-  std::vector< Dune::shared_ptr< ComponentType > > components_;
-  const std::vector< Dune::shared_ptr< const CoefficientType > > coefficients_;
+  std::vector< std::shared_ptr< ComponentType > > components_;
+  const std::vector< std::shared_ptr< const CoefficientType > > coefficients_;
 }; // class Separable
 #endif // HAVE_EIGEN
 
