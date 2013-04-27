@@ -24,7 +24,7 @@ public:
 
 template< class DomainFieldImp, int domainDim, class RangeFieldImp >
 class FunctionProduct<  DomainFieldImp, domainDim, RangeFieldImp, 1,
-                DomainFieldImp, domainDim, RangeFieldImp, 1 >
+                        DomainFieldImp, domainDim, RangeFieldImp, 1 >
   : public FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, 1 >
 {
 public:
