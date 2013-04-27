@@ -1,5 +1,7 @@
 #include "femeoc.hh"
 
+#ifdef HAVE_DUNE_FEM
+
 namespace Dune {
 namespace Stuff {
 namespace Fem {
@@ -164,3 +166,5 @@ void FemEoc::writeerr(double h, double size, double time, int counter) {
 } // namespace Stuff
 } // namespace Fem
 } // namespace Dune
+
+#endif // HAVE_DUNE_FEM
