@@ -69,7 +69,11 @@ void test_init(int argc, char** argv)
   testing::InitGoogleTest(&argc, argv);
   DSC_CONFIG.readOptions(argc, argv);
 #ifdef HAVE_DUNE_FEM
+#if DUNE_VERSION_NEWER(DUNE_FEM,1,4)
+  Dune::Fem::MPIManager::initialize(argc, argv);
+#else
   Dune::MPIManager::initialize(argc, argv);
+#endif
 #else
   Dune::MPIHelper::instance(argc, argv);
 #endif
