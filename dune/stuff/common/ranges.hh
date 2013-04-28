@@ -27,28 +27,44 @@ namespace Dune {
 namespace Fem {
 
 template < class DiscreteFunctionTraits >
+#if DUNE_VERSION_NEWER(DUNE_FEM,1,4)
+auto begin( const Dune::Fem::DiscreteFunctionInterface< DiscreteFunctionTraits >& func )
+#else
 auto begin( const Dune::DiscreteFunctionInterface< DiscreteFunctionTraits >& func )
+#endif
   -> decltype(func.dbegin())
 {
   return func.dbegin();
 }
 
 template < class DiscreteFunctionTraits >
+#if DUNE_VERSION_NEWER(DUNE_FEM,1,4)
+auto end( const Dune::Fem::DiscreteFunctionInterface< DiscreteFunctionTraits >& func )
+#else
 auto end( const Dune::DiscreteFunctionInterface< DiscreteFunctionTraits >& func )
+#endif
   -> decltype(func.dend())
 {
   return func.dend();
 }
 
 template < class DiscreteFunctionTraits >
+#if DUNE_VERSION_NEWER(DUNE_FEM,1,4)
+auto begin( Dune::Fem::DiscreteFunctionInterface< DiscreteFunctionTraits >& func )
+#else
 auto begin( Dune::DiscreteFunctionInterface< DiscreteFunctionTraits >& func )
+#endif
   -> decltype(func.dbegin())
 {
   return func.dbegin();
 }
 
 template < class DiscreteFunctionTraits >
+#if DUNE_VERSION_NEWER(DUNE_FEM,1,4)
+auto end( Dune::Fem::DiscreteFunctionInterface< DiscreteFunctionTraits >& func )
+#else
 auto end( Dune::DiscreteFunctionInterface< DiscreteFunctionTraits >& func )
+#endif
   -> decltype(func.dend())
 {
   return func.dend();
@@ -160,6 +176,17 @@ lagrangePointSetRange(const DiscreteFunctionspaceType& space, const EntityType& 
   return LagrangePointSetRange<DiscreteFunctionspaceType,codim>(space, entity, subEntity);
 }
 
+#if DUNE_VERSION_NEWER(DUNE_FEM,1,4)
+template < class GridPartTraits >
+IntersectionRange<Dune::Fem::GridPartInterface<GridPartTraits>,
+                  typename Dune::Fem::GridPartInterface<GridPartTraits>::template Codim< 0 >::EntityType>
+intersectionRange(const Dune::Fem::GridPartInterface<GridPartTraits>& gridpart,
+                  const typename Dune::Fem::GridPartInterface<GridPartTraits>::template Codim< 0 >::EntityType& entity)
+{
+  return IntersectionRange<Dune::Fem::GridPartInterface<GridPartTraits>,
+          typename Dune::Fem::GridPartInterface<GridPartTraits>::template Codim< 0 >::EntityType>(gridpart, entity);
+}
+#else
 template < class GridPartTraits >
 IntersectionRange<Dune::GridPartInterface<GridPartTraits>,
                   typename Dune::GridPartInterface<GridPartTraits>::template Codim< 0 >::EntityType>
@@ -169,6 +196,7 @@ intersectionRange(const Dune::GridPartInterface<GridPartTraits>& gridpart,
   return IntersectionRange<Dune::GridPartInterface<GridPartTraits>,
           typename Dune::GridPartInterface<GridPartTraits>::template Codim< 0 >::EntityType>(gridpart, entity);
 }
+#endif
 #endif //HAVE_DUNE_FEM
 
 

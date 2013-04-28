@@ -23,7 +23,11 @@ FemEoc::~FemEoc() {
 
 void FemEoc::init(const std::string& path,
           const std::string& name, const std::string& descript, const std::string& inputFile) {
+#if DUNE_VERSION_NEWER(DUNE_FEM,1,4)
+  if ( !Dune::Fem::directoryExists(path) && !Dune::Fem::createDirectory(path) )
+#else
   if ( !Dune::directoryExists(path) && !Dune::createDirectory(path) )
+#endif
     DUNE_THROW( Dune::IOError, (boost::format("couldn't create directory") % path).str() );
   init(path + "/" + name, descript, path + "/" + inputFile);
 }
