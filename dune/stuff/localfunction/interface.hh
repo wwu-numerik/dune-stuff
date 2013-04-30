@@ -9,21 +9,21 @@ namespace Dune {
 namespace Stuff {
 
 
-template< class Traits >
+template< class DomainFieldImp, unsigned int domainDim, class RangeFieldImp, unsigned int rangeDim, class Traits >
 class LocalFunctionInterface
 {
 public:
-  typedef LocalFunctionInterface< Traits >  ThisType;
+//  typedef LocalFunctionInterface< Traits >  ThisType;
   typedef typename Traits::derived_type     derived_type;
 
   typedef typename Traits::EntityType EntityType;
 
-  typedef Traits::DomainFieldType                         DomainFieldType;
-  static const unsigned int                               dimDomain = Traits::dimDomain;
+  typedef DomainFieldImp                                  DomainFieldType;
+  static const unsigned int                               dimDomain = domainDim;
   typedef Dune::FieldVector< DomainFieldType, dimDomain > DomainType;
 
-  typedef Traits::RangeFieldType                          RangeFieldType;
-  static const unsigned int                               dimRange = Traits::dimRange;
+  typedef RangeFieldImp                                   RangeFieldType;
+  static const unsigned int                               dimRange = rangeDim;
   typedef Dune::FieldVector< RangeFieldType, dimDomain >  RangeType;
 
   const EntityType& entity() const
@@ -55,36 +55,36 @@ public:
 }; // class LocalFunctionInterface
 
 
-template< class Traits >
-class LocalDifferentiableFunctionInterface
-  : public LocalFunctionInterface< Traits >
-{
-public:
-  typedef LocalDifferentiableFunctionInterface< Traits >  ThisType;
-  typedef LocalFunctionInterface< Traits >                BaseType;
-  typedef typename Traits::derived_type                   derived_type;
-  typedef typename Traits::EntityType EntityType;
+//template< class Traits >
+//class LocalDifferentiableFunctionInterface
+//  : public LocalFunctionInterface< Traits >
+//{
+//public:
+//  typedef LocalDifferentiableFunctionInterface< Traits >  ThisType;
+//  typedef LocalFunctionInterface< Traits >                BaseType;
+//  typedef typename Traits::derived_type                   derived_type;
+//  typedef typename Traits::EntityType EntityType;
 
-  typedef Traits::DomainFieldType                         DomainFieldType;
-  static const unsigned int                               dimDomain = Traits::dimDomain;
-  typedef Dune::FieldVector< DomainFieldType, dimDomain > DomainType;
+//  typedef Traits::DomainFieldType                         DomainFieldType;
+//  static const unsigned int                               dimDomain = Traits::dimDomain;
+//  typedef Dune::FieldVector< DomainFieldType, dimDomain > DomainType;
 
-  typedef Traits::RangeFieldType                          RangeFieldType;
-  static const unsigned int                               dimRange = Traits::dimRange;
-  typedef Dune::FieldVector< RangeFieldType, dimDomain >  RangeType;
+//  typedef Traits::RangeFieldType                          RangeFieldType;
+//  static const unsigned int                               dimRange = Traits::dimRange;
+//  typedef Dune::FieldVector< RangeFieldType, dimDomain >  RangeType;
 
-  typedef Dune::FieldMatrix< RangeFieldType, dimRange, dimDomain > JacobianRangeType;
+//  typedef Dune::FieldMatrix< RangeFieldType, dimRange, dimDomain > JacobianRangeType;
 
-  using BaseType::entity;
-  using BaseType::evaluate;
-  using BaseType::asImp;
+//  using BaseType::entity;
+//  using BaseType::evaluate;
+//  using BaseType::asImp;
 
-  void jacobian(const DomainType& x, JacobianRangeType& ret) const
-  {
-    CHECK_INTERFACE_IMPLEMENTATION(asImp().jacobian(x, ret));
-    asImp().jacobian(x, ret);
-  }
-}; // class LocalDifferentiableFunctionInterface
+//  void jacobian(const DomainType& x, JacobianRangeType& ret) const
+//  {
+//    CHECK_INTERFACE_IMPLEMENTATION(asImp().jacobian(x, ret));
+//    asImp().jacobian(x, ret);
+//  }
+//}; // class LocalDifferentiableFunctionInterface
 
 
 } // namespace Stuff
