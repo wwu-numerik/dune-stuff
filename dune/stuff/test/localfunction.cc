@@ -3,7 +3,8 @@
 #include <memory>
 
 #include <dune/common/exceptions.hh>
-#include <dune/common/shared_ptr.hh>
+#include <dune/common/typetraits.hh>
+#include <dune/common/static_assert.hh>
 
 #include <dune/grid/sgrid.hh>
 
@@ -22,6 +23,8 @@ template< class FunctionType >
 struct LocalizableFunctionTest
   : public ::testing::Test
 {
+  static_assert((Dune::IsBaseOf< LocalizableFunction, FunctionType >::value), "ERROR: not a LocalizableFunction!");
+
   typedef typename FunctionType::DomainFieldType DomainFieldType;
   static const unsigned int dimDomain = FunctionType::dimDomain;
   typedef typename FunctionType::DomainType DomainType;
