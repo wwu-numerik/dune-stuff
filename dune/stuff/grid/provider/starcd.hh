@@ -14,6 +14,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <memory>
 #include <type_traits>
 
 #include <boost/assign/list_of.hpp>
@@ -189,7 +190,7 @@ public:
     // finish off the construction of the grid object
     std::cout << "Starting createGrid() ... " << std::endl;
 
-    grid_ = Dune::shared_ptr< GridType >(factory.createGrid());
+    grid_ = std::shared_ptr< GridType >(factory.createGrid());
   } //constructor
 
 
@@ -239,19 +240,19 @@ public:
   }
 
   //! access to shared ptr
-  virtual Dune::shared_ptr<GridType> grid()
+  virtual std::shared_ptr<GridType> grid()
   {
     return grid_;
   }
 
   //! const access to shared ptr
-  virtual const Dune::shared_ptr< const GridType > grid() const
+  virtual const std::shared_ptr< const GridType > grid() const
   {
     return grid_;
   }
 
 private:
-  Dune::shared_ptr< GridType > grid_;
+  std::shared_ptr< GridType > grid_;
 }; // class GridProviderStarCD
 
 } // namespace Stuff
