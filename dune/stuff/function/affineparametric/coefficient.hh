@@ -22,11 +22,11 @@ namespace Stuff {
 
 
 template< class RangeFieldImp = double >
-class FunctionAffineSeparablCoefficient
+class AffineParametricCoefficientFunction
   : public FunctionExpressionBase< Common::Parameter::FieldType, Common::Parameter::maxDim, RangeFieldImp, 1 >
 {
 public:
-  typedef FunctionAffineSeparablCoefficient< RangeFieldImp >                                                  ThisType;
+  typedef AffineSeparableCoefficientFunction< RangeFieldImp >                                                 ThisType;
   typedef FunctionExpressionBase< Common::Parameter::FieldType, Common::Parameter::maxDim, RangeFieldImp, 1 > BaseType;
 
   typedef Common::Parameter::Type ParamType;
@@ -37,13 +37,15 @@ public:
     return "function.affineparametric.coefficient";
   }
 
-  FunctionAffineSeparablCoefficient(const std::string _expression)
+  AffineParametricCoefficientFunction(const std::string _expression)
     : BaseType("mu", _expression)
   {}
 
-  FunctionAffineSeparablCoefficient(const ThisType& other)
-    : BaseType(other)
-  {}
+  std::string expression() const
+  {
+    assert(BaseType::expression().size() == 1);
+    return BaseType::expression()[0];
+  }
 
   void evaluate(const ParamType& _mu, RangeFieldType& _ret) const
   {
@@ -56,7 +58,7 @@ public:
     BaseType::evaluate(_mu, ret);
     return ret;
   }
-}; // class FunctionAffineSeparablCoefficient
+}; // class AffineParametricCoefficientFunction
 
 
 } // namespace Stuff
