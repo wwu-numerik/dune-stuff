@@ -19,6 +19,8 @@
 
 #include <dune/stuff/localfunction/interface.hh>
 
+#include "local.hh"
+
 namespace Dune {
 namespace Stuff {
 
@@ -176,6 +178,13 @@ public:
     evaluate(_x, _mu, ret);
     return ret;
   }
+
+  template< class EntityType >
+  LocalizedFunction< EntityType, DomainFieldType, dimDomain, RangeFieldType, dimRangeRows, dimRangeCols >
+  localFunction(const EntityType& entity) const
+  {
+    return LocalizedFunction< EntityType, DomainFieldType, dimDomain, RangeFieldType, dimRangeRows, dimRangeCols >(*this, entity);
+  }
   /* @} */
 }; // class GenericStationaryFunctionInterface
 
@@ -325,6 +334,13 @@ public:
     RangeType ret;
     evaluate(_x, _mu, ret);
     return ret;
+  }
+
+  template< class EntityType >
+  LocalizedFunction< EntityType, DomainFieldType, dimDomain, RangeFieldType, dimRangeRows, dimRangeCols >
+  localFunction(const EntityType& entity) const
+  {
+    return LocalizedFunction< EntityType, DomainFieldType, dimDomain, RangeFieldType, dimRangeRows, dimRangeCols >(*this, entity);
   }
   /* @} */
 }; // class GenericStationaryFunctionInterface< ..., 1 >
