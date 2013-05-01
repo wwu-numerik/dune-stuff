@@ -16,6 +16,7 @@
 
 #include <dune/stuff/common/color.hh>
 #include <dune/stuff/common/parameter.hh>
+
 #include <dune/stuff/localfunction/interface.hh>
 
 namespace Dune {
@@ -28,7 +29,7 @@ class AffineParametricCoefficientFunction;
 
 
 // forward, needed in the interface
-template< class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDimCols, int rangeDimRows >
+template< class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDimRows, int rangeDimCols >
 class FunctionInterface;
 
 
@@ -37,8 +38,9 @@ class FunctionInterface;
  *
  *          See spezialization for rangeDimCols = 1 for scalar and vector valued functions.
  */
-template< class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDimCols, int rangeDimRows >
+template< class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDimRows, int rangeDimCols >
 class GenericStationaryFunctionInterface
+  : public LocalizableFunction
 {
 public:
   typedef GenericStationaryFunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows, rangeDimCols > ThisType;
@@ -184,8 +186,8 @@ public:
 template< class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDim >
 class GenericStationaryFunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDim, 1 >
 {
-public:
   typedef GenericStationaryFunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDim, 1 > ThisType;
+public:
 
   typedef DomainFieldImp                                  DomainFieldType;
   static const unsigned int                               dimDomain = domainDim;
@@ -333,11 +335,11 @@ public:
  *
  *          See specialization for rangeDimRows = 1 for scalar and vector valued functions.
  */
-template< class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDimCols, int rangeDimRows >
+template< class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDimRows, int rangeDimCols >
 class FunctionInterface
-  : public GenericStationaryFunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDimCols, rangeDimRows >
+  : public GenericStationaryFunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows, rangeDimCols >
 {
-  typedef GenericStationaryFunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDimCols, rangeDimRows > BaseType;
+  typedef GenericStationaryFunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows, rangeDimCols > BaseType;
 public:
 
   typedef typename BaseType::DomainFieldType  DomainFieldType;
@@ -408,11 +410,11 @@ public:
 /**
  *  \brief  Interface for parametric functions.
  */
-template< class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDimCols, int rangeDimRows >
+template< class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDimRows, int rangeDimCols >
 class ParametricFunctionInterface
-  : public GenericStationaryFunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDimCols, rangeDimRows >
+  : public GenericStationaryFunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows, rangeDimCols >
 {
-  typedef GenericStationaryFunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDimCols, rangeDimRows > BaseType;
+  typedef GenericStationaryFunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows, rangeDimCols> BaseType;
 public:
   typedef typename BaseType::DomainType DomainType;
   typedef typename BaseType::RangeType  RangeType;
@@ -446,7 +448,7 @@ public:
 /**
  *  \brief  Interface for affine parametric functions.
  */
-template< class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDimCols, int rangeDimRows >
+template< class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDimRows, int rangeDimCols >
 class AffineParametricFunctionInterface
   : public ParametricFunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows, rangeDimCols >
 {
@@ -495,7 +497,7 @@ public:
  *
  *          See spezialization for rangeDimCols = 1 for scalar and vector valued functions.
  */
-template< class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDimCols, int rangeDimRows >
+template< class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDimRows, int rangeDimCols >
 class TimedependentFunctionInterface
 {
 public:
