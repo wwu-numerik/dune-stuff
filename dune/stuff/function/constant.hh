@@ -12,12 +12,17 @@ namespace Stuff {
 template< class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDimCols, int rangeDimRows >
 class FunctionConstantBase
   : public FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDimCols, rangeDimRows >
+  , public TimedependentFunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDimCols, rangeDimRows >
 {
   typedef FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDimCols, rangeDimRows > BaseType;
 public:
-  typedef typename BaseType::DomainType     DomainType;
-  typedef typename BaseType::RangeFieldType RangeFieldType;
-  typedef typename BaseType::RangeType      RangeType;
+  typedef typename BaseType::DomainFieldType  DomainFieldType;
+  static const unsigned int                   dimDomain = BaseType::dimDomain;
+  typedef typename BaseType::DomainType       DomainType;
+  typedef typename BaseType::RangeFieldType   RangeFieldType;
+  static const unsigned int                   dimRangeCols = BaseType::dimRangeCols;
+  static const unsigned int                   dimRangeRows = BaseType::dimRangeRows;
+  typedef typename BaseType::RangeType        RangeType;
 
   FunctionConstantBase(const RangeFieldType& constant)
     : constant_(constant)
@@ -37,7 +42,17 @@ public:
     return 0;
   }
 
+  virtual std::string name() const
+  {
+    return "function.constant";
+  }
+
   virtual void evaluate(const DomainType& /*arg*/, RangeType& ret) const
+  {
+    ret = constant_;
+  }
+
+  virtual void evaluate(const DomainType& /*arg*/, const double& /*t*/, RangeType& ret) const
   {
     ret = constant_;
   }
