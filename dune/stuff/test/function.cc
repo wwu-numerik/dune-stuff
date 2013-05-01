@@ -7,6 +7,7 @@
 #include <dune/stuff/function/expression.hh>
 #include <dune/stuff/function/checkerboard.hh>
 #include <dune/stuff/function/spe10.hh>
+#include <dune/stuff/function/constant.hh>
 #include <dune/stuff/function/affineparametric/checkerboard.hh>
 
 
@@ -17,6 +18,9 @@ typedef testing::Types< FunctionExpression< double, 1, double, 1 >
                       , FunctionCheckerboard< double, 1, double, 1 >
                       , FunctionCheckerboard< double, 2, double, 1 >
                       , FunctionCheckerboard< double, 3, double, 1 >
+                      , FunctionConstant< double, 1, double, 1 >
+                      , FunctionConstant< double, 2, double, 1 >
+                      , FunctionConstant< double, 3, double, 1 >
 //                      , FunctionSpe10Model1< double, 2, double, 1 > // <- this makes only sense, if the data file is present
                       > Functions;
 
