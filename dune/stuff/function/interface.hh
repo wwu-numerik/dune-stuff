@@ -457,6 +457,11 @@ public:
 
   virtual ~AffineParametricFunctionInterface() {}
 
+  static std::string id()
+  {
+    return "function.affineparametric";
+  }
+
   virtual bool affineparametric() const
   {
     return true;
