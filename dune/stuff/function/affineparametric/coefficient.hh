@@ -25,9 +25,8 @@ template< class RangeFieldImp = double >
 class AffineParametricCoefficientFunction
   : public FunctionExpressionBase< Common::Parameter::FieldType, Common::Parameter::maxDim, RangeFieldImp, 1 >
 {
-public:
-  typedef AffineSeparableCoefficientFunction< RangeFieldImp >                                                 ThisType;
   typedef FunctionExpressionBase< Common::Parameter::FieldType, Common::Parameter::maxDim, RangeFieldImp, 1 > BaseType;
+public:
 
   typedef Common::Parameter::Type ParamType;
   typedef RangeFieldImp           RangeFieldType;
