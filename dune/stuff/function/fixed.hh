@@ -14,42 +14,43 @@ namespace Dune {
 namespace Stuff {
 
 
-template< class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDim >
-class FunctionFixed
-  : public FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDim >
+template< class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDimRows, int rangeDimCols >
+class FunctionFixedParameter
+  : public FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows, rangeDimCols >
 {
+  typedef FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows, rangeDimCols > BaseType;
 public:
-  typedef FunctionFixed< DomainFieldImp, domainDim, RangeFieldImp, rangeDim >     ThisType;
-  typedef FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDim > BaseType;
-
   typedef typename BaseType::DomainFieldType  DomainFieldType;
   static const int                            dimDomain = BaseType::dimDomain;
   typedef typename BaseType::DomainType       DomainType;
   typedef typename BaseType::RangeFieldType   RangeFieldType;
-  static const int                            dimRange = BaseType::dimRange;
+  static const int                            dimRangeRows = BaseType::dimRangeRows;
+  static const int                            dimRangeCols = BaseType::dimRangeCols;
   typedef typename BaseType::RangeType        RangeType;
   typedef typename BaseType::ParamType        ParamType;
+
+  typedef GenericStationaryFunctionInterface< DomainFieldType, dimDomain,
+                                              RangeFieldType, dimRangeRows, dimRangeCols > WrappedType;
 
   static std::string id()
   {
     return BaseType::id() + ".fixed";
   }
 
-  FunctionFixed(const std::shared_ptr< const BaseType > parametricFunction,
-                const ParamType fixedParameter = ParamType())
+  FunctionFixedParameter(const std::shared_ptr< const WrappedType > parametricFunction,
+                         const ParamType fixedParameter)
     : wrappedFunction_(parametricFunction)
     , fixedParam_(fixedParameter)
   {
+    if (!wrappedFunction_->parametric())
+      DUNE_THROW(Dune::InvalidStateException,
+                 "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
+                 << " given function not parametric!");
     if (fixedParam_.size() != wrappedFunction_->paramSize())
       DUNE_THROW(Dune::InvalidStateException,
                  "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
                  << " given parameter has wrong size (is " << fixedParam_.size()
                  << ", should be " << wrappedFunction_->paramSize() << ")!");
-  }
-
-  virtual bool parametric() const
-  {
-    return false;
   }
 
   virtual std::string name() const
@@ -68,9 +69,11 @@ public:
   }
 
 private:
-  const std::shared_ptr< const BaseType > wrappedFunction_;
+  const std::shared_ptr< const WrappedType > wrappedFunction_;
   const ParamType fixedParam_;
-}; // class FunctionFixed
+}; // class FunctionFixedParameter
+
+
 
 
 } // namespace Stuff
