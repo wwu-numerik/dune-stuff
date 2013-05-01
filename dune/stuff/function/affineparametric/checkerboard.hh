@@ -1,12 +1,7 @@
 #ifndef DUNE_STUFF_FUNCTION_AFFINEPARAMETRIC_CHECKERBOARD_HH
 #define DUNE_STUFF_FUNCTION_AFFINEPARAMETRIC_CHECKERBOARD_HH
 
-#ifdef HAVE_CMAKE_CONFIG
-  #include "cmake_config.h"
-#elif defined (HAVE_CONFIG_H)
-  #include <config.h>
-#endif // ifdef HAVE_CMAKE_CONFIG
-
+#include <memory>
 #include <vector>
 
 #include <dune/common/shared_ptr.hh>
@@ -23,45 +18,38 @@ namespace Dune {
 namespace Stuff {
 
 
-// forward, to allow for specialization
-template< class DomainFieldImp, int domainDim,
-          class RangeFieldImp, int rangeDim >
-class FunctionAffineParametricCheckerboard;
-
-
-template< class DomainFieldImp, int domainDim,
-          class RangeFieldImp >
-class FunctionAffineParametricCheckerboard< DomainFieldImp, domainDim, RangeFieldImp, 1 >
-  : public FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, 1 >
+template< class DomainFieldImp, int domainDim, class RangeFieldImp >
+class AffineParametricFunctionCheckerboard
+  : public AffineParametricFunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, 1, 1 >
 {
+  typedef AffineParametricFunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, 1, 1 > BaseType;
 public:
-  typedef FunctionAffineParametricCheckerboard< DomainFieldImp, domainDim, RangeFieldImp, 1 > ThisType;
-  typedef FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, 1 >                    BaseType;
+  typedef AffineParametricFunctionCheckerboard< DomainFieldImp, domainDim, RangeFieldImp > ThisType;
 
   typedef typename BaseType::DomainFieldType  DomainFieldType;
   static const int                            dimDomain = BaseType::dimDomain;
   typedef typename BaseType::DomainType       DomainType;
   typedef typename BaseType::RangeFieldType   RangeFieldType;
-  static const int                            dimRange = BaseType::dimRange;
+//  static const int                            dimRange = BaseType::dimRange;
   typedef typename BaseType::RangeType        RangeType;
 
-  typedef Common::Parameter::FieldType  ParamFieldType;
-  typedef Common::Parameter::Type       ParamType;
+  typedef typename BaseType::ParamFieldType ParamFieldType;
+  typedef typename BaseType::ParamType      ParamType;
 
   typedef typename BaseType::ComponentType    ComponentType;
   typedef typename BaseType::CoefficientType  CoefficientType;
 
   static const std::string id()
   {
-    return BaseType::id() + ".affineparametric.checkerboard";
+    return BaseType::id() + ".checkerboard";
   }
 
-  FunctionAffineParametricCheckerboard(const DomainType& _lowerLeft,
+  AffineParametricFunctionCheckerboard(const DomainType& _lowerLeft,
                                        const DomainType& _upperRight,
                                        const std::vector< size_t >& _numElements,
                                        const std::vector< ParamType >& _paramRange,
                                        const std::string _name = id())
-    : paramSize_(1u)
+    : paramSize_(1)
     , paramRange_(_paramRange)
     , name_(_name)
   {
@@ -81,10 +69,10 @@ public:
           && "Given minimal parameter has to be piecewise <= maximum parameter!");
     }
     // create the coefficients and components
-    typedef FunctionCheckerboard< DomainFieldType, dimDomain, RangeFieldType, dimRange > NonparametricType;
+    typedef FunctionCheckerboard< DomainFieldType, dimDomain, RangeFieldType, 1 > NonparametricType;
     for (size_t ii = 0; ii < paramSize_; ++ii) {
-      std::vector< RangeFieldType > indicator(paramSize_, RangeFieldType(0));
-      indicator[ii] = RangeFieldType(1);
+      std::vector< RangeType > indicator(paramSize_, RangeType(0));
+      indicator[ii] = RangeType(1);
       components_.emplace_back(new NonparametricType(_lowerLeft, _upperRight, _numElements, indicator));
       coefficients_.emplace_back(new CoefficientType("mu[" + DSC::toString(ii) + "]"));
     } // create the coefficients and components
@@ -108,31 +96,7 @@ public:
             }
         }
     }
-  } // FunctionAffineParametricCheckerboard(...)
-
-  FunctionAffineParametricCheckerboard(const ThisType& other)
-    : paramSize_(other.paramSize_)
-    , paramRange_(other.paramRange_)
-    , name_(other.name_)
-    , parameterExplanation_(other.parameterExplanation_)
-    , components_(other.components_)
-    , coefficients_(other.coefficients_)
-  {}
-
-  ThisType& operator=(ThisType& other)
-  {
-    if (this != &other) {
-      paramSize_ = other.paramSize();
-      paramRange_ = other.paramRange();
-      name_ = other.name();
-      parameterExplanation_ = other.parameterExplanation();
-      for (size_t q; q < paramSize_; ++q) {
-        components_.push_back(other.component(q));
-        coefficients_.push_back(other.coefficient(q));
-      }
-    }
-    return *this;
-  } // ThisType& operator=(ThisType& other)
+  } // AffineParametricFunctionCheckerboard(...)
 
   static Dune::ParameterTree createSampleDescription(const std::string subName = "")
   {
@@ -191,16 +155,6 @@ public:
     return new ThisType(lowerLeft, upperRight, numElements, paramRange, _name);
   } // ... create(...)
 
-  virtual bool parametric() const
-  {
-    return true;
-  }
-
-  virtual bool affineparametric() const
-  {
-    return true;
-  }
-
   virtual int order() const
   {
     return 0;
@@ -226,22 +180,12 @@ public:
     return parameterExplanation_;
   }
 
-  virtual size_t numComponents() const
-  {
-    return paramSize_;
-  }
-
-  virtual size_t numCoefficients() const
-  {
-    return paramSize_;
-  }
-
-  virtual const std::vector< Dune::shared_ptr< const ComponentType > >& components() const
+  virtual const std::vector< std::shared_ptr< const ComponentType > >& components() const
   {
     return components_;
   }
 
-  virtual const std::vector< Dune::shared_ptr< const CoefficientType > >& coefficients() const
+  virtual const std::vector< std::shared_ptr< const CoefficientType > >& coefficients() const
   {
     return coefficients_;
   }
@@ -263,9 +207,9 @@ private:
   std::vector< ParamType > paramRange_;
   std::string name_;
   std::vector< std::string > parameterExplanation_;
-  std::vector< shared_ptr< const ComponentType > > components_;
-  std::vector< shared_ptr< const CoefficientType > > coefficients_;
-}; // class FunctionAffineParametricCheckerboard
+  std::vector< std::shared_ptr< const ComponentType > > components_;
+  std::vector< std::shared_ptr< const CoefficientType > > coefficients_;
+}; // class AffineParametricFunctionCheckerboard
 
 
 } // namespace Stuff
