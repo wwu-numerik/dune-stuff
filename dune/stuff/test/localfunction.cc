@@ -23,7 +23,7 @@ template< class FunctionType >
 struct LocalizableFunctionTest
   : public ::testing::Test
 {
-  static_assert((Dune::IsBaseOf< LocalizableFunction, FunctionType >::value), "ERROR: not a LocalizableFunction!");
+  dune_static_assert((Dune::IsBaseOf< LocalizableFunction, FunctionType >::value), "ERROR: not a LocalizableFunction!");
 
   typedef typename FunctionType::DomainFieldType DomainFieldType;
   static const unsigned int dimDomain = FunctionType::dimDomain;
@@ -52,8 +52,8 @@ struct LocalizableFunctionTest
 
     // get localfunction
     const auto localFunction =function->localFunction(entity);
-    const int order = localFunction.order();
-    const auto& ent = localFunction.entity();
+    const int DUNE_UNUSED(order) = localFunction.order();
+    const auto& DUNE_UNUSED(ent) = localFunction.entity();
     const DomainType x(1);
     RangeType ret(0);
     localFunction.evaluate(x, ret);
