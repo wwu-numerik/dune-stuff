@@ -5,8 +5,13 @@ AC_DEFUN([DUNE_STUFF_CHECKS],[
                            [Define wether boost was found.])],
                            [AC_MSG_ERROR([Boost 1.48 is required])])
   AX_BOOST_FILESYSTEM([1.48.0])
+  AX_BOOST_SYSTEM([1.48.0])
+  AX_BOOST_TIMER([1.48.0])
+  AX_BOOST_CHRONO([1.48.0])
+
   AC_LANG([C++])
   AX_CXX_COMPILE_STDCXX_11([noext],[mandatory])
+
   PKG_CHECK_MODULES([EIGEN],
                     [eigen3],
                     [AC_DEFINE([HAVE_EIGEN],
