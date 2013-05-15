@@ -67,7 +67,8 @@ class LocalizedFunction
   : public LocalFunctionInterface<  LocalizedFunctionTraits< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows, rangeDimCols >,
                                     DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows, rangeDimCols >
 {
-  typedef LocalizedFunctionTraits< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows, rangeDimCols > Traits;
+  typedef LocalizedFunctionTraits< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows, rangeDimCols >  Traits;
+  typedef LocalFunctionInterface< Traits, DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows, rangeDimCols >      BaseType;
 public:
   typedef LocalizedFunction< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows, rangeDimCols > Type;
 
@@ -105,6 +106,8 @@ public:
   {
     function_.evaluate(entity_.geometry().global(x), ret);
   }
+
+  using BaseType::evaluate;
 
 private:
   const FunctionType& function_;
