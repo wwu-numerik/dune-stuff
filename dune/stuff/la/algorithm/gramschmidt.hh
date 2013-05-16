@@ -70,13 +70,12 @@ void gramSchmidt(Dune::Stuff::LA::Container::EigenDenseMatrix< ElementType >& _c
       Dune::Stuff::LA::Algorithm::normalize(_columnVectors);
     } else {
       // this is a set of column-vectors
-      typedef typename Dune::Stuff::LA::Container::EigenDenseMatrix< ElementType >::size_type size_type;
-      for (size_type ii = 0; ii < _columnVectors.cols(); ++ii) {
+      for (size_t ii = 0; ii < _columnVectors.cols(); ++ii) {
         // get the iith column
         typedef typename Dune::Stuff::LA::Container::EigenDenseMatrix< ElementType >::BackendType::ColXpr ColumnType;
         ColumnType iith_column = _columnVectors.backend().col(ii);
         // and orthonormalize it wrt all previous columns
-        for (size_type jj = 0; jj < ii; ++ jj) {
+        for (size_t jj = 0; jj < ii; ++ jj) {
           // therefore, get the jjth column,
           ColumnType jjth_column = _columnVectors.backend().col(jj);
           // project the iith column wrt to the jjth column
@@ -148,13 +147,12 @@ void gramSchmidt(const Dune::Stuff::LA::Container::EigenDenseMatrix< ElementType
       // this is a set of column-vectors, check sizes
       assert(_columnVectors.rows() == _scalarProduct.rows());
       assert(_columnVectors.rows() == _scalarProduct.cols());
-      typedef typename Dune::Stuff::LA::Container::EigenDenseMatrix< ElementType >::size_type size_type;
-      for (size_type ii = 0; ii < _columnVectors.cols(); ++ii) {
+      for (size_t ii = 0; ii < _columnVectors.cols(); ++ii) {
         // get the iith column
         typedef typename Dune::Stuff::LA::Container::EigenDenseMatrix< ElementType >::BackendType::ColXpr ColumnType;
         ColumnType iith_column = _columnVectors.backend().col(ii);
         // and orthonormalize it wrt all previous columns
-        for (size_type jj = 0; jj < ii; ++ jj) {
+        for (size_t jj = 0; jj < ii; ++ jj) {
           // therefore, get the jjth column,
           ColumnType jjth_column = _columnVectors.backend().col(jj);
           // project the iith column wrt to the jjth column
@@ -197,9 +195,8 @@ bool gramSchmidt(const Dune::Stuff::LA::Container::EigenRowMajorSparseMatrix< El
     assert(_scalarProduct.rows() == _vector.size());
     assert(_scalarProduct.cols() == _vector.size());
     assert(_columnBasisVectors.rows() == _vector.size());
-    typedef typename Dune::Stuff::LA::Container::EigenDenseMatrix< ElementType >::size_type size_type;
     // orthonormalize _vector wrt all columns in _columnBasisVectors
-    for (size_type jj = 0; jj < _columnBasisVectors.cols(); ++ jj) {
+    for (size_t jj = 0; jj < _columnBasisVectors.cols(); ++ jj) {
       // therefore, subtract its projection onto the jjth basis vector
       const ElementType factor = _vector.backend().transpose() * _scalarProduct.backend() * _columnBasisVectors.backend().col(jj);
       const ElementType norm = _columnBasisVectors.backend().col(jj).transpose() * _scalarProduct.backend() * _columnBasisVectors.backend().col(jj);
@@ -232,9 +229,8 @@ bool gramSchmidt(const Dune::Stuff::LA::Container::EigenRowMajorSparseMatrix< El
     assert(_scalarProduct.rows() == _vector.size());
     assert(_scalarProduct.cols() == _vector.size());
     assert(_columnBasisVector.size() == _vector.size());
-//    typedef typename Dune::Stuff::LA::Container::EigenDenseMatrix< ElementType >::size_type size_type;
 //    // orthonormalize _vector wrt all columns in _columnBasisVectors
-//    for (size_type jj = 0; jj < _columnBasisVectors.cols(); ++ jj) {
+//    for (size_t jj = 0; jj < _columnBasisVectors.cols(); ++ jj) {
       // therefore, subtract its projection onto the jjth basis vector
       const ElementType factor = _vector.backend().transpose() * _scalarProduct.backend() * _columnBasisVector.backend();
       ElementType norm = _columnBasisVector.backend().transpose() * _scalarProduct.backend() * _columnBasisVector.backend();

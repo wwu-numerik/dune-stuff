@@ -31,7 +31,6 @@ public:
   typedef typename BaseType::MatrixType   MatrixType;
   typedef typename BaseType::VectorType   VectorType;
   typedef typename BaseType::ElementType  ElementType;
-  typedef typename BaseType::size_type    size_type;
 
   static Dune::ParameterTree createSampleDescription()
   {
@@ -140,12 +139,12 @@ public:
    *  \attention  There is a const_cast inside, in order to forward non-const pointers to fasp. I hope they do not
    *              touch the matrix, but who knows...
    */
-  virtual size_type apply(const MatrixType& _systemMatrix,
-                          const VectorType& _rhsVector,
-                          VectorType& solutionVector,
-                          const size_type maxIter = 5000,
-                          const ElementType precision = 1e-12,
-                          const Dune::ParameterTree description = Dune::ParameterTree()) const
+  virtual size_t apply(const MatrixType& _systemMatrix,
+                       const VectorType& _rhsVector,
+                       VectorType& solutionVector,
+                       const size_t maxIter = 5000,
+                       const ElementType precision = 1e-12,
+                       const Dune::ParameterTree description = Dune::ParameterTree()) const
   {
     // init system matrix and right hand side
     MatrixType& systemMatrix = const_cast< MatrixType& >(_systemMatrix);
@@ -225,7 +224,7 @@ public:
   } // ... apply(...)
 
 private:
-  input_param initInputParams(const size_type& maxIter, const ElementType& precision, const Dune::ParameterTree& description) const
+  input_param initInputParams(const size_t& maxIter, const ElementType& precision, const Dune::ParameterTree& description) const
   {
     input_param inputParam;
     inputParam.print_level = description.get< int >("input_param.print_level", 0);
@@ -274,7 +273,7 @@ private:
     return inputParam;
   } // ... initInputParams(...)
 
-  itsolver_param initItsolverParams(const size_type& maxIter, const ElementType& precision, const Dune::ParameterTree& description) const
+  itsolver_param initItsolverParams(const size_t& maxIter, const ElementType& precision, const Dune::ParameterTree& description) const
   {
     itsolver_param itsolverParams;
     itsolverParams.itsolver_type = description.get< int >("itsolver_param.itsolver_type", 1);
@@ -287,7 +286,7 @@ private:
     return itsolverParams;
   } // ... initItsolverParams(...)
 
-  AMG_param initAMGParams(const size_type& maxIter, const ElementType& precision, const Dune::ParameterTree& description) const
+  AMG_param initAMGParams(const size_t& maxIter, const ElementType& precision, const Dune::ParameterTree& description) const
   {
     AMG_param amgParams;
     amgParams.AMG_type = description.get< int >("AMG_param.AMG_type", 1);
@@ -330,7 +329,7 @@ private:
     return amgParams;
   } // ... initAMGParams(...)
 
-  ILU_param initIluParams(const size_type& /*maxIter*/, const ElementType& /*precision*/, const Dune::ParameterTree& description) const
+  ILU_param initIluParams(const size_t& /*maxIter*/, const ElementType& /*precision*/, const Dune::ParameterTree& description) const
   {
     ILU_param iluParams;
     iluParams.print_level = description.get< int >("ILU_param.print_level", 0);
@@ -342,7 +341,7 @@ private:
     return iluParams;
   } // ... initIluParams(...)
 
-  Schwarz_param initSchwarzParams(const size_type& /*maxIter*/, const ElementType& /*precision*/, const Dune::ParameterTree& description) const
+  Schwarz_param initSchwarzParams(const size_t& /*maxIter*/, const ElementType& /*precision*/, const Dune::ParameterTree& description) const
   {
     Schwarz_param schwarzParams;
     schwarzParams.print_level = description.get< int >("schwarzParams.print_level", 0);
