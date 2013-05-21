@@ -48,6 +48,13 @@ public:
     asImp().evaluate(x, ret);
   }
 
+  RangeType evaluate(const DomainType& x) const
+  {
+    RangeType ret(0);
+    evaluate(x, ret);
+    return ret;
+  }
+
   derived_type& asImp()
   {
     return static_cast< derived_type& >(*this);
