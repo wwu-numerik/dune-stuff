@@ -1,7 +1,7 @@
 #ifndef DUNE_STUFF_MATRIX_OBJECT_HH
 #define DUNE_STUFF_MATRIX_OBJECT_HH
 
-#if defined HAVE_DUNE_FEM && HAVE_EIGEN
+#if 1 //defined HAVE_DUNE_FEM && HAVE_EIGEN
 
 #include <dune/fem/function/adaptivefunction/adaptivefunction.hh>
 #include <dune/fem/solver/oemsolver.hh>
@@ -136,7 +136,7 @@ public:
   //! add value to matrix entry
   void add( int localRow, int localCol, const DofType value )
   {
-    assert(!std::is_nan(value));
+    assert(!std::isnan(value));
     index_checks(localRow, localCol);
     matrix_.add(rowMapper_[ localRow ], colMapper_[ localCol ],value);
   }
@@ -151,7 +151,7 @@ public:
   //! set matrix entry to value
   void set( int localRow, int localCol, const DofType value )
   {
-    assert(!std::is_nan(value));
+    assert(!std::isnan(value));
     index_checks(localRow, localCol);
     matrix_.set( rowMapper_[ localRow ], colMapper_[ localCol ], value );
   }
@@ -191,9 +191,9 @@ class LagrangePattern : public DSLC::SparsityPatternDefault {
 public:
     template< class D_FunctionSpace, class D_GridPart, int D_polOrder, template< class > class D_Storage,
               class R_FunctionSpace, class R_GridPart, int R_polOrder, template< class > class R_Storage>
-    LagrangePattern(const Dune::Fem::LagrangeDiscreteFunctionSpace<D_FunctionSpace,
+    LagrangePattern(const Dune::LagrangeDiscreteFunctionSpace<D_FunctionSpace,
                                             D_GridPart, D_polOrder, D_Storage>& domain_space,
-                    const Dune::Fem::LagrangeDiscreteFunctionSpace<R_FunctionSpace,
+                    const Dune::LagrangeDiscreteFunctionSpace<R_FunctionSpace,
                                             R_GridPart, R_polOrder, R_Storage>& range_space,
                     const bool non_conform = false)
         : BaseType(domain_space.size())
@@ -426,7 +426,8 @@ public:
   void operator()(const DomainVector& arg, RangeVector& x) const {
       EigenVectorWrapperType arg_w(const_cast<double*>(arg.leakPointer()), arg.size());
       EigenVectorWrapperType x_w(x.leakPointer(), x.size());
-      std::unique_ptr<DSLS::Interface<MatrixType, EigenVectorWrapperType>> solver(DSLS::create<MatrixType, EigenVectorWrapperType>("bicgstab.diagonal"));
+      typedef DSLS::Interface<MatrixType, EigenVectorWrapperType> SolverType;
+      std::unique_ptr<SolverType> solver(DSLS::create<MatrixType, EigenVectorWrapperType>("bicgstab.diagonal"));
       solver->apply(matrix_, arg_w, x_w, 5000, precision_);
   }
 };
