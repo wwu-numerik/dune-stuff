@@ -427,7 +427,7 @@ public:
       EigenVectorWrapperType arg_w(const_cast<double*>(arg.leakPointer()), arg.size());
       EigenVectorWrapperType x_w(x.leakPointer(), x.size());
       typedef DSLS::Interface<MatrixType, EigenVectorWrapperType> SolverType;
-      std::unique_ptr<SolverType> solver(DSLS::create<MatrixType, EigenVectorWrapperType>("bicgstab.diagonal"));
+      std::unique_ptr<SolverType> solver(DSLS::create<MatrixType, EigenVectorWrapperType>("bicgstab.ilut"));
       solver->apply(matrix_, arg_w, x_w, 5000, precision_);
   }
 };
