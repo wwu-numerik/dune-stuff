@@ -81,43 +81,43 @@ public:
 }; // class SolverNotImplementedForThisMatrixVectorCombination
 
 
-template< class MatrixImp, class VectorImp >
+template< class MatrixImp, class VectorImp, class Enable = void >
 class Cg
   : public SolverNotImplementedForThisMatrixVectorCombination< MatrixImp, VectorImp >
 {};
 
-template< class MatrixImp, class VectorImp >
+template< class MatrixImp, class VectorImp, class Enable = void >
 class CgDiagonal
   : public SolverNotImplementedForThisMatrixVectorCombination< MatrixImp, VectorImp >
 {};
 
-template< class MatrixImp, class VectorImp >
+template< class MatrixImp, class VectorImp, class Enable = void >
 class Bicgstab
   : public SolverNotImplementedForThisMatrixVectorCombination< MatrixImp, VectorImp >
 {};
 
-template< class MatrixImp, class VectorImp >
+template< class MatrixImp, class VectorImp, class Enable = void >
 class BicgstabDiagonal
   : public SolverNotImplementedForThisMatrixVectorCombination< MatrixImp, VectorImp >
 {};
 
-template< class MatrixImp, class VectorImp >
+template< class MatrixImp, class VectorImp, class Enable = void >
 class BicgstabILUT
   : public SolverNotImplementedForThisMatrixVectorCombination< MatrixImp, VectorImp >
 {};
 
-template< class MatrixImp, class VectorImp >
+template< class MatrixImp, class VectorImp, class Enable = void >
 class SimplicialLLT
   : public SolverNotImplementedForThisMatrixVectorCombination< MatrixImp, VectorImp >
 {};
 
-template< class MatrixImp, class VectorImp >
+template< class MatrixImp, class VectorImp, class Enable = void >
 class SimplicialLDLT
   : public SolverNotImplementedForThisMatrixVectorCombination< MatrixImp, VectorImp >
 {};
 
 #if HAVE_FASP
-template< class MatrixImp, class VectorImp >
+template< class MatrixImp, class VectorImp, class Enable = void >
 class AmgFasp
   : public SolverNotImplementedForThisMatrixVectorCombination< MatrixImp, VectorImp >
 {};
