@@ -54,6 +54,7 @@ public:
     Dune::ParameterTree description;
     description["maxIter"] = "5000";
     description["precision"] = "1e-12";
+    description["verbose"] = "0";
     return description;
   }
 }; // class Interface

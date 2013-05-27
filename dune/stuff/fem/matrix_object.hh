@@ -421,12 +421,20 @@ public:
     , solver_settings_(solver_settings)
   {}
 
+  static Dune::ParameterTree defaultSettings()
+  {
+    auto settings = DSL::BicgstabILUTSolver<MatrixType, EigenVectorWrapperType>::defaultSettings();
+    settings["type"] = "bicgstab.ilut";
+    return settings;
+  }
+
   template <class DomainVector, class RangeVector>
   void operator()(const DomainVector& arg, RangeVector& x) const {
       const EigenVectorWrapperType arg_w(const_cast<double*>(arg.leakPointer()), arg.size());
       EigenVectorWrapperType x_w(x.leakPointer(), x.size());
       typedef DSL::SolverInterface<MatrixType, EigenVectorWrapperType> SolverType;
-      std::unique_ptr<SolverType> solver(DSL::createSolver<MatrixType, EigenVectorWrapperType>("bicgstab.ilut"));
+      std::unique_ptr<SolverType> solver(DSL::createSolver<MatrixType,
+                                                           EigenVectorWrapperType>(solver_settings_["type"]));
       solver->apply(matrix_, arg_w, x_w, solver_settings_);
   }
 };
