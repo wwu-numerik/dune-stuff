@@ -36,9 +36,7 @@ public:
   virtual size_type apply(const MatrixType& /*_systemMatrix*/,
                           const VectorType& /*_rhsVector*/,
                           VectorType& /*_solutionVector*/,
-                          const size_type /*_maxIter*/ = 5000,
-                          const ElementType /*_precision*/ = 1e-12,
-                          const Dune::ParameterTree /*description*/ = Dune::ParameterTree()) const = 0;
+                          const Dune::ParameterTree /*description*/) const = 0;
 #if HAVE_EIGEN
   size_type translateInfo(const ::Eigen::ComputationInfo& info) const
   {
@@ -50,6 +48,14 @@ public:
     }
   }
 #endif
+
+  static Dune::ParameterTree defaultIterativeSettings()
+  {
+    Dune::ParameterTree description;
+    description["maxIter"] = "5000";
+    description["precision"] = "1e-12";
+    return description;
+  }
 }; // class Interface
 
 
@@ -71,8 +77,6 @@ public:
   virtual size_type apply(const MatrixType& /*_systemMatrix*/,
                           const VectorType& /*_rhsVector*/,
                           VectorType& /*_solutionVector*/,
-                          const size_type /*_maxIter*/ = 0,
-                          const ElementType /*_precision*/ = 0,
                           const Dune::ParameterTree /*description*/ = Dune::ParameterTree()) const
   {
     return size_type(3);

@@ -56,26 +56,18 @@ public:
                   << " this solver is believed to be slow! " << std::flush;
   }
 
-  static Dune::ParameterTree defaultSettings()
-  {
-    Dune::ParameterTree description;
-    description["maxIter"] = "5000";
-    description["precision"] = "1e-12";
-    return description;
-  } // Dune::ParameterTree defaultSettings()
-
   virtual size_type apply(const MatrixType& systemMatrix,
                           const VectorType& rhsVector,
                           VectorType& solutionVector,
-                          const size_type maxIter = 5000,
-                          const ElementType precision = 1e-12,
-                          const Dune::ParameterTree /*description*/ = Dune::ParameterTree()) const
+                          const Dune::ParameterTree description = BaseType::defaultIterativeSettings()) const
   {
     auto& x_i = solutionVector.backend();
     const auto& b = rhsVector.backend();
     const auto& A = systemMatrix.backend();
     const int cols = A.cols();
     size_type iteration(1);
+    const size_type maxIter = description.get<size_type>("maxIter");
+    const ElementType precision = description.get<ElementType>("precision");
     ElementType rho(0), rho_prev(1), beta, alpha;
     const ElementType tolerance = precision * precision * b.squaredNorm();
     typedef typename DSL::EigenDenseVector<typename VectorType::ElementType>::BackendType RealEigenVector;
@@ -126,27 +118,17 @@ public:
                   << " this solver is believed to produce utterly wrong results! " << std::flush;
   }
 
-  static Dune::ParameterTree defaultSettings()
-  {
-    Dune::ParameterTree description;
-    description["maxIter"] = "5000";
-    description["precision"] = "1e-12";
-    return description;
-  } // Dune::ParameterTree defaultSettings()
-
   virtual size_type apply(const MatrixType& systemMatrix,
                           const VectorType& rhsVector,
                           VectorType& solutionVector,
-                          const size_type maxIter = 5000,
-                          const ElementType precision = 1e-12,
-                          const Dune::ParameterTree /*description*/ = Dune::ParameterTree()) const
+                          const Dune::ParameterTree description = BaseType::defaultIterativeSettings()) const
   {
     typedef ::Eigen::ConjugateGradient< typename MatrixType::BackendType,
                                         ::Eigen::Lower,
                                         ::Eigen::DiagonalPreconditioner< ElementType > > EigenSolverType;
     EigenSolverType eigenSolver(systemMatrix.backend());
-    eigenSolver.setMaxIterations(maxIter);
-    eigenSolver.setTolerance(precision);
+    eigenSolver.setMaxIterations(description.get<size_type>("maxIter"));
+    eigenSolver.setTolerance(description.get<ElementType>("precision"));
     solutionVector.backend() = eigenSolver.solve(rhsVector.backend());
     return BaseType::translateInfo(eigenSolver.info());
   } // virtual bool apply(...)
@@ -169,25 +151,16 @@ public:
   typedef typename BaseType::ElementType ElementType;
   typedef typename BaseType::size_type size_type;
 
-  static Dune::ParameterTree defaultSettings()
-  {
-    Dune::ParameterTree description;
-    description["maxIter"] = "5000";
-    description["precision"] = "1e-12";
-    return description;
-  } // Dune::ParameterTree defaultSettings()
 
   virtual size_type apply(const MatrixType& systemMatrix,
                           const VectorType& rhsVector,
                           VectorType& solutionVector,
-                          const size_type maxIter = 5000,
-                          const ElementType precision = 1e-12,
-                          const Dune::ParameterTree /*description*/ = Dune::ParameterTree()) const
+                          const Dune::ParameterTree description = BaseType::defaultIterativeSettings()) const
   {
     typedef ::Eigen::BiCGSTAB< typename MatrixType::BackendType, ::Eigen::IdentityPreconditioner > EigenSolverType;
     EigenSolverType eigenSolver(systemMatrix.backend());
-    eigenSolver.setMaxIterations(maxIter);
-    eigenSolver.setTolerance(precision);
+    eigenSolver.setMaxIterations(description.get<size_type>("maxIter"));
+    eigenSolver.setTolerance(description.get<ElementType>("precision"));
     solutionVector.backend() = eigenSolver.solve(rhsVector.backend());
     return BaseType::translateInfo(eigenSolver.info());
   } // virtual bool apply(...)
@@ -210,25 +183,15 @@ public:
   typedef typename BaseType::ElementType ElementType;
   typedef typename BaseType::size_type size_type;
 
-  static Dune::ParameterTree defaultSettings()
-  {
-    Dune::ParameterTree description;
-    description["maxIter"] = "5000";
-    description["precision"] = "1e-12";
-    return description;
-  } // Dune::ParameterTree defaultSettings()
-
   virtual size_type apply(const MatrixType& systemMatrix,
                           const VectorType& rhsVector,
                           VectorType& solutionVector,
-                          const size_type maxIter = 5000,
-                          const ElementType precision = 1e-12,
-                          const Dune::ParameterTree /*description*/ = Dune::ParameterTree()) const
+                          const Dune::ParameterTree description = BaseType::defaultIterativeSettings()) const
   {
     typedef ::Eigen::BiCGSTAB< typename MatrixType::BackendType, ::Eigen::DiagonalPreconditioner< ElementType > > EigenSolverType;
-    EigenSolverType eigenSolver(systemMatrix.backend());
-    eigenSolver.setMaxIterations(maxIter);
-    eigenSolver.setTolerance(precision);
+    EigenSolverType eigenSolver(systemMatrix.backend());   
+    eigenSolver.setMaxIterations(description.get<size_type>("maxIter"));
+    eigenSolver.setTolerance(description.get<ElementType>("precision"));
     solutionVector.backend() = eigenSolver.solve(rhsVector.backend());
     return BaseType::translateInfo(eigenSolver.info());
   } // virtual bool apply(...)static_assert
@@ -253,18 +216,14 @@ public:
 
   static Dune::ParameterTree defaultSettings()
   {
-    Dune::ParameterTree description;
-    description["maxIter"] = "5000";
-    description["precision"] = "1e-12";
+    Dune::ParameterTree description = BaseType::defaultIterativeSettings();
     return description;
   } // Dune::ParameterTree defaultSettings()
 
   virtual size_type apply(const MatrixType& systemMatrix,
                           const VectorType& rhsVector,
                           VectorType& solutionVector,
-                          const size_type maxIter = 5000,
-                          const ElementType precision = 1e-12,
-                          const Dune::ParameterTree /*description*/ = Dune::ParameterTree()) const
+                          const Dune::ParameterTree description = defaultSettings()) const
   {
     typedef ::Eigen::BiCGSTAB< typename MatrixType::BackendType, ::Eigen::IncompleteLUT< ElementType > > EigenSolverType;
     EigenSolverType solver(systemMatrix.backend());
@@ -347,9 +306,7 @@ public:
   virtual size_type apply(const MatrixType& systemMatrix,
                           const VectorType& rhsVector,
                           VectorType& solutionVector,
-                          const size_type /*maxIter*/ = 5000,
-                          const ElementType /*precision*/ = 1e-12,
-                          const Dune::ParameterTree /*description*/ = Dune::ParameterTree()) const override
+                          const Dune::ParameterTree description = Dune::ParameterTree()) const override
   {
 //    typedef ::Eigen::SimplicialLDLT< typename MatrixType::BackendType> EigenSolverType;
     typedef ::Eigen::SuperLU< typename MatrixType::BackendType> EigenSolverType;

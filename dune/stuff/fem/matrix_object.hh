@@ -413,13 +413,12 @@ class EigenInverseOperator {
     typedef typename MatrixOperatorType::MatrixType MatrixType;
 
     const MatrixType& matrix_;
-    double precision_;
+    const Dune::ParameterTree& solver_settings_;
 public:
 
-  template < class... Args >
-  EigenInverseOperator( const MatrixOperatorType& matrix_operator, const double /*reduction*/, const double solverEps, Args... )
+  EigenInverseOperator( const MatrixOperatorType& matrix_operator, const Dune::ParameterTree& solver_settings )
     : matrix_(matrix_operator.matrix())
-    , precision_(solverEps)
+    , solver_settings_(solver_settings)
   {}
 
   template <class DomainVector, class RangeVector>
@@ -428,7 +427,7 @@ public:
       EigenVectorWrapperType x_w(x.leakPointer(), x.size());
       typedef DSL::SolverInterface<MatrixType, EigenVectorWrapperType> SolverType;
       std::unique_ptr<SolverType> solver(DSL::createSolver<MatrixType, EigenVectorWrapperType>("bicgstab.ilut"));
-      solver->apply(matrix_, arg_w, x_w, 5000, precision_);
+      solver->apply(matrix_, arg_w, x_w, solver_settings_);
   }
 };
 
