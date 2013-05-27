@@ -417,17 +417,17 @@ class EigenInverseOperator {
 public:
 
   template < class... Args >
-  EigenInverseOperator( MatrixOperatorType& matrix_operator, const double /*reduction*/, const double solverEps, Args... )
+  EigenInverseOperator( const MatrixOperatorType& matrix_operator, const double /*reduction*/, const double solverEps, Args... )
     : matrix_(matrix_operator.matrix())
     , precision_(solverEps)
   {}
 
   template <class DomainVector, class RangeVector>
   void operator()(const DomainVector& arg, RangeVector& x) const {
-      EigenVectorWrapperType arg_w(const_cast<double*>(arg.leakPointer()), arg.size());
+      const EigenVectorWrapperType arg_w(const_cast<double*>(arg.leakPointer()), arg.size());
       EigenVectorWrapperType x_w(x.leakPointer(), x.size());
-      typedef DSLS::Interface<MatrixType, EigenVectorWrapperType> SolverType;
-      std::unique_ptr<SolverType> solver(DSLS::create<MatrixType, EigenVectorWrapperType>("bicgstab.ilut"));
+      typedef DSL::SolverInterface<MatrixType, EigenVectorWrapperType> SolverType;
+      std::unique_ptr<SolverType> solver(DSL::createSolver<MatrixType, EigenVectorWrapperType>("bicgstab.ilut"));
       solver->apply(matrix_, arg_w, x_w, 5000, precision_);
   }
 };

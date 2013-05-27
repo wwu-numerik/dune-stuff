@@ -19,11 +19,10 @@
 namespace Dune {
 namespace Stuff {
 namespace LA {
-namespace Solver {
 
 
 template< class MatrixImp, class VectorImp >
-class Interface
+class SolverInterface
 {
 public:
   typedef typename Dune::Stuff::LA::Container::MatrixInterface< typename MatrixImp::Traits > MatrixType;
@@ -31,7 +30,7 @@ public:
   typedef typename Dune::Stuff::LA::Container::VectorInterface< typename VectorImp::Traits > VectorType;
   typedef typename MatrixType::size_type size_type;
 
-  virtual ~Interface()
+  virtual ~SolverInterface()
   {}
 
   virtual size_type apply(const MatrixType& /*_systemMatrix*/,
@@ -56,13 +55,13 @@ public:
 
 template< class MatrixImp, class VectorImp >
 class SolverNotImplementedForThisMatrixVectorCombination
-  : public Interface< MatrixImp, VectorImp >
+  : public SolverInterface< MatrixImp, VectorImp >
 {
 public:
-  typedef typename Interface< MatrixImp, VectorImp >::MatrixType   MatrixType;
-  typedef typename Interface< MatrixImp, VectorImp >::VectorType   VectorType;
-  typedef typename Interface< MatrixImp, VectorImp >::ElementType  ElementType;
-  typedef typename Interface< MatrixImp, VectorImp >::size_type    size_type;
+  typedef typename SolverInterface< MatrixImp, VectorImp >::MatrixType   MatrixType;
+  typedef typename SolverInterface< MatrixImp, VectorImp >::VectorType   VectorType;
+  typedef typename SolverInterface< MatrixImp, VectorImp >::ElementType  ElementType;
+  typedef typename SolverInterface< MatrixImp, VectorImp >::size_type    size_type;
 
   SolverNotImplementedForThisMatrixVectorCombination(const std::string msg = "\nERROR: this solver is not implemented for this matrix/vector combination")
   {
@@ -82,49 +81,48 @@ public:
 
 
 template< class MatrixImp, class VectorImp, class Enable = void >
-class Cg
+class CgSolver
   : public SolverNotImplementedForThisMatrixVectorCombination< MatrixImp, VectorImp >
 {};
 
 template< class MatrixImp, class VectorImp, class Enable = void >
-class CgDiagonal
+class CgDiagonalSolver
   : public SolverNotImplementedForThisMatrixVectorCombination< MatrixImp, VectorImp >
 {};
 
 template< class MatrixImp, class VectorImp, class Enable = void >
-class Bicgstab
+class BicgstabSolver
   : public SolverNotImplementedForThisMatrixVectorCombination< MatrixImp, VectorImp >
 {};
 
 template< class MatrixImp, class VectorImp, class Enable = void >
-class BicgstabDiagonal
+class BicgstabDiagonalSolver
   : public SolverNotImplementedForThisMatrixVectorCombination< MatrixImp, VectorImp >
 {};
 
 template< class MatrixImp, class VectorImp, class Enable = void >
-class BicgstabILUT
+class BicgstabILUTSolver
   : public SolverNotImplementedForThisMatrixVectorCombination< MatrixImp, VectorImp >
 {};
 
 template< class MatrixImp, class VectorImp, class Enable = void >
-class SimplicialLLT
+class SimplicialLLTSolver
   : public SolverNotImplementedForThisMatrixVectorCombination< MatrixImp, VectorImp >
 {};
 
 template< class MatrixImp, class VectorImp, class Enable = void >
-class SimplicialLDLT
+class SimplicialLDLTSolver
   : public SolverNotImplementedForThisMatrixVectorCombination< MatrixImp, VectorImp >
 {};
 
 #if HAVE_FASP
 template< class MatrixImp, class VectorImp, class Enable = void >
-class AmgFasp
+class AmgFaspSolver
   : public SolverNotImplementedForThisMatrixVectorCombination< MatrixImp, VectorImp >
 {};
 #endif // HAVE_FASP
 
 
-} // namespace Solver
 } // namespace LA
 } // namespace Stuff
 } // namespace Dune

@@ -22,6 +22,7 @@ namespace DSC = Dune::Stuff::Common;
 namespace DSG = Dune::Stuff::Grid;
 namespace DSFe = Dune::Stuff::Fem;
 //namespace DSFu = Dune::Stuff::Function;
+namespace DSL = Dune::Stuff::LA;
 namespace DSLC = Dune::Stuff::LA::Container;
 namespace DSLS = Dune::Stuff::LA::Solver;
 namespace DSLA = Dune::Stuff::LA::Algorithm;
