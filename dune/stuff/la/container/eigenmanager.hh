@@ -20,13 +20,12 @@
 namespace Dune {
 namespace Stuff {
 namespace LA {
-namespace Container {
 
 class EigenManager
 {
 public:
-  typedef Dune::Stuff::LA::Container::EigenDenseVector< double > DenseVectorType;
-  typedef Dune::Stuff::LA::Container::EigenDenseMatrix< double > DenseMatrixType;
+  typedef Dune::Stuff::LA::EigenDenseVector< double > DenseVectorType;
+  typedef Dune::Stuff::LA::EigenDenseMatrix< double > DenseMatrixType;
 
   EigenManager();
 
@@ -43,7 +42,6 @@ private:
   std::map< const std::string, std::shared_ptr< DenseMatrixType > > denseMatrixMap_;
 }; // class EigenManager
 
-} // namespace Container
 } // namespace LA
 } // namespace Stuff
 } // namespace Dune

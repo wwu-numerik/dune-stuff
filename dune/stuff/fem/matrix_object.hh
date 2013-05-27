@@ -185,9 +185,9 @@ private:
 
 };
 
-class LagrangePattern : public DSLC::SparsityPatternDefault {
+class LagrangePattern : public DSL::SparsityPatternDefault {
 
-    typedef DSLC::SparsityPatternDefault BaseType;
+    typedef DSL::SparsityPatternDefault BaseType;
 public:
     template< class D_FunctionSpace, class D_GridPart, int D_polOrder, template< class > class D_Storage,
               class R_FunctionSpace, class R_GridPart, int R_polOrder, template< class > class R_Storage>
@@ -260,7 +260,7 @@ public:
   typedef DomainSpace DomainSpaceType;
   typedef RangeSpace RangeSpaceType;
 
-  typedef DSLC::EigenRowMajorSparseMatrix< typename DomainSpace::RangeFieldType > MatrixType;
+  typedef DSL::EigenRowMajorSparseMatrix< typename DomainSpace::RangeFieldType > MatrixType;
   typedef MatrixType PreconditionMatrixType;
 
 private:
@@ -275,7 +275,7 @@ private:
 
   mutable MatrixType matrix_;
   bool preconditioning_;
-  const DSLC::SparsityPatternDefault& sparsity_pattern_;
+  const DSL::SparsityPatternDefault& sparsity_pattern_;
 
 public:
   //! type of local matrix
@@ -283,7 +283,7 @@ public:
 
   inline EigenMatrixObject( const DomainSpaceType& domainSpace,
                             const RangeSpaceType& rangeSpace,
-                            const DSLC::SparsityPatternDefault& sparsity_pattern )
+                            const DSL::SparsityPatternDefault& sparsity_pattern )
     : domainSpace_(domainSpace)
     , rangeSpace_(rangeSpace)
     , sequence_(-1)
@@ -390,7 +390,7 @@ public:
 
   EigenMatrixOperator ( const DomainSpaceType &domainSpace,
                             const RangeSpaceType &rangeSpace,
-                            const DSLC::SparsityPatternDefault& pattern )
+                            const DSL::SparsityPatternDefault& pattern )
   : Base( domainSpace, rangeSpace, pattern )
   {}
 
@@ -409,7 +409,7 @@ public:
 template< class DomainDiscreteFunctionType, class MatrixOperatorType >
 class EigenInverseOperator {
 
-    typedef DSLC::EigenMappedDenseVector<typename DomainDiscreteFunctionType::RangeFieldType> EigenVectorWrapperType;
+    typedef DSL::EigenMappedDenseVector<typename DomainDiscreteFunctionType::RangeFieldType> EigenVectorWrapperType;
     typedef typename MatrixOperatorType::MatrixType MatrixType;
 
     const MatrixType& matrix_;
