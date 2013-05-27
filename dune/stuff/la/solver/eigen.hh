@@ -56,13 +56,13 @@ public:
                   << " this solver is believed to be slow! " << std::flush;
   }
 
-  static Dune::ParameterTree createSampleDescription()
+  static Dune::ParameterTree defaultSettings()
   {
     Dune::ParameterTree description;
     description["maxIter"] = "5000";
     description["precision"] = "1e-12";
     return description;
-  } // Dune::ParameterTree createSampleDescription()
+  } // Dune::ParameterTree defaultSettings()
 
   virtual size_type apply(const MatrixType& systemMatrix,
                           const VectorType& rhsVector,
@@ -126,13 +126,13 @@ public:
                   << " this solver is believed to produce utterly wrong results! " << std::flush;
   }
 
-  static Dune::ParameterTree createSampleDescription()
+  static Dune::ParameterTree defaultSettings()
   {
     Dune::ParameterTree description;
     description["maxIter"] = "5000";
     description["precision"] = "1e-12";
     return description;
-  } // Dune::ParameterTree createSampleDescription()
+  } // Dune::ParameterTree defaultSettings()
 
   virtual size_type apply(const MatrixType& systemMatrix,
                           const VectorType& rhsVector,
@@ -169,13 +169,13 @@ public:
   typedef typename BaseType::ElementType ElementType;
   typedef typename BaseType::size_type size_type;
 
-  static Dune::ParameterTree createSampleDescription()
+  static Dune::ParameterTree defaultSettings()
   {
     Dune::ParameterTree description;
     description["maxIter"] = "5000";
     description["precision"] = "1e-12";
     return description;
-  } // Dune::ParameterTree createSampleDescription()
+  } // Dune::ParameterTree defaultSettings()
 
   virtual size_type apply(const MatrixType& systemMatrix,
                           const VectorType& rhsVector,
@@ -210,13 +210,13 @@ public:
   typedef typename BaseType::ElementType ElementType;
   typedef typename BaseType::size_type size_type;
 
-  static Dune::ParameterTree createSampleDescription()
+  static Dune::ParameterTree defaultSettings()
   {
     Dune::ParameterTree description;
     description["maxIter"] = "5000";
     description["precision"] = "1e-12";
     return description;
-  } // Dune::ParameterTree createSampleDescription()
+  } // Dune::ParameterTree defaultSettings()
 
   virtual size_type apply(const MatrixType& systemMatrix,
                           const VectorType& rhsVector,
@@ -251,13 +251,13 @@ public:
   typedef typename BaseType::ElementType ElementType;
   typedef typename BaseType::size_type size_type;
 
-  static Dune::ParameterTree createSampleDescription()
+  static Dune::ParameterTree defaultSettings()
   {
     Dune::ParameterTree description;
     description["maxIter"] = "5000";
     description["precision"] = "1e-12";
     return description;
-  } // Dune::ParameterTree createSampleDescription()
+  } // Dune::ParameterTree defaultSettings()
 
   virtual size_type apply(const MatrixType& systemMatrix,
                           const VectorType& rhsVector,
