@@ -30,8 +30,7 @@ static std::vector< std::string > solverTypes()
       , "bicgstab"
       , "cg"
       , "cg.diagonal"
-      , "simplicialllt"
-      , "simplicialldlt"
+      , "direct.superlu"
 #if HAVE_FASP
       , "amg.fasp"
 #endif // FAVE_FASP
@@ -66,10 +65,8 @@ SolverInterface< MatrixType, VectorType >* createSolver(const std::string type =
     return new Dune::Stuff::LA::BicgstabDiagonalSolver< MatrixType, VectorType >();
   } else if (type == "bicgstab.ilut") {
     return new Dune::Stuff::LA::BicgstabILUTSolver< MatrixType, VectorType >();
-  } else if (type == "simplicialllt") {
-    return new Dune::Stuff::LA::SimplicialLLTSolver< MatrixType, VectorType >();
-  } else if (type == "simplicialldlt") {
-    return new Dune::Stuff::LA::SimplicialLDLTSolver< MatrixType, VectorType >();
+  } else if (type == "direct.superlu") {
+    return new Dune::Stuff::LA::DirectSuperLuSolver< MatrixType, VectorType >();
 #if HAVE_FASP
   } else if (type == "amg.fasp") {
     return new Dune::Stuff::LA::AmgFaspSolver< MatrixType, VectorType >();

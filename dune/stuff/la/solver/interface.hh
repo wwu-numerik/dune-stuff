@@ -111,12 +111,7 @@ class BicgstabILUTSolver
 {};
 
 template< class MatrixImp, class VectorImp, class Enable = void >
-class SimplicialLLTSolver
-  : public SolverNotImplementedForThisMatrixVectorCombination< MatrixImp, VectorImp >
-{};
-
-template< class MatrixImp, class VectorImp, class Enable = void >
-class SimplicialLDLTSolver
+class DirectSuperLuSolver
   : public SolverNotImplementedForThisMatrixVectorCombination< MatrixImp, VectorImp >
 {};
 
