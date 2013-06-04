@@ -7,7 +7,7 @@
  #include "config.h"
 #endif // ifdef HAVE_CMAKE_CONFIG
 
-#ifdef HAVE_DUNE_FEM
+#if HAVE_DUNE_FEM
 
 #include <set>
 #include <dune/fem/space/common/restrictprolonginterface.hh>
@@ -43,20 +43,20 @@ public:
   } // setFatherChildWeight
 
   //! restrict data to father
-  template< class EntityType >
-  void restrictLocal(EntityType& father,
-                     EntityType& son,
+  template< class FatherEntityType, class SonEntityType>
+  void restrictLocal(FatherEntityType& father,
+                     const SonEntityType& son,
                      bool initialize) const {
-    for (auto el : pair_set_)
+    for (auto& el : pair_set_)
     {
       el->restrictLocal(father, son, initialize);
     }
   } // restrictLocal
 
   //! prolong data to children
-  template< class EntityType >
-  void prolongLocal(EntityType& father,
-                    EntityType& son,
+  template< class FatherEntityType, class SonEntityType>
+  void prolongLocal(const FatherEntityType& father,
+                    SonEntityType& son,
                     bool initialize) const {
     for (auto el : pair_set_)
     {
