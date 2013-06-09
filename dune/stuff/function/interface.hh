@@ -339,6 +339,12 @@ public:
   }
 
   template< class EntityType >
+  struct LocalFunction
+  {
+    typedef LocalizedFunction< EntityType, DomainFieldType, dimDomain, RangeFieldType, dimRangeRows, dimRangeCols > Type;
+  };
+
+  template< class EntityType >
   LocalizedFunction< EntityType, DomainFieldType, dimDomain, RangeFieldType, dimRangeRows, dimRangeCols >
   localFunction(const EntityType& entity) const
   {
@@ -380,6 +386,8 @@ public:
   /* @{ */
   virtual void evaluate(const DomainType& /*_x*/, RangeType& /*_ret*/) const = 0;
   /* @} */
+
+  using BaseType::localFunction;
 }; // class FunctionInterface
 
 
@@ -422,6 +430,8 @@ public:
   /* @{ */
   virtual void evaluate(const DomainType& /*_x*/, RangeType& /*_ret*/) const = 0;
   /* @} */
+
+  using BaseType::localFunction;
 }; // class FunctionInterface
 
 
