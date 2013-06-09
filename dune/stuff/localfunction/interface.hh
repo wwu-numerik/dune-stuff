@@ -125,6 +125,29 @@ public:
 
 /**
  *  \brief  Flag for all functions which provide a localFunction(entity) method.
+ *
+ *  The derived class has to provide a method with the following signature:
+\code
+template< class EntityType >
+ReturnType localFunction(const EntityType& entity) const
+{
+  ...
+}
+\endcode
+ *  and a struct to provide the ReturnType of this method:
+\code
+template< class EntityType >
+struct LocalFunction
+{
+  typedef ... Type;
+};
+\endcode
+ *  You can thus obtain the return type and the local function, if derived is an instance of a derived class
+ *  of this class with type derived_type:
+\code
+typedef typename derived_type::template LocalFunction< EntityType >::Type LocalFunctionType;
+const LocalFunctionType localfunction = derived.localFunction(entity);
+\endcode
  */
 class LocalizableFunction
 {};
