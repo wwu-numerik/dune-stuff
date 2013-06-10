@@ -5,20 +5,49 @@
 #include <assert.h>
 #include <dune/common/float_cmp.hh>
 #include <dune/stuff/common/debug.hh>
+#include <dune/stuff/common/type_utils.hh>
+#include <dune/stuff/aliases.hh>
 
 namespace Dune {
 namespace Stuff {
 namespace Fem {
 
+
+template <class MatrixObjectType, class Enable = void>
+struct LocalMatrixProxyTraits
+{
+    typedef typename MatrixObjectType::LocalMatrixType LocalMatrixType;
+    typedef typename MatrixObjectType::DomainSpaceType DomainSpaceType;
+    typedef typename MatrixObjectType::RangeSpaceType RangeSpaceType;
+    typedef typename MatrixObjectType::DomainSpaceType::GridType GridType;
+    typedef typename MatrixObjectType::DomainSpaceType::EntityType DomainEntityType;
+    typedef typename MatrixObjectType::RangeSpaceType::EntityType RangeEntityType;
+    typedef typename MatrixObjectType::RangeSpaceType::RangeFieldType FieldType;
+};
+
+
+template <class MatrixObjectType>
+struct LocalMatrixProxyTraits<MatrixObjectType, typename std::enable_if<DSC::is_smart_ptr<MatrixObjectType>::value>::type>
+{
+    typedef typename MatrixObjectType::element_type::LocalMatrixType LocalMatrixType;
+    typedef typename MatrixObjectType::element_type::DomainSpaceType DomainSpaceType;
+    typedef typename MatrixObjectType::element_type::RangeSpaceType RangeSpaceType;
+    typedef typename MatrixObjectType::element_type::DomainSpaceType::GridType GridType;
+    typedef typename MatrixObjectType::element_type::DomainSpaceType::EntityType DomainEntityType;
+    typedef typename MatrixObjectType::element_type::RangeSpaceType::EntityType RangeEntityType;
+    typedef typename MatrixObjectType::element_type::RangeSpaceType::RangeFieldType FieldType;
+};
+
 //! a small proxy object that automagically prevents near-0 value fill-in
-template< class MatrixObjectType >
+template< class MatrixObjectType>
 class LocalMatrixProxy
 {
-  typedef typename MatrixObjectType::LocalMatrixType LocalMatrixType;
-  typedef typename MatrixObjectType::DomainSpaceType::GridType GridType;
-  typedef typename MatrixObjectType::DomainSpaceType::EntityType DomainEntityType;
-  typedef typename MatrixObjectType::RangeSpaceType::EntityType RangeEntityType;
-  typedef typename MatrixObjectType::RangeSpaceType::RangeFieldType FieldType;
+  typedef LocalMatrixProxyTraits<MatrixObjectType> TraitsType;
+  typedef typename TraitsType::LocalMatrixType LocalMatrixType;
+  typedef typename TraitsType::DomainSpaceType::GridType GridType;
+  typedef typename TraitsType::DomainSpaceType::EntityType DomainEntityType;
+  typedef typename TraitsType::RangeSpaceType::EntityType RangeEntityType;
+  typedef typename TraitsType::RangeSpaceType::RangeFieldType FieldType;
   typedef Dune::FloatCmpOps<FieldType> CompareType;
   typedef Dune::FloatCmp::DefaultEpsilon<typename CompareType::EpsilonType, CompareType::cstyle> DefaultEpsilon;
   LocalMatrixType local_matrix_;
@@ -30,7 +59,7 @@ class LocalMatrixProxy
 public:
   LocalMatrixProxy(MatrixObjectType& object, const DomainEntityType& self, const RangeEntityType& neigh,
                    const double eps = DefaultEpsilon::value())
-    : local_matrix_( object.localMatrix(self, neigh) )
+    : local_matrix_( DSC::PtrCaller<MatrixObjectType>::call(object).localMatrix(self, neigh) )
     , eps_(eps)
     , rows_( local_matrix_.rows() )
     , cols_( local_matrix_.columns() )
@@ -52,7 +81,7 @@ public:
   }
 
   ~LocalMatrixProxy() {
-    auto comp = CompareType(eps_);
+    const auto comp = CompareType(eps_);
     for (unsigned int i = 0; i < rows_; ++i)
     {
       for (unsigned int j = 0; j < cols_; ++j)
@@ -104,8 +133,8 @@ public:
     const auto& domainSpace = matrix_pointer_->rowSpace();
     const auto& rangeSpace = matrix_pointer_->colSpace();
 
-    rowMap_.resize( domainSpace.baseFunctionSet(self).numBaseFunctions() );
-    colMap_.resize( rangeSpace.baseFunctionSet(neigh).numBaseFunctions() );
+    rowMap_.resize( domainSpace.baseFunctionSet(self).size() );
+    colMap_.resize( rangeSpace.baseFunctionSet(neigh).size() );
 
     const auto dmend = domainSpace.mapper().end(self);
     for (auto dmit = domainSpace.mapper().begin(self); dmit != dmend; ++dmit)

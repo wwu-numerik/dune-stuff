@@ -6,17 +6,16 @@
 namespace Dune {
 namespace Stuff {
 namespace LA {
-namespace Container {
 
 
 template< class Traits >
-class Interface
+class ContainerInterface
 {
 public:
   typedef typename Traits::BackendType BackendType;
 
   virtual BackendType& backend() = 0;
-  virtual ~Interface() {}
+  virtual ~ContainerInterface() {}
 
   virtual const BackendType& backend() const = 0;
 }; // class Interface
@@ -24,7 +23,7 @@ public:
 
 template< class Traits >
 class MatrixInterface
-  : public Interface< Traits >
+  : public ContainerInterface< Traits >
 {
 public:
   typedef MatrixInterface< Traits > ThisType;
@@ -74,7 +73,7 @@ public:
 
 template< class Traits >
 class VectorInterface
-  : public Interface< Traits >
+  : public ContainerInterface< Traits >
 {
 public:
   typedef VectorInterface< Traits > ThisType;
@@ -117,7 +116,6 @@ public:
 }; // class VectorInterface
 
 
-} // namespace Container
 } // namespace LA
 } // namespace Stuff
 } // namespace Dune

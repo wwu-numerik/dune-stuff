@@ -13,23 +13,22 @@
 namespace Dune {
 namespace Stuff {
 namespace LA {
-namespace Container {
 
 
 #if HAVE_EIGEN
 template< class EigenContainerImp >
-class AffineParametric
+class AffineParametricContainer
 {
 public:
-  typedef AffineParametric< EigenContainerImp >  ThisType;
+  typedef AffineParametricContainer< EigenContainerImp >  ThisType;
 
-  typedef typename LA::Container::EigenInterface< typename EigenContainerImp::Traits >::derived_type  ComponentType;
+  typedef typename LA::EigenInterface< typename EigenContainerImp::Traits >::derived_type  ComponentType;
   typedef Stuff::FunctionAffineSeparablCoefficient< typename EigenContainerImp::ElementType >         CoefficientType;
 
   typedef typename Stuff::Common::Parameter::Type ParamType;
 
 public:
-  AffineParametric(const size_t _paramSize,
+  AffineParametricContainer(const size_t _paramSize,
                    std::vector< std::shared_ptr< ComponentType > >& _components,
                    const std::vector< std::shared_ptr< const CoefficientType > >& _coefficients)
     : paramSize_(_paramSize)
@@ -55,7 +54,7 @@ public:
     }
   } // AffineParametric(...)
 
-  AffineParametric(std::shared_ptr< ComponentType > _component)
+  AffineParametricContainer(std::shared_ptr< ComponentType > _component)
     : paramSize_(0)
   {
     components_.push_back(_component);
@@ -124,7 +123,6 @@ private:
 #endif // HAVE_EIGEN
 
 
-} // namespace Container
 } // namespace LA
 } // namespace Stuff
 } // namespace Dune

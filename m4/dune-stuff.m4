@@ -5,10 +5,13 @@ AC_DEFUN([DUNE_STUFF_CHECKS],[
                            [Define wether boost was found.])],
                            [AC_MSG_ERROR([Boost 1.48 is required])])
   AX_BOOST_FILESYSTEM([1.48.0])
-  AC_REQUIRE([GXX0X])
-  AC_REQUIRE([LAMBDAS_CHECK])
-  AC_REQUIRE([STD_BEGIN_END_CHECK])
-  AC_REQUIRE([CONSTEXPR_CHECK])
+  AX_BOOST_SYSTEM([1.48.0])
+  AX_BOOST_TIMER([1.48.0])
+  AX_BOOST_CHRONO([1.48.0])
+
+  AC_LANG([C++])
+  AX_CXX_COMPILE_STDCXX_11([noext],[mandatory])
+
   PKG_CHECK_MODULES([EIGEN],
                     [eigen3],
                     [AC_DEFINE([HAVE_EIGEN],
@@ -22,5 +25,5 @@ to the PKG_CONFIG_PATH environment variable.])])
 
 AC_DEFUN([DUNE_STUFF_CHECK_MODULE],
 [
-    DUNE_CHECK_MODULES([dune-stuff], [stuff/exists.hh])
+    DUNE_CHECK_MODULES([dune-stuff], [stuff/common/profiler.hh], [Dune::Stuff::Common::profiler()])
 ])

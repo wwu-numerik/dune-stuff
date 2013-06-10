@@ -161,9 +161,9 @@ private:
 #define NULLFUNCTION_TP_BOUNDARY(classname) \
   template< class T, class P > \
   struct classname \
-    : public Stuff::ConstantIntersectionTimeFunction< T, P > \
+    : public Dune::Stuff::Fem::ConstantIntersectionTimeFunction< T, P > \
   { classname(const P &p, const T &t, double = 0.0, double = 0.0) \
-      : Stuff::ConstantIntersectionTimeFunction< T, P >(p, t) {} };
+      : Dune::Stuff::Fem::ConstantIntersectionTimeFunction< T, P >(p, t) {} };
 
 #define NULLFUNCTION(classname) \
   template< class T > \

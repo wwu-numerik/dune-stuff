@@ -36,17 +36,7 @@ AC_CONFIG_FILES([Makefile
 	m4/Makefile
 	dune-stuff.pc])
 
-have_pthreads=no
-AS_IF([test "x$with_pthreads" != "xno"],
-      [ACX_PTHREAD(
-        [],
-        [AS_IF([test "x$with_pthreads" != "xcheck"],
-               [AC_MSG_FAILURE(
-                 [--with-pthreads was specified, but unable to be used])])])
-       have_pthreads="$acx_pthread_ok"])
-AM_CONDITIONAL([HAVE_PTHREADS],[test "x$have_pthreads" == "xyes"])
-AC_SUBST(PTHREAD_CFLAGS)
-AC_SUBST(PTHREAD_LIBS)
+
 AC_OUTPUT
 # finally print the summary information
 DUNE_SUMMARY_ALL

@@ -10,8 +10,6 @@ namespace Fem {}
 namespace Function {}
 
 namespace LA {
-  namespace Container{}
-  namespace Solver{}
   namespace Algorithm{}
 }
 
@@ -21,9 +19,7 @@ namespace LA {
 namespace DSC = Dune::Stuff::Common;
 namespace DSG = Dune::Stuff::Grid;
 namespace DSFe = Dune::Stuff::Fem;
-//namespace DSFu = Dune::Stuff::Function;
-namespace DSLC = Dune::Stuff::LA::Container;
-namespace DSLS = Dune::Stuff::LA::Solver;
+namespace DSL = Dune::Stuff::LA;
 namespace DSLA = Dune::Stuff::LA::Algorithm;
 
 #endif // DUNE_STUFF_ALIASES_HH

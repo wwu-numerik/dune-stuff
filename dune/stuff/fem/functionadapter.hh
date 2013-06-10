@@ -192,7 +192,7 @@ public:
     // clear destination
     BaseType::clear();
 
-    for (auto entity : space)
+    for (const auto& entity : space)
     {
       const auto& geo = entity.geometry();
       const VolumeQuadratureType quad(entity, quadOrd);
@@ -278,7 +278,7 @@ public:
     const bool affineMapping = massMatrix.affine();
     BaseType::clear();
 
-    for (auto entity : space)
+    for (const auto& entity : space)
     {
       const auto& geo = entity.geometry();
       const VolumeQuadratureType quad(entity, quadOrd);
