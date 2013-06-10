@@ -18,13 +18,18 @@ namespace Dune {
 namespace Stuff {
 
 
+// forward, to allow for specialization
+template< class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDimRows, int rangeDimCols >
+class AffineParametricFunctionCheckerboard;
+
+
 template< class DomainFieldImp, int domainDim, class RangeFieldImp >
-class AffineParametricFunctionCheckerboard
+class AffineParametricFunctionCheckerboard< DomainFieldImp, domainDim, RangeFieldImp, 1, 1 >
   : public AffineParametricFunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, 1, 1 >
 {
   typedef AffineParametricFunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, 1, 1 > BaseType;
 public:
-  typedef AffineParametricFunctionCheckerboard< DomainFieldImp, domainDim, RangeFieldImp > ThisType;
+  typedef AffineParametricFunctionCheckerboard< DomainFieldImp, domainDim, RangeFieldImp, 1, 1 > ThisType;
 
   typedef typename BaseType::DomainFieldType  DomainFieldType;
   static const int                            dimDomain = BaseType::dimDomain;
