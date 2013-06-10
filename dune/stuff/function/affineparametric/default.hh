@@ -1,12 +1,7 @@
 #ifndef DUNE_STUFF_FUNCTION_AFFINEPARAMETRIC_DEFAULT_HH
 #define DUNE_STUFF_FUNCTION_AFFINEPARAMETRIC_DEFAULT_HH
 
-#ifdef HAVE_CMAKE_CONFIG
-  #include "cmake_config.h"
-#elif defined (HAVE_CONFIG_H)
-  #include <config.h>
-#endif // ifdef HAVE_CMAKE_CONFIG
-
+#include <memory>
 #include <vector>
 
 #include <dune/common/shared_ptr.hh>
@@ -50,8 +45,8 @@ public:
 
   FunctionAffineParametricDefault(const size_t _paramSize,
                                   const std::vector< ParamType > _paramRange,
-                                  const std::vector< Dune::shared_ptr< const ComponentType > > _components,
-                                  const std::vector< Dune::shared_ptr< const CoefficientType > > _coefficients,
+                                  const std::vector< std::shared_ptr< const ComponentType > > _components,
+                                  const std::vector< std::shared_ptr< const CoefficientType > > _coefficients,
                                   const std::vector< std::string > _parameterExplanation = std::vector< std::string >(),
                                   const int _order = -1,
                                   const std::string _name = id())
@@ -139,7 +134,7 @@ public:
     const int _order = description.get< int >("order", -1);
     // then, read what has to exist
     // * components
-    std::vector< Dune::shared_ptr< const ComponentType > > _components;
+    std::vector< std::shared_ptr< const ComponentType > > _components;
     bool continue_search = true;
     while (continue_search) {
       // lets see if there is a component with this index
@@ -200,7 +195,7 @@ public:
                    "\n" << DSC::colorStringRed("ERROR:")
                    << " component " << qq << " is parametric!");
     // * coefficients
-    std::vector< Dune::shared_ptr< const CoefficientType > > _coefficients;
+    std::vector< std::shared_ptr< const CoefficientType > > _coefficients;
     continue_search = true;
     while (continue_search) {
       // lets see if there is a coefficient with this index
@@ -288,12 +283,12 @@ public:
     return coefficients_.size();
   }
 
-  virtual const std::vector< Dune::shared_ptr< const ComponentType > >& components() const
+  virtual const std::vector< std::shared_ptr< const ComponentType > >& components() const
   {
     return components_;
   }
 
-  virtual const std::vector< Dune::shared_ptr< const CoefficientType > >& coefficients() const
+  virtual const std::vector< std::shared_ptr< const CoefficientType > >& coefficients() const
   {
     return coefficients_;
   }
@@ -317,8 +312,8 @@ public:
 private:
   size_t paramSize_;
   std::vector< ParamType > paramRange_;
-  std::vector< Dune::shared_ptr< const ComponentType > > components_;
-  std::vector< Dune::shared_ptr< const CoefficientType > > coefficients_;
+  std::vector< std::shared_ptr< const ComponentType > > components_;
+  std::vector< std::shared_ptr< const CoefficientType > > coefficients_;
   const int order_;
   const std::string name_;
   std::vector< std::string > parameterExplanation_;
