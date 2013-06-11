@@ -66,7 +66,7 @@ public:
     const auto& A = systemMatrix.backend();
     const int cols = A.cols();
     size_t iteration(1);
-    const size_t maxIter = description.get<size_type>("maxIter");
+    const size_t maxIter = description.get<size_t >("maxIter");
     const ElementType precision = description.get<ElementType>("precision");
     ElementType rho(0), rho_prev(1), beta, alpha;
     const ElementType tolerance = precision * precision * b.squaredNorm();
@@ -186,8 +186,8 @@ public:
                           const Dune::ParameterTree description = BaseType::defaultIterativeSettings()) const
   {
     typedef ::Eigen::BiCGSTAB< typename MatrixType::BackendType, ::Eigen::DiagonalPreconditioner< ElementType > > EigenSolverType;
-    EigenSolverType eigenSolver(systemMatrix.backend());   
-    eigenSolver.setMaxIterations(description.get<size_type>("maxIter"));
+    EigenSolverType eigenSolver(systemMatrix.backend());
+    eigenSolver.setMaxIterations(description.get<size_t >("maxIter"));
     eigenSolver.setTolerance(description.get<ElementType>("precision"));
     solutionVector.backend() = eigenSolver.solve(rhsVector.backend());
     return BaseType::translateInfo(eigenSolver.info());
@@ -220,9 +220,9 @@ public:
   } // Dune::ParameterTree defaultSettings()
 
   virtual size_t apply(const MatrixType& systemMatrix,
-                          const VectorType& rhsVector,
-                          VectorType& solutionVector,
-                          const Dune::ParameterTree description = defaultSettings()) const
+                       const VectorType& rhsVector,
+                       VectorType& solutionVector,
+                       const Dune::ParameterTree description = defaultSettings()) const
   {
     typedef ::Eigen::BiCGSTAB< typename MatrixType::BackendType, ::Eigen::IncompleteLUT< ElementType > > EigenSolverType;
     EigenSolverType solver(systemMatrix.backend());
