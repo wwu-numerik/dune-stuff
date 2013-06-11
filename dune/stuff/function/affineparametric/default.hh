@@ -107,7 +107,7 @@ public:
     return this;
   }
 
-  static Dune::ParameterTree createSampleDescription(const std::string subName = "")
+  static Dune::ParameterTree createDefaultSettings(const std::string subName = "")
   {
     Dune::ParameterTree description;
     description["name"] = id();
@@ -125,13 +125,13 @@ public:
     DSC::ExtendedParameterTree extendedDescription;
     extendedDescription.add(description, subName);
     return extendedDescription;
-  } // ... createSampleDescription(...)
+  } // ... createDefaultSettings(...)
 
-  static ThisType* create(const DSC::ExtendedParameterTree description)
+  static ThisType* create(const DSC::ExtendedParameterTree settings)
   {
     // first of all, read the optional stuff
-    const std::string _name = description.get< std::string >("name", id());
-    const int _order = description.get< int >("order", -1);
+    const std::string _name = settings.get< std::string >("name", id());
+    const int _order = settings.get< int >("order", -1);
     // then, read what has to exist
     // * components
     std::vector< std::shared_ptr< const ComponentType > > _components;
@@ -139,46 +139,46 @@ public:
     while (continue_search) {
       // lets see if there is a component with this index
       const std::string key = "component." + DSC::toString(_components.size());
-      if (description.hasSub(key)) {
+      if (settings.hasSub(key)) {
         // there is a sub
-        Dune::ParameterTree componentDescription = description.sub(key);
+        Dune::ParameterTree componentSettings = settings.sub(key);
         // lets see if it has a type
-        if (componentDescription.hasKey("type")) {
-          const std::string type = componentDescription.get< std::string >("type");
+        if (componentSettings.hasKey("type")) {
+          const std::string type = componentSettings.get< std::string >("type");
           if (type == "function.affineparametric.default")
             DUNE_THROW(Dune::IOError,
                        "\n" << DSC::colorStringRed("ERROR:")
                        << " can not create a 'function.affineparametric.default' inside itself!");
           _components.emplace_back(Functions< DomainFieldType, dimDomain,
-                                              RangeFieldType, dimRange >::create(type, componentDescription));
+                                              RangeFieldType, dimRange >::create(type, componentSettings));
         } else {
           // since it does not have a type, treat it as an expression function
-          if (!(componentDescription.hasKey("expression") || componentDescription.hasSub("expression")))
+          if (!(componentSettings.hasKey("expression") || componentSettings.hasSub("expression")))
             DUNE_THROW(Dune::IOError,
                        "\n" << DSC::colorStringRed("ERROR:")
                        << " could not interpret component." << _components.size()
                        << "in the following Dune::ParameterTree:\n"
-                       << description.reportString("  "));
-          if (!componentDescription.hasKey("variable"))
-            componentDescription["variable"] = "x";
-          if (!componentDescription.hasKey("name"))
-            componentDescription["name"] = _name;
-          if (!componentDescription.hasKey("order"))
-            componentDescription["order"] = DSC::toString(_order);
+                       << settings.reportString("  "));
+          if (!componentSettings.hasKey("variable"))
+            componentSettings["variable"] = "x";
+          if (!componentSettings.hasKey("name"))
+            componentSettings["name"] = _name;
+          if (!componentSettings.hasKey("order"))
+            componentSettings["order"] = DSC::toString(_order);
           _components.emplace_back(Functions< DomainFieldType, dimDomain,
                                               RangeFieldType, dimRange >::create("function.expression",
-                                                                               componentDescription));
-        } // if (componentDescription.hasKey("type"))
-      } else if (description.hasKey(key)) {
+                                                                               componentSettings));
+        } // if (componentSettings.hasKey("type"))
+      } else if (settings.hasKey(key)) {
         // there is only one key, interpret it as an entry for an expression function with variable x
-        Dune::ParameterTree componentDescription;
-        componentDescription["name"] = _name;
-        componentDescription["order"] = DSC::toString(_order);
-        componentDescription["variable"] = "x";
-        componentDescription["expression"] = description.get< std::string >(key);
+        Dune::ParameterTree componentSettings;
+        componentSettings["name"] = _name;
+        componentSettings["order"] = DSC::toString(_order);
+        componentSettings["variable"] = "x";
+        componentSettings["expression"] = settings.get< std::string >(key);
         _components.emplace_back(Functions< DomainFieldType, dimDomain,
                                             RangeFieldType, dimRange >::create("function.expression",
-                                                                             componentDescription));
+                                                                             componentSettings));
       } else {
         // stop the search
         continue_search = false;
@@ -187,7 +187,7 @@ public:
     if (_components.size() == 0)
       DUNE_THROW(Dune::IOError,
                  "\n" << DSC::colorStringRed("ERROR:")
-                 << " no 'component' found in the following description:\n" << description.reportString("  "));
+                 << " no 'component' found in the following settings:\n" << settings.reportString("  "));
     // check that all components are nonparametric
     for (size_t qq = 0; qq < _components.size(); ++qq)
       if (_components[qq]->parametric())
@@ -200,26 +200,26 @@ public:
     while (continue_search) {
       // lets see if there is a coefficient with this index
       const std::string key = "coefficient." + DSC::toString(_coefficients.size());
-      if (description.hasKey(key)) {
-        _coefficients.emplace_back(new CoefficientType(description.get< std::string >(key)));
+      if (settings.hasKey(key)) {
+        _coefficients.emplace_back(new CoefficientType(settings.get< std::string >(key)));
       } else
         continue_search = false;
     } // while (continue_search)
     if (_coefficients.size() == 0)
       DUNE_THROW(Dune::IOError,
                  "\n" << DSC::colorStringRed("ERROR:")
-                 << " no 'coefficient' found in the following description:\n" << description.reportString("  "));
+                 << " no 'coefficient' found in the following settings:\n" << settings.reportString("  "));
     else if (!(_coefficients.size() == _components.size()
              || _coefficients.size() == (_components.size() - 1)))
       DUNE_THROW(Dune::IOError,
                  "\n" << DSC::colorStringRed("ERROR:")
-                 << " wrong number of 'coefficient' found in the following description:\n"
-                 << description.reportString("  "));
+                 << " wrong number of 'coefficient' found in the following settings:\n"
+                 << settings.reportString("  "));
     // * paramSize
-    const size_t _paramSize = description.get< size_t >("paramSize");
+    const size_t _paramSize = settings.get< size_t >("paramSize");
     // * paramRange
-    const std::vector< ParamFieldType > _paramMins = description.getVector< ParamFieldType >("paramMin", _paramSize);
-    const std::vector< ParamFieldType > _paramMaxs = description.getVector< ParamFieldType >("paramMax", _paramSize);
+    const std::vector< ParamFieldType > _paramMins = settings.getVector< ParamFieldType >("paramMin", _paramSize);
+    const std::vector< ParamFieldType > _paramMaxs = settings.getVector< ParamFieldType >("paramMax", _paramSize);
     ParamType _paramMin(_paramSize);
     ParamType _paramMax(_paramSize);
     for (size_t pp = 0; pp < _paramSize; ++pp) {
@@ -231,10 +231,10 @@ public:
     _paramRange.push_back(_paramMax);
     // * paramExplanation
     std::vector< std::string > _paramExplanation;
-    if (description.hasVector("paramExplanation"))
-      _paramExplanation = description.getVector< std::string >("paramExplanation", 1);
-    else if (description.hasKey("paramExplanation"))
-      _paramExplanation.push_back(description.get< std::string >("paramExplanation"));
+    if (settings.hasVector("paramExplanation"))
+      _paramExplanation = settings.getVector< std::string >("paramExplanation", 1);
+    else if (settings.hasKey("paramExplanation"))
+      _paramExplanation.push_back(settings.get< std::string >("paramExplanation"));
     return new ThisType(_paramSize, _paramRange, _components, _coefficients, _paramExplanation, _order, _name);
   } // ... create(...)
 

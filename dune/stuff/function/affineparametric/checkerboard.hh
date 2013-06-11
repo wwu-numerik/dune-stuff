@@ -103,7 +103,7 @@ public:
     }
   } // AffineParametricFunctionCheckerboard(...)
 
-  static Dune::ParameterTree createSampleDescription(const std::string subName = "")
+  static Dune::ParameterTree createDefaultSettings(const std::string subName = "")
   {
     Dune::ParameterTree description;
     description["lowerLeft"] = "[0.0; 0.0; 0.0]";
@@ -119,27 +119,27 @@ public:
       extendedDescription.add(description, subName);
       return extendedDescription;
     }
-  } // ... createSampleDescription(...)
+  } // ... createDefaultSettings(...)
 
-  static ThisType* create(const DSC::ExtendedParameterTree description)
+  static ThisType* create(const DSC::ExtendedParameterTree settings)
   {
     // get data
-    const std::string _name = description.get< std::string >("name", id());
-    const std::vector< DomainFieldType > lowerLefts = description.getVector("lowerLeft", DomainFieldType(0), dimDomain);
-    const std::vector< DomainFieldType > upperRights = description.getVector("upperRight",
+    const std::string _name = settings.get< std::string >("name", id());
+    const std::vector< DomainFieldType > lowerLefts = settings.getVector("lowerLeft", DomainFieldType(0), dimDomain);
+    const std::vector< DomainFieldType > upperRights = settings.getVector("upperRight",
                                                                              DomainFieldType(1),
                                                                              dimDomain);
-    const std::vector< size_t > numElements = description.getVector("numElements", size_t(1), dimDomain);
+    const std::vector< size_t > numElements = settings.getVector("numElements", size_t(1), dimDomain);
     // get paramSize
     size_t paramSize = 1u;
     for (int dd = 0; dd < dimDomain; ++dd) {
       assert(numElements[dd] > 0 && "Please provide positive number of elements per dim!");
       paramSize *= numElements[dd];
     }
-    const std::vector< ParamFieldType > paramMins = description.getVector("paramMin",
+    const std::vector< ParamFieldType > paramMins = settings.getVector("paramMin",
                                                                           ParamFieldType(1),
                                                                           paramSize);
-    const std::vector< ParamFieldType > paramMaxs = description.getVector("paramMax",
+    const std::vector< ParamFieldType > paramMaxs = settings.getVector("paramMax",
                                                                           ParamFieldType(1),
                                                                           paramSize);
     // convert and leave the checks to the constructor

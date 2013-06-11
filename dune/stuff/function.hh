@@ -35,7 +35,7 @@ class AffineParametricFunctionCheckerboard;
  *  \attention  This class will not compile for all dimensions. The errors should give you a hint which specializations
  *              are needed below.
  */
-template< class D, int d, class R, int rR, int rC = 1>
+template< class D, int d, class R, int rR, int rC = 1 >
 class Functions
 {
 public:
@@ -49,33 +49,33 @@ public:
     };
   } // ... available(...)
 
-  static Dune::ParameterTree createSampleDescription(const std::string type)
+  static Dune::ParameterTree createDefaultSettings(const std::string type)
   {
     if (type == "function.checkerboard")
-      return FunctionCheckerboard< D, d, R, rR, rC >::createSampleDescription();
+      return FunctionCheckerboard< D, d, R, rR, rC >::createDefaultSettings();
     else if (type == "function.expression")
-      return FunctionExpression< D, d, R, rR, rC >::createSampleDescription();
+      return FunctionExpression< D, d, R, rR, rC >::createDefaultSettings();
     else if (type == "function.constant")
-      return FunctionConstant< D, d, R, rR, rC >::createSampleDescription();
+      return FunctionConstant< D, d, R, rR, rC >::createDefaultSettings();
     else if (type == "function.spe10.model1")
-      return FunctionSpe10Model1< D, d, R, rR, rC >::createSampleDescription();
+      return FunctionSpe10Model1< D, d, R, rR, rC >::createDefaultSettings();
     else
       DUNE_THROW(Dune::RangeError,
                  "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
                  << " unknown function '" << type << "' requested!");
-  } // ... createSampleDescription(...)
+  } // ... createDefaultSettings(...)
 
   static FunctionInterface< D, d, R, rR, rC >* create(const std::string type,
-                                                      const Dune::ParameterTree description = Dune::ParameterTree())
+                                                      const Dune::ParameterTree settings = Dune::ParameterTree())
   {
     if (type == "function.checkerboard")
-      return FunctionCheckerboard< D, d, R, rR, rC >::create(description);
+      return FunctionCheckerboard< D, d, R, rR, rC >::create(settings);
     else if (type == "function.expression")
-      return FunctionExpression< D, d, R, rR, rC >::create(description);
+      return FunctionExpression< D, d, R, rR, rC >::create(settings);
     else if (type == "function.constant")
-      return FunctionConstant< D, d, R, rR, rC >::create(description);
+      return FunctionConstant< D, d, R, rR, rC >::create(settings);
     else if (type == "function.spe10.model1")
-      return FunctionSpe10Model1< D, d, R, rR, rC >::createSampleDescription();
+      return FunctionSpe10Model1< D, d, R, rR, rC >::create(settings);
     else
       DUNE_THROW(Dune::RangeError,
                  "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
@@ -102,21 +102,21 @@ public:
     };
   } // ... available(...)
 
-  static Dune::ParameterTree createSampleDescription(const std::string type)
+  static Dune::ParameterTree createDefaultSettings(const std::string type)
   {
     if (type == "function.affineparametric.checkerboard")
-      return AffineParametricFunctionCheckerboard< D, d, R, rR, rC >::createSampleDescription();
+      return AffineParametricFunctionCheckerboard< D, d, R, rR, rC >::createDefaultSettings();
     else
       DUNE_THROW(Dune::RangeError,
                  "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
                  << " unknown function '" << type << "' requested!");
-  } // ... createSampleDescription(...)
+  } // ... createDefaultSettings(...)
 
   static FunctionInterface< D, d, R, rR, rC >* create(const std::string type,
-                                                      const Dune::ParameterTree description = Dune::ParameterTree())
+                                                      const Dune::ParameterTree settings = Dune::ParameterTree())
   {
     if (type == "function.affineparametric.checkerboard")
-      return AffineParametricFunctionCheckerboard< D, d, R, rR, rC >::create(description);
+      return AffineParametricFunctionCheckerboard< D, d, R, rR, rC >::create(settings);
     else
       DUNE_THROW(Dune::RangeError,
                  "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
