@@ -43,22 +43,22 @@ public:
   } // setFatherChildWeight
 
   //! restrict data to father
-  template< class FatherEntityType, class SonEntityType>
-  void restrictLocal(FatherEntityType& father,
-                     const SonEntityType& son,
+  template< class EntityType>
+  void restrictLocal(const EntityType& father,
+                     const EntityType& son,
                      bool initialize) const {
-    for (auto& el : pair_set_)
+    for (const auto& el : pair_set_)
     {
       el->restrictLocal(father, son, initialize);
     }
   } // restrictLocal
 
   //! prolong data to children
-  template< class FatherEntityType, class SonEntityType>
-  void prolongLocal(const FatherEntityType& father,
-                    SonEntityType& son,
+  template< class EntityType>
+  void prolongLocal(const EntityType& father,
+                    const EntityType& son,
                     bool initialize) const {
-    for (auto el : pair_set_)
+    for (const auto& el : pair_set_)
     {
       el->prolongLocal(father, son, initialize);
     }
