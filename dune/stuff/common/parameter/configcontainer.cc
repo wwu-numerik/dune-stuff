@@ -57,16 +57,20 @@ ConfigContainer::ConfigContainer(const Dune::ParameterTree& tree)
     , tree_(tree)
     , record_defaults_(false)
     , logdir_(boost::filesystem::path(get("global.datadir", "data", false)) / get("logging.dir", "log", false))
-{}
+{
+    testCreateDirectory(logdir_.string());
+}
 
 ConfigContainer::ConfigContainer()
     : warning_output_(true)
     , record_defaults_(false)
     , logdir_(boost::filesystem::path(get("global.datadir", "data", false)) / get("logging.dir", "log", false))
-{}
+{
+    testCreateDirectory(logdir_.string());
+}
 
 ConfigContainer::~ConfigContainer() {
-  boost::filesystem::ofstream out(logdir_ / "paramter.log");
+  boost::filesystem::ofstream out(logdir_ / "dsc_parameter.log");
   tree_.report(out);
 }
 
