@@ -149,7 +149,7 @@ public:
     buildGrid(tmpNumElements);
   }
 
-  static Dune::ParameterTree createDefaultSettings(const std::string subName = "")
+  static Dune::ParameterTree defaultSettings(const std::string subName = "")
   {
     Dune::ParameterTree description;
     description["lowerLeft"] = "[0.0; 0.0; 0.0]";
