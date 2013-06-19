@@ -25,15 +25,14 @@ public:
 template< class DomainFieldImp, int domainDim, class RangeFieldImp >
 class FunctionProduct<  DomainFieldImp, domainDim, RangeFieldImp, 1,
                         DomainFieldImp, domainDim, RangeFieldImp, 1 >
-  : public FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, 1 >
+  : public GenericStationaryFunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, 1 >
 {
 public:
-  typedef FunctionProduct<  DomainFieldImp, domainDim, RangeFieldImp, 1,
-                    DomainFieldImp, domainDim, RangeFieldImp, 1 >  ThisType;
-  typedef FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, 1 >  BaseType;
+  typedef FunctionProduct<  DomainFieldImp, domainDim, RangeFieldImp, 1, DomainFieldImp, domainDim, RangeFieldImp, 1 > ThisType;
+  typedef GenericStationaryFunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, 1 >  BaseType;
 
-  typedef FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, 1 >  LeftFactorType;
-  typedef FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, 1 >  RightFactorType;
+  typedef GenericStationaryFunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, 1 >  LeftFactorType;
+  typedef GenericStationaryFunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, 1 >  RightFactorType;
 
   typedef typename BaseType::DomainFieldType  DomainFieldType;
   static const int                            dimDomain = BaseType::dimDomain;
@@ -63,6 +62,8 @@ public:
     , rightParametric_(rightFactor_->parametric())
     , leftSeparable_(leftParametric_ ? leftFactor_->affineparametric() : false)
     , rightSeparable_(rightParametric_ ? rightFactor_->affineparametric() : false)
+    , leftHasAffinePart_(leftSeparable_ ? leftFactor_->hasAffinePart() : false)
+    , rightHasAffinePart_(rightSeparable_ ? rightFactor_->hasAffinePart() : false)
     , name_("product of '" + leftFactor_->name() + "' and '" + rightFactor_->name())
     , order_((leftFactor_->order() >= 0 && rightFactor_->order() >= 0)
              ? (leftFactor_->order() + rightFactor_->order())
@@ -77,9 +78,13 @@ public:
     if (leftSeparable_) {
       for (size_t qq = 0; qq < leftFactor_->numComponents(); ++qq)
         components_.push_back(std::make_shared< ThisType >(leftFactor_->components()[qq], rightFactor_));
+      if (leftHasAffinePart_)
+        affinePart_ = std::make_shared< ThisType >(leftFactor_->affinePart(), rightFactor_);
     } else if (rightSeparable_) {
       for (size_t qq = 0; qq < rightFactor_->numComponents(); ++qq)
         components_.push_back(std::make_shared< ThisType >(leftFactor_, rightFactor_->components()[qq]));
+      if (rightHasAffinePart_)
+        affinePart_ = std::make_shared< ThisType >(leftFactor_, rightFactor_->affinePart());
     }
   } // Product
 
@@ -178,21 +183,8 @@ public:
 
   virtual bool affineparametric() const
   {
-    if (!parametric())
-      DUNE_THROW(Dune::InvalidStateException,
-                 "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
-                 << " affineparametric() called for a nonparametric function!");
     return leftSeparable_ || rightSeparable_;
   } // ... affineparametric(...)
-
-  virtual size_t numComponents() const
-  {
-    if (!affineparametric())
-      DUNE_THROW(Dune::InvalidStateException,
-                 "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
-                 << " numComponents() called for a nonaffineparametric function!");
-    return components_.size();
-  } // ... numComponents(...)
 
   virtual const std::vector< std::shared_ptr< const ComponentType > >& components() const
   {
@@ -202,18 +194,6 @@ public:
                  << " components() called for a nonaffineparametric function!");
     return components_;
   } // ... components(...)
-
-  virtual size_t numCoefficients() const
-  {
-    if (!affineparametric())
-      DUNE_THROW(Dune::InvalidStateException,
-                 "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
-                 << " numCoefficients() called for a nonaffineparametric function!");
-    if (leftSeparable_)
-      return leftFactor_->numCoefficients();
-    else
-      return rightFactor_->numCoefficients();
-  } // ... numCoefficients(...)
 
   virtual const std::vector< std::shared_ptr< const CoefficientType > >& coefficients() const
   {
@@ -227,6 +207,21 @@ public:
       return rightFactor_->coefficients();
   } // ... coefficients(...)
 
+  virtual bool hasAffinePart() const
+  {
+    return leftHasAffinePart_ || rightHasAffinePart_;
+  }
+
+  virtual std::shared_ptr< const ComponentType > affinePart() const
+  {
+    if (!hasAffinePart())
+      DUNE_THROW(Dune::InvalidStateException,
+                 "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
+                 << " do not call affinePart() if hasAffinePart() is false!");
+    return affinePart_;
+  }
+
+
 private:
   const std::shared_ptr< const LeftFactorType >  leftFactor_;
   const std::shared_ptr< const RightFactorType > rightFactor_;
@@ -234,9 +229,12 @@ private:
   const bool rightParametric_;
   const bool leftSeparable_;
   const bool rightSeparable_;
+  const bool leftHasAffinePart_;
+  const bool rightHasAffinePart_;
   const std::string name_;
   const int order_;
   std::vector< std::shared_ptr< const ComponentType > > components_;
+  std::shared_ptr< const ComponentType > affinePart_;
 }; // class FunctionProduct< ..., ... >
 
 } // namespace Stuff
