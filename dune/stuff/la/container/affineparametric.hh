@@ -9,6 +9,7 @@
 #include <dune/stuff/la/container/eigen.hh>
 #include <dune/stuff/common/parameter.hh>
 #include <dune/stuff/function/affineparametric/coefficient.hh>
+#include <dune/stuff/common/color.hh>
 
 namespace Dune {
 namespace Stuff {
@@ -22,57 +23,69 @@ class AffineParametricContainer
 public:
   typedef AffineParametricContainer< EigenContainerImp >  ThisType;
 
-  typedef typename LA::EigenInterface< typename EigenContainerImp::Traits >::derived_type  ComponentType;
-  typedef Stuff::FunctionAffineSeparablCoefficient< typename EigenContainerImp::ElementType >         CoefficientType;
+  typedef typename LA::EigenContainerInterface< typename EigenContainerImp::Traits >::derived_type  ComponentType;
+  typedef Stuff::AffineParametricCoefficientFunction< typename EigenContainerImp::ElementType >     CoefficientType;
 
   typedef typename Stuff::Common::Parameter::Type ParamType;
 
-public:
   AffineParametricContainer(const size_t _paramSize,
-                   std::vector< std::shared_ptr< ComponentType > >& _components,
-                   const std::vector< std::shared_ptr< const CoefficientType > >& _coefficients)
+                            std::vector< std::shared_ptr< ComponentType > >& _components,
+                            const std::vector< std::shared_ptr< const CoefficientType > >& _coefficients)
     : paramSize_(_paramSize)
     , components_(_components)
     , coefficients_(_coefficients)
+    , hasAffinePart_(false)
   {
     // sanity checks
     if (components_.size() < 1)
       DUNE_THROW(Dune::RangeError,
                  "\nERROR: not enough 'components' given!");
-    if (!(coefficients_.size() == components_.size()
-          || coefficients_.size() == (components_.size() - 1)))
+    if (!coefficients_.size() == components_.size())
       DUNE_THROW(Dune::RangeError,
                  "\nERROR: wrong number of 'coefficients' given!");
-    if (coefficients_.size() == 0) {
-      if (paramSize_ > 0)
-        DUNE_THROW(Dune::RangeError,
-                   "\nERROR: 'paramSize' has to be zero!");
-    } else {
-      if (paramSize_ < 1)
-        DUNE_THROW(Dune::RangeError,
-                   "\nERROR: 'paramSize' has to be positive!");
-    }
+    if (paramSize_ < 1)
+      DUNE_THROW(Dune::RangeError,
+                 "\nERROR: 'paramSize' has to be positive!");
   } // AffineParametric(...)
 
-  AffineParametricContainer(std::shared_ptr< ComponentType > _component)
-    : paramSize_(0)
+  AffineParametricContainer(const size_t _paramSize,
+                            std::vector< std::shared_ptr< ComponentType > >& _components,
+                            const std::vector< std::shared_ptr< const CoefficientType > >& _coefficients,
+                            std::shared_ptr< ComponentType > _affinePart)
+    : paramSize_(_paramSize)
+    , components_(_components)
+    , coefficients_(_coefficients)
+    , hasAffinePart_(true)
+    , affinePart_(_affinePart)
   {
-    components_.push_back(_component);
-  }
+    // sanity checks
+    if (components_.size() < 1)
+      DUNE_THROW(Dune::RangeError,
+                 "\nERROR: not enough 'components' given!");
+    if (!coefficients_.size() == components_.size())
+      DUNE_THROW(Dune::RangeError,
+                 "\nERROR: wrong number of 'coefficients' given!");
+    if (paramSize_ < 1)
+      DUNE_THROW(Dune::RangeError,
+                 "\nERROR: 'paramSize' has to be positive!");
+  } // AffineParametric(...)
+
+  AffineParametricContainer(std::shared_ptr< ComponentType > _affinePart)
+    : paramSize_(0)
+    , components_(0)
+    , coefficients_(0)
+    , hasAffinePart_(true)
+    , affinePart_(_affinePart)
+  {}
 
   bool parametric() const
   {
-    return numCoefficients() > 0;
+    return (coefficients_.size() > 0);
   }
 
   size_t paramSize() const
   {
     return paramSize_;
-  }
-
-  size_t numComponents() const
-  {
-    return components_.size();
   }
 
   std::vector< std::shared_ptr< ComponentType > > components()
@@ -85,40 +98,66 @@ public:
     return components_;
   }
 
-  size_t numCoefficients() const
-  {
-    return coefficients_.size();
-  }
-
   const std::vector< std::shared_ptr< const CoefficientType > >& coefficients() const
   {
     return coefficients_;
   }
 
-  std::shared_ptr< ComponentType > fix(const ParamType _mu = ParamType()) const
+  bool hasAffinePart() const
   {
-    // in any case, there exists at least one component
-    auto ret = std::make_shared< ComponentType >(*(components_[0]));
-    // if we are parametric, we have to do some more
-    if (parametric()) {
-      assert(_mu.size() == paramSize());
-      // since we are parametric, at least one coefficient has to exist as well
-      ret->backend() *= coefficients_[0]->evaluate(_mu);
-      // sum over the rest of the component/coefficient combinations
-      size_t qq = 1;
-      for (; qq < numCoefficients(); ++qq)
-        ret->backend() += components_[qq]->backend() * coefficients_[qq]->evaluate(_mu);
-      // add the last lonely component if necesarry
-      if (numComponents() > qq)
-        ret->backend() += components_[qq]->backend();
-    } // if (parametric())
-    return ret;
+    return hasAffinePart_;
+  }
+
+  std::shared_ptr< ComponentType > affinePart()
+  {
+    if (hasAffinePart_)
+      return affinePart_;
+    else
+      DUNE_THROW(Dune::InvalidStateException,
+                 "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
+                 << " do not call affinePart() if hasAffinePart() is false!");
+  }
+
+  std::shared_ptr< const ComponentType >& affinePart() const
+  {
+    if (hasAffinePart_)
+      return affinePart_;
+    else
+      DUNE_THROW(Dune::InvalidStateException,
+                 "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
+                 << " do not call affinePart() if hasAffinePart() is false!");
+  }
+
+  std::shared_ptr< ComponentType > fix(const ParamType mu = ParamType()) const
+  {
+    if (components_.size() == 0) {
+      assert(hasAffinePart_);
+      assert(mu.size() == 0);
+      return std::make_shared< ComponentType >(*affinePart_);
+    } else {
+      assert(mu.size() == paramSize_);
+      std::shared_ptr< ComponentType > ret;
+      if (hasAffinePart_)
+        ret = make_shared< ComponentType >(*affinePart_);
+      else {
+        assert(components_.size() > 0);
+        assert(coefficients_.size() > 0);
+        ret = make_shared< ComponentType >(*components()[0]);
+        ret->backend() *= coefficients_[0]->evaluate(mu);
+      }
+      assert(components_.size() == coefficients_.size());
+      for (size_t qq = 1; qq < components_.size(); ++qq)
+        ret->backend() += components_[qq]->backend() * coefficients_[qq]->evaluate(mu);
+      return ret;
+    }
   } // std::shared_ptr< ComponentType > fix(const ParamType& mu) const
 
 private:
   const size_t paramSize_;
   std::vector< std::shared_ptr< ComponentType > > components_;
   const std::vector< std::shared_ptr< const CoefficientType > > coefficients_;
+  const bool hasAffinePart_;
+  std::shared_ptr< ComponentType > affinePart_;
 }; // class Separable
 #endif // HAVE_EIGEN
 
