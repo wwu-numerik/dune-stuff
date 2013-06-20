@@ -158,7 +158,7 @@ public:
     : BaseType(_lowerLeft, _upperRight, _numElements, _values, _name)
   {}
 
-  static Dune::ParameterTree createDefaultSettings(const std::string subName = "")
+  static Dune::ParameterTree defaultSettings(const std::string subName = "")
   {
     Dune::ParameterTree description;
     description["lowerLeft"] = "[0.0; 0.0; 0.0]";
@@ -173,7 +173,7 @@ public:
       extendedDescription.add(description, subName);
       return extendedDescription;
     }
-  } // ... createDefaultSettings(...)
+  } // ... defaultSettings(...)
 
   static ThisType* create(const DSC::ExtendedParameterTree settings)
   {
