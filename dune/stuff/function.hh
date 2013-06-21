@@ -49,7 +49,7 @@ public:
     };
   } // ... available(...)
 
-  static Dune::ParameterTree defaultSettings(const std::string type)
+  static Dune::ParameterTree defaultSettings(const std::string type = available()[0])
   {
     if (type == "function.checkerboard")
       return FunctionCheckerboard< D, d, R, rR, rC >::defaultSettings();
@@ -65,8 +65,8 @@ public:
                  << " unknown function '" << type << "' requested!");
   } // ... defaultSettings(...)
 
-  static FunctionInterface< D, d, R, rR, rC >* create(const std::string type,
-                                                      const Dune::ParameterTree settings = Dune::ParameterTree())
+  static FunctionInterface< D, d, R, rR, rC >* create(const std::string type = available()[0],
+                                                      const Dune::ParameterTree settings = defaultSettings())
   {
     if (type == "function.checkerboard")
       return FunctionCheckerboard< D, d, R, rR, rC >::create(settings);
@@ -91,7 +91,7 @@ public:
  *  \attention  This class will not compile for all dimensions. The errors should give you a hint which specializations
  *              are needed below.
  */
-template< class D, int d, class R, int rR, int rC >
+template< class D, int d, class R, int rR, int rC = 1>
 class AffineParametricFunctions
 {
 public:
@@ -102,7 +102,7 @@ public:
     };
   } // ... available(...)
 
-  static Dune::ParameterTree defaultSettings(const std::string type)
+  static Dune::ParameterTree defaultSettings(const std::string type = available()[0])
   {
     if (type == "function.affineparametric.checkerboard")
       return AffineParametricFunctionCheckerboard< D, d, R, rR, rC >::defaultSettings();
@@ -112,8 +112,8 @@ public:
                  << " unknown function '" << type << "' requested!");
   } // ... defaultSettings(...)
 
-  static FunctionInterface< D, d, R, rR, rC >* create(const std::string type,
-                                                      const Dune::ParameterTree settings = Dune::ParameterTree())
+  static AffineParametricFunctionInterface< D, d, R, rR, rC >* create(const std::string type = available()[0],
+                                                                      const Dune::ParameterTree settings = defaultSettings())
   {
     if (type == "function.affineparametric.checkerboard")
       return AffineParametricFunctionCheckerboard< D, d, R, rR, rC >::create(settings);
