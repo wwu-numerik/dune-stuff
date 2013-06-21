@@ -18,13 +18,18 @@ namespace Dune {
 namespace Stuff {
 
 
+// forward to allow for specialization
+template< class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDimRows, int rangeDimCols = 1>
+class AffineParametricFunctionDefault;
+
+
 template< class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDim >
-class FunctionAffineParametricDefault
-  : public FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDim >
+class AffineParametricFunctionDefault< DomainFieldImp, domainDim, RangeFieldImp, rangeDim, 1 >
+  : public AffineParametricFunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDim, 1 >
 {
+  typedef AffineParametricFunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDim, 1 >  BaseType;
 public:
-  typedef FunctionAffineParametricDefault< DomainFieldImp, domainDim, RangeFieldImp, rangeDim > ThisType;
-  typedef FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDim >               BaseType;
+  typedef AffineParametricFunctionDefault< DomainFieldImp, domainDim, RangeFieldImp, rangeDim, 1 >    ThisType;
 
   typedef typename BaseType::DomainFieldType  DomainFieldType;
   static const int                            dimDomain = BaseType::dimDomain;
@@ -40,10 +45,10 @@ public:
 
   static const std::string id()
   {
-    return BaseType::id() + ".affineparametric.default";
+    return BaseType::id() + ".default";
   }
 
-  FunctionAffineParametricDefault(const size_t _paramSize,
+  AffineParametricFunctionDefault(const size_t _paramSize,
                                   const std::vector< ParamType > _paramRange,
                                   const std::vector< std::shared_ptr< const ComponentType > > _components,
                                   const std::vector< std::shared_ptr< const CoefficientType > > _coefficients,
@@ -54,6 +59,7 @@ public:
     , paramRange_(_paramRange)
     , components_(_components)
     , coefficients_(_coefficients)
+    , hasAffinePart_(false)
     , order_(_order)
     , name_(_name)
   {
@@ -61,8 +67,7 @@ public:
     assert(paramSize_ > 0);
     assert(components_.size() > 0);
     assert(coefficients_.size() > 0);
-    assert((components_.size() == coefficients_.size())
-           || (components_.size() == coefficients_.size() + 1));
+    assert(components_.size() == coefficients_.size());
     assert(paramRange_.size() == 2 && "Vector has wrong size!");
     assert(paramRange_[0].size() == paramSize_ && "Vector has wrong size!");
     assert(paramRange_[1].size() == paramSize_ && "Vector has wrong size!");
@@ -83,49 +88,71 @@ public:
       parameterExplanation_.push_back("parameter_component_" + DSC::toString(qq));
   } // FunctionAffineParametricDefault(...)
 
-  FunctionAffineParametricDefault(const ThisType& other)
-    : paramSize_(other.paramSize_)
-    , paramRange_(other.paramRange_)
-    , components_(other.components_)
-    , coefficients_(other.coefficients_)
-    , order_(other.order_)
-    , name_(other.name_)
-    , parameterExplanation_(other.parameterExplanation_)
-  {}
+  AffineParametricFunctionDefault(const size_t _paramSize,
+                                  const std::vector< ParamType > _paramRange,
+                                  const std::vector< std::shared_ptr< const ComponentType > > _components,
+                                  const std::vector< std::shared_ptr< const CoefficientType > > _coefficients,
+                                  const std::shared_ptr< const ComponentType > _affinePart,
+                                  const std::vector< std::string > _parameterExplanation = std::vector< std::string >(),
+                                  const int _order = -1,
+                                  const std::string _name = id())
+    : paramSize_(_paramSize)
+    , paramRange_(_paramRange)
+    , components_(_components)
+    , coefficients_(_coefficients)
+    , hasAffinePart_(true)
+    , order_(_order)
+    , name_(_name)
+    , affinePart_(_affinePart)
 
-  ThisType& operator=(const ThisType& other)
   {
-    if (this != &other) {
-      paramSize_ = other.paramSize();
-      paramRange_ = other.paramRange();
-      components_ = other.components();
-      coefficients_ = other.coefficients();
-      order_ = other.order();
-      name_ = other.name();
-      parameterExplanation_ = other.parameterExplanation();
+    // some checks
+    assert(paramSize_ > 0);
+    assert(components_.size() > 0);
+    assert(coefficients_.size() > 0);
+    assert(components_.size() == coefficients_.size());
+    assert(paramRange_.size() == 2 && "Vector has wrong size!");
+    assert(paramRange_[0].size() == paramSize_ && "Vector has wrong size!");
+    assert(paramRange_[1].size() == paramSize_ && "Vector has wrong size!");
+    for (size_t qq = 0; qq < paramSize_; ++qq) {
+      assert(paramRange_[0][qq] <= paramRange_[1][qq]
+          && "Given minimum parameter has to be piecewise <= maximum parameter!");
     }
-    return this;
-  }
+    for (size_t qq = 0; qq < components_.size(); ++qq) {
+      if (components_[qq]->parametric())
+        DUNE_THROW(Dune::RangeError,
+                   "\n" << DSC::colorStringRed("ERROR:")
+                   << " component " << qq << " is parametric!");
+    }
+    if (affinePart_->parametric())
+      DUNE_THROW(Dune::RangeError,
+                 "\n" << DSC::colorStringRed("ERROR:")
+                 << " affinePart must not be parametric!");
+    // process parameter explanation
+    for (size_t qq = 0; qq < std::min(paramSize_, _parameterExplanation.size()); ++qq)
+      parameterExplanation_.push_back(_parameterExplanation[qq]);
+    for (size_t qq = std::min(paramSize_, _parameterExplanation.size()); qq < paramSize_; ++qq)
+      parameterExplanation_.push_back("parameter_component_" + DSC::toString(qq));
+  } // FunctionAffineParametricDefault(...)
 
-  static Dune::ParameterTree createDefaultSettings(const std::string subName = "")
+  static Dune::ParameterTree defaultSettings(const std::string subName = "")
   {
     Dune::ParameterTree description;
     description["name"] = id();
     description["order"] = "1";
     description["component.0"] = "2.0 * x[0]";
-    description["component.1"] = "sin(x[0])";
     description["coefficient.0"] = "mu[0] + mu[1]";
+    description["affinePart"] = "sin(x[0])";
     description["paramSize"] = "2";
     description["paramMin"] = "[0.1; 0.1]";
     description["paramMax"] = "[1.0; 1.0]";
     description["paramExplanation"] = "[first_parameter; second_parameter]";
     if (subName.empty())
       return description;
-
     DSC::ExtendedParameterTree extendedDescription;
     extendedDescription.add(description, subName);
     return extendedDescription;
-  } // ... createDefaultSettings(...)
+  } // ... defaultSettings(...)
 
   static ThisType* create(const DSC::ExtendedParameterTree settings)
   {
@@ -157,7 +184,7 @@ public:
             DUNE_THROW(Dune::IOError,
                        "\n" << DSC::colorStringRed("ERROR:")
                        << " could not interpret component." << _components.size()
-                       << "in the following Dune::ParameterTree:\n"
+                       << "in the following settings:\n"
                        << settings.reportString("  "));
           if (!componentSettings.hasKey("variable"))
             componentSettings["variable"] = "x";
@@ -209,12 +236,54 @@ public:
       DUNE_THROW(Dune::IOError,
                  "\n" << DSC::colorStringRed("ERROR:")
                  << " no 'coefficient' found in the following settings:\n" << settings.reportString("  "));
-    else if (!(_coefficients.size() == _components.size()
-             || _coefficients.size() == (_components.size() - 1)))
+    else if (!(_coefficients.size() == _components.size()))
       DUNE_THROW(Dune::IOError,
                  "\n" << DSC::colorStringRed("ERROR:")
                  << " wrong number of 'coefficient' found in the following settings:\n"
                  << settings.reportString("  "));
+    // the affine part
+    std::shared_ptr< const ComponentType > _affinePart;
+    bool _hasAffinePart = false;
+    if (settings.hasSub("affinePart")) {
+      _hasAffinePart = true;
+      // there is a sub
+      Dune::ParameterTree affinePartSettings = settings.sub("affinePart");
+      // lets see if it has a type
+      if (affinePartSettings.hasKey("type")) {
+        const std::string type = affinePartSettings.get< std::string >("type");
+        if (type == "function.affineparametric.default")
+          DUNE_THROW(Dune::IOError,
+                     "\n" << DSC::colorStringRed("ERROR:")
+                     << " can not create a 'function.affineparametric.default' inside itself!");
+        _affinePart = std::shared_ptr< ComponentType >(Functions< DomainFieldType, dimDomain,
+                                                                  RangeFieldType, dimRange >::create(type, affinePartSettings));
+      } else {
+        // since it does not have a type, treat it as an expression function
+        if (!(affinePartSettings.hasKey("expression") || affinePartSettings.hasSub("expression")))
+          DUNE_THROW(Dune::IOError,
+                     "\n" << DSC::colorStringRed("ERROR:")
+                     << " could not interpret affinePart in the following settings:\n"
+                     << settings.reportString("  "));
+        if (!affinePartSettings.hasKey("variable"))
+          affinePartSettings["variable"] = "x";
+        if (!affinePartSettings.hasKey("name"))
+          affinePartSettings["name"] = _name;
+        if (!affinePartSettings.hasKey("order"))
+          affinePartSettings["order"] = DSC::toString(_order);
+        _affinePart = std::shared_ptr< ComponentType >(Functions< DomainFieldType, dimDomain,
+                                                                  RangeFieldType, dimRange >::create("function.expression", affinePartSettings));
+      } // if (componentSettings.hasKey("type"))
+    } else if (settings.hasKey("affinePart")) {
+      _hasAffinePart = true;
+      // there is only one key, interpret it as an entry for an expression function with variable x
+      Dune::ParameterTree affinePartSettings;
+      affinePartSettings["name"] = _name;
+      affinePartSettings["order"] = DSC::toString(_order);
+      affinePartSettings["variable"] = "x";
+      affinePartSettings["expression"] = settings.get< std::string >("affinePart");
+      _affinePart = std::shared_ptr< ComponentType >(Functions< DomainFieldType, dimDomain,
+                                                                RangeFieldType, dimRange >::create("function.expression", affinePartSettings));
+    }
     // * paramSize
     const size_t _paramSize = settings.get< size_t >("paramSize");
     // * paramRange
@@ -235,7 +304,10 @@ public:
       _paramExplanation = settings.getVector< std::string >("paramExplanation", 1);
     else if (settings.hasKey("paramExplanation"))
       _paramExplanation.push_back(settings.get< std::string >("paramExplanation"));
-    return new ThisType(_paramSize, _paramRange, _components, _coefficients, _paramExplanation, _order, _name);
+    if (_hasAffinePart)
+      return new ThisType(_paramSize, _paramRange, _components, _coefficients, _affinePart, _paramExplanation, _order, _name);
+    else
+      return new ThisType(_paramSize, _paramRange, _components, _coefficients, _paramExplanation, _order, _name);
   } // ... create(...)
 
   virtual bool parametric() const
@@ -273,16 +345,6 @@ public:
     return parameterExplanation_;
   }
 
-  virtual size_t numComponents() const
-  {
-    return components_.size();
-  }
-
-  virtual size_t numCoefficients() const
-  {
-    return coefficients_.size();
-  }
-
   virtual const std::vector< std::shared_ptr< const ComponentType > >& components() const
   {
     return components_;
@@ -293,18 +355,33 @@ public:
     return coefficients_;
   }
 
+  virtual bool hasAffinePart() const
+  {
+    return hasAffinePart_;
+  }
+
+  virtual const std::shared_ptr< const ComponentType > & affinePart() const
+  {
+    DUNE_THROW(Dune::InvalidStateException,
+               "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
+               << " do not call affinePart() if hasAffinePart() is false!");
+    return affinePart_;
+  }
+
   virtual void evaluate(const DomainType& _x, const ParamType& _mu, RangeType& _ret) const
   {
     assert(_mu.size() == paramSize_);
     _ret = RangeFieldType(0);
     RangeType tmpComponentValue;
-    for (size_t qq = 0; qq < numCoefficients(); ++qq) {
+    RangeFieldType tmpCoefficientValue;
+    for (size_t qq = 0; qq < coefficients_.size(); ++qq) {
       components_[qq]->evaluate(_x, tmpComponentValue);
-      tmpComponentValue *= coefficients_[qq]->evaluate(_mu);
+      coefficients_[qq]->evaluate(_mu, tmpCoefficientValue);
+      tmpComponentValue *= tmpCoefficientValue;
       _ret += tmpComponentValue;
     }
-    if (numComponents() > numCoefficients()) {
-      components_[numCoefficients()]->evaluate(_x, tmpComponentValue);
+    if (hasAffinePart_) {
+      affinePart_->evaluate(_x, tmpComponentValue);
       _ret += tmpComponentValue;
     }
   } // virtual void evaluate(const DomainType& _x, const ParamType& _mu, RangeType& _ret) const
@@ -314,10 +391,12 @@ private:
   std::vector< ParamType > paramRange_;
   std::vector< std::shared_ptr< const ComponentType > > components_;
   std::vector< std::shared_ptr< const CoefficientType > > coefficients_;
+  bool hasAffinePart_;
   const int order_;
   const std::string name_;
+  std::shared_ptr< const ComponentType > affinePart_;
   std::vector< std::string > parameterExplanation_;
-}; // class FunctionAffineParametricDefault
+}; // class AffineParametricFunctionDefault
 
 
 } // namespace Stuff
