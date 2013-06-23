@@ -127,10 +127,10 @@ public:
 
 private:
   //! copy constructor
-  SparsityPattern(const ThisType&) = delete;
+  SparsityPattern(const SparsityPattern&) = delete;
 
   //! assignment operator
-  ThisType& operator=(const ThisType&) = delete;
+  SparsityPattern& operator=(const SparsityPattern&) = delete;
 
   SparsityPatternContainerType sparsityPattern_;
   unsigned int sizeN_;
