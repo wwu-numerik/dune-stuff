@@ -23,7 +23,7 @@ std::pair< typename FunctionType::RangeType, double > integralAndVolume(const Fu
                                                                         const DiscreteFunctionSpaceType& space,
                                                                         const int polOrd = -1) {
   typedef Dune::CachingQuadrature< typename DiscreteFunctionSpaceType::Traits::GridPartType, 0 > QuadratureType;
-  typedef Dune::Stuff::Fem::LocalMassMatrix< DiscreteFunctionSpaceType, QuadratureType > LocalMassMatrixType;
+//  typedef Dune::Stuff::Fem::LocalMassMatrix< DiscreteFunctionSpaceType, QuadratureType > LocalMassMatrixType;
 
   typename FunctionType::RangeType integral_value = typename FunctionType::RangeType(0);
   double total_volume = 0;
