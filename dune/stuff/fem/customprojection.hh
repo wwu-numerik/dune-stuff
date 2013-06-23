@@ -263,16 +263,16 @@ public:
     Iterator;
     typedef typename DiscreteFunctionSpaceType::BaseFunctionSetType
     BaseFunctionSetType;
-    typedef typename GridPartType::IntersectionIteratorType
-    IntersectionIteratorType;
+//    typedef typename GridPartType::IntersectionIteratorType
+//    IntersectionIteratorType;
     typedef typename DiscreteVelocityFunctionType::LocalFunctionType
     LocalFType;
 
     const DiscreteFunctionSpaceType space( velocity.space().gridPart() );
     const GridPartType& gridPart = space.gridPart();
     // type of quadrature
-    typedef Dune::CachingQuadrature< GridPartType, 0 > VolumeQuadratureType;
-    typedef Dune::CachingQuadrature< GridPartType, 1 > FaceQuadratureType;
+    typedef Dune::Fem::CachingQuadrature< GridPartType, 0 > VolumeQuadratureType;
+//    typedef Dune::Fem::CachingQuadrature< GridPartType, 1 > FaceQuadratureType;
     // type of local mass matrix
     typedef Dune::Stuff::Fem::LocalMassMatrix< DiscreteFunctionSpaceType, VolumeQuadratureType > LocalMassMatrixType;
 
