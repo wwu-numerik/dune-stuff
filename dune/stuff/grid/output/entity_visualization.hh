@@ -1,7 +1,6 @@
 #ifndef DUNE_STUFF_GRID_ENTITY_VISUALIZATION_HH
 #define DUNE_STUFF_GRID_ENTITY_VISUALIZATION_HH
 
-#include <dune/grid/io/file/dgfparser/dgfgridtype.hh>
 #include <dune/grid/io/file/dgfparser/dgfparser.hh>
 #include <dune/stuff/common/filesystem.hh>
 #include <dune/stuff/aliases.hh>
@@ -46,24 +45,30 @@ struct ElementVisualization {
       Dune::VTKWriter<typename Grid::LeafGridView> vtkwriter(gridView);
       vtkwriter.addCellData(values,"data");
       DSC::testCreateDirectory( f.filename() );
-      vtkwriter.write( f.filename().c_str(), Dune::VTK::base64);
+      vtkwriter.pwrite( f.filename(), f.dir(), "piecefiles", Dune::VTK::appendedraw);
     }
 
 
     class FunctorBase {
         public:
-            FunctorBase ( const std::string filename )
-                : filename_( filename ) {}
+            FunctorBase ( const std::string filename,
+                          const std::string dir)
+                : filename_( filename )
+                , dir_(dir)
+            {}
             const std::string filename() const { return filename_; }
+            const std::string dir() const { return dir_; }
         protected:
             const std::string filename_;
+            const std::string dir_;
 
     };
 
     class VolumeFunctor : public FunctorBase {
         public:
-            VolumeFunctor ( const std::string filename )
-                : FunctorBase( filename ) {}
+            VolumeFunctor ( const std::string filename,
+                            const std::string dir )
+                : FunctorBase( filename, dir ) {}
 
             template <class Entity>
             double operator() ( const Entity& ent ) const
@@ -74,8 +79,10 @@ struct ElementVisualization {
 
     class ProcessIdFunctor : public FunctorBase {
         public:
-            ProcessIdFunctor ( const std::string filename, Dune::MPIHelper& mpiHelper )
-                : FunctorBase( filename ),
+            ProcessIdFunctor ( const std::string filename,
+                               const std::string dir,
+                               Dune::MPIHelper& mpiHelper )
+                : FunctorBase( filename, dir ),
                 mpiHelper_( mpiHelper )
             {}
 
@@ -91,8 +98,9 @@ struct ElementVisualization {
 
     class BoundaryFunctor : public FunctorBase {
         public:
-            BoundaryFunctor ( const std::string filename )
-                : FunctorBase( filename ) {}
+            BoundaryFunctor ( const std::string filename,
+                              const std::string dir )
+                : FunctorBase( filename, dir ) {}
 
             template <class Entity>
             double operator() ( const Entity& entity ) const
@@ -122,8 +130,9 @@ struct ElementVisualization {
     class AreaMarker : public FunctorBase {
 
         public:
-            AreaMarker( const std::string filename )
-                : FunctorBase( filename ) {}
+            AreaMarker( const std::string filename,
+                        const std::string dir )
+                : FunctorBase( filename, dir ) {}
 
             template <class Entity>
             double operator() ( const Entity& entity ) const
@@ -156,8 +165,9 @@ struct ElementVisualization {
 
     class GeometryFunctor : public FunctorBase {
         public:
-            GeometryFunctor ( const std::string filename )
-                : FunctorBase( filename ) {}
+            GeometryFunctor ( const std::string filename,
+                              const std::string dir )
+                : FunctorBase( filename, dir ) {}
 
             template <class Entity>
             double operator() ( const Entity& ent ) const
@@ -182,11 +192,11 @@ struct ElementVisualization {
               const std::string outputDir = "visualisation" )
     {
         // make function objects
-        BoundaryFunctor boundaryFunctor( outputDir + std::string("/boundaryFunctor") );
-        AreaMarker areaMarker( outputDir + std::string("/areaMarker") );
-        GeometryFunctor geometryFunctor( outputDir + std::string("/geometryFunctor") );
-        ProcessIdFunctor processIdFunctor( outputDir + std::string("/ProcessIdFunctor"), mpiHelper );
-        VolumeFunctor volumeFunctor( outputDir + std::string("/volumeFunctor") );
+        BoundaryFunctor boundaryFunctor("boundaryFunctor", outputDir);
+        AreaMarker areaMarker("areaMarker", outputDir);
+        GeometryFunctor geometryFunctor("geometryFunctor", outputDir);
+        ProcessIdFunctor processIdFunctor("ProcessIdFunctor", outputDir, mpiHelper );
+        VolumeFunctor volumeFunctor("volumeFunctor", outputDir);
 
         // call the visualization functions
         elementdata( grid, areaMarker );
