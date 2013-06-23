@@ -30,7 +30,7 @@ void normalize(ContainerType& /*_vector*/)
 
 #if HAVE_EIGEN
 template< class ElementType >
-void normalize(Dune::Stuff::LA::Container::EigenDenseVector< ElementType >& _vector)
+void normalize(Dune::Stuff::LA::EigenDenseVector< ElementType >& _vector)
 {
   // if this is an empty vector report and do nothing
   if (_vector.size() == 0) {
@@ -46,7 +46,7 @@ void normalize(Dune::Stuff::LA::Container::EigenDenseVector< ElementType >& _vec
 
 
 template< class ElementType >
-void normalize(Dune::Stuff::LA::Container::EigenDenseMatrix< ElementType >& _matrix)
+void normalize(Dune::Stuff::LA::EigenDenseMatrix< ElementType >& _matrix)
 {
   // if this is an empty matrix report and do nothing
   if (_matrix.rows() == 0 || _matrix.cols() == 0) {
@@ -74,7 +74,7 @@ void normalize(Dune::Stuff::LA::Container::EigenDenseMatrix< ElementType >& _mat
 
 
 template< class ElementType >
-void normalize(Dune::Stuff::LA::Container::EigenRowMajorSparseMatrix< ElementType >& /*_vector*/)
+void normalize(Dune::Stuff::LA::EigenRowMajorSparseMatrix< ElementType >& /*_vector*/)
 {
   dune_static_assert((Dune::AlwaysFalse< ElementType >::value),
                      "ERROR: not implemeneted for EigenRowMajorSparseMatrix!");
@@ -92,8 +92,8 @@ void normalize(const ScalarProductType& /*scalarProduct*/, ContainerType& /*_col
 
 #if HAVE_EIGEN
 template< class ElementType >
-void normalize(const Dune::Stuff::LA::Container::EigenDenseMatrix< ElementType >& /*_scalarProduct*/,
-               Dune::Stuff::LA::Container::EigenDenseVector< ElementType >& /*_columnVectors*/)
+void normalize(const Dune::Stuff::LA::EigenDenseMatrix< ElementType >& /*_scalarProduct*/,
+               Dune::Stuff::LA::EigenDenseVector< ElementType >& /*_columnVectors*/)
 {
   dune_static_assert((Dune::AlwaysFalse< ElementType >::value),
                      "ERROR: not implemeneted yet!");
@@ -101,8 +101,8 @@ void normalize(const Dune::Stuff::LA::Container::EigenDenseMatrix< ElementType >
 
 
 template< class ElementType >
-void normalize(const Dune::Stuff::LA::Container::EigenDenseMatrix< ElementType >& _scalarProduct,
-               Dune::Stuff::LA::Container::EigenDenseMatrix< ElementType >& _matrix)
+void normalize(const Dune::Stuff::LA::EigenDenseMatrix< ElementType >& _scalarProduct,
+               Dune::Stuff::LA::EigenDenseMatrix< ElementType >& _matrix)
 {
   // if this is an empty matrix, report and do nothing
   if (_matrix.rows() == 0 || _matrix.cols() == 0) {
@@ -136,8 +136,8 @@ void normalize(const Dune::Stuff::LA::Container::EigenDenseMatrix< ElementType >
 
 
 template< class ElementType >
-bool normalize(const Dune::Stuff::LA::Container::EigenRowMajorSparseMatrix< ElementType >& _scalarProduct,
-               Dune::Stuff::LA::Container::EigenDenseVector< ElementType >& _vector,
+bool normalize(const Dune::Stuff::LA::EigenRowMajorSparseMatrix< ElementType >& _scalarProduct,
+               Dune::Stuff::LA::EigenDenseVector< ElementType >& _vector,
                const ElementType& epsilon = 1e-10)
 {
   // if this is an empty vector, report and do nothing
@@ -163,8 +163,8 @@ bool normalize(const Dune::Stuff::LA::Container::EigenRowMajorSparseMatrix< Elem
 
 
 template< class ElementType >
-void normalize(const Dune::Stuff::LA::Container::EigenRowMajorSparseMatrix< ElementType >& /*_scalarProduct*/,
-               Dune::Stuff::LA::Container::EigenDenseMatrix< ElementType >& /*_columnVectors*/)
+void normalize(const Dune::Stuff::LA::EigenRowMajorSparseMatrix< ElementType >& /*_scalarProduct*/,
+               Dune::Stuff::LA::EigenDenseMatrix< ElementType >& /*_columnVectors*/)
 {
   dune_static_assert((Dune::AlwaysFalse< ElementType >::value),
                      "ERROR: not implemeneted yet!");

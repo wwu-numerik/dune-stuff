@@ -27,7 +27,7 @@ void gramSchmidt(ContainerType& /*_columnVectors*/)
 
 #if HAVE_EIGEN
 template< class ElementType >
-void gramSchmidt(Dune::Stuff::LA::Container::EigenDenseVector< ElementType >& /*_columnVectors*/)
+void gramSchmidt(Dune::Stuff::LA::EigenDenseVector< ElementType >& /*_columnVectors*/)
 {
   dune_static_assert((Dune::AlwaysFalse< ElementType >::value),
                      "ERROR: not implemeneted for EigenDenseVector, use normalize()!");
@@ -53,7 +53,7 @@ void gramSchmidt(Dune::Stuff::LA::Container::EigenDenseVector< ElementType >& /*
 
 
 template< class ElementType >
-void gramSchmidt(Dune::Stuff::LA::Container::EigenDenseMatrix< ElementType >& _columnVectors)
+void gramSchmidt(Dune::Stuff::LA::EigenDenseMatrix< ElementType >& _columnVectors)
 {
   // if this is an empty matrix, throw up
   if (_columnVectors.cols() == 0 || _columnVectors.rows() == 0)
@@ -72,7 +72,7 @@ void gramSchmidt(Dune::Stuff::LA::Container::EigenDenseMatrix< ElementType >& _c
       // this is a set of column-vectors
       for (size_t ii = 0; ii < _columnVectors.cols(); ++ii) {
         // get the iith column
-        typedef typename Dune::Stuff::LA::Container::EigenDenseMatrix< ElementType >::BackendType::ColXpr ColumnType;
+        typedef typename Dune::Stuff::LA::EigenDenseMatrix< ElementType >::BackendType::ColXpr ColumnType;
         ColumnType iith_column = _columnVectors.backend().col(ii);
         // and orthonormalize it wrt all previous columns
         for (size_t jj = 0; jj < ii; ++ jj) {
@@ -91,7 +91,7 @@ void gramSchmidt(Dune::Stuff::LA::Container::EigenDenseMatrix< ElementType >& _c
 
 
 template< class ElementType >
-void gramSchmidt(Dune::Stuff::LA::Container::EigenRowMajorSparseMatrix< ElementType >& /*_columnVectors*/)
+void gramSchmidt(Dune::Stuff::LA::EigenRowMajorSparseMatrix< ElementType >& /*_columnVectors*/)
 {
   dune_static_assert((Dune::AlwaysFalse< ElementType >::value),
                      "ERROR: not implemeneted for EigenRowMajorSparseMatrix!");
@@ -109,8 +109,8 @@ void gramSchmidt(const ScalarProductType& /*scalarProduct*/, ContainerType& /*_c
 
 #if HAVE_EIGEN
 template< class ElementType >
-void gramSchmidt(const Dune::Stuff::LA::Container::EigenDenseMatrix< ElementType >& /*_scalarProduct*/,
-                 Dune::Stuff::LA::Container::EigenDenseVector< ElementType >& /*_columnVectors*/)
+void gramSchmidt(const Dune::Stuff::LA::EigenDenseMatrix< ElementType >& /*_scalarProduct*/,
+                 Dune::Stuff::LA::EigenDenseVector< ElementType >& /*_columnVectors*/)
 {
   dune_static_assert((Dune::AlwaysFalse< ElementType >::value),
                      "ERROR: not implemeneted for EigenDenseVector, use normalize()!");
@@ -118,8 +118,8 @@ void gramSchmidt(const Dune::Stuff::LA::Container::EigenDenseMatrix< ElementType
 
 
 template< class ElementType >
-void gramSchmidt(const Dune::Stuff::LA::Container::EigenRowMajorSparseMatrix< ElementType >& /*_scalarProduct*/,
-                 Dune::Stuff::LA::Container::EigenDenseVector< ElementType >& /*_columnVectors*/)
+void gramSchmidt(const Dune::Stuff::LA::EigenRowMajorSparseMatrix< ElementType >& /*_scalarProduct*/,
+                 Dune::Stuff::LA::EigenDenseVector< ElementType >& /*_columnVectors*/)
 {
   dune_static_assert((Dune::AlwaysFalse< ElementType >::value),
                      "ERROR: not implemeneted for EigenDenseVector, use normalize()!");
@@ -127,8 +127,8 @@ void gramSchmidt(const Dune::Stuff::LA::Container::EigenRowMajorSparseMatrix< El
 
 
 template< class ElementType >
-void gramSchmidt(const Dune::Stuff::LA::Container::EigenDenseMatrix< ElementType >& _scalarProduct,
-                 Dune::Stuff::LA::Container::EigenDenseMatrix< ElementType >& _columnVectors)
+void gramSchmidt(const Dune::Stuff::LA::EigenDenseMatrix< ElementType >& _scalarProduct,
+                 Dune::Stuff::LA::EigenDenseMatrix< ElementType >& _columnVectors)
 {
   // if this is an empty matrix, throw up
   if (_columnVectors.cols() == 0 || _columnVectors.rows() == 0)
@@ -149,7 +149,7 @@ void gramSchmidt(const Dune::Stuff::LA::Container::EigenDenseMatrix< ElementType
       assert(_columnVectors.rows() == _scalarProduct.cols());
       for (size_t ii = 0; ii < _columnVectors.cols(); ++ii) {
         // get the iith column
-        typedef typename Dune::Stuff::LA::Container::EigenDenseMatrix< ElementType >::BackendType::ColXpr ColumnType;
+        typedef typename Dune::Stuff::LA::EigenDenseMatrix< ElementType >::BackendType::ColXpr ColumnType;
         ColumnType iith_column = _columnVectors.backend().col(ii);
         // and orthonormalize it wrt all previous columns
         for (size_t jj = 0; jj < ii; ++ jj) {
@@ -181,9 +181,9 @@ void gramSchmidt(const ScalarProductType& /*scalarProduct*/,
 
 #if HAVE_EIGEN
 template< class ElementType >
-bool gramSchmidt(const Dune::Stuff::LA::Container::EigenRowMajorSparseMatrix< ElementType >& _scalarProduct,
-                 const Dune::Stuff::LA::Container::EigenDenseMatrix< ElementType >& _columnBasisVectors,
-                 Dune::Stuff::LA::Container::EigenDenseVector< ElementType >& _vector,
+bool gramSchmidt(const Dune::Stuff::LA::EigenRowMajorSparseMatrix< ElementType >& _scalarProduct,
+                 const Dune::Stuff::LA::EigenDenseMatrix< ElementType >& _columnBasisVectors,
+                 Dune::Stuff::LA::EigenDenseVector< ElementType >& _vector,
                  const ElementType epsilon = 1e-10)
 {
   // if this is an empty vector, throw up
@@ -215,9 +215,9 @@ bool gramSchmidt(const Dune::Stuff::LA::Container::EigenRowMajorSparseMatrix< El
 
 
 template< class ElementType >
-bool gramSchmidt(const Dune::Stuff::LA::Container::EigenRowMajorSparseMatrix< ElementType >& _scalarProduct,
-                 const Dune::Stuff::LA::Container::EigenDenseVector< ElementType >& _columnBasisVector,
-                 Dune::Stuff::LA::Container::EigenDenseVector< ElementType >& _vector,
+bool gramSchmidt(const Dune::Stuff::LA::EigenRowMajorSparseMatrix< ElementType >& _scalarProduct,
+                 const Dune::Stuff::LA::EigenDenseVector< ElementType >& _columnBasisVector,
+                 Dune::Stuff::LA::EigenDenseVector< ElementType >& _vector,
                  const ElementType epsilon = 1e-10)
 {
   // if this is an empty vector, throw up
