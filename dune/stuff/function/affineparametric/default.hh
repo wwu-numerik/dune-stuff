@@ -4,8 +4,6 @@
 #include <memory>
 #include <vector>
 
-#include <dune/common/shared_ptr.hh>
-
 #include <dune/stuff/common/parameter.hh>
 #include <dune/stuff/common/string.hh>
 #include <dune/stuff/common/color.hh>
