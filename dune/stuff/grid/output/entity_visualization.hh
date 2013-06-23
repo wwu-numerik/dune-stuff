@@ -51,10 +51,10 @@ struct ElementVisualization {
 
     class FunctorBase {
         public:
-            FunctorBase ( const std::string filename,
-                          const std::string dir)
-                : filename_( filename )
-                , dir_(dir)
+            FunctorBase ( const std::string fname,
+                          const std::string dname)
+                : filename_(fname)
+                , dir_(dname)
             {}
             const std::string filename() const { return filename_; }
             const std::string dir() const { return dir_; }
@@ -66,9 +66,9 @@ struct ElementVisualization {
 
     class VolumeFunctor : public FunctorBase {
         public:
-            VolumeFunctor ( const std::string filename,
-                            const std::string dir )
-                : FunctorBase( filename, dir ) {}
+            VolumeFunctor ( const std::string fname,
+                            const std::string dname)
+                : FunctorBase(fname, dname) {}
 
             template <class Entity>
             double operator() ( const Entity& ent ) const
@@ -79,10 +79,10 @@ struct ElementVisualization {
 
     class ProcessIdFunctor : public FunctorBase {
         public:
-            ProcessIdFunctor ( const std::string filename,
-                               const std::string dir,
+            ProcessIdFunctor ( const std::string fname,
+                               const std::string dname,
                                Dune::MPIHelper& mpiHelper )
-                : FunctorBase( filename, dir ),
+                : FunctorBase(fname, dname),
                 mpiHelper_( mpiHelper )
             {}
 
@@ -98,9 +98,9 @@ struct ElementVisualization {
 
     class BoundaryFunctor : public FunctorBase {
         public:
-            BoundaryFunctor ( const std::string filename,
-                              const std::string dir )
-                : FunctorBase( filename, dir ) {}
+            BoundaryFunctor ( const std::string fname,
+                              const std::string dname)
+                : FunctorBase(fname, dname) {}
 
             template <class Entity>
             double operator() ( const Entity& entity ) const
@@ -130,9 +130,9 @@ struct ElementVisualization {
     class AreaMarker : public FunctorBase {
 
         public:
-            AreaMarker( const std::string filename,
-                        const std::string dir )
-                : FunctorBase( filename, dir ) {}
+            AreaMarker( const std::string fname,
+                        const std::string dname)
+                : FunctorBase(fname, dname) {}
 
             template <class Entity>
             double operator() ( const Entity& entity ) const
@@ -165,9 +165,9 @@ struct ElementVisualization {
 
     class GeometryFunctor : public FunctorBase {
         public:
-            GeometryFunctor ( const std::string filename,
-                              const std::string dir )
-                : FunctorBase( filename, dir ) {}
+            GeometryFunctor ( const std::string fname,
+                              const std::string dname)
+                : FunctorBase(fname, dname) {}
 
             template <class Entity>
             double operator() ( const Entity& ent ) const
