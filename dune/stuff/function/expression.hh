@@ -46,20 +46,20 @@ public:
 
   FunctionExpression(const std::string _variable,
                      const std::string _expression,
-                     const int order = -1,
-                     const std::string name = id())
+                     const int orderIn = -1,
+                     const std::string nameIn = id())
     : BaseType(_variable, _expression)
-    , order_(order)
-    , name_(name)
+    , order_(orderIn)
+    , name_(nameIn)
   {}
 
   FunctionExpression(const std::string _variable,
                      const std::vector< std::string > _expressions,
-                     const int order = -1,
-                     const std::string name = id())
+                     const int orderIn = -1,
+                     const std::string nameIn = id())
     : BaseType(_variable, _expressions)
-    , order_(order)
-    , name_(name)
+    , order_(orderIn)
+    , name_(nameIn)
   {}
 
   static Dune::ParameterTree defaultSettings(const std::string subName = "")
