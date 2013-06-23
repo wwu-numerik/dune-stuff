@@ -14,25 +14,26 @@ namespace Stuff {
 
 
 // forward, to allow for specialization
-template< class LeftFactorDomainFieldImp, int dimDomainLeftFactor, class LeftFactorRangeFieldImp, int dimRangeLeftFactor,
-          class RightFactorDomainFieldImp, int dimDomainRightFactor, class RightFactorRangeFieldImp, int dimRangeRightFactor >
-class FunctionProduct{
+template< class DL, int dL, class RL, int rRL, int rCL,
+          class DR, int dR, class RR, int rRR, int RCR >
+class GenericStationaryFunctionProduct{
 public:
-  FunctionProduct() = delete;
+  GenericStationaryFunctionProduct() = delete;
 };
 
 
 template< class DomainFieldImp, int domainDim, class RangeFieldImp >
-class FunctionProduct<  DomainFieldImp, domainDim, RangeFieldImp, 1,
-                        DomainFieldImp, domainDim, RangeFieldImp, 1 >
-  : public GenericStationaryFunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, 1 >
+class GenericStationaryFunctionProduct< DomainFieldImp, domainDim, RangeFieldImp, 1, 1,
+                                        DomainFieldImp, domainDim, RangeFieldImp, 1, 1 >
+  : public GenericStationaryFunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, 1, 1 >
 {
+  typedef GenericStationaryFunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, 1, 1 >  BaseType;
+  typedef GenericStationaryFunctionProduct< DomainFieldImp, domainDim, RangeFieldImp, 1, 1,
+                                            DomainFieldImp, domainDim, RangeFieldImp, 1, 1 > ThisType;
 public:
-  typedef FunctionProduct<  DomainFieldImp, domainDim, RangeFieldImp, 1, DomainFieldImp, domainDim, RangeFieldImp, 1 > ThisType;
-  typedef GenericStationaryFunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, 1 >  BaseType;
 
-  typedef GenericStationaryFunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, 1 >  LeftFactorType;
-  typedef GenericStationaryFunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, 1 >  RightFactorType;
+  typedef GenericStationaryFunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, 1, 1 >  LeftFactorType;
+  typedef GenericStationaryFunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, 1, 1 >  RightFactorType;
 
   typedef typename BaseType::DomainFieldType  DomainFieldType;
   static const int                            dimDomain = BaseType::dimDomain;
@@ -54,8 +55,8 @@ public:
     return BaseType::id() + ".product";
   }
 
-  FunctionProduct(const std::shared_ptr< const LeftFactorType > _leftFactor,
-                  const std::shared_ptr< const RightFactorType > _rightFactor)
+  GenericStationaryFunctionProduct(const std::shared_ptr< const LeftFactorType > _leftFactor,
+                                   const std::shared_ptr< const RightFactorType > _rightFactor)
     : leftFactor_(_leftFactor)
     , rightFactor_(_rightFactor)
     , leftParametric_(leftFactor_->parametric())
@@ -86,7 +87,7 @@ public:
       if (rightHasAffinePart_)
         affinePart_ = std::make_shared< ThisType >(leftFactor_, rightFactor_->affinePart());
     }
-  } // Product
+  } // GenericStationaryFunctionProduct
 
   std::shared_ptr< const LeftFactorType >  leftFactor() const
   {
@@ -221,7 +222,6 @@ public:
     return affinePart_;
   }
 
-
 private:
   const std::shared_ptr< const LeftFactorType >  leftFactor_;
   const std::shared_ptr< const RightFactorType > rightFactor_;
@@ -235,7 +235,7 @@ private:
   const int order_;
   std::vector< std::shared_ptr< const ComponentType > > components_;
   std::shared_ptr< const ComponentType > affinePart_;
-}; // class FunctionProduct< ..., ... >
+}; // class GenericStationaryFunctionProduct
 
 } // namespace Stuff
 } // namespace Dune
