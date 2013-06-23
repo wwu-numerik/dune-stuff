@@ -136,18 +136,16 @@ public:
       return std::make_shared< ComponentType >(*affinePart_);
     } else {
       assert(mu.size() == paramSize_);
-      std::shared_ptr< ComponentType > ret;
-      if (hasAffinePart_)
-        ret = make_shared< ComponentType >(*affinePart_);
-      else {
-        assert(components_.size() > 0);
-        assert(coefficients_.size() > 0);
-        ret = make_shared< ComponentType >(*components()[0]);
-        ret->backend() *= coefficients_[0]->evaluate(mu);
-      }
       assert(components_.size() == coefficients_.size());
+      // here we have at least one component/coefficient
+      auto ret = make_shared< ComponentType >(*components()[0]);
+      ret->backend() *= coefficients_[0]->evaluate(mu);
+      // then we do the rest
       for (size_t qq = 1; qq < components_.size(); ++qq)
         ret->backend() += components_[qq]->backend() * coefficients_[qq]->evaluate(mu);
+      // and the affine part
+      if (hasAffinePart_)
+        ret->backend() += affinePart_->backend();
       return ret;
     }
   } // std::shared_ptr< ComponentType > fix(const ParamType& mu) const
