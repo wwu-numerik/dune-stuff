@@ -92,22 +92,22 @@ static double colonProduct(const SomeRangeType& arg1,
  * use this to get the minimum increment/difference for all basic types
  * (or add specializations as necessary ofc)
  **/
-template < class T, bool is_integral = std::is_integral<T>::value >
+template< class T, bool is_integral = std::is_integral< T >::value >
 struct Epsilon {
 };
 
-template < class T >
-struct Epsilon<T,true> {
+template< class T >
+struct Epsilon< T,true > {
   static const T value ;
 };
 
-template < class T >
-struct Epsilon<T,false> {
+template< class T >
+struct Epsilon< T, false > {
   static const T value ;
 };
 
-template < >
-struct Epsilon<std::string,false> {
+template< >
+struct Epsilon< std::string, false > {
   static const std::string value;
 };
 
@@ -115,10 +115,10 @@ struct Epsilon<std::string,false> {
 const std::string Epsilon< std::string, false >::value = "_";
 
 
-template < class T >
-const T Epsilon<T,true>::value = 1;
-template < class T >
-const T Epsilon<T,false >::value = std::numeric_limits<T>::epsilon();
+template< class T >
+const T Epsilon< T, true >::value = 1;
+template< class T >
+const T Epsilon< T, false >::value = std::numeric_limits< T >::epsilon();
 
 
 /**
