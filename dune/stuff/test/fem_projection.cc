@@ -24,7 +24,11 @@
 template <int dimDomain, int rangeDim>
 struct CustomFunction : public Dune::Stuff::FunctionInterface< double, dimDomain, double, rangeDim > {
   typedef Dune::Stuff::FunctionInterface< double, dimDomain, double, rangeDim > Base;
-  using Base::evaluate;
+
+  void evaluate(const typename Base::DomainType& /*arg*/, typename Base::RangeType& ret) const
+  {
+    ret = typename Base::RangeType(0.0f);
+  }
 
   template <class IntersectionType>
   void evaluate( const typename Base::DomainType& /*arg*/, typename Base::RangeType& ret, const IntersectionType& face ) const
