@@ -41,14 +41,14 @@ struct LocalizableFunctionTest
   void check() const
   {
     // generate grid
-    const GridProviderType* gridProvider = GridProviderType::create(GridProviderType::createSampleDescription());
+    const GridProviderType* gridProvider = GridProviderType::create(GridProviderType::defaultSettings());
     const std::shared_ptr< const GridType > grid = gridProvider->grid();
     const GridViewType gridView = grid->leafView();
     const auto entityIt = gridView.template begin< 0 >();
     const auto& entity = *entityIt;
 
     // create function
-    const FunctionType* function = FunctionType::create(FunctionType::createSampleDescription());
+    const FunctionType* function = FunctionType::create(FunctionType::defaultSettings());
 
     // get localfunction
     const auto localFunction =function->localFunction(entity);
