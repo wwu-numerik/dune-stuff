@@ -1,3 +1,5 @@
+#include <dune/stuff/fem/namespace.hh>
+
 #include "femeoc.hh"
 
 #ifdef HAVE_DUNE_FEM
@@ -23,10 +25,10 @@ FemEoc::~FemEoc() {
 
 void FemEoc::init(const std::string& path,
           const std::string& name, const std::string& descript, const std::string& inputFile) {
-#if DUNE_VERSION_NEWER(DUNE_FEM,1,4)
-  if ( !Dune::Fem::directoryExists(path) && !Dune::Fem::createDirectory(path) )
+#if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
+  if (!Dune::directoryExists(path) && !Dune::createDirectory(path))
 #else
-  if ( !Dune::directoryExists(path) && !Dune::createDirectory(path) )
+  if (!Dune::Fem::directoryExists(path) && !Dune::Fem::createDirectory(path))
 #endif
     DUNE_THROW( Dune::IOError, (boost::format("couldn't create directory") % path).str() );
   init(path + "/" + name, descript, path + "/" + inputFile);

@@ -25,6 +25,8 @@
 #include <fstream>
 #include <sys/time.h>
 
+#include <dune/stuff/fem/namespace.hh>
+
 template < template <class> class Test >
 struct TestRunner {
     struct Visitor {
@@ -69,10 +71,10 @@ void test_init(int argc, char** argv)
   testing::InitGoogleTest(&argc, argv);
   DSC_CONFIG.readOptions(argc, argv);
 #ifdef HAVE_DUNE_FEM
-#if DUNE_VERSION_NEWER(DUNE_FEM,1,4)
-  Dune::Fem::MPIManager::initialize(argc, argv);
-#else
+#if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
   Dune::MPIManager::initialize(argc, argv);
+#else
+  Dune::Fem::MPIManager::initialize(argc, argv);
 #endif
 #else
   Dune::MPIHelper::instance(argc, argv);
