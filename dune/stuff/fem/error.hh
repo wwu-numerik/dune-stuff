@@ -11,6 +11,7 @@
 
 #include <dune/fem/misc/l2norm.hh>
 #include <dune/fem/misc/h1norm.hh>
+#include <dune/stuff/fem/namespace.hh>
 #include <boost/format.hpp>
 #include <utility>
 
@@ -21,7 +22,13 @@ namespace Fem {
 /** \brief Class that facilitates getting absolute and relative error of a pair of DisceteFunctions
    * \tparam NormType
    **/
+#if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
 template< class GridPartType, class NormType = Dune::L2Norm< GridPartType > >
+#elif DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
+template< class GridPartType, class NormType = Dune::Fem::L2Norm< GridPartType > >
+#else
+template< class GridPartType, class NormType = Dune::Fem::L2Norm< GridPartType > >
+#endif
 class L2Error
 {
   typedef NormType

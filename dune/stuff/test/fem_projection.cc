@@ -20,6 +20,7 @@
 #include <dune/stuff/grid/provider/cube.hh>
 #include <dune/stuff/function/expression.hh>
 #include <dune/stuff/function/affineparametric/coefficient.hh>
+#include <dune/stuff/fem/namespace.hh>
 
 template <int dimDomain, int rangeDim>
 struct CustomFunction : public Dune::Stuff::FunctionInterface< double, dimDomain, double, rangeDim > {
@@ -63,12 +64,28 @@ public:
   typedef typename GridProviderType::GridType GridType;
   typedef Dune::Stuff::FunctionExpression< double, GridType::dimension, double, range_dim > FunctionType;
   typedef typename FunctionType::FunctionSpaceType FunctionSpaceType;
+#if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
   typedef Dune::AdaptiveLeafGridPart< GridType > GridPartType;
   typedef Dune::DiscontinuousGalerkinSpace< FunctionSpaceType,
                                             GridPartType,
                                             pol_order>
     DiscreteFunctionSpaceType;
   typedef Dune::AdaptiveDiscreteFunction< DiscreteFunctionSpaceType > DiscreteFunctionType;
+#elif DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
+  typedef Dune::Fem::AdaptiveLeafGridPart< GridType > GridPartType;
+  typedef Dune::Fem::DiscontinuousGalerkinSpace< FunctionSpaceType,
+                                            GridPartType,
+                                            pol_order>
+    DiscreteFunctionSpaceType;
+  typedef Dune::Fem::AdaptiveDiscreteFunction< DiscreteFunctionSpaceType > DiscreteFunctionType;
+#else
+  typedef Dune::Fem::AdaptiveLeafGridPart< GridType > GridPartType;
+  typedef Dune::Fem::DiscontinuousGalerkinSpace< FunctionSpaceType,
+                                            GridPartType,
+                                            pol_order>
+    DiscreteFunctionSpaceType;
+  typedef Dune::Fem::AdaptiveDiscreteFunction< DiscreteFunctionSpaceType > DiscreteFunctionType;
+#endif
 
   GridProviderType gridProvider_;
   GridPartType gridPart_;

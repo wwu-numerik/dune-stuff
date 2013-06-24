@@ -23,6 +23,7 @@
 #include <dune/grid/common/entity.hh>
 #include <dune/stuff/common/ranges.hh>
 #include <dune/stuff/aliases.hh>
+#include <dune/stuff/fem/namespace.hh>
 
 #ifdef HAVE_DUNE_FEM
   #include <dune/fem/function/common/discretefunction.hh>
@@ -186,8 +187,16 @@ class HeterogenousProjection
 public:
 #ifdef HAVE_DUNE_FEM
   template < class SourceDFImp, class TargetDFImp >
+#if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
   static void project(const Dune::DiscreteFunctionInterface<SourceDFImp>& source,
                       Dune::DiscreteFunctionInterface<TargetDFImp>& target)
+#elif DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
+  static void project(const Dune::Fem::DiscreteFunctionInterface<SourceDFImp>& source,
+                      Dune::Fem::DiscreteFunctionInterface<TargetDFImp>& target)
+#else
+  static void project(const Dune::Fem::DiscreteFunctionInterface<SourceDFImp>& source,
+                      Dune::Fem::DiscreteFunctionInterface<TargetDFImp>& target)
+#endif
   {
     typedef SearchStrategy<typename SourceDFImp::GridType::LeafGridView::Traits> SearchStrategyType;
     typedef typename TargetDFImp::DiscreteFunctionSpaceType TargetDiscreteFunctionSpaceType;

@@ -15,7 +15,10 @@
 #include <dune/fem/function/common/gridfunctionadapter.hh>
 
 #include <dune/common/static_assert.hh>
+
 #include <dune/stuff/common/math.hh>
+#include <dune/stuff/fem/namespace.hh>
+
 #include "localmassmatrix.hh"
 
 namespace Dune {
@@ -34,8 +37,16 @@ class CustomProjection
 public:
   template< class OriginFunctionType, class DestinationFunctionType >
   static void project(const OriginFunctionType& f, DestinationFunctionType& discFunc) {
+#if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
     typedef Dune::CachingQuadrature< typename DestinationFunctionType::DiscreteFunctionSpaceType::GridPartType, 1 >
         FaceQuadratureType;
+#elif DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
+    typedef Dune::Fem::CachingQuadrature< typename DestinationFunctionType::DiscreteFunctionSpaceType::GridPartType, 1 >
+        FaceQuadratureType;
+#else
+    typedef Dune::Fem::CachingQuadrature< typename DestinationFunctionType::DiscreteFunctionSpaceType::GridPartType, 1 >
+        FaceQuadratureType;
+#endif
 
     const auto& space_ = discFunc.space();
     const auto& gridPart_ = space_.gridPart();
@@ -90,8 +101,16 @@ public:
   static void project(const FunctionImp& func,
                       DiscreteFunctionImp& discFunc,
                       int polOrd = -1) {
+#if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
     dune_static_assert(!(Conversion< FunctionImp, IsDiscreteFunction >::exists),
                        "TimeAwareL2Projection_not_implemented_for_discrete_source_functions");
+#elif DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
+    dune_static_assert(!(Conversion< FunctionImp, Dune::Fem::IsDiscreteFunction >::exists),
+                       "TimeAwareL2Projection_not_implemented_for_discrete_source_functions");
+#else
+    dune_static_assert(!(Conversion< FunctionImp, Dune::Fem::IsDiscreteFunction >::exists),
+                       "TimeAwareL2Projection_not_implemented_for_discrete_source_functions");
+#endif
     DefaultEvaluationFunctor< FunctionImp > functor(func);
     projectCommon(functor, discFunc, polOrd);
   }
@@ -101,8 +120,16 @@ public:
                       const FunctionImp& func,
                       DiscreteFunctionImp& discFunc,
                       int polOrd = -1) {
+#if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
     dune_static_assert(!(Conversion< FunctionImp, IsDiscreteFunction >::exists),
                        "TimeAwareL2Projection_not_implemented_for_discrete_source_functions");
+#elif DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
+    dune_static_assert(!(Conversion< FunctionImp, Dune::Fem::IsDiscreteFunction >::exists),
+                       "TimeAwareL2Projection_not_implemented_for_discrete_source_functions");
+#else
+    dune_static_assert(!(Conversion< FunctionImp, Dune::Fem::IsDiscreteFunction >::exists),
+                       "TimeAwareL2Projection_not_implemented_for_discrete_source_functions");
+#endif
     TimeEvaluationFunctor< FunctionImp, TimeProviderType > functor(func, timeProvider);
     projectCommon(functor, discFunc, polOrd);
   }
@@ -155,13 +182,25 @@ protected:
                             int polOrd = -1) {
     typedef typename DiscreteFunctionImp::DiscreteFunctionSpaceType  DiscreteFunctionSpaceType;
     typedef typename DiscreteFunctionSpaceType::Traits::GridPartType GridPartType;
+#if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
     typedef CachingQuadrature< GridPartType, 0 > QuadratureType;
+#elif DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
+    typedef Dune::Fem::CachingQuadrature< GridPartType, 0 > QuadratureType;
+#else
+    typedef Dune::Fem::CachingQuadrature< GridPartType, 0 > QuadratureType;
+#endif
 
     typename DiscreteFunctionSpaceType::RangeType ret(0.0);
     typename DiscreteFunctionSpaceType::RangeType phi(0.0);
     const auto& space = discFunc.space();
     const int quadOrd = std::max(2 * space.order() + 2, polOrd);
+#if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
     const LocalMassMatrix< DiscreteFunctionSpaceType, QuadratureType > massMatrix(space, quadOrd);
+#elif DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
+    const Dune::Fem::LocalMassMatrix< DiscreteFunctionSpaceType, QuadratureType > massMatrix(space, quadOrd);
+#else
+    const Dune::Fem::LocalMassMatrix< DiscreteFunctionSpaceType, QuadratureType > massMatrix(space, quadOrd);
+#endif
     const bool affineMapping = massMatrix.affine();
     discFunc.clear();
 

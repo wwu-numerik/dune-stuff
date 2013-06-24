@@ -13,6 +13,8 @@
 #include <dune/stuff/common/ranges.hh>
 #include <dune/fem/quadrature/cachingquadrature.hh>
 
+#include <dune/stuff/fem/namespace.hh>
+
 namespace Dune {
 namespace Stuff {
 namespace Fem {
@@ -21,8 +23,15 @@ namespace Fem {
 template< class FunctionType, class DiscreteFunctionSpaceType >
 std::pair< typename FunctionType::RangeType, double > integralAndVolume(const FunctionType& function,
                                                                         const DiscreteFunctionSpaceType& space,
-                                                                        const int polOrd = -1) {
+                                                                        const int polOrd = -1)
+{
+#if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
   typedef Dune::CachingQuadrature< typename DiscreteFunctionSpaceType::Traits::GridPartType, 0 > QuadratureType;
+#elif DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
+  typedef Dune::Fem::CachingQuadrature< typename DiscreteFunctionSpaceType::Traits::GridPartType, 0 > QuadratureType;
+#else
+  typedef Dune::Fem::CachingQuadrature< typename DiscreteFunctionSpaceType::Traits::GridPartType, 0 > QuadratureType;
+#endif
 //  typedef Dune::Stuff::Fem::LocalMassMatrix< DiscreteFunctionSpaceType, QuadratureType > LocalMassMatrixType;
 
   typename FunctionType::RangeType integral_value = typename FunctionType::RangeType(0);
@@ -68,11 +77,22 @@ typename FunctionType::RangeType meanValue(const FunctionType& function,
 
 /** \todo RENE needs to doc me **/
 template< class FunctionType, class DiscreteFunctionSpaceType >
-double boundaryIntegral(const FunctionType& function, const DiscreteFunctionSpaceType& space, const int polOrd = -1) {
+double boundaryIntegral(const FunctionType& function, const DiscreteFunctionSpaceType& space, const int polOrd = -1)
+{
   typedef typename DiscreteFunctionSpaceType::Traits::GridPartType GridPartType;
+#if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
   typedef Dune::CachingQuadrature< GridPartType, 1 > QuadratureType;
   typedef Dune::Stuff::Fem::LocalMassMatrix< DiscreteFunctionSpaceType,
                                   Dune::CachingQuadrature< GridPartType, 0 > > LocalMassMatrixType;
+#elif DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
+  typedef Dune::Fem::CachingQuadrature< GridPartType, 1 > QuadratureType;
+  typedef Dune::Stuff::Fem::LocalMassMatrix< DiscreteFunctionSpaceType,
+                                  Dune::Fem::CachingQuadrature< GridPartType, 0 > > LocalMassMatrixType;
+#else
+  typedef Dune::Fem::CachingQuadrature< GridPartType, 1 > QuadratureType;
+  typedef Dune::Stuff::Fem::LocalMassMatrix< DiscreteFunctionSpaceType,
+                                  Dune::Fem::CachingQuadrature< GridPartType, 0 > > LocalMassMatrixType;
+#endif
   double integral_value = 0;
   double total_volume = 0;
   typename DiscreteFunctionSpaceType::RangeType ret(0.0);

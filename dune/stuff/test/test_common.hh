@@ -73,6 +73,8 @@ void test_init(int argc, char** argv)
 #ifdef HAVE_DUNE_FEM
 #if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
   Dune::MPIManager::initialize(argc, argv);
+#elif DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
+  Dune::Fem::MPIManager::initialize(argc, argv);
 #else
   Dune::Fem::MPIManager::initialize(argc, argv);
 #endif

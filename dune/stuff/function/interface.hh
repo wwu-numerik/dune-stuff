@@ -403,6 +403,8 @@ class FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDim, 1 >
   , public Dune::Fem::Function< Dune::FunctionSpace< DomainFieldImp, RangeFieldImp, domainDim, rangeDim >,
 #elif DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
   , public Dune::Fem::Function< Dune::Fem::FunctionSpace< DomainFieldImp, RangeFieldImp, domainDim, rangeDim >,
+#else
+  , public Dune::Fem::Function< Dune::Fem::FunctionSpace< DomainFieldImp, RangeFieldImp, domainDim, rangeDim >,
 #endif
                                 FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDim, 1 > >
 #endif // HAVE_DUNE_FEM

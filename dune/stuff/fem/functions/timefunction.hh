@@ -12,6 +12,8 @@
 #include <dune/fem/function/common/function.hh>
 #include <dune/common/bartonnackmanifcheck.hh>
 
+#include <dune/stuff/fem/namespace.hh>
+
 namespace Dune {
 namespace Stuff {
 namespace Fem {
@@ -30,8 +32,13 @@ struct ConstTimeProvider
    **/
 template< class FunctionSpaceImp, class FunctionImp, class TimeProviderImp >
 class TimeFunction
-  : public BartonNackmanInterface< TimeFunction< FunctionSpaceImp, FunctionImp, TimeProviderImp >,
-                                   FunctionImp >
+#if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
+  : public BartonNackmanInterface< TimeFunction< FunctionSpaceImp, FunctionImp, TimeProviderImp >, FunctionImp >
+#elif DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
+  : public Dune::Fem::BartonNackmanInterface< TimeFunction< FunctionSpaceImp, FunctionImp, TimeProviderImp >, FunctionImp >
+#else
+  : public Dune::Fem::BartonNackmanInterface< TimeFunction< FunctionSpaceImp, FunctionImp, TimeProviderImp >, FunctionImp >
+#endif
     , public Dune::Fem::Function< FunctionSpaceImp, TimeFunction< FunctionSpaceImp, FunctionImp, TimeProviderImp > >
 {
 protected:
@@ -39,8 +46,13 @@ protected:
     ThisType;
   typedef Dune::Fem::Function< FunctionSpaceImp, ThisType >
     BaseType;
-  typedef BartonNackmanInterface< ThisType, FunctionImp >
-    Interface;
+#if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
+  typedef BartonNackmanInterface< ThisType, FunctionImp > Interface;
+#elif DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
+  typedef Dune::Fem::BartonNackmanInterface< ThisType, FunctionImp > Interface;
+#else
+  typedef Dune::Fem::BartonNackmanInterface< ThisType, FunctionImp > Interface;
+#endif
 
   //!TODO having both here is just plain weird
   TimeProviderImp* timeProviderPtr_;          // in case we cosntruct our own
@@ -121,8 +133,13 @@ public:
    **/
 template< class FunctionSpaceImp, class FunctionImp, class TimeProviderImp >
 class IntersectionTimeFunction
-  : public BartonNackmanInterface< IntersectionTimeFunction< FunctionSpaceImp, FunctionImp, TimeProviderImp >,
-                                   FunctionImp >
+#if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
+  : public BartonNackmanInterface< IntersectionTimeFunction< FunctionSpaceImp, FunctionImp, TimeProviderImp >, FunctionImp >
+#elif DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
+  : public Dune::Fem::BartonNackmanInterface< IntersectionTimeFunction< FunctionSpaceImp, FunctionImp, TimeProviderImp >, FunctionImp >
+#else
+  : public Dune::Fem::BartonNackmanInterface< IntersectionTimeFunction< FunctionSpaceImp, FunctionImp, TimeProviderImp >, FunctionImp >
+#endif
     , public Dune::Fem::Function< FunctionSpaceImp, IntersectionTimeFunction< FunctionSpaceImp, FunctionImp, TimeProviderImp > >
 {
 protected:
@@ -130,8 +147,13 @@ protected:
     ThisType;
   typedef Dune::Fem::Function< FunctionSpaceImp, ThisType >
     BaseType;
-  typedef BartonNackmanInterface< ThisType, FunctionImp >
-    Interface;
+#if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
+  typedef BartonNackmanInterface< ThisType, FunctionImp > Interface;
+#elif DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
+  typedef Dune::Fem::BartonNackmanInterface< ThisType, FunctionImp > Interface;
+#else
+  typedef Dune::Fem::BartonNackmanInterface< ThisType, FunctionImp > Interface;
+#endif
 
   const TimeProviderImp& timeProvider_;
 
