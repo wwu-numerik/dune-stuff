@@ -53,16 +53,8 @@ public:
       GridPartType;
 
     // type of quadrature
-#if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
-    typedef Dune::CachingQuadrature< GridPartType, 0 > VolumeQuadratureType;
-    typedef Dune::CachingQuadrature< GridPartType, 1 > FaceQuadratureType;
-#elif DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
     typedef Dune::Fem::CachingQuadrature< GridPartType, 0 > VolumeQuadratureType;
     typedef Dune::Fem::CachingQuadrature< GridPartType, 1 > FaceQuadratureType;
-#else
-    typedef Dune::Fem::CachingQuadrature< GridPartType, 0 > VolumeQuadratureType;
-    typedef Dune::Fem::CachingQuadrature< GridPartType, 1 > FaceQuadratureType;
-#endif
     // type of local mass matrix
     typedef Dune::Stuff::Fem::LocalMassMatrix< DiscreteFunctionSpaceType, VolumeQuadratureType > LocalMassMatrixType;
 
@@ -192,16 +184,8 @@ public:
 
     const DiscreteFunctionSpaceType space( velocity.space().gridPart() );
     // type of quadrature
-#if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
-    typedef Dune::CachingQuadrature< GridPartType, 0 > VolumeQuadratureType;
-    typedef Dune::CachingQuadrature< GridPartType, 1 > FaceQuadratureType;
-#elif DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
     typedef Dune::Fem::CachingQuadrature< GridPartType, 0 > VolumeQuadratureType;
     typedef Dune::Fem::CachingQuadrature< GridPartType, 1 > FaceQuadratureType;
-#else
-    typedef Dune::Fem::CachingQuadrature< GridPartType, 0 > VolumeQuadratureType;
-    typedef Dune::Fem::CachingQuadrature< GridPartType, 1 > FaceQuadratureType;
-#endif
     // type of local mass matrix
     typedef DSFe::LocalMassMatrix< DiscreteFunctionSpaceType, VolumeQuadratureType > LocalMassMatrixType;
     const int quadOrd = std::max(2 * space.order() + 2, polOrd);
@@ -288,16 +272,8 @@ public:
     typedef typename DiscreteFunctionSpaceType::Traits::GridPartType GridPartType;
 
     const DiscreteFunctionSpaceType& space = BaseType::space();
-#if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
-    typedef Dune::CachingQuadrature< GridPartType, 0 > VolumeQuadratureType;
-    typedef Dune::CachingQuadrature< GridPartType, 1 > FaceQuadratureType;
-#elif DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
     typedef Dune::Fem::CachingQuadrature< GridPartType, 0 > VolumeQuadratureType;
     typedef Dune::Fem::CachingQuadrature< GridPartType, 1 > FaceQuadratureType;
-#else
-    typedef Dune::Fem::CachingQuadrature< GridPartType, 0 > VolumeQuadratureType;
-    typedef Dune::Fem::CachingQuadrature< GridPartType, 1 > FaceQuadratureType;
-#endif
     typedef Dune::Stuff::Fem::LocalMassMatrix< DiscreteFunctionSpaceType, VolumeQuadratureType > LocalMassMatrixType;
     const int quadOrd = std::max(2 * space.order() + 2, polOrd);
     const LocalMassMatrixType massMatrix(space, quadOrd);

@@ -35,11 +35,8 @@ namespace boost {
 namespace math {
 //! isinf specialization for Dune::StraightenBlockVector
 template< class BlockVectorImp, class DofImp >
-#if DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
-inline bool isinf(const Dune::Fem::StraightenBlockVector< BlockVectorImp, DofImp >& x) {
-#else
-inline bool isinf(const Dune::Fem::StraightenBlockVector< BlockVectorImp, DofImp >& x) {
-#endif
+inline bool isinf(const Dune::Fem::StraightenBlockVector< BlockVectorImp, DofImp >& x)
+{
   for (size_t i = 0; i < x.size(); ++i)
   {
     if ( std::isinf(x[i]) )
