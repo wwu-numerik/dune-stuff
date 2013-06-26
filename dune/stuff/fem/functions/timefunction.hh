@@ -32,9 +32,7 @@ struct ConstTimeProvider
    **/
 template< class FunctionSpaceImp, class FunctionImp, class TimeProviderImp >
 class TimeFunction
-#if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
-  : public BartonNackmanInterface< TimeFunction< FunctionSpaceImp, FunctionImp, TimeProviderImp >, FunctionImp >
-#elif DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
+#if DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
   : public Dune::Fem::BartonNackmanInterface< TimeFunction< FunctionSpaceImp, FunctionImp, TimeProviderImp >, FunctionImp >
 #else
   : public Dune::Fem::BartonNackmanInterface< TimeFunction< FunctionSpaceImp, FunctionImp, TimeProviderImp >, FunctionImp >
@@ -46,9 +44,7 @@ protected:
     ThisType;
   typedef Dune::Fem::Function< FunctionSpaceImp, ThisType >
     BaseType;
-#if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
-  typedef BartonNackmanInterface< ThisType, FunctionImp > Interface;
-#elif DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
+#if DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
   typedef Dune::Fem::BartonNackmanInterface< ThisType, FunctionImp > Interface;
 #else
   typedef Dune::Fem::BartonNackmanInterface< ThisType, FunctionImp > Interface;
@@ -133,9 +129,7 @@ public:
    **/
 template< class FunctionSpaceImp, class FunctionImp, class TimeProviderImp >
 class IntersectionTimeFunction
-#if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
-  : public BartonNackmanInterface< IntersectionTimeFunction< FunctionSpaceImp, FunctionImp, TimeProviderImp >, FunctionImp >
-#elif DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
+#if DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
   : public Dune::Fem::BartonNackmanInterface< IntersectionTimeFunction< FunctionSpaceImp, FunctionImp, TimeProviderImp >, FunctionImp >
 #else
   : public Dune::Fem::BartonNackmanInterface< IntersectionTimeFunction< FunctionSpaceImp, FunctionImp, TimeProviderImp >, FunctionImp >
@@ -147,9 +141,7 @@ protected:
     ThisType;
   typedef Dune::Fem::Function< FunctionSpaceImp, ThisType >
     BaseType;
-#if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
-  typedef BartonNackmanInterface< ThisType, FunctionImp > Interface;
-#elif DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
+#if DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
   typedef Dune::Fem::BartonNackmanInterface< ThisType, FunctionImp > Interface;
 #else
   typedef Dune::Fem::BartonNackmanInterface< ThisType, FunctionImp > Interface;

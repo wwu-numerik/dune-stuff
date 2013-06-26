@@ -72,6 +72,7 @@ public:
     entries_[row * cols_ + col] += val;
   }
 
+#if DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
   auto domainBaseFunctionSet() const -> decltype(local_matrix_.domainBaseFunctionSet()) {
     return local_matrix_.domainBaseFunctionSet();
   }
@@ -79,6 +80,15 @@ public:
   auto rangeBaseFunctionSet() const -> decltype(local_matrix_.rangeBaseFunctionSet()) {
     return local_matrix_.rangeBaseFunctionSet();
   }
+#else
+  auto domainBasisFunctionSet() const -> decltype(local_matrix_.domainBasisFunctionSet()) {
+    return local_matrix_.domainBasisFunctionSet();
+  }
+
+  auto rangeBasisFunctionSet() const -> decltype(local_matrix_.rangeBasisFunctionSet()) {
+    return local_matrix_.rangeBasisFunctionSet();
+  }
+#endif
 
   ~LocalMatrixProxy() {
     const auto comp = CompareType(eps_);

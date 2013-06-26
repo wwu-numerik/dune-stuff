@@ -28,7 +28,6 @@
 #ifdef HAVE_DUNE_FEM
   #include <dune/fem/function/common/discretefunction.hh>
   #include <dune/fem/quadrature/cachingquadrature.hh>
-  #include <dune/fem/space/dgspace/localdgmassmatrix.hh>
 #endif
 
 #if HAVE_DUNE_DETAILED_DISCRETIZATIONS
@@ -187,16 +186,8 @@ class HeterogenousProjection
 public:
 #ifdef HAVE_DUNE_FEM
   template < class SourceDFImp, class TargetDFImp >
-#if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
-  static void project(const Dune::DiscreteFunctionInterface<SourceDFImp>& source,
-                      Dune::DiscreteFunctionInterface<TargetDFImp>& target)
-#elif DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
   static void project(const Dune::Fem::DiscreteFunctionInterface<SourceDFImp>& source,
                       Dune::Fem::DiscreteFunctionInterface<TargetDFImp>& target)
-#else
-  static void project(const Dune::Fem::DiscreteFunctionInterface<SourceDFImp>& source,
-                      Dune::Fem::DiscreteFunctionInterface<TargetDFImp>& target)
-#endif
   {
     typedef SearchStrategy<typename SourceDFImp::GridType::LeafGridView::Traits> SearchStrategyType;
     typedef typename TargetDFImp::DiscreteFunctionSpaceType TargetDiscreteFunctionSpaceType;
