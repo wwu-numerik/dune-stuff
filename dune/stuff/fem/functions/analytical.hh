@@ -43,25 +43,37 @@ public:
   ~ConstantFunction()
   {}
 
-  inline void evaluate(const double /*time*/, const DomainType& /*arg*/, RangeType& ret) const {
+  inline void evaluate(RangeType& ret) const {
     ret = constant_;
   }
 
-  inline void evaluate(const DomainType& /*arg*/, RangeType& ret) const { ret = RangeType(constant_); }
+  //! recursively consume args until only the output arg RangeType is left and the above function is called
+  template <class FirstType, class... Args>
+  void evaluate(FirstType&&, Args&&... args) const { evaluate(args...); }
 
   template< class IntersectionIteratorType >
   inline void evaluate(const double /*time*/, const DomainType& /*arg*/,
                        RangeType& ret, const IntersectionIteratorType /*it*/) const
   { ret = constant_; }
 
-  //! this signature might be used by GRAPE
-  inline void evaluate(const DomainType& /*arg*/,const typename RangeType::value_type /*time*/,  RangeType& ret) const {
-    ret = constant_;
+  inline void jacobian(typename BaseType::JacobianRangeType& jac) const {
+    jac = typename BaseType::JacobianRangeType(0);
   }
 
-  inline void evaluateJacobian(const DomainType& /*arg*/, typename BaseType::JacobianRangeType& jacobian) const {
-    jacobian = typename BaseType::JacobianRangeType(0);
-  }
+  template <class FirstType, class... Args>
+  void jacobian(FirstType&&, Args&&... args) const { jacobian(args...); }
+
+  //! alias for evaluate
+  template <class... Args>
+  void position_derivative(Args&&... args) const { evaluate(std::forward<Args>(args)...); }
+
+  //! alias for jacobian
+  template <class... Args>
+  void direction_derivative(Args&&... args) const { jacobian(std::forward<Args>(args)...); }
+
+  //! deprecated alias for jacobian
+  template <class... Args>
+  void evaluateJacobian(Args&&... args) const { jacobian(std::forward<Args>(args)...); }
 
 private:
   const RangeType constant_;
