@@ -8,26 +8,26 @@
 #include <dune/stuff/function/interface.hh>
 #include <dune/stuff/common/color.hh>
 
-#if HAVE_DUNE_DETAILED_DISCRETIZATIONS
-#include <dune/detailed/discretizations/space/continuouslagrange/fem.hh>
-#include <dune/detailed/discretizations/discretefunction/default.hh>
-#endif // HAVE_DUNE_DETAILED_DISCRETIZATIONS
+#if HAVE_DUNE_GDT
+  #include <dune/gdt/space/continuouslagrange/fem.hh>
+  #include <dune/gdt/discretefunction/default.hh>
+#endif // HAVE_DUNE_GDT
 
 namespace Dune {
 namespace Stuff {
 namespace DiscreteFunction {
 
 
-#if HAVE_DUNE_DETAILED_DISCRETIZATIONS
+#if HAVE_DUNE_GDT
 template< class GridPartType, int polOrder, class RangeFieldType, class VectorImp >
 void project(const Dune::Stuff::GridboundaryInterface< typename GridPartType::GridViewType >& boundaryInfo,
              const Dune::Stuff::GenericStationaryFunctionInterface< typename GridPartType::ctype, GridPartType::dimension, RangeFieldType, 1, 1 >& source,
-             Dune::Detailed::Discretizations::DiscreteFunctionDefault<
-                Dune::Detailed::Discretizations::ContinuousLagrangeSpace::FemWrapper< GridPartType, polOrder, RangeFieldType, 1, 1 >,
+             Dune::GDT::DiscreteFunctionDefault<
+                Dune::GDT::ContinuousLagrangeSpace::FemWrapper< GridPartType, polOrder, RangeFieldType, 1, 1 >,
                 VectorImp
              >& target)
 {
-  typedef Dune::Detailed::Discretizations::ContinuousLagrangeSpace::FemWrapper< GridPartType, polOrder, RangeFieldType, 1, 1 > SpaceType;
+  typedef Dune::GDT::ContinuousLagrangeSpace::FemWrapper< GridPartType, polOrder, RangeFieldType, 1, 1 > SpaceType;
   // checks
   if (source.parametric())
     DUNE_THROW(Dune::NotImplemented,
@@ -72,7 +72,7 @@ void project(const Dune::Stuff::GridboundaryInterface< typename GridPartType::Gr
     } // only consider entities with boundary intersection
   } // walk the grid
 } // static void project(...)
-#endif // HAVE_DUNE_DETAILED_DISCRETIZATIONS
+#endif // HAVE_DUNE_GDT
 
 
 } // namespace DiscreteFunction
