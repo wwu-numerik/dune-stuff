@@ -345,6 +345,13 @@ public:
     eigenVector_.setZero(_size);
   }
 
+  EigenDenseVector(const size_t _size, const ElementType value)
+    : eigenVector_(_size)
+  {
+    eigenVector_.setOnes();
+    eigenVector_ *= value;
+  }
+
   ThisType& operator=(const ThisType& other)
   {
     eigenVector_ = other.backend();
