@@ -9,7 +9,7 @@ namespace Stuff {
 
 // forward, includes are below
 template< class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDimRows, int rangeDimCols >
-class GenericStationaryFunctionInterface;
+class FunctionInterface;
 
 
 // forward, to be used in the traits
@@ -83,14 +83,12 @@ public:
 
   typedef typename Traits::EntityType EntityType;
 
-  typedef GenericStationaryFunctionInterface< DomainFieldType, dimDomain, RangeFieldType, dimRangeRows, dimRangeCols > FunctionType;
+  typedef FunctionInterface< DomainFieldType, dimDomain, RangeFieldType, dimRangeRows, dimRangeCols > FunctionType;
 
   LocalizedFunction(const FunctionType& func, const EntityType& en)
     : function_(func)
     , entity_(en)
-  {
-    assert(!function_.parametric());
-  }
+  {}
 
   const EntityType& entity() const
   {
