@@ -87,7 +87,7 @@ public:
   static const int                            dimRangeRows = BaseType::dimRangeRows;
   static const int                            dimRangeCols = BaseType::dimRangeCols;
   typedef typename BaseType::RangeType        RangeType;
-  typedef typename BaseType::ParamType        ParamType;
+//  typedef typename BaseType::ParamType        ParamType;
 
   typedef TimedependentFunctionInterface< DomainFieldType, dimDomain,
                                           RangeFieldType, dimRangeRows, dimRangeCols > WrappedType;
