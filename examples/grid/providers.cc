@@ -99,12 +99,12 @@ int main(int argc, char** argv)
     info << "visualizing grid... " << std::flush;
     timer.reset();
     gridProvider->visualize(paramTree.sub(id).get("filename", id + ".grid"));
-    info << " done (took " << timer.elapsed() << " sek)" << std::endl;
+    info << " done (took " << timer.elapsed() << " sec)" << std::endl;
 
     info << "walking leaf grid view... " << std::flush;
     timer.reset();
     const unsigned int leafElements = measureTiming(grid->leafView());
-    info << " done (has " << leafElements << " elements, took " << timer.elapsed() << " sek)" << std::endl;
+    info << " done (has " << leafElements << " elements, took " << timer.elapsed() << " sec)" << std::endl;
 
     // if we came that far we can as well be happy about it
     delete gridProvider;
