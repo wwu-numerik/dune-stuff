@@ -21,18 +21,13 @@ namespace DiscreteFunction {
 #if HAVE_DUNE_GDT
 template< class GridPartType, int polOrder, class RangeFieldType, class VectorImp >
 void project(const Dune::Stuff::GridboundaryInterface< typename GridPartType::GridViewType >& boundaryInfo,
-             const Dune::Stuff::GenericStationaryFunctionInterface< typename GridPartType::ctype, GridPartType::dimension, RangeFieldType, 1, 1 >& source,
+             const Dune::Stuff::FunctionInterface< typename GridPartType::ctype, GridPartType::dimension, RangeFieldType, 1, 1 >& source,
              Dune::GDT::DiscreteFunctionDefault<
                 Dune::GDT::ContinuousLagrangeSpace::FemWrapper< GridPartType, polOrder, RangeFieldType, 1, 1 >,
                 VectorImp
              >& target)
 {
   typedef Dune::GDT::ContinuousLagrangeSpace::FemWrapper< GridPartType, polOrder, RangeFieldType, 1, 1 > SpaceType;
-  // checks
-  if (source.parametric())
-    DUNE_THROW(Dune::NotImplemented,
-               "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
-               << " not implemented for parametric functions!");
   // clear target function
   target.vector()->backend() *= RangeFieldType(0);
   // walk the grid

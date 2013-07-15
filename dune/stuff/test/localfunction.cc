@@ -6,6 +6,7 @@
 #include <dune/common/typetraits.hh>
 #include <dune/common/static_assert.hh>
 
+#if HAVE_DUNE_GRID
 #include <dune/grid/sgrid.hh>
 
 #include <dune/stuff/function/constant.hh>
@@ -76,3 +77,12 @@ int main(int argc, char** argv)
   test_init(argc, argv);
   return RUN_ALL_TESTS();
 }
+
+#else // HAVE_DUNE_GRID
+
+int main(int /*argc*/, char** /*argv*/)
+{
+  return 0;
+}
+
+#endif // HAVE_DUNE_GRID

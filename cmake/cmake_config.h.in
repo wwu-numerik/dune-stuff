@@ -24,6 +24,7 @@
   #define HAVE_BOOST 1
 #endif
 
+#if HAVE_DUNE_GRID
 #if !HAVE_GRIDTYPE
   #include <dune/grid/sgrid.hh>
   namespace Dune
@@ -35,6 +36,7 @@
       typedef Dune::SGrid< dimgrid > GridType;
     }
   }
+#endif
 #endif
 
 // enable these when dropping autotools
