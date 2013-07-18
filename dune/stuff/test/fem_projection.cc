@@ -5,7 +5,7 @@
 #include <memory>
 
 #include <dune/fem/misc/mpimanager.hh>
-#include <dune/fem/space/fvspace/fvspace.hh>
+#include <dune/fem/space/finitevolume.hh>
 #include <dune/fem/space/dgspace.hh>
 #include <dune/fem/gridpart/adaptiveleafgridpart.hh>
 #include <dune/fem/function/adaptivefunction.hh>
