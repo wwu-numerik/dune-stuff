@@ -8,8 +8,7 @@
 #include <iostream>
 #include <type_traits>
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wreorder"
+#include <dune/stuff/common/header/disable_warnings.hh>
 
 namespace Dune {
 namespace Stuff {
@@ -187,7 +186,7 @@ namespace {
 } // namespace Stuff
 } // namespace Dune
 
-#pragma GCC diagnostic pop
+#include <dune/stuff/common/header/reenable_warnings.hh>
 
 #endif // LOGSTREAMS_HH
 /** Copyright (c) 2012, Rene Milk
