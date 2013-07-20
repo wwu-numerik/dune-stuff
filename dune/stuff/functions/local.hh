@@ -116,6 +116,6 @@ private:
 } // namespace Stuff
 } // namespace Dune
 
-#include "interface.hh"
+#include "interfaces.hh"
 
 #endif // DUNE_STUFF_FUNCTION_LOCAL_HH
