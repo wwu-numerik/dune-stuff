@@ -43,15 +43,13 @@ public:
                    const DomainType& _upperRight,
                    const std::vector< size_t >& _numElements,
                    const std::string _name = static_id(),
-                   const int _order = 0,
-                   const bool _ascii = true)
+                   const int _order = 0)
     : filename_(_filename)
     , lowerLeft_(_lowerLeft)
     , upperRight_(_upperRight)
     , numElements_(_numElements)
     , name_(_name)
     , order_(_order)
-    , ascii_(_ascii)
   {
     // sanity checks
     std::stringstream msg;
@@ -132,11 +130,6 @@ public:
     return order_;
   }
 
-  virtual int ascii() const
-  {
-    return ascii_;
-  }
-
   virtual void evaluate(const DomainType& x, RangeType& ret) const
   {
     // decide on the voxel x belongs to
@@ -168,7 +161,6 @@ private:
   const std::vector< size_t > numElements_;
   const std::string name_;
   const int order_;
-  const bool ascii_;
   std::vector< RangeType > data_;
 }; // class FunctionFromFile
 
@@ -188,9 +180,9 @@ public:
   static const int                            dimRange = BaseType::dimRange;
   typedef typename BaseType::RangeType        RangeType;
 
-  static std::string id()
+  static std::string static_id()
   {
-    return BaseType::id() + ".fromfile";
+    return BaseType::static_id() + ".fromfile";
   }
 
 public:
@@ -198,16 +190,14 @@ public:
                    const DomainType& _lowerLeft,
                    const DomainType& _upperRight,
                    const std::vector< size_t >& _numElements,
-                   const std::string _name = id(),
-                   const int _order = 0,
-                   const bool _ascii = true)
+                   const std::string _name = static_id(),
+                   const int _order = 0)
     : filename_(_filename)
     , lowerLeft_(_lowerLeft)
     , upperRight_(_upperRight)
     , numElements_(_numElements)
     , name_(_name)
     , order_(_order)
-    , ascii_(_ascii)
   {
     // sanity checks
     std::stringstream msg;
@@ -283,11 +273,6 @@ public:
     return order_;
   }
 
-  virtual int ascii() const
-  {
-    return ascii_;
-  }
-
   virtual void evaluate(const DomainType& x, RangeType& ret) const
   {
     // decide on the voxel x belongs to
@@ -319,7 +304,6 @@ private:
   const std::vector< size_t > numElements_;
   const std::string name_;
   const int order_;
-  const bool ascii_;
   std::vector< RangeType > data_;
 }; // class FunctionFromFile< ..., 1, 1 >
 
@@ -351,15 +335,13 @@ public:
                    const DomainType& _upperRight,
                    const std::vector< size_t >& _numElements,
                    const std::string _name = id(),
-                   const int _order = 0,
-                   const bool _ascii = true)
+                   const int _order = 0)
     : filename_(_filename)
     , lowerLeft_(_lowerLeft)
     , upperRight_(_upperRight)
     , numElements_(_numElements)
     , name_(_name)
     , order_(_order)
-    , ascii_(_ascii)
   {
     // sanity checks
     std::stringstream msg;
@@ -437,11 +419,6 @@ public:
     return order_;
   }
 
-  virtual int ascii() const
-  {
-    return ascii_;
-  }
-
   virtual void evaluate(const DomainType& x, RangeType& ret) const
   {
     // decide on the voxel x belongs to
@@ -473,7 +450,6 @@ private:
   const std::vector< size_t > numElements_;
   const std::string name_;
   const int order_;
-  const bool ascii_;
   std::vector< RangeType > data_;
 }; // class FunctionFromFile< ..., 1>
 
