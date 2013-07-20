@@ -9,6 +9,7 @@ libstuff_la_SOURCES = \
 	common/color.cc \
 	common/logging.cc \
 	common/logstreams.cc \
+	common/math.cc \
 	common/profiler.cc \
 	common/parameter/configcontainer.cc \
 	common/parameter/tree.cc \
