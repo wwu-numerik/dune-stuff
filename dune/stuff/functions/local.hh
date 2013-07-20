@@ -1,20 +1,10 @@
 #ifndef DUNE_STUFF_FUNCTION_LOCAL_HH
 #define DUNE_STUFF_FUNCTION_LOCAL_HH
 
-#include <dune/stuff/localfunction/interface.hh>
+#include "interfaces.hh"
 
 namespace Dune {
 namespace Stuff {
-
-
-// forward, includes are below
-template< class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDimRows, int rangeDimCols = 1 >
-class FunctionInterface;
-
-
-// forward, to be used in the traits
-template< class EntityImp, class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDimRows, int rangeDimCols >
-class LocalizedFunction;
 
 
 /**
@@ -115,7 +105,5 @@ private:
 
 } // namespace Stuff
 } // namespace Dune
-
-#include "interfaces.hh"
 
 #endif // DUNE_STUFF_FUNCTION_LOCAL_HH
