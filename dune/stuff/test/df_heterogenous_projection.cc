@@ -13,7 +13,7 @@
 
 #include <dune/stuff/grid/provider/cube.hh>
 #include <dune/stuff/discretefunction/projection/heterogenous.hh>
-#include <dune/stuff/function/expression.hh>
+#include <dune/stuff/functions/expression.hh>
 #include <dune/stuff/fem/customprojection.hh>
 #include <dune/stuff/common/profiler.hh>
 #include <dune/stuff/common/ranges.hh>
