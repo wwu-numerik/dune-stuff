@@ -43,9 +43,9 @@ public:
   static const int                            dimRange = BaseType::dimRange;
   typedef typename BaseType::RangeType        RangeType;
 
-  static std::string id()
+  static std::string static_id()
   {
-    return BaseType::id() + ".spe10.model1";
+    return BaseType::static_id() + ".spe10.model1";
   }
 
 private:
@@ -60,7 +60,7 @@ public:
                       const DomainType& _lowerLeft,
                       const DomainType& _upperRight,
 //                      const std::vector< size_t >& _numElements,
-                      const std::string _name = id(),
+                      const std::string _name = static_id(),
                       const int _order = 0,
                       const double _minValue = minValue,
                       const double _maxValue = maxValue)
@@ -152,7 +152,7 @@ public:
     description["minValue"] = "0.001"; //Dune::Stuff::Common::toString(minValue);
     description["maxValue"] = "998.915"; //Dune::Stuff::Common::toString(maxValue);
 //    description["numElements"] = "[100; 20]";
-    description["name"] = id();
+    description["name"] = static_id();
     description["order"] = "0";
     if (subName.empty())
       return description;
@@ -179,7 +179,7 @@ public:
     double maxValueIn = maxValue;
     if (settings.hasKey("maxValue"))
       maxValueIn = settings.get< double >("maxValue");
-    const std::string                    nameIn       = settings.get< std::string >(          "name",        id());
+    const std::string                    nameIn       = settings.get< std::string >(          "name",        static_id());
     const int                            orderIn      = settings.get< int >(                  "order",       0);
     // convert and leave the checks to the constructor
     DomainType lowerLeft;

@@ -5,9 +5,7 @@
 
 #include <dune/common/exceptions.hh>
 
-#include <dune/stuff/common/color.hh>
-
-#include "interface.hh"
+#include "interfaces.hh"
 
 namespace Dune {
 namespace Stuff {
@@ -43,9 +41,9 @@ public:
   static const int                            dimRange = BaseType::dimRange;
   typedef typename BaseType::RangeType        RangeType;
 
-  static std::string id()
+  static std::string static_id()
   {
-    return BaseType::id() + ".product";
+    return BaseType::static_id() + ".product";
   }
 
   FunctionProduct(const std::shared_ptr< const LeftFactorType > _leftFactor,
@@ -90,6 +88,7 @@ private:
   const std::shared_ptr< const LeftFactorType >  leftFactor_;
   const std::shared_ptr< const RightFactorType > rightFactor_;
   const int order_;
+  const std::string name_;
 }; // class FunctionProduct
 
 

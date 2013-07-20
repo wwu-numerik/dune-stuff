@@ -32,9 +32,9 @@ public:
   static const int                            dimRange = BaseType::dimRange;
   typedef typename BaseType::RangeType        RangeType;
 
-  static std::string id()
+  static std::string static_id()
   {
-    return BaseType::id() + ".fromfile";
+    return BaseType::static_id() + ".fromfile";
   }
 
 public:
@@ -42,7 +42,7 @@ public:
                    const DomainType& _lowerLeft,
                    const DomainType& _upperRight,
                    const std::vector< size_t >& _numElements,
-                   const std::string _name = id(),
+                   const std::string _name = static_id(),
                    const int _order = 0,
                    const bool _ascii = true)
     : filename_(_filename)

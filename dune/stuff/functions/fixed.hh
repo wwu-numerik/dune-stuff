@@ -30,9 +30,9 @@ public:
   typedef TimedependentFunctionInterface< DomainFieldType, dimDomain,
                                           RangeFieldType, dimRangeRows, dimRangeCols > WrappedType;
 
-  static std::string id()
+  static std::string static_id()
   {
-    return BaseType::id() + ".fixed";
+    return BaseType::static_id() + ".fixed";
   }
 
   FunctionFixedTime(const std::shared_ptr< const WrappedType > timedependentFunction,
@@ -43,7 +43,7 @@ public:
 
   virtual std::string name() const
   {
-    return "fixed '" + wrappedFunction_->name() + "' for time '" + Dune::Stuff::Common::toString(time_);
+    return "fixed '" + wrappedFunction_->name() + "' for time '" + Dune::Stuff::Common::toString(time_) + "'";
   }
 
   virtual int order() const

@@ -49,19 +49,14 @@ public:
 
   static std::string static_id()
   {
-    return "function";
-  }
-
-  virtual std::string id() const
-  {
-    return static_id();
+    return "dune.stuff.function";
   }
 
   /** \defgroup info ´´These methods should be implemented in order to identify the function.'' */
   /* @{ */
   virtual std::string name() const
   {
-    return id();
+    return static_id();
   }
 
   virtual int order() const
@@ -126,16 +121,17 @@ public:
 
   virtual ~FunctionInterface() {}
 
-  static std::string id()
+  static std::string static_id()
   {
-    return "function";
+    return "dune.stuff.function";
   }
+
 
   /** \defgroup info ´´These methods should be implemented in order to identify the function.'' */
   /* @{ */
   virtual std::string name() const
   {
-    return id();
+    return static_id();
   }
 
   virtual int order() const
@@ -190,16 +186,16 @@ public:
 
   virtual ~TimedependentFunctionInterface() {}
 
-  static std::string id()
+  static std::string static_id()
   {
-    return "function.timedependent";
+    return "dune.stuff.timedependentfunction";
   }
 
   /** \defgroup info ´´These methods should be implemented in order to identify the function.'' */
   /* @{ */
   virtual std::string name() const
   {
-    return "function.timedependent";
+    return static_id();
   }
 
   virtual int order() const
@@ -234,16 +230,16 @@ public:
 
   virtual ~TimedependentFunctionInterface() {}
 
-  static std::string id()
+  static std::string static_id()
   {
-    return "function.timedependent";
+    return "dune.stuff.timedependentfunction";
   }
 
   /** \defgroup info ´´These methods should be implemented in order to identify the function.'' */
   /* @{ */
   virtual std::string name() const
   {
-    return "function.timedependent";
+    return static_id();
   }
 
   virtual int order() const
