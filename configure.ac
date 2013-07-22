@@ -4,7 +4,7 @@
 AC_PREREQ(2.50)
 DUNE_AC_INIT # gets module version from dune.module file
 
-AC_CONFIG_SRCDIR([dune/stuff/exists.hh])
+AC_CONFIG_SRCDIR([dune/stuff/aliases.hh])
 AM_CONFIG_HEADER([config.h])
 
 # check all dune-module stuff
