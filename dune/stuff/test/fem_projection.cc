@@ -2,10 +2,12 @@
 
 #if HAVE_DUNE_FEM
 
+#include <dune/stuff/fem/namespace.hh>
+
+#if DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
 #include <memory>
 
 #include <dune/fem/misc/mpimanager.hh>
-#include <dune/fem/space/fvspace/fvspace.hh>
 #include <dune/fem/space/dgspace.hh>
 #include <dune/fem/gridpart/adaptiveleafgridpart.hh>
 #include <dune/fem/function/adaptivefunction.hh>
@@ -143,6 +145,7 @@ TYPED_TEST(ProjectionTest, All) {
 }
 
 #endif
+#endif //#if DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
 
 int main(int argc, char** argv)
 {
