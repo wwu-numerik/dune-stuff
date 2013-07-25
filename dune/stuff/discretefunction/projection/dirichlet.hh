@@ -5,7 +5,7 @@
 
 #include <dune/stuff/grid/boundaryinfo.hh>
 #include <dune/stuff/grid/intersection.hh>
-#include <dune/stuff/function/interface.hh>
+#include <dune/stuff/functions/interfaces.hh>
 #include <dune/stuff/common/color.hh>
 
 #if HAVE_DUNE_GDT
