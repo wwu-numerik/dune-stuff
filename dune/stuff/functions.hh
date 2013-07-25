@@ -32,8 +32,8 @@ public:
   static std::vector< std::string > available()
   {
     return {
-        FunctionCheckerboard< D, d, R, rR, rC >::static_id()
-      , FunctionExpression< D, d, R, rR, rC >::static_id()
+        FunctionExpression< D, d, R, rR, rC >::static_id()
+      , FunctionCheckerboard< D, d, R, rR, rC >::static_id()
       , FunctionConstant< D, d, R, rR, rC >::static_id()
       , FunctionSpe10Model1< D, d, R, rR, rC >::static_id()
     };
@@ -81,8 +81,8 @@ public:
   static std::vector< std::string > available()
   {
     return {
-        FunctionCheckerboard< D, 1, R, 1, 1 >::static_id()
-      , FunctionExpression< D, 1, R, 1, 1 >::static_id()
+        FunctionExpression< D, 1, R, 1, 1 >::static_id()
+      , FunctionCheckerboard< D, 1, R, 1, 1 >::static_id()
       , FunctionConstant< D, 1, R, 1, 1 >::static_id()
     };
   } // ... available(...)
@@ -125,8 +125,8 @@ public:
   static std::vector< std::string > available()
   {
     return {
-        FunctionCheckerboard< D, 3, R, 1, 1 >::static_id()
-      , FunctionExpression< D, 3, R, 1, 1 >::static_id()
+        FunctionExpression< D, 3, R, 1, 1 >::static_id()
+      , FunctionCheckerboard< D, 3, R, 1, 1 >::static_id()
       , FunctionConstant< D, 3, R, 1, 1 >::static_id()
     };
   } // ... available(...)
