@@ -10,6 +10,7 @@
 #include <dune/stuff/common/parameter/tree.hh>
 #include <dune/stuff/common/color.hh>
 #include <dune/stuff/common/string.hh>
+#include <dune/stuff/common/logging.hh>
 
 #include "interfaces.hh"
 
@@ -43,7 +44,8 @@ public:
                    const DomainType& _upperRight,
                    const std::vector< size_t >& _numElements,
                    const std::string _name = static_id(),
-                   const int _order = 0)
+                   const int _order = 0,
+                   std::ostream& out = Dune::Stuff::Common::Logger().devnull())
     : filename_(_filename)
     , lowerLeft_(_lowerLeft)
     , upperRight_(_upperRight)
@@ -77,15 +79,21 @@ public:
       const int dim = rangeDimCols*rangeDimRows;
       RangeType values;
 
-      std::cout << "Reading " << filename_ << " ...   " << std::flush;
+      out << "Reading " << filename_ << " ...   " << std::flush;
       while(std::getline(datafile,line))
       {
         numberOfVoxels++;
         const std::vector<double> items = Dune::Stuff::Common::tokenize<double>(line, " ");
-        assert(items.size() == dim + dimDomain);
+        if (items.size() != dimDomain + dim)
+          DUNE_THROW(Dune::IOError,
+                     "Error: " << items.size() << " = items.size() != dimDomain + rangeDimCols*rangeDimRows = " << dimDomain + dim << "!");
         for (unsigned int ii = 0; ii < dimDomain; ++ii){
           // the numbering of the voxels starts with 1
-          assert( (1 <= items[ii]) && (items[ii] <= numElements_[ii]) );
+          if (!( (1 <= items[ii]) && (items[ii] <= numElements_[ii]) ))
+            DUNE_THROW(Dune::IOError,
+                       "Error: " << ii << ". index of the voxel (" << items[ii]
+                       << ") does not lie between 1 and numElements[" << ii << "] ("
+                       << numElements_[ii] << ") !");
         }
         for (unsigned int ii = 0; ii < rangeDimRows; ++ii){
           for (unsigned int jj = 0; jj < rangeDimCols; ++jj){
@@ -94,7 +102,7 @@ public:
         }
         data_.push_back(values);
       }
-      std::cout << "done: function values for " << numberOfVoxels << " voxels read." << std::endl;
+      out << "done: function values for " << numberOfVoxels << " voxels read." << std::endl;
     } else { // if (datafile)
       ++throw_up;
       msg << "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
@@ -136,6 +144,11 @@ public:
     Dune::FieldVector< size_t, dimDomain > voxel;
     for (size_t ii=0; ii < dimDomain; ++ii){
       voxel[ii] = std::floor(numElements_[ii]*( (x[ii] - lowerLeft_[ii])/(upperRight_[ii] - lowerLeft_[ii]) ));
+      if (!( (0 <= voxel[ii]) && (voxel[ii] < numElements_[ii]) ))
+        DUNE_THROW(Dune::RangeError,
+                   "Error: " << ii << ". index of the voxel (" << voxel[ii]
+                   << ") does not lie between 0 and numElements[" << ii << "]-1 ("
+                   << numElements_[ii]-1 << ") !");
     }
     int index;
     if (dimDomain == 1){
@@ -191,7 +204,8 @@ public:
                    const DomainType& _upperRight,
                    const std::vector< size_t >& _numElements,
                    const std::string _name = static_id(),
-                   const int _order = 0)
+                   const int _order = 0,
+                   std::ostream& out = Dune::Stuff::Common::Logger().devnull())
     : filename_(_filename)
     , lowerLeft_(_lowerLeft)
     , upperRight_(_upperRight)
@@ -224,20 +238,26 @@ public:
       int numberOfVoxels = 0;
       RangeType value;
 
-      std::cout << "Reading " << filename_ << " ...   " << std::flush;
+      out << "Reading " << filename_ << " ...   " << std::flush;
       while(std::getline(datafile,line))
       {
         numberOfVoxels++;
         const std::vector<double> items = Dune::Stuff::Common::tokenize<double>(line, " ");
-        assert(items.size() == dimDomain + 1);
+        if (items.size() != dimDomain + 1)
+          DUNE_THROW(Dune::IOError,
+                     "Error: " << items.size() << " = items.size() != dimDomain + 1 = " << dimDomain + 1 << "!");
         for (unsigned int ii = 0; ii < dimDomain; ++ii){
           // the numbering of the voxels starts with 1
-          assert( (1 <= items[ii]) && (items[ii] <= numElements_[ii]) );
+          if (!( (1 <= items[ii]) && (items[ii] <= numElements_[ii]) ))
+            DUNE_THROW(Dune::IOError,
+                       "Error: " << ii << ". index of the voxel (" << items[ii]
+                       << ") does not lie between 1 and numElements[" << ii << "] ("
+                       << numElements_[ii] << ") !");
         }
-        value = items[dimDomain + 1];
+        value = items[dimDomain];
         data_.push_back(value);
       }
-      std::cout << "done: function values for " << numberOfVoxels << " voxels read." << std::endl;
+      out << "done: function values for " << numberOfVoxels << " voxels read." << std::endl;
     } else { // if (datafile)
       ++throw_up;
       msg << "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
@@ -279,6 +299,11 @@ public:
     Dune::FieldVector< size_t, dimDomain > voxel;
     for (size_t ii=0; ii < dimDomain; ++ii){
       voxel[ii] = std::floor(numElements_[ii]*( (x[ii] - lowerLeft_[ii])/(upperRight_[ii] - lowerLeft_[ii]) ));
+      if (!( (0 <= voxel[ii]) && (voxel[ii] < numElements_[ii]) ))
+        DUNE_THROW(Dune::RangeError,
+                   "Error: " << ii << ". index of the voxel (" << voxel[ii]
+                   << ") does not lie between 0 and numElements[" << ii << "]-1 ("
+                   << numElements_[ii]-1 << ") !");
     }
     int index;
     if (dimDomain == 1){
@@ -335,7 +360,8 @@ public:
                    const DomainType& _upperRight,
                    const std::vector< size_t >& _numElements,
                    const std::string _name = id(),
-                   const int _order = 0)
+                   const int _order = 0,
+                   std::ostream& out = Dune::Stuff::Common::Logger().devnull())
     : filename_(_filename)
     , lowerLeft_(_lowerLeft)
     , upperRight_(_upperRight)
@@ -368,22 +394,28 @@ public:
       int numberOfVoxels = 0;
       RangeType values;
 
-      std::cout << "Reading " << filename_ << " ...   " << std::flush;
+      out << "Reading " << filename_ << " ...   " << std::flush;
       while(std::getline(datafile,line))
       {
         numberOfVoxels++;
         const std::vector<double> items = Dune::Stuff::Common::tokenize<double>(line, " ");
-        assert(items.size() == rangeDimRows + dimDomain);
+        if (items.size() != rangeDimRows + dimDomain)
+          DUNE_THROW(Dune::IOError,
+                     "Error: " << items.size() << " = items.size() != rangeDimRows + dimDomain = " << rangeDimRows + dimDomain << "!");
         for (unsigned int ii = 0; ii < dimDomain; ++ii){
           // the numbering of the voxels starts with 1
-          assert( (1 <= items[ii]) && (items[ii] <= numElements_[ii]) );
+          if (!( (1 <= items[ii]) && (items[ii] <= numElements_[ii]) ))
+            DUNE_THROW(Dune::IOError,
+                       "Error: " << ii << ". index of the voxel (" << items[ii]
+                       << ") does not lie between 1 and numElements[" << ii << "] ("
+                       << numElements_[ii] << ") !");
         }
         for (unsigned int ii = 0; ii < rangeDimRows; ++ii){
           values[ii] = items[dimDomain + ii];
         }
         data_.push_back(values);
       }
-      std::cout << "done: function values for " << numberOfVoxels << " voxels read." << std::endl;
+      out << "done: function values for " << numberOfVoxels << " voxels read." << std::endl;
     } else { // if (datafile)
       ++throw_up;
       msg << "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
@@ -425,6 +457,11 @@ public:
     Dune::FieldVector< size_t, dimDomain > voxel;
     for (size_t ii=0; ii < dimDomain; ++ii){
       voxel[ii] = std::floor(numElements_[ii]*( (x[ii] - lowerLeft_[ii])/(upperRight_[ii] - lowerLeft_[ii]) ));
+      if (!( (0 <= voxel[ii]) && (voxel[ii] < numElements_[ii]) ))
+        DUNE_THROW(Dune::RangeError,
+                   "Error: " << ii << ". index of the voxel (" << voxel[ii]
+                   << ") does not lie between 0 and numElements[" << ii << "]-1 ("
+                   << numElements_[ii]-1 << ") !");
     }
     int index;
     if (dimDomain == 1){
