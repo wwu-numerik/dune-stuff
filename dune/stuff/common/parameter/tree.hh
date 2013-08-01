@@ -220,6 +220,11 @@ public:
   static ParameterTree init(int argc, char** argv, std::string filename);
   static ParameterTree init(const std::string filename);
 
+  bool empty() const
+  {
+    return getValueKeys().empty() && this->getSubKeys().empty();
+  }
+
 private:
   void reportAsSub(std::ostream& stream, const std::string& prefix, const std::string& subPath) const;
   std::string findCommonPrefix(const BaseType& sub, const std::string previousPrefix = "") const;
