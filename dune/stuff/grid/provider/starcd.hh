@@ -189,7 +189,7 @@ public:
       DUNE_THROW(Dune::IOError, "Number of Elements (" << numberOfElements << ") is not equal to number of cubes (" << numberOfCubes << ") and number of prisms (" << numberOfPrisms << ").");
 
     out << "done: " << numberOfElements << " elements read ("
-              << numberOfPrisms << " prisms and " << numberOfCubes << " cubes)." << std::endl;
+        << numberOfPrisms << " prisms and " << numberOfCubes << " cubes)." << std::endl;
 
     // finish off the construction of the grid object
     out << "Starting createGrid() ... " << std::endl;
