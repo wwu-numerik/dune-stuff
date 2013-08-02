@@ -55,8 +55,7 @@ class AffineParametricCoefficientFunction;
  *  \brief base class that makes a function out of the stuff from mathexpr.hh
  *  \attention  Most surely you do not want to use this class directly, but FunctionExpression!
  */
-template< class DomainFieldImp, int domainDim,
-          class RangeFieldImp, int rangeDim >
+template< class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDim >
 class FunctionExpressionBase
 {
 public:

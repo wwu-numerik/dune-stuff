@@ -184,7 +184,7 @@ public:
                                                        const T& def,
                                                        const unsigned int minSize) const
   {
-    // get correspongin vector
+    // get corresponding vector
     std::vector< T > vec = getVector< T >(key, def, minSize);
     // create eigen vector and return
     Eigen::Matrix< T, Eigen::Dynamic, 1 > ret(vec.size());
@@ -196,7 +196,7 @@ public:
   template< class T >
   Eigen::Matrix< T, Eigen::Dynamic, 1 > getEigenVector(const std::string& key, const unsigned int minSize) const
   {
-    // get correspongin vector
+    // get corresponding vector
     std::vector< T > vec = getVector< T >(key, minSize);
     // create eigen vector and return
     Eigen::Matrix< T, Eigen::Dynamic, 1 > ret(vec.size());
