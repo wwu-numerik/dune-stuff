@@ -17,7 +17,7 @@
 #include <dune/detailed/discretizations/discretefunction/local.hh>
 #include <dune/detailed/discretizations/discretefunction/default.hh>
 #include <dune/detailed/discretizations/discretefunction/multiscale.hh>
-#include <dune/stuff/function/interface.hh>
+#include <dune/stuff/functions/interfaces.hh>
 
 namespace Dune {
 namespace Stuff {
