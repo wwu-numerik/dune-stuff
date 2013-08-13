@@ -15,7 +15,9 @@
 #include <vector>
 
 #include <dune/common/fvector.hh>
-#include <dune/fem/io/file/iointerface.hh>
+#include <dune/stuff/common/disable_warnings.hh>
+  #include <dune/fem/io/file/iointerface.hh>
+#include <dune/stuff/common/reenable_warnings.hh>
 #include <boost/format.hpp>
 
 namespace Dune {

@@ -15,12 +15,12 @@ common_color_SOURCES = common_color.cc $(GTEST_SRC)
 common_tuple_SOURCES = common_tuple.cc $(GTEST_SRC)
 
 if HAVE_DUNE_GRID
-GRID_TESTS = grid_provider grid_information grid_output_pgf function_expression
+GRID_TESTS = grid_provider grid_information grid_output_pgf functions_expression
 GRID_FLAGS = -DGRIDDIM=$(GRIDDIM) -D$(GRIDTYPE)
 grid_provider_SOURCES = grid_provider.cc $(GTEST_SRC)
 grid_information_SOURCES = grid_information.cc $(GTEST_SRC)
 grid_output_pgf_SOURCES = grid_output_pgf.cc $(GTEST_SRC)
-function_expression_SOURCES = function_expression.cc $(GTEST_SRC)
+functions_expression_SOURCES = functions_expression.cc $(GTEST_SRC)
 endif
 
 if HAVE_DUNE_FEM
@@ -36,7 +36,8 @@ SOURCES = $(common_parameter_validation_SOURCES) $(common_logger_SOURCES) \
 	$(grid_provider_SOURCES) $(grid_information_SOURCES) $(grid_output_pgf_SOURCES) \
 	$(fem_error_SOURCES) $(fem_projection_SOURCES) 
 
-LDFLAGS = $(BOOST_LDFLAGS) $(BOOST_FILESYSTEM_LIB) $(BOOST_SYSTEM_LIB) $(BOOST_TIMER_LIB) $(BOOST_CHRONO_LIB) -lpthread
+LDFLAGS = $(ALL_PKG_LDFLAGS)  $(BOOST_LDFLAGS) -L$(DUNE_STUFF_ROOT)/lib
+LDADD = -ldunestuff $(LOCAL_LIBS) $(ALL_PKG_LIBS) $(BOOST_FILESYSTEM_LIB) $(BOOST_SYSTEM_LIB) $(BOOST_TIMER_LIB) $(BOOST_CHRONO_LIB) -lpthread 
 CXXFLAGS = $(BOOST_CPPFLAGS) $(DUNE_CPPFLAGS) -I./gtest $(GRID_FLAGS)
 CPPFLAGS = $(BOOST_CPPFLAGS) $(DUNE_CPPFLAGS)
 

@@ -9,7 +9,7 @@
 #if HAVE_DUNE_GRID
 #include <dune/grid/sgrid.hh>
 
-#include <dune/stuff/function/constant.hh>
+#include <dune/stuff/functions/constant.hh>
 #include <dune/stuff/grid/provider.hh>
 
 using namespace Dune::Stuff;

@@ -1,8 +1,9 @@
 #include "test_common.hh"
 
-#include <dune/stuff/common/string.hh>
-#include <dune/stuff/function/fromfile.hh>
 #include <dune/common/fvector.hh>
+
+#include <dune/stuff/common/string.hh>
+#include <dune/stuff/functions/fromfile.hh>
 
 using namespace Dune::Stuff;
 
