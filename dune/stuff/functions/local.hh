@@ -57,9 +57,10 @@ class LocalizedFunction
   : public LocalFunctionInterface<  LocalizedFunctionTraits< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows, rangeDimCols >,
                                     DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows, rangeDimCols >
 {
-  typedef LocalizedFunctionTraits< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows, rangeDimCols >  Traits;
-  typedef LocalFunctionInterface< Traits, DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows, rangeDimCols >      BaseType;
+  typedef LocalFunctionInterface< LocalizedFunctionTraits< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows, rangeDimCols >,
+                                  DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows, rangeDimCols > BaseType;
 public:
+  typedef LocalizedFunctionTraits< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows, rangeDimCols > Traits;
   typedef LocalizedFunction< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows, rangeDimCols > Type;
 
   typedef typename Traits::DomainFieldType DomainFieldType;
