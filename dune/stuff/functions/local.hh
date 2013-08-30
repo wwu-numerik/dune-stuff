@@ -49,6 +49,8 @@ public:
   static const unsigned int                                               dimRangeRows = dimRange;
   static const unsigned int                                               dimRangeCols = 1;
   typedef Dune::FieldVector< RangeFieldType, dimRange > RangeType;
+
+  typedef Dune::FieldMatrix< RangeFieldType, dimRange, dimDomain > JacobianRangeType;
 }; // class LocalizedFunctionTraits
 
 
@@ -71,6 +73,8 @@ public:
   static const unsigned int dimRangeRows = Traits::dimRangeRows;
   static const unsigned int dimRangeCols = Traits::dimRangeCols;
   typedef typename Traits::RangeType RangeType;
+
+  typedef typename Traits::JacobianRangeType JacobianRangeType;
 
   typedef typename Traits::EntityType EntityType;
 
@@ -97,6 +101,13 @@ public:
   }
 
   using BaseType::evaluate;
+
+  void jacobian(const DomainType& xx, JacobianRangeType& ret) const
+  {
+    function_.jacobian(entity_.geometry().global(xx), ret);
+  }
+
+  using BaseType::jacobian;
 
 private:
   const FunctionType& function_;
