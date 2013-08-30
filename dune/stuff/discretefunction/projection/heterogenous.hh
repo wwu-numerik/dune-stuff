@@ -1,25 +1,9 @@
 #ifndef DUNE_STUFF_DISCRETEFUNCTION_PROJECTION_HETEROGENOUS_HH
 #define DUNE_STUFF_DISCRETEFUNCTION_PROJECTION_HETEROGENOUS_HH
 
-#ifdef HAVE_CMAKE_CONFIG
- #include "cmake_config.h"
-#else
- #include "config.h"
-#endif // ifdef HAVE_CMAKE_CONFIG
-
-#include <vector>
-
-#if HAVE_DUNE_GEOMETRY
-#include <dune/geometry/referenceelements.hh>
-#else
-#include <dune/grid/common/genericreferenceelements.hh>
-#endif
-
-#include <dune/common/shared_ptr.hh>
 #include <dune/common/fvector.hh>
 #include <dune/grid/common/backuprestore.hh>
 #include <dune/grid/common/grid.hh>
-#include <dune/grid/common/gridview.hh>
 #include <dune/grid/common/entity.hh>
 #include <dune/stuff/common/ranges.hh>
 #include <dune/stuff/aliases.hh>
@@ -32,158 +16,22 @@
 
 #include <dune/grid/io/file/vtk/function.hh>
 
-#include <boost/range/iterator_range.hpp>
+#include <dune/stuff/grid/search.hh>
 
 namespace Dune {
 namespace Stuff {
 
-template <class ViewTraits>
-class StrategyBase {
-public:
-  typedef typename ViewTraits::template Codim<0>::Entity EntityType;
-  typedef typename EntityType::Geometry::LocalCoordinate LocalCoordinateType;
-  typedef typename EntityType::Geometry::GlobalCoordinate GlobalCoordinateType;
-  typedef std::vector<typename EntityType::EntityPointer> EntityPointerVector;
-};
 
-template <class ViewTraits>
-class InlevelSearchStrategy : public StrategyBase<ViewTraits> {
-  typedef StrategyBase<ViewTraits> BaseType;
-  typedef GenericReferenceElements< typename  BaseType::LocalCoordinateType::value_type,
-                                              BaseType::LocalCoordinateType::dimension >
-        RefElementType;
-  typedef typename Dune::GridView<ViewTraits>::template Codim< 0 >::Iterator IteratorType;
-
-
-  inline bool check_add(const typename BaseType::EntityType& entity,
-                        const typename BaseType::GlobalCoordinateType& point,
-                        typename BaseType::EntityPointerVector& ret) const {
-    const auto& geometry = entity.geometry();
-    const auto& refElement = RefElementType::general(geometry.type());
-    if(refElement.checkInside(geometry.local(point)))
-    {
-      ret.emplace_back(entity);
-      return true;
-    }
-    return false;
-  }
-public:
-  InlevelSearchStrategy(const Dune::GridView<ViewTraits>& gridview)
-    : gridview_(gridview)
-    , it_last_(gridview_.template begin< 0 >())
-  {}
-
-  template <class QuadpointContainerType>
-  typename BaseType::EntityPointerVector operator() (const QuadpointContainerType& quad_points)
-  {
-    const auto max_size = quad_points.size();
-
-    const IteratorType begin = gridview_.template begin< 0 >();
-    const IteratorType end = gridview_.template end< 0 >();
-    std::vector<typename BaseType::EntityType::EntityPointer> ret;
-    for(const auto& point : quad_points)
-    {
-      IteratorType it_current = it_last_;
-      bool it_reset = true;
-      for(; it_current != end && ret.size() < max_size; ++it_current)
-      {
-        if(check_add(*it_current, point, ret)) {
-          it_reset = false;
-          it_last_ = it_current;
-          break;
-        }
-      }
-      if(!it_reset)
-        continue;
-      for(it_current = begin;
-          it_current != it_last_ && ret.size() < max_size;
-          ++it_current)
-      {
-        if(check_add(*it_current, point, ret)) {
-          it_reset = false;
-          it_last_ = it_current;
-          break;
-        }
-      }
-      assert(!it_reset);
-    }
-    return ret;
-  }
-
-private:
-  const Dune::GridView<ViewTraits>& gridview_;
-  IteratorType it_last_;
-};
-
-template <class ViewTraits>
-class HierarchicSearchStrategy : public StrategyBase<ViewTraits> {
-  typedef StrategyBase<ViewTraits> BaseType;
-
-  const Dune::GridView<ViewTraits>& gridview_;
-  const int start_level_;
-
-public:
-  HierarchicSearchStrategy(const Dune::GridView<ViewTraits>& gridview)
-    : gridview_(gridview)
-    , start_level_(0)
-  {}
-
-  template <class QuadpointContainerType>
-  typename BaseType::EntityPointerVector
-  operator() (const QuadpointContainerType& quad_points) const
-  {
-    auto level = std::min(gridview_.grid().maxLevel(), start_level_);
-    auto range = DSC::viewRange(gridview_.grid().levelView(level));
-    return process(quad_points, range);
-  }
-
-private:
-
-  template <class QuadpointContainerType, class RangeType>
-  std::vector<typename BaseType::EntityType::EntityPointer>
-  process(const QuadpointContainerType& quad_points,
-          const RangeType& range) const
-  {
-    typedef GenericReferenceElements< typename BaseType::LocalCoordinateType::value_type,
-        BaseType::LocalCoordinateType::dimension > RefElementType;
-    std::vector<typename BaseType::EntityType::EntityPointer> ret;
-
-    for(const auto& my_ent : range) {
-      const int my_level = my_ent.level();
-      const auto& geometry = my_ent.geometry();
-      const auto& refElement = RefElementType::general(geometry.type());
-      for(const auto& point : quad_points)
-      {
-        if(refElement.checkInside(geometry.local(point)))
-        {
-          //if I cannot descend further add this entity even if it's not my view
-          if(gridview_.grid().maxLevel() <= my_level || gridview_.contains(my_ent)) {
-            ret.emplace_back(my_ent);
-          }
-          else {
-            const auto h_end = my_ent.hend(my_level+1);
-            const auto h_begin = my_ent.hbegin(my_level+1);
-            const auto h_range = boost::make_iterator_range(h_begin, h_end);
-            const auto kids = process(QuadpointContainerType(1, point), h_range);
-            ret.insert(ret.end(), kids.begin(), kids.end());
-          }
-        }
-      }
-    }
-    return ret;
-  }
-};
-
-template <template <class> class SearchStrategy = InlevelSearchStrategy>
+#ifdef HAVE_DUNE_FEM
+template< template< class > class SearchStrategy = Grid::EntityInlevelSearch >
 class HeterogenousProjection
 {
 public:
-#ifdef HAVE_DUNE_FEM
   template < class SourceDFImp, class TargetDFImp >
   static void project(const Dune::Fem::DiscreteFunctionInterface<SourceDFImp>& source,
                       Dune::Fem::DiscreteFunctionInterface<TargetDFImp>& target)
   {
-    typedef SearchStrategy<typename SourceDFImp::GridType::LeafGridView::Traits> SearchStrategyType;
+    typedef SearchStrategy<typename SourceDFImp::GridType::LeafGridView> SearchStrategyType;
     typedef typename TargetDFImp::DiscreteFunctionSpaceType TargetDiscreteFunctionSpaceType;
     typedef typename TargetDFImp::DofType TargetDofType;
     static const int target_dimRange = TargetDiscreteFunctionSpaceType::dimRange;
@@ -235,6 +83,7 @@ public:
       }
     }
   } // ... project(...)
+}; // class HeterogenousProjection
 #endif // HAVE_DUNE_FEM
 
 
