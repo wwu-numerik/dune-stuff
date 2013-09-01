@@ -108,6 +108,8 @@ public:
 
   typedef Dune::FieldMatrix< RangeFieldType, dimRange, dimDomain > JacobianRangeType;
 
+  virtual ~LocalFunctionInterface() {}
+
   const EntityType& entity() const
   {
     CHECK_INTERFACE_IMPLEMENTATION(asImp().entity());
