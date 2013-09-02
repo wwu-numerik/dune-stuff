@@ -195,7 +195,7 @@ public:
     static const int target_dimRange = TargetDiscreteFunctionSpaceType::dimRange;
 
     const auto& space =  target.space();
-    const auto infinity = std::numeric_limits< TargetDofType >::infinity();
+    const auto infinity = DSC::numeric_limits< TargetDofType >::infinity();
 
     // set all DoFs to infinity
     const auto dend = target.dend();
