@@ -68,8 +68,8 @@ public:
     // boundary id
     std::vector< double > boundaryId = generateBoundaryIdVisualization(gridView);
     vtkwriter.addCellData(boundaryId, "boundaryId");
-    const GridboundaryInterface< LeafGridViewType >*
-        boundaryInfo = Gridboundaries< LeafGridViewType >::create(boundaryInfoType, description);
+    const GridboundaryInterface< typename LeafGridViewType::Intersection >*
+        boundaryInfo = Gridboundaries< typename LeafGridViewType::Intersection >::create(boundaryInfoType, description);
     // dirichlet values
     std::vector< double > dirichlet = generateBoundaryVisualization(gridView, *boundaryInfo, "dirichlet");
     vtkwriter.addCellData(dirichlet, "isDirichletBoundary");
@@ -115,7 +115,7 @@ private:
   } // std::vector< double > generateBoundaryIdVisualization(const LeafGridViewType& gridView) const
 
   std::vector< double > generateBoundaryVisualization(const LeafGridViewType& gridView,
-                                                      const Dune::Stuff::GridboundaryInterface< LeafGridViewType >& boundaryInfo,
+                                                      const Dune::Stuff::GridboundaryInterface< typename LeafGridViewType::Intersection >& boundaryInfo,
                                                       const std::string type) const
   {
     std::vector< double > data(gridView.indexSet().size(0));
