@@ -20,7 +20,7 @@ namespace DiscreteFunction {
 
 #if HAVE_DUNE_GDT
 template< class GridPartType, int polOrder, class RangeFieldType, class VectorImp >
-void project(const Dune::Stuff::GridboundaryInterface< typename GridPartType::GridViewType >& boundaryInfo,
+void project(const Dune::Stuff::GridboundaryInterface< typename GridPartType::IntersectionType >& boundaryInfo,
              const Dune::Stuff::FunctionInterface< typename GridPartType::ctype, GridPartType::dimension, RangeFieldType, 1, 1 >& source,
              Dune::GDT::DiscreteFunctionDefault<
                 Dune::GDT::ContinuousLagrangeSpace::FemWrapper< GridPartType, polOrder, RangeFieldType, 1, 1 >,
