@@ -7,7 +7,6 @@ namespace Stuff {
 namespace Common {}
 namespace Grid {}
 namespace Fem {}
-namespace Function {}
 
 namespace LA {
   namespace Algorithm{}
