@@ -117,7 +117,7 @@ public:
   }
 
 private:
-  const Dune::GridView<ViewTraits>& gridview_;
+  const Dune::GridView<ViewTraits> gridview_;
   IteratorType it_last_;
 };
 
@@ -125,7 +125,7 @@ template <class ViewTraits>
 class HierarchicSearchStrategy : public StrategyBase<ViewTraits> {
   typedef StrategyBase<ViewTraits> BaseType;
 
-  const Dune::GridView<ViewTraits>& gridview_;
+  const Dune::GridView<ViewTraits> gridview_;
   const int start_level_;
 
 public:
