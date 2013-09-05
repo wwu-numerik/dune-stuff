@@ -1,6 +1,9 @@
 #ifndef DUNE_STUFF_DISCRETEFUNCTION_PROJECTION_DIRICHLET_HH
 #define DUNE_STUFF_DISCRETEFUNCTION_PROJECTION_DIRICHLET_HH
 
+#warning "This header is deprecated and will be removed in the future!"
+#warning "Use #include <dune/gdt/operator/projections.hh> of the dune-gdt module instead!"
+
 #include <vector>
 
 #include <dune/stuff/grid/boundaryinfo.hh>
@@ -20,7 +23,7 @@ namespace DiscreteFunction {
 
 #if HAVE_DUNE_GDT
 template< class GridPartType, int polOrder, class RangeFieldType, class VectorImp >
-void project(const Dune::Stuff::GridboundaryInterface< typename GridPartType::IntersectionType >& boundaryInfo,
+void DUNE_DEPRECATED_MSG("This function is deprecated! Use Dune::GDT::ProjectionOperator::Dirichlet instead!") project(const Dune::Stuff::GridboundaryInterface< typename GridPartType::IntersectionType >& boundaryInfo,
              const Dune::Stuff::FunctionInterface< typename GridPartType::ctype, GridPartType::dimension, RangeFieldType, 1, 1 >& source,
              Dune::GDT::DiscreteFunctionDefault<
                 Dune::GDT::ContinuousLagrangeSpace::FemWrapper< GridPartType, polOrder, RangeFieldType, 1, 1 >,
