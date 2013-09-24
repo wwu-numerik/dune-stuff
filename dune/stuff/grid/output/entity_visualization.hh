@@ -98,11 +98,16 @@ struct ElementVisualization {
             Dune::MPIHelper& mpiHelper_;
     };
 
+    template < class GridType >
     class BoundaryFunctor : public FunctorBase {
+        const GridType& grid_;
         public:
-            BoundaryFunctor ( const std::string fname,
+            BoundaryFunctor ( const GridType& grid,
+                              const std::string fname,
                               const std::string dname)
-                : FunctorBase(fname, dname) {}
+                : FunctorBase(fname, dname)
+                , grid_(grid)
+            {}
 
             template <class Entity>
             double operator() ( const Entity& entity ) const
@@ -110,16 +115,13 @@ struct ElementVisualization {
                 double ret( 0.0 );
                 int numberOfBoundarySegments( 0 );
                 bool isOnBoundary = false;
-                typedef typename Entity::LeafIntersectionIterator
-                IntersectionIteratorType;
-                IntersectionIteratorType endIntersection = entity.ileafend();
-                for (	IntersectionIteratorType intersection = entity.ileafbegin();
-                        intersection != endIntersection;
-                        ++intersection ) {
-                    if ( !intersection->neighbor() && intersection->boundary() ) {
+                const auto leafview = grid_.leafView();
+                for ( const auto& intersection : DSC::intersectionRange(leafview, entity) )
+                {
+                    if ( !intersection.neighbor() && intersection.boundary() ) {
                         isOnBoundary = true;
                         numberOfBoundarySegments += 1;
-                        ret += double( intersection->boundaryId() );
+                        ret += double( intersection.boundaryId() );
                     }
                 }
                 if ( isOnBoundary ) {
@@ -194,7 +196,7 @@ struct ElementVisualization {
               const std::string outputDir = "visualisation" )
     {
         // make function objects
-        BoundaryFunctor boundaryFunctor("boundaryFunctor", outputDir);
+        BoundaryFunctor<Grid> boundaryFunctor(grid, "boundaryFunctor", outputDir);
         AreaMarker areaMarker("areaMarker", outputDir);
         GeometryFunctor geometryFunctor("geometryFunctor", outputDir);
         ProcessIdFunctor processIdFunctor("ProcessIdFunctor", outputDir, mpiHelper );

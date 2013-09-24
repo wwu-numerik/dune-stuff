@@ -8,6 +8,7 @@
 #include <memory>
 
 #include <dune/fem/misc/mpimanager.hh>
+#include <dune/fem/space/finitevolume.hh>
 #include <dune/fem/space/dgspace.hh>
 #include <dune/fem/gridpart/adaptiveleafgridpart.hh>
 #include <dune/fem/function/adaptivefunction.hh>
@@ -15,12 +16,13 @@
 #include <dune/fem/io/file/datawriter.hh>
 
 #include <dune/stuff/aliases.hh>
-#include <dune/stuff/functions.hh>
+#include <dune/stuff/function.hh>
 #include <dune/stuff/common/tuple.hh>
 #include <dune/stuff/fem/functions/timefunction.hh>
 #include <dune/stuff/fem/customprojection.hh>
 #include <dune/stuff/grid/provider/cube.hh>
 #include <dune/stuff/functions/expression.hh>
+#include <dune/stuff/functions/affineparametric/coefficient.hh>
 #include <dune/stuff/fem/namespace.hh>
 
 template <int dimDomain, int rangeDim>

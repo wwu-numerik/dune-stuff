@@ -1,12 +1,7 @@
 #ifndef DUNE_STUFF_FEM_NAMESPACE_HH
 #define DUNE_STUFF_FEM_NAMESPACE_HH
 
-#ifdef HAVE_CMAKE_CONFIG
-  #include "cmake_config.h"
-#elif defined (HAVE_CONFIG_H)
-  #include "config.h"
-#endif
-
+#include <config.h>
 #include <dune/common/version.hh>
 
 #ifdef HAVE_DUNE_FEM

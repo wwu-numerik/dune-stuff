@@ -1,14 +1,16 @@
 #ifndef DUNE_STUFF_MATRIX_OBJECT_HH
 #define DUNE_STUFF_MATRIX_OBJECT_HH
 
-#if defined HAVE_DUNE_FEM && HAVE_EIGEN
+#if HAVE_DUNE_FEM
 
 #include <dune/fem/function/adaptivefunction/adaptivefunction.hh>
 #include <dune/fem/solver/oemsolver.hh>
 #include <dune/fem/operator/common/operator.hh>
 #include <dune/fem/operator/common/localmatrix.hh>
 #include <dune/fem/operator/common/localmatrixwrapper.hh>
-#include <dune/fem/space/lagrangespace/lagrangespace.hh>
+#include <dune/fem/space/lagrange.hh>
+#include <dune/fem/operator/common/stencil.hh>
+#include <dune/fem/operator/matrix/spmatrix.hh>
 #include <dune/fem/misc/functor.hh>
 #include <dune/stuff/common/matrix.hh>
 #include <dune/stuff/la/container/eigen.hh>
@@ -18,9 +20,12 @@
 #include <dune/stuff/aliases.hh>
 #include <dune/stuff/common/random.hh>
 #include <dune/stuff/common/print.hh>
+#include <dune/stuff/aliases.hh>
 
+#if HAVE_EIGEN
 #include <Eigen/IterativeLinearSolvers>
 #include <Eigen/SparseCholesky>
+#endif
 
 #include <memory>
 
@@ -28,6 +33,7 @@ namespace Dune {
 namespace Stuff {
 namespace Fem {
 
+#if HAVE_EIGEN
 template< class DomainSpace, class RangeSpace, class TraitsImp >
 class EigenMatrixObject;
 
@@ -439,10 +445,48 @@ public:
   }
 };
 
+#endif // HAVE_EIGEN
+
+template <class MatrixObject, template <class,class> class StencilType = Dune::Fem::DiagonalAndNeighborStencil>
+StencilType<typename MatrixObject::DomainSpaceType,
+                           typename MatrixObject::DomainSpaceType>
+  diagonalAndNeighborStencil(const MatrixObject& object)
+{
+  return StencilType<typename MatrixObject::DomainSpaceType,
+                      typename MatrixObject::RangeSpaceType>(object.domainSpace(), object.rangeSpace());
+}
+
+template <class MatrixObject, template <class,class> class StencilType = Dune::Fem::DiagonalAndNeighborStencil>
+StencilType<typename MatrixObject::DomainSpaceType,
+                           typename MatrixObject::RangeSpaceType>
+  diagonalAndNeighborStencil(const typename MatrixObject::DomainSpaceType& domainSpace,
+                             const typename MatrixObject::RangeSpaceType& rangeSpace)
+{
+  return StencilType<typename MatrixObject::DomainSpaceType,
+                      typename MatrixObject::RangeSpaceType>(domainSpace,rangeSpace);
+}
+
+template <class MatrixObject, template <class,class> class StencilType = Dune::Fem::DiagonalAndNeighborStencil>
+void reserve_matrix(MatrixObject& matrix_object)
+{
+  matrix_object.reserve(diagonalAndNeighborStencil(matrix_object));
+}
+
+template <class DomainSpaceType, class RangeSpaceType, template <class,class> class StencilType = Dune::Fem::DiagonalAndNeighborStencil>
+void reserve_matrix(Dune::Fem::SparseRowMatrixObject<DomainSpaceType, RangeSpaceType>& matrix_object)
+{
+  matrix_object.reserve();
+}
+template <class DomainFunctionType, class RangeFunctionType, class Traits, template <class,class> class StencilType = Dune::Fem::DiagonalAndNeighborStencil>
+void reserve_matrix(Dune::Fem::SparseRowMatrixOperator<DomainFunctionType, RangeFunctionType, Traits>& matrix_object)
+{
+  matrix_object.reserve();
+}
+
 } // namespace Fem
 } // namespace Stuff
 } // namespace Dune
 
-#endif // defined HAVE_DUNE_FEM && HAVE_EIGEN
+#endif // HAVE_DUNE_FEM
 
 #endif // DUNE_STUFF_MATRIX_OBJECT_HH

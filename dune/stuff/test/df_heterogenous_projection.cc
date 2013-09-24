@@ -19,6 +19,7 @@
 #include <dune/stuff/common/ranges.hh>
 #include <dune/stuff/common/parameter/configcontainer.hh>
 #include <dune/stuff/fem/namespace.hh>
+#include <dune/stuff/aliases.hh>
 
 using namespace Dune;
 
@@ -137,14 +138,14 @@ void ptest(const int macro_elements = 4, const int target_factor = 2) {
 //  Stuff::HeterogenousProjection<Stuff::HierarchicSearchStrategy>::project(source_df, target_df);
 //  DSC_PROFILER.stopTiming("HierarchicSearchStrategy");
 
-  DSC_PROFILER.startTiming("InlevelSearchStrategy ST");
-  Stuff::HeterogenousProjection<Stuff::InlevelSearchStrategy>::project(source_df, target_df);
-  DSC_PROFILER.stopTiming("InlevelSearchStrategy ST");
+  DSC_PROFILER.startTiming("EntityInlevelSearch ST");
+  Stuff::HeterogenousProjection<DSG::EntityInlevelSearch>::project(source_df, target_df);
+  DSC_PROFILER.stopTiming("EntityInlevelSearch ST");
   vtk_out(source_df);
   vtk_out(target_df);
-  DSC_PROFILER.startTiming("InlevelSearchStrategy TS");
-  Stuff::HeterogenousProjection<Stuff::InlevelSearchStrategy>::project(source_df, target_df);
-  DSC_PROFILER.stopTiming("InlevelSearchStrategy TS");
+  DSC_PROFILER.startTiming("EntityInlevelSearch TS");
+  Stuff::HeterogenousProjection<DSG::EntityInlevelSearch>::project(source_df, target_df);
+  DSC_PROFILER.stopTiming("EntityInlevelSearch TS");
 
   DiscretefunctionShroud<typename SourceTraits::DiscreteFunction> shrouded_source_df(source_df);
   DSC_PROFILER.startTiming("FemProjection ST");
