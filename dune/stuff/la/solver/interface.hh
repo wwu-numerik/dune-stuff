@@ -74,9 +74,9 @@ public:
   }
 
   virtual size_t apply(const MatrixType& /*_systemMatrix*/,
-                          const VectorType& /*_rhsVector*/,
-                          VectorType& /*_solutionVector*/,
-                          const Dune::ParameterTree /*description*/ = Dune::ParameterTree()) const
+                       const VectorType& /*_rhsVector*/,
+                       VectorType& /*_solutionVector*/,
+                       const Dune::ParameterTree /*description*/ = Dune::ParameterTree()) const
   {
     return size_t(3);
   }
