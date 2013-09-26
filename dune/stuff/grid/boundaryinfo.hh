@@ -62,6 +62,8 @@ public:
     return Dune::ParameterTree();
   }
 
+  GridboundaryAllDirichlet() {}
+
   virtual bool dirichlet(const IntersectionType& intersection) const
   {
     if (intersection.boundary())
@@ -94,6 +96,8 @@ public:
   {
     return Dune::ParameterTree();
   }
+
+  GridboundaryAllNeumann() {}
 
   virtual bool dirichlet(const IntersectionType& /*intersection*/) const
   {
