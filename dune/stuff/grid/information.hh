@@ -116,6 +116,11 @@ struct Dimensions
   }
 };
 
+template <class GridType>
+Dimensions<GridType> dimensions(const GridType& grid) {
+  return Dimensions<GridType>(grid);
+}
+
 } // namespace Grid
 } // end of namespace Stuff
 } // namespace Dune
