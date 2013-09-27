@@ -170,6 +170,7 @@ public:
     acc_ = std::for_each(elements.begin(), elements.end(), acc_);
   }
 
+  ElementType sum() const { return boost::accumulators::sum(acc_); }
   ElementType min() const { return boost::accumulators::min(acc_); }
   ElementType max() const { return boost::accumulators::max(acc_); }
   ElementType average() const {
@@ -189,7 +190,8 @@ protected:
   typedef boost::accumulators::stats<
     boost::accumulators::tag::max,
     boost::accumulators::tag::min,
-    boost::accumulators::tag::mean >
+    boost::accumulators::tag::mean,
+    boost::accumulators::tag::sum>
   StatsType;
   boost::accumulators::accumulator_set< ElementType, StatsType > acc_;
 
