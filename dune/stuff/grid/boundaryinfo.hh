@@ -25,12 +25,11 @@ namespace Dune {
 namespace Stuff {
 
 
-template< class GridViewImp >
+template< class IntersectionImp >
 class GridboundaryInterface
 {
 public:
-  typedef GridViewImp                         GridViewType;
-  typedef typename GridViewType::Intersection IntersectionType;
+  typedef IntersectionImp IntersectionType;
 
   static const std::string id()
   {
@@ -45,16 +44,13 @@ public:
 }; // class GridboundaryInterface
 
 
-template< class GridViewImp >
+template< class IntersectionImp >
 class GridboundaryAllDirichlet
-  : public GridboundaryInterface< GridViewImp >
+  : public GridboundaryInterface< IntersectionImp >
 {
+  typedef GridboundaryInterface< IntersectionImp >  BaseType;
 public:
-  typedef GridboundaryInterface< GridViewImp >    BaseType;
-  typedef GridboundaryAllDirichlet< GridViewImp > ThisType;
-
-  typedef typename BaseType::GridViewType     GridViewType;
-  typedef typename BaseType::IntersectionType IntersectionType;
+  typedef typename BaseType::IntersectionType       IntersectionType;
 
   static const std::string id()
   {
@@ -81,16 +77,13 @@ public:
 }; // class GridboundaryAllDirichlet
 
 
-template< class GridViewImp >
+template< class IntersectionImp >
 class GridboundaryAllNeumann
-  : public GridboundaryInterface< GridViewImp >
+  : public GridboundaryInterface< IntersectionImp >
 {
+  typedef GridboundaryInterface< IntersectionImp >  BaseType;
 public:
-  typedef GridboundaryInterface< GridViewImp >  BaseType;
-  typedef GridboundaryAllNeumann< GridViewImp > ThisType;
-
-  typedef typename BaseType::GridViewType     GridViewType;
-  typedef typename BaseType::IntersectionType IntersectionType;
+  typedef typename BaseType::IntersectionType       IntersectionType;
 
   static const std::string id()
   {
@@ -117,16 +110,14 @@ public:
 }; // class GridboundaryAllNeumann
 
 
-template< class GridViewImp >
+template< class IntersectionImp >
 class GridboundaryIdBased
-  : public GridboundaryInterface< GridViewImp >
+  : public GridboundaryInterface< IntersectionImp >
 {
+  typedef GridboundaryInterface< IntersectionImp >  BaseType;
 public:
-  typedef GridboundaryInterface< GridViewImp >  BaseType;
-  typedef GridboundaryIdBased< GridViewImp >    ThisType;
-
-  typedef typename BaseType::GridViewType     GridViewType;
-  typedef typename BaseType::IntersectionType IntersectionType;
+  typedef GridboundaryIdBased< IntersectionImp >    ThisType;
+  typedef typename BaseType::IntersectionType       IntersectionType;
 
   static const std::string id()
   {
@@ -243,19 +234,17 @@ private:
 }; // class GridboundaryIdBased
 
 
-template< class GridViewImp >
+template< class IntersectionImp >
 class GridboundaryNormalBased
-  : public GridboundaryInterface< GridViewImp >
+  : public GridboundaryInterface< IntersectionImp >
 {
+  typedef GridboundaryInterface< IntersectionImp >    BaseType;
 public:
-  typedef GridboundaryInterface< GridViewImp >    BaseType;
-  typedef GridboundaryNormalBased< GridViewImp >  ThisType;
+  typedef GridboundaryNormalBased< IntersectionImp >  ThisType;
+  typedef typename BaseType::IntersectionType         IntersectionType;
 
-  typedef typename BaseType::GridViewType     GridViewType;
-  typedef typename BaseType::IntersectionType IntersectionType;
-
-  typedef typename GridViewType::ctype DomainFieldType;
-  static const unsigned int dimDomain = GridViewType::dimension;
+  typedef typename IntersectionType::ctype DomainFieldType;
+  static const unsigned int dimDomain = IntersectionType::dimension;
   typedef Dune::FieldVector< DomainFieldType, dimDomain > DomainType;
 
   static const std::string id()
@@ -420,7 +409,7 @@ private:
 }; // class GridboundaryNormalBased
 
 
-template< class GridViewType >
+template< class IntersectionType >
 class Gridboundaries
 {
 public:
@@ -437,30 +426,30 @@ public:
   static Dune::ParameterTree defaultSettings(const std::string type, const std::string subname = "")
   {
     if (type == "boundaryinfo.alldirichlet")
-      return GridboundaryAllDirichlet< GridViewType >::defaultSettings(subname);
+      return GridboundaryAllDirichlet< IntersectionType >::defaultSettings(subname);
     else if (type == "boundaryinfo.allneumann")
-      return GridboundaryAllNeumann< GridViewType >::defaultSettings(subname);
+      return GridboundaryAllNeumann< IntersectionType >::defaultSettings(subname);
     else if (type == "boundaryinfo.idbased")
-      return GridboundaryIdBased< GridViewType >::defaultSettings(subname);
+      return GridboundaryIdBased< IntersectionType >::defaultSettings(subname);
     else if (type == "boundaryinfo.normalbased")
-      return GridboundaryNormalBased< GridViewType >::defaultSettings(subname);
+      return GridboundaryNormalBased< IntersectionType >::defaultSettings(subname);
     else
       DUNE_THROW(Dune::RangeError,
                  "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
                  << " unknown boundaryinfo '" << type << "' requested!");
   } // ... createDefaultSettings(...)
 
-  static GridboundaryInterface< GridViewType >* create(const std::string& type = available()[0],
-                                                       const Dune::ParameterTree settings = Dune::ParameterTree())
+  static GridboundaryInterface< IntersectionType >* create(const std::string& type = available()[0],
+                                                           const Dune::ParameterTree settings = Dune::ParameterTree())
   {
     if (type == "boundaryinfo.alldirichlet") {
-      return new GridboundaryAllDirichlet< GridViewType >();
+      return new GridboundaryAllDirichlet< IntersectionType >();
     } else if (type == "boundaryinfo.allneumann") {
-      return new GridboundaryAllNeumann< GridViewType >();
+      return new GridboundaryAllNeumann< IntersectionType >();
     } else if (type == "boundaryinfo.idbased") {
-      return GridboundaryIdBased< GridViewType >::create(settings);
+      return GridboundaryIdBased< IntersectionType >::create(settings);
     } else if (type == "boundaryinfo.normalbased") {
-      return GridboundaryNormalBased< GridViewType >::create(settings);
+      return GridboundaryNormalBased< IntersectionType >::create(settings);
     } else
       DUNE_THROW(Dune::RangeError,
                  "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
