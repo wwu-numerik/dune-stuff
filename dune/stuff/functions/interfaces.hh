@@ -18,6 +18,13 @@
 
 namespace Dune {
 namespace Stuff {
+namespace Function {
+
+// forward, include is below
+template< class GridViewType, int dimRange >
+class VisualizationAdapter;
+
+}
 
 
 /**
@@ -394,6 +401,16 @@ public:
     return static_id();
   }
   /* @} */
+
+  template< class GridViewType >
+  void visualize(const GridViewType& grid_view, const std::string filename) const
+  {
+    if (filename.empty()) DUNE_THROW(IOError, "Empty filename given!");
+    auto adapter = std::make_shared< Function::VisualizationAdapter< GridViewType, dimRange > >(*this);
+    VTKWriter< GridViewType > vtk_writer(grid_view, VTK::nonconforming);
+    vtk_writer.addVertexData(adapter);
+    vtk_writer.write(filename);
+  } // ... visualize(...)
 }; // class LocalizableFunctionInterface
 
 
@@ -548,5 +565,7 @@ timefunctionAdapted(const Dune::Stuff::FunctionInterface< DomainFieldImp, domain
 
 } // namespace Stuff
 } // namespace Dune
+
+#include "visualization.hh"
 
 #endif // DUNE_STUFF_FUNCTION_INTERFACE_HH
