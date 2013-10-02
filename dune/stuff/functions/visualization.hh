@@ -39,7 +39,7 @@ public:
     return function_.name();
   }
 
-  virtual double evaluate (int comp, const EntityType& en, const DomainType& xx) const override
+  virtual double evaluate(int comp, const EntityType& en, const DomainType& xx) const override
   {
     assert(comp >= 0);
     assert(comp < dimRange);
