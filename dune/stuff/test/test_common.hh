@@ -12,7 +12,7 @@
 #include <dune/common/fmatrix.hh>
 #include <dune/common/tuples.hh>
 #include <dune/common/tupleutility.hh>
-#include <dune/common/mpihelper.hh>
+#include <dune/common/parallel/mpihelper.hh>
 #include <dune/stuff/aliases.hh>
 #include <dune/stuff/common/parameter/configcontainer.hh>
 #include <dune/stuff/common/logging.hh>
@@ -71,13 +71,7 @@ void test_init(int argc, char** argv)
   testing::InitGoogleTest(&argc, argv);
   DSC_CONFIG.readOptions(argc, argv);
 #ifdef HAVE_DUNE_FEM
-#if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
-  Dune::MPIManager::initialize(argc, argv);
-#elif DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
   Dune::Fem::MPIManager::initialize(argc, argv);
-#else
-  Dune::Fem::MPIManager::initialize(argc, argv);
-#endif
 #else
   Dune::MPIHelper::instance(argc, argv);
 #endif
