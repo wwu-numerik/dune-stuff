@@ -11,6 +11,8 @@
 #include <dune/common/version.hh>
 #include <dune/common/deprecated.hh>
 
+#include <dune/geometry/genericreferenceelements.hh>
+
 #include <dune/grid/io/file/vtk/vtkwriter.hh>
 
 #if HAVE_DUNE_FEM
@@ -86,6 +88,13 @@ public:
 //    return ret;
 //  }
   /* @} */
+
+protected:
+  bool is_a_valid_point(const DomainType& xx) const
+  {
+    const auto& reference_element = GenericReferenceElements< DomainFieldType, dimDomain >::general(entity().type());
+    return reference_element.checkInside(xx);
+  }
 }; // class LocalfunctionSetInterface
 
 
@@ -145,6 +154,13 @@ public:
     return ret;
   }
   /* @} */
+
+protected:
+  bool is_a_valid_point(const DomainType& xx) const
+  {
+    const auto& reference_element = GenericReferenceElements< DomainFieldType, dimDomain >::general(entity().type());
+    return reference_element.checkInside(xx);
+  }
 }; // class LocalfunctionSetInterface< ...., 1 >
 
 
@@ -407,7 +423,7 @@ public:
   template< class GridViewType >
   void visualize(const GridViewType& grid_view, const std::string filename) const
   {
-    if (filename.empty()) DUNE_THROW(IOError, "Empty filename given!");
+    if (filename.empty()) DUNE_THROW(RangeError, "Empty filename given!");
     auto adapter = std::make_shared< Function::VisualizationAdapter< GridViewType, dimRange > >(*this);
     VTKWriter< GridViewType > vtk_writer(grid_view, VTK::nonconforming);
     vtk_writer.addVertexData(adapter);
