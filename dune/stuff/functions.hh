@@ -10,7 +10,7 @@
 #include <dune/stuff/common/color.hh>
 
 #include "functions/interfaces.hh"
-//#include "functions/checkerboard.hh"
+#include "functions/checkerboard.hh"
 #include "functions/expression.hh"
 //#include "functions/spe10.hh"
 #include "functions/constant.hh"
@@ -34,6 +34,7 @@ public:
     return {
       Function::Constant< E, D, d, R, rR, rC >::static_id()
     , Function::Expression< E, D, d, R, rR, rC >::static_id()
+    , Function::Checkerboard< E, D, d, R, rR, rC >::static_id()
     };
   } // ... available(...)
 
@@ -43,6 +44,8 @@ public:
       return Function::Constant< E, D, d, R, rR, rC >::defaultSettings();
     else if (type == Function::Expression< E, D, d, R, rR, rC >::static_id())
       return Function::Expression< E, D, d, R, rR, rC >::defaultSettings();
+    else if (type == Function::Checkerboard< E, D, d, R, rR, rC >::static_id())
+      return Function::Checkerboard< E, D, d, R, rR, rC >::defaultSettings();
     else
       DUNE_THROW(Dune::RangeError,
                  "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
@@ -56,6 +59,8 @@ public:
       return Function::Constant< E, D, d, R, rR, rC >::create(settings);
     else if (type == Function::Expression< E, D, d, R, rR, rC >::static_id())
       return Function::Expression< E, D, d, R, rR, rC >::create(settings);
+    else if (type == Function::Checkerboard< E, D, d, R, rR, rC >::static_id())
+      return Function::Checkerboard< E, D, d, R, rR, rC >::create(settings);
     else
       DUNE_THROW(Dune::RangeError,
                  "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
@@ -76,6 +81,7 @@ public:
     return {
         Function::Constant< E, D, d, R, rR, rC >::static_id()
       , Function::Expression< E, D, d, R, rR, rC >::static_id()
+      , Function::Checkerboard< E, D, d, R, rR, rC >::static_id()
     };
   } // ... available(...)
 
@@ -85,6 +91,8 @@ public:
       return Function::Constant< E, D, d, R, rR, rC >::defaultSettings();
     else if (type == Function::Expression< E, D, d, R, rR, rC >::static_id())
       return Function::Expression< E, D, d, R, rR, rC >::defaultSettings();
+    else if (type == Function::Checkerboard< E, D, d, R, rR, rC >::static_id())
+      return Function::Checkerboard< E, D, d, R, rR, rC >::defaultSettings();
     else
       DUNE_THROW(Dune::RangeError,
                  "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
@@ -98,6 +106,8 @@ public:
       return Function::Constant< E, D, d, R, rR, rC >::create(settings);
     else if (type == Function::Expression< E, D, d, R, rR, rC >::static_id())
       return Function::Expression< E, D, d, R, rR, rC >::create(settings);
+    else if (type == Function::Checkerboard< E, D, d, R, rR, rC >::static_id())
+      return Function::Checkerboard< E, D, d, R, rR, rC >::create(settings);
     else
       DUNE_THROW(Dune::RangeError,
                  "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
