@@ -21,23 +21,23 @@ class Difference
                                          typename MinuendType::DomainFieldType,
                                          MinuendType::dimDomain,
                                          typename MinuendType::RangeFieldType,
-                                         MinuendType::dimRangeRows,
+                                         MinuendType::dimRange,
                                          MinuendType::dimRangeCols >
 {
   typedef LocalizableFunctionInterface
       < typename MinuendType::EntityType, typename MinuendType::DomainFieldType, MinuendType::dimDomain,
-        typename MinuendType::RangeFieldType, MinuendType::dimRangeRows, MinuendType::dimRangeCols >
+        typename MinuendType::RangeFieldType, MinuendType::dimRange, MinuendType::dimRangeCols >
     BaseType;
   typedef Difference< MinuendType, SubtrahendType > ThisType;
 
   class LocalFunction
     : public LocalfunctionInterface< typename MinuendType::EntityType, typename MinuendType::DomainFieldType,
                                      MinuendType::dimDomain, typename MinuendType::RangeFieldType,
-                                     MinuendType::dimRangeRows, MinuendType::dimRangeCols >
+                                     MinuendType::dimRange, MinuendType::dimRangeCols >
   {
     typedef LocalfunctionInterface
         < typename MinuendType::EntityType, typename MinuendType::DomainFieldType, MinuendType::dimDomain,
-          typename MinuendType::RangeFieldType, MinuendType::dimRangeRows, MinuendType::dimRangeCols >
+          typename MinuendType::RangeFieldType, MinuendType::dimRange, MinuendType::dimRangeCols >
       BaseType;
   public:
     typedef typename BaseType::EntityType EntityType;
@@ -47,7 +47,7 @@ class Difference
     typedef typename BaseType::DomainType       DomainType;
 
     typedef typename BaseType::RangeFieldType RangeFieldType;
-    static const unsigned int                 dimRangeRows = BaseType::dimRangeRows;
+    static const unsigned int                 dimRange = BaseType::dimRange;
     static const unsigned int                 dimRangeCols = BaseType::dimRangeCols;
     typedef typename BaseType::RangeType      RangeType;
 
@@ -55,7 +55,7 @@ class Difference
   private:
     static_assert(
         std::is_base_of< LocalizableFunctionInterface< EntityType, DomainFieldType, dimDomain,
-                                                       RangeFieldType, dimRangeRows, dimRangeCols >,
+                                                       RangeFieldType, dimRange, dimRangeCols >,
                          MinuendType>::value,
         "MinuendType has to be derived from LocalizableFunctionInterface!");
     static_assert(std::is_same< EntityType, typename SubtrahendType::EntityType >::value, "Types do not match!");
@@ -63,8 +63,8 @@ class Difference
                   "Types do not match!");
     static_assert(dimDomain == SubtrahendType::dimDomain, "Dimensions do not match!");
     static_assert(std::is_same< RangeFieldType, typename SubtrahendType::RangeFieldType >::value, "Types do not match!");
-    static const unsigned int rRS = SubtrahendType::dimRangeRows;
-    static_assert(dimRangeRows == SubtrahendType::dimRangeRows, "Dimensions do not match!");
+    static const unsigned int rRS = SubtrahendType::dimRange;
+    static_assert(dimRange == SubtrahendType::dimRange, "Dimensions do not match!");
     static const unsigned int rCS = SubtrahendType::dimRangeCols;
     static_assert(dimRangeCols == SubtrahendType::dimRangeCols, "Dimensions do not match!");
     static_assert(
@@ -127,7 +127,7 @@ public:
   typedef typename BaseType::DomainType       DomainType;
 
   typedef typename BaseType::RangeFieldType RangeFieldType;
-  static const unsigned int                 dimRangeRows = BaseType::dimRangeRows;
+  static const unsigned int                 dimRange = BaseType::dimRange;
   static const unsigned int                 dimRangeCols = BaseType::dimRangeCols;
   typedef typename BaseType::RangeType      RangeType;
 
@@ -148,9 +148,9 @@ public:
 
   ThisType& operator=(const ThisType& /*other*/) = delete;
 
-  virtual std::shared_ptr< LocalfunctionType > local_function(const EntityType& entity) const override
+  virtual std::unique_ptr< LocalfunctionType > local_function(const EntityType& entity) const override
   {
-    return std::shared_ptr< LocalFunction >(new LocalFunction(minuend_, subtrahend_, entity));
+    return std::unique_ptr< LocalFunction >(new LocalFunction(minuend_, subtrahend_, entity));
   }
 
   virtual ThisType* copy() const override
