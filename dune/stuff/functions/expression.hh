@@ -21,20 +21,20 @@ namespace Stuff {
 namespace Function {
 
 
-template< class EntityImp, class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDimRows, int rangeDimCols = 1 >
+template< class EntityImp, class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDim, int rangeDimCols = 1 >
 class Expression
-  : public LocalizableFunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows, rangeDimCols >
+  : public LocalizableFunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols >
 {
   typedef LocalizableFunctionInterface
-      < EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows, rangeDimCols >               BaseType;
-  typedef Expression< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows, rangeDimCols > ThisType;
+      < EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols >               BaseType;
+  typedef Expression< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols > ThisType;
   typedef MathExpressionBase
-      < DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows*rangeDimCols > MathExpressionFunctionType;
+      < DomainFieldImp, domainDim, RangeFieldImp, rangeDim*rangeDimCols > MathExpressionFunctionType;
 
   class Localfunction
-    : public LocalfunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows, rangeDimCols >
+    : public LocalfunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols >
   {
-    typedef LocalfunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows, rangeDimCols > BaseType;
+    typedef LocalfunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols > BaseType;
   public:
     typedef typename BaseType::EntityType EntityType;
 
@@ -43,11 +43,11 @@ class Expression
     typedef typename BaseType::DomainType       DomainType;
 
     typedef typename BaseType::RangeFieldType RangeFieldType;
-    static const unsigned int                 dimRangeRows = BaseType::dimRangeRows;
+    static const unsigned int                 dimRange = BaseType::dimRange;
     static const unsigned int                 dimRangeCols = BaseType::dimRangeCols;
     typedef typename BaseType::RangeType      RangeType;
 
-//    typedef typename BaseType::JacobianRangeType JacobianRangeType;
+    typedef typename BaseType::JacobianRangeType JacobianRangeType;
 
     Localfunction(const EntityType& ent,
                   const std::shared_ptr< const MathExpressionFunctionType >& function,
@@ -75,10 +75,10 @@ class Expression
     virtual void evaluate(const DomainType& xx, RangeType& ret) const override
     {
       function_->evaluate(entity_.geometry().global(xx), tmp_vector_);
-      for (size_t ii = 0; ii < dimRangeRows; ++ii) {
+      for (size_t ii = 0; ii < dimRange; ++ii) {
         auto& retRow = ret[ii];
         for (size_t jj = 0; jj < dimRangeCols; ++jj) {
-          retRow[jj] = tmp_vector_[ii*dimRangeRows + jj];
+          retRow[jj] = tmp_vector_[ii*dimRange + jj];
         }
       }
     } // ... evaluate(...)
@@ -92,7 +92,7 @@ class Expression
     const EntityType& entity_;
     const std::shared_ptr< const MathExpressionFunctionType > function_;
     const size_t order_;
-    mutable FieldVector< RangeFieldType, dimRangeRows*dimRangeCols > tmp_vector_;
+    mutable FieldVector< RangeFieldType, dimRange*dimRangeCols > tmp_vector_;
   }; // class Localfunction
 
 public:
@@ -104,7 +104,7 @@ public:
   typedef typename BaseType::DomainType       DomainType;
 
   typedef typename BaseType::RangeFieldType     RangeFieldType;
-  static const unsigned int                     dimRangeRows = BaseType::rangeDimRows;
+  static const unsigned int                     dimRange = BaseType::rangeDim;
   static const unsigned int                     dimRangeCols = BaseType::rangeDimCols;
   typedef typename LocalfunctionType::RangeType RangeType;
 
@@ -227,9 +227,8 @@ class Expression< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim,
     typedef typename BaseType::DomainType       DomainType;
 
     typedef typename BaseType::RangeFieldType RangeFieldType;
-    static const unsigned int                 dimRangeRows = BaseType::dimRangeRows;
-    static const unsigned int                 dimRangeCols = BaseType::dimRangeCols;
     static const unsigned int                 dimRange = BaseType::dimRange;
+    static const unsigned int                 dimRangeCols = BaseType::dimRangeCols;
     typedef typename BaseType::RangeType      RangeType;
 
     typedef typename BaseType::JacobianRangeType JacobianRangeType;
@@ -316,7 +315,6 @@ public:
 
   typedef typename BaseType::RangeFieldType     RangeFieldType;
   static const unsigned int                     dimRange = BaseType::dimRange;
-  static const unsigned int                     dimRangeRows = BaseType::dimRangeRows;
   static const unsigned int                     dimRangeCols = BaseType::dimRangeCols;
   typedef typename LocalfunctionType::RangeType RangeType;
 
@@ -420,9 +418,9 @@ public:
     return name_;
   }
 
-  virtual std::shared_ptr< LocalfunctionType > local_function(const EntityType& entity) const override
+  virtual std::unique_ptr< LocalfunctionType > local_function(const EntityType& entity) const override
   {
-    return std::shared_ptr< Localfunction >(new Localfunction(entity, function_, gradients_, order_));
+    return std::unique_ptr< Localfunction >(new Localfunction(entity, function_, gradients_, order_));
   }
 
 private:
