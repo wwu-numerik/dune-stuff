@@ -115,7 +115,7 @@ class DirectSuperLuSolver
 
 #if HAVE_FASP
 template< class MatrixImp, class VectorImp, class Enable = void >
-class AmgFaspSolver
+class AmgSolver
   : public SolverNotImplementedForThisMatrixVectorCombination< MatrixImp, VectorImp >
 {};
 #endif // HAVE_FASP
