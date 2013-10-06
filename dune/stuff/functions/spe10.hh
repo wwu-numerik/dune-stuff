@@ -107,7 +107,7 @@ public:
                read_values_from_file(filename, min, max), nm)
   {}
 
-  ThisType* copy() const override
+  virtual ThisType* copy() const override
   {
     return new ThisType(*this);
   }
