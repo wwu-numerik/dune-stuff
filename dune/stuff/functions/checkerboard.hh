@@ -44,18 +44,13 @@ class Checkerboard
 
     Localfunction(const EntityType& ent,
                   const RangeType value)
-      : entity_(ent)
+      : BaseType(ent)
       , value_(value)
     {}
 
     Localfunction(const Localfunction& /*other*/) = delete;
 
     Localfunction& operator=(const Localfunction& /*other*/) = delete;
-
-    virtual const EntityType& entity() const override
-    {
-      return entity_;
-    }
 
     virtual size_t order() const override
     {
@@ -75,7 +70,6 @@ class Checkerboard
     }
 
   private:
-    const EntityType& entity_;
     const RangeType value_;
   }; // class Localfunction
 

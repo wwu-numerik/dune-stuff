@@ -57,14 +57,21 @@ public:
 
   typedef std::string JacobianRangeType; // <- this is yet unclear, but we need a type
 
+  LocalfunctionSetInterface(const EntityType& ent)
+    : entity_(ent)
+  {}
+
   virtual ~LocalfunctionSetInterface() {}
+
+  virtual const EntityType& entity() const
+  {
+    return entity_;
+  }
 
   /**
    * \defgroup haveto ´´These methods have to be implemented.''
    * @{
    **/
-  virtual const EntityType& entity() const = 0;
-
   virtual size_t size() const = 0;
 
   virtual size_t order() const = 0;
@@ -99,6 +106,8 @@ protected:
     const auto& reference_element = GenericReferenceElements< DomainFieldType, dimDomain >::general(entity().type());
     return reference_element.checkInside(xx);
   }
+
+  const EntityType& entity_;
 }; // class LocalfunctionSetInterface
 
 
@@ -122,14 +131,21 @@ public:
 
   typedef Dune::FieldMatrix< RangeFieldType, dimRange, dimDomain > JacobianRangeType;
 
+  LocalfunctionSetInterface(const EntityType& ent)
+    : entity_(ent)
+  {}
+
   virtual ~LocalfunctionSetInterface() {}
+
+  const EntityType& entity() const
+  {
+    return entity_;
+  }
 
   /**
    * \defgroup haveto ´´These methods have to be implemented.''
    * @{
    **/
-  virtual const EntityType& entity() const = 0;
-
   virtual size_t size() const = 0;
 
   virtual size_t order() const = 0;
@@ -164,6 +180,8 @@ protected:
     const auto& reference_element = GenericReferenceElements< DomainFieldType, dimDomain >::general(entity().type());
     return reference_element.checkInside(xx);
   }
+
+  const EntityType& entity_;
 }; // class LocalfunctionSetInterface< ...., 1 >
 
 
@@ -192,6 +210,10 @@ public:
   typedef typename BaseType::RangeType      RangeType;
 
   typedef typename BaseType::JacobianRangeType JacobianRangeType;
+
+  LocalfunctionInterface(const EntityType& ent)
+    : BaseType(ent)
+  {}
 
   virtual ~LocalfunctionInterface() {}
 
