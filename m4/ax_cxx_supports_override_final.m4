@@ -27,7 +27,7 @@ AC_DEFUN([AX_OVERRIDE_KEYWORD_CHECK],[
   if test "x$dune_stuff_override_support" = xyes; then
     AC_DEFINE(DS_OVERRIDE, override, [Define override keyword, if supported])
   else
-    AC_DEFINE(DS_OVERRIDE, , [Define override keyword, if supported])
+    AC_DEFINE(DS_OVERRIDE, /*override*/, [Define override keyword, if supported])
   fi
 ])
 
@@ -60,6 +60,6 @@ AC_DEFUN([AX_FINAL_KEYWORD_CHECK],[
   if test "x$dune_stuff_final_support" = xyes; then
     AC_DEFINE(DS_FINAL, final, [Define final keyword, if supported])
   else
-    AC_DEFINE(DS_FINAL, , [Define final keyword, if supported])
+    AC_DEFINE(DS_FINAL, /*final*/, [Define final keyword, if supported])
   fi
 ])
