@@ -12,6 +12,9 @@ AC_DEFUN([DUNE_STUFF_CHECKS],[
   AC_LANG([C++])
   AX_CXX_COMPILE_STDCXX_11([noext],[mandatory])
 
+  AX_OVERRIDE_KEYWORD_CHECK()
+  AX_FINAL_KEYWORD_CHECK()
+
   PKG_CHECK_MODULES([EIGEN],
                     [eigen3],
                     [AC_DEFINE([HAVE_EIGEN],
