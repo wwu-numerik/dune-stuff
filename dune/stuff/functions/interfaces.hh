@@ -256,15 +256,15 @@ public:
   /* @} */
 
 #if HAVE_DUNE_GRID
-template< class GridViewType >
-void visualize(const GridViewType& grid_view, const std::string filename) const
-{
-  if (filename.empty()) DUNE_THROW(RangeError, "Empty filename given!");
-  auto adapter = std::make_shared< Stuff::Function::VisualizationAdapter< GridViewType, dimRange > >(*this);
-  VTKWriter< GridViewType > vtk_writer(grid_view, VTK::nonconforming);
-  vtk_writer.addVertexData(adapter);
-  vtk_writer.write(filename);
-} // ... visualize(...)
+  template< class GridViewType >
+  void visualize(const GridViewType& grid_view, const std::string filename) const
+  {
+    if (filename.empty()) DUNE_THROW(RangeError, "Empty filename given!");
+    auto adapter = std::make_shared< Stuff::Function::VisualizationAdapter< GridViewType, dimRange > >(*this);
+    VTKWriter< GridViewType > vtk_writer(grid_view, VTK::nonconforming);
+    vtk_writer.addVertexData(adapter);
+    vtk_writer.write(filename);
+  } // ... visualize(...)
 #endif // HAVE_DUNE_GRID
 }; // class LocalizableFunctionInterface
 
