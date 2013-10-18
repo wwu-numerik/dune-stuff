@@ -184,35 +184,47 @@ FunctionInterface< D, d, R, r >::jacobian(const DomainType& x) const
 } // namespace Stuff
 } // namespace Dune
 
+#define LS6(etype) \
+  LS5(Dune::Stuff::LocalfunctionSetInterface, etype) \
+  LS5(Dune::Stuff::LocalfunctionInterface, etype) \
+  LS5(Dune::Stuff::LocalizableFunctionInterface, etype)
+
+#define LS5(cname, etype) \
+  LS4(cname, etype, double)
+
+#define LS4(cname, etype, dftype) \
+  LS3(cname, etype, dftype, double)
+
+#define LS3(cname, etype, dftype, rftype) \
+  LS2(cname, etype, dftype, rftype, 1) \
+  LS2(cname, etype, dftype, rftype, 2) \
+  LS2(cname, etype, dftype, rftype, 3)
+
+#define LS2(cname, etype, dftype, rftype, ddim) \
+  LS1(cname, etype, dftype, ddim, rftype, 1) \
+  LS1(cname, etype, dftype, ddim, rftype, 2) \
+  LS1(cname, etype, dftype, ddim, rftype, 3)
+
+#define LS1(cname, etype, dftype, ddim, rftype, rdim) \
+  LS0(cname, etype, dftype, ddim, rftype, rdim, 1) \
+  LS0(cname, etype, dftype, ddim, rftype, rdim, 2) \
+  LS0(cname, etype, dftype, ddim, rftype, rdim, 3)
+
+#define LS0(cname, etype, dftype, ddim, rftype, rdim, rcdim) \
+  template class cname< etype, dftype, ddim, rftype, rdim, rcdim >;
+
 #include <dune/stuff/grid/fakeentity.hh>
 
 typedef Dune::Stuff::Grid::FakeEntity< 1 > DuneStuffFake1dEntityType;
 typedef Dune::Stuff::Grid::FakeEntity< 2 > DuneStuffFake2dEntityType;
 typedef Dune::Stuff::Grid::FakeEntity< 3 > DuneStuffFake3dEntityType;
 
-#define LS5(ent) \
-  LS4(Dune::Stuff::LocalfunctionSetInterface,ent) LS4(Dune::Stuff::LocalfunctionInterface,ent) \
-  LS4(Dune::Stuff::LocalizableFunctionInterface,ent)
-
-#define LS4(cname, ent) \
-  LS3(cname,ent,double) // L3(cname,ent,std::complex)
-
-#define LS3(cname, ent, ftype) \
-  LS2(cname,ent,ftype, 1) LS2(cname,ent,ftype, 2) LS2(cname,ent,ftype,3)
-
-#define LS2(cname, ent, ftype, ddim) \
-  LS1(cname,ent,ftype, ddim,1) LS1(cname,ent,ftype, ddim,2) LS1(cname,ent,ftype, ddim, 3)
-
-#define LS1(cname, ent, ftype, ddim, rdim) \
-  LS0(cname,ent,ftype, ddim,rdim, 1) LS0(cname,ent,ftype, ddim,rdim, 2) LS0(cname,ent,ftype, ddim,rdim, 3)
-
-#define LS0(cname, ent, ftype, ddim, rdim, cdim) \
-  template class cname < ent, ftype, ddim, ftype, rdim, cdim >;
-
 #define LS_FAKE(dimw) \
-  LS5(Dune::Stuff::Grid::FakeEntity< dimw >)
+  LS6(Dune::Stuff::Grid::FakeEntity< dimw >)
 
-LS_FAKE(1) LS_FAKE(2) LS_FAKE(3)
+LS_FAKE(1)
+LS_FAKE(2)
+LS_FAKE(3)
 
 #ifdef HAVE_DUNE_GRID
 
