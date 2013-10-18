@@ -202,7 +202,7 @@ template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake1dEntityType
 //template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake1dEntityType, double, 1, double, 3, 2 >;
 //template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake1dEntityType, double, 1, double, 3, 3 >;
 
-//template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 1, 1 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 1, 1 >;
 //template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 1, 2 >;
 //template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 1, 3 >;
 //template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 2, 1 >;
@@ -212,7 +212,7 @@ template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake1dEntityType
 //template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 3, 2 >;
 //template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 3, 3 >;
 
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 1, 1 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 1, 1 >;
 //template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 1, 2 >;
 //template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 1, 3 >;
 //template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 2, 1 >;
