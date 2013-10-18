@@ -184,48 +184,44 @@ FunctionInterface< D, d, R, r >::jacobian(const DomainType& x) const
 } // namespace Stuff
 } // namespace Dune
 
-#define LS6(etype) \
-  LS5(Dune::Stuff::LocalfunctionSetInterface, etype) \
-  LS5(Dune::Stuff::LocalfunctionInterface, etype) \
-  LS5(Dune::Stuff::LocalizableFunctionInterface, etype)
+#define DSF_LIST_DIMDOMAIN(etype) \
+  DSF_LIST_CLASSES(etype, 1) \
+  DSF_LIST_CLASSES(etype, 2) \
+  DSF_LIST_CLASSES(etype, 3)
 
-#define LS5(cname, etype) \
-  LS4(cname, etype, double)
+#define DSF_LIST_CLASSES(etype, ddim) \
+  DSF_LIST_DIMRANGE(Dune::Stuff::LocalfunctionSetInterface, etype, ddim) \
+  DSF_LIST_DIMRANGE(Dune::Stuff::LocalfunctionInterface, etype, ddim) \
+  DSF_LIST_DIMRANGE(Dune::Stuff::LocalizableFunctionInterface, etype, ddim)
 
-#define LS4(cname, etype, dftype) \
-  LS3(cname, etype, dftype, double) \
-  LS3(cname, etype, dftype, long double)
+#define DSF_LIST_DIMRANGE(cname, etype, ddim) \
+  DSF_LIST_DIMRANGECOLS(cname, etype, ddim, 1) \
+  DSF_LIST_DIMRANGECOLS(cname, etype, ddim, 2) \
+  DSF_LIST_DIMRANGECOLS(cname, etype, ddim, 3)
 
-#define LS3(cname, etype, dftype, rftype) \
-  LS2(cname, etype, dftype, rftype, 1) \
-  LS2(cname, etype, dftype, rftype, 2) \
-  LS2(cname, etype, dftype, rftype, 3)
+#define DSF_LIST_DIMRANGECOLS(cname, etype, ddim, rdim) \
+  DSF_LIST_DOMAINFIELDTYPES(cname, etype, ddim, rdim, 1) \
+  DSF_LIST_DOMAINFIELDTYPES(cname, etype, ddim, rdim, 2) \
+  DSF_LIST_DOMAINFIELDTYPES(cname, etype, ddim, rdim, 3)
 
-#define LS2(cname, etype, dftype, rftype, ddim) \
-  LS1(cname, etype, dftype, ddim, rftype, 1) \
-  LS1(cname, etype, dftype, ddim, rftype, 2) \
-  LS1(cname, etype, dftype, ddim, rftype, 3)
+#define DSF_LIST_DOMAINFIELDTYPES(cname, etype, ddim, rdim, rcdim) \
+  DSF_LIST_RANGEFIELDTYPES(cname, etype, double, ddim, rdim, rcdim)
 
-#define LS1(cname, etype, dftype, ddim, rftype, rdim) \
-  LS0(cname, etype, dftype, ddim, rftype, rdim, 1) \
-  LS0(cname, etype, dftype, ddim, rftype, rdim, 2) \
-  LS0(cname, etype, dftype, ddim, rftype, rdim, 3)
+#define DSF_LIST_RANGEFIELDTYPES(cname, etype, dftype, ddim, rdim, rcdim) \
+  DSF_LAST_EXPANSION(cname, etype, dftype, ddim, double, rdim, rcdim) \
+  DSF_LAST_EXPANSION(cname, etype, dftype, ddim, long double, rdim, rcdim)
 
-#define LS0(cname, etype, dftype, ddim, rftype, rdim, rcdim) \
+#define DSF_LAST_EXPANSION(cname, etype, dftype, ddim, rftype, rdim, rcdim) \
   template class cname< etype, dftype, ddim, rftype, rdim, rcdim >;
 
 #include <dune/stuff/grid/fakeentity.hh>
 
-typedef Dune::Stuff::Grid::FakeEntity< 1 > DuneStuffFake1dEntityType;
-typedef Dune::Stuff::Grid::FakeEntity< 2 > DuneStuffFake2dEntityType;
-typedef Dune::Stuff::Grid::FakeEntity< 3 > DuneStuffFake3dEntityType;
+#define DSF_LIST_FAKEENTITIES(dimw) \
+  DSF_LIST_DIMDOMAIN(Dune::Stuff::Grid::FakeEntity< dimw >)
 
-#define LS_FAKE(dimw) \
-  LS6(Dune::Stuff::Grid::FakeEntity< dimw >)
-
-LS_FAKE(1)
-LS_FAKE(2)
-LS_FAKE(3)
+DSF_LIST_FAKEENTITIES(1)
+DSF_LIST_FAKEENTITIES(2)
+DSF_LIST_FAKEENTITIES(3)
 
 #ifdef HAVE_DUNE_GRID
 
