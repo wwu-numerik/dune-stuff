@@ -38,7 +38,6 @@ class VisualizationAdapter;
 #endif // HAVE_DUNE_GRID
 
 
-
 /**
  *  \brief  Interface for a set of matrix valued functions, which can be evaluated locally on one Entity.
  *
@@ -62,7 +61,7 @@ class LocalfunctionSetInterface
   template< int dimDomain, class RangeFieldType, int dimRange, int dimRangeCols>
   struct JacobianRangeTypeSelector
   {
-    typedef std::string type;
+    typedef double type;
   };
 
   template< int dimDomain, class RangeFieldType, int dimRange >
