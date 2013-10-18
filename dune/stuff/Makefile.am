@@ -15,12 +15,14 @@ libstuff_la_SOURCES = \
 	common/parameter/tree.cc \
 	common/signals.cc \
 	fem/femeoc.cc \
-  functions/expression/mathexpr.cc \
-  functions/interfaces.cc
+  grid/fakeentity.cc \
+	functions/expression/mathexpr.cc \
+	functions/interfaces.cc \
+	functions/constant.cc
 
 libstuff_la_LIBADD = common $(BOOST_FILESYSTEM_LIB) $(BOOST_SYSTEM_LIB) \
 	$(BOOST_TIMER_LIB) $(BOOST_CHRONO_LIB) $(ALUGRID_LIBS)
 
 libstuff_la_CPPFLAGS = $(DUNE_CPPFLAGS) $(ALUGRID_CPPFLAGS)
-	
+
 include $(top_srcdir)/am/global-rules
