@@ -3,9 +3,7 @@
 // Copyright Holders: Felix Albrecht, Rene Milk
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
-#ifdef HAVE_CMAKE_CONFIG
-# include "cmake_config.h"
-#elif defined (HAVE_CONFIG_H)
+#ifdef HAVE_CONFIG_H
 # include "config.h"
 #endif
 
@@ -193,408 +191,408 @@ typedef Dune::Stuff::Grid::FakeEntity< 2 > DuneStuffFake2dEntityType;
 typedef Dune::Stuff::Grid::FakeEntity< 3 > DuneStuffFake3dEntityType;
 
 template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake1dEntityType, double, 1, double, 1, 1 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake1dEntityType, double, 1, double, 1, 2 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake1dEntityType, double, 1, double, 1, 3 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake1dEntityType, double, 1, double, 2, 1 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake1dEntityType, double, 1, double, 2, 2 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake1dEntityType, double, 1, double, 2, 3 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake1dEntityType, double, 1, double, 3, 1 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake1dEntityType, double, 1, double, 3, 2 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake1dEntityType, double, 1, double, 3, 3 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake1dEntityType, double, 1, double, 1, 2 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake1dEntityType, double, 1, double, 1, 3 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake1dEntityType, double, 1, double, 2, 1 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake1dEntityType, double, 1, double, 2, 2 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake1dEntityType, double, 1, double, 2, 3 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake1dEntityType, double, 1, double, 3, 1 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake1dEntityType, double, 1, double, 3, 2 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake1dEntityType, double, 1, double, 3, 3 >;
 
 template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 1, 1 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 1, 2 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 1, 3 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 2, 1 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 2, 2 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 2, 3 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 3, 1 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 3, 2 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 3, 3 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 1, 2 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 1, 3 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 2, 1 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 2, 2 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 2, 3 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 3, 1 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 3, 2 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 3, 3 >;
 
 template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 1, 1 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 1, 2 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 1, 3 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 2, 1 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 2, 2 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 2, 3 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 3, 1 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 3, 2 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 3, 3 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 1, 2 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 1, 3 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 2, 1 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 2, 2 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 2, 3 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 3, 1 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 3, 2 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 3, 3 >;
 
 
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake2dEntityType, double, 2, double, 1, 1 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake2dEntityType, double, 2, double, 1, 2 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake2dEntityType, double, 2, double, 1, 3 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake2dEntityType, double, 2, double, 2, 1 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake2dEntityType, double, 2, double, 2, 2 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake2dEntityType, double, 2, double, 2, 3 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake2dEntityType, double, 2, double, 3, 1 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake2dEntityType, double, 2, double, 3, 2 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake2dEntityType, double, 2, double, 3, 3 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake2dEntityType, double, 2, double, 1, 1 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake2dEntityType, double, 2, double, 1, 2 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake2dEntityType, double, 2, double, 1, 3 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake2dEntityType, double, 2, double, 2, 1 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake2dEntityType, double, 2, double, 2, 2 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake2dEntityType, double, 2, double, 2, 3 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake2dEntityType, double, 2, double, 3, 1 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake2dEntityType, double, 2, double, 3, 2 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake2dEntityType, double, 2, double, 3, 3 >;
 
-//template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 1, 1 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 1, 2 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 1, 3 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 2, 1 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 2, 2 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 2, 3 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 3, 1 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 3, 2 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 3, 3 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 1, 1 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 1, 2 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 1, 3 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 2, 1 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 2, 2 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 2, 3 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 3, 1 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 3, 2 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 3, 3 >;
 
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 1, 1 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 1, 2 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 1, 3 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 2, 1 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 2, 2 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 2, 3 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 3, 1 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 3, 2 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 3, 3 >;
-
-
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake3dEntityType, double, 3, double, 1, 1 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake3dEntityType, double, 3, double, 1, 2 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake3dEntityType, double, 3, double, 1, 3 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake3dEntityType, double, 3, double, 2, 1 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake3dEntityType, double, 3, double, 2, 2 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake3dEntityType, double, 3, double, 2, 3 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake3dEntityType, double, 3, double, 3, 1 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake3dEntityType, double, 3, double, 3, 2 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake3dEntityType, double, 3, double, 3, 3 >;
-
-//template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 1, 1 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 1, 2 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 1, 3 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 2, 1 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 2, 2 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 2, 3 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 3, 1 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 3, 2 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 3, 3 >;
-
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 1, 1 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 1, 2 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 1, 3 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 2, 1 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 2, 2 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 2, 3 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 3, 1 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 3, 2 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 3, 3 >;
-
-//#ifdef HAVE_DUNE_GRID
-
-//# include <dune/grid/sgrid.hh>
-
-//typedef typename Dune::SGrid< 1, 1 >::template Codim< 0 >::Entity DuneSGrid1dEntityType;
-//typedef typename Dune::SGrid< 2, 2 >::template Codim< 0 >::Entity DuneSGrid2dEntityType;
-//typedef typename Dune::SGrid< 3, 3 >::template Codim< 0 >::Entity DuneSGrid3dEntityType;
-
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid1dEntityType, double, 1, double, 1, 1 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid1dEntityType, double, 1, double, 1, 2 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid1dEntityType, double, 1, double, 1, 3 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid1dEntityType, double, 1, double, 2, 1 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid1dEntityType, double, 1, double, 2, 2 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid1dEntityType, double, 1, double, 2, 3 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid1dEntityType, double, 1, double, 3, 1 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid1dEntityType, double, 1, double, 3, 2 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid1dEntityType, double, 1, double, 3, 3 >;
-
-//template class Dune::Stuff::LocalfunctionInterface< DuneSGrid1dEntityType, double, 1, double, 1, 1 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneSGrid1dEntityType, double, 1, double, 1, 2 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneSGrid1dEntityType, double, 1, double, 1, 3 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneSGrid1dEntityType, double, 1, double, 2, 1 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneSGrid1dEntityType, double, 1, double, 2, 2 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneSGrid1dEntityType, double, 1, double, 2, 3 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneSGrid1dEntityType, double, 1, double, 3, 1 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneSGrid1dEntityType, double, 1, double, 3, 2 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneSGrid1dEntityType, double, 1, double, 3, 3 >;
-
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid1dEntityType, double, 1, double, 1, 1 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid1dEntityType, double, 1, double, 1, 2 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid1dEntityType, double, 1, double, 1, 3 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid1dEntityType, double, 1, double, 2, 1 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid1dEntityType, double, 1, double, 2, 2 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid1dEntityType, double, 1, double, 2, 3 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid1dEntityType, double, 1, double, 3, 1 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid1dEntityType, double, 1, double, 3, 2 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid1dEntityType, double, 1, double, 3, 3 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 1, 1 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 1, 2 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 1, 3 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 2, 1 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 2, 2 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 2, 3 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 3, 1 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 3, 2 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 3, 3 >;
 
 
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid2dEntityType, double, 2, double, 1, 1 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid2dEntityType, double, 2, double, 1, 2 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid2dEntityType, double, 2, double, 1, 3 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid2dEntityType, double, 2, double, 2, 1 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid2dEntityType, double, 2, double, 2, 2 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid2dEntityType, double, 2, double, 2, 3 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid2dEntityType, double, 2, double, 3, 1 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid2dEntityType, double, 2, double, 3, 2 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid2dEntityType, double, 2, double, 3, 3 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake3dEntityType, double, 3, double, 1, 1 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake3dEntityType, double, 3, double, 1, 2 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake3dEntityType, double, 3, double, 1, 3 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake3dEntityType, double, 3, double, 2, 1 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake3dEntityType, double, 3, double, 2, 2 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake3dEntityType, double, 3, double, 2, 3 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake3dEntityType, double, 3, double, 3, 1 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake3dEntityType, double, 3, double, 3, 2 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake3dEntityType, double, 3, double, 3, 3 >;
 
-//template class Dune::Stuff::LocalfunctionInterface< DuneSGrid2dEntityType, double, 2, double, 1, 1 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneSGrid2dEntityType, double, 2, double, 1, 2 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneSGrid2dEntityType, double, 2, double, 1, 3 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneSGrid2dEntityType, double, 2, double, 2, 1 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneSGrid2dEntityType, double, 2, double, 2, 2 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneSGrid2dEntityType, double, 2, double, 2, 3 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneSGrid2dEntityType, double, 2, double, 3, 1 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneSGrid2dEntityType, double, 2, double, 3, 2 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneSGrid2dEntityType, double, 2, double, 3, 3 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 1, 1 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 1, 2 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 1, 3 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 2, 1 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 2, 2 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 2, 3 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 3, 1 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 3, 2 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 3, 3 >;
 
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid2dEntityType, double, 2, double, 1, 1 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid2dEntityType, double, 2, double, 1, 2 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid2dEntityType, double, 2, double, 1, 3 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid2dEntityType, double, 2, double, 2, 1 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid2dEntityType, double, 2, double, 2, 2 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid2dEntityType, double, 2, double, 2, 3 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid2dEntityType, double, 2, double, 3, 1 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid2dEntityType, double, 2, double, 3, 2 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid2dEntityType, double, 2, double, 3, 3 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 1, 1 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 1, 2 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 1, 3 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 2, 1 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 2, 2 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 2, 3 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 3, 1 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 3, 2 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 3, 3 >;
 
+#ifdef HAVE_DUNE_GRID
 
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid3dEntityType, double, 3, double, 1, 1 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid3dEntityType, double, 3, double, 1, 2 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid3dEntityType, double, 3, double, 1, 3 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid3dEntityType, double, 3, double, 2, 1 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid3dEntityType, double, 3, double, 2, 2 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid3dEntityType, double, 3, double, 2, 3 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid3dEntityType, double, 3, double, 3, 1 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid3dEntityType, double, 3, double, 3, 2 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid3dEntityType, double, 3, double, 3, 3 >;
+# include <dune/grid/sgrid.hh>
 
-//template class Dune::Stuff::LocalfunctionInterface< DuneSGrid3dEntityType, double, 3, double, 1, 1 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneSGrid3dEntityType, double, 3, double, 1, 2 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneSGrid3dEntityType, double, 3, double, 1, 3 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneSGrid3dEntityType, double, 3, double, 2, 1 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneSGrid3dEntityType, double, 3, double, 2, 2 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneSGrid3dEntityType, double, 3, double, 2, 3 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneSGrid3dEntityType, double, 3, double, 3, 1 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneSGrid3dEntityType, double, 3, double, 3, 2 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneSGrid3dEntityType, double, 3, double, 3, 3 >;
+typedef typename Dune::SGrid< 1, 1 >::template Codim< 0 >::Entity DuneSGrid1dEntityType;
+typedef typename Dune::SGrid< 2, 2 >::template Codim< 0 >::Entity DuneSGrid2dEntityType;
+typedef typename Dune::SGrid< 3, 3 >::template Codim< 0 >::Entity DuneSGrid3dEntityType;
 
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid3dEntityType, double, 3, double, 1, 1 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid3dEntityType, double, 3, double, 1, 2 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid3dEntityType, double, 3, double, 1, 3 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid3dEntityType, double, 3, double, 2, 1 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid3dEntityType, double, 3, double, 2, 2 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid3dEntityType, double, 3, double, 2, 3 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid3dEntityType, double, 3, double, 3, 1 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid3dEntityType, double, 3, double, 3, 2 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid3dEntityType, double, 3, double, 3, 3 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid1dEntityType, double, 1, double, 1, 1 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid1dEntityType, double, 1, double, 1, 2 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid1dEntityType, double, 1, double, 1, 3 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid1dEntityType, double, 1, double, 2, 1 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid1dEntityType, double, 1, double, 2, 2 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid1dEntityType, double, 1, double, 2, 3 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid1dEntityType, double, 1, double, 3, 1 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid1dEntityType, double, 1, double, 3, 2 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid1dEntityType, double, 1, double, 3, 3 >;
 
-//# include <dune/grid/yaspgrid.hh>
+template class Dune::Stuff::LocalfunctionInterface< DuneSGrid1dEntityType, double, 1, double, 1, 1 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneSGrid1dEntityType, double, 1, double, 1, 2 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneSGrid1dEntityType, double, 1, double, 1, 3 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneSGrid1dEntityType, double, 1, double, 2, 1 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneSGrid1dEntityType, double, 1, double, 2, 2 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneSGrid1dEntityType, double, 1, double, 2, 3 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneSGrid1dEntityType, double, 1, double, 3, 1 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneSGrid1dEntityType, double, 1, double, 3, 2 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneSGrid1dEntityType, double, 1, double, 3, 3 >;
 
-//typedef typename Dune::YaspGrid< 1 >::template Codim< 0 >::Entity DuneYaspGrid1dEntityType;
-//typedef typename Dune::YaspGrid< 2 >::template Codim< 0 >::Entity DuneYaspGrid2dEntityType;
-//typedef typename Dune::YaspGrid< 3 >::template Codim< 0 >::Entity DuneYaspGrid3dEntityType;
-
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid1dEntityType, double, 1, double, 1, 1 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid1dEntityType, double, 1, double, 1, 2 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid1dEntityType, double, 1, double, 1, 3 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid1dEntityType, double, 1, double, 2, 1 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid1dEntityType, double, 1, double, 2, 2 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid1dEntityType, double, 1, double, 2, 3 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid1dEntityType, double, 1, double, 3, 1 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid1dEntityType, double, 1, double, 3, 2 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid1dEntityType, double, 1, double, 3, 3 >;
-
-//template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid1dEntityType, double, 1, double, 1, 1 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid1dEntityType, double, 1, double, 1, 2 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid1dEntityType, double, 1, double, 1, 3 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid1dEntityType, double, 1, double, 2, 1 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid1dEntityType, double, 1, double, 2, 2 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid1dEntityType, double, 1, double, 2, 3 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid1dEntityType, double, 1, double, 3, 1 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid1dEntityType, double, 1, double, 3, 2 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid1dEntityType, double, 1, double, 3, 3 >;
-
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid1dEntityType, double, 1, double, 1, 1 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid1dEntityType, double, 1, double, 1, 2 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid1dEntityType, double, 1, double, 1, 3 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid1dEntityType, double, 1, double, 2, 1 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid1dEntityType, double, 1, double, 2, 2 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid1dEntityType, double, 1, double, 2, 3 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid1dEntityType, double, 1, double, 3, 1 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid1dEntityType, double, 1, double, 3, 2 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid1dEntityType, double, 1, double, 3, 3 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid1dEntityType, double, 1, double, 1, 1 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid1dEntityType, double, 1, double, 1, 2 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid1dEntityType, double, 1, double, 1, 3 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid1dEntityType, double, 1, double, 2, 1 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid1dEntityType, double, 1, double, 2, 2 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid1dEntityType, double, 1, double, 2, 3 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid1dEntityType, double, 1, double, 3, 1 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid1dEntityType, double, 1, double, 3, 2 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid1dEntityType, double, 1, double, 3, 3 >;
 
 
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid2dEntityType, double, 2, double, 1, 1 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid2dEntityType, double, 2, double, 1, 2 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid2dEntityType, double, 2, double, 1, 3 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid2dEntityType, double, 2, double, 2, 1 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid2dEntityType, double, 2, double, 2, 2 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid2dEntityType, double, 2, double, 2, 3 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid2dEntityType, double, 2, double, 3, 1 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid2dEntityType, double, 2, double, 3, 2 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid2dEntityType, double, 2, double, 3, 3 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid2dEntityType, double, 2, double, 1, 1 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid2dEntityType, double, 2, double, 1, 2 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid2dEntityType, double, 2, double, 1, 3 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid2dEntityType, double, 2, double, 2, 1 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid2dEntityType, double, 2, double, 2, 2 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid2dEntityType, double, 2, double, 2, 3 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid2dEntityType, double, 2, double, 3, 1 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid2dEntityType, double, 2, double, 3, 2 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid2dEntityType, double, 2, double, 3, 3 >;
 
-//template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid2dEntityType, double, 2, double, 1, 1 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid2dEntityType, double, 2, double, 1, 2 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid2dEntityType, double, 2, double, 1, 3 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid2dEntityType, double, 2, double, 2, 1 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid2dEntityType, double, 2, double, 2, 2 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid2dEntityType, double, 2, double, 2, 3 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid2dEntityType, double, 2, double, 3, 1 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid2dEntityType, double, 2, double, 3, 2 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid2dEntityType, double, 2, double, 3, 3 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneSGrid2dEntityType, double, 2, double, 1, 1 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneSGrid2dEntityType, double, 2, double, 1, 2 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneSGrid2dEntityType, double, 2, double, 1, 3 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneSGrid2dEntityType, double, 2, double, 2, 1 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneSGrid2dEntityType, double, 2, double, 2, 2 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneSGrid2dEntityType, double, 2, double, 2, 3 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneSGrid2dEntityType, double, 2, double, 3, 1 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneSGrid2dEntityType, double, 2, double, 3, 2 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneSGrid2dEntityType, double, 2, double, 3, 3 >;
 
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid2dEntityType, double, 2, double, 1, 1 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid2dEntityType, double, 2, double, 1, 2 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid2dEntityType, double, 2, double, 1, 3 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid2dEntityType, double, 2, double, 2, 1 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid2dEntityType, double, 2, double, 2, 2 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid2dEntityType, double, 2, double, 2, 3 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid2dEntityType, double, 2, double, 3, 1 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid2dEntityType, double, 2, double, 3, 2 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid2dEntityType, double, 2, double, 3, 3 >;
-
-
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid3dEntityType, double, 3, double, 1, 1 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid3dEntityType, double, 3, double, 1, 2 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid3dEntityType, double, 3, double, 1, 3 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid3dEntityType, double, 3, double, 2, 1 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid3dEntityType, double, 3, double, 2, 2 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid3dEntityType, double, 3, double, 2, 3 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid3dEntityType, double, 3, double, 3, 1 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid3dEntityType, double, 3, double, 3, 2 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid3dEntityType, double, 3, double, 3, 3 >;
-
-//template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid3dEntityType, double, 3, double, 1, 1 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid3dEntityType, double, 3, double, 1, 2 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid3dEntityType, double, 3, double, 1, 3 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid3dEntityType, double, 3, double, 2, 1 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid3dEntityType, double, 3, double, 2, 2 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid3dEntityType, double, 3, double, 2, 3 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid3dEntityType, double, 3, double, 3, 1 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid3dEntityType, double, 3, double, 3, 2 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid3dEntityType, double, 3, double, 3, 3 >;
-
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid3dEntityType, double, 3, double, 1, 1 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid3dEntityType, double, 3, double, 1, 2 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid3dEntityType, double, 3, double, 1, 3 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid3dEntityType, double, 3, double, 2, 1 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid3dEntityType, double, 3, double, 2, 2 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid3dEntityType, double, 3, double, 2, 3 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid3dEntityType, double, 3, double, 3, 1 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid3dEntityType, double, 3, double, 3, 2 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid3dEntityType, double, 3, double, 3, 3 >;
-
-//# if HAVE_ALUGRID_SERIAL_H || HAVE_ALUGRID_PARALLEL_H
-//#   define ALUGRID_CONFORM 1
-//#   define ENABLE_ALUGRID 1
-
-//#   include <dune/grid/alugrid.hh>
-
-//typedef typename Dune::ALUSimplexGrid< 2, 2 >::template Codim< 0 >::Entity DuneAluSimplexGrid2dEntityType;
-//typedef typename Dune::ALUSimplexGrid< 3, 3 >::template Codim< 0 >::Entity DuneAluSimplexGrid3dEntityType;
-//typedef typename Dune::ALUCubeGrid< 3, 3 >::template Codim< 0 >::Entity DuneAluCubeGrid3dEntityType;
-
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 1, 1 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 1, 2 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 1, 3 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 2, 1 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 2, 2 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 2, 3 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 3, 1 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 3, 2 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 3, 3 >;
-
-//template class Dune::Stuff::LocalfunctionInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 1, 1 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 1, 2 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 1, 3 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 2, 1 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 2, 2 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 2, 3 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 3, 1 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 3, 2 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 3, 3 >;
-
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 1, 1 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 1, 2 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 1, 3 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 2, 1 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 2, 2 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 2, 3 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 3, 1 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 3, 2 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 3, 3 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid2dEntityType, double, 2, double, 1, 1 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid2dEntityType, double, 2, double, 1, 2 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid2dEntityType, double, 2, double, 1, 3 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid2dEntityType, double, 2, double, 2, 1 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid2dEntityType, double, 2, double, 2, 2 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid2dEntityType, double, 2, double, 2, 3 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid2dEntityType, double, 2, double, 3, 1 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid2dEntityType, double, 2, double, 3, 2 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid2dEntityType, double, 2, double, 3, 3 >;
 
 
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 1, 1 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 1, 2 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 1, 3 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 2, 1 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 2, 2 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 2, 3 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 3, 1 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 3, 2 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 3, 3 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid3dEntityType, double, 3, double, 1, 1 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid3dEntityType, double, 3, double, 1, 2 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid3dEntityType, double, 3, double, 1, 3 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid3dEntityType, double, 3, double, 2, 1 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid3dEntityType, double, 3, double, 2, 2 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid3dEntityType, double, 3, double, 2, 3 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid3dEntityType, double, 3, double, 3, 1 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid3dEntityType, double, 3, double, 3, 2 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneSGrid3dEntityType, double, 3, double, 3, 3 >;
 
-//template class Dune::Stuff::LocalfunctionInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 1, 1 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 1, 2 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 1, 3 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 2, 1 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 2, 2 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 2, 3 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 3, 1 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 3, 2 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 3, 3 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneSGrid3dEntityType, double, 3, double, 1, 1 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneSGrid3dEntityType, double, 3, double, 1, 2 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneSGrid3dEntityType, double, 3, double, 1, 3 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneSGrid3dEntityType, double, 3, double, 2, 1 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneSGrid3dEntityType, double, 3, double, 2, 2 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneSGrid3dEntityType, double, 3, double, 2, 3 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneSGrid3dEntityType, double, 3, double, 3, 1 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneSGrid3dEntityType, double, 3, double, 3, 2 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneSGrid3dEntityType, double, 3, double, 3, 3 >;
 
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 1, 1 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 1, 2 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 1, 3 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 2, 1 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 2, 2 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 2, 3 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 3, 1 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 3, 2 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 3, 3 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid3dEntityType, double, 3, double, 1, 1 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid3dEntityType, double, 3, double, 1, 2 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid3dEntityType, double, 3, double, 1, 3 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid3dEntityType, double, 3, double, 2, 1 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid3dEntityType, double, 3, double, 2, 2 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid3dEntityType, double, 3, double, 2, 3 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid3dEntityType, double, 3, double, 3, 1 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid3dEntityType, double, 3, double, 3, 2 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneSGrid3dEntityType, double, 3, double, 3, 3 >;
+
+# include <dune/grid/yaspgrid.hh>
+
+typedef typename Dune::YaspGrid< 1 >::template Codim< 0 >::Entity DuneYaspGrid1dEntityType;
+typedef typename Dune::YaspGrid< 2 >::template Codim< 0 >::Entity DuneYaspGrid2dEntityType;
+typedef typename Dune::YaspGrid< 3 >::template Codim< 0 >::Entity DuneYaspGrid3dEntityType;
+
+template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid1dEntityType, double, 1, double, 1, 1 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid1dEntityType, double, 1, double, 1, 2 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid1dEntityType, double, 1, double, 1, 3 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid1dEntityType, double, 1, double, 2, 1 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid1dEntityType, double, 1, double, 2, 2 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid1dEntityType, double, 1, double, 2, 3 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid1dEntityType, double, 1, double, 3, 1 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid1dEntityType, double, 1, double, 3, 2 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid1dEntityType, double, 1, double, 3, 3 >;
+
+template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid1dEntityType, double, 1, double, 1, 1 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid1dEntityType, double, 1, double, 1, 2 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid1dEntityType, double, 1, double, 1, 3 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid1dEntityType, double, 1, double, 2, 1 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid1dEntityType, double, 1, double, 2, 2 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid1dEntityType, double, 1, double, 2, 3 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid1dEntityType, double, 1, double, 3, 1 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid1dEntityType, double, 1, double, 3, 2 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid1dEntityType, double, 1, double, 3, 3 >;
+
+template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid1dEntityType, double, 1, double, 1, 1 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid1dEntityType, double, 1, double, 1, 2 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid1dEntityType, double, 1, double, 1, 3 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid1dEntityType, double, 1, double, 2, 1 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid1dEntityType, double, 1, double, 2, 2 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid1dEntityType, double, 1, double, 2, 3 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid1dEntityType, double, 1, double, 3, 1 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid1dEntityType, double, 1, double, 3, 2 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid1dEntityType, double, 1, double, 3, 3 >;
 
 
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 1, 1 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 1, 2 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 1, 3 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 2, 1 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 2, 2 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 2, 3 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 3, 1 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 3, 2 >;
-//template class Dune::Stuff::LocalfunctionSetInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 3, 3 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid2dEntityType, double, 2, double, 1, 1 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid2dEntityType, double, 2, double, 1, 2 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid2dEntityType, double, 2, double, 1, 3 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid2dEntityType, double, 2, double, 2, 1 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid2dEntityType, double, 2, double, 2, 2 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid2dEntityType, double, 2, double, 2, 3 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid2dEntityType, double, 2, double, 3, 1 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid2dEntityType, double, 2, double, 3, 2 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid2dEntityType, double, 2, double, 3, 3 >;
 
-//template class Dune::Stuff::LocalfunctionInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 1, 1 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 1, 2 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 1, 3 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 2, 1 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 2, 2 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 2, 3 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 3, 1 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 3, 2 >;
-//template class Dune::Stuff::LocalfunctionInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 3, 3 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid2dEntityType, double, 2, double, 1, 1 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid2dEntityType, double, 2, double, 1, 2 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid2dEntityType, double, 2, double, 1, 3 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid2dEntityType, double, 2, double, 2, 1 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid2dEntityType, double, 2, double, 2, 2 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid2dEntityType, double, 2, double, 2, 3 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid2dEntityType, double, 2, double, 3, 1 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid2dEntityType, double, 2, double, 3, 2 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid2dEntityType, double, 2, double, 3, 3 >;
 
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 1, 1 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 1, 2 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 1, 3 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 2, 1 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 2, 2 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 2, 3 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 3, 1 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 3, 2 >;
-//template class Dune::Stuff::LocalizableFunctionInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 3, 3 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid2dEntityType, double, 2, double, 1, 1 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid2dEntityType, double, 2, double, 1, 2 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid2dEntityType, double, 2, double, 1, 3 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid2dEntityType, double, 2, double, 2, 1 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid2dEntityType, double, 2, double, 2, 2 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid2dEntityType, double, 2, double, 2, 3 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid2dEntityType, double, 2, double, 3, 1 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid2dEntityType, double, 2, double, 3, 2 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid2dEntityType, double, 2, double, 3, 3 >;
 
-//# endif // HAVE_ALUGRID_SERIAL_H || HAVE_ALUGRID_PARALLEL_H
-//#endif // HAVE_DUNE_GRID
 
-//template class Dune::Stuff::FunctionInterface< double, 1, double, 1 >;
-//template class Dune::Stuff::FunctionInterface< double, 1, double, 2 >;
-//template class Dune::Stuff::FunctionInterface< double, 1, double, 3 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid3dEntityType, double, 3, double, 1, 1 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid3dEntityType, double, 3, double, 1, 2 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid3dEntityType, double, 3, double, 1, 3 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid3dEntityType, double, 3, double, 2, 1 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid3dEntityType, double, 3, double, 2, 2 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid3dEntityType, double, 3, double, 2, 3 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid3dEntityType, double, 3, double, 3, 1 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid3dEntityType, double, 3, double, 3, 2 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneYaspGrid3dEntityType, double, 3, double, 3, 3 >;
 
-//template class Dune::Stuff::FunctionInterface< double, 2, double, 1 >;
-//template class Dune::Stuff::FunctionInterface< double, 2, double, 2 >;
-//template class Dune::Stuff::FunctionInterface< double, 2, double, 3 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid3dEntityType, double, 3, double, 1, 1 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid3dEntityType, double, 3, double, 1, 2 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid3dEntityType, double, 3, double, 1, 3 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid3dEntityType, double, 3, double, 2, 1 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid3dEntityType, double, 3, double, 2, 2 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid3dEntityType, double, 3, double, 2, 3 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid3dEntityType, double, 3, double, 3, 1 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid3dEntityType, double, 3, double, 3, 2 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneYaspGrid3dEntityType, double, 3, double, 3, 3 >;
 
-//template class Dune::Stuff::FunctionInterface< double, 3, double, 1 >;
-//template class Dune::Stuff::FunctionInterface< double, 3, double, 2 >;
-//template class Dune::Stuff::FunctionInterface< double, 3, double, 3 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid3dEntityType, double, 3, double, 1, 1 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid3dEntityType, double, 3, double, 1, 2 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid3dEntityType, double, 3, double, 1, 3 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid3dEntityType, double, 3, double, 2, 1 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid3dEntityType, double, 3, double, 2, 2 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid3dEntityType, double, 3, double, 2, 3 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid3dEntityType, double, 3, double, 3, 1 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid3dEntityType, double, 3, double, 3, 2 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneYaspGrid3dEntityType, double, 3, double, 3, 3 >;
+
+# if HAVE_ALUGRID_SERIAL_H || HAVE_ALUGRID_PARALLEL_H
+#   define ALUGRID_CONFORM 1
+#   define ENABLE_ALUGRID 1
+
+#   include <dune/grid/alugrid.hh>
+
+typedef typename Dune::ALUSimplexGrid< 2, 2 >::template Codim< 0 >::Entity DuneAluSimplexGrid2dEntityType;
+typedef typename Dune::ALUSimplexGrid< 3, 3 >::template Codim< 0 >::Entity DuneAluSimplexGrid3dEntityType;
+typedef typename Dune::ALUCubeGrid< 3, 3 >::template Codim< 0 >::Entity DuneAluCubeGrid3dEntityType;
+
+template class Dune::Stuff::LocalfunctionSetInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 1, 1 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 1, 2 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 1, 3 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 2, 1 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 2, 2 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 2, 3 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 3, 1 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 3, 2 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 3, 3 >;
+
+template class Dune::Stuff::LocalfunctionInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 1, 1 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 1, 2 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 1, 3 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 2, 1 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 2, 2 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 2, 3 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 3, 1 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 3, 2 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 3, 3 >;
+
+template class Dune::Stuff::LocalizableFunctionInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 1, 1 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 1, 2 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 1, 3 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 2, 1 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 2, 2 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 2, 3 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 3, 1 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 3, 2 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneAluSimplexGrid2dEntityType, double, 2, double, 3, 3 >;
+
+
+template class Dune::Stuff::LocalfunctionSetInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 1, 1 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 1, 2 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 1, 3 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 2, 1 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 2, 2 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 2, 3 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 3, 1 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 3, 2 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 3, 3 >;
+
+template class Dune::Stuff::LocalfunctionInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 1, 1 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 1, 2 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 1, 3 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 2, 1 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 2, 2 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 2, 3 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 3, 1 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 3, 2 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 3, 3 >;
+
+template class Dune::Stuff::LocalizableFunctionInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 1, 1 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 1, 2 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 1, 3 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 2, 1 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 2, 2 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 2, 3 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 3, 1 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 3, 2 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneAluSimplexGrid3dEntityType, double, 3, double, 3, 3 >;
+
+
+template class Dune::Stuff::LocalfunctionSetInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 1, 1 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 1, 2 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 1, 3 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 2, 1 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 2, 2 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 2, 3 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 3, 1 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 3, 2 >;
+template class Dune::Stuff::LocalfunctionSetInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 3, 3 >;
+
+template class Dune::Stuff::LocalfunctionInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 1, 1 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 1, 2 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 1, 3 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 2, 1 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 2, 2 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 2, 3 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 3, 1 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 3, 2 >;
+template class Dune::Stuff::LocalfunctionInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 3, 3 >;
+
+template class Dune::Stuff::LocalizableFunctionInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 1, 1 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 1, 2 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 1, 3 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 2, 1 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 2, 2 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 2, 3 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 3, 1 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 3, 2 >;
+template class Dune::Stuff::LocalizableFunctionInterface< DuneAluCubeGrid3dEntityType, double, 3, double, 3, 3 >;
+
+# endif // HAVE_ALUGRID_SERIAL_H || HAVE_ALUGRID_PARALLEL_H
+#endif // HAVE_DUNE_GRID
+
+template class Dune::Stuff::FunctionInterface< double, 1, double, 1 >;
+template class Dune::Stuff::FunctionInterface< double, 1, double, 2 >;
+template class Dune::Stuff::FunctionInterface< double, 1, double, 3 >;
+
+template class Dune::Stuff::FunctionInterface< double, 2, double, 1 >;
+template class Dune::Stuff::FunctionInterface< double, 2, double, 2 >;
+template class Dune::Stuff::FunctionInterface< double, 2, double, 3 >;
+
+template class Dune::Stuff::FunctionInterface< double, 3, double, 1 >;
+template class Dune::Stuff::FunctionInterface< double, 3, double, 2 >;
+template class Dune::Stuff::FunctionInterface< double, 3, double, 3 >;
