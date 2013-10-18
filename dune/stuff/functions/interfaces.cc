@@ -193,7 +193,8 @@ FunctionInterface< D, d, R, r >::jacobian(const DomainType& x) const
   LS4(cname, etype, double)
 
 #define LS4(cname, etype, dftype) \
-  LS3(cname, etype, dftype, double)
+  LS3(cname, etype, dftype, double) \
+  LS3(cname, etype, dftype, long double)
 
 #define LS3(cname, etype, dftype, rftype) \
   LS2(cname, etype, dftype, rftype, 1) \
