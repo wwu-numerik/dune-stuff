@@ -18,7 +18,8 @@ libstuff_la_SOURCES = \
   grid/fakeentity.cc \
 	functions/expression/mathexpr.cc \
 	functions/interfaces.cc \
-	functions/constant.cc
+	functions/constant.cc \
+  la/container/pattern.cc
 
 libstuff_la_LIBADD = common $(BOOST_FILESYSTEM_LIB) $(BOOST_SYSTEM_LIB) \
 	$(BOOST_TIMER_LIB) $(BOOST_CHRONO_LIB) $(ALUGRID_LIBS)
