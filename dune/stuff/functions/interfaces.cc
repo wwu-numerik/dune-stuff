@@ -190,97 +190,29 @@ typedef Dune::Stuff::Grid::FakeEntity< 1 > DuneStuffFake1dEntityType;
 typedef Dune::Stuff::Grid::FakeEntity< 2 > DuneStuffFake2dEntityType;
 typedef Dune::Stuff::Grid::FakeEntity< 3 > DuneStuffFake3dEntityType;
 
-template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake1dEntityType, double, 1, double, 1, 1 >;
-template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake1dEntityType, double, 1, double, 1, 2 >;
-template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake1dEntityType, double, 1, double, 1, 3 >;
-template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake1dEntityType, double, 1, double, 2, 1 >;
-template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake1dEntityType, double, 1, double, 2, 2 >;
-template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake1dEntityType, double, 1, double, 2, 3 >;
-template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake1dEntityType, double, 1, double, 3, 1 >;
-template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake1dEntityType, double, 1, double, 3, 2 >;
-template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake1dEntityType, double, 1, double, 3, 3 >;
+#define LS5(ent) \
+  LS4(Dune::Stuff::LocalfunctionSetInterface,ent) LS4(Dune::Stuff::LocalfunctionInterface,ent) \
+  LS4(Dune::Stuff::LocalizableFunctionInterface,ent)
 
-template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 1, 1 >;
-template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 1, 2 >;
-template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 1, 3 >;
-template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 2, 1 >;
-template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 2, 2 >;
-template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 2, 3 >;
-template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 3, 1 >;
-template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 3, 2 >;
-template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 3, 3 >;
+#define LS4(cname, ent) \
+  LS3(cname,ent,double) // L3(cname,ent,std::complex)
 
-template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 1, 1 >;
-template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 1, 2 >;
-template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 1, 3 >;
-template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 2, 1 >;
-template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 2, 2 >;
-template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 2, 3 >;
-template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 3, 1 >;
-template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 3, 2 >;
-template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake1dEntityType, double, 1, double, 3, 3 >;
+#define LS3(cname, ent, ftype) \
+  LS2(cname,ent,ftype, 1) LS2(cname,ent,ftype, 2) LS2(cname,ent,ftype,3)
 
+#define LS2(cname, ent, ftype, ddim) \
+  LS1(cname,ent,ftype, ddim,1) LS1(cname,ent,ftype, ddim,2) LS1(cname,ent,ftype, ddim, 3)
 
-template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake2dEntityType, double, 2, double, 1, 1 >;
-template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake2dEntityType, double, 2, double, 1, 2 >;
-template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake2dEntityType, double, 2, double, 1, 3 >;
-template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake2dEntityType, double, 2, double, 2, 1 >;
-template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake2dEntityType, double, 2, double, 2, 2 >;
-template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake2dEntityType, double, 2, double, 2, 3 >;
-template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake2dEntityType, double, 2, double, 3, 1 >;
-template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake2dEntityType, double, 2, double, 3, 2 >;
-template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake2dEntityType, double, 2, double, 3, 3 >;
+#define LS1(cname, ent, ftype, ddim, rdim) \
+  LS0(cname,ent,ftype, ddim,rdim, 1) LS0(cname,ent,ftype, ddim,rdim, 2) LS0(cname,ent,ftype, ddim,rdim, 3)
 
-template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 1, 1 >;
-template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 1, 2 >;
-template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 1, 3 >;
-template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 2, 1 >;
-template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 2, 2 >;
-template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 2, 3 >;
-template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 3, 1 >;
-template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 3, 2 >;
-template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 3, 3 >;
+#define LS0(cname, ent, ftype, ddim, rdim, cdim) \
+  template class cname < ent, ftype, ddim, ftype, rdim, cdim >;
 
-template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 1, 1 >;
-template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 1, 2 >;
-template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 1, 3 >;
-template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 2, 1 >;
-template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 2, 2 >;
-template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 2, 3 >;
-template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 3, 1 >;
-template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 3, 2 >;
-template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake2dEntityType, double, 2, double, 3, 3 >;
+#define LS_FAKE(dimw) \
+  LS5(Dune::Stuff::Grid::FakeEntity< dimw >)
 
-
-template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake3dEntityType, double, 3, double, 1, 1 >;
-template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake3dEntityType, double, 3, double, 1, 2 >;
-template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake3dEntityType, double, 3, double, 1, 3 >;
-template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake3dEntityType, double, 3, double, 2, 1 >;
-template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake3dEntityType, double, 3, double, 2, 2 >;
-template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake3dEntityType, double, 3, double, 2, 3 >;
-template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake3dEntityType, double, 3, double, 3, 1 >;
-template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake3dEntityType, double, 3, double, 3, 2 >;
-template class Dune::Stuff::LocalfunctionSetInterface< DuneStuffFake3dEntityType, double, 3, double, 3, 3 >;
-
-template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 1, 1 >;
-template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 1, 2 >;
-template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 1, 3 >;
-template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 2, 1 >;
-template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 2, 2 >;
-template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 2, 3 >;
-template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 3, 1 >;
-template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 3, 2 >;
-template class Dune::Stuff::LocalfunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 3, 3 >;
-
-template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 1, 1 >;
-template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 1, 2 >;
-template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 1, 3 >;
-template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 2, 1 >;
-template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 2, 2 >;
-template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 2, 3 >;
-template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 3, 1 >;
-template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 3, 2 >;
-template class Dune::Stuff::LocalizableFunctionInterface< DuneStuffFake3dEntityType, double, 3, double, 3, 3 >;
+LS_FAKE(1) LS_FAKE(2) LS_FAKE(3)
 
 #ifdef HAVE_DUNE_GRID
 
