@@ -40,7 +40,7 @@ Dune::ParameterTree Constant< E, D, d, R, r >::defaultSettings(const std::string
 } // ... defaultSettings(...)
 
 template< class E, class D, int d, class R, int r >
-typename Constant< E, D, d, R, r >::ThisType* create(const DSC::ExtendedParameterTree settings)
+typename Constant< E, D, d, R, r >::ThisType* Constant< E, D, d, R, r >::create(const DSC::ExtendedParameterTree settings)
 {
   typedef typename Constant< E, D, d, R, r >::ThisType ThisType;
   typedef typename Constant< E, D, d, R, r >::RangeFieldType RangeFieldType;
