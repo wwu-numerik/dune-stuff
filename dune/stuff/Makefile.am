@@ -17,6 +17,7 @@ libstuff_la_SOURCES = \
 	fem/femeoc.cc \
 	grid/fakeentity.cc \
 	functions/interfaces.cc \
+	functions/checkerboard.cc \
 	functions/constant.cc \
 	functions/expression/mathexpr.cc \
 	functions/expression.cc \
