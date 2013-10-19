@@ -15,11 +15,12 @@ libstuff_la_SOURCES = \
 	common/parameter/tree.cc \
 	common/signals.cc \
 	fem/femeoc.cc \
-  grid/fakeentity.cc \
-	functions/expression/mathexpr.cc \
+	grid/fakeentity.cc \
 	functions/interfaces.cc \
 	functions/constant.cc \
-  la/container/pattern.cc
+	functions/expression/mathexpr.cc \
+	functions/expression.cc \
+	la/container/pattern.cc
 
 libstuff_la_LIBADD = common $(BOOST_FILESYSTEM_LIB) $(BOOST_SYSTEM_LIB) \
 	$(BOOST_TIMER_LIB) $(BOOST_CHRONO_LIB) $(ALUGRID_LIBS)
