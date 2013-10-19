@@ -2,9 +2,9 @@
 #define DUNE_STUFF_TEST_TOOLS_HH
 
 #ifdef HAVE_CMAKE_CONFIG
-  #include "cmake_config.h"
+# include "cmake_config.h"
 #elif defined (HAVE_CONFIG_H)
-  #include <config.h>
+# include "config.h"
 #endif // ifdef HAVE_CMAKE_CONFIG
 
 #include <dune/common/float_cmp.hh>
