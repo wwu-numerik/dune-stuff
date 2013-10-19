@@ -231,9 +231,9 @@ typedef typename Dune::SGrid< 1, 1 >::template Codim< 0 >::Entity DuneSGrid1dEnt
 typedef typename Dune::SGrid< 2, 2 >::template Codim< 0 >::Entity DuneSGrid2dEntityType;
 typedef typename Dune::SGrid< 3, 3 >::template Codim< 0 >::Entity DuneSGrid3dEntityType;
 
-DSF_LIST_DIMDOMAIN(DuneSGrid1dEntityType)
-DSF_LIST_DIMDOMAIN(DuneSGrid2dEntityType)
-DSF_LIST_DIMDOMAIN(DuneSGrid3dEntityType)
+DSF_LIST_CLASSES(DuneSGrid1dEntityType, 1)
+DSF_LIST_CLASSES(DuneSGrid2dEntityType, 2)
+DSF_LIST_CLASSES(DuneSGrid3dEntityType, 3)
 
 # include <dune/grid/yaspgrid.hh>
 
@@ -241,9 +241,9 @@ typedef typename Dune::YaspGrid< 1 >::template Codim< 0 >::Entity DuneYaspGrid1d
 typedef typename Dune::YaspGrid< 2 >::template Codim< 0 >::Entity DuneYaspGrid2dEntityType;
 typedef typename Dune::YaspGrid< 3 >::template Codim< 0 >::Entity DuneYaspGrid3dEntityType;
 
-DSF_LIST_DIMDOMAIN(DuneYaspGrid1dEntityType)
-DSF_LIST_DIMDOMAIN(DuneYaspGrid2dEntityType)
-DSF_LIST_DIMDOMAIN(DuneYaspGrid3dEntityType)
+DSF_LIST_CLASSES(DuneYaspGrid1dEntityType, 1)
+DSF_LIST_CLASSES(DuneYaspGrid2dEntityType, 2)
+DSF_LIST_CLASSES(DuneYaspGrid3dEntityType, 3)
 
 # if HAVE_ALUGRID_SERIAL_H || HAVE_ALUGRID_PARALLEL_H
 #   define ALUGRID_CONFORM 1

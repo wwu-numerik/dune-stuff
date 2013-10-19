@@ -99,11 +99,6 @@ Constant< E, D, d, R, r, rC >::local_function(const EntityType& entity) const
 } // namespace Stuff
 } // namespace Dune
 
-#define DSF_LIST_DIMDOMAIN(etype) \
-  DSF_LIST_DIMRANGE(etype, 1) \
-  DSF_LIST_DIMRANGE(etype, 2) \
-  DSF_LIST_DIMRANGE(etype, 3)
-
 #define DSF_LIST_DIMRANGE(etype, ddim) \
   DSF_LIST_DIMRANGECOLS(Dune::Stuff::Function::Constant, etype, ddim, 1) \
   DSF_LIST_DIMRANGECOLS(Dune::Stuff::Function::Constant, etype, ddim, 2) \
@@ -130,9 +125,9 @@ typedef Dune::Stuff::Grid::FakeEntity< 1 > DuneStuffFake1dEntityType;
 typedef Dune::Stuff::Grid::FakeEntity< 2 > DuneStuffFake2dEntityType;
 typedef Dune::Stuff::Grid::FakeEntity< 3 > DuneStuffFake3dEntityType;
 
-DSF_LIST_DIMDOMAIN(DuneStuffFake1dEntityType)
-DSF_LIST_DIMDOMAIN(DuneStuffFake2dEntityType)
-DSF_LIST_DIMDOMAIN(DuneStuffFake3dEntityType)
+DSF_LIST_DIMRANGE(DuneStuffFake1dEntityType, 1)
+DSF_LIST_DIMRANGE(DuneStuffFake2dEntityType, 2)
+DSF_LIST_DIMRANGE(DuneStuffFake3dEntityType, 3)
 
 #ifdef HAVE_DUNE_GRID
 
@@ -142,9 +137,9 @@ typedef typename Dune::SGrid< 1, 1 >::template Codim< 0 >::Entity DuneSGrid1dEnt
 typedef typename Dune::SGrid< 2, 2 >::template Codim< 0 >::Entity DuneSGrid2dEntityType;
 typedef typename Dune::SGrid< 3, 3 >::template Codim< 0 >::Entity DuneSGrid3dEntityType;
 
-DSF_LIST_DIMDOMAIN(DuneSGrid1dEntityType)
-DSF_LIST_DIMDOMAIN(DuneSGrid2dEntityType)
-DSF_LIST_DIMDOMAIN(DuneSGrid3dEntityType)
+DSF_LIST_DIMRANGE(DuneSGrid1dEntityType, 1)
+DSF_LIST_DIMRANGE(DuneSGrid2dEntityType, 2)
+DSF_LIST_DIMRANGE(DuneSGrid3dEntityType, 3)
 
 # include <dune/grid/yaspgrid.hh>
 
@@ -152,9 +147,9 @@ typedef typename Dune::YaspGrid< 1 >::template Codim< 0 >::Entity DuneYaspGrid1d
 typedef typename Dune::YaspGrid< 2 >::template Codim< 0 >::Entity DuneYaspGrid2dEntityType;
 typedef typename Dune::YaspGrid< 3 >::template Codim< 0 >::Entity DuneYaspGrid3dEntityType;
 
-DSF_LIST_DIMDOMAIN(DuneYaspGrid1dEntityType)
-DSF_LIST_DIMDOMAIN(DuneYaspGrid2dEntityType)
-DSF_LIST_DIMDOMAIN(DuneYaspGrid3dEntityType)
+DSF_LIST_DIMRANGE(DuneYaspGrid1dEntityType, 1)
+DSF_LIST_DIMRANGE(DuneYaspGrid2dEntityType, 2)
+DSF_LIST_DIMRANGE(DuneYaspGrid3dEntityType, 3)
 
 # if HAVE_ALUGRID_SERIAL_H || HAVE_ALUGRID_PARALLEL_H
 #   define ALUGRID_CONFORM 1
