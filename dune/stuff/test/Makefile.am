@@ -14,8 +14,9 @@ common_typenames_SOURCES = common_typenames.cc $(GTEST_SRC)
 common_color_SOURCES = common_color.cc $(GTEST_SRC)
 common_tuple_SOURCES = common_tuple.cc $(GTEST_SRC)
 
-FUNCTIONS_TESTS = functions_constant
+FUNCTIONS_TESTS = functions_constant functions_expression
 functions_constant_SOURCES = functions_constant.cc $(GTEST_SRC)
+functions_expression_SOURCES = functions_expression.cc $(GTEST_SRC)
 
 if HAVE_DUNE_GRID
 GRID_TESTS = grid_provider grid_information grid_output_pgf
