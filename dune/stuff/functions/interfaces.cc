@@ -3,9 +3,7 @@
 // Copyright Holders: Felix Albrecht, Rene Milk
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
-#ifdef HAVE_CONFIG_H
-# include "config.h"
-#endif
+#include "config.h"
 
 #include "interfaces.hh"
 
