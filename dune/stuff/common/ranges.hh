@@ -8,11 +8,12 @@
 #endif // ifdef HAVE_CMAKE_CONFIG
 
 #if HAVE_DUNE_GRID
-#include <dune/stuff/common/disable_warnings.hh>
-#include <dune/grid/common/gridview.hh>
-#include <dune/stuff/common/reenable_warnings.hh>
-#include <boost/serialization/static_warning.hpp>
-#include <boost/iterator/iterator_facade.hpp>
+# include <dune/stuff/common/disable_warnings.hh>
+#   include <dune/grid/common/gridview.hh>
+# include <dune/stuff/common/reenable_warnings.hh>
+# include <dune/grid/common/geometry.hh>
+# include <boost/serialization/static_warning.hpp>
+# include <boost/iterator/iterator_facade.hpp>
 #endif
 
 #if HAVE_DUNE_FEM
