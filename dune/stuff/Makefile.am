@@ -22,6 +22,7 @@ libstuff_la_SOURCES = \
 	functions/expression/mathexpr.cc \
 	functions/expression.cc \
 	functions/spe10.cc \
+	functions.cc \
 	la/container/pattern.cc
 
 libstuff_la_LIBADD = common $(BOOST_FILESYSTEM_LIB) $(BOOST_SYSTEM_LIB) \
