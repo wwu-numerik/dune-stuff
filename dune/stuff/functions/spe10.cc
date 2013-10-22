@@ -15,6 +15,22 @@ namespace Function {
 // ========================================
 // ==== Spe10Model1< ..., 2..., 1, 1 > ====
 // ========================================
+
+template< class E, class D, class R >
+const size_t Spe10Model1< E, D, 2, R, 1, 1 >::numXelements = 100;
+
+template< class E, class D, class R >
+const size_t Spe10Model1< E, D, 2, R, 1, 1 >::numYelements = 1;
+
+template< class E, class D, class R >
+const size_t Spe10Model1< E, D, 2, R, 1, 1 >::numZelements = 20;
+
+template< class E, class D, class R >
+const typename Spe10Model1< E, D, 2, R, 1, 1 >::RangeFieldType Spe10Model1< E, D, 2, R, 1, 1 >::minValue = 0.001;
+
+template< class E, class D, class R >
+const typename Spe10Model1< E, D, 2, R, 1, 1 >::RangeFieldType Spe10Model1< E, D, 2, R, 1, 1 >::maxValue = 998.915;
+
 template< class E, class D, class R >
 std::string Spe10Model1< E, D, 2, R, 1, 1 >::static_id()
 {
