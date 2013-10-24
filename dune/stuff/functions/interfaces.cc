@@ -5,6 +5,7 @@
 
 #include "config.h"
 
+#ifdef DUNE_STUFF_FUNCTIONS_TO_LIB
 #include "interfaces.hh"
 
 #define DUNE_STUFF_FUNCTION_INTERFACE_CC_LIST_CLASSES(etype, ddim) \
@@ -92,3 +93,5 @@ template class Dune::Stuff::FunctionInterface< double, 2, double, 3 >;
 template class Dune::Stuff::FunctionInterface< double, 3, double, 1 >;
 template class Dune::Stuff::FunctionInterface< double, 3, double, 2 >;
 template class Dune::Stuff::FunctionInterface< double, 3, double, 3 >;
+
+#endif // DUNE_STUFF_FUNCTIONS_TO_LIB

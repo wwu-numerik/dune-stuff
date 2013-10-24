@@ -5,6 +5,7 @@
 
 #include "config.h"
 
+#ifdef DUNE_STUFF_FUNCTIONS_TO_LIB
 #include "constant.hh"
 
 #define DUNE_STUFF_FUNCTIONS_CONSTANT_CC_LIST_DIMRANGE(etype, ddim) \
@@ -75,3 +76,4 @@ DUNE_STUFF_FUNCTIONS_CONSTANT_CC_LIST_DIMRANGE(DuneAluCubeGrid3dEntityType, 3)
 
 # endif // HAVE_ALUGRID_SERIAL_H || HAVE_ALUGRID_PARALLEL_H
 #endif // HAVE_DUNE_GRID
+#endif // DUNE_STUFF_FUNCTIONS_TO_LIB
