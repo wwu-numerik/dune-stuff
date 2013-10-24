@@ -235,88 +235,50 @@ private:
 } // namespace Dune
 
 #ifdef DUNE_STUFF_FUNCTIONS_TO_LIB
-#define DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LIST_DIMRANGE(etype, ddim) \
+# define DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LIST_DIMRANGE(etype, ddim) \
   DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LIST_DIMRANGECOLS(etype, ddim, 1) \
   DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LIST_DIMRANGECOLS(etype, ddim, 2) \
   DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LIST_DIMRANGECOLS(etype, ddim, 3)
 
-#define DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LIST_DIMRANGECOLS(etype, ddim, rdim) \
+# define DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LIST_DIMRANGECOLS(etype, ddim, rdim) \
   DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LIST_DOMAINFIELDTYPES(etype, ddim, rdim, 1) \
   DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LIST_DOMAINFIELDTYPES(etype, ddim, rdim, 2) \
   DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LIST_DOMAINFIELDTYPES(etype, ddim, rdim, 3)
 
-#define DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LIST_DOMAINFIELDTYPES(etype, ddim, rdim, rcdim) \
+# define DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LIST_DOMAINFIELDTYPES(etype, ddim, rdim, rcdim) \
   DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LIST_RANGEFIELDTYPES(etype, double, ddim, rdim, rcdim)
 
-#define DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LIST_RANGEFIELDTYPES(etype, dftype, ddim, rdim, rcdim) \
+# define DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LIST_RANGEFIELDTYPES(etype, dftype, ddim, rdim, rcdim) \
   DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LAST_EXPANSION(etype, dftype, ddim, double, rdim, rcdim) \
   DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LAST_EXPANSION(etype, dftype, ddim, long double, rdim, rcdim)
 
-#define DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LAST_EXPANSION(etype, dftype, ddim, rftype, rdim, rcdim) \
+# define DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LAST_EXPANSION(etype, dftype, ddim, rftype, rdim, rcdim) \
   extern template class Dune::Stuff::Function::Checkerboard< etype, dftype, ddim, rftype, rdim, rcdim >;
 
-#ifdef HAVE_DUNE_GRID
+# ifdef HAVE_DUNE_GRID
 
-# include <dune/grid/sgrid.hh>
+DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LIST_DIMRANGE(DuneStuffFunctionsInterfacesSGrid1dEntityType, 1)
+DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LIST_DIMRANGE(DuneStuffFunctionsInterfacesSGrid2dEntityType, 2)
+DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LIST_DIMRANGE(DuneStuffFunctionsInterfacesSGrid3dEntityType, 3)
 
-typedef typename Dune::SGrid< 1, 1 >::template Codim< 0 >::Entity DuneFunctionsCheckerboardSGrid1dEntityType;
-typedef typename Dune::SGrid< 2, 2 >::template Codim< 0 >::Entity DuneFunctionsCheckerboardSGrid2dEntityType;
-typedef typename Dune::SGrid< 3, 3 >::template Codim< 0 >::Entity DuneFunctionsCheckerboardSGrid3dEntityType;
+DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LIST_DIMRANGE(DuneStuffFunctionsInterfacesYaspGrid1dEntityType, 1)
+DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LIST_DIMRANGE(DuneStuffFunctionsInterfacesYaspGrid2dEntityType, 2)
+DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LIST_DIMRANGE(DuneStuffFunctionsInterfacesYaspGrid3dEntityType, 3)
 
-DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LIST_DIMRANGE(DuneFunctionsCheckerboardSGrid1dEntityType, 1)
-DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LIST_DIMRANGE(DuneFunctionsCheckerboardSGrid2dEntityType, 2)
-DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LIST_DIMRANGE(DuneFunctionsCheckerboardSGrid3dEntityType, 3)
+#   if HAVE_ALUGRID_SERIAL_H || HAVE_ALUGRID_PARALLEL_H
 
-# include <dune/grid/yaspgrid.hh>
+DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LIST_DIMRANGE(DuneStuffFunctionsInterfacesAluSimplexGrid2dEntityType, 2)
+DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LIST_DIMRANGE(DuneStuffFunctionsInterfacesAluSimplexGrid3dEntityType, 3)
+DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LIST_DIMRANGE(DuneStuffFunctionsInterfacesAluCubeGrid3dEntityType, 3)
 
-typedef typename Dune::YaspGrid< 1 >::template Codim< 0 >::Entity DuneFunctionsCheckerboardYaspGrid1dEntityType;
-typedef typename Dune::YaspGrid< 2 >::template Codim< 0 >::Entity DuneFunctionsCheckerboardYaspGrid2dEntityType;
-typedef typename Dune::YaspGrid< 3 >::template Codim< 0 >::Entity DuneFunctionsCheckerboardYaspGrid3dEntityType;
+#   endif // HAVE_ALUGRID_SERIAL_H || HAVE_ALUGRID_PARALLEL_H
+# endif // HAVE_DUNE_GRID
 
-DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LIST_DIMRANGE(DuneFunctionsCheckerboardYaspGrid1dEntityType, 1)
-DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LIST_DIMRANGE(DuneFunctionsCheckerboardYaspGrid2dEntityType, 2)
-DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LIST_DIMRANGE(DuneFunctionsCheckerboardYaspGrid3dEntityType, 3)
-
-# if HAVE_ALUGRID_SERIAL_H || HAVE_ALUGRID_PARALLEL_H
-#   ifdef ALUGRID_CONFORM
-#     define DUNE_STUFF_FUNCTION_CHECKERBOARD_ALUGRID_CONFORM_WAS_DEFINED_BEFORE
-#   else
-#     define ALUGRID_CONFORM 1
-#   endif
-#   ifdef ENABLE_ALUGRID
-#     define DUNE_STUFF_FUNCTION_CHECKERBOARD_ENABLE_ALUGRID_WAS_DEFINED_BEFORE
-#   else
-#     define ENABLE_ALUGRID 1
-#   endif
-
-#   include <dune/grid/alugrid.hh>
-
-typedef typename Dune::ALUSimplexGrid< 2, 2 >::template Codim< 0 >::Entity DuneFunctionsCheckerboardAluSimplexGrid2dEntityType;
-typedef typename Dune::ALUSimplexGrid< 3, 3 >::template Codim< 0 >::Entity DuneFunctionsCheckerboardAluSimplexGrid3dEntityType;
-typedef typename Dune::ALUCubeGrid< 3, 3 >::template Codim< 0 >::Entity DuneFunctionsCheckerboardAluCubeGrid3dEntityType;
-
-DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LIST_DIMRANGE(DuneFunctionsCheckerboardAluSimplexGrid2dEntityType, 2)
-DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LIST_DIMRANGE(DuneFunctionsCheckerboardAluSimplexGrid3dEntityType, 3)
-DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LIST_DIMRANGE(DuneFunctionsCheckerboardAluCubeGrid3dEntityType, 3)
-
-#   ifdef DUNE_STUFF_FUNCTION_CHECKERBOARD_ALUGRID_CONFORM_WAS_DEFINED_BEFORE
-#     undef DUNE_STUFF_FUNCTION_CHECKERBOARD_ALUGRID_CONFORM_WAS_DEFINED_BEFORE
-#   else
-#     undef ALUGRID_CONFORM
-#   endif
-#   ifdef DUNE_STUFF_FUNCTION_CHECKERBOARD_ENABLE_ALUGRID_WAS_DEFINED_BEFORE
-#     undef DUNE_STUFF_FUNCTION_CHECKERBOARD_ENABLE_ALUGRID_WAS_DEFINED_BEFORE
-#   else
-#     undef ENABLE_ALUGRID
-#   endif
-# endif // HAVE_ALUGRID_SERIAL_H || HAVE_ALUGRID_PARALLEL_H
-#endif // HAVE_DUNE_GRID
-
-#undef DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LAST_EXPANSION
-#undef DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LIST_RANGEFIELDTYPES
-#undef DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LIST_DOMAINFIELDTYPES
-#undef DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LIST_DIMRANGECOLS
-#undef DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LIST_DIMRANGE
+# undef DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LAST_EXPANSION
+# undef DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LIST_RANGEFIELDTYPES
+# undef DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LIST_DOMAINFIELDTYPES
+# undef DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LIST_DIMRANGECOLS
+# undef DUNE_STUFF_FUNCTIONS_CHECKERBOARD_LIST_DIMRANGE
 #endif // DUNE_STUFF_FUNCTIONS_TO_LIB
 
 #endif // DUNE_STUFF_FUNCTION_CHECKERBOARD_HH
