@@ -152,6 +152,57 @@ integralAndVolume(const Dune::Fem::DiscreteFunctionInterface<FunctionTraits>& fu
 
   return globalPair;
 }
+
+/** Compute the mean value of a given discrete function on a codim-0 entity.
+*
+* @param[in] function The discrete function
+* @param[in] entity The entity
+* @param[in] order The order for the quadrature
+* @return Returns the mean value of the function over the entity.
+*/
+template< class FunctionTraits >
+typename FunctionTraits::RangeType
+meanValue(const Dune::Fem::DiscreteFunctionInterface<FunctionTraits>& function,
+          const typename FunctionTraits::DiscreteFunctionSpaceType::EntityType& entity,
+          const int order = -1) {
+  const auto& intAndVol = integralAndVolume(function, entity, order);
+  return (intAndVol.first/intAndVol.second);
+}
+
+/** Compute the mean value of a given discrete function on a codim-1 entity.
+*
+* @param[in] function The discrete function
+* @param[in] intersection The entity
+* @param[in] order The order for the quadrature
+* @param[in] inside Bool signifying whether an INSIDE-quadrature shall be used.
+* @return Returns the mean value of the function over the intersection.
+*/
+template< class FunctionTraits >
+typename FunctionTraits::RangeType
+meanValue(const Dune::Fem::DiscreteFunctionInterface<FunctionTraits>& function,
+          const typename FunctionTraits::DiscreteFunctionSpaceType::IntersectionType& intersection,
+          const int order = -1,
+          const bool inside = true) {
+  const auto& intAndVol = integralAndVolume(function, intersection, order, inside);
+  return (intAndVol.first/intAndVol.second);
+}
+
+/** Compute the mean value of a given discrete function on the grid part.
+*
+* "The grid part" here refers to the grid part where the function was defined.
+*
+* @param[in] function The discrete function
+* @param[in] order The order for the quadrature
+* @return Returns the mean value of the function over the grid part.
+*/
+template< class FunctionTraits >
+typename FunctionTraits::RangeType
+meanValue(const Dune::Fem::DiscreteFunctionInterface<FunctionTraits>& function,
+          const int order = -1) {
+  const auto& intAndVol = integralAndVolume(function, order);
+  return (intAndVol.first/intAndVol.second);
+}
+
 /** \todo RENE needs to doc me **/
 template< class FunctionType, class SpaceTraits >
 std::pair< typename FunctionType::RangeType, double >
