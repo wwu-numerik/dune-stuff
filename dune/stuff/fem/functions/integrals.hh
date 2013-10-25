@@ -104,7 +104,9 @@ typename FunctionType::RangeType meanValue(const FunctionType& function,
 
 /** \todo RENE needs to doc me **/
 template< class FunctionType, class DiscreteFunctionSpaceType >
-double boundaryIntegral(const FunctionType& function, const DiscreteFunctionSpaceType& space, const int polOrd = -1)
+double boundaryIntegral(const FunctionType& function,
+                        const DiscreteFunctionSpaceType& space,
+                        const int polOrd = -1)
 {
   typedef typename DiscreteFunctionSpaceType::Traits::GridPartType GridPartType;
 #if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
