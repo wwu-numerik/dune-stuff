@@ -19,6 +19,41 @@ namespace Dune {
 namespace Stuff {
 namespace Fem {
 
+/** Generate and return a Dune::Fem::CachingQuadrature on a codim-0 entity of the grid.
+ *
+ *  @param[in] entity The codim-0 entity that will be used as domain for the quadrature
+ *  @param[in] space The discrete function space that hosts function to be integrated with this quadrature
+ *  @param[in] order The desired order for the quadrature
+ *  @return Returns a caching quadrature of order order (or 2*space.order()+2 if no order was provided) on the entity.
+ */
+template <class SpaceTraits, class GridImp, template <int, int, class> class EntityImp>
+Dune::Fem::CachingQuadrature<typename SpaceTraits::GridPartType, 0>
+make_quadrature(const Dune::Entity<0, GridImp::dimension, GridImp, EntityImp>& entity,
+                const Dune::Fem::DiscreteFunctionSpaceInterface<SpaceTraits>& space, int order = -1) {
+  order = order > -1 ? order : 2 * space.order() + 2;
+  return Dune::Fem::CachingQuadrature<typename SpaceTraits::GridPartType, 0>(entity, order);
+}
+
+/** Generate and return a Dune::Fem::CachingQuadrature on a codim-1 entity of the grid.
+ *
+ *  @param[in] intersection The codim-1 entity that will be used as domain for the quadrature
+ *  @param[in] space The discrete function space that hosts function to be integrated with this quadrature
+ *  @param[in] order The desired order for the quadrature
+ *  @param[in] inside Switch to change from inside quadrature to outside.
+ *  @return Returns a caching quadrature of order order (or 2*space.order()+2 if no order was provided) on the entity.
+ */
+template <class SpaceTraits, class IntersectionImp>
+Dune::Fem::CachingQuadrature<typename SpaceTraits::GridPartType, 1> make_quadrature(
+    const Dune::Intersection<const typename SpaceTraits::GridPartType::GridType, IntersectionImp>& intersection,
+    const Dune::Fem::DiscreteFunctionSpaceInterface<SpaceTraits>& space, int order = -1, bool inside = true) {
+  order = order > -1 ? order : 2 * space.order() + 2;
+  typedef Dune::Fem::CachingQuadrature<typename SpaceTraits::GridPartType, 1> Quad;
+  // this const_cast cast is necessary because the gridPart() method in DiscreteFunctionSpaceInterface
+  // has no const version
+  auto& castedSpace = const_cast<Dune::Fem::DiscreteFunctionSpaceInterface<SpaceTraits>&>(space);
+  return Quad(castedSpace.gridPart(), intersection, order, inside ? Quad::INSIDE : Quad::OUTSIDE);
+}
+
 /** \todo RENE needs to doc me **/
 template< class FunctionType, class DiscreteFunctionSpaceType >
 std::pair< typename FunctionType::RangeType, double > integralAndVolume(const FunctionType& function,
