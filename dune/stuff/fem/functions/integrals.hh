@@ -93,9 +93,9 @@ integralAndVolume(const FunctionType& function,
 } // integralAndVolume
 
 /** \todo RENE needs to doc me **/
-template< class FunctionType, class DiscreteFunctionSpaceType >
+template< class FunctionType, class SpaceTraits >
 typename FunctionType::RangeType meanValue(const FunctionType& function,
-                                           const DiscreteFunctionSpaceType& space,
+                                           const Dune::Fem::DiscreteFunctionSpaceInterface<SpaceTraits>& space,
                                            const int polOrd = -1) {
   std::pair< typename FunctionType::RangeType, double > pair = integralAndVolume(function, space, polOrd);
   pair.first /= pair.second;
