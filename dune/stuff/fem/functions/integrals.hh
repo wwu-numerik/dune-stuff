@@ -12,6 +12,7 @@
 #include <dune/stuff/fem/localmassmatrix.hh>
 #include <dune/stuff/common/ranges.hh>
 #include <dune/fem/quadrature/cachingquadrature.hh>
+#include <dune/fem/function/common/discretefunction.hh>
 
 #include <dune/stuff/fem/namespace.hh>
 
@@ -54,6 +55,103 @@ Dune::Fem::CachingQuadrature<typename SpaceTraits::GridPartType, 1> make_quadrat
   return Quad(castedSpace.gridPart(), intersection, order, inside ? Quad::INSIDE : Quad::OUTSIDE);
 }
 
+
+/** Compute the integral of a given discrete function on a codim-0 entity and the entity's volume.
+*
+* @param[in] function The discrete function
+* @param[in] entity The entity
+* @param[in] order The order for the quadrature
+* @return Returns a std::pair containing the integral of function over entity and entity's volume.
+*/
+template< class FunctionTraits >
+std::pair< typename FunctionTraits::RangeType, double >
+integralAndVolume(const Dune::Fem::DiscreteFunctionInterface<FunctionTraits>& function,
+                  const typename FunctionTraits::DiscreteFunctionSpaceType::EntityType& entity,
+                  const int order = -1) {
+  typedef typename FunctionTraits::RangeType RangeType;
+
+  const auto& quadrature = make_quadrature(entity, function.space(), order);
+
+  const auto& geometry = entity.geometry();
+  const int quadNop = quadrature.nop();
+
+  std::vector<RangeType> evals(quadNop);
+  const auto localFunction = function.localFunction(entity);
+  localFunction.evaluateQuadrature(quadrature, evals);
+
+  RangeType integral(0.0);
+  for (const auto& i : Dune::Stuff::Common::valueRange(quadNop)) {
+    const auto factor = quadrature.weight(i) * geometry.integrationElement(quadrature.point(i));
+    integral += evals[i]*factor;
+  }
+  return std::make_pair(integral, entity.geometry().volume());
+}
+
+/** Compute the integral of a given discrete function on a codim-1 entity and the entity's volume.
+*
+* @param[in] function The discrete function
+* @param[in] intersection The entity
+* @param[in] order The order for the quadrature
+* @param[in] inside Bool signifying whether an INSIDE-quadrature shall be used.
+* @return Returns a std::pair containing the integral of function over entity and entity's volume.
+*/
+template< class FunctionTraits >
+std::pair< typename FunctionTraits::RangeType, double >
+integralAndVolume(const Dune::Fem::DiscreteFunctionInterface<FunctionTraits>& function,
+                  const typename FunctionTraits::DiscreteFunctionSpaceType::IntersectionType& intersection,
+                  int order = -1,
+                  bool inside = true) {
+  typedef typename FunctionTraits::RangeType RangeType;
+
+  const auto& quadrature = make_quadrature(intersection, function.space(), order, inside);
+
+  const auto& geometry = intersection.geometry();
+  const int quadNop = quadrature.nop();
+
+  const auto entityPtr = (inside) ? intersection.inside() : intersection.outside();
+  const auto& entity = *entityPtr;
+
+  std::vector<RangeType> evals(quadNop);
+  const auto localFunction = function.localFunction(entity);
+  localFunction.evaluateQuadrature(quadrature, evals);
+
+  RangeType integral(0.0);
+  for (const auto& i : Dune::Stuff::Common::valueRange(quadNop)) {
+    const double factor = quadrature.weight(i) * geometry.integrationElement(quadrature.localPoint(i));
+    integral += evals[i]*factor;
+  }
+  return std::make_pair(integral, intersection.geometry().volume());
+}
+
+/** Compute the integral of a given discrete function on the grid part and the grid part's volume.
+*
+* "The grid part" here refers to the grid part where the function was defined.
+*
+* @param[in] function The discrete function
+* @param[in] order The order for the quadrature
+* @return Returns a std::pair containing the integral of function over the grid part and the grid part's volume.
+*/
+template< class FunctionTraits >
+std::pair< typename FunctionTraits::RangeType, double >
+integralAndVolume(const Dune::Fem::DiscreteFunctionInterface<FunctionTraits>& function,
+                  const int order = -1) {
+  typedef typename FunctionTraits::RangeType RangeType;
+
+  RangeType globalIntegral(0.0);
+  double globalVolume(0.0);
+  // grid run, compute per-element contributions
+  for (const auto& entity : function.space()) {
+    const auto& localPair = integralAndVolume(function, entity, order);
+    globalIntegral += localPair.first;
+    globalVolume += localPair.second;
+  }
+
+  // for parallel runs: sum up over all processes
+  const auto& communication = function.space().gridPart().grid().comm();
+  std::pair<RangeType, double> globalPair(communication.sum(globalIntegral), communication.sum(globalVolume));
+
+  return globalPair;
+}
 /** \todo RENE needs to doc me **/
 template< class FunctionType, class SpaceTraits >
 std::pair< typename FunctionType::RangeType, double >
