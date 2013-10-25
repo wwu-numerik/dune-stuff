@@ -55,37 +55,29 @@ Dune::Fem::CachingQuadrature<typename SpaceTraits::GridPartType, 1> make_quadrat
 }
 
 /** \todo RENE needs to doc me **/
-template< class FunctionType, class DiscreteFunctionSpaceType >
-std::pair< typename FunctionType::RangeType, double > integralAndVolume(const FunctionType& function,
-                                                                        const DiscreteFunctionSpaceType& space,
-                                                                        const int polOrd = -1)
+template< class FunctionType, class SpaceTraits >
+std::pair< typename FunctionType::RangeType, double >
+integralAndVolume(const FunctionType& function,
+                  const Dune::Fem::DiscreteFunctionSpaceInterface<SpaceTraits>& space,
+                  const int polOrd = -1)
 {
-#if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
-  typedef Dune::CachingQuadrature< typename DiscreteFunctionSpaceType::Traits::GridPartType, 0 > QuadratureType;
-#elif DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
-  typedef Dune::Fem::CachingQuadrature< typename DiscreteFunctionSpaceType::Traits::GridPartType, 0 > QuadratureType;
-#else
-  typedef Dune::Fem::CachingQuadrature< typename DiscreteFunctionSpaceType::Traits::GridPartType, 0 > QuadratureType;
-#endif
 //  typedef Dune::Stuff::Fem::LocalMassMatrix< DiscreteFunctionSpaceType, QuadratureType > LocalMassMatrixType;
 
-  typename FunctionType::RangeType integral_value = typename FunctionType::RangeType(0);
-  double total_volume = 0;
-  typename DiscreteFunctionSpaceType::RangeType ret(0.0);
+  typedef typename FunctionType::RangeType RangeType;
 
-  const int quadOrd = std::max(2 * space.order() + 2, polOrd);
+  RangeType integral_value(0);
+  double total_volume = 0;
+  RangeType ret(0.0);
+
   for (const auto& en : space)
   {
     const auto& geo = en.geometry();
     total_volume += geo.volume();
-    const QuadratureType quad(en, quadOrd);
-    const int quadNop = quad.nop();
-    for (int qP = 0; qP < quadNop; ++qP)
-    {
-      const double intel = quad.weight(qP)
-                           * geo.integrationElement( quad.point(qP) ); // general case
+    const auto& quad = make_quadrature(en, space, polOrd);
+    for (const auto& qP : Dune::Stuff::Common::valueRange(quad.nop())) {
+      const double intel = quad.weight(qP) * geo.integrationElement( quad.point(qP) );
       // evaluate function
-      typename DiscreteFunctionSpaceType::RangeType dummy;
+      RangeType dummy;
       const auto xWorld = geo.global( quad.point(qP) );
       function.evaluate(xWorld, dummy);
       ret = dummy;
