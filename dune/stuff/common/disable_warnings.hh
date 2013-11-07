@@ -1,14 +1,16 @@
 #ifdef __GNUC__
-  #pragma GCC diagnostic push
-  #pragma GCC diagnostic ignored "-Wunused-parameter"
-  #pragma GCC diagnostic ignored "-Wignored-qualifiers"
-  #pragma GCC diagnostic ignored "-Wextra"
-  #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
-  #pragma GCC diagnostic ignored "-Wtype-limits"
-  #pragma GCC diagnostic ignored "-Wshadow"
-  #pragma GCC diagnostic ignored "-Wreorder"
+# pragma GCC diagnostic push
+# pragma GCC diagnostic ignored "-Wunused-parameter"
+# pragma GCC diagnostic ignored "-Wignored-qualifiers"
+# pragma GCC diagnostic ignored "-Wextra"
+# pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+# pragma GCC diagnostic ignored "-Wtype-limits"
+# pragma GCC diagnostic ignored "-Wshadow"
+# pragma GCC diagnostic ignored "-Wreorder"
+# pragma GCC diagnostic ignored "-Wreorder"
 #endif
-/** Copyright (c) 2012, Rene Milk
+
+/** Copyright (c) 2012, Rene Milk, Felix Albrecht
    * All rights reserved.
    *
    * Redistribution and use in source and binary forms, with or without
