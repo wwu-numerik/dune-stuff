@@ -335,8 +335,7 @@ public:
       dirichletDef = false;
     else
       DUNE_THROW(Dune::IOError,
-                 "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
-                 << " wrong 'default'' given!");
+                 "\n" << Dune::Stuff::Common::colorStringRed("ERROR:") << " wrong 'default' given!");
     // get tolerance
     const DomainFieldType tol = settings.get("compare_tolerance", 1e-10);
     // get dirichlet and neumann
