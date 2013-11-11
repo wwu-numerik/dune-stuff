@@ -163,34 +163,34 @@ void ExtendedParameterTree::reportAsSub(std::ostream& stream, const std::string&
   }
 } // void report(std::ostream& stream = std::cout, const std::string& prefix = "") const
 
-std::string ExtendedParameterTree::findCommonPrefix(const BaseType& sub, const std::string previousPrefix /*= ""*/) const
+std::string ExtendedParameterTree::findCommonPrefix(const BaseType& subtree, const std::string previousPrefix /*= ""*/) const
 {
-  const auto& valuekeys = sub.getValueKeys();
-  const auto& subkeys = sub.getSubKeys();
+  const auto& valuekeys = subtree.getValueKeys();
+  const auto& subkeys = subtree.getSubKeys();
   if (valuekeys.size() == 0 && subkeys.size() == 1) {
     // we append the subs name
     if (previousPrefix.empty())
-      return findCommonPrefix(sub.sub(subkeys[0]), subkeys[0]);
+      return findCommonPrefix(subtree.sub(subkeys[0]), subkeys[0]);
     else
-      return findCommonPrefix(sub.sub(subkeys[0]), previousPrefix + "." + subkeys[0]);
+      return findCommonPrefix(subtree.sub(subkeys[0]), previousPrefix + "." + subkeys[0]);
   } else {
     // end of the recursion, return the previous prefix
     return previousPrefix;
   }
 }
 
-void ExtendedParameterTree::reportFlatly(const BaseType& sub, const std::string& prefix /*= ""*/,
+void ExtendedParameterTree::reportFlatly(const BaseType& subtree, const std::string& prefix /*= ""*/,
                                          std::ostream& stream /*= std::cout*/) const
 {
   // report all the keys
-  for (auto key : sub.getValueKeys())
-    stream << prefix << key << " = " << sub[key] << std::endl;
+  for (auto key : subtree.getValueKeys())
+    stream << prefix << key << " = " << subtree[key] << std::endl;
   // report all the subs
-  for (auto subkey : sub.getSubKeys()) {
+  for (auto subkey : subtree.getSubKeys()) {
     if (prefix.empty())
-      reportFlatly(sub.sub(subkey), subkey + ".", stream);
+      reportFlatly(subtree.sub(subkey), subkey + ".", stream);
     else
-      reportFlatly(sub.sub(subkey), prefix + subkey+ "." , stream);
+      reportFlatly(subtree.sub(subkey), prefix + subkey+ "." , stream);
   }
 }
 
