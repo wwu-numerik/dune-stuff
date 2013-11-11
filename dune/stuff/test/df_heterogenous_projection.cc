@@ -17,6 +17,7 @@
 #include <dune/stuff/fem/customprojection.hh>
 #include <dune/stuff/common/profiler.hh>
 #include <dune/stuff/common/ranges.hh>
+#include <dune/stuff/functions/femadapter.hh>
 #include <dune/stuff/common/parameter/configcontainer.hh>
 #include <dune/stuff/fem/namespace.hh>
 #include <dune/stuff/aliases.hh>
@@ -129,10 +130,14 @@ void ptest(const int macro_elements = 4, const int target_factor = 2) {
   typename TargetTraits::DiscreteFunction target_df("target", target_space);
   typename TargetTraits::DiscreteFunction fem_target_df("fem_target", target_space);
 
-  typedef Stuff::FunctionExpression< SourceGrid::ctype,
+  typedef typename SourceGrid::Codim<0>::Entity SourceEntity;
+  typedef typename TargetGrid::Codim<0>::Entity TargetEntity;
+
+  typedef Stuff::Function::Expression< SourceEntity, SourceGrid::ctype,
       SourceGrid::dimension, SourceGrid::ctype, 1 > ScalarFunctionType;
   ScalarFunctionType scalar_f("x", "x[0] + x[1]");
-  LagrangeInterpolation<typename SourceTraits::DiscreteFunction>::apply(scalar_f, source_df);
+  auto wrapped = Stuff::femFunctionAdapter(scalar_f);
+  LagrangeInterpolation<typename SourceTraits::DiscreteFunction>::apply(wrapped, source_df);
 
 //  DSC_PROFILER.startTiming("HierarchicSearchStrategy");
 //  Stuff::HeterogenousProjection<Stuff::HierarchicSearchStrategy>::project(source_df, target_df);
