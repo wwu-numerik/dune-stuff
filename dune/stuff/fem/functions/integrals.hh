@@ -45,7 +45,7 @@ make_quadrature(const Dune::Entity<0, GridImp::dimension, GridImp, EntityImp>& e
  */
 template <class SpaceTraits, class IntersectionImp>
 Dune::Fem::CachingQuadrature<typename SpaceTraits::GridPartType, 1> make_quadrature(
-    const Dune::Intersection<const typename SpaceTraits::GridPartType::GridType, IntersectionImp>& intersection,
+    const IntersectionImp& intersection,
     const Dune::Fem::DiscreteFunctionSpaceInterface<SpaceTraits>& space, int order = -1, bool inside = true) {
   order = order > -1 ? order : 2 * space.order() + 2;
   typedef Dune::Fem::CachingQuadrature<typename SpaceTraits::GridPartType, 1> Quad;
