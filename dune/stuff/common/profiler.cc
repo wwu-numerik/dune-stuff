@@ -269,6 +269,7 @@ void Profiler::outputTimingsAll(std::ostream& out) const
         << csv_sep << section.first << "_avg_wall" << csv_sep << section.first << "_max_wall";
   }
   int i = 0;
+  const auto weight = 1 / float(comm.size());
   for (const auto& datamap : datamaps_) {
     stash << std::endl << i++;
     for (const auto& section : datamap) {
