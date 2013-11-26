@@ -15,6 +15,7 @@ namespace LA {
 }
 }
 
+namespace DS = Dune::Stuff;
 namespace DSC = Dune::Stuff::Common;
 namespace DSG = Dune::Stuff::Grid;
 namespace DSFe = Dune::Stuff::Fem;
