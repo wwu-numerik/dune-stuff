@@ -11,6 +11,7 @@
 #include <boost/noncopyable.hpp>
 #include <boost/timer/timer.hpp>
 
+#include <dune/stuff/common/threadmanager.hh>
 
 namespace Dune {
 namespace Stuff {
@@ -56,7 +57,7 @@ private:
   Profiler();
   ~Profiler();
 
-  typedef std::map< std::string, std::pair< bool, TimingData > >
+  typedef std::map< std::string, std::pair< bool, PerThreadValue<TimingData> > >
     KnownTimersMap;
   //! section name -> seconds
   typedef std::map< std::string, TimingData::DeltaType >
