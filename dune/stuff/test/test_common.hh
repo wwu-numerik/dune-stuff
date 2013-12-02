@@ -1,11 +1,7 @@
 #ifndef DUNE_STUFF_TEST_TOOLS_HH
 #define DUNE_STUFF_TEST_TOOLS_HH
 
-#ifdef HAVE_CMAKE_CONFIG
-# include "cmake_config.h"
-#elif defined (HAVE_CONFIG_H)
-# include "config.h"
-#endif // ifdef HAVE_CMAKE_CONFIG
+#include "config.h"
 
 #include <dune/common/float_cmp.hh>
 #include <dune/common/fvector.hh>
@@ -17,7 +13,7 @@
 #include <dune/stuff/common/parameter/configcontainer.hh>
 #include <dune/stuff/common/logging.hh>
 #ifdef HAVE_DUNE_FEM
-  #include <dune/fem/misc/mpimanager.hh>
+# include <dune/fem/misc/mpimanager.hh>
 #endif
 #include <gtest.h>
 
