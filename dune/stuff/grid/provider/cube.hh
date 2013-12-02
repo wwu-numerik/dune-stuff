@@ -306,10 +306,10 @@ struct ElementVariant< Dune::SGrid< dim, dim > > {
 };
 
 #if HAVE_ALUGRID
-  template< int dim >
-  struct ElementVariant< Dune::ALUCubeGrid< dim, dim > > {
-    static const int id = 1;
-  };
+template< int dim >
+struct ElementVariant< Dune::ALUCubeGrid< dim, dim > > {
+  static const int id = 1;
+};
 #endif // HAVE_ALUGRID
 
 
