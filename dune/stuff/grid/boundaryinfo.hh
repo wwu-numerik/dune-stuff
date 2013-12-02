@@ -6,12 +6,6 @@
 #ifndef DUNE_STUFF_GRID_BOUNDARYINFO_HH
 #define DUNE_STUFF_GRID_BOUNDARYINFO_HH
 
-#ifdef HAVE_CMAKE_CONFIG
-# include "cmake_config.h"
-#elif defined (HAVE_CONFIG_H)
-# include "config.h"
-#endif // ifdef HAVE_CMAKE_CONFIG
-
 #include <map>
 #include <set>
 #include <string>
@@ -279,8 +273,7 @@ public:
     for (auto& dirichletNormal : dirichletNormals_) {
       if (contains(dirichletNormal, neumannNormals_))
         DUNE_THROW(Dune::InvalidStateException,
-                   "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
-                   << " normals are too close!");
+                   "\n" << Dune::Stuff::Common::colorStringRed("ERROR:") << " normals are too close!");
     }
   }
 
