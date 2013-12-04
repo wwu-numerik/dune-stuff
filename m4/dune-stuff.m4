@@ -28,5 +28,5 @@ to the PKG_CONFIG_PATH environment variable.])])
 
 AC_DEFUN([DUNE_STUFF_CHECK_MODULE],
 [
-    DUNE_CHECK_MODULES([dune-stuff], [stuff/common/profiler.hh], [Dune::Stuff::Common::profiler()])
+    DUNE_CHECK_MODULES([dune-stuff], [stuff/common/logging.hh], [Dune::Stuff::Common::Logger()])
 ])
