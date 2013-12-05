@@ -3,7 +3,6 @@
 
 #ifdef HAVE_DUNE_FEM
 
-#include <config.h>
 #include <cassert>
 #include <sstream>
 #include <fstream>

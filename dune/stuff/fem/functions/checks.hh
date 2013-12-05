@@ -1,12 +1,6 @@
 #ifndef STUFF_FUNCTIONS_HH_INCLUDED
 #define STUFF_FUNCTIONS_HH_INCLUDED
 
-#ifdef HAVE_CMAKE_CONFIG
- #include "cmake_config.h"
-#elif defined (HAVE_CONFIG_H)
- #include <config.h>
-#endif // ifdef HAVE_CMAKE_CONFIG
-
 #ifdef HAVE_DUNE_FEM
 
 #include <cmath>

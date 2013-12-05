@@ -1,12 +1,6 @@
 #ifndef DUNE_STUFF_INTEGRALS_HH
 #define DUNE_STUFF_INTEGRALS_HH
 
-#ifdef HAVE_CMAKE_CONFIG
- #include "cmake_config.h"
-#else
- #include "config.h"
-#endif
-
 #ifdef HAVE_DUNE_FEM
 
 #include <dune/stuff/fem/localmassmatrix.hh>

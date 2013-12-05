@@ -1,12 +1,6 @@
 #ifndef STUFF_TIMEFUNCTION_HH
 #define STUFF_TIMEFUNCTION_HH
 
-#ifdef HAVE_CMAKE_CONFIG
- #include "cmake_config.h"
-#else
- #include "config.h"
-#endif // ifdef HAVE_CMAKE_CONFIG
-
 #ifdef HAVE_DUNE_FEM
 
 #include <dune/fem/function/common/function.hh>

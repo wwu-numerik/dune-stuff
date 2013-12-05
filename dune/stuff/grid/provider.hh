@@ -1,7 +1,6 @@
 #ifndef DUNE_STUFF_GRID_PROVIDER_HH
 #define DUNE_STUFF_GRID_PROVIDER_HH
 
-#include <config.h>
 #if HAVE_DUNE_GRID
 
 #include <dune/common/parametertree.hh>
@@ -45,7 +44,7 @@ public:
 #if defined ALUGRID_CONFORM || defined ALUGRID_CUBE || defined ALUGRID_SIMPLEX || defined ALBERTAGRID || defined UGGRID
       else if (type == "gridprovider.gmsh") {
       return GridProviderGmsh< GridType >::defaultSettings(subname);
-    } 
+    }
 #endif
 #endif
     else if (type == "gridprovider.starcd") {

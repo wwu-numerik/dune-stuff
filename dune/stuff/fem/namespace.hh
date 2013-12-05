@@ -1,7 +1,6 @@
 #ifndef DUNE_STUFF_FEM_NAMESPACE_HH
 #define DUNE_STUFF_FEM_NAMESPACE_HH
 
-#include <config.h>
 #include <dune/common/version.hh>
 
 #ifdef HAVE_DUNE_FEM

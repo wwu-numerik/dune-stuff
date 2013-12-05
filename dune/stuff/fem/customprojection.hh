@@ -1,12 +1,6 @@
 #ifndef CUSTOMPROJECTION_HH
 #define CUSTOMPROJECTION_HH
 
-#ifdef HAVE_CMAKE_CONFIG
- #include "cmake_config.h"
-#else
- #include "config.h"
-#endif // ifdef HAVE_CMAKE_CONFIG
-
 #ifdef HAVE_DUNE_FEM
 
 #include <dune/fem/quadrature/cachingquadrature.hh>

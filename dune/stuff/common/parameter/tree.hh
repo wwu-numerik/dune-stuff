@@ -1,7 +1,6 @@
 #ifndef DUNE_STUFF_COMMON_PARAMETER_TREE_HH
 #define DUNE_STUFF_COMMON_PARAMETER_TREE_HH
 
-#include <config.h>
 #include <cstring>
 #include <sstream>
 #include <vector>

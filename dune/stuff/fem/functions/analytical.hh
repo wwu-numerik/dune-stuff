@@ -1,12 +1,6 @@
 #ifndef DUNE_STUFF_ANALYTICAL_HH
 #define DUNE_STUFF_ANALYTICAL_HH
 
-#ifdef HAVE_CMAKE_CONFIG
- #include "cmake_config.h"
-#else
- #include "config.h"
-#endif // ifdef HAVE_CMAKE_CONFIG
-
 #ifdef HAVE_DUNE_FEM
 
 #include "timefunction.hh"
