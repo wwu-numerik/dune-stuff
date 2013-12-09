@@ -213,6 +213,9 @@ public:
     return description;
   } // Dune::ParameterTree defaultSettings()
 
+  BicgstabILUTSolver()
+  {}
+
   virtual size_t apply(const MatrixType& systemMatrix,
                        const VectorType& rhsVector,
                        VectorType& solutionVector,
