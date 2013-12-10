@@ -1,3 +1,8 @@
+// This file is part of the dune-stuff project:
+//   https://users.dune-project.org/projects/dune-stuff/
+// Copyright Holders: Felix Albrecht, Rene Milk
+// License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+
 #ifndef DUNE_STUFF_LA_CONTAINER_EIGEN_HH
 #define DUNE_STUFF_LA_CONTAINER_EIGEN_HH
 
@@ -39,6 +44,10 @@ template< class ScalarType >
 class EigenRowMajorSparseMatrix;
 
 
+class EigenVectorInterfaceDynamic {};
+class EigenMatrixInterfaceDynamic {};
+
+
 /**
  *  \brief Traits for EigenDenseVector.
  */
@@ -58,10 +67,11 @@ public:
 template< class ScalarImp = double>
 class EigenDenseVector
   : public VectorInterface< EigenDenseVectorTraits< ScalarImp > >
+  , public EigenVectorInterfaceDynamic
   , public ProvidesBackend< EigenDenseVectorTraits< ScalarImp > >
   , public ProvidesDataAccess< EigenDenseVectorTraits< ScalarImp > >
 {
-  typedef typename Traits::derived_type       ThisType;
+  typedef EigenDenseVector< ScalarImp >       ThisType;
 public:
   typedef EigenDenseVectorTraits< ScalarImp > Traits;
   typedef typename Traits::ScalarType         ScalarType;
@@ -71,7 +81,7 @@ public:
     : backend_(new BackendType(ss))
   {
     if (FloatCmp::eq(value, ScalarType(0)))
-      backend_->setZeros();
+      backend_->setZero();
     else {
       backend_->setOnes();
       backend_->operator*=(value);
@@ -151,7 +161,7 @@ public:
    * \{
    */
 
-  derived_type copy() const
+  ThisType copy() const
   {
     return ThisType(*backend_);
   }
@@ -166,15 +176,15 @@ public:
   {
     if (xx.size() != size())
       DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
-                            "The size of x (" << x.size() << ") does not match the size of this (" << size()
+                            "The size of x (" << xx.size() << ") does not match the size of this (" << size()
                             << ")!");
     ensure_uniqueness();
     auto& this_ref = *backend_;
     const auto& xx_ref= *(xx.backend_);
-    this_ref += alpha * xx_ref.backend();
+    this_ref += alpha * xx_ref;
   } // ... axpy(...)
 
-  bool has_equal_shape(const derived_type& other) const
+  bool has_equal_shape(const ThisType& other) const
   {
     return size() == other.size();
   }
@@ -237,7 +247,7 @@ public:
     return result;
   } // ... amax(...)
 
-  virtual ScalarType dot(const derived_type& other) const DS_OVERRIDE
+  virtual ScalarType dot(const ThisType& other) const DS_OVERRIDE
   {
     if (other.size() != size())
       DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
@@ -262,7 +272,7 @@ public:
     return backend_->template lpNorm< ::Eigen::Infinity >();
   }
 
-  virtual void add(const derived_type& other, derived_type& result) const DS_OVERRIDE
+  virtual void add(const ThisType& other, ThisType& result) const DS_OVERRIDE
   {
     if (other.size() != size())
       DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
@@ -275,26 +285,27 @@ public:
     result.backend() = backend_->operator+(*(other.backend_));
   } // ... add(...)
 
-  virtual derived_type add(const derived_type& other) const DS_OVERRIDE
+  virtual ThisType add(const ThisType& other) const DS_OVERRIDE
   {
     if (other.size() != size())
       DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
                             "The size of other (" << other.size() << ") does not match the size of this (" << size()
                             << ")!");
-    return derived_type(backend_->operator+(*(other.backend_)));
+    return ThisType(backend_->operator+(*(other.backend_)));
   } // ... add(...)
 
-  virtual void iadd(const derived_type& other) DS_OVERRIDE
+  virtual void iadd(const ThisType& other) DS_OVERRIDE
   {
     if (other.size() != size())
       DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
                             "The size of other (" << other.size() << ") does not match the size of this (" << size()
                             << ")!");
     ensure_uniqueness();
-    backend_->operator+=(other);
+    const auto& other_ref = *(other.backend_);
+    backend_->operator+=(other_ref);
   } // ... iadd(...)
 
-  virtual void sub(const derived_type& other, derived_type& result) const DS_OVERRIDE
+  virtual void sub(const ThisType& other, ThisType& result) const DS_OVERRIDE
   {
     if (other.size() != size())
       DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
@@ -307,23 +318,24 @@ public:
     result.backend() = backend_->operator-(*(other.backend_));
   } // ... sub(...)
 
-  virtual derived_type sub(const derived_type& other) const DS_OVERRIDE
+  virtual ThisType sub(const ThisType& other) const DS_OVERRIDE
   {
     if (other.size() != size())
       DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
                             "The size of other (" << other.size() << ") does not match the size of this (" << size()
                             << ")!");
-    return derived_type(backend_->operator-(*(other.backend_)));
+    return ThisType(backend_->operator-(*(other.backend_)));
   } // ... sub(...)
 
-  void isub(const derived_type& other) DS_OVERRIDE
+  void isub(const ThisType& other) DS_OVERRIDE
   {
     if (other.size() != size())
       DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
                             "The size of other (" << other.size() << ") does not match the size of this (" << size()
                             << ")!");
     ensure_uniqueness();
-    backend_->operator-=(other);
+    const auto& other_ref = *(other.backend_);
+    backend_->operator-=(other_ref);
   } // ... isub(...)
 
   /**
@@ -362,6 +374,7 @@ public:
 template< class ScalarImp = double >
 class EigenMappedDenseVector
   : public VectorInterface< EigenMappedDenseVectorTraits< ScalarImp > >
+  , public EigenVectorInterfaceDynamic
   , public ProvidesBackend< EigenMappedDenseVectorTraits< ScalarImp > >
 {
   static_assert(std::is_same< ScalarImp, double >::value, "undefined behaviour for non-double data");
@@ -375,7 +388,7 @@ public:
    *  \brief  This is the constructor of interest which wrappes a rar array.
    */
   EigenMappedDenseVector(ScalarType* data, size_t data_size)
-    : backend_(data, data_size)
+    : backend_(new BackendType(data, data_size))
   {}
 
   /**
@@ -385,7 +398,7 @@ public:
     : backend_(new BackendType(new ScalarType[ss], ss))
   {
     if (FloatCmp::eq(value, ScalarType(0)))
-      backend_->setZeros();
+      backend_->setZero();
     else {
       backend_->setOnes();
       backend_->operator*=(value);
@@ -453,7 +466,7 @@ public:
    * \defgroup container ´´These methods are required by ContainerInterface.``
    * \{
    */
-  derived_type copy() const
+  ThisType copy() const
   {
     return ThisType(*backend_);
   }
@@ -473,10 +486,10 @@ public:
     ensure_uniqueness();
     auto& this_ref = *backend_;
     const auto& xx_ref= *(xx.backend_);
-    this_ref += alpha * xx_ref.backend();
+    this_ref += alpha * xx_ref;
   } // ... axpy(...)
 
-  bool has_equal_shape(const derived_type& other) const
+  bool has_equal_shape(const ThisType& other) const
   {
     return size() == other.size();
   }
@@ -539,7 +552,7 @@ public:
     return result;
   } // ... amax(...)
 
-  virtual ScalarType dot(const derived_type& other) const DS_OVERRIDE
+  virtual ScalarType dot(const ThisType& other) const DS_OVERRIDE
   {
     if (other.size() != size())
       DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
@@ -564,7 +577,7 @@ public:
     return backend_->template lpNorm< ::Eigen::Infinity >();
   }
 
-  virtual void add(const derived_type& other, derived_type& result) const DS_OVERRIDE
+  virtual void add(const ThisType& other, ThisType& result) const DS_OVERRIDE
   {
     if (other.size() != size())
       DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
@@ -577,26 +590,18 @@ public:
     result.backend() = backend_->operator+(*(other.backend_));
   } // ... add(...)
 
-  virtual derived_type add(const derived_type& other) const DS_OVERRIDE
-  {
-    if (other.size() != size())
-      DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
-                            "The size of other (" << other.size() << ") does not match the size of this (" << size()
-                            << ")!");
-    return derived_type(backend_->operator+(*(other.backend_)));
-  } // ... add(...)
-
-  virtual void iadd(const derived_type& other) DS_OVERRIDE
+  virtual void iadd(const ThisType& other) DS_OVERRIDE
   {
     if (other.size() != size())
       DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
                             "The size of other (" << other.size() << ") does not match the size of this (" << size()
                             << ")!");
     ensure_uniqueness();
-    backend_->operator+=(other);
+    const auto& other_ref = *(other.backend_);
+    backend_->operator+=(other_ref);
   } // ... iadd(...)
 
-  virtual void sub(const derived_type& other, derived_type& result) const DS_OVERRIDE
+  virtual void sub(const ThisType& other, ThisType& result) const DS_OVERRIDE
   {
     if (other.size() != size())
       DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
@@ -609,23 +614,15 @@ public:
     result.backend() = backend_->operator-(*(other.backend_));
   } // ... sub(...)
 
-  virtual derived_type sub(const derived_type& other) const DS_OVERRIDE
-  {
-    if (other.size() != size())
-      DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
-                            "The size of other (" << other.size() << ") does not match the size of this (" << size()
-                            << ")!");
-    return derived_type(backend_->operator-(*(other.backend_)));
-  } // ... sub(...)
-
-  void isub(const derived_type& other) DS_OVERRIDE
+  void isub(const ThisType& other) DS_OVERRIDE
   {
     if (other.size() != size())
       DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
                             "The size of other (" << other.size() << ") does not match the size of this (" << size()
                             << ")!");
     ensure_uniqueness();
-    backend_->operator-=(other);
+    const auto& other_ref = *(other.backend_);
+    backend_->operator-=(other_ref);
   } // ... isub(...)
 
   /**
@@ -664,6 +661,7 @@ public:
 template< class ScalarImp = double >
 class EigenDenseMatrix
   : public MatrixInterface< EigenDenseMatrixTraits< ScalarImp > >
+  , public EigenMatrixInterfaceDynamic
   , public ProvidesBackend< EigenDenseMatrixTraits< ScalarImp > >
   , public ProvidesDataAccess< EigenDenseMatrixTraits< ScalarImp > >
 {
@@ -677,7 +675,7 @@ public:
     : backend_(new BackendType(rr, cc))
   {
     if (FloatCmp::eq(value, ScalarType(0)))
-      backend_->setZeros();
+      backend_->setZero();
     else {
       backend_->setOnes();
       backend_->operator*=(value);
@@ -757,7 +755,7 @@ public:
    * \{
    */
 
-  derived_type copy() const
+  ThisType copy() const
   {
     return ThisType(*backend_);
   }
@@ -777,10 +775,10 @@ public:
     ensure_uniqueness();
     auto& this_ref = *backend_;
     const auto& xx_ref= *(xx.backend_);
-    this_ref += alpha * xx_ref.backend();
+    this_ref += alpha * xx_ref;
   } // ... axpy(...)
 
-  bool has_equal_shape(const derived_type& other) const
+  bool has_equal_shape(const ThisType& other) const
   {
     return (rows() == other.rows()) && (cols() == other.cols());
   }
@@ -896,6 +894,7 @@ public:
 template< class ScalarImp = double >
 class EigenRowMajorSparseMatrix
   : public MatrixInterface< EigenRowMajorSparseMatrixTraits< ScalarImp > >
+  , public EigenMatrixInterfaceDynamic
   , public ProvidesBackend< EigenRowMajorSparseMatrixTraits< ScalarImp > >
 {
   typedef EigenRowMajorSparseMatrix< ScalarImp > ThisType;
@@ -916,27 +915,20 @@ public:
                             << ") does not match the number of rows of this (" << rows() << ")!");
     for (size_t row = 0; row < size_t(pattern.size()); ++row) {
       backend_->startVec(row);
-      const auto& colums = pattern.inner(row);
+      const auto& columns = pattern.inner(row);
       for (auto& column : columns)
         backend_->insertBackByOuterInner(row, column);
       // create diagonal entry (insertBackByOuterInner() can not handle empty rows)
-      if (colums.size() == 0)
+      if (columns.size() == 0)
         backend_->insertBackByOuterInner(row, row);
     }
     backend_->finalize();
     backend_->makeCompressed();
   }
 
-  EigenRowMajorSparseMatrix(const size_t rr = 0, const size_t cc = 0, const ScalarType value = ScalarType(0))
+  EigenRowMajorSparseMatrix(const size_t rr = 0, const size_t cc = 0)
     : backend_(new BackendType(rr, cc))
-  {
-    if (FloatCmp::eq(value, ScalarType(0)))
-      backend_->setZeros();
-    else {
-      backend_->setOnes();
-      backend_->operator*=(value);
-    }
-  }
+  {}
 
   EigenRowMajorSparseMatrix(const ThisType& other)
     : backend_(other.backend_)
@@ -997,7 +989,7 @@ public:
    * \{
    */
 
-  derived_type copy() const
+  ThisType copy() const
   {
     return ThisType(*backend_);
   }
@@ -1017,10 +1009,10 @@ public:
     ensure_uniqueness();
     auto& this_ref = *backend_;
     const auto& xx_ref= *(xx.backend_);
-    this_ref += alpha * xx_ref.backend();
+    this_ref += alpha * xx_ref;
   } // ... axpy(...)
 
-  bool has_equal_shape(const derived_type& other) const
+  bool has_equal_shape(const ThisType& other) const
   {
     return (rows() == other.rows()) && (cols() == other.cols());
   }
