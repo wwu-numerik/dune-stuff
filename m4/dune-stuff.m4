@@ -1,4 +1,6 @@
 AC_DEFUN([DUNE_STUFF_CHECKS],[
+  AC_DEFINE([DUNE_STUFF_SSIZE_T], [long int], [We need this for the python bindings (there is no unsigned in python).])
+
   AX_BOOST_BASE([1.48.0],
                 [AC_DEFINE([HAVE_BOOST],
                            [],
