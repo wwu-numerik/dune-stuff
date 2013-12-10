@@ -1,3 +1,8 @@
+// This file is part of the dune-stuff project:
+//   https://users.dune-project.org/projects/dune-stuff/
+// Copyright Holders: Felix Albrecht, Rene Milk
+// License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+
 #ifndef DUNE_STUFF_LA_CONTAINER_INTERFACE_HH
 #define DUNE_STUFF_LA_CONTAINER_INTERFACE_HH
 
@@ -20,7 +25,7 @@ namespace LA {
 
 template< class Traits >
 class ProvidesBackend
-  : CRTPInterface< ProvidesBackend< Traits >, Traits >
+  : protected CRTPInterface< ProvidesBackend< Traits >, Traits >
 {
 public:
   typedef typename Traits::BackendType BackendType;
@@ -44,7 +49,7 @@ class ContainerInterfaceDynamic {};
 template< class Traits >
 class ContainerInterface
   : public ContainerInterfaceDynamic
-  , CRTPInterface< ContainerInterface< Traits >, Traits >
+  , protected CRTPInterface< ContainerInterface< Traits >, Traits >
 {
   typedef ContainerInterface< Traits > ThisType;
 public:
@@ -96,7 +101,7 @@ public:
 
 template< class Traits >
 class ProvidesContainer
-  : CRTPInterface< ProvidesContainer< Traits >, Traits >
+  : protected CRTPInterface< ProvidesContainer< Traits >, Traits >
 {
 public:
   typedef typename Traits::ContainerType ContainerType;
@@ -120,7 +125,7 @@ class ProvidesDataAccessDynamic {};
 
 template< class Traits >
 class ProvidesDataAccess
-  : CRTPInterface< ProvidesDataAccess< Traits >, Traits >
+  : protected CRTPInterface< ProvidesDataAccess< Traits >, Traits >
 {
 public:
   typedef typename Traits::ScalarType ScalarType;
@@ -380,7 +385,7 @@ public:
    *  \param  other The subtrahend.
    *  \note   If you override this method please use exceptions instead of assertions (for the python bindings).
    */
-  void isub(const derived_type& other)
+  virtual void isub(const derived_type& other)
   {
     if (other.size() != size())
       DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
@@ -661,6 +666,22 @@ public:
   {
     return get_entry(ii, jj);
   }
+
+  inline void DUNE_DEPRECATED_MSG("Please use unit_row()!") unitRow(const size_t row)
+  {
+    unit_row(row);
+  }
+
+  inline void DUNE_DEPRECATED_MSG("Please use unit_col()!") unitCol(const size_t col)
+  {
+    unit_col(col);
+  }
+
+  inline void DUNE_DEPRECATED_MSG("Please use unit_col()!") clearRow(const size_t ii)
+  {
+    clear_row(ii);
+  }
+
   /**
    * \}
    */
