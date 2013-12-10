@@ -2,7 +2,7 @@
 #define DUNE_STUFF_LA_SOLVER_FASP_HH
 
 #if HAVE_FASP
-//#if HAVE_EIGEN
+#if HAVE_EIGEN
 
 extern "C" {
   #include "fasp_functs.h"
@@ -29,7 +29,7 @@ public:
 
   typedef typename BaseType::MatrixType   MatrixType;
   typedef typename BaseType::VectorType   VectorType;
-  typedef typename BaseType::ElementType  ElementType;
+  typedef typename BaseType::ScalarType  ScalarType;
 
   static Dune::ParameterTree defaultSettings()
   {
@@ -144,7 +144,7 @@ public:
                        const Dune::ParameterTree description = defaultSettings()) const
   {
     const size_t maxIter = description.get<size_t >("maxIter");
-    const ElementType precision = description.get<ElementType>("precision");
+    const ScalarType precision = description.get<ScalarType>("precision");
     // init system matrix and right hand side
     MatrixType& systemMatrix = const_cast< MatrixType& >(_systemMatrix);
     VectorType& rhsVector = const_cast< VectorType& >(_rhsVector);
@@ -223,7 +223,7 @@ public:
   } // ... apply(...)
 
 private:
-  input_param initInputParams(const size_t& maxIter, const ElementType& precision, const Dune::ParameterTree& description) const
+  input_param initInputParams(const size_t& maxIter, const ScalarType& precision, const Dune::ParameterTree& description) const
   {
     input_param inputParam;
     inputParam.print_level = description.get< int >("input_param.print_level", 0);
@@ -272,7 +272,7 @@ private:
     return inputParam;
   } // ... initInputParams(...)
 
-  itsolver_param initItsolverParams(const size_t& maxIter, const ElementType& precision, const Dune::ParameterTree& description) const
+  itsolver_param initItsolverParams(const size_t& maxIter, const ScalarType& precision, const Dune::ParameterTree& description) const
   {
     itsolver_param itsolverParams;
     itsolverParams.itsolver_type = description.get< int >("itsolver_param.itsolver_type", 1);
@@ -285,7 +285,7 @@ private:
     return itsolverParams;
   } // ... initItsolverParams(...)
 
-  AMG_param initAMGParams(const size_t& maxIter, const ElementType& precision, const Dune::ParameterTree& description) const
+  AMG_param initAMGParams(const size_t& maxIter, const ScalarType& precision, const Dune::ParameterTree& description) const
   {
     AMG_param amgParams;
     amgParams.AMG_type = description.get< int >("AMG_param.AMG_type", 1);
@@ -329,7 +329,7 @@ private:
   } // ... initAMGParams(...)
 
   ILU_param initIluParams(const size_t& /*maxIter*/,
-                          const ElementType& /*precision*/,
+                          const ScalarType& /*precision*/,
                           const Dune::ParameterTree& description) const
   {
     ILU_param iluParams;
@@ -343,7 +343,7 @@ private:
   } // ... initIluParams(...)
 
   Schwarz_param initSchwarzParams(const size_t& /*maxIter*/,
-                                  const ElementType& /*precision*/,
+                                  const ScalarType& /*precision*/,
                                   const Dune::ParameterTree& description) const
   {
     Schwarz_param schwarzParams;
@@ -359,7 +359,7 @@ private:
 } // namespace Stuff
 } // namespace Dune
 
-//#endif // HAVE_EIGEN
+#endif // HAVE_EIGEN
 #endif // HAVE_FASP
 
 #endif // DUNE_STUFF_LA_SOLVER_FASP_HH

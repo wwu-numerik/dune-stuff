@@ -23,10 +23,10 @@ namespace Dune {
 namespace Stuff {
 namespace LA {
 
-template <class MatrixImp, class VectorImp>
+template< class MatrixImp, class VectorImp >
 struct IsEigenMV {
-  typedef typename std::is_base_of< Dune::Stuff::LA::EigenMatrixInterface<typename MatrixImp::Traits>, MatrixImp>::type Mtype;
-  typedef typename std::is_base_of< Dune::Stuff::LA::EigenVectorInterface<typename VectorImp::Traits>, VectorImp>::type Vtype;
+  typedef typename std::is_base_of< EigenMatrixInterfaceDynamic, MatrixImp >::type Mtype;
+  typedef typename std::is_base_of< EigenVectorInterfaceDynamic, VectorImp >::type Vtype;
   static constexpr bool value = Mtype::value && Vtype::value;
 };
 
@@ -42,7 +42,7 @@ public:
 
   typedef typename BaseType::MatrixType MatrixType;
   typedef typename BaseType::VectorType VectorType;
-  typedef typename BaseType::ElementType ElementType;
+  typedef typename BaseType::ScalarType ScalarType;
 
   CgSolver()
   {
@@ -61,10 +61,10 @@ public:
     const int cols = A.cols();
     size_t iteration(1);
     const size_t maxIter = description.get<size_t >("maxIter");
-    const ElementType precision = description.get<ElementType>("precision");
-    ElementType rho(0), rho_prev(1), beta, alpha;
-    const ElementType tolerance = precision * precision * b.squaredNorm();
-    typedef typename DSL::EigenDenseVector<typename VectorType::ElementType >::BackendType RealEigenVector;
+    const ScalarType precision = description.get<ScalarType>("precision");
+    ScalarType rho(0), rho_prev(1), beta, alpha;
+    const ScalarType tolerance = precision * precision * b.squaredNorm();
+    typedef typename DSL::EigenDenseVector<typename VectorType::ScalarType >::BackendType RealEigenVector;
     RealEigenVector residuum = b - A * x_i;
     RealEigenVector correction_p(cols);
     RealEigenVector correction_q(cols);
@@ -103,7 +103,7 @@ public:
 
   typedef typename BaseType::MatrixType MatrixType;
   typedef typename BaseType::VectorType VectorType;
-  typedef typename BaseType::ElementType ElementType;
+  typedef typename BaseType::ScalarType ScalarType;
 
   CgDiagonalSolver()
   {
@@ -118,10 +118,10 @@ public:
   {
     typedef ::Eigen::ConjugateGradient< typename MatrixType::BackendType,
                                         ::Eigen::Lower,
-                                        ::Eigen::DiagonalPreconditioner< ElementType > > EigenSolverType;
+                                        ::Eigen::DiagonalPreconditioner< ScalarType > > EigenSolverType;
     EigenSolverType eigenSolver(systemMatrix.backend());
     eigenSolver.setMaxIterations(description.get<size_t>("maxIter"));
-    eigenSolver.setTolerance(description.get<ElementType>("precision"));
+    eigenSolver.setTolerance(description.get<ScalarType>("precision"));
     solutionVector.backend() = eigenSolver.solve(rhsVector.backend());
     return BaseType::translateInfo(eigenSolver.info());
   } // virtual bool apply(...)
@@ -141,7 +141,7 @@ public:
 
   typedef typename BaseType::MatrixType MatrixType;
   typedef typename BaseType::VectorType VectorType;
-  typedef typename BaseType::ElementType ElementType;
+  typedef typename BaseType::ScalarType ScalarType;
 
 
   virtual size_t apply(const MatrixType& systemMatrix,
@@ -152,7 +152,7 @@ public:
     typedef ::Eigen::BiCGSTAB< typename MatrixType::BackendType, ::Eigen::IdentityPreconditioner > EigenSolverType;
     EigenSolverType eigenSolver(systemMatrix.backend());
     eigenSolver.setMaxIterations(description.get<size_t>("maxIter"));
-    eigenSolver.setTolerance(description.get<ElementType>("precision"));
+    eigenSolver.setTolerance(description.get<ScalarType>("precision"));
     solutionVector.backend() = eigenSolver.solve(rhsVector.backend());
     return BaseType::translateInfo(eigenSolver.info());
   } // virtual bool apply(...)
@@ -172,17 +172,17 @@ public:
 
   typedef typename BaseType::MatrixType MatrixType;
   typedef typename BaseType::VectorType VectorType;
-  typedef typename BaseType::ElementType ElementType;
+  typedef typename BaseType::ScalarType ScalarType;
 
   virtual size_t apply(const MatrixType& systemMatrix,
                           const VectorType& rhsVector,
                           VectorType& solutionVector,
                           const Dune::ParameterTree description = BaseType::defaultIterativeSettings()) const
   {
-    typedef ::Eigen::BiCGSTAB< typename MatrixType::BackendType, ::Eigen::DiagonalPreconditioner< ElementType > > EigenSolverType;
+    typedef ::Eigen::BiCGSTAB< typename MatrixType::BackendType, ::Eigen::DiagonalPreconditioner< ScalarType > > EigenSolverType;
     EigenSolverType eigenSolver(systemMatrix.backend());
     eigenSolver.setMaxIterations(description.get<size_t >("maxIter"));
-    eigenSolver.setTolerance(description.get<ElementType>("precision"));
+    eigenSolver.setTolerance(description.get<ScalarType>("precision"));
     solutionVector.backend() = eigenSolver.solve(rhsVector.backend());
     return BaseType::translateInfo(eigenSolver.info());
   } // virtual bool apply(...)static_assert
@@ -202,7 +202,7 @@ public:
 
   typedef typename BaseType::MatrixType MatrixType;
   typedef typename BaseType::VectorType VectorType;
-  typedef typename BaseType::ElementType ElementType;
+  typedef typename BaseType::ScalarType ScalarType;
 
   static Dune::ParameterTree defaultSettings()
   {
@@ -221,7 +221,7 @@ public:
                        VectorType& solutionVector,
                        const Dune::ParameterTree description = defaultSettings()) const
   {
-    typedef ::Eigen::BiCGSTAB< typename MatrixType::BackendType, ::Eigen::IncompleteLUT< ElementType > > EigenSolverType;
+    typedef ::Eigen::BiCGSTAB< typename MatrixType::BackendType, ::Eigen::IncompleteLUT< ScalarType > > EigenSolverType;
     EigenSolverType solver(systemMatrix.backend());
     // configure solver and preconditioner
     // do not fail, but warn on non existing settings
@@ -252,7 +252,7 @@ public:
 
   typedef typename BaseType::MatrixType MatrixType;
   typedef typename BaseType::VectorType VectorType;
-  typedef typename BaseType::ElementType ElementType;
+  typedef typename BaseType::ScalarType ScalarType;
 
   DirectSuperLuSolver()
   {}

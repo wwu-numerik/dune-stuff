@@ -18,18 +18,29 @@ namespace LA {
 template< class MatrixImp, class VectorImp >
 class SolverInterface
 {
+  static_assert(std::is_base_of< typename Dune::Stuff::LA::MatrixInterface< typename MatrixImp::Traits >,
+                                 MatrixImp >::value,
+                "MatrixImp has to be derived from Dune::Stuff::LA::MatrixInterface!");
+  static_assert(std::is_base_of< typename Dune::Stuff::LA::VectorInterface< typename VectorImp::Traits >,
+                                 VectorImp >::value,
+                "MatrixImp has to be derived from Dune::Stuff::LA::MatrixInterface!");
+  static_assert(std::is_same< typename MatrixImp::ScalarType,
+                              typename VectorImp::ScalarType >::value, "Types do not match!");
 public:
-  typedef typename Dune::Stuff::LA::MatrixInterface< typename MatrixImp::Traits > MatrixType;
-  typedef typename MatrixType::ElementType ElementType;
-  typedef typename Dune::Stuff::LA::VectorInterface< typename VectorImp::Traits > VectorType;
+  typedef MatrixImp MatrixType;
+  typedef VectorImp VectorType;
+  typedef typename MatrixType::ScalarType ScalarType;
+
+  // deprecated
+  typedef ScalarType ElementType;
 
   virtual ~SolverInterface()
   {}
 
   virtual size_t apply(const MatrixType& /*_systemMatrix*/,
-                          const VectorType& /*_rhsVector*/,
-                          VectorType& /*_solutionVector*/,
-                          const Dune::ParameterTree /*description*/) const = 0;
+                       const VectorType& /*_rhsVector*/,
+                       VectorType& /*_solutionVector*/,
+                       const Dune::ParameterTree /*description*/) const = 0;
 #if HAVE_EIGEN
   size_t translateInfo(const ::Eigen::ComputationInfo& info) const
   {
@@ -60,7 +71,7 @@ class SolverNotImplementedForThisMatrixVectorCombination
 public:
   typedef typename SolverInterface< MatrixImp, VectorImp >::MatrixType   MatrixType;
   typedef typename SolverInterface< MatrixImp, VectorImp >::VectorType   VectorType;
-  typedef typename SolverInterface< MatrixImp, VectorImp >::ElementType  ElementType;
+  typedef typename SolverInterface< MatrixImp, VectorImp >::ScalarType  ScalarType;
 
   SolverNotImplementedForThisMatrixVectorCombination(const std::string msg = "\nERROR: this solver is not implemented for this matrix/vector combination")
   {
