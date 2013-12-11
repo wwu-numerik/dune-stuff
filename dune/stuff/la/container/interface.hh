@@ -150,6 +150,8 @@ public:
   typedef typename Traits::derived_type derived_type;
   typedef typename Traits::ScalarType   ScalarType;
 
+  virtual ~VectorInterface() {}
+
   /**
    * \defgroup haveto ´´These methods have to be implemented by a derived class in addition to the ones required by ContainerInterface!``
    * \{
@@ -474,6 +476,8 @@ public:
   typedef typename Traits::derived_type derived_type;
   typedef typename Traits::ScalarType   ScalarType;
 
+  virtual ~MatrixInterface() {}
+
   /**
    * \defgroup haveto ´´These methods have to be implemented by a derived class in addition to the ones required by ContainerInterface!``
    * \{
@@ -532,7 +536,7 @@ public:
    */
 
   /**
-   * \defgroup provided ´´These methods are provided by the interface for convenience! Those marked as virtual may be implemented more efficiently in a derived class!``
+   * \defgroup provided ´´These methods are provided by the interface for convenience!``
    * \{
    */
 
