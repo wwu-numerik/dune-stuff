@@ -8,7 +8,7 @@
 
 #include <dune/common/exceptions.hh>
 #include <dune/common/parametertree.hh>
-#include <dune/stuff/la/container/interface.hh>
+#include <dune/stuff/la/container/interfaces.hh>
 
 namespace Dune {
 namespace Stuff {
