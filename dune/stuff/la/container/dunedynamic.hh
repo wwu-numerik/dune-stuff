@@ -7,6 +7,7 @@
 #define DUNE_STUFF_LA_CONTAINER_DYNAMICVECTOR_HH
 
 #include <memory>
+#include <type_traits>
 
 #include <dune/common/dynvector.hh>
 #include <dune/stuff/common/disable_warnings.hh>
@@ -63,6 +64,8 @@ class DuneDynamicVector
 {
   typedef DuneDynamicVector< ScalarImp >                           ThisType;
   typedef VectorInterface< DuneDynamicVectorTraits< ScalarImp > >  VectorInterfaceType;
+  static_assert(!std::is_same< DUNE_STUFF_SSIZE_T, int >::value,
+                "You have to manually disable the constructor below which uses DUNE_STUFF_SSIZE_T!");
 public:
   typedef DuneDynamicVectorTraits< ScalarImp >  Traits;
   typedef typename Traits::ScalarType           ScalarType;
@@ -72,8 +75,14 @@ public:
     : backend_(new BackendType(ss, value))
   {}
 
+  /// This constructor is needed for the python bindings.
   DuneDynamicVector(const DUNE_STUFF_SSIZE_T ss, const ScalarType value = ScalarType(0))
-    : backend_(new BackendType(VectorInterfaceType::assert_is_size_t_compatible_and_convert(ss), value))
+    : DuneDynamicVector(VectorInterfaceType::assert_is_size_t_compatible_and_convert(ss), value)
+  {}
+
+  /// This constructor is needed because marking the above one as explicit had not effect.
+  DuneDynamicVector(const int ss, const ScalarType value = ScalarType(0))
+    : DuneDynamicVector(VectorInterfaceType::assert_is_size_t_compatible_and_convert(ss), value)
   {}
 
   DuneDynamicVector(const ThisType& other)
@@ -325,6 +334,8 @@ class DuneDynamicMatrix
 {
   typedef DuneDynamicMatrix< ScalarImp >                          ThisType;
   typedef MatrixInterface< DuneDynamicMatrixTraits< ScalarImp > > MatrixInterfaceType;
+  static_assert(!std::is_same< DUNE_STUFF_SSIZE_T, int >::value,
+                "You have to manually disable the constructor below which uses DUNE_STUFF_SSIZE_T!");
 public:
   typedef DuneDynamicMatrixTraits< ScalarImp >  Traits;
   typedef typename Traits::BackendType          BackendType;
@@ -334,10 +345,20 @@ public:
     : backend_(new BackendType(rr, cc, value))
   {}
 
-  DuneDynamicMatrix(const DUNE_STUFF_SSIZE_T rr, const size_t cc = 0, const ScalarType value = ScalarType(0))
-    : backend_(new BackendType(MatrixInterfaceType::assert_is_size_t_compatible_and_convert(rr),
-                               MatrixInterfaceType::assert_is_size_t_compatible_and_convert(cc),
-                               value))
+  /// This constructor is needed for the python bindings.
+  DuneDynamicMatrix(const DUNE_STUFF_SSIZE_T rr,
+                    const DUNE_STUFF_SSIZE_T cc = 0,
+                    const ScalarType value = ScalarType(0))
+    : DuneDynamicMatrix(MatrixInterfaceType::assert_is_size_t_compatible_and_convert(rr),
+                        MatrixInterfaceType::assert_is_size_t_compatible_and_convert(cc),
+                        value)
+  {}
+
+  /// This constructor is needed because marking the above one as explicit had not effect.
+  DuneDynamicMatrix(const int rr, const int cc = 0, const ScalarType value = ScalarType(0))
+    : DuneDynamicMatrix(MatrixInterfaceType::assert_is_size_t_compatible_and_convert(rr),
+                        MatrixInterfaceType::assert_is_size_t_compatible_and_convert(cc),
+                        value)
   {}
 
   DuneDynamicMatrix(const ThisType& other)
