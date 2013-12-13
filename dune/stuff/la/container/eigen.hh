@@ -6,10 +6,6 @@
 #ifndef DUNE_STUFF_LA_CONTAINER_EIGEN_HH
 #define DUNE_STUFF_LA_CONTAINER_EIGEN_HH
 
-#ifndef DS_OVERRIDE
-# define DS_OVERRIDE /*override*/
-#endif
-
 #if HAVE_EIGEN
 
 #include <memory>
@@ -405,7 +401,8 @@ class EigenMappedDenseVector
   , public ProvidesBackend< EigenMappedDenseVectorTraits< ScalarImp > >
 {
   static_assert(std::is_same< ScalarImp, double >::value, "undefined behaviour for non-double data");
-  typedef EigenMappedDenseVector< ScalarImp > ThisType;
+  typedef EigenMappedDenseVector< ScalarImp >                           ThisType;
+  typedef VectorInterface< EigenMappedDenseVectorTraits< ScalarImp > >  VectorInterfaceType;
 public:
   typedef EigenMappedDenseVectorTraits< ScalarImp > Traits;
   typedef typename Traits::BackendType              BackendType;
@@ -423,6 +420,18 @@ public:
    */
   EigenMappedDenseVector(const size_t ss = 0, const ScalarType value = ScalarType(0))
     : backend_(new BackendType(new ScalarType[ss], ss))
+  {
+    if (FloatCmp::eq(value, ScalarType(0)))
+      backend_->setZero();
+    else {
+      backend_->setOnes();
+      backend_->operator*=(value);
+    }
+  }
+
+  EigenMappedDenseVector(const DUNE_STUFF_SSIZE_T ss, const ScalarType value = ScalarType(0))
+    : backend_(new BackendType(new ScalarType[VectorInterfaceType::assert_is_size_t_compatible_and_convert(ss)],
+                               VectorInterfaceType::assert_is_size_t_compatible_and_convert(ss)))
   {
     if (FloatCmp::eq(value, ScalarType(0)))
       backend_->setZero();
@@ -695,7 +704,8 @@ class EigenDenseMatrix
   , public ProvidesBackend< EigenDenseMatrixTraits< ScalarImp > >
   , public ProvidesDataAccess< EigenDenseMatrixTraits< ScalarImp > >
 {
-  typedef EigenDenseMatrix< ScalarImp > ThisType;
+  typedef EigenDenseMatrix< ScalarImp >                           ThisType;
+  typedef MatrixInterface< EigenDenseMatrixTraits< ScalarImp > >  MatrixInterfaceType;
 public:
   typedef EigenDenseMatrixTraits< ScalarImp > Traits;
   typedef typename Traits::BackendType        BackendType;
@@ -703,6 +713,18 @@ public:
 
   EigenDenseMatrix(const size_t rr = 0, const size_t cc = 0, const ScalarType value = ScalarType(0))
     : backend_(new BackendType(rr, cc))
+  {
+    if (FloatCmp::eq(value, ScalarType(0)))
+      backend_->setZero();
+    else {
+      backend_->setOnes();
+      backend_->operator*=(value);
+    }
+  }
+
+  EigenDenseMatrix(const DUNE_STUFF_SSIZE_T rr, const DUNE_STUFF_SSIZE_T cc = 0, const ScalarType value = ScalarType(0))
+    : backend_(new BackendType(MatrixInterfaceType::assert_is_size_t_compatible_and_convert(rr),
+                               MatrixInterfaceType::assert_is_size_t_compatible_and_convert(cc)))
   {
     if (FloatCmp::eq(value, ScalarType(0)))
       backend_->setZero();
@@ -902,6 +924,9 @@ private:
     if (!backend_.unique())
       backend_ = std::make_shared< BackendType >(*backend_);
   } // ... ensure_uniqueness(...)
+
+  friend class Dune::Pymor::Operators::EigenRowMajorSparseInverse< ScalarType >;
+  friend class Dune::Pymor::Operators::EigenRowMajorSparse< ScalarType >;
 
   std::shared_ptr< BackendType > backend_;
 }; // class EigenDenseMatrix
