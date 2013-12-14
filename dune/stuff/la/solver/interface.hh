@@ -69,11 +69,12 @@ class SolverNotImplementedForThisMatrixVectorCombination
   : public SolverInterface< MatrixImp, VectorImp >
 {
 public:
-  typedef typename SolverInterface< MatrixImp, VectorImp >::MatrixType   MatrixType;
-  typedef typename SolverInterface< MatrixImp, VectorImp >::VectorType   VectorType;
+  typedef typename SolverInterface< MatrixImp, VectorImp >::MatrixType  MatrixType;
+  typedef typename SolverInterface< MatrixImp, VectorImp >::VectorType  VectorType;
   typedef typename SolverInterface< MatrixImp, VectorImp >::ScalarType  ScalarType;
 
-  SolverNotImplementedForThisMatrixVectorCombination(const std::string msg = "\nERROR: this solver is not implemented for this matrix/vector combination")
+  SolverNotImplementedForThisMatrixVectorCombination(
+      const std::string msg = "\nERROR: this solver is not implemented for this matrix/vector combination")
   {
     DUNE_THROW(Dune::NotImplemented, msg);
   }
