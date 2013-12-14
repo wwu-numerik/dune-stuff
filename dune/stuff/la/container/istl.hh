@@ -14,6 +14,8 @@
 #include <dune/istl/bvector.hh>
 #include <dune/istl/bcrsmatrix.hh>
 
+#include <dune/stuff/la/solver/interface.hh>
+
 #include "interfaces.hh"
 #include "pattern.hh"
 
@@ -305,6 +307,9 @@ private:
       backend_ = std::make_shared< BackendType >(*backend_);
   } // ... ensure_uniqueness(...)
 
+  friend class BicgstabILUTSolver< IstlRowMajorSparseMatrix< ScalarType >, ThisType >;
+  friend class AmgSolver< IstlRowMajorSparseMatrix< ScalarType >, ThisType >;
+
   std::shared_ptr< BackendType > backend_;
 }; // class IstlDenseVector
 
@@ -356,6 +361,7 @@ public:
         row.insert(col);
       ++row_index;
     }
+    backend_->operator*=(ScalarType(0));
   }
 
   IstlRowMajorSparseMatrix(const size_t rr = 0, const size_t cc = 0)
@@ -563,8 +569,8 @@ private:
       backend_ = std::make_shared< BackendType >(*backend_);
   } // ... ensure_uniqueness(...)
 
-  friend class Dune::Pymor::Operators::EigenRowMajorSparseInverse< ScalarType >;
-  friend class Dune::Pymor::Operators::EigenRowMajorSparse< ScalarType >;
+  friend class BicgstabILUTSolver< ThisType, IstlDenseVector< ScalarType > >;
+  friend class AmgSolver< ThisType, IstlDenseVector< ScalarType > >;
 
   std::shared_ptr< BackendType > backend_;
 }; // class IstlRowMajorSparseMatrix
