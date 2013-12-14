@@ -80,7 +80,7 @@ public:
     : DuneDynamicVector(VectorInterfaceType::assert_is_size_t_compatible_and_convert(ss), value)
   {}
 
-  /// This constructor is needed because marking the above one as explicit had not effect.
+  /// This constructor is needed because marking the above one as explicit had no effect.
   DuneDynamicVector(const int ss, const ScalarType value = ScalarType(0))
     : DuneDynamicVector(VectorInterfaceType::assert_is_size_t_compatible_and_convert(ss), value)
   {}
@@ -354,7 +354,7 @@ public:
                         value)
   {}
 
-  /// This constructor is needed because marking the above one as explicit had not effect.
+  /// This constructor is needed because marking the above one as explicit had no effect.
   DuneDynamicMatrix(const int rr, const int cc = 0, const ScalarType value = ScalarType(0))
     : DuneDynamicMatrix(MatrixInterfaceType::assert_is_size_t_compatible_and_convert(rr),
                         MatrixInterfaceType::assert_is_size_t_compatible_and_convert(cc),
