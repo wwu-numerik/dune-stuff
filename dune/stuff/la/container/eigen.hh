@@ -995,7 +995,7 @@ public:
   }
 
   EigenRowMajorSparseMatrix(const size_t rr = 0, const size_t cc = 0)
-    : EigenRowMajorSparseMatrix(rr, cc)
+    : backend_(new BackendType(rr, cc))
   {}
 
   /// This constructor is needed for the python bindings.
