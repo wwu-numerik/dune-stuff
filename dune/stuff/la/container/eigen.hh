@@ -244,6 +244,19 @@ public:
     assert(ii < size());
     return backend_->operator()(ii);
   } // ... get_entry(...)
+
+protected:
+  inline ScalarType& get_entry_ref(const size_t ii)
+  {
+    return backend_->operator()(ii);
+  }
+
+  inline const ScalarType& get_entry_ref(const size_t ii) const
+  {
+    return backend_->operator()(ii);
+  }
+
+public:
   /**
    * \}
    */
@@ -372,6 +385,7 @@ private:
       backend_ = std::make_shared< BackendType >(*backend_);
   } // ... ensure_uniqueness(...)
 
+  friend class VectorInterface< EigenDenseVectorTraits< ScalarType > >;
   friend class EigenDenseMatrix< ScalarType >;
   friend class EigenRowMajorSparseMatrix< ScalarType >;
   friend class Dune::Pymor::Operators::EigenRowMajorSparseInverse< ScalarType >;
@@ -568,6 +582,19 @@ public:
     assert(ii < size());
     return backend_->operator()(ii);
   } // ... get_entry(...)
+
+private:
+  inline ScalarType& get_entry_ref(const size_t ii)
+  {
+    return backend_->operator()(ii);
+  }
+
+  inline const ScalarType& get_entry_ref(const size_t ii) const
+  {
+    return backend_->operator()(ii);
+  }
+
+public:
   /**
    * \}
    */
@@ -680,6 +707,7 @@ private:
     }
   } // ... ensure_uniqueness(...)
 
+  friend class VectorInterface< EigenMappedDenseVectorTraits< ScalarType > >;
   friend class EigenDenseMatrix< ScalarType >;
   friend class EigenRowMajorSparseMatrix< ScalarType >;
   friend class Dune::Pymor::Operators::EigenRowMajorSparseInverse< ScalarType >;
