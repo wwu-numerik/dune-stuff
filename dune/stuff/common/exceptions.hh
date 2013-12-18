@@ -54,6 +54,8 @@ class shapes_do_not_match : public Dune::Exception {};
 
 class index_out_of_range : public Dune::Exception {};
 
+class configuration_error : public Dune::Exception {};
+
 
 } // namespace Exception
 } // namespace Stuff
