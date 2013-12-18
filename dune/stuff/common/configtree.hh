@@ -328,7 +328,7 @@ public:
       return Choose< T >::get(*this, key);
     else
       return default_value;
-  }
+  } // ... get(...)
 
   std::string get(const std::string& key, const char* default_value) const
   {
@@ -380,7 +380,7 @@ private:
     BaseType param_tree;
     Dune::ParameterTreeParser::readINITree(filename, param_tree);
     return param_tree;
-  }
+  } // ... initialize(...)
 
   static BaseType initialize(int argc, char** argv)
   {
@@ -394,7 +394,7 @@ private:
       Dune::ParameterTreeParser::readINITree(param_tree.get< std::string >("paramfile"), param_tree, false);
     }
     return param_tree;
-  }
+  } // ... initialize(...)
 
   static BaseType initialize(int argc, char** argv, std::string filename)
   {
@@ -410,7 +410,7 @@ private:
       Dune::ParameterTreeParser::readINITree(param_tree.get< std::string >("paramfile"), param_tree, false);
     }
     return param_tree;
-  }
+  } // ... initialize(...)
 
   void report_as_sub(std::ostream& out, const std::string& prefix, const std::string& sub_path) const
   {
