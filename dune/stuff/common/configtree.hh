@@ -9,6 +9,7 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <initializer_list>
 
 #include <dune/common/parametertree.hh>
 #include <dune/common/parametertreeparser.hh>
@@ -18,6 +19,7 @@
 
 #include <dune/stuff/common/exceptions.hh>
 #include <dune/stuff/common/string.hh>
+#include <dune/stuff/common/type_utils.hh>
 #include <dune/stuff/la/container/dunedynamic.hh>
 #if HAVE_EIGEN
 # include <dune/stuff/la/container/eigen.hh>
@@ -51,11 +53,12 @@ class ConfigTree
         const auto tokens = tokenize< std::string >(vector_str, " ", boost::algorithm::token_compress_off);
         if (size > 0 && tokens.size() < size)
           DUNE_THROW_COLORFULLY(Exception::configuration_error,
-                                "Vector (see below) to given key " << key << " has only " << tokens.size()
+                                "Vector (see below) to given key '" << key << "' has only " << tokens.size()
                                 << " elements but " << size << " elements were requested!"
                                 << "\n" << "'[" << vector_str << "]'");
-        VectorType ret(tokens.size());
-        for (size_t ii = 0; ii < std::min(tokens.size(), size); ++ii)
+        const size_t actual_size = (size > 0) ? std::min(tokens.size(), size) : tokens.size();
+        VectorType ret(actual_size);
+        for (size_t ii = 0; ii < actual_size; ++ii)
           ret[ii] = fromString< S >(boost::algorithm::trim_copy(tokens[ii]));
         return ret;
       } else {
@@ -109,6 +112,11 @@ class ConfigTree
   public:
     static VectorType get(const ParameterTree& config, const std::string& key, const size_t size = 0)
     {
+      if (size > 0 && size != d)
+        DUNE_THROW_COLORFULLY(Exception::configuration_error,
+                              "You requested a '" << Typename< VectorType >::value() << "' for key '" << key
+                              << "' with a 'size' of " << size
+                              << " but this type of vector can not have any size other than " << d << "!");
       return BaseType::template get_vector< VectorType, K >(config, key, size);
     }
   }; // class Choose< FieldVector< ... > >
@@ -213,6 +221,19 @@ public:
       add(keys[ii], values[ii]);
   }
 
+  template< class T >
+  ConfigTree(const std::vector< std::string > keys, const std::initializer_list< T > value_list)
+    : BaseType()
+  {
+    std::vector< T > values(value_list);
+    if (keys.size() != values.size())
+      DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
+                            "The size of 'keys'' (" << keys.size() << ") does not match the size of 'value_list' ("
+                            << values.size() << ")!");
+    for (size_t ii = 0; ii < keys.size(); ++ii)
+      add(keys[ii], values[ii]);
+  }
+
   ConfigTree(const std::string filename)
     : BaseType(initialize(filename))
   {}
@@ -251,8 +272,8 @@ public:
           DUNE_THROW_COLORFULLY(Exception::configuration_error,
                                 "While adding 'other' to this (see below), the key '" << key
                                 << "' already exists and you requested no overwrite!"
-                                << "\n" << "==== this ==========" << report_string()
-                                << "\n" << "==== other =========" << other.report_string());
+                                << "\n==== this ============\n" << report_string()
+                                << "\n==== other ===========\n" << other.report_string());
         add(key, other.get< std::string >(key));
       }
     } else {
@@ -260,8 +281,8 @@ public:
         DUNE_THROW_COLORFULLY(Exception::configuration_error,
                               "While adding 'other' to this (see below), the key '" << sub_id
                               << "' already exists and you requested no overwrite!"
-                              << "\n" << "==== this ============" << report_string()
-                              << "\n" << "==== other ===========" << other.report_string());
+                              << "\n==== this ============\n" << report_string()
+                              << "\n==== other ===========\n" << other.report_string());
       else if (has_sub(sub_id)) {
         ConfigTree sub_tree = BaseType::sub(sub_id);
         sub_tree.add(other);
@@ -278,7 +299,7 @@ public:
       DUNE_THROW_COLORFULLY(Exception::configuration_error,
                             "While adding '" << key << "' = '" << value << "' to this (see below), the key '" << key
                             << "' already exists and you requested no overwrite!"
-                            << "\n" << "======================" << report_string());
+                            << "\n======================\n" << report_string());
     const std::string value_string = toString(value);
     BaseType::operator[](key) = value_string;
   } // ... add(...)
@@ -289,7 +310,7 @@ public:
       DUNE_THROW_COLORFULLY(Exception::configuration_error,
                             "While adding '" << key << "' = '" << value << "' to this (see below), the key '" << key
                             << "' already exists and you requested no overwrite!"
-                            << "\n" << "======================" << report_string());
+                            << "\n======================\n" << report_string());
     const std::string value_string = toString(value);
     BaseType::operator[](key) = value_string;
   } // ... add(...)
@@ -312,7 +333,7 @@ public:
                             "Subtree '" << sub_id << "' does not exist in this ConfigTree (see below), use has_sub(\""
                             << sub_id
                             << "\") to check first!"
-                            << "\n" << "======================" << report_string());
+                            << "\n======================\n" << report_string());
     return ConfigTree(BaseType::sub(sub_id));
   } // ... sub(...)
 
@@ -322,15 +343,15 @@ public:
   }
 
   template< typename T >
-  T get(const std::string& key, const T& default_value) const
+  T get(const std::string& key, const T& default_value, const size_t size = 0) const
   {
     if (has_key(key))
-      return Choose< T >::get(*this, key);
+      return Choose< T >::get(*this, key, size);
     else
       return default_value;
   } // ... get(...)
 
-  std::string get(const std::string& key, const char* default_value) const
+  std::string get(const std::string& key, const char* default_value, const size_t /*size*/ = 0) const
   {
     return BaseType::get(key, default_value);
   }
@@ -350,21 +371,26 @@ public:
                             "Given key '" << key << "' does not exist in this ConfigTree (see below), use has_key(\""
                             << key
                             << "\") to check first!"
-                            << "\n" << "======================" << report_string());
+                            << "\n======================\n" << report_string());
     return Choose< T >::get(*this, key, size);
   } // ... get(...)
 
   void report(std::ostream& out = std::cout, const std::string& prefix = "") const
   {
-    if (valueKeys.size() == 0 || subKeys.size() == 0) {
-      const std::string common_prefix = find_common_prefix(*this, "");
-      if (!common_prefix.empty()) {
-        out << "[" << common_prefix << "]" << std::endl;
-        const ExtendedParameterTree& commonSub = sub(common_prefix);
-        report_flatly(commonSub, prefix, out);
+    if (!empty()) {
+      if (subKeys.size() == 0) {
+        report_as_sub(out, prefix, "");
+      } else if (valueKeys.size() == 0) {
+        const std::string common_prefix = find_common_prefix(*this, "");
+        if (!common_prefix.empty()) {
+          out << "[" << common_prefix << "]" << std::endl;
+          const ExtendedParameterTree& commonSub = sub(common_prefix);
+          report_flatly(commonSub, prefix, out);
+        }
+      } else {
+        report_as_sub(out, prefix, "");
       }
-    } else
-      report_as_sub(out, prefix, "");
+    }
   } // ... report(...)
 
   std::string report_string(const std::string& prefix = "") const
@@ -457,7 +483,11 @@ private:
 }; // class ConfigTree
 
 
-std::ostream& operator<<(std::ostream& out, const ConfigTree& config);
+std::ostream& operator<<(std::ostream& out, const ConfigTree& config)
+{
+  config.report(out);
+  return out;
+}
 
 
 } // namespace Common
