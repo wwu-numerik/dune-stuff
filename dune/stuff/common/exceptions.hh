@@ -56,6 +56,8 @@ class index_out_of_range : public Dune::Exception {};
 
 class configuration_error : public Dune::Exception {};
 
+class results_are_not_as_expected : public Dune::Exception {};
+
 
 } // namespace Exception
 } // namespace Stuff
