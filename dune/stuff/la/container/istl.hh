@@ -8,14 +8,14 @@
 
 #include <dune/common/static_assert.hh>
 
-#if HAVE_DUNE_ISTL
-
 #include <dune/common/fvector.hh>
 #include <dune/common/fmatrix.hh>
 #include <dune/common/typetraits.hh>
 
-#include <dune/istl/bvector.hh>
-#include <dune/istl/bcrsmatrix.hh>
+#if HAVE_DUNE_ISTL
+# include <dune/istl/bvector.hh>
+# include <dune/istl/bcrsmatrix.hh>
+#endif // HAVE_DUNE_ISTL
 
 #include "interfaces.hh"
 #include "pattern.hh"
@@ -32,6 +32,8 @@ class IstlDenseVector;
 template< class ScalarImp >
 class IstlRowMajorSparseMatrix;
 
+
+#if HAVE_DUNE_ISTL
 
 /// Traits for IstlDenseVector.
 template< class ScalarImp >
@@ -598,15 +600,7 @@ private:
 }; // class IstlRowMajorSparseMatrix
 
 
-} // namespace LA
-} // namespace Stuff
-} // namespace Dune
-
 #else // HAVE_DUNE_ISTL
-
-namespace Dune {
-namespace Stuff {
-namespace LA {
 
 
 template< class ScalarImp >
@@ -616,10 +610,10 @@ template< class ScalarImp >
 class IstlRowMajorSparseMatrix{ static_assert(Dune::AlwaysFalse< ScalarImp >::value, "You are missing dune-istl!"); };
 
 
+#endif // HAVE_DUNE_ISTL
+
 } // namespace LA
 } // namespace Stuff
 } // namespace Dune
-
-#endif // HAVE_DUNE_ISTL
 
 #endif // DUNE_STUFF_LA_CONTAINER_ISTL_HH
