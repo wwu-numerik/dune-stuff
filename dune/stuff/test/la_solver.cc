@@ -14,8 +14,8 @@
 #include <dune/stuff/la/solver.hh>
 
 // toggle output
-std::ostream& out = std::cout;
-//std::ostream& out = DSC_LOG.devnull();
+//std::ostream& out = std::cout;
+std::ostream& out = DSC_LOG.devnull();
 
 using namespace Dune::Stuff;
 using namespace Dune::Stuff::LA;
@@ -28,9 +28,9 @@ typedef testing::Types< std::tuple< DuneDynamicMatrix< double >, DuneDynamicVect
                       , std::tuple< EigenDenseMatrix< double >, EigenMappedDenseVector< double >, EigenMappedDenseVector< double > >
                       , std::tuple< EigenRowMajorSparseMatrix< double >, EigenDenseVector< double >, EigenDenseVector< double > >
 #endif // HAVE_EIGEN
-#if HAVE_ISTL
+#if HAVE_DUNE_ISTL
                       , std::tuple< IstlRowMajorSparseMatrix< double >, IstlDenseVector< double >, IstlDenseVector< double > >
-#endif // HAVE_ISTL
+#endif
                       > MatrixVectorCombinations;
 
 template< class MatrixVectorCombination >
