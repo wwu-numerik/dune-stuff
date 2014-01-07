@@ -28,6 +28,9 @@ typedef testing::Types< std::tuple< DuneDynamicMatrix< double >, DuneDynamicVect
                       , std::tuple< EigenDenseMatrix< double >, EigenMappedDenseVector< double >, EigenMappedDenseVector< double > >
                       , std::tuple< EigenRowMajorSparseMatrix< double >, EigenDenseVector< double >, EigenDenseVector< double > >
 #endif // HAVE_EIGEN
+#if HAVE_ISTL
+                      , std::tuple< IstlRowMajorSparseMatrix< double >, IstlDenseVector< double >, IstlDenseVector< double > >
+#endif // HAVE_ISTL
                       > MatrixVectorCombinations;
 
 template< class MatrixVectorCombination >
