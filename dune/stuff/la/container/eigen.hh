@@ -6,13 +6,13 @@
 #ifndef DUNE_STUFF_LA_CONTAINER_EIGEN_HH
 #define DUNE_STUFF_LA_CONTAINER_EIGEN_HH
 
-#if HAVE_EIGEN
-
 #include <memory>
 #include <type_traits>
 
-#include <Eigen/Core>
-#include <Eigen/SparseCore>
+#if HAVE_EIGEN
+# include <Eigen/Core>
+# include <Eigen/SparseCore>
+#endif // HAVE_EIGEN
 
 #include <dune/common/typetraits.hh>
 
@@ -58,6 +58,7 @@ class EigenVectorInterfaceDynamic {};
 class EigenMatrixInterfaceDynamic {};
 
 
+#if HAVE_EIGEN
 /**
  *  \brief Traits for EigenDenseVector.
  */
@@ -1345,15 +1346,7 @@ private:
 }; // class EigenRowMajorSparseMatrix
 
 
-} // namespace LA
-} // namespace Stuff
-} // namespace Dune
-
 #else // HAVE_EIGEN
-
-namespace Dune {
-namespace Stuff {
-namespace LA {
 
 
 template< class ScalarImp >
@@ -1369,10 +1362,10 @@ template< class ScalarImp >
 class EigenRowMajorSparseMatrix{ static_assert(Dune::AlwaysFalse< ScalarImp >::value, "You are missing Eigen!"); };
 
 
+#endif // HAVE_EIGEN
+
 } // namespace LA
 } // namespace Stuff
 } // namespace Dune
-
-#endif // HAVE_EIGEN
 
 #endif // DUNE_STUFF_LA_CONTAINER_EIGEN_HH
