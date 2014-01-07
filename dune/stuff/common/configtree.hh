@@ -384,7 +384,7 @@ public:
         const std::string common_prefix = find_common_prefix(*this, "");
         if (!common_prefix.empty()) {
           out << "[" << common_prefix << "]" << std::endl;
-          const ExtendedParameterTree& commonSub = sub(common_prefix);
+          const ConfigTree& commonSub = sub(common_prefix);
           report_flatly(commonSub, prefix, out);
         }
       } else {
