@@ -53,6 +53,9 @@ class EigenDenseMatrix;
 template< class ScalarType >
 class EigenRowMajorSparseMatrix;
 
+template< class MatrixImp >
+class Solver;
+
 
 class EigenVectorInterfaceDynamic {};
 class EigenMatrixInterfaceDynamic {};
@@ -283,6 +286,21 @@ public:
     return result;
   } // ... amax(...)
 
+  bool almost_equal(const EigenMappedDenseVector< ScalarType >& other,
+                    const ScalarType epsilon = Dune::FloatCmp::DefaultEpsilon< ScalarType >::value()) const
+  {
+    if (other.size() != size())
+      DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
+                            "The size of other (" << other.size() << ") does not match the size of this (" << size()
+                            << ")!");
+    for (size_t ii = 0; ii < size(); ++ii)
+      if (!Dune::FloatCmp::eq< ScalarType >(backend_->operator()(ii), other.backend_->operator()(ii), epsilon))
+        return false;
+      return true;
+  } // ... almost_equal(...)
+
+  using VectorInterfaceType::almost_equal;
+
   virtual ScalarType dot(const ThisType& other) const DS_OVERRIDE
   {
     if (other.size() != size())
@@ -386,8 +404,11 @@ private:
   } // ... ensure_uniqueness(...)
 
   friend class VectorInterface< EigenDenseVectorTraits< ScalarType > >;
+  friend class EigenMappedDenseVector< ScalarType >;
   friend class EigenDenseMatrix< ScalarType >;
   friend class EigenRowMajorSparseMatrix< ScalarType >;
+  friend class Solver< EigenDenseMatrix< ScalarType > >;
+  friend class Solver< EigenRowMajorSparseMatrix< ScalarType > >;
   friend class Dune::Pymor::Operators::EigenRowMajorSparseInverse< ScalarType >;
   friend class Dune::Pymor::Operators::EigenRowMajorSparse< ScalarType >;
 
@@ -621,6 +642,21 @@ public:
     return result;
   } // ... amax(...)
 
+  bool almost_equal(const EigenDenseVector< ScalarType >& other,
+                    const ScalarType epsilon = Dune::FloatCmp::DefaultEpsilon< ScalarType >::value()) const
+  {
+    if (other.size() != size())
+      DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
+                            "The size of other (" << other.size() << ") does not match the size of this (" << size()
+                            << ")!");
+    for (size_t ii = 0; ii < size(); ++ii)
+      if (!Dune::FloatCmp::eq< ScalarType >(backend_->operator()(ii), other.backend_->operator()(ii), epsilon))
+        return false;
+      return true;
+  } // ... almost_equal(...)
+
+  using VectorInterfaceType::almost_equal;
+
   virtual ScalarType dot(const ThisType& other) const DS_OVERRIDE
   {
     if (other.size() != size())
@@ -708,8 +744,11 @@ private:
   } // ... ensure_uniqueness(...)
 
   friend class VectorInterface< EigenMappedDenseVectorTraits< ScalarType > >;
+  friend class EigenDenseVector< ScalarType >;
   friend class EigenDenseMatrix< ScalarType >;
   friend class EigenRowMajorSparseMatrix< ScalarType >;
+  friend class Solver< EigenDenseMatrix< ScalarType > >;
+  friend class Solver< EigenRowMajorSparseMatrix< ScalarType > >;
   friend class Dune::Pymor::Operators::EigenRowMajorSparseInverse< ScalarType >;
   friend class Dune::Pymor::Operators::EigenRowMajorSparse< ScalarType >;
 
@@ -774,6 +813,10 @@ public:
                        value)
   {}
 
+  /// This constructors ignores the given pattern and initializes the matrix with 0.
+  EigenDenseMatrix(const size_t rr, const size_t cc, const SparsityPatternDefault& /*pattern*/)
+    : EigenDenseMatrix(rr, cc)
+  {}
 
   EigenDenseMatrix(const ThisType& other)
     : backend_(other.backend_)
@@ -992,6 +1035,7 @@ private:
       backend_ = std::make_shared< BackendType >(*backend_);
   } // ... ensure_uniqueness(...)
 
+  friend class Solver< EigenDenseMatrix< ScalarType > >;
   friend class Dune::Pymor::Operators::EigenRowMajorSparseInverse< ScalarType >;
   friend class Dune::Pymor::Operators::EigenRowMajorSparse< ScalarType >;
 
@@ -1302,6 +1346,7 @@ private:
       backend_ = std::make_shared< BackendType >(*backend_);
   } // ... ensure_uniqueness(...)
 
+  friend class Solver< EigenRowMajorSparseMatrix< ScalarType > >;
   friend class Dune::Pymor::Operators::EigenRowMajorSparseInverse< ScalarType >;
   friend class Dune::Pymor::Operators::EigenRowMajorSparse< ScalarType >;
 
