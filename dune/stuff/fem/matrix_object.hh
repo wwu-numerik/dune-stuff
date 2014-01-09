@@ -16,7 +16,6 @@
 #include <dune/stuff/la/container/eigen.hh>
 #include <dune/stuff/la/container/pattern.hh>
 #include <dune/stuff/la/solver.hh>
-#include <dune/stuff/la/solver/interface.hh>
 #include <dune/stuff/aliases.hh>
 #include <dune/stuff/common/random.hh>
 #include <dune/stuff/common/print.hh>
