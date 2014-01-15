@@ -22,7 +22,7 @@ namespace Dune {
 namespace Stuff {
 
 
-#ifdef HAVE_DUNE_FEM
+#if 1 //def 1 // HAVE_DUNE_FEM
 template< template< class > class SearchStrategy = Grid::EntityInlevelSearch >
 class HeterogenousProjection
 {
@@ -60,8 +60,8 @@ public:
       for(size_t qP = 0; qP < quadNop ; ++qP) {
         global_quads[qP] = target_geometry.global(target_lagrangepoint_set.point(qP));
       }
-      const auto evaluation_entities = search(global_quads);
-      assert(evaluation_entities.size() == global_quads.size());
+      const auto evaluation_entity_ptrs = search(global_quads);
+      assert(evaluation_entity_ptrs.size() >= global_quads.size());
 
       int k = 0;
       for(size_t qP = 0; qP < quadNop ; ++qP)
@@ -70,13 +70,20 @@ public:
         {
           const auto& global_point = global_quads[qP];
           // evaluate source function
-          const auto source_entity = evaluation_entities[qP];
-          const auto& source_geometry = source_entity->geometry();
-          const auto& source_local_point = source_geometry.local(global_point);
-          const auto& source_local_function = source.localFunction(*source_entity);
-          source_local_function.evaluate(source_local_point, source_value);
-          for(int i = 0; i < target_dimRange; ++i, ++k)
-            target_local_function[k] = source_value[i];
+          const auto& source_entity_unique_ptr = evaluation_entity_ptrs[qP];
+          if (source_entity_unique_ptr) {
+            const auto& source_entity_ptr = (*source_entity_unique_ptr);
+            const auto& source_geometry = source_entity_ptr->geometry();
+            const auto& source_local_point = source_geometry.local(global_point);
+            const auto& source_local_function = source.localFunction(*source_entity_ptr);
+            source_local_function.evaluate(source_local_point, source_value);
+            for(int i = 0; i < target_dimRange; ++i, ++k)
+              target_local_function[k] = source_value[i];
+          }
+          else {
+            for(int i = 0; i < target_dimRange; ++i, ++k)
+              target_local_function[k] = TargetDofType(0);
+          }
         }
         else
           k += target_dimRange;
