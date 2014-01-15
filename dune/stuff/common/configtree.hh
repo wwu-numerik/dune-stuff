@@ -483,7 +483,7 @@ private:
 }; // class ConfigTree
 
 
-std::ostream& operator<<(std::ostream& out, const ConfigTree& config)
+inline std::ostream& operator<<(std::ostream& out, const ConfigTree& config)
 {
   config.report(out);
   return out;
