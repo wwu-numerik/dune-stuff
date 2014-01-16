@@ -110,14 +110,12 @@ public:
   }
 };
 
-void ptest(const int macro_elements = 4, const int target_factor = 2) {
+
+template <class SourceGrid, class TargetGrid>
+void ptest(const std::shared_ptr<SourceGrid>& source_cube, const std::shared_ptr<TargetGrid>& target_cube, bool do_lagrange = false)
+{
   typedef Traits<SourceGrid> SourceTraits;
   typedef Traits<TargetGrid> TargetTraits;
-  auto source_cube = Stuff::GridProviderCube<SourceGrid>(0,1,macro_elements).grid();
-  auto target_cube = Stuff::GridProviderCube<TargetGrid>(0,1,macro_elements*target_factor).grid();
-  source_cube->globalRefine(2);
-  target_cube->globalRefine(2*target_factor);
-
   std::cout << (boost::format("\n\nProjecting from %d source elements to %d target elements\n")
                    % source_cube->size(0) % target_cube->size(0)).str();
   typename SourceTraits::GridPart source_part(*source_cube);
@@ -130,28 +128,29 @@ void ptest(const int macro_elements = 4, const int target_factor = 2) {
   typename TargetTraits::DiscreteFunction target_df("target", target_space);
   typename TargetTraits::DiscreteFunction fem_target_df("fem_target", target_space);
 
-  typedef typename SourceGrid::Codim<0>::Entity SourceEntity;
-  typedef typename TargetGrid::Codim<0>::Entity TargetEntity;
+  typedef typename SourceGrid::template Codim<0>::Entity SourceEntity;
+  typedef typename TargetGrid::template Codim<0>::Entity TargetEntity;
 
-  typedef Stuff::Function::Expression< SourceEntity, SourceGrid::ctype,
-      SourceGrid::dimension, SourceGrid::ctype, 1 > ScalarFunctionType;
+  typedef Stuff::Function::Expression< SourceEntity, typename SourceGrid::ctype,
+      SourceGrid::dimension, typename SourceGrid::ctype, 1 > ScalarFunctionType;
   ScalarFunctionType scalar_f("x", "x[0] + x[1]");
   auto wrapped = Stuff::femFunctionAdapter(scalar_f);
   LagrangeInterpolation<typename SourceTraits::DiscreteFunction>::apply(wrapped, source_df);
 
-//  DSC_PROFILER.startTiming("HierarchicSearchStrategy");
-//  Stuff::HeterogenousProjection<Stuff::HierarchicSearchStrategy>::project(source_df, target_df);
-//  DSC_PROFILER.stopTiming("HierarchicSearchStrategy");
+  DSC_PROFILER.startTiming("HierarchicSearchStrategy");
+  Stuff::HeterogenousProjection<Stuff::HierarchicSearchStrategy>::project(source_df, target_df);
+  DSC_PROFILER.stopTiming("HierarchicSearchStrategy");
 
   DSC_PROFILER.startTiming("EntityInlevelSearch ST");
   Stuff::HeterogenousProjection<DSG::EntityInlevelSearch>::project(source_df, target_df);
   DSC_PROFILER.stopTiming("EntityInlevelSearch ST");
   vtk_out(source_df);
   vtk_out(target_df);
-  DSC_PROFILER.startTiming("EntityInlevelSearch TS");
-  Stuff::HeterogenousProjection<DSG::EntityInlevelSearch>::project(source_df, target_df);
-  DSC_PROFILER.stopTiming("EntityInlevelSearch TS");
 
+  if(!do_lagrange)
+    return;
+
+  // below code uses dune-fem's entity search and therefore cannot handle differently sized domains
   DiscretefunctionShroud<typename SourceTraits::DiscreteFunction> shrouded_source_df(source_df);
   DSC_PROFILER.startTiming("FemProjection ST");
   LagrangeInterpolation<typename TargetTraits::DiscreteFunction>::apply(shrouded_source_df, fem_target_df);
@@ -162,6 +161,19 @@ void ptest(const int macro_elements = 4, const int target_factor = 2) {
   DSC_PROFILER.startTiming("FemProjection TS");
   LagrangeInterpolation<typename SourceTraits::DiscreteFunction>::apply(shrouded_target_df, source_df);
   DSC_PROFILER.stopTiming("FemProjection TS");
+}
+
+void ptest(const int macro_elements = 4, const int target_factor = 2) {
+  auto source_cube = Stuff::GridProviderCube<SourceGrid>(0,1,macro_elements).grid();
+  auto target_cube = Stuff::GridProviderCube<TargetGrid>(0,1,macro_elements*target_factor).grid();
+  source_cube->globalRefine(2);
+  target_cube->globalRefine(2*target_factor);
+  ptest(source_cube, target_cube, true);
+  ptest(target_cube, source_cube, true);
+  source_cube = Stuff::GridProviderCube<SourceGrid>(0.25,0.75,macro_elements).grid();
+  source_cube->globalRefine(2);
+  ptest(source_cube, target_cube, false);
+  ptest(target_cube, source_cube, false);
 }
 
 TEST(Projection, Cubes){
