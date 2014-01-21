@@ -139,8 +139,10 @@ public:
     const Common::ExtendedParameterTree ext_settings = settings.hasSub(subName) ? settings.sub(subName) : settings;
     const std::vector< int > dirichletIds = ext_settings.getVector< int >("dirichlet", 0, 0);
     const std::vector< int > neumannIds = ext_settings.getVector< int >("neumann", 0, 0);
-    boundaryInfoMap_.insert(std::pair< std::string, IdSetType >("dirichlet", IdSetType(dirichletIds.begin(), dirichletIds.end())));
-    boundaryInfoMap_.emplace("neumann", IdSetType(neumannIds.begin(), neumannIds.end()));
+    boundaryInfoMap_.insert(std::pair< std::string, IdSetType >("dirichlet",
+                                                                IdSetType(dirichletIds.begin(), dirichletIds.end())));
+    boundaryInfoMap_.insert(std::pair< std::string, IdSetType >("neumann",
+                                                                IdSetType(neumannIds.begin(), neumannIds.end())));
     hasDirichlet_ = boundaryInfoMap_.find("dirichlet") != boundaryInfoMap_.end();
     hasNeumann_ = boundaryInfoMap_.find("neumann") != boundaryInfoMap_.end();
   }
