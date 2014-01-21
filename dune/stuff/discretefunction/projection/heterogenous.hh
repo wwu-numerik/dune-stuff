@@ -27,11 +27,23 @@ template< template< class > class SearchStrategy = Grid::EntityInlevelSearch >
 class HeterogenousProjection
 {
 public:
+  /** If your SearchStrategy only takes a leafview of the source grid, you may use this signature.
+   * Otherwise you'll have to provide an instance of the SearchStrategy to the method below
+   **/
   template < class SourceDFImp, class TargetDFImp >
   static void project(const Dune::Fem::DiscreteFunctionInterface<SourceDFImp>& source,
                       Dune::Fem::DiscreteFunctionInterface<TargetDFImp>& target)
   {
-    typedef SearchStrategy<typename SourceDFImp::GridType::LeafGridView> SearchStrategyType;
+    SearchStrategy<typename SourceDFImp::GridType::LeafGridView> search(source.gridPart().grid().leafView());
+    project(source, target, search);
+  }
+
+  //! signature for non-default SearchStrategy constructions
+  template < class SourceDFImp, class TargetDFImp, class SearchStrategyImp >
+  static void project(const Dune::Fem::DiscreteFunctionInterface<SourceDFImp>& source,
+                      Dune::Fem::DiscreteFunctionInterface<TargetDFImp>& target,
+                      SearchStrategyImp& search)
+  {
     typedef typename TargetDFImp::DiscreteFunctionSpaceType TargetDiscreteFunctionSpaceType;
     typedef typename TargetDFImp::DofType TargetDofType;
     static const int target_dimRange = TargetDiscreteFunctionSpaceType::dimRange;
@@ -44,7 +56,6 @@ public:
     for( auto dit = target.dbegin(); dit != dend; ++dit )
       *dit = infinity;
 
-    SearchStrategyType search(source.gridPart().grid().leafView());
     const auto endit = space.end();
     for(auto it = space.begin(); it != endit ; ++it)
     {
