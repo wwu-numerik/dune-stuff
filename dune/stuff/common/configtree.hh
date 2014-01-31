@@ -215,7 +215,18 @@ public:
   {
     if (keys.size() != values.size())
       DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
-                            "The size of 'keys'' (" << keys.size() << ") does not match the size of 'values' ("
+                            "The size of 'keys' (" << keys.size() << ") does not match the size of 'values' ("
+                            << values.size() << ")!");
+    for (size_t ii = 0; ii < keys.size(); ++ii)
+      add(keys[ii], values[ii]);
+  }
+
+  ConfigTree(const std::vector< std::string > keys, const std::vector< std::string > values)
+    : BaseType()
+  {
+    if (keys.size() != values.size())
+      DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
+                            "The size of 'keys' (" << keys.size() << ") does not match the size of 'values' ("
                             << values.size() << ")!");
     for (size_t ii = 0; ii < keys.size(); ++ii)
       add(keys[ii], values[ii]);
@@ -228,7 +239,7 @@ public:
     std::vector< T > values(value_list);
     if (keys.size() != values.size())
       DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
-                            "The size of 'keys'' (" << keys.size() << ") does not match the size of 'value_list' ("
+                            "The size of 'keys' (" << keys.size() << ") does not match the size of 'value_list' ("
                             << values.size() << ")!");
     for (size_t ii = 0; ii < keys.size(); ++ii)
       add(keys[ii], values[ii]);
