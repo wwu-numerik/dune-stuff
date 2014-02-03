@@ -63,7 +63,7 @@ public:
 
   GridboundaryAllDirichlet() {}
 
-  virtual bool dirichlet(const IntersectionType& intersection) const
+  virtual bool dirichlet(const IntersectionType& intersection) const DS_OVERRIDE
   {
     if (intersection.boundary())
       return true;
@@ -71,7 +71,7 @@ public:
       return false;
   } // virtual bool dirichlet(const IntersectionType& intersection) const
 
-  virtual bool neumann(const IntersectionType&) const
+  virtual bool neumann(const IntersectionType&) const DS_OVERRIDE
   {
     return false;
   }
@@ -98,12 +98,12 @@ public:
 
   GridboundaryAllNeumann() {}
 
-  virtual bool dirichlet(const IntersectionType& /*intersection*/) const
+  virtual bool dirichlet(const IntersectionType& /*intersection*/) const DS_OVERRIDE
   {
     return false;
   }
 
-  virtual bool neumann(const IntersectionType& intersection) const
+  virtual bool neumann(const IntersectionType& intersection) const DS_OVERRIDE
   {
     return intersection.boundary();
   } // virtual bool neumann(const IntersectionType& intersection) const
@@ -170,7 +170,7 @@ public:
     return boundaryInfoMap_;
   }
 
-  virtual bool dirichlet(const IntersectionType& intersection) const
+  virtual bool dirichlet(const IntersectionType& intersection) const DS_OVERRIDE
   {
     if (hasDirichlet_ && intersection.boundary()) {
       const IdType boundaryId = intersection.boundaryId();
@@ -183,7 +183,7 @@ public:
       return false;
   } // bool dirichlet(const IntersectionType& intersection) const
 
-  virtual bool neumann(const IntersectionType& intersection) const
+  virtual bool neumann(const IntersectionType& intersection) const DS_OVERRIDE
   {
     if (hasNeumann_ && intersection.boundary()) {
       // get boundary id
@@ -306,7 +306,7 @@ public:
     return new ThisType(dirichletDef, dirichlets, neumanns, tol);
   }
 
-  virtual bool dirichlet(const IntersectionType& intersection) const
+  virtual bool dirichlet(const IntersectionType& intersection) const DS_OVERRIDE
   {
     if (intersection.boundary()) {
       const DomainType outerNormal = intersection.centerUnitOuterNormal();
@@ -320,7 +320,7 @@ public:
     return false;
   } // bool dirichlet(const IntersectionType& intersection) const
 
-  virtual bool neumann(const IntersectionType& intersection) const
+  virtual bool neumann(const IntersectionType& intersection) const DS_OVERRIDE
   {
     if (intersection.boundary()) {
       const DomainType outerNormal = intersection.centerUnitOuterNormal();
