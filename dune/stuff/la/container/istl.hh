@@ -351,7 +351,7 @@ class IstlRowMajorSparseMatrix
   , public ProvidesBackend< IstlRowMajorSparseMatrixTraits< ScalarImp > >
 {
   typedef IstlRowMajorSparseMatrix< ScalarImp > ThisType;
-  typedef MatrixInterface< IstlRowMajorSparseMatrixTraits< ScalarImp > > MatrixInterface;
+//  typedef MatrixInterface< IstlRowMajorSparseMatrixTraits< ScalarImp > > MatrixInterface;
   static_assert(!std::is_same< DUNE_STUFF_SSIZE_T, int >::value,
                 "You have to manually disable the constructor below which uses DUNE_STUFF_SSIZE_T!");
 public:
