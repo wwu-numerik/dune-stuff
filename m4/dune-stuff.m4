@@ -26,6 +26,17 @@ AC_DEFUN([DUNE_STUFF_CHECKS],[
 Perhaps you should add the directory containing `eigen3.pc'
 to the PKG_CONFIG_PATH environment variable.])])
   DUNE_CPPFLAGS="$DUNE_CPPFLAGS $EIGEN_CFLAGS"
+
+  PKG_CHECK_MODULES([LIBAMA],
+                    [libama],
+                    [AC_DEFINE([HAVE_LIBAMA],
+                               [1],
+                               [Define wether libama.])],
+                               [AC_MSG_RESULT([Package 'libama' was not found in the pkg-config search path.
+Perhaps you should add the directory containing `libama.pc'
+to the PKG_CONFIG_PATH environment variable.])])
+  DUNE_CPPFLAGS="$DUNE_CPPFLAGS $LIBAMA_CFLAGS"
+  DUNE_LDFLAGS="$DUNE_LDFLAGS $LIBAMA_LDFLAGS"
 ])
 
 AC_DEFUN([DUNE_STUFF_CHECK_MODULE],
