@@ -20,7 +20,7 @@ static typename TraitsType::RangeFieldType l2norm(const Dune::Fem::DiscreteFunct
 }
 
 template <class FunctionType_A, class TraitsType>
-typename TraitsType::RangeFieldType l2norm(const FunctionType_A& function_A, const Dune::Fem::DiscreteFunctionInterface<TraitsType>& function_B)
+typename TraitsType::RangeFieldType l2distance(const FunctionType_A& function_A, const Dune::Fem::DiscreteFunctionInterface<TraitsType>& function_B)
 {
   static_assert(std::is_base_of<Dune::Fem::HasLocalFunction, FunctionType_A>::value, "");
   Dune::Fem::L2Norm<typename TraitsType::DiscreteFunctionType::GridPartType> norm(function_B.space().gridPart());
@@ -35,7 +35,7 @@ static typename TraitsType::RangeFieldType h1norm(const Dune::Fem::DiscreteFunct
 }
 
 template <class FunctionType_A, class TraitsType>
-typename TraitsType::RangeFieldType h1norm(const FunctionType_A& function_A, const Dune::Fem::DiscreteFunctionInterface<TraitsType>& function_B)
+typename TraitsType::RangeFieldType h1distance(const FunctionType_A& function_A, const Dune::Fem::DiscreteFunctionInterface<TraitsType>& function_B)
 {
   static_assert(std::is_base_of<Dune::Fem::HasLocalFunction, FunctionType_A>::value, "");
   Dune::Fem::H1Norm<typename TraitsType::DiscreteFunctionType::GridPartType> norm(function_B.space().gridPart());

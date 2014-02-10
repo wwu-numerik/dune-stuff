@@ -79,6 +79,11 @@ FemFunctionAdapter<typename F::EntityType, typename F::DomainFieldType, F::dimDo
   return FemFunctionAdapter<typename F::EntityType, typename F::DomainFieldType, F::dimDomain, typename F::RangeFieldType, F::dimRange>(function);
 }
 
+template <class DataType, class GridPartType>
+Dune::Fem::GridFunctionAdapter<DataType, GridPartType> gridFunctionAdapter(const DataType& data, const GridPartType& grid_part) {
+  return Dune::Fem::GridFunctionAdapter<DataType, GridPartType> ("", data, grid_part);
+}
+
 } // namespace Stuff
 } // namespace Dune
 
