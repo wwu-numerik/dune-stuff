@@ -212,15 +212,26 @@ public:
 
   static std::vector< std::string > options()
   {
-    return { "bicgstab.ilut" , "bicgstab.diagonal" , "bicgstab.identity" , "lu.sparse", "qr.sparse", "ldlt.simplicial"
-           , "llt.simplicial"/*, "spqr", "llt.cholmodsupernodal"*/
+    return { "bicgstab.ilut"
+           , "bicgstab.diagonal"
+           , "bicgstab.identity"
+           , "lu.sparse"
+//           , "qr.sparse"             // <- produces correct results, but is painfully slow
+//           , "ldlt.simplicial"       // <- does not produce correct results
+//           , "llt.simplicial"        // <- does not produce correct results
+//           , "spqr"                  // <- does not compile
+//           , "llt.cholmodsupernodal" // <- does not compile
 #if HAVE_UMFPACK
-           , "lu.umfpack"
+           , "lu.umfpack"              // <-untested
 #endif
 #if HAVE_SUPERLU
-           , "superlu"
+           , "superlu"                 // <- untested
 #endif
-           , "cg.diagonal.lower" , "cg.diagonal.upper", "cg.identity.lower", "cg.identity.upper" };
+           , "cg.diagonal.lower"       // <- does only work with symmetric matrices
+           , "cg.diagonal.upper"       // <- does only work with symmetric matrices
+           , "cg.identity.lower"       // <- does only work with symmetric matrices
+           , "cg.identity.upper"       // <- does only work with symmetric matrices
+    };
   }
 
   static Common::ConfigTree options(const std::string& type)
@@ -240,7 +251,8 @@ public:
     if (type == "bicgstab.ilut") {
       iterative_options.add("preconditioner.fill_factor", "10");
       iterative_options.add("preconditioner.drop_tol", "1e-4");
-    }
+    } else if (type.substr(0, 3) == "cg.")
+      iterative_options.add("DEBUG_symmetry_check", "1e-8");
     return iterative_options;
   } // ... options(...)
 
@@ -328,7 +340,14 @@ private:
     const auto type = opts.get< std::string >("type");
     const Common::ConfigTree default_opts = options(type);
     if (type == "cg.diagonal.lower") {
-      // create solver
+#ifndef NDEBUG
+      const S symmetry_check_accuracy = opts.get("DEBUG_symmetry_check", default_opts.get< S >("DEBUG_symmetry_check"));
+      if (symmetry_check_accuracy > 0) {
+        const ColMajorBackendType colmajor_copy(matrix_.backend());
+        if (!colmajor_copy.isApprox(matrix_.backend().transpose(), symmetry_check_accuracy))
+          return 1;
+      }
+#endif
       typedef ::Eigen::ConjugateGradient< typename MatrixType::BackendType,
                                           ::Eigen::Lower,
                                           ::Eigen::DiagonalPreconditioner< S > > SolverType;
@@ -339,6 +358,14 @@ private:
       if (solver.info() != ::Eigen::Success)
         return solver.info();
     } else if (type == "cg.diagonal.upper") {
+#ifndef NDEBUG
+      const S symmetry_check_accuracy = opts.get("DEBUG_symmetry_check", default_opts.get< S >("DEBUG_symmetry_check"));
+      if (symmetry_check_accuracy > 0) {
+        const ColMajorBackendType colmajor_copy(matrix_.backend());
+        if (!colmajor_copy.isApprox(matrix_.backend().transpose(), symmetry_check_accuracy))
+          return 1;
+      }
+#endif
         typedef ::Eigen::ConjugateGradient< typename MatrixType::BackendType,
                                             ::Eigen::Upper,
                                             ::Eigen::DiagonalPreconditioner< double > > SolverType;
@@ -349,6 +376,14 @@ private:
       if (solver.info() != ::Eigen::Success)
         return solver.info();
     } else if (type == "cg.identity.lower") {
+#ifndef NDEBUG
+      const S symmetry_check_accuracy = opts.get("DEBUG_symmetry_check", default_opts.get< S >("DEBUG_symmetry_check"));
+      if (symmetry_check_accuracy > 0) {
+        const ColMajorBackendType colmajor_copy(matrix_.backend());
+        if (!colmajor_copy.isApprox(matrix_.backend().transpose(), symmetry_check_accuracy))
+          return 1;
+      }
+#endif
         typedef ::Eigen::ConjugateGradient< typename MatrixType::BackendType,
                                             ::Eigen::Lower,
                                             ::Eigen::IdentityPreconditioner > SolverType;
@@ -359,6 +394,14 @@ private:
       if (solver.info() != ::Eigen::Success)
         return solver.info();
     } else if (type == "cg.identity.upper") {
+#ifndef NDEBUG
+      const S symmetry_check_accuracy = opts.get("DEBUG_symmetry_check", default_opts.get< S >("DEBUG_symmetry_check"));
+      if (symmetry_check_accuracy > 0) {
+        const ColMajorBackendType colmajor_copy(matrix_.backend());
+        if (!colmajor_copy.isApprox(matrix_.backend().transpose(), symmetry_check_accuracy))
+          return 1;
+      }
+#endif
         typedef ::Eigen::ConjugateGradient< typename MatrixType::BackendType,
                                             ::Eigen::Lower,
                                             ::Eigen::IdentityPreconditioner > SolverType;
@@ -479,7 +522,7 @@ private:
                             "Given type '" << type << "' is not supported, although it was reported by options()!");
     // check
 #ifndef NDEBUG
-    const post_solve_check_accuracy = opts.get("DEBUG_post_solve_test", default_opts.get< S >("DEBUG_post_solve_test"));
+    const S post_solve_check_accuracy = opts.get("DEBUG_post_solve_test", default_opts.get< S >("DEBUG_post_solve_test"));
     if (post_solve_check_accuracy > 0) {
       auto tmp = rhs.copy();
       tmp.backend() = matrix_.backend() * solution.backend() - rhs.backend();
