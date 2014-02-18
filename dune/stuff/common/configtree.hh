@@ -199,14 +199,14 @@ public:
   ConfigTree(const std::string key, const T& value)
     : BaseType()
   {
-    add(key, value);
+    set(key, value);
   }
 
   template< class T >
   ConfigTree(const std::string key, const char* value)
     : BaseType()
   {
-    add(key, value);
+    set(key, value);
   }
 
   template< class T >
@@ -218,7 +218,7 @@ public:
                             "The size of 'keys' (" << keys.size() << ") does not match the size of 'values' ("
                             << values.size() << ")!");
     for (size_t ii = 0; ii < keys.size(); ++ii)
-      add(keys[ii], values[ii]);
+      set(keys[ii], values[ii]);
   }
 
   ConfigTree(const std::vector< std::string > keys, const std::vector< std::string > values)
@@ -229,7 +229,7 @@ public:
                             "The size of 'keys' (" << keys.size() << ") does not match the size of 'values' ("
                             << values.size() << ")!");
     for (size_t ii = 0; ii < keys.size(); ++ii)
-      add(keys[ii], values[ii]);
+      set(keys[ii], values[ii]);
   }
 
   template< class T >
@@ -242,7 +242,7 @@ public:
                             "The size of 'keys' (" << keys.size() << ") does not match the size of 'value_list' ("
                             << values.size() << ")!");
     for (size_t ii = 0; ii < keys.size(); ++ii)
-      add(keys[ii], values[ii]);
+      set(keys[ii], values[ii]);
   }
 
   ConfigTree(const std::string filename)
@@ -285,7 +285,7 @@ public:
                                 << "' already exists and you requested no overwrite!"
                                 << "\n==== this ============\n" << report_string()
                                 << "\n==== other ===========\n" << other.report_string());
-        add(key, other.get< std::string >(key));
+        set(key, other.get< std::string >(key));
       }
     } else {
       if (has_key(sub_id) && !overwrite)
@@ -303,19 +303,20 @@ public:
     }
   } // ... add(...)
 
-  template< typename T >
-  void add(const std::string& key, const T& value, const bool overwrite = false)
+  ConfigTree& operator+=(const ConfigTree& other)
   {
-    if (has_key(key) && !overwrite)
-      DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
-                            "While adding '" << key << "' = '" << value << "' to this (see below), the key '" << key
-                            << "' already exists and you requested no overwrite!"
-                            << "\n======================\n" << report_string());
-    const std::string value_string = toString(value);
-    BaseType::operator[](key) = value_string;
-  } // ... add(...)
+    add(other);
+    return *this;
+  }
 
-  void add(const std::string& key, const char* value, const bool overwrite = false)
+  ConfigTree operator+(const ConfigTree& other)
+  {
+    add(other);
+    return *this;
+  }
+
+  template< typename T >
+  void set(const std::string& key, const T& value, const bool overwrite = false)
   {
     if (has_key(key) && !overwrite)
       DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
@@ -324,7 +325,18 @@ public:
                             << "\n======================\n" << report_string());
     const std::string value_string = toString(value);
     BaseType::operator[](key) = value_string;
-  } // ... add(...)
+  } // ... set(...)
+
+  void set(const std::string& key, const char* value, const bool overwrite = false)
+  {
+    if (has_key(key) && !overwrite)
+      DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
+                            "While adding '" << key << "' = '" << value << "' to this (see below), the key '" << key
+                            << "' already exists and you requested no overwrite!"
+                            << "\n======================\n" << report_string());
+    const std::string value_string = toString(value);
+    BaseType::operator[](key) = value_string;
+  } // ... set(...)
 
   bool has_sub(const std::string& sub_id) const
   {
