@@ -102,9 +102,9 @@ protected:
   static size_t assert_is_size_t_compatible_and_convert(const SignedSizeType& size)
   {
     if (size < 0)
-      DUNE_THROW_COLORFULLY(Exception::index_out_of_range, "Given size (" << size << ") has to be non-negative!");
+      DUNE_THROW_COLORFULLY(Exceptions::index_out_of_range, "Given size (" << size << ") has to be non-negative!");
     if (size > std::numeric_limits< size_t >::max())
-      DUNE_THROW_COLORFULLY(Exception::index_out_of_range,
+      DUNE_THROW_COLORFULLY(Exceptions::index_out_of_range,
                             "Given size (" << size << ") is to large for size_t (max "
                             << std::numeric_limits< size_t >::max() << ")!");
     return size_t(size);
@@ -288,7 +288,7 @@ public:
                             const ScalarType epsilon = Dune::FloatCmp::DefaultEpsilon< ScalarType >::value()) const
   {
     if (other.size() != size())
-      DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
+      DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
                             "The size of other (" << other.size() << ") does not match the size of this (" << size()
                             << ")!");
     for (size_t ii = 0; ii < size(); ++ii)
@@ -306,7 +306,7 @@ public:
   virtual ScalarType dot(const derived_type& other) const
   {
     if (other.size() != size())
-      DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
+      DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
                             "The size of other (" << other.size() << ") does not match the size of this (" << size()
                             << ")!");
     ScalarType result = 0;
@@ -358,11 +358,11 @@ public:
   virtual void add(const derived_type& other, derived_type& result) const
   {
     if (other.size() != size())
-      DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
+      DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
                             "The size of other (" << other.size() << ") does not match the size of this (" << size()
                             << ")!");
     if (result.size() != size())
-      DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
+      DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
                             "The size of result (" << result.size() << ") does not match the size of this (" << size()
                             << ")!");
     for (size_t ii = 0; ii < size(); ++ii)
@@ -391,7 +391,7 @@ public:
   virtual void iadd(const derived_type& other)
   {
     if (other.size() != size())
-      DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
+      DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
                             "The size of other (" << other.size() << ") does not match the size of this (" << size()
                             << ")!");
     for (size_t ii = 0; ii < size(); ++ii)
@@ -407,11 +407,11 @@ public:
   virtual void sub(const derived_type& other, derived_type& result) const
   {
     if (other.size() != size())
-      DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
+      DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
                             "The size of other (" << other.size() << ") does not match the size of this (" << size()
                             << ")!");
     if (result.size() != size())
-      DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
+      DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
                             "The size of result (" << result.size() << ") does not match the size of this (" << size()
                             << ")!");
     for (size_t ii = 0; ii < size(); ++ii)
@@ -439,7 +439,7 @@ public:
   virtual void isub(const derived_type& other)
   {
     if (other.size() != size())
-      DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
+      DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
                             "The size of other (" << other.size() << ") does not match the size of this (" << size()
                             << ")!");
     for (size_t ii = 0; ii < size(); ++ii)
@@ -493,7 +493,7 @@ public:
   inline DUNE_STUFF_SSIZE_T pb_dim() const
   {
     if (!(dim() <= std::numeric_limits< DUNE_STUFF_SSIZE_T >::max()))
-      DUNE_THROW_COLORFULLY(Exception::index_out_of_range,
+      DUNE_THROW_COLORFULLY(Exceptions::index_out_of_range,
                             "The dimension of this (" << dim() << ") does not fit into DUNE_STUFF_SSIZE_T (max "
                             << std::numeric_limits< DUNE_STUFF_SSIZE_T >::max() << ")!");
     return (DUNE_STUFF_SSIZE_T)(dim());
@@ -535,7 +535,7 @@ public:
     const auto max = amax();
     if (!(max.first >= std::numeric_limits< ScalarType >::min()
           && max.first <= std::numeric_limits< ScalarType >::max()))
-      DUNE_THROW_COLORFULLY(Exception::index_out_of_range,
+      DUNE_THROW_COLORFULLY(Exceptions::index_out_of_range,
                             "The index (" << max.first << ") does not fit into ScalarType (min "
                             << std::numeric_limits< DUNE_STUFF_SSIZE_T >::min() << ", max "
                             << std::numeric_limits< ScalarType >::max() << ")!");
@@ -548,14 +548,14 @@ public:
   std::vector< ScalarType > components(const std::vector< DUNE_STUFF_SSIZE_T >& component_indices) const
   {
     if (component_indices.size() > dim())
-      DUNE_THROW_COLORFULLY(Exception::index_out_of_range,
+      DUNE_THROW_COLORFULLY(Exceptions::index_out_of_range,
                             "size of component_indices (" << component_indices.size()
                             << ") is larger than the dim of this (" << dim() << ")!");
     std::vector< ScalarType > values(component_indices.size(), ScalarType(0));
     for (size_t ii = 0; ii < component_indices.size(); ++ii) {
       const size_t component = this->assert_is_size_t_compatible_and_convert(component_indices[ii]);
       if (component >= dim())
-        DUNE_THROW_COLORFULLY(Exception::index_out_of_range,
+        DUNE_THROW_COLORFULLY(Exceptions::index_out_of_range,
                               "component_indices[" << ii << "] is too large for this (" << dim() << ")!");
       values[ii] = get_entry(component);
     }
@@ -674,7 +674,7 @@ public:
   inline DUNE_STUFF_SSIZE_T pb_rows() const
   {
     if (!(rows() <= std::numeric_limits< DUNE_STUFF_SSIZE_T >::max()))
-      DUNE_THROW_COLORFULLY(Exception::index_out_of_range,
+      DUNE_THROW_COLORFULLY(Exceptions::index_out_of_range,
                             "The number of rows of this (" << rows() << ") do not fit into DUNE_STUFF_SSIZE_T (max "
                             << std::numeric_limits< DUNE_STUFF_SSIZE_T >::max() << ")!");
     return (DUNE_STUFF_SSIZE_T)(rows());
@@ -683,7 +683,7 @@ public:
   inline DUNE_STUFF_SSIZE_T pb_cols() const
   {
     if (!(cols() <= std::numeric_limits< DUNE_STUFF_SSIZE_T >::max()))
-      DUNE_THROW_COLORFULLY(Exception::index_out_of_range,
+      DUNE_THROW_COLORFULLY(Exceptions::index_out_of_range,
                             "The number of columns of this (" << cols() << ") do not fit into DUNE_STUFF_SSIZE_T (max "
                             << std::numeric_limits< DUNE_STUFF_SSIZE_T >::max() << ")!");
     return (DUNE_STUFF_SSIZE_T)(cols());

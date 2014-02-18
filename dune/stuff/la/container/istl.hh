@@ -152,7 +152,7 @@ public:
   void axpy(const ScalarType& alpha, const ThisType& xx)
   {
     if (xx.size() != size())
-      DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
+      DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
                             "The size of x (" << xx.size() << ") does not match the size of this (" << size()
                             << ")!");
     ensure_uniqueness();
@@ -221,7 +221,7 @@ public:
   virtual ScalarType dot(const ThisType& other) const DS_OVERRIDE
   {
     if (other.size() != size())
-      DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
+      DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
                             "The size of other (" << other.size() << ") does not match the size of this (" << size()
                             << ")!");
     return backend_->dot(*(other.backend_));
@@ -245,11 +245,11 @@ public:
   virtual void add(const ThisType& other, ThisType& result) const DS_OVERRIDE
   {
     if (other.size() != size())
-      DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
+      DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
                             "The size of other (" << other.size() << ") does not match the size of this (" << size()
                             << ")!");
     if (result.size() != size())
-      DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
+      DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
                             "The size of result (" << result.size() << ") does not match the size of this (" << size()
                             << ")!");
     result.backend() = *(backend_);
@@ -259,7 +259,7 @@ public:
   virtual ThisType add(const ThisType& other) const DS_OVERRIDE
   {
     if (other.size() != size())
-      DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
+      DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
                             "The size of other (" << other.size() << ") does not match the size of this (" << size()
                             << ")!");
     ThisType result = copy();
@@ -270,7 +270,7 @@ public:
   virtual void iadd(const ThisType& other) DS_OVERRIDE
   {
     if (other.size() != size())
-      DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
+      DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
                             "The size of other (" << other.size() << ") does not match the size of this (" << size()
                             << ")!");
     ensure_uniqueness();
@@ -280,11 +280,11 @@ public:
   virtual void sub(const ThisType& other, ThisType& result) const DS_OVERRIDE
   {
     if (other.size() != size())
-      DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
+      DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
                             "The size of other (" << other.size() << ") does not match the size of this (" << size()
                             << ")!");
     if (result.size() != size())
-      DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
+      DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
                             "The size of result (" << result.size() << ") does not match the size of this (" << size()
                             << ")!");
     result.backend() = *(backend_);
@@ -294,7 +294,7 @@ public:
   virtual ThisType sub(const ThisType& other) const DS_OVERRIDE
   {
     if (other.size() != size())
-      DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
+      DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
                             "The size of other (" << other.size() << ") does not match the size of this (" << size()
                             << ")!");
     ThisType result = copy();
@@ -305,7 +305,7 @@ public:
   virtual void isub(const ThisType& other) DS_OVERRIDE
   {
     if (other.size() != size())
-      DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
+      DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
                             "The size of other (" << other.size() << ") does not match the size of this (" << size()
                             << ")!");
     ensure_uniqueness();
@@ -366,7 +366,7 @@ public:
     : backend_(new BackendType(rr, cc, BackendType::row_wise))
   {
     if (size_t(pattern.size()) != rr)
-      DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
+      DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
                             "The size of the pattern (" << pattern.size()
                             << ") does not match the number of rows of this (" << rows() << ")!");
     size_t row_index = 0;
@@ -471,7 +471,7 @@ public:
   void axpy(const ScalarType& alpha, const ThisType& xx)
   {
     if (!has_equal_shape(xx))
-      DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
+      DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
                             "The shape of xx (" << xx.rows() << "x" << xx.cols()
                             << ") does not match the shape of this (" << rows() << "x" << cols() << ")!");
     ensure_uniqueness();
@@ -534,7 +534,7 @@ public:
   void clear_row(const size_t ii)
   {
     if (ii >= rows())
-      DUNE_THROW_COLORFULLY(Exception::index_out_of_range,
+      DUNE_THROW_COLORFULLY(Exceptions::index_out_of_range,
                             "Given ii (" << ii << ") is larger than the rows of this (" << rows() << ")!");
     backend_->operator[](ii) *= ScalarType(0);
   } // ... clear_row(...)
@@ -542,7 +542,7 @@ public:
   void clear_col(const size_t jj)
   {
     if (jj >= cols())
-      DUNE_THROW_COLORFULLY(Exception::index_out_of_range,
+      DUNE_THROW_COLORFULLY(Exceptions::index_out_of_range,
                             "Given jj (" << jj << ") is larger than the cols of this (" << cols() << ")!");
     for (size_t ii = 0; ii < rows(); ++ii) {
       const auto& row = backend_->operator[](ii);
@@ -555,10 +555,10 @@ public:
   void unit_row(const size_t ii)
   {
     if (ii >= rows())
-      DUNE_THROW_COLORFULLY(Exception::index_out_of_range,
+      DUNE_THROW_COLORFULLY(Exceptions::index_out_of_range,
                             "Given ii (" << ii << ") is larger than the rows of this (" << rows() << ")!");
     if (!backend_->exists(ii, ii))
-      DUNE_THROW_COLORFULLY(Exception::index_out_of_range,
+      DUNE_THROW_COLORFULLY(Exceptions::index_out_of_range,
                             "Diagonal entry (" << ii << ", " << ii << ") is not contained in the sparsity pattern!");
     backend_->operator[](ii) *= ScalarType(0);
     backend_->operator[](ii)[ii] = ScalarType(1);
@@ -567,10 +567,10 @@ public:
   void unit_col(const size_t jj)
   {
     if (jj >= cols())
-      DUNE_THROW_COLORFULLY(Exception::index_out_of_range,
+      DUNE_THROW_COLORFULLY(Exceptions::index_out_of_range,
                             "Given jj (" << jj << ") is larger than the cols of this (" << cols() << ")!");
     if (!backend_->exists(jj, jj))
-      DUNE_THROW_COLORFULLY(Exception::index_out_of_range,
+      DUNE_THROW_COLORFULLY(Exceptions::index_out_of_range,
                             "Diagonal entry (" << jj << ", " << jj << ") is not contained in the sparsity pattern!");
     for (size_t ii = 0; (ii < rows()) && (ii != jj); ++ii) {
       const auto& row = backend_->operator[](ii);

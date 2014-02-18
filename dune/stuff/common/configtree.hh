@@ -52,7 +52,7 @@ class ConfigTree
         // we treat this as a vector and split along ';'
         const auto tokens = tokenize< std::string >(vector_str, " ", boost::algorithm::token_compress_off);
         if (size > 0 && tokens.size() < size)
-          DUNE_THROW_COLORFULLY(Exception::configuration_error,
+          DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
                                 "Vector (see below) to given key '" << key << "' has only " << tokens.size()
                                 << " elements but " << size << " elements were requested!"
                                 << "\n" << "'[" << vector_str << "]'");
@@ -64,7 +64,7 @@ class ConfigTree
       } else {
         // we treat this as a scalar
         if (size > 0 && size != 1)
-          DUNE_THROW_COLORFULLY(Exception::configuration_error,
+          DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
                                 "Vector (see below) to given key " << key << " has 1 element but " << size
                                 << " elements were requested!"
                                 << "\n" << "'" << vector_str << "'");
@@ -113,7 +113,7 @@ class ConfigTree
     static VectorType get(const ParameterTree& config, const std::string& key, const size_t size = 0)
     {
       if (size > 0 && size != d)
-        DUNE_THROW_COLORFULLY(Exception::configuration_error,
+        DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
                               "You requested a '" << Typename< VectorType >::value() << "' for key '" << key
                               << "' with a 'size' of " << size
                               << " but this type of vector can not have any size other than " << d << "!");
@@ -214,7 +214,7 @@ public:
     : BaseType()
   {
     if (keys.size() != values.size())
-      DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
+      DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
                             "The size of 'keys' (" << keys.size() << ") does not match the size of 'values' ("
                             << values.size() << ")!");
     for (size_t ii = 0; ii < keys.size(); ++ii)
@@ -225,7 +225,7 @@ public:
     : BaseType()
   {
     if (keys.size() != values.size())
-      DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
+      DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
                             "The size of 'keys' (" << keys.size() << ") does not match the size of 'values' ("
                             << values.size() << ")!");
     for (size_t ii = 0; ii < keys.size(); ++ii)
@@ -238,7 +238,7 @@ public:
   {
     std::vector< T > values(value_list);
     if (keys.size() != values.size())
-      DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
+      DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
                             "The size of 'keys' (" << keys.size() << ") does not match the size of 'value_list' ("
                             << values.size() << ")!");
     for (size_t ii = 0; ii < keys.size(); ++ii)
@@ -280,7 +280,7 @@ public:
       const auto& keys = other.getValueKeys();
       for (const std::string& key : keys) {
         if (has_key(key) && !overwrite)
-          DUNE_THROW_COLORFULLY(Exception::configuration_error,
+          DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
                                 "While adding 'other' to this (see below), the key '" << key
                                 << "' already exists and you requested no overwrite!"
                                 << "\n==== this ============\n" << report_string()
@@ -289,7 +289,7 @@ public:
       }
     } else {
       if (has_key(sub_id) && !overwrite)
-        DUNE_THROW_COLORFULLY(Exception::configuration_error,
+        DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
                               "While adding 'other' to this (see below), the key '" << sub_id
                               << "' already exists and you requested no overwrite!"
                               << "\n==== this ============\n" << report_string()
@@ -307,7 +307,7 @@ public:
   void add(const std::string& key, const T& value, const bool overwrite = false)
   {
     if (has_key(key) && !overwrite)
-      DUNE_THROW_COLORFULLY(Exception::configuration_error,
+      DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
                             "While adding '" << key << "' = '" << value << "' to this (see below), the key '" << key
                             << "' already exists and you requested no overwrite!"
                             << "\n======================\n" << report_string());
@@ -318,7 +318,7 @@ public:
   void add(const std::string& key, const char* value, const bool overwrite = false)
   {
     if (has_key(key) && !overwrite)
-      DUNE_THROW_COLORFULLY(Exception::configuration_error,
+      DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
                             "While adding '" << key << "' = '" << value << "' to this (see below), the key '" << key
                             << "' already exists and you requested no overwrite!"
                             << "\n======================\n" << report_string());
@@ -334,13 +334,13 @@ public:
   ConfigTree sub(const std::string& sub_id) const
   {
     if (empty())
-      DUNE_THROW_COLORFULLY(Exception::configuration_error,
+      DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
                             "You can not get anything from an empty ConfigTree, use has_sub(\"" << sub_id
                             << "\") to check first!");
     if (sub_id.empty())
-      DUNE_THROW_COLORFULLY(Exception::configuration_error, "Given sub_id must not be empty!");
+      DUNE_THROW_COLORFULLY(Exceptions::configuration_error, "Given sub_id must not be empty!");
     if (!has_sub(sub_id))
-      DUNE_THROW_COLORFULLY(Exception::configuration_error,
+      DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
                             "Subtree '" << sub_id << "' does not exist in this ConfigTree (see below), use has_sub(\""
                             << sub_id
                             << "\") to check first!"
@@ -374,11 +374,11 @@ public:
   T get(const std::string& key, const size_t size = 0) const
   {
     if (empty())
-      DUNE_THROW_COLORFULLY(Exception::configuration_error,
+      DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
                             "You can not get anything from an empty ConfigTree, use has_key(\"" << key
                             << "\") to check first!");
     if (!has_key(key))
-      DUNE_THROW_COLORFULLY(Exception::configuration_error,
+      DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
                             "Given key '" << key << "' does not exist in this ConfigTree (see below), use has_key(\""
                             << key
                             << "\") to check first!"

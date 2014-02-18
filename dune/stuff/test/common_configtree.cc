@@ -18,7 +18,7 @@ std::ostream& out = DSC_LOG.devnull();
 
 using namespace Dune;
 using Dune::Stuff::Common::ConfigTree;
-using Dune::Stuff::Exception::results_are_not_as_expected;
+using Dune::Stuff::Exceptions::results_are_not_as_expected;
 
 
 struct CreateByOperator { static ConfigTree create() {
