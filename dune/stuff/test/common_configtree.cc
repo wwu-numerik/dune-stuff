@@ -32,8 +32,8 @@ struct CreateByOperator { static ConfigTree create() {
 
 struct CreateByKeyAndValueAndAdd { static ConfigTree create() {
     ConfigTree config("string", "string");
-    config.add("sub1.int", "1");
-    config.add("sub2.size_t", 1);
+    config.set("sub1.int", "1");
+    config.set("sub2.size_t", 1);
     config.add(ConfigTree("vector", "[0 1]"), "sub2.subsub1");
     return config;
 } };
