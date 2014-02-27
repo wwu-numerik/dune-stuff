@@ -82,20 +82,15 @@ struct ElementVisualization {
     class ProcessIdFunctor : public FunctorBase {
         public:
             ProcessIdFunctor ( const std::string fname,
-                               const std::string dname,
-                               Dune::MPIHelper& mpiHelper )
-                : FunctorBase(fname, dname),
-                mpiHelper_( mpiHelper )
+                               const std::string dname )
+                : FunctorBase(fname, dname)
             {}
 
             template <class Entity>
             double operator() ( const Entity& /*ent*/ ) const
             {
-                return mpiHelper_.rank();
+                return Dune::MPIHelper::getCollectiveCommunication().rank();
             }
-
-        private:
-            Dune::MPIHelper& mpiHelper_;
     };
 
     template < class GridType >
@@ -192,14 +187,14 @@ struct ElementVisualization {
 
     //! supply functor
     template<class Grid>
-    static void all( const Grid& grid, Dune::MPIHelper& mpiHelper,
-              const std::string outputDir = "visualisation" )
+    static void all( const Grid& grid,
+              const std::string outputDir = "visualisation")
     {
         // make function objects
         BoundaryFunctor<Grid> boundaryFunctor(grid, "boundaryFunctor", outputDir);
         AreaMarker areaMarker("areaMarker", outputDir);
         GeometryFunctor geometryFunctor("geometryFunctor", outputDir);
-        ProcessIdFunctor processIdFunctor("ProcessIdFunctor", outputDir, mpiHelper );
+        ProcessIdFunctor processIdFunctor("ProcessIdFunctor", outputDir);
         VolumeFunctor volumeFunctor("volumeFunctor", outputDir);
 
         // call the visualization functions
