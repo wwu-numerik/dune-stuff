@@ -9,8 +9,58 @@
 # include <dune/fem/misc/h1norm.hh>
 #endif
 
+#if HAVE_DUNE_PDELAB
+# include <dune/pdelab/test/l2difference.hh>
+# include <dune/pdelab/common/functionwrappers.hh>
+# include <dune/pdelab/common/functionutilities.hh>
+# include <dune/stuff/functions/pdelabadapter.hh>
+#endif
+
 namespace Dune {
+namespace PDELab {
+template<typename GFS, typename C>
+class ISTLBlockVectorContainer;
+
+} //namespace PDELab
+
 namespace Stuff {
+
+#if HAVE_DUNE_PDELAB
+template <class FunctionType_A, class GFS, class C>
+typename GFS::Traits::FiniteElementType::Traits::LocalBasisType::Traits::RangeFieldType
+l2distance(const FunctionType_A& function_A, const PDELab::ISTLBlockVectorContainer<GFS,C>& function_B)
+{
+  using namespace PDELab;
+  typedef DiscreteGridFunction<GFS,ISTLBlockVectorContainer<GFS,C>> DGF;
+  DGF disc(function_B.gridFunctionSpace(), function_B);
+
+  const auto grid_f = pdelabAdapted(function_A, function_B.gridFunctionSpace().gridView());
+  typedef DifferenceSquaredAdapter<decltype(grid_f), DGF> DifferenceSquared;
+  DifferenceSquared differencesquared(grid_f,disc);
+  typename DifferenceSquared::Traits::RangeType l2errorsquared(0.0);
+  const int magic_number_order = 8;
+  integrateGridFunction(differencesquared, l2errorsquared, magic_number_order);
+  return sqrt(l2errorsquared);
+}
+
+template <class FunctionType_A, class GFS, class C>
+typename GFS::Traits::FiniteElementType::Traits::LocalBasisType::Traits::RangeFieldType
+h1distance(const FunctionType_A& function_A, const PDELab::ISTLBlockVectorContainer<GFS,C>& function_B)
+{
+//  static_assert(std::is_base_of<Dune::Fem::HasLocalFunction, FunctionType_A>::value, "");
+  using namespace PDELab;
+  typedef DiscreteGridFunction<GFS,ISTLBlockVectorContainer<GFS,C>> DGF;
+  DGF disc(function_B.gridFunctionSpace(), function_B);
+
+  const auto grid_f = pdelabAdapted(function_A, function_B.gridFunctionSpace().gridView());
+  typedef H1DifferenceSquaredAdapter<decltype(grid_f), PDELab::ISTLBlockVectorContainer<GFS,C>, GFS> H1DifferenceSquared;
+  H1DifferenceSquared h1_difference_squared(grid_f, function_B);
+  typename H1DifferenceSquared::Traits::RangeType value(0.0);
+  const int magic_number_order = 8;
+  integrateGridFunction(h1_difference_squared, value, magic_number_order);
+  return std::sqrt(value);
+}
+#endif // HAVE_DUNE_PDELAB
 
 #if HAVE_DUNE_FEM
 template <class TraitsType>
