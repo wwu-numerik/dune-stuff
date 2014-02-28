@@ -20,9 +20,9 @@ namespace Stuff {
 
 template< class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDimRows, int rangeDimCols >
 class FunctionFromFile
-  : public FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows, rangeDimCols >
+  : public FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows >
 {
-  typedef FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows, rangeDimCols > BaseType;
+  typedef FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows > BaseType;
 public:
   typedef FunctionFromFile< DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows, rangeDimCols >  ThisType;
 
@@ -97,7 +97,8 @@ public:
         }
         for (unsigned int ii = 0; ii < rangeDimRows; ++ii){
           for (unsigned int jj = 0; jj < rangeDimCols; ++jj){
-            values[ii][jj] = items[dimDomain + jj + rangeDimCols*ii];
+            DUNE_THROW(InvalidStateException, "assignment below doesn't compile");
+//            values[ii][jj] = items[dimDomain + jj + rangeDimCols*ii];
           }
         }
         data_.push_back(values);
@@ -180,9 +181,9 @@ private:
 
 template< class DomainFieldImp, int domainDim, class RangeFieldImp>
 class FunctionFromFile< DomainFieldImp, domainDim, RangeFieldImp, 1, 1 >
-  : public FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, 1, 1 >
+  : public FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, 1 >
 {
-  typedef FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, 1, 1 > BaseType;
+  typedef FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, 1 > BaseType;
 public:
   typedef FunctionFromFile< DomainFieldImp, domainDim, RangeFieldImp, 1, 1 >  ThisType;
 
@@ -335,9 +336,9 @@ private:
 
 template< class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDim>
 class FunctionFromFile< DomainFieldImp, domainDim, RangeFieldImp, rangeDim, 1 >
-  : public FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDim, 1 >
+  : public FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDim >
 {
-  typedef FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDim, 1 > BaseType;
+  typedef FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDim > BaseType;
 public:
   typedef FunctionFromFile< DomainFieldImp, domainDim, RangeFieldImp, rangeDim, 1 >  ThisType;
 

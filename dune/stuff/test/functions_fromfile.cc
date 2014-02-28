@@ -25,7 +25,8 @@ TEST(FUNCTION_FROMFILE, All) {
 
   Dune::FieldVector<DomainFieldType, dimDomain> x(4);
   RangeType ret;
-  fct.evaluate(x, ret);
+  DUNE_THROW(Dune::InvalidStateException, "eval below doesn't compile");
+//  fct.evaluate(x, ret);
   std::cout << ret << std::endl;
 
 
