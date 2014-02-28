@@ -80,15 +80,13 @@ public:
                         const typename Traits::DomainType& x,
                         typename Traits::RangeType& y) const
   {
-    typename Traits::RangeType l2;
-    l2_difference_.evaluate(e, x, l2);
+    l2_difference_.evaluate(e, x, y);
     typename T1::JacobianRangeType j1;
     typename T2GradientType::Traits::RangeType j2;
-    auto foo = t1_.local_function(e);
-    foo->jacobian(x, j1);
+    t1_.local_function(e)->jacobian(x, j1);
     t2_gradient_.evaluate(e, x, j2);
     j2 -= j1[0];
-    y = l2 + j2.two_norm2();
+    y += j2.two_norm2();
   }
 
 private:
