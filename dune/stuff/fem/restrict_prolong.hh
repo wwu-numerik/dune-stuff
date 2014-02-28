@@ -21,13 +21,7 @@ namespace Fem {
    */
 template< class RestrictProlongOperatorPointerType >
 class RestrictProlongOperatorSet
-#if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
-  : public RestrictProlongInterface< RestrictProlongTraits<
-#elif DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
   : public Dune::Fem::RestrictProlongInterface< Dune::Fem::RestrictProlongTraits<
-#else
-  : public Dune::Fem::RestrictProlongInterface< Dune::Fem::RestrictProlongTraits<
-#endif
                                        RestrictProlongOperatorSet< RestrictProlongOperatorPointerType >, double > >
 {
 public:

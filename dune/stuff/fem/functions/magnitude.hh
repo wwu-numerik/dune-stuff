@@ -23,48 +23,24 @@ template< class DiscreteFunctionImp, int polOrder = 3 >
 class MagnitudeFunction
 {
 public:
-#if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
-  typedef Dune::FunctionSpace< typename DiscreteFunctionImp::FunctionSpaceType::DomainFieldType,
-#elif DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
   typedef Dune::Fem::FunctionSpace< typename DiscreteFunctionImp::FunctionSpaceType::DomainFieldType,
-#else
-  typedef Dune::Fem::FunctionSpace< typename DiscreteFunctionImp::FunctionSpaceType::DomainFieldType,
-#endif
                                double,
                                DiscreteFunctionImp::FunctionSpaceType::dimDomain,
                                1 >
       MagnitudeSpaceType;
   typedef DiscreteFunctionImp DiscreteFunctionType;
   typedef typename DiscreteFunctionType::DiscreteFunctionSpaceType::GridPartType GridPartType;
-#if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
-  typedef Dune::DiscontinuousGalerkinSpace< MagnitudeSpaceType, GridPartType, polOrder >
-    MagnitudeDiscreteFunctionSpaceType;
-  typedef Dune::AdaptiveDiscreteFunction< MagnitudeDiscreteFunctionSpaceType >
-    MagnitudeDiscreteFunctionType;
-#elif DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
   typedef Dune::Fem::DiscontinuousGalerkinSpace< MagnitudeSpaceType, GridPartType, polOrder >
     MagnitudeDiscreteFunctionSpaceType;
   typedef Dune::Fem::AdaptiveDiscreteFunction< MagnitudeDiscreteFunctionSpaceType >
     MagnitudeDiscreteFunctionType;
-#else
-  typedef Dune::Fem::DiscontinuousGalerkinSpace< MagnitudeSpaceType, GridPartType, polOrder >
-    MagnitudeDiscreteFunctionSpaceType;
-  typedef Dune::Fem::AdaptiveDiscreteFunction< MagnitudeDiscreteFunctionSpaceType >
-    MagnitudeDiscreteFunctionType;
-#endif
 
   //! constructor taking discrete function
   MagnitudeFunction(const DiscreteFunctionType& _discreteFunction)
     : magnitude_disretefunctionspace_( _discreteFunction.space().gridPart() )
     , magnitude_disretefunction_(_discreteFunction.name() + "-magnitude", magnitude_disretefunctionspace_)
   {
-#if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
-    typedef Dune::CachingQuadrature< GridPartType, 0 > QuadratureType;
-#elif DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
     typedef Dune::Fem::CachingQuadrature< GridPartType, 0 > QuadratureType;
-#else
-    typedef Dune::Fem::CachingQuadrature< GridPartType, 0 > QuadratureType;
-#endif
     typename MagnitudeDiscreteFunctionSpaceType::RangeType ret(0.0);
     typename MagnitudeDiscreteFunctionSpaceType::RangeType phi(0.0);
     const auto& space = _discreteFunction.space();

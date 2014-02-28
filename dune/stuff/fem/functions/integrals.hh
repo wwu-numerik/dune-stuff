@@ -252,19 +252,9 @@ double boundaryIntegral(const FunctionType& function,
                         const int polOrd = -1)
 {
   typedef typename DiscreteFunctionSpaceType::Traits::GridPartType GridPartType;
-#if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
-  typedef Dune::CachingQuadrature< GridPartType, 1 > QuadratureType;
-  typedef Dune::Stuff::Fem::LocalMassMatrix< DiscreteFunctionSpaceType,
-                                  Dune::CachingQuadrature< GridPartType, 0 > > LocalMassMatrixType;
-#elif DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
   typedef Dune::Fem::CachingQuadrature< GridPartType, 1 > QuadratureType;
   typedef Dune::Stuff::Fem::LocalMassMatrix< DiscreteFunctionSpaceType,
                                   Dune::Fem::CachingQuadrature< GridPartType, 0 > > LocalMassMatrixType;
-#else
-  typedef Dune::Fem::CachingQuadrature< GridPartType, 1 > QuadratureType;
-  typedef Dune::Stuff::Fem::LocalMassMatrix< DiscreteFunctionSpaceType,
-                                  Dune::Fem::CachingQuadrature< GridPartType, 0 > > LocalMassMatrixType;
-#endif
   double integral_value = 0;
   double total_volume = 0;
   typename DiscreteFunctionSpaceType::RangeType ret(0.0);
