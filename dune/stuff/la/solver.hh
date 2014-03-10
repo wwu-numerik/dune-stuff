@@ -18,7 +18,8 @@
 #include "container/eigen.hh"
 
 namespace Dune {
-namespace Stuff {namespace Exceptions {
+namespace Stuff {
+namespace Exceptions {
 
 
 class linear_solver_failed_bc_matrix_did_not_fulfill_requirements :    public linear_solver_failed {};
