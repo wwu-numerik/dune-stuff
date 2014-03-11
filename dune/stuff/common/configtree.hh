@@ -20,7 +20,7 @@
 #include <dune/stuff/common/exceptions.hh>
 #include <dune/stuff/common/string.hh>
 #include <dune/stuff/common/type_utils.hh>
-#include <dune/stuff/la/container/dunedynamic.hh>
+#include <dune/stuff/la/container/common.hh>
 #if HAVE_EIGEN
 # include <dune/stuff/la/container/eigen.hh>
 #endif
@@ -135,17 +135,17 @@ class ConfigTree
   }; // class Choose< DynamicVector< ... > >
 
   template< class S >
-  class Choose< LA::DuneDynamicVector< S > >
-    : ChooseBase< LA::DuneDynamicVector< S > >
+  class Choose< LA::CommonDenseVector< S > >
+    : ChooseBase< LA::CommonDenseVector< S > >
   {
-    typedef ChooseBase< LA::DuneDynamicVector< S > > BaseType;
-    typedef LA::DuneDynamicVector< S > VectorType;
+    typedef ChooseBase< LA::CommonDenseVector< S > > BaseType;
+    typedef LA::CommonDenseVector< S > VectorType;
   public:
     static VectorType get(const ParameterTree& config, const std::string& key, const size_t size = 0)
     {
       return BaseType::template get_vector< VectorType, S >(config, key, size);
     }
-  }; // class Choose< LA::DuneDynamicVector< ... > >
+  }; // class Choose< LA::CommonDenseVector< ... > >
 
 #if HAVE_DUNE_ISTL
   template< class S >
