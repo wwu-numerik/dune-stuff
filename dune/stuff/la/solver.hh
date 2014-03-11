@@ -10,16 +10,21 @@
 #include <vector>
 
 #include <dune/stuff/common/type_utils.hh>
-
 #include <dune/stuff/common/exceptions.hh>
 #include <dune/stuff/common/configtree.hh>
 
-#include "container/interfaces.hh"
-#include "container/dunedynamic.hh"
-#include "container/eigen.hh"
-
 namespace Dune {
 namespace Stuff {
+namespace Exceptions {
+
+
+class linear_solver_failed_bc_matrix_did_not_fulfill_requirements :    public linear_solver_failed {};
+class linear_solver_failed_bc_it_did_not_converge :                    public linear_solver_failed {};
+class linear_solver_failed_bc_it_was_not_set_up_correctly :            public linear_solver_failed {};
+class linear_solver_failed_bc_the_solution_does_not_solve_the_system : public linear_solver_failed {};
+
+
+} // namespace Exceptions
 namespace LA {
 
 
@@ -32,7 +37,7 @@ protected:
       std::stringstream ss;
       for (auto opt : opts)
         ss << opt << " ";
-      DUNE_THROW_COLORFULLY(Exception::configuration_error,
+      DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
                             "Given type '" << type << "' not supported (see below for a list of supported ones). "
                             << "Call options() first!\n" << ss.str());
     }
@@ -72,14 +77,11 @@ public:
   }
 
   /**
-   *  \return Returns 0 if the solve was successfull. Otherwise
-   *          * 1 if the given matrix did not fulfill the requirements
-   *          * 2 if an iterative solver did not converge
-   *          * 3 if the solver was not set up correctly
-   *          * 4 if the computed solution does not solve the system (only if NDEBUG is not defined)
+   *  Throws any of the above exceptions, if there was a problem. If none was thrown we beleive that a suitable solution
+   *  was found (given the current options).
    */
   template< class RhsType, class SolutionType >
-  size_t apply(const RhsType& /*rhs*/, SolutionType& /*solution*/) const
+  void apply(const RhsType& /*rhs*/, SolutionType& /*solution*/) const
   {
     DUNE_THROW_COLORFULLY(NotImplemented,
                           "This is the unspecialized version of LA::Solver< ... >. "
@@ -88,7 +90,7 @@ public:
   }
 
   template< class RhsType, class SolutionType >
-  size_t apply(const RhsType& /*rhs*/, SolutionType& /*solution*/, const std::string& /*type*/) const
+  void apply(const RhsType& /*rhs*/, SolutionType& /*solution*/, const std::string& /*type*/) const
   {
     DUNE_THROW_COLORFULLY(NotImplemented,
                           "This is the unspecialized version of LA::Solver< ... >. "
@@ -97,7 +99,7 @@ public:
   }
 
   template< class RhsType, class SolutionType >
-  size_t apply(const RhsType& /*rhs*/, SolutionType& /*solution*/, const Common::ConfigTree& /*options*/) const
+  void apply(const RhsType& /*rhs*/, SolutionType& /*solution*/, const Common::ConfigTree& /*options*/) const
   {
     DUNE_THROW_COLORFULLY(NotImplemented,
                           "This is the unspecialized version of LA::Solver< ... >. "
@@ -111,7 +113,7 @@ public:
 } // namespace Stuff
 } // namespace Dune
 
-#include "solver/dunedynamic.hh"
+#include "solver/common.hh"
 #include "solver/eigen.hh"
 #include "solver/istl.hh"
 
