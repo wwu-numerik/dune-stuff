@@ -13,10 +13,6 @@
 #include <dune/stuff/common/exceptions.hh>
 #include <dune/stuff/common/configtree.hh>
 
-#include "container/interfaces.hh"
-#include "container/dunedynamic.hh"
-#include "container/eigen.hh"
-
 namespace Dune {
 namespace Stuff {
 namespace Exceptions {
@@ -117,7 +113,7 @@ public:
 } // namespace Stuff
 } // namespace Dune
 
-#include "solver/dunedynamic.hh"
+#include "solver/common.hh"
 #include "solver/eigen.hh"
 #include "solver/istl.hh"
 
