@@ -63,11 +63,11 @@ public:
     return {
              "lu.partialpiv"
            , "qr.householder"
+           , "llt"
+           , "ldlt"
            , "qr.colpivhouseholder"
            , "qr.fullpivhouseholder"
            , "lu.fullpiv"
-           , "llt"
-           , "ldlt"
            };
   } // ... options()
 
