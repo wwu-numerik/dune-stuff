@@ -31,13 +31,14 @@ namespace Stuff {
 
 template< class IntersectionImp >
 class GridboundaryInterface
-    #if HAVE_DUNE_PDELAB
-      : public TypeTree::LeafNode //makes this usable as BoundaryCondition type directly in PDElab
-    #endif
-{ 
 #if HAVE_DUNE_PDELAB
-  typedef PDELab::IntersectionGeometry<IntersectionImp> IntersectionGeometryType;
-  typedef FieldVector<typename IntersectionGeometryType::ctype, IntersectionGeometryType::dimension-1> Codim1DomainType;
+  : public TypeTree::LeafNode //makes this usable as BoundaryCondition type directly in PDElab
+#endif
+{
+#if HAVE_DUNE_PDELAB
+  typedef PDELab::IntersectionGeometry< IntersectionImp > IntersectionGeometryType;
+  typedef FieldVector< typename IntersectionGeometryType::ctype, IntersectionGeometryType::dimension - 1 >
+    Codim1DomainType;
 #endif
 
 public:
@@ -55,7 +56,8 @@ public:
 
 #if HAVE_DUNE_PDELAB
   //! default implementation for signature used in PDELab
-  virtual bool isDirichlet(const IntersectionGeometryType& intersection_geometry, const Codim1DomainType& /*coord*/) const
+  virtual bool isDirichlet(const IntersectionGeometryType& intersection_geometry,
+                           const Codim1DomainType& /*coord*/) const
   {
     return dirichlet(intersection_geometry.intersection());
   }
