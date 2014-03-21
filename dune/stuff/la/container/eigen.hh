@@ -9,7 +9,7 @@
 #include <memory>
 #include <type_traits>
 
-#if HAVE_EIGEN
+#ifdef HAVE_EIGEN
 # include <Eigen/Core>
 # include <Eigen/SparseCore>
 #endif // HAVE_EIGEN
@@ -62,7 +62,7 @@ class EigenVectorInterfaceDynamic {};
 class EigenMatrixInterfaceDynamic {};
 
 
-#if HAVE_EIGEN
+#ifdef HAVE_EIGEN
 
 
 /**
