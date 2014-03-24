@@ -47,7 +47,7 @@ public:
 
   virtual std::string name() const
   {
-    return "dune.stuff.functions.global";
+    return "dune.stuff.function.global";
   }
 
   virtual ThisType* copy() const
@@ -134,7 +134,6 @@ public:
 
   typedef RangeFieldImp                                 RangeFieldType;
   static const unsigned int                             dimRange = rangeDim;
-  static const unsigned int                             dimRangeRows = dimRange;
   static const unsigned int                             dimRangeCols = 1;
   typedef Dune::FieldVector< RangeFieldType, dimRange > RangeType;
 #if HAVE_DUNE_FEM
@@ -150,7 +149,7 @@ public:
 
   virtual std::string name() const
   {
-    return "";
+    return "dune.stuff.function.global";
   }
 
   virtual ThisType* copy() const
