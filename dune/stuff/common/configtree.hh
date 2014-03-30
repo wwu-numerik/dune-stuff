@@ -84,7 +84,7 @@ class ConfigTree
     : ChooseBase< T >
   {
   public:
-    static T get(const ParameterTree& config, const std::string& key, const size_t size = 0)
+    static T get(const ParameterTree& config, const std::string& key, const size_t /*size*/ = 0)
     {
       return config.get< T >(key);
     }
