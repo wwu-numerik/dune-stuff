@@ -432,6 +432,11 @@ struct VectorTest
       if (!Dune::FloatCmp::eq(scaled_copy[ii], -3.75 * testvector_5[ii]))
         DUNE_THROW_COLORFULLY(Dune::Exception, scaled_copy[ii] << " vs. "<< testvector_5[ii]);
     }
+
+
+
+
+
   } //void produces_correct_results() const
 }; // struct VectorTest
 
@@ -445,6 +450,29 @@ TYPED_TEST(VectorTest, produces_correct_results) {
   this->produces_correct_results();
 }
 
+template< class MatrixImp >
+struct MatrixTest
+  : public ::testing::Test
+{
+  void fulfills_interface() const
+  {
+
+  }
+
+  void produces_correct_results() const
+  {
+
+  }
+}; //struct MatrixTest
+
+TYPED_TEST_CASE(MatrixTest, MatrixTypes);
+TYPED_TEST(MatrixTest, fulfills_interface) {
+  this->fulfills_interface();
+}
+TYPED_TEST_CASE(MatrixTest, MatrixTypes);
+TYPED_TEST(MatrixTest, produces_correct_results) {
+  this->produces_correct_results();
+}
 
 int main(int argc, char** argv)
 {
