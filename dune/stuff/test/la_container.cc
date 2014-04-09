@@ -33,25 +33,48 @@ typedef testing::Types<
                       > VectorTypes;
 
 typedef testing::Types<
-                        std::pair< Dune::Stuff::LA::CommonDenseMatrix< double >, Dune::Stuff::LA::CommonDenseVector< double > >
+                        std::pair< Dune::Stuff::LA::CommonDenseMatrix< double >
+                                 , Dune::Stuff::LA::CommonDenseVector< double > >
 #if HAVE_EIGEN
-                      , std::pair< Dune::Stuff::LA::EigenRowMajorSparseMatrix< double >, Dune::Stuff::LA::EigenDenseVector< double > >
+                      , std::pair< Dune::Stuff::LA::EigenRowMajorSparseMatrix< double >
+                                 , Dune::Stuff::LA::EigenDenseVector< double > >
+                      , std::pair< Dune::Stuff::LA::EigenRowMajorSparseMatrix< double >
+                                 , Dune::Stuff::LA::EigenMappedDenseVector< double > >
+                      , std::pair< Dune::Stuff::LA::EigenDenseMatrix< double >
+                                 , Dune::Stuff::LA::EigenDenseVector< double > >
+                      , std::pair< Dune::Stuff::LA::EigenDenseMatrix< double >
+                                 , Dune::Stuff::LA::EigenMappedDenseVector< double > >
 #endif
 #if HAVE_DUNE_ISTL
-                      , std::pair< Dune::Stuff::LA::IstlRowMajorSparseMatrix< double >, Dune::Stuff::LA::IstlDenseVector< double > >
+                      , std::pair< Dune::Stuff::LA::IstlRowMajorSparseMatrix< double >
+                                 , Dune::Stuff::LA::IstlDenseVector< double > >
 #endif
                       > MatrixVectorCombinations;
 
 typedef testing::Types<
-                        std::pair< Dune::Stuff::LA::CommonDenseMatrix< double >, Dune::Stuff::LA::CommonDenseVector< double > >
+                        std::pair< Dune::Stuff::LA::CommonDenseMatrix< double >
+                                 , Dune::Stuff::LA::CommonDenseVector< double > >
+#if HAVE_EIGEN
+                      , std::pair< Dune::Stuff::LA::EigenDenseMatrix< double >
+                                 , Dune::Stuff::LA::EigenDenseVector< double > >
+                      , std::pair< Dune::Stuff::LA::EigenDenseMatrix< double >
+                                 , Dune::Stuff::LA::EigenMappedDenseVector< double > >
+#endif
                       > DenseMatrixVectorCombinations;
 
 typedef testing::Types<
 #if HAVE_EIGEN
-                        std::pair< Dune::Stuff::LA::EigenRowMajorSparseMatrix< double >, Dune::Stuff::LA::EigenDenseVector< double > >
-#endif
+                        std::pair< Dune::Stuff::LA::EigenRowMajorSparseMatrix< double >
+                                 , Dune::Stuff::LA::EigenDenseVector< double > >
+                      , std::pair< Dune::Stuff::LA::EigenRowMajorSparseMatrix< double >
+                                 , Dune::Stuff::LA::EigenMappedDenseVector< double > >
+# if HAVE_DUNE_ISTL
+                      ,
+# endif
+#endif // HAVE_EIGEN
 #if HAVE_DUNE_ISTL
-                      , std::pair< Dune::Stuff::LA::IstlRowMajorSparseMatrix< double >, Dune::Stuff::LA::IstlDenseVector< double > >
+                        std::pair< Dune::Stuff::LA::IstlRowMajorSparseMatrix< double >
+                                 , Dune::Stuff::LA::IstlDenseVector< double > >
 #endif
                       > SparseMatrixVectorCombinations;
 
@@ -85,13 +108,15 @@ struct ContainerTest
     typedef typename Traits::ScalarType       T_ScalarType;
     // * of the container as itself (aka the derived type)
     typedef typename ContainerImp::ScalarType D_ScalarType;
-    static_assert(std::is_same< T_ScalarType, D_ScalarType >::value, "ScalarType of derived_type has to be the correct Type!");
+    static_assert(std::is_same< T_ScalarType, D_ScalarType >::value,
+                  "ScalarType of derived_type has to be the correct Type!");
     // * of the container as the interface
     typedef typename Stuff::LA::ContainerInterface< Traits >  InterfaceType;
     typedef typename InterfaceType::derived_type              I_derived_type;
     typedef typename InterfaceType::ScalarType                I_ScalarType;
     static_assert(std::is_same< ContainerImp, I_derived_type >::value, "derived_type has to be the correct Type!");
-    static_assert(std::is_same< T_ScalarType, I_ScalarType >::value, "ScalarType of derived_type has to be the correct Type!");
+    static_assert(std::is_same< T_ScalarType, I_ScalarType >::value,
+                  "ScalarType of derived_type has to be the correct Type!");
 
 
     // dynamic tests
@@ -133,13 +158,15 @@ struct VectorTest
     typedef typename Traits::ScalarType     T_ScalarType;
     // * of the vector as itself (aka the derived type)
     typedef typename VectorImp::ScalarType  D_ScalarType;
-    static_assert(std::is_same< T_ScalarType, D_ScalarType >::value, "ScalarType of derived_type has to be the correct Type!");
+    static_assert(std::is_same< T_ScalarType, D_ScalarType >::value,
+                  "ScalarType of derived_type has to be the correct Type!");
     // * of the vector as the interface
     typedef typename Stuff::LA::VectorInterface< Traits > InterfaceType;
     typedef typename InterfaceType::derived_type          I_derived_type;
     typedef typename InterfaceType::ScalarType            I_ScalarType;
     static_assert(std::is_same< VectorImp, I_derived_type >::value, "derived_type has to be the correct Type!");
-    static_assert(std::is_same< T_ScalarType, I_ScalarType >::value, "ScalarType of derived_type has to be the correct Type!");
+    static_assert(std::is_same< T_ScalarType, I_ScalarType >::value,
+                  "ScalarType of derived_type has to be the correct Type!");
     // dynamic tests
     // * of the vector as itself (aka the derived type)
     VectorImp d_by_size(dim);
@@ -149,7 +176,7 @@ struct VectorTest
     for (size_t ii = 0; ii < d_size; ++ii) {
       d_by_size_and_value.set_entry(ii, D_ScalarType(0.5) + D_ScalarType(ii));
       d_by_size_and_value.add_to_entry(ii, D_ScalarType(0.5) + D_ScalarType(ii));
-      if (FloatCmp::ne(d_by_size_and_value.get_entry(ii), 2*D_ScalarType(ii) + D_ScalarType(1)))
+      if (FloatCmp::ne(d_by_size_and_value.get_entry(ii), D_ScalarType(2)*D_ScalarType(ii) + D_ScalarType(1)))
         DUNE_THROW_COLORFULLY(Dune::Exception, d_by_size_and_value.get_entry(ii));
       if (FloatCmp::ne(d_by_size_and_value.get_entry(ii), d_by_size_and_value[ii]))
         DUNE_THROW_COLORFULLY(Dune::Exception, d_by_size_and_value[ii]);
@@ -204,7 +231,8 @@ struct VectorTest
     if (!Dune::FloatCmp::eq(i_sup_norm ,I_ScalarType(0))) DUNE_THROW_COLORFULLY(Dune::Exception, i_sup_norm);
     VectorImp i_ones(dim, I_ScalarType(1));
     std::pair< size_t, I_ScalarType > i_amax = i_ones.amax();
-    if (i_amax.first != 0 || !Dune::FloatCmp::eq(i_amax.second, I_ScalarType(1))) DUNE_THROW_COLORFULLY(Dune::Exception, "");
+    if (i_amax.first != 0 || !Dune::FloatCmp::eq(i_amax.second, I_ScalarType(1)))
+      DUNE_THROW_COLORFULLY(Dune::Exception, "");
     i_ones.add(d_by_size_2, d_by_size_and_value_2);
     if (!i_by_size_and_value.almost_equal(i_ones)) DUNE_THROW_COLORFULLY(Dune::Exception, "");
     VectorImp i_added = i_ones.add(d_by_size_2);
@@ -413,7 +441,7 @@ struct VectorTest
 
     //test scal
     VectorImp scaled_copy = zeros;
-    scaled_copy.scal(1);
+    scaled_copy.scal(ScalarType(1));
     if (scaled_copy != zeros)
       DUNE_THROW_COLORFULLY(Dune::Exception, "");
     scaled_copy = ones;
@@ -424,27 +452,27 @@ struct VectorTest
     if (scaled_copy != zeros)
       DUNE_THROW_COLORFULLY(Dune::Exception, "");
     scaled_copy = testvector_1;
-    scaled_copy.scal(2);
+    scaled_copy.scal(ScalarType(2));
     for (size_t ii = 0; ii < dim; ++ii) {
-      if (!Dune::FloatCmp::eq(scaled_copy[ii], 2 * testvector_1[ii]))
+      if (!Dune::FloatCmp::eq(scaled_copy[ii], ScalarType(2)*testvector_1[ii]))
         DUNE_THROW_COLORFULLY(Dune::Exception, scaled_copy[ii] << " vs. "<< testvector_1[ii]);
     }
     scaled_copy = testvector_3;
-    scaled_copy.scal(-2);
+    scaled_copy.scal(ScalarType(-2));
     for (size_t ii = 0; ii < dim; ++ii) {
-      if (!Dune::FloatCmp::eq(scaled_copy[ii], -2 * testvector_3[ii]))
+      if (!Dune::FloatCmp::eq(scaled_copy[ii], ScalarType(-2)*testvector_3[ii]))
         DUNE_THROW_COLORFULLY(Dune::Exception, scaled_copy[ii] << " vs. "<< testvector_3[ii]);
     }
     scaled_copy = countingup;
-    scaled_copy.scal(2.2);
+    scaled_copy.scal(ScalarType(2.2));
     for (size_t ii = 0; ii < dim; ++ii) {
-      if (!Dune::FloatCmp::eq(scaled_copy[ii], 2.2 * countingup[ii]))
+      if (!Dune::FloatCmp::eq(scaled_copy[ii], ScalarType(2.2)*countingup[ii]))
         DUNE_THROW_COLORFULLY(Dune::Exception, scaled_copy[ii] << " vs. "<< countingup[ii]);
     }
     scaled_copy = testvector_5;
-    scaled_copy.scal(-3.75);
+    scaled_copy.scal(ScalarType(-3.75));
     for (size_t ii = 0; ii < dim; ++ii) {
-      if (!Dune::FloatCmp::eq(scaled_copy[ii], -3.75 * testvector_5[ii]))
+      if (!Dune::FloatCmp::eq(scaled_copy[ii], ScalarType(-3.75)*testvector_5[ii]))
         DUNE_THROW_COLORFULLY(Dune::Exception, scaled_copy[ii] << " vs. "<< testvector_5[ii]);
     }
 
@@ -483,15 +511,15 @@ struct MatrixTestBase
     typedef typename Traits::ScalarType     T_ScalarType;
     // * of the matrix as itself (aka the derived type)
     typedef typename MatrixImp::ScalarType  D_ScalarType;
-    static_assert(std::is_same< T_ScalarType, D_ScalarType >::value
-                  , "ScalarType of derived_type has to be the correct Type!");
+    static_assert(std::is_same< T_ScalarType, D_ScalarType >::value,
+                  "ScalarType of derived_type has to be the correct Type!");
     // * of the matrix as the interface
     typedef typename Stuff::LA::MatrixInterface< Traits > InterfaceType;
     typedef typename InterfaceType::derived_type          I_derived_type;
     typedef typename InterfaceType::ScalarType            I_ScalarType;
     static_assert(std::is_same< MatrixImp, I_derived_type >::value, "derived_type has to be the correct Type!");
-    static_assert(std::is_same< T_ScalarType, I_ScalarType >::value
-                  , "ScalarType of derived_type has to be the correct Type!");
+    static_assert(std::is_same< T_ScalarType, I_ScalarType >::value,
+                  "ScalarType of derived_type has to be the correct Type!");
     // dynamic tests
     // * of the matrix as itself (aka the derived type)
     MatrixImp d_by_size(dim, dim);
@@ -558,8 +586,8 @@ struct MatrixTestBase
       for (size_t jj = 0; jj < d_cols; ++jj) {
         d_by_size_and_pattern.set_entry(ii, jj, D_ScalarType(0.5) + D_ScalarType(ii) + D_ScalarType(jj));
         d_by_size_and_pattern.add_to_entry(ii, jj, D_ScalarType(0.5) + D_ScalarType(ii) + D_ScalarType(jj));
-        if (FloatCmp::ne(d_by_size_and_pattern.get_entry(ii, jj)
-                         , 2*D_ScalarType(ii) + 2* D_ScalarType(jj) + D_ScalarType(1)))
+        if (FloatCmp::ne(d_by_size_and_pattern.get_entry(ii, jj),
+                         D_ScalarType(2)*D_ScalarType(ii) + D_ScalarType(2)*D_ScalarType(jj) + D_ScalarType(1)))
           DUNE_THROW_COLORFULLY(Dune::Exception, d_by_size_and_pattern.get_entry(ii, jj));
       }
     }
