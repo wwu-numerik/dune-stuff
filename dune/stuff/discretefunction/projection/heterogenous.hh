@@ -73,16 +73,12 @@ public:
                       SearchStrategyImp& search)
   {
     typedef typename TargetDFImp::DiscreteFunctionSpaceType TargetDiscreteFunctionSpaceType;
-    typedef typename TargetDFImp::DofType TargetDofType;
     static const int target_dimRange = TargetDiscreteFunctionSpaceType::dimRange;
 
     const auto& space =  target.space();
-    const auto infinity = DSC::numeric_limits< TargetDofType >::infinity();
 
     // set all DoFs to infinity
-    const auto dend = target.dend();
-    for( auto dit = target.dbegin(); dit != dend; ++dit )
-      *dit = infinity;
+    preprocess(target);
 
     const auto endit = space.end();
     for(auto it = space.begin(); it != endit ; ++it)
@@ -108,18 +104,40 @@ public:
             const auto& source_local_function = source.localFunction(*source_entity_ptr);
             source_local_function.evaluate(source_local_point, source_value);
             for(int i = 0; i < target_dimRange; ++i, ++k)
-              target_local_function[k] = source_value[i];
+              setDofValue(target_local_function[k], source_value[i]);
           }
           else {
-            for(int i = 0; i < target_dimRange; ++i, ++k)
-              target_local_function[k] = TargetDofType(6);
+            DUNE_THROW(InvalidStateException, "Did not find the local lagrange point in the source mesh!");
           }
         }
         else
           k += target_dimRange;
       }
     }
+    postprocess(target);
+
   } // ... project(...)
+
+protected:
+  template<class TargetDFImp>
+  static void preprocess(Dune::Fem::DiscreteFunctionInterface<TargetDFImp>& func) {
+    typedef typename TargetDFImp::DofType TargetDofType;
+    const auto infinity = DSC::numeric_limits< TargetDofType >::infinity();
+    // set all DoFs to infinity
+    const auto dend = func.dend();
+    for( auto dit = func.dbegin(); dit != dend; ++dit )
+      *dit = infinity;
+  }
+
+  template<class DofType, class SourceType >
+  static void setDofValue(DofType& dof, const SourceType& value)
+  {
+    dof = value;
+  }
+
+  template<class TargetDFImp>
+  static void postprocess(typename Dune::Fem::DiscreteFunctionInterface<TargetDFImp>& /*func*/) { return; }
+
 }; // class HeterogenousProjection
 #endif // HAVE_DUNE_FEM
 
