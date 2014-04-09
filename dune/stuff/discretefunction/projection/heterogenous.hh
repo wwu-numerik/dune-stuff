@@ -139,6 +139,64 @@ protected:
   static void postprocess(typename Dune::Fem::DiscreteFunctionInterface<TargetDFImp>& /*func*/) { return; }
 
 }; // class HeterogenousProjection
+
+template< template< class > class SearchStrategy = Grid::EntityInlevelSearch >
+class MsFEMProjection : public HeterogenousProjection<SearchStrategy> {
+
+protected:
+  template<class TargetDFImp>
+  void preprocess(Dune::Fem::DiscreteFunctionInterface<TargetDFImp>& func) {
+
+    // set all DoFs to zero
+    const auto dend = func.dend();
+    for( auto dit = func.dbegin(); dit != dend; ++dit )
+      *dit = 0.0;
+  }
+
+  template<class DofType, class SourceType >
+  static void setDofValue(DofType& dof, const SourceType& value)
+  {
+    dof += value;
+  }
+
+  template<class TargetDFImp>
+  void postprocess(typename Dune::Fem::DiscreteFunctionInterface<TargetDFImp>& func) {
+    // compute node to entity relations
+    typedef Dune::Fem::DiscreteFunctionInterface<TargetDFImp> DiscFuncType;
+    const static int dimension = DiscFuncType::DiscreteFunctionSpaceType::GridPartType::GridType::dimension;
+    std::vector<int> nodeToEntity(func.space().gridPart().grid().size(dimension), 0);
+    indentifySharedNodes(func.space().gridPart().grid(), nodeToEntity);
+
+    const auto dend = func.dend();
+    auto factorsIt = nodeToEntity.begin();
+    for (auto dit = func.dbegin(); dit!=dend; ++dit) {
+      assert(factorsIt!=nodeToEntity.end());
+      assert(*factorsIt>0);
+      *dit /= *factorsIt;
+      ++factorsIt;
+    }
+    return;
+  }
+
+  template<class GridPartType, class MapType>
+  void identifySharedNodes(const GridPartType& gridPart, const MapType& map) {
+    typedef typename GridPartType::GridType GridType;
+    const auto& indexSet = gridPart.indexSet();
+
+    for (auto& entity : DSC::viewRange(gridPart.grid().leafGridView())) {
+      int number_of_nodes_in_entity = entity.template count<GridType::dimension>();
+      for (int i = 0; i < number_of_nodes_in_entity; ++i) {
+        const auto node = entity.subEntity<GridType::dimension>(i);
+        const auto global_index_node = indexSet.index(*node);
+
+        // make sure we don't access non-existing elements
+        assert(map.size() > global_index_node);
+        ++map[global_index_node];
+      }
+    }
+  }
+
+};
 #endif // HAVE_DUNE_FEM
 
 
