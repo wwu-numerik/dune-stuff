@@ -106,7 +106,7 @@ public:
 
 template <class DiscreteFunctionType>
 struct FemToPDELabAdapterTraits :
-  public PDELab::GridFunctionTraits<typename DiscreteFunctionType::GridPartType::GridViewType,
+  public PDELab::GridFunctionTraits<typename DiscreteFunctionType::GridPartType::GridType::LeafGridView,
                                     typename DiscreteFunctionType::RangeFieldType,
                                     DiscreteFunctionType::RangeType::dimension, typename DiscreteFunctionType::RangeType >
 {};
@@ -119,12 +119,15 @@ class FemToPDELabAdapter : public
   typedef PDELab::GridFunctionInterface<FemToPDELabAdapterTraits<DiscreteFunctionType>, FemToPDELabAdapter<DiscreteFunctionType>>
     BaseType;
 public:
-  typedef typename DiscreteFunctionType::JacobianRangeType JacobianRangeType;
-
   typedef FemToPDELabAdapterTraits<DiscreteFunctionType> Traits;
-  FemToPDELabAdapter(const DiscreteFunctionType& df)
+
+  typedef typename DiscreteFunctionType::JacobianRangeType JacobianRangeType;
+  typedef typename Traits::GridViewType GridViewType;
+
+  FemToPDELabAdapter(const DiscreteFunctionType& df, const GridViewType& gridView)
     : BaseType()
     , df_(df)
+    , gridView_(gridView)
   {}
 
   inline void evaluate (const typename Traits::ElementType& e,
@@ -134,9 +137,9 @@ public:
     df_.localFunction(e).evaluate(x,y);
   }
 
-  inline const typename Traits::GridViewType& getGridView () const
+  inline const GridViewType& getGridView () const
   {
-    return df_.gridPart().gridView();
+    return gridView_;
   }
 
   std::unique_ptr<typename DiscreteFunctionType::LocalFunctionType> local_function(const typename Traits::ElementType& e) const {
@@ -144,7 +147,7 @@ public:
   }
 private:
   const DiscreteFunctionType& df_;
-
+  const GridViewType& gridView_;
 
 };
 
@@ -197,9 +200,9 @@ GlobalGridFunctionAdapter<GridViewType,GlobalFunction<E,D,d,RF,r>> pdelabAdapted
 
 template <class GridViewType, class TraitsType>
 FemToPDELabAdapter<Dune::Fem::DiscreteFunctionInterface<TraitsType>> pdelabAdapted(const Dune::Fem::DiscreteFunctionInterface<TraitsType>& f,
-                                                                                 const GridViewType& /*view*/)
+                                                                                 const GridViewType& view)
 {
-  return FemToPDELabAdapter<Dune::Fem::DiscreteFunctionInterface<TraitsType>>(f);
+  return FemToPDELabAdapter<Dune::Fem::DiscreteFunctionInterface<TraitsType> >(f, view);
 }
 
 
