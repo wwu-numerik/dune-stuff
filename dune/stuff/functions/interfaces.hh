@@ -42,6 +42,12 @@ class Difference;
 }
 #endif // HAVE_DUNE_GRID
 
+namespace Tags {
+
+class LocalizableFunction {};
+
+}
+
 
 /**
  *  \brief  Interface for a set of globalvalued functions, which can be evaluated locally on one Entity.
@@ -240,6 +246,7 @@ class IsLocalizableFunction {};
 template< class EntityImp, class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDim, int rangeDimCols = 1 >
 class LocalizableFunctionInterface
   : public IsLocalizableFunction
+  , public Tags::LocalizableFunction
 {
   typedef LocalizableFunctionInterface
       < EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols > ThisType;
