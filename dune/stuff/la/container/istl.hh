@@ -528,7 +528,9 @@ public:
   {
     assert(ii < rows());
     assert(jj < cols());
-    return backend_->operator[](ii)[jj][0][0];
+    if(these_are_valid_indices(ii, jj))
+      return backend_->operator[](ii)[jj][0][0];
+    else return ScalarType(0);
   } // ... get_entry(...)
 
   void clear_row(const size_t ii)
@@ -585,7 +587,7 @@ public:
    */
 
 private:
-  bool these_are_valid_indices(const size_t ii, const size_t jj)
+  bool these_are_valid_indices(const size_t ii, const size_t jj) const
   {
     if (ii >= rows())
       return false;
