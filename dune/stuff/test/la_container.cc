@@ -53,35 +53,6 @@ typedef testing::Types<
                       > MatrixVectorCombinations;
 
 typedef testing::Types<
-                        std::pair< Dune::Stuff::LA::CommonDenseMatrix< double >
-                                 , Dune::Stuff::LA::CommonDenseVector< double > >
-#if HAVE_EIGEN
-                      , std::pair< Dune::Stuff::LA::EigenDenseMatrix< double >
-                                 , Dune::Stuff::LA::EigenDenseVector< double > >
-                      , std::pair< Dune::Stuff::LA::EigenDenseMatrix< double >
-                                 , Dune::Stuff::LA::EigenMappedDenseVector< double > >
-#endif
-                      > DenseMatrixVectorCombinations;
-
-typedef testing::Types<
-#if HAVE_EIGEN
-                        std::pair< Dune::Stuff::LA::EigenRowMajorSparseMatrix< double >
-                                 , Dune::Stuff::LA::EigenDenseVector< double > >
-                      , std::pair< Dune::Stuff::LA::EigenRowMajorSparseMatrix< double >
-                                 , Dune::Stuff::LA::EigenMappedDenseVector< double > >
-# if HAVE_DUNE_ISTL
-                      ,
-# endif
-#endif // HAVE_EIGEN
-#if HAVE_DUNE_ISTL
-                        std::pair< Dune::Stuff::LA::IstlRowMajorSparseMatrix< double >
-                                 , Dune::Stuff::LA::IstlDenseVector< double > >
-#endif
-                      > SparseMatrixVectorCombinations;
-
-
-
-typedef testing::Types<
                         Dune::Stuff::LA::CommonDenseVector< double >
                       , Dune::Stuff::LA::CommonDenseMatrix< double >
 #if HAVE_EIGEN
@@ -648,7 +619,7 @@ TYPED_TEST(VectorTest, produces_correct_results) {
 }
 
 template< class MatrixVectorCombination >
-struct MatrixTestBase
+struct MatrixTest
   : public ::testing::Test
 {
   typedef typename MatrixVectorCombination::first_type MatrixImp;
@@ -940,28 +911,12 @@ struct MatrixTestBase
   } //void produces_correct_results() const
 }; //struct MatrixTest
 
-}; //struct MatrixTestBase
-
-template< class DenseMatrixVectorCombination >
-struct DenseMatrixTest
-  : public MatrixTestBase< DenseMatrixVectorCombination >
-{
-
-}; // struct DenseMatrixTest
-
-template< class SparseMatrixVectorCombination >
-struct SparseMatrixTest
-  : public MatrixTestBase< SparseMatrixVectorCombination >
-{
-
-}; // struct SparseMatrixTest
-
-TYPED_TEST_CASE(MatrixTestBase, MatrixVectorCombinations);
-TYPED_TEST(MatrixTestBase, fulfills_interface) {
+TYPED_TEST_CASE(MatrixTest, MatrixVectorCombinations);
+TYPED_TEST(MatrixTest, fulfills_interface) {
   this->fulfills_interface();
 }
-TYPED_TEST_CASE(MatrixTestBase, MatrixVectorCombinations);
-TYPED_TEST(MatrixTestBase, produces_correct_results) {
+TYPED_TEST_CASE(MatrixTest, MatrixVectorCombinations);
+TYPED_TEST(MatrixTest, produces_correct_results) {
   this->produces_correct_results();
 }
 
