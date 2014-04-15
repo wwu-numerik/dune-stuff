@@ -231,7 +231,7 @@ private:
 
 #endif // DUNE_STUFF_COMMON_PARAMETER_TREE_HH
 
-/** Copyright (c) 2012, Rene Milk, Felix Albrecht
+/** Copyright (c) 2012, Rene Milk, Felix Schindler
    * All rights reserved.
    *
    * Redistribution and use in source and binary forms, with or without

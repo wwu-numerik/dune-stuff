@@ -33,7 +33,7 @@ void printFunctionMinMax(std::ostream& stream, const Function& func) {
 #endif // HAVE_DUNE_FEM
 #endif // ifndef DUNE_STUFF_FEM_PRINT_HH
 
-/** Copyright (c) 2012, Felix Albrecht, Rene Milk     , Sven Kaulmann
+/** Copyright (c) 2012, Rene Milk, Felix Schindler     , Sven Kaulmann
    * All rights reserved.
    *
    * Redistribution and use in source and binary forms, with or without

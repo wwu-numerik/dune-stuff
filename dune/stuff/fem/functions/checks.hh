@@ -139,7 +139,7 @@ bool MatrixContainsNanOrInf(const MatrixType& matrix) {
 #endif // HAVE_DUNE_FEM
 
 #endif // includeguard
-/** Copyright (c) 2012, Felix Albrecht, Rene Milk
+/** Copyright (c) 2012, Rene Milk, Felix Schindler
    * All rights reserved.
    *
    * Redistribution and use in source and binary forms, with or without

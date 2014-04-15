@@ -64,7 +64,7 @@ bool intersectionContains( const IntersectionType& intersection, const Dune::Fie
 } // end namespace Dune
 
 #endif // DUNE_STUFF_GRID_INTERSECTION_HH
-/** Copyright (c) 2012, Felix Albrecht
+/** Copyright (c) 2012, Rene Milk, Felix Schindler
    * All rights reserved.
    *
    * Redistribution and use in source and binary forms, with or without
