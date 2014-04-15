@@ -10,7 +10,9 @@
 #include <boost/format.hpp>
 
 #if HAVE_EIGEN
-  #include <Eigen/Core>
+# include <dune/stuff/common/disable_warnings.hh>
+#   include <Eigen/Core>
+# include <dune/stuff/common/reenable_warnings.hh>
 #endif // HAVE_EIGEN
 
 #include <dune/common/exceptions.hh>
