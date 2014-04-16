@@ -3,7 +3,7 @@
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
-﻿#ifndef DUNE_STUFF_FUNCTIONS_VISUALIZATION_HH
+#ifndef DUNE_STUFF_FUNCTIONS_VISUALIZATION_HH
 #define DUNE_STUFF_FUNCTIONS_VISUALIZATION_HH
 
 #if HAVE_DUNE_GRID
