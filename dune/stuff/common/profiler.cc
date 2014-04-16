@@ -1,10 +1,6 @@
-#include <dune/common/version.hh>
+#include "config.h"
 
-#ifdef HAVE_CMAKE_CONFIG
-  #include "cmake_config.h"
-#elif defined (HAVE_CONFIG_H)
-  #include <config.h>
-#endif // ifdef HAVE_CMAKE_CONFIG
+#include <dune/common/version.hh>
 
 #include "profiler.hh"
 
@@ -285,7 +281,7 @@ void Profiler::outputTimingsAll(std::ostream& out) const
     }
   }
   stash << std::endl;
-  if (comm.rank() == 0) 
+  if (comm.rank() == 0)
     out << stash.str();
 }
 

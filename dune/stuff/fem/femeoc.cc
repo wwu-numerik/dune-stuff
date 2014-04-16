@@ -2,7 +2,7 @@
 
 #include "femeoc.hh"
 
-#ifdef HAVE_DUNE_FEM
+#if HAVE_DUNE_FEM
 
 namespace Dune {
 namespace Stuff {

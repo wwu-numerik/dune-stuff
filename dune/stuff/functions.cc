@@ -28,7 +28,7 @@
 # define DUNE_STUFF_FUNCTIONS_CC_LAST_EXPANSION(etype, dftype, ddim, rftype, rdim, rcdim) \
   template class Dune::Stuff::Functions< etype, dftype, ddim, rftype, rdim, rcdim >;
 
-# ifdef HAVE_DUNE_GRID
+# if HAVE_DUNE_GRID
 
 DUNE_STUFF_FUNCTIONS_CC_LIST_DIMRANGE(DuneStuffFunctionsInterfacesSGrid1dEntityType, 1)
 DUNE_STUFF_FUNCTIONS_CC_LIST_DIMRANGE(DuneStuffFunctionsInterfacesSGrid2dEntityType, 2)

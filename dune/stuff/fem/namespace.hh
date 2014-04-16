@@ -3,7 +3,7 @@
 
 #include <dune/common/version.hh>
 
-#ifdef HAVE_DUNE_FEM
+#if HAVE_DUNE_FEM
 
 #if DUNE_VERSION_EQUAL_REV(DUNE_FEM,1,4,-1)
   #define DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE 1

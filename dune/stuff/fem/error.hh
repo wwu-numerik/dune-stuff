@@ -1,7 +1,7 @@
 #ifndef DUNE_STUFF_ERROR_HH
 #define DUNE_STUFF_ERROR_HH
 
-#ifdef HAVE_DUNE_FEM
+#if HAVE_DUNE_FEM
 
 #include <dune/fem/misc/l2norm.hh>
 #include <dune/fem/misc/h1norm.hh>

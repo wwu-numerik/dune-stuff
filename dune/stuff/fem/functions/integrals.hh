@@ -1,7 +1,7 @@
 #ifndef DUNE_STUFF_INTEGRALS_HH
 #define DUNE_STUFF_INTEGRALS_HH
 
-#ifdef HAVE_DUNE_FEM
+#if HAVE_DUNE_FEM
 
 #include <dune/stuff/fem/localmassmatrix.hh>
 #include <dune/stuff/common/ranges.hh>

@@ -37,7 +37,7 @@
 // TEST_STRUCT_GENERATOR
 
 
-#ifdef HAVE_DUNE_GRID
+#if HAVE_DUNE_GRID
 
 # include <dune/grid/sgrid.hh>
 

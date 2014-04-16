@@ -17,8 +17,8 @@
 
 #include <dune/grid/utility/structuredgridfactory.hh>
 #include <dune/grid/yaspgrid.hh>
-#ifdef HAVE_ALUGRID
-  #include <dune/grid/alugrid.hh>
+#if HAVE_ALUGRID
+# include <dune/grid/alugrid.hh>
 #endif
 #include <dune/grid/sgrid.hh>
 

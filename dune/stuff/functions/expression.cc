@@ -5,7 +5,7 @@
 
 #include "config.h"
 
-# ifdef DUNE_STUFF_FUNCTIONS_TO_LIB
+#ifdef DUNE_STUFF_FUNCTIONS_TO_LIB
 # include "expression.hh"
 
 # define DUNE_STUFF_FUNCTIONS_EXPRESSION_CC_LIST_DIMRANGE(etype, ddim) \
@@ -27,7 +27,7 @@
 # define DUNE_STUFF_FUNCTIONS_EXPRESSION_CC_LAST_EXPANSION(etype, dftype, ddim, rftype, rdim, rcdim) \
   template class Dune::Stuff::Function::Expression< etype, dftype, ddim, rftype, rdim, rcdim >;
 
-# ifdef HAVE_DUNE_GRID
+# if HAVE_DUNE_GRID
 
 DUNE_STUFF_FUNCTIONS_EXPRESSION_CC_LIST_DIMRANGE(DuneStuffFunctionsInterfacesSGrid1dEntityType, 1)
 DUNE_STUFF_FUNCTIONS_EXPRESSION_CC_LIST_DIMRANGE(DuneStuffFunctionsInterfacesSGrid2dEntityType, 2)

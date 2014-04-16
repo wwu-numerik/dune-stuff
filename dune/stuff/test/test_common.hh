@@ -12,7 +12,7 @@
 #include <dune/stuff/aliases.hh>
 #include <dune/stuff/common/parameter/configcontainer.hh>
 #include <dune/stuff/common/logging.hh>
-#ifdef HAVE_DUNE_FEM
+#if HAVE_DUNE_FEM
 # include <dune/fem/misc/mpimanager.hh>
 #endif
 #include <gtest.h>
@@ -66,7 +66,7 @@ void test_init(int argc, char** argv)
 {
   testing::InitGoogleTest(&argc, argv);
   DSC_CONFIG.readOptions(argc, argv);
-#ifdef HAVE_DUNE_FEM
+#if HAVE_DUNE_FEM
   Dune::Fem::MPIManager::initialize(argc, argv);
 #else
   Dune::MPIHelper::instance(argc, argv);

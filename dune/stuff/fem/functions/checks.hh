@@ -1,7 +1,7 @@
 #ifndef STUFF_FUNCTIONS_HH_INCLUDED
 #define STUFF_FUNCTIONS_HH_INCLUDED
 
-#ifdef HAVE_DUNE_FEM
+#if HAVE_DUNE_FEM
 
 #include <cmath>
 #include <fstream>

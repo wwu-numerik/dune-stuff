@@ -1,7 +1,7 @@
 #ifndef CUSTOMPROJECTION_HH
 #define CUSTOMPROJECTION_HH
 
-#ifdef HAVE_DUNE_FEM
+#if HAVE_DUNE_FEM
 
 #include <dune/fem/quadrature/cachingquadrature.hh>
 #include <dune/fem/operator/common/operator.hh>

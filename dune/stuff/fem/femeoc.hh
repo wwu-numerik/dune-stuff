@@ -1,7 +1,7 @@
 #ifndef DUNE_STUFF_FEMEOC_HH
 #define DUNE_STUFF_FEMEOC_HH
 
-#ifdef HAVE_DUNE_FEM
+#if HAVE_DUNE_FEM
 
 #include <cassert>
 #include <sstream>

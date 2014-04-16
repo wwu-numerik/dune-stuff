@@ -3,8 +3,8 @@
 
 #include "../common/print.hh"
 
-#ifdef HAVE_DUNE_FEM
-#include <dune/stuff/fem/functions/checks.hh>
+#if HAVE_DUNE_FEM
+# include <dune/stuff/fem/functions/checks.hh>
 
 namespace Dune {
 namespace Stuff {

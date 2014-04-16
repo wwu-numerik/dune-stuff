@@ -1,7 +1,7 @@
 #ifndef STUFF_TIMEFUNCTION_HH
 #define STUFF_TIMEFUNCTION_HH
 
-#ifdef HAVE_DUNE_FEM
+#if HAVE_DUNE_FEM
 
 #include <dune/fem/function/common/function.hh>
 #include <dune/common/bartonnackmanifcheck.hh>

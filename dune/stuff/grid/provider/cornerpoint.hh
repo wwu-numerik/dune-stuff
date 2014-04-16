@@ -6,7 +6,7 @@
 #ifndef DUNE_STUFF_GRID_PROVIDER_CORNERPOINT_HH
 #define DUNE_STUFF_GRID_PROVIDER_CORNERPOINT_HH
 
-#ifdef HAVE_DUNE_CORNERPOINT
+#if HAVE_DUNE_CORNERPOINT
 
 // dune-common
 #include <dune/common/parametertree.hh>

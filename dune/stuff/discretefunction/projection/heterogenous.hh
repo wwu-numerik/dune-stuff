@@ -9,7 +9,7 @@
 #include <dune/stuff/aliases.hh>
 #include <dune/stuff/fem/namespace.hh>
 
-#ifdef HAVE_DUNE_FEM
+#if HAVE_DUNE_FEM
   #include <dune/fem/function/common/discretefunction.hh>
   #include <dune/fem/quadrature/cachingquadrature.hh>
   #include <dune/fem/space/finitevolume.hh>
