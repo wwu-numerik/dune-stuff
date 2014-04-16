@@ -1,3 +1,10 @@
+# This file is part of the dune-stuff project:
+#   http://users.dune-project.org/projects/dune-stuff
+# Copyright holders: Rene Milk, Felix Schindler
+# License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+#
+# Contributors: Sven Kaulmann
+
 # ===========================================================================
 #      http://www.gnu.org/software/autoconf-archive/ax_boost_chrono.html
 # ===========================================================================
