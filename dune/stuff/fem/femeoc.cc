@@ -1,8 +1,13 @@
+// This file is part of the dune-stuff project:
+//   http://users.dune-project.org/projects/dune-stuff
+// Copyright holders: Rene Milk, Felix Schindler
+// License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+
 #include <dune/stuff/fem/namespace.hh>
 
 #include "femeoc.hh"
 
-#ifdef HAVE_DUNE_FEM
+#if HAVE_DUNE_FEM
 
 namespace Dune {
 namespace Stuff {

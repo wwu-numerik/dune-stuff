@@ -245,7 +245,7 @@ public:
       set(keys[ii], values[ii]);
   }
 
-  ConfigTree(const std::string filename)
+  explicit ConfigTree(const std::string filename)
     : BaseType(initialize(filename))
   {}
 

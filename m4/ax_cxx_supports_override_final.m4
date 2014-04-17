@@ -1,3 +1,8 @@
+# This file is part of the dune-stuff project:
+#   http://users.dune-project.org/projects/dune-stuff
+# Copyright holders: Rene Milk, Felix Schindler
+# License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+
 AC_DEFUN([AX_OVERRIDE_KEYWORD_CHECK],[
   AC_CACHE_CHECK([whether $CXX supports the override keyword], dune_stuff_override_support, [
     AC_REQUIRE([AC_PROG_CXX])

@@ -1,3 +1,10 @@
+// This file is part of the dune-stuff project:
+//   http://users.dune-project.org/projects/dune-stuff
+// Copyright holders: Rene Milk, Felix Schindler
+// License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+//
+// Contributors: Sven Kaulmann
+
 #ifndef DUNE_STUFF_DISCRETEFUNCTION_PROJECTION_HETEROGENOUS_HH
 #define DUNE_STUFF_DISCRETEFUNCTION_PROJECTION_HETEROGENOUS_HH
 
@@ -9,7 +16,7 @@
 #include <dune/stuff/aliases.hh>
 #include <dune/stuff/fem/namespace.hh>
 
-#ifdef HAVE_DUNE_FEM
+#if HAVE_DUNE_FEM
   #include <dune/fem/function/common/discretefunction.hh>
   #include <dune/fem/quadrature/cachingquadrature.hh>
   #include <dune/fem/space/finitevolume.hh>

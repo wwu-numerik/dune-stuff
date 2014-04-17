@@ -18,7 +18,7 @@
 # define DUNE_STUFF_FUNCTIONS_SPE10_CC_LAST_EXPANSION(etype, dftype, ddim, rftype, rdim, rcdim) \
   template class Dune::Stuff::Function::Spe10Model1< etype, dftype, ddim, rftype, rdim, rcdim >;
 
-# ifdef HAVE_DUNE_GRID
+# if HAVE_DUNE_GRID
 
 DUNE_STUFF_FUNCTIONS_SPE10_CC_LIST_DOMAINFIELDTYPES(DuneStuffFunctionsInterfacesSGrid2dEntityType, 2, 1, 1)
 

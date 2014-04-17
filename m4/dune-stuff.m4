@@ -1,3 +1,10 @@
+# This file is part of the dune-stuff project:
+#   http://users.dune-project.org/projects/dune-stuff
+# Copyright holders: Rene Milk, Felix Schindler
+# License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+#
+# Contributors: Sven Kaulmann
+
 AC_DEFUN([DUNE_STUFF_CHECKS],[
   AC_DEFINE([DUNE_STUFF_SSIZE_T], [long int], [We need this for the python bindings (there is no unsigned in python).])
 

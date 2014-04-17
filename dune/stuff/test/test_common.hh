@@ -1,3 +1,8 @@
+// This file is part of the dune-stuff project:
+//   http://users.dune-project.org/projects/dune-stuff
+// Copyright holders: Rene Milk, Felix Schindler
+// License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+
 #ifndef DUNE_STUFF_TEST_TOOLS_HH
 #define DUNE_STUFF_TEST_TOOLS_HH
 
@@ -12,7 +17,7 @@
 #include <dune/stuff/aliases.hh>
 #include <dune/stuff/common/parameter/configcontainer.hh>
 #include <dune/stuff/common/logging.hh>
-#ifdef HAVE_DUNE_FEM
+#if HAVE_DUNE_FEM
 # include <dune/fem/misc/mpimanager.hh>
 #endif
 #include <gtest.h>
@@ -66,7 +71,7 @@ void test_init(int argc, char** argv)
 {
   testing::InitGoogleTest(&argc, argv);
   DSC_CONFIG.readOptions(argc, argv);
-#ifdef HAVE_DUNE_FEM
+#if HAVE_DUNE_FEM
   Dune::Fem::MPIManager::initialize(argc, argv);
 #else
   Dune::MPIHelper::instance(argc, argv);

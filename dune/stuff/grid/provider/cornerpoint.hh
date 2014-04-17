@@ -1,3 +1,8 @@
+// This file is part of the dune-stuff project:
+//   http://users.dune-project.org/projects/dune-stuff
+// Copyright holders: Rene Milk, Felix Schindler
+// License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+
 /**
   \file   dune/stuff/grid/provider/cornerpoint.hh
   \brief  dune/stuff/grid/provider/cornerpoint.hh - Contains a class to construct a cornerpoint grid from file.
@@ -6,7 +11,7 @@
 #ifndef DUNE_STUFF_GRID_PROVIDER_CORNERPOINT_HH
 #define DUNE_STUFF_GRID_PROVIDER_CORNERPOINT_HH
 
-#ifdef HAVE_DUNE_CORNERPOINT
+#if HAVE_DUNE_CORNERPOINT
 
 // dune-common
 #include <dune/common/parametertree.hh>
