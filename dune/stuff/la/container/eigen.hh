@@ -239,7 +239,7 @@ public:
       DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
                             "The size of other (" << other.size() << ") does not match the size of this (" << size()
                             << ")!");
-    return backend_->transpose() * (*other.backend_);
+    return backend_->transpose() * *(other.backend_);
   } // ... dot(...)
 
   virtual ScalarType dot(const VectorImpType& other) const DS_OVERRIDE DS_FINAL
@@ -273,7 +273,7 @@ public:
       DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
                             "The size of result (" << result.size() << ") does not match the size of this (" << size()
                             << ")!");
-    result.backend() = *backend_ + *other.backend_;
+    result.backend() = *backend_ + *(other.backend_);
   } // ... add(...)
 
   virtual void add(const VectorImpType& other, VectorImpType& result) const DS_OVERRIDE DS_FINAL
@@ -288,7 +288,7 @@ public:
       DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
                             "The size of other (" << other.size() << ") does not match the size of this (" << size()
                             << ")!");
-    backend() += *other.backend_;
+    backend() += *(other.backend_);
   } // ... iadd(...)
 
   virtual void iadd(const VectorImpType& other) DS_OVERRIDE DS_FINAL
@@ -307,7 +307,7 @@ public:
       DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
                             "The size of result (" << result.size() << ") does not match the size of this (" << size()
                             << ")!");
-    result.backend() = *backend_ - *other.backend_;
+    result.backend() = *backend_ - *(other.backend_);
   } // ... sub(...)
 
   virtual void sub(const VectorImpType& other, VectorImpType& result) const DS_OVERRIDE DS_FINAL
@@ -322,7 +322,7 @@ public:
       DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
                             "The size of other (" << other.size() << ") does not match the size of this (" << size()
                             << ")!");
-    backend() -= *other.backend_;
+    backend() -= *(other.backend_);
   } // ... isub(...)
 
   virtual void isub(const VectorImpType& other) DS_OVERRIDE DS_FINAL
@@ -745,7 +745,7 @@ public:
 
   void scal(const ScalarType& alpha)
   {
-    backend()*=alpha;
+    backend() *= alpha;
   } // ... scal(...)
 
   void axpy(const ScalarType& alpha, const ThisType& xx)
@@ -1005,7 +1005,7 @@ public:
 
   void scal(const ScalarType& alpha)
   {
-    backend()*=alpha;
+    backend() *= alpha;
   } // ... scal(...)
 
   void axpy(const ScalarType& alpha, const ThisType& xx)

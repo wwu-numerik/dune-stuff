@@ -147,7 +147,7 @@ public:
 
   void scal(const ScalarType& alpha)
   {
-    backend()*=(alpha);
+    backend() *= alpha;
   } // ... scal(...)
 
   void axpy(const ScalarType& alpha, const ThisType& xx)
@@ -460,7 +460,7 @@ public:
 
   void scal(const ScalarType& alpha)
   {
-    backend()*=(alpha);
+    backend() *= alpha;
   } // ... scal(...)
 
   void axpy(const ScalarType& alpha, const ThisType& xx)

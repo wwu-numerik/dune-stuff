@@ -261,7 +261,7 @@ public:
       DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
                             "The size of other (" << other.size() << ") does not match the size of this (" << size()
                             << ")!");
-    backend() += *other.backend_;
+    backend() += *(other.backend_);
   } // ... iadd(...)
 
   virtual void sub(const ThisType& other, ThisType& result) const DS_OVERRIDE DS_FINAL
@@ -285,7 +285,7 @@ public:
       DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
                             "The size of other (" << other.size() << ") does not match the size of this (" << size()
                             << ")!");
-    backend() -= *other.backend_;
+    backend() -= *(other.backend_);
   } // ... isub(...)
 
   /**
@@ -435,7 +435,7 @@ public:
 
   void scal(const ScalarType& alpha)
   {
-    backend()*=alpha;
+    backend() *= alpha;
   } // ... scal(...)
 
   void axpy(const ScalarType& alpha, const ThisType& xx)
