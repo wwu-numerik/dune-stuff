@@ -73,8 +73,21 @@ private:
 };
 
 
+class BufferContainer
+{
+public:
+  BufferContainer(SuspendableStrBuffer* buffer)
+    : buffer_(buffer)
+  {}
+
+protected:
+  SuspendableStrBuffer* buffer_;
+}; // class BufferContainer
+
+
 class LogStream
-  : public std::basic_ostream< char, std::char_traits<char> >
+  : public BufferContainer
+  , public std::basic_ostream< char, std::char_traits<char> >
 {
   typedef std::basic_ostream< char, std::char_traits<char> > BaseType;
 public:
@@ -82,8 +95,8 @@ public:
   static const PriorityType default_suspend_priority = SuspendableStrBuffer::default_suspend_priority;
 
   LogStream(SuspendableStrBuffer* buffer)
-    : BaseType( buffer_ )
-    , buffer_(buffer)
+    : BufferContainer(buffer)
+    , BaseType(this->buffer_)
   {}
 
   /** \brief Tunnel buffer setting to ostream base
@@ -91,7 +104,7 @@ public:
    * it again after base class init
    **/
   void rdbuf(SuspendableStrBuffer* buf) {
-    buffer_ = buf;
+    this->buffer_ = buf;
     BaseType::rdbuf(buf);
   }
 
@@ -107,20 +120,17 @@ public:
      * no-op if already suspended
      ***/
   void suspend(PriorityType priority = default_suspend_priority) {
-    assert(buffer_);
-    buffer_->suspend(priority);
+    assert(this->buffer_);
+    this->buffer_->suspend(priority);
   }
 
   /** \brief start accepting input into the buffer again
      * no-op if not suspended
      ***/
   void resume(PriorityType priority = default_suspend_priority) {
-    assert(buffer_);
-    buffer_->resume(priority);
+    assert(this->buffer_);
+    this->buffer_->resume(priority);
   }   // Resume
-
-private:
-  SuspendableStrBuffer* buffer_;
 }; // LogStream
 
 
