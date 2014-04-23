@@ -1,8 +1,3 @@
-# This file is part of the dune-stuff project:
-#   http://users.dune-project.org/projects/dune-stuff
-# Copyright holders: Rene Milk, Felix Schindler
-# License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
-
 # File: UseLATEX.cmake
 # CMAKE commands to actually use the LaTeX compiler
 # Version: 1.9.4
@@ -431,7 +426,7 @@ FUNCTION(LATEX_MAKEGLOSSARIES)
           )
       ENDIF ("${xindy_output}" MATCHES "^Cannot locate xindy module for language (.+) in codepage (.+)\\.$")
       #ENDIF ("${xindy_output}" MATCHES "Cannot locate xindy module for language (.+) in codepage (.+)\\.")
-      
+
     ELSE (use_xindy)
       MESSAGE("${MAKEINDEX_COMPILER} ${MAKEGLOSSARIES_COMPILER_FLAGS} -s ${istfile} -t ${glossary_log} -o ${glossary_out} ${glossary_in}")
       EXEC_PROGRAM(${MAKEINDEX_COMPILER} ARGS ${MAKEGLOSSARIES_COMPILER_FLAGS}
