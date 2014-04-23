@@ -5,7 +5,7 @@
 
 stuffdir = $(includedir)/dune/stuff
 
-SUBDIRS = . common discretefunction fem grid test
+SUBDIRS = . test
 
 noinst_LTLIBRARIES = libstuff.la
 

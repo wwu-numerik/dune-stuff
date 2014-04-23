@@ -32,17 +32,7 @@ AC_CONFIG_FILES([Makefile
 	lib/Makefile
 	dune/Makefile
 	dune/stuff/Makefile
-	dune/stuff/common/Makefile
-	dune/stuff/fem/Makefile
-	dune/stuff/fem/functions/Makefile
-	dune/stuff/grid/Makefile
-	dune/stuff/grid/provider/Makefile
-	dune/stuff/grid/output/Makefile
-	dune/stuff/discretefunction/Makefile
-	dune/stuff/discretefunction/projection/Makefile
 	dune/stuff/test/Makefile
-	examples/Makefile
-	examples/grid/Makefile
 	m4/Makefile
 	dune-stuff.pc])
 
