@@ -21,7 +21,7 @@ libstuff_la_SOURCES = \
 	common/signals.cc \
 	common/threadmanager.cc \
 	fem/femeoc.cc \
-	grid/fakeentity.cc \
+	grids/fakeentity.cc \
 	functions/interfaces.cc \
 	functions/checkerboard.cc \
 	functions/constant.cc \

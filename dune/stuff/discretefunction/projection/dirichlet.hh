@@ -11,8 +11,8 @@
 
 #include <vector>
 
-#include <dune/stuff/grid/boundaryinfo.hh>
-#include <dune/stuff/grid/intersection.hh>
+#include <dune/stuff/grids/boundaryinfo.hh>
+#include <dune/stuff/grids/intersection.hh>
 #include <dune/stuff/functions/interfaces.hh>
 #include <dune/stuff/common/color.hh>
 

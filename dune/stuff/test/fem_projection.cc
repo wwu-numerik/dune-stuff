@@ -25,7 +25,7 @@
 #include <dune/stuff/common/tuple.hh>
 #include <dune/stuff/fem/functions/timefunction.hh>
 #include <dune/stuff/fem/customprojection.hh>
-#include <dune/stuff/grid/provider/cube.hh>
+#include <dune/stuff/grids/provider/cube.hh>
 #include <dune/stuff/functions/expression.hh>
 #include <dune/stuff/functions/affineparametric/coefficient.hh>
 #include <dune/stuff/fem/namespace.hh>
