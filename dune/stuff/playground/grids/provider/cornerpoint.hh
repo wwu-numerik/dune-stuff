@@ -1,5 +1,5 @@
 // This file is part of the dune-stuff project:
-//   http://users.dune-project.org/projects/dune-stuff
+//   https://users.dune-project.org/projects/dune-stuff
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
@@ -47,11 +47,11 @@ namespace Provider {
 /**
   \brief  Creates a cornerpoint grid from a grdecl file.
 
-          A corresponding file can be obtained i.e. from http://www.sintef.no/Projectweb/MatMorA/Downloads/Johansen/. If
+          A corresponding file can be obtained i.e. from https://www.sintef.no/Projectweb/MatMorA/Downloads/Johansen/. If
           \code $BASEDIR\endcode denotes the directory containing dune-rb, the following commands will download and unzip a sample grid file:
           \code mkdir -p $BASEDIR/dune-rb/dune/rb/grid/examples/data && \
  cd $BASEDIR/dune-rb/dune/rb/grid/examples/data && \
- wget http://www.sintef.no/project/MatMoRA/Johansen/FULLFIELD_Eclipse.zip && \
+ wget https://www.sintef.no/project/MatMoRA/Johansen/FULLFIELD_Eclipse.zip && \
  unzip FULLFIELD_Eclipse.zip && \
  mv FULLFIELD_IMAXJMAX.GRDECL johansen_formation.grdecl && \
  rm FULLFIELD_*\endcode
