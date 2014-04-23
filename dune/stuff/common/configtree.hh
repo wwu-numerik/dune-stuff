@@ -309,10 +309,11 @@ public:
     return *this;
   }
 
-  ConfigTree operator+(const ConfigTree& other)
+  ConfigTree operator+(const ConfigTree& other) const
   {
-    add(other);
-    return *this;
+    ConfigTree ret(*this);
+    ret += other;
+    return ret;
   }
 
   template< typename T >
@@ -406,10 +407,11 @@ public:
       } else if (valueKeys.size() == 0) {
         const std::string common_prefix = find_common_prefix(*this, "");
         if (!common_prefix.empty()) {
-          out << "[" << common_prefix << "]" << std::endl;
+          out << prefix << "[" << common_prefix << "]" << std::endl;
           const ConfigTree& commonSub = sub(common_prefix);
           report_flatly(commonSub, prefix, out);
-        }
+        } else
+          report_as_sub(out, prefix, "");
       } else {
         report_as_sub(out, prefix, "");
       }
