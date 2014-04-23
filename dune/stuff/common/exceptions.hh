@@ -64,6 +64,8 @@ class results_are_not_as_expected : public Dune::Exception {};
 
 class internal_error : public Dune::Exception {};
 
+class external_error : public Dune::Exception {};
+
 class linear_solver_failed : public Dune::Exception {};
 
 
