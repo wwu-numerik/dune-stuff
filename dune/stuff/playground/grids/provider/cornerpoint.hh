@@ -4,8 +4,8 @@
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
 /**
-  \file   dune/stuff/grids/provider/cornerpoint.hh
-  \brief  dune/stuff/grids/provider/cornerpoint.hh - Contains a class to construct a cornerpoint grid from file.
+  \file   dune/stuff/grid/provider/cornerpoint.hh
+  \brief  dune/stuff/grid/provider/cornerpoint.hh - Contains a class to construct a cornerpoint grid from file.
   **/
 
 #ifndef DUNE_STUFF_GRID_PROVIDER_CORNERPOINT_HH

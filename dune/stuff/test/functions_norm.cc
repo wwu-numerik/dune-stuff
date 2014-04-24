@@ -9,7 +9,7 @@
 #include <dune/common/mpihelper.hh>
 #include <dune/common/parametertreeparser.hh>
 
-#include <dune/stuff/grids/provider/cube.hh>
+#include <dune/stuff/grid/provider/cube.hh>
 
 #include <dune/stuff/functions/expression.hh>
 #include <dune/stuff/common/profiler.hh>

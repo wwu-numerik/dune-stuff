@@ -25,7 +25,7 @@
 
 #include <dune/grid/io/file/vtk/function.hh>
 
-#include <dune/stuff/grids/search.hh>
+#include <dune/stuff/grid/search.hh>
 
 namespace Dune {
 namespace Stuff {
