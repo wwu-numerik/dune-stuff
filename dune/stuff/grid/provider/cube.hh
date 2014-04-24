@@ -31,7 +31,8 @@
 
 namespace Dune {
 namespace Stuff {
-namespace Grids {
+namespace Grid {
+namespace Providers {
 namespace internal {
 
 
@@ -95,11 +96,11 @@ struct ElementVariant< Dune::ALUCubeGrid< dim, dim > >
  *          <li>2: simplices</ul>
  **/
 template< typename GridImp, int variant = internal::ElementVariant< GridImp >::id >
-class CubeProvider
+class Cube
   : public ProviderInterface< GridImp >
 {
   typedef ProviderInterface< GridImp > BaseType;
-  typedef CubeProvider< GridImp, variant > ThisType;
+  typedef Cube< GridImp, variant > ThisType;
 public:
   using typename BaseType::GridType;
   static const unsigned int dimDomain = BaseType::dimDomain;
@@ -125,7 +126,7 @@ public:
    *  \param[in]  numElements (optional)
    *              number of elements.
    **/
-  CubeProvider(const double _lowerLeft = 0.0, const double _upperRight = 1.0, const unsigned int numElements = 1u)
+  Cube(const double _lowerLeft = 0.0, const double _upperRight = 1.0, const unsigned int numElements = 1u)
     : lower_left_(_lowerLeft)
     , upper_right_(_upperRight)
   {
@@ -134,7 +135,7 @@ public:
     buildGrid(tmpNumElements);
   }
 
-  CubeProvider(const std::vector< double >& lL, const std::vector< double >& uR, const std::vector< unsigned int >& nE)
+  Cube(const std::vector< double >& lL, const std::vector< double >& uR, const std::vector< unsigned int >& nE)
   {
     if (lL.size() < dimDomain)
       DUNE_THROW_COLORFULLY(Exceptions::wrong_input_given,
@@ -163,7 +164,7 @@ public:
    *  \param[in]  numElements (optional)
    *              number of elements.
    **/
-  CubeProvider(const DomainType& _lowerLeft, const DomainType& _upperRight, const unsigned int numElements = 1u)
+  Cube(const DomainType& _lowerLeft, const DomainType& _upperRight, const unsigned int numElements = 1u)
     : lower_left_(_lowerLeft)
     , upper_right_(_upperRight)
   {
@@ -184,7 +185,7 @@ public:
     \tparam ContainerType some sequence type that functions with std::begin/end
     **/
   template< class ContainerType  >
-  CubeProvider(const DomainType& _lowerLeft, const DomainType& _upperRight,
+  Cube(const DomainType& _lowerLeft, const DomainType& _upperRight,
                const ContainerType numElements
                   = boost::assign::list_of< typename ContainerType::value_type>().repeat(dimDomain,
                                                                                          typename ContainerType::value_type(1u)))
@@ -285,14 +286,14 @@ private:
   DomainType lower_left_;
   DomainType upper_right_;
   std::shared_ptr< GridType > grid_;
-}; // class CubeProvider
+}; // class Cube
 
 
 #else // HAVE_DUNE_GRID
 
 
 template< typename GridImp, int variant = 1 >
-class CubeProvider
+class Cube
 {
   static_assert(AlwaysFalse< GridImp >::value, "You are missing dune-grid!");
 };
@@ -300,7 +301,8 @@ class CubeProvider
 
 #endif // HAVE_DUNE_GRID
 
-} // namespace Grids
+} // namespace Providers
+} // namespace Grid
 } // namespace Stuff
 } // namespace Dune
 
