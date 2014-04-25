@@ -307,7 +307,7 @@ public:
   void visualize(const GridViewType& grid_view,
                  const std::string filename,
                  const bool subsampling = true,
-                 VTK::OutputType vtk_output_type = VTK::appendedraw) const
+                 const VTK::OutputType vtk_output_type = VTK::appendedraw) const
   {
     if (filename.empty()) DUNE_THROW(RangeError, "Empty filename given!");
     auto adapter = std::make_shared< Stuff::Function::VisualizationAdapter< GridViewType, dimRange > >(*this);
