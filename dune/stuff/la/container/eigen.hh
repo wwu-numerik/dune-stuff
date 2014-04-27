@@ -1128,7 +1128,6 @@ public:
    */
 
 private:
-
   bool these_are_valid_indices(const size_t ii, const size_t jj) const
   {
     if (ii >= rows())
