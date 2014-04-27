@@ -26,11 +26,11 @@ functions_checkerboard_SOURCES = functions_checkerboard.cc $(GTEST_SRC)
 functions_functions_SOURCES = functions_functions.cc $(GTEST_SRC)
 
 if HAVE_DUNE_GRID
-GRID_TESTS = grid_provider grid_information grid_output_pgf
+GRID_TESTS = grids_provider grids_information grids_output_pgf
 GRID_FLAGS = -DGRIDDIM=$(GRIDDIM) -D$(GRIDTYPE)
-grid_provider_SOURCES = grid_provider.cc $(GTEST_SRC)
-grid_information_SOURCES = grid_information.cc $(GTEST_SRC)
-grid_output_pgf_SOURCES = grid_output_pgf.cc $(GTEST_SRC)
+grids_provider_SOURCES = grids_provider.cc $(GTEST_SRC)
+grids_information_SOURCES = grids_information.cc $(GTEST_SRC)
+grids_output_pgf_SOURCES = grids_output_pgf.cc $(GTEST_SRC)
 endif
 
 if HAVE_DUNE_FEM
@@ -44,7 +44,7 @@ SOURCES = $(common_parameter_validation_SOURCES) $(common_logger_SOURCES) \
 	$(common_math_SOURCES) $(common_profiler_SOURCES) $(common_string_SOURCES) \
 	$(common_typenames_SOURCES) $(common_color_SOURCES) \
 	$(fem_projection_SOURCES) $(fem_error_SOURCES) \
-	$(grid_provider_SOURCES) $(grid_information_SOURCES) $(grid_output_pgf_SOURCES) \
+	$(grids_provider_SOURCES) $(grids_information_SOURCES) $(grids_output_pgf_SOURCES) \
 	$(fem_error_SOURCES) $(fem_projection_SOURCES) \
   $(functions_SOURCES)
 

@@ -1,6 +1,6 @@
 // This file is part of the dune-stuff project:
-//   http://users.dune-project.org/projects/dune-stuff/
-// Copyright Holders: Rene Milk, Felix Schindler
+//   https://users.dune-project.org/projects/dune-stuff/
+// Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
 #ifndef DUNE_STUFF_CONFIGTREE_HH
@@ -50,7 +50,7 @@ class ConfigTree
       if (vector_str.substr(0, 1) == "[" && vector_str.substr(vector_str.size() - 1, 1) == "]") {
         vector_str = vector_str.substr(1, vector_str.size() - 2);
         // we treat this as a vector and split along ';'
-        const auto tokens = tokenize< std::string >(vector_str, " ", boost::algorithm::token_compress_off);
+        const auto tokens = tokenize< std::string >(vector_str, ";", boost::algorithm::token_compress_off);
         if (size > 0 && tokens.size() < size)
           DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
                                 "Vector (see below) to given key '" << key << "' has only " << tokens.size()
@@ -58,8 +58,14 @@ class ConfigTree
                                 << "\n" << "'[" << vector_str << "]'");
         const size_t actual_size = (size > 0) ? std::min(tokens.size(), size) : tokens.size();
         VectorType ret(actual_size);
-        for (size_t ii = 0; ii < actual_size; ++ii)
-          ret[ii] = fromString< S >(boost::algorithm::trim_copy(tokens[ii]));
+        for (size_t ii = 0; ii < actual_size; ++ii) {
+          try {
+            ret[ii] = fromString< S >(boost::algorithm::trim_copy(tokens[ii]));
+          } catch (boost::bad_lexical_cast&) {
+            DUNE_THROW_COLORFULLY(Exceptions::external_error,
+                                  "There was an error in boost while parsing '" << tokens[ii] << "'!");
+          }
+        }
         return ret;
       } else {
         // we treat this as a scalar
@@ -309,10 +315,11 @@ public:
     return *this;
   }
 
-  ConfigTree operator+(const ConfigTree& other)
+  ConfigTree operator+(const ConfigTree& other) const
   {
-    add(other);
-    return *this;
+    ConfigTree ret(*this);
+    ret += other;
+    return ret;
   }
 
   template< typename T >
@@ -406,10 +413,11 @@ public:
       } else if (valueKeys.size() == 0) {
         const std::string common_prefix = find_common_prefix(*this, "");
         if (!common_prefix.empty()) {
-          out << "[" << common_prefix << "]" << std::endl;
+          out << prefix << "[" << common_prefix << "]" << std::endl;
           const ConfigTree& commonSub = sub(common_prefix);
           report_flatly(commonSub, prefix, out);
-        }
+        } else
+          report_as_sub(out, prefix, "");
       } else {
         report_as_sub(out, prefix, "");
       }
