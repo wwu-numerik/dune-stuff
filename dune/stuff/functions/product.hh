@@ -14,6 +14,7 @@
 
 namespace Dune {
 namespace Stuff {
+namespace Functions {
 
 
 // forward, to allow for specialization
@@ -97,6 +98,7 @@ private:
 }; // class FunctionProduct
 
 
+} // namespace Functions
 } // namespace Stuff
 } // namespace Dune
 

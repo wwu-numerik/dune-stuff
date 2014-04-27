@@ -29,7 +29,7 @@
 
 namespace Dune {
 namespace Stuff {
-namespace Function {
+namespace Functions {
 
 // forwards, include is below
 #if HAVE_DUNE_GRID
@@ -267,7 +267,7 @@ public:
   typedef typename LocalfunctionType::RangeType         RangeType;
   typedef typename LocalfunctionType::JacobianRangeType JacobianRangeType;
 
-  typedef Function::Difference< ThisType, ThisType > DifferenceType;
+  typedef Functions::Difference< ThisType, ThisType > DifferenceType;
 
   virtual ~LocalizableFunctionInterface() {}
 
@@ -310,7 +310,7 @@ public:
                  VTK::OutputType vtk_output_type = VTK::appendedraw) const
   {
     if (filename.empty()) DUNE_THROW(RangeError, "Empty filename given!");
-    auto adapter = std::make_shared< Stuff::Function::VisualizationAdapter< GridViewType, dimRange > >(*this);
+    auto adapter = std::make_shared< Stuff::Functions::VisualizationAdapter< GridViewType, dimRange > >(*this);
     if (subsampling) {
       SubsamplingVTKWriter< GridViewType > vtk_writer(grid_view, VTK::nonconforming);
       vtk_writer.addVertexData(adapter);

@@ -22,7 +22,7 @@
 
 namespace Dune {
 namespace Stuff {
-namespace Function {
+namespace Functions {
 
 
 /**
@@ -389,7 +389,7 @@ private:
 }; // class Expression< ..., 1 >
 
 
-} // namespace Function
+} // namespace Functions
 } // namespace Stuff
 } // namespace Dune
 

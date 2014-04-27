@@ -12,7 +12,7 @@
 
 namespace Dune {
 namespace Stuff {
-namespace Function {
+namespace Functions {
 
 
 template< class MinuendType, class SubtrahendType >
@@ -163,7 +163,7 @@ private:
 }; // class Difference
 
 
-} // namespace Function
+} // namespace Functions
 } // namespace Stuff
 } // namespace Dune
 
