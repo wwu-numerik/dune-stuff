@@ -7,7 +7,7 @@ stuffdir = $(includedir)/dune/stuff
 
 SUBDIRS = . test
 
-noinst_LTLIBRARIES = libstuff.la
+noinst_LTLIBRARIES = libstuff.la libstuffpythonbindings.la
 
 libstuff_la_SOURCES = \
 	common/filesystem.cc \
@@ -35,5 +35,10 @@ libstuff_la_LIBADD = common $(BOOST_FILESYSTEM_LIB) $(BOOST_SYSTEM_LIB) \
 	$(BOOST_TIMER_LIB) $(BOOST_CHRONO_LIB) $(ALUGRID_LIBS)
 
 libstuff_la_CPPFLAGS = $(DUNE_CPPFLAGS) $(ALUGRID_CPPFLAGS)
+
+libstuffpythonbindings_la_SOURCES = python_bindings.cc
+libstuffpythonbindings_la_CPPFLAGS = $(libstuff_la_CPPFLAGS)
+libstuffpythonbindings_la_LIBADD = libstuff.la $(libstuff_la_LIBADD)
+libstuffpythonbindings_la_LDFLAGS = $(libstuff_la_LDFLAGS)
 
 include $(top_srcdir)/am/global-rules
