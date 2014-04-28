@@ -155,11 +155,13 @@ to something else than an empty string.
 		   AC_MSG_RESULT([yes])
 		else
 			AC_MSG_RESULT([no])
-			AC_MSG_ERROR([this package requires Python $1.
+                        if test "$is_package_required" = yes; then
+			    AC_MSG_ERROR([this package requires Python $1.
 If you have it installed, but it isn't the default Python
 interpreter in your system path, please pass the PYTHON_VERSION
 variable to configure. See ``configure --help'' for reference.
 ])
+                        fi
 			PYTHON_VERSION=""
 		fi
 	fi
@@ -176,9 +178,11 @@ variable to configure. See ``configure --help'' for reference.
 		AC_MSG_RESULT([yes])
 	else
 		AC_MSG_RESULT([no])
-		AC_MSG_ERROR([cannot import Python module "distutils".
+                if test "$is_package_required" = yes; then
+                        AC_MSG_ERROR([cannot import Python module "distutils".
 Please check your Python installation. The error was:
 $ac_distutils_result])
+                fi
 		PYTHON_VERSION=""
 	fi
 	fi
@@ -282,10 +286,12 @@ EOD`
 		fi
 
 		if test -z "PYTHON_LDFLAGS"; then
-			AC_MSG_ERROR([
+                        if test "$is_package_required" = yes; then
+                                AC_MSG_ERROR([
   Cannot determine location of your Python DSO. Please check it was installed with
   dynamic libraries enabled, or try setting PYTHON_LDFLAGS by hand.
 			])
+                        fi
 		fi
 	fi
 	AC_MSG_RESULT([$PYTHON_LDFLAGS])
