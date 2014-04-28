@@ -8,6 +8,10 @@
 AC_DEFUN([DUNE_STUFF_CHECKS],[
   AC_DEFINE([DUNE_STUFF_SSIZE_T], [long int], [We need this for the python bindings (there is no unsigned in python).])
 
+  AX_PYTHON_DEVEL([<= '2.7.7'], no)
+  DUNE_CPPFLAGS="$DUNE_CPPFLAGS $PYTHON_CPPFLAGS"
+  DUNE_LDFLAGS="$DUNE_LDFLAGS $PYTHON_LDFLAGS"
+
   AX_BOOST_BASE([1.48.0],
                 [AC_DEFINE([HAVE_BOOST],
                            [],
