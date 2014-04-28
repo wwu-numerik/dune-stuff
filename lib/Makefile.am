@@ -24,7 +24,6 @@ libdunestuffpythonbindings_la_SOURCES =
 # This forces automake to use the C++ linker
 # (see the automake manual, section "Libtool Convenience Libraries")
 nodist_EXTRA_libdunestuffpythonbindings_la_SOURCES = dummy.cc
-sourcescheck_DUMMY = dummy.cc
 libdunestuffpythonbindings_la_LIBADD = ../dune/stuff/libstuffpythonbindings.la \
   $(BOOST_FILESYSTEM_LIB) $(BOOST_SYSTEM_LIB) \
   $(BOOST_TIMER_LIB) $(BOOST_CHRONO_LIB)
