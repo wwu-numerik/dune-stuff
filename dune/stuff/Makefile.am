@@ -38,7 +38,7 @@ libstuff_la_CPPFLAGS = $(DUNE_CPPFLAGS) $(ALUGRID_CPPFLAGS)
 
 libstuffpythonbindings_la_SOURCES = python_bindings.cc
 libstuffpythonbindings_la_CPPFLAGS = $(libstuff_la_CPPFLAGS)
-libstuffpythonbindings_la_LIBADD = libstuff.la $(libstuff_la_LIBADD)
-libstuffpythonbindings_la_LDFLAGS = $(libstuff_la_LDFLAGS)
+libstuffpythonbindings_la_LIBADD = libstuff.la $(libstuff_la_LIBADD) -l$(BOOST_PYTHON_LIB)
+libstuffpythonbindings_la_LDFLAGS = $(libstuff_la_LDFLAGS) $(PYTHON_LDFLAGS) $(BOOST_LDFLAGS)
 
 include $(top_srcdir)/am/global-rules
