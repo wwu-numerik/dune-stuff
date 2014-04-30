@@ -70,7 +70,7 @@ struct GTraits {
   typedef typename Grid::template Codim<0>::Entity Entity;
   typedef Stuff::GlobalConstantFunction<Entity, typename Grid::ctype,
       Grid::dimension, typename Grid::ctype, 1> ConstantFunction;
-  typedef Stuff::Function::Expression< Entity, typename Grid::ctype,
+  typedef Stuff::Functions::Expression< Entity, typename Grid::ctype,
       Grid::dimension, typename Grid::ctype, 1 > ScalarFunction;
 #if HAVE_DUNE_FEM
   typedef Dune::Fem::AdaptiveLeafGridPart<Grid> GridPart;

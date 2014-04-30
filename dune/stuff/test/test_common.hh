@@ -10,10 +10,12 @@
 
 #include <dune/common/float_cmp.hh>
 #include <dune/common/fvector.hh>
-#include <dune/common/fmatrix.hh>
-#include <dune/common/tuples.hh>
-#include <dune/common/tupleutility.hh>
-#include <dune/common/parallel/mpihelper.hh>
+#include <dune/stuff/common/disable_warnings.hh>
+# include <dune/common/fmatrix.hh>
+# include <dune/common/tuples.hh>
+# include <dune/common/tupleutility.hh>
+# include <dune/common/parallel/mpihelper.hh>
+#include <dune/stuff/common/reenable_warnings.hh>
 #include <dune/stuff/aliases.hh>
 #include <dune/stuff/common/parameter/configcontainer.hh>
 #include <dune/stuff/common/logging.hh>
