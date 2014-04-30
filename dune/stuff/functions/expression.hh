@@ -275,6 +275,11 @@ public:
     return name_;
   }
 
+  virtual size_t order() const DS_OVERRIDE
+  {
+    return order_;
+  }
+
   virtual void evaluate(const DomainType& xx, RangeType& ret) const DS_OVERRIDE
   {
     function_->evaluate(xx, ret);
