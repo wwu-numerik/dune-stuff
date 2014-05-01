@@ -34,7 +34,7 @@
     void check() const \
     { \
       const std::unique_ptr< const LocalizableFunctionType > \
-          function(LocalizableFunctionType::create(LocalizableFunctionType::defaultSettings())); \
+          function(LocalizableFunctionType::create(LocalizableFunctionType::default_config())); \
     } \
   };
 // TEST_STRUCT_GENERATOR
@@ -48,7 +48,7 @@ typedef Dune::SGrid< 1, 1 >::Codim< 0 >::Entity DuneSGrid1dEntityType;
 typedef Dune::SGrid< 2, 2 >::Codim< 0 >::Entity DuneSGrid2dEntityType;
 typedef Dune::SGrid< 3, 3 >::Codim< 0 >::Entity DuneSGrid3dEntityType;
 
-// the matrix valued version is missing the create() and defaultSettings() method
+// the matrix valued version is missing the create() and default_config() method
 typedef testing::Types< Dune::Stuff::Functions::Expression< DuneSGrid1dEntityType, double, 1, double, 1, 1 >
 //                      , Dune::Stuff::Functions::Expression< DuneSGrid1dEntityType, double, 1, double, 1, 2 >
 //                      , Dune::Stuff::Functions::Expression< DuneSGrid1dEntityType, double, 1, double, 1, 3 >
