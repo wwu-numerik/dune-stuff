@@ -135,17 +135,13 @@ public:
   static std::unique_ptr< ThisType > create(const Common::ConfigTree config = default_config(), const std::string sub_name = static_id())
   {
     // get correct config
-    Common::ConfigTree cfg;
-    if (config.has_sub(sub_name))
-      cfg = config.sub(sub_name);
-    else
-      cfg = config;
+    const Common::ConfigTree cfg = config.has_sub(sub_name) ? config.sub(sub_name) : config;
     // extract needed data
     const auto filename = cfg.get< std::string >("filename");
     auto lower_left = cfg.get< std::vector< DomainFieldType > >("lower_left", dimDomain);
     auto upper_right = cfg.get< std::vector< DomainFieldType > >("upper_right", dimDomain);
-    const auto min_val = cfg.get< RangeFieldType >("minValue", minValue);
-    const auto max_val = cfg.get< RangeFieldType >("maxValue", maxValue);
+    const auto min_val = cfg.get< RangeFieldType >("min_value", minValue);
+    const auto max_val = cfg.get< RangeFieldType >("max_value", maxValue);
     const auto nm = cfg.get< std::string >("name", static_id());
     // create and return, leave the checks to the constructor
     return Common::make_unique< ThisType >(filename, std::move(lower_left), std::move(upper_right), min_val, max_val, nm);
