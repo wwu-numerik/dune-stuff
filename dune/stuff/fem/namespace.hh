@@ -8,7 +8,9 @@
 
 #include <dune/common/version.hh>
 
-#include <dune/fem/version.hh>
+#if HAVE_DUNE_FEM
+# include <dune/fem/version.hh>
+#endif
 
 
 #if HAVE_DUNE_FEM

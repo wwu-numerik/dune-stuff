@@ -25,7 +25,7 @@
   DUNE_STUFF_FUNCTIONS_EXPRESSION_CC_LAST_EXPANSION(etype, dftype, ddim, long double, rdim, rcdim)
 
 # define DUNE_STUFF_FUNCTIONS_EXPRESSION_CC_LAST_EXPANSION(etype, dftype, ddim, rftype, rdim, rcdim) \
-  template class Dune::Stuff::Function::Expression< etype, dftype, ddim, rftype, rdim, rcdim >;
+  template class Dune::Stuff::Functions::Expression< etype, dftype, ddim, rftype, rdim, rcdim >;
 
 # if HAVE_DUNE_GRID
 

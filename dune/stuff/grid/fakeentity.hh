@@ -18,6 +18,22 @@ class FakeEntity
 {
 public:
   GeometryType type() const;
+
+  class Geometry
+  {
+  public:
+    template< class T >
+    T global(const T& t) const
+    {
+      return t;
+    }
+  }; // class Geometry
+
+  Geometry geometry() const
+  {
+    return Geometry();
+  }
+
 }; // class FakeEntity
 
 

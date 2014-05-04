@@ -16,7 +16,7 @@
   DUNE_STUFF_FUNCTIONS_SPE10_CC_LAST_EXPANSION(etype, dftype, ddim, long double, rdim, rcdim)
 
 # define DUNE_STUFF_FUNCTIONS_SPE10_CC_LAST_EXPANSION(etype, dftype, ddim, rftype, rdim, rcdim) \
-  template class Dune::Stuff::Function::Spe10Model1< etype, dftype, ddim, rftype, rdim, rcdim >;
+  template class Dune::Stuff::Functions::Spe10Model1< etype, dftype, ddim, rftype, rdim, rcdim >;
 
 # if HAVE_DUNE_GRID
 
