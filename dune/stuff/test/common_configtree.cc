@@ -11,14 +11,16 @@
 #include <dune/stuff/la/container.hh>
 #include <dune/stuff/common/exceptions.hh>
 #include <dune/stuff/common/type_utils.hh>
+#include <dune/stuff/common/float_cmp.hh>
 
 // uncomment this for output
-//std::ostream& out = std::cout;
-std::ostream& out = DSC_LOG.devnull();
+//std::ostream& test_out = std::cout;
+std::ostream& test_out = DSC_LOG.devnull();
 
 using namespace Dune;
 using Dune::Stuff::Common::ConfigTree;
 using Dune::Stuff::Exceptions::results_are_not_as_expected;
+using namespace Dune::Stuff::Common::FloatCmp;
 
 
 struct CreateByOperator { static ConfigTree create() {
@@ -27,6 +29,7 @@ struct CreateByOperator { static ConfigTree create() {
     config["sub1.int"] = "1";
     config["sub2.size_t"] = "1";
     config["sub2.subsub1.vector"] = "[0 1]";
+    config["sub2.subsub1.matrix"] = "[0 1; 1 2]";
     return config;
 } };
 
@@ -35,12 +38,13 @@ struct CreateByKeyAndValueAndAdd { static ConfigTree create() {
     config.set("sub1.int", "1");
     config.set("sub2.size_t", 1);
     config.add(ConfigTree("vector", "[0 1]"), "sub2.subsub1");
+    config.add(ConfigTree("matrix", "[0 1; 1 2]"), "sub2.subsub1");
     return config;
 } };
 
 struct CreateByKeysAndValues { static ConfigTree create() {
-    return ConfigTree({"string", "sub1.int", "sub2.size_t", "sub2.subsub1.vector"},
-                      {"string", "1",        "1",           "[0 1]"});
+    return ConfigTree({"string", "sub1.int", "sub2.size_t", "sub2.subsub1.vector", "sub2.subsub1.matrix"},
+                      {"string", "1",        "1",           "[0 1]",               "[0 1; 1 2]"});
 } };
 
 
@@ -58,83 +62,400 @@ struct ConfigTreeTest
     if (vec.size() != 1) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
                                                vec.size() << " vs. 1 with VectorType = "
                                                << Stuff::Common::Typename< VectorType >::value());
-    if (vec[0] != 0) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                           vec[0] << " vs. 0 with VectorType = "
-                                                  << Stuff::Common::Typename< VectorType >::value());
+    if (FloatCmp::ne(vec[0], 0.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                         vec[0] << " vs. 0 with VectorType = "
+                                                                << Stuff::Common::Typename< VectorType >::value());
     vec = config.get("vector", VectorType(), 2);
     if (vec.size() != 2) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
                                                vec.size() << " vs. 2 with VectorType = "
                                                << Stuff::Common::Typename< VectorType >::value());
-    for (auto ii : {0, 1})
-      if (vec[ii] != ii) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                               vec[ii] << " vs. " << ii << " with VectorType = "
-                                               << Stuff::Common::Typename< VectorType >::value());
+    for (auto ii : {0.0, 1.0})
+      if (FloatCmp::ne(vec[ii], ii)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                           vec[ii] << " vs. " << ii << " with VectorType = "
+                                                           << Stuff::Common::Typename< VectorType >::value());
 
     vec = config.get< VectorType >("vector", 1);
     if (vec.size() != 1) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
                                                vec.size() << " vs. 1 with VectorType = "
                                                << Stuff::Common::Typename< VectorType >::value());
-    if (vec[0] != 0) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                           vec[0] << " vs. 0 with VectorType = "
-                                                  << Stuff::Common::Typename< VectorType >::value());
+    if (FloatCmp::ne(vec[0], 0.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                         vec[0] << " vs. 0 with VectorType = "
+                                                                << Stuff::Common::Typename< VectorType >::value());
     vec = config.get< VectorType >("vector", 2);
     if (vec.size() != 2) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
                                                vec.size() << " vs. 2 with VectorType = "
                                                << Stuff::Common::Typename< VectorType >::value());
-    for (auto ii : {0, 1})
-      if (vec[ii] != ii) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                               vec[ii] << " vs. " << ii << " with VectorType = "
-                                               << Stuff::Common::Typename< VectorType >::value());
+    for (auto ii : {0.0, 1.0})
+      if (FloatCmp::ne(vec[ii], ii)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                           vec[ii] << " vs. " << ii << " with VectorType = "
+                                                           << Stuff::Common::Typename< VectorType >::value());
 
     vec = config.get< VectorType >("vector");
     if (vec.size() != 2) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
                                                vec.size() << " vs. 2 with VectorType = "
                                                << Stuff::Common::Typename< VectorType >::value());
-    for (auto ii : {0, 1})
-      if (vec[ii] != ii) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+    for (auto ii : {0.0, 1.0})
+      if (FloatCmp::ne(vec[ii], ii)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
                                                vec[ii] << " vs. " << ii << " with VectorType = "
                                                << Stuff::Common::Typename< VectorType >::value());
   } // ... check_vector< ... >(...)
 
   template< class K, int d >
-  static void check_vector(const ConfigTree& config)
+  static void check_field_vector(const ConfigTree& config)
   {
     typedef FieldVector< K, d > VectorType;
-    VectorType vec = config.get("vector", VectorType(), 2);
-    if (vec.size() != 2) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+    VectorType vec = config.get("vector", VectorType(), d);
+    if (vec.size() != d) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
                                                vec.size() << " vs. 2 with VectorType = "
                                                << Stuff::Common::Typename< VectorType >::value());
-    for (auto ii : {0, 1})
-      if (vec[ii] != ii) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                               vec[ii] << " vs. " << ii << " with VectorType = "
-                                               << Stuff::Common::Typename< VectorType >::value());
+    for (size_t ii = 0; ii < d; ++ii)
+      if (FloatCmp::ne(vec[ii], double(ii)))
+        DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                              vec[ii] << " vs. " << ii << " with VectorType = "
+                              << Stuff::Common::Typename< VectorType >::value());
 
-    vec = config.get< VectorType >("vector", 2);
-    if (vec.size() != 2) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+    vec = config.get< VectorType >("vector", d);
+    if (vec.size() != d) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
                                                vec.size() << " vs. 2 with VectorType = "
                                                << Stuff::Common::Typename< VectorType >::value());
-    for (auto ii : {0, 1})
-      if (vec[ii] != ii) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                               vec[ii] << " vs. " << ii << " with VectorType = "
-                                               << Stuff::Common::Typename< VectorType >::value());
+    for (size_t ii = 0; ii < d; ++ii)
+      if (FloatCmp::ne(vec[ii], double(ii)))
+        DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                              vec[ii] << " vs. " << ii << " with VectorType = "
+                              << Stuff::Common::Typename< VectorType >::value());
 
     vec = config.get< VectorType >("vector");
-    if (vec.size() != 2) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+    if (vec.size() != d) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
                                                vec.size() << " vs. 2 with VectorType = "
                                                << Stuff::Common::Typename< VectorType >::value());
-    for (auto ii : {0, 1})
-      if (vec[ii] != ii) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                               vec[ii] << " vs. " << ii << " with VectorType = "
-                                               << Stuff::Common::Typename< VectorType >::value());
-  } // ... check_vector< K, d >(...)
+    for (size_t ii = 0; ii < d; ++ii)
+      if (FloatCmp::ne(vec[ii], double(ii)))
+        DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                              vec[ii] << " vs. " << ii << " with VectorType = "
+                              << Stuff::Common::Typename< VectorType >::value());
+  } // ... check_field_vector< ... >(...)
+
+  template< class MatrixType >
+  static void check_matrix(const ConfigTree& config)
+  {
+    MatrixType mat = config.get("matrix", MatrixType(), 1, 1);
+    if (mat.rows() != 1 || mat.cols() != 1)
+      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                            mat.rows() << " vs. 1 and " << mat.cols() << "vs. 1 with MatrixType = "
+                            << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[0][0], 0.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat[0][0] << " vs. 0 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    mat = config.get("matrix", MatrixType(), 1, 2);
+    if (mat.rows() != 1 || mat.cols() != 2)
+      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                            mat.rows() << " vs. 1 and " << mat.cols() << "vs. 2 with MatrixType = "
+                            << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[0][0], 0.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat[0][0] << " vs. 0 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[0][1], 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat[0][1] << " vs. 1 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    mat = config.get("matrix", MatrixType(), 2, 1);
+    if (mat.rows() != 2 || mat.cols() != 1)
+      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                            mat.rows() << " vs. 2 and " << mat.cols() << "vs. 1 with MatrixType = "
+                            << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[0][0], 0.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat[0][0] << " vs. 0 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[1][0], 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat[1][0] << " vs. 1 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    mat = config.get("matrix", MatrixType(), 2, 2);
+    if (mat.rows() != 2 || mat.cols() != 2)
+      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                            mat.rows() << " vs. 2 and " << mat.cols() << "vs. 2 with MatrixType = "
+                            << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[0][0], 0.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat[0][0] << " vs. 0 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[0][1], 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat[0][1] << " vs. 1 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[1][0], 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat[1][0] << " vs. 1 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[1][1], 2.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat[1][1] << " vs. 2 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    mat = config.get("matrix", MatrixType());
+    if (mat.rows() != 2 || mat.cols() != 2)
+      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                            mat.rows() << " vs. 2 and " << mat.cols() << "vs. 2 with MatrixType = "
+                            << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[0][0], 0.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat[0][0] << " vs. 0 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[0][1], 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat[0][1] << " vs. 1 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[1][0], 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat[1][0] << " vs. 1 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[1][1], 2.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat[1][1] << " vs. 2 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+
+    mat = config.get< MatrixType >("matrix", 1, 1);
+    if (mat.rows() != 1 || mat.cols() != 1)
+      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                            mat.rows() << " vs. 1 and " << mat.cols() << "vs. 1 with MatrixType = "
+                            << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[0][0], 0.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat[0][0] << " vs. 0 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    mat = config.get< MatrixType >("matrix", 1, 2);
+    if (mat.rows() != 1 || mat.cols() != 2)
+      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                            mat.rows() << " vs. 1 and " << mat.cols() << "vs. 2 with MatrixType = "
+                            << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[0][0], 0.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat[0][0] << " vs. 0 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[0][1], 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat[0][1] << " vs. 1 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    mat = config.get< MatrixType >("matrix", 2, 1);
+    if (mat.rows() != 2 || mat.cols() != 1)
+      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                            mat.rows() << " vs. 2 and " << mat.cols() << "vs. 1 with MatrixType = "
+                            << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[0][0], 0.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat[0][0] << " vs. 0 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[1][0], 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat[1][0] << " vs. 1 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    mat = config.get< MatrixType >("matrix", 2, 2);
+    if (mat.rows() != 2 || mat.cols() != 2)
+      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                            mat.rows() << " vs. 2 and " << mat.cols() << "vs. 2 with MatrixType = "
+                            << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[0][0], 0.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat[0][0] << " vs. 0 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[0][1], 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat[0][1] << " vs. 1 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[1][0], 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat[1][0] << " vs. 1 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[1][1], 2.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat[1][1] << " vs. 2 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    mat = config.get< MatrixType >("matrix");
+    if (mat.rows() != 2 || mat.cols() != 2)
+      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                            mat.rows() << " vs. 2 and " << mat.cols() << "vs. 2 with MatrixType = "
+                            << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[0][0], 0.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat[0][0] << " vs. 0 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[0][1], 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat[0][1] << " vs. 1 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[1][0], 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat[1][0] << " vs. 1 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[1][1], 2.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat[1][1] << " vs. 2 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+  } // ... check_matrix< ... >(...)
+
+  template< class MatrixType >
+  static void check_stuff_matrix(const ConfigTree& config)
+  {
+    MatrixType mat = config.get("matrix", MatrixType(), 1, 1);
+    if (mat.rows() != 1 || mat.cols() != 1)
+      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                            mat.rows() << " vs. 1 and " << mat.cols() << "vs. 1 with MatrixType = "
+                            << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(0, 0), 0.0))
+      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                            mat.get_entry(0, 0) << " vs. 0 with MatrixType = "
+                            << Stuff::Common::Typename< MatrixType >::value());
+    mat = config.get("matrix", MatrixType(), 1, 2);
+    if (mat.rows() != 1 || mat.cols() != 2)
+      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                            mat.rows() << " vs. 1 and " << mat.cols() << "vs. 2 with MatrixType = "
+                            << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(0, 0), 0.0))
+      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                            mat.get_entry(0, 0) << " vs. 0 with MatrixType = "
+                            << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(0, 1), 1.0))
+      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                            mat.get_entry(0, 1) << " vs. 1 with MatrixType = "
+                            << Stuff::Common::Typename< MatrixType >::value());
+    mat = config.get("matrix", MatrixType(), 2, 1);
+    if (mat.rows() != 2 || mat.cols() != 1)
+      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                            mat.rows() << " vs. 2 and " << mat.cols() << "vs. 1 with MatrixType = "
+                            << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(0, 0), 0.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat.get_entry(0, 0) << " vs. 0 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(1, 0), 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat.get_entry(1, 0) << " vs. 1 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    mat = config.get("matrix", MatrixType(), 2, 2);
+    if (mat.rows() != 2 || mat.cols() != 2)
+      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                            mat.rows() << " vs. 2 and " << mat.cols() << "vs. 2 with MatrixType = "
+                            << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(0, 0), 0.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat.get_entry(0, 0) << " vs. 0 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(0, 1), 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat.get_entry(0, 1) << " vs. 1 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(1, 0), 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat.get_entry(1, 0) << " vs. 1 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(1, 1), 2.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat.get_entry(1, 1) << " vs. 2 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    mat = config.get("matrix", MatrixType());
+    if (mat.rows() != 2 || mat.cols() != 2)
+      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                            mat.rows() << " vs. 2 and " << mat.cols() << "vs. 2 with MatrixType = "
+                            << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(0, 0), 0.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat.get_entry(0, 0) << " vs. 0 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(0, 1), 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat.get_entry(0, 1) << " vs. 1 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(1, 0), 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat.get_entry(1, 0) << " vs. 1 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(1, 1), 2.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat.get_entry(1, 1) << " vs. 2 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+
+    mat = config.get< MatrixType >("matrix", 1, 1);
+    if (mat.rows() != 1 || mat.cols() != 1)
+      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                            mat.rows() << " vs. 1 and " << mat.cols() << "vs. 1 with MatrixType = "
+                            << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(0, 0), 0.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat.get_entry(0, 0) << " vs. 0 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    mat = config.get< MatrixType >("matrix", 1, 2);
+    if (mat.rows() != 1 || mat.cols() != 2)
+      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                            mat.rows() << " vs. 1 and " << mat.cols() << "vs. 2 with MatrixType = "
+                            << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(0, 0), 0.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat.get_entry(0, 0) << " vs. 0 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(0, 1), 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat.get_entry(0, 1) << " vs. 1 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    mat = config.get< MatrixType >("matrix", 2, 1);
+    if (mat.rows() != 2 || mat.cols() != 1)
+      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                            mat.rows() << " vs. 2 and " << mat.cols() << "vs. 1 with MatrixType = "
+                            << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(0, 0), 0.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat.get_entry(0, 0) << " vs. 0 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(1, 0), 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat.get_entry(1, 0) << " vs. 1 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    mat = config.get< MatrixType >("matrix", 2, 2);
+    if (mat.rows() != 2 || mat.cols() != 2)
+      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                            mat.rows() << " vs. 2 and " << mat.cols() << "vs. 2 with MatrixType = "
+                            << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(0, 0), 0.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat.get_entry(0, 0) << " vs. 0 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(0, 1), 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat.get_entry(0, 1) << " vs. 1 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(1, 0), 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat.get_entry(1, 0) << " vs. 1 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(1, 1), 2.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat.get_entry(1, 1) << " vs. 2 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    mat = config.get< MatrixType >("matrix");
+    if (mat.rows() != 2 || mat.cols() != 2)
+      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                            mat.rows() << " vs. 2 and " << mat.cols() << "vs. 2 with MatrixType = "
+                            << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(0, 0), 0.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat.get_entry(0, 0) << " vs. 0 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(0, 1), 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat.get_entry(0, 1) << " vs. 1 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(1, 0), 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat.get_entry(1, 0) << " vs. 1 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(1, 1), 2.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                                            mat.get_entry(1, 1) << " vs. 2 with MatrixType = "
+                                                                      << Stuff::Common::Typename< MatrixType >::value());
+  } // ... check_stuff_matrix< ... >(...)
+
+  template< class K, int r, int c >
+  static void check_field_matrix(const ConfigTree& config)
+  {
+    typedef FieldMatrix< K, r, c > MatrixType;
+    MatrixType mat = config.get("matrix", MatrixType(), r, c);
+    for (size_t cc = 0; cc < c; ++cc) {
+      for (size_t rr = 0; rr < r; ++rr) {
+        if (FloatCmp::ne(mat[rr][cc], double(rr + cc)))
+          DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                mat[rr][cc] << " vs. " << rr + cc << " with MatrixType = "
+                                << Stuff::Common::Typename< MatrixType >::value());
+      }
+    }
+    mat = config.get("matrix", MatrixType());
+    for (size_t cc = 0; cc < c; ++cc) {
+      for (size_t rr = 0; rr < r; ++rr) {
+        if (FloatCmp::ne(mat[rr][cc], double(rr + cc)))
+          DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                mat[rr][cc] << " vs. " << rr + cc << " with MatrixType = "
+                                << Stuff::Common::Typename< MatrixType >::value());
+      }
+    }
+
+    mat = config.get< MatrixType >("matrix", r, c);
+    for (size_t cc = 0; cc < c; ++cc) {
+      for (size_t rr = 0; rr < r; ++rr) {
+        if (FloatCmp::ne(mat[rr][cc], double(rr + cc)))
+          DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                mat[rr][cc] << " vs. " << rr + cc << " with MatrixType = "
+                                << Stuff::Common::Typename< MatrixType >::value());
+      }
+    }
+    mat = config.get< MatrixType >("matrix");
+    for (size_t cc = 0; cc < c; ++cc) {
+      for (size_t rr = 0; rr < r; ++rr) {
+        if (FloatCmp::ne(mat[rr][cc], double(rr + cc)))
+          DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+                                mat[rr][cc] << " vs. " << rr + cc << " with MatrixType = "
+                                << Stuff::Common::Typename< MatrixType >::value());
+      }
+    }
+  } // ... check_field_matrix< ... >(...)
 
   static void behaves_correctly()
   {
     const ConfigTree config = ConfigTreeCreator::create();
 //    config.report(); // <- this works as well but will produce output
-    config.report(out);
-    config.report(out, "'prefix '");
-    out << config << std::endl;
+    config.report(test_out);
+    config.report(test_out, "'prefix '");
+    test_out << config << std::endl;
     std::string DUNE_UNUSED(report_str) = config.report_string();
 
     std::string str = config.get("string", std::string("foo"));
@@ -162,9 +483,10 @@ struct ConfigTreeTest
     if (st != 1) DUNE_THROW_COLORFULLY(results_are_not_as_expected, "'" << st << "'' vs. '1'");
 
     check_vector< std::vector< double > >(config.sub("sub2.subsub1"));
-    check_vector< double, 2 >(config.sub("sub2.subsub1"));
+    check_field_vector< double, 1 >(config.sub("sub2.subsub1"));
+    check_field_vector< double, 2 >(config.sub("sub2.subsub1"));
     check_vector< DynamicVector< double > >(config.sub("sub2.subsub1"));
-    check_vector< Stuff::LA::DuneDynamicVector< double > >(config.sub("sub2.subsub1"));
+    check_vector< Stuff::LA::CommonDenseVector< double > >(config.sub("sub2.subsub1"));
 #if HAVE_DUNE_ISTL
     check_vector< Stuff::LA::IstlDenseVector< double > >(config.sub("sub2.subsub1"));
 #endif
@@ -172,6 +494,10 @@ struct ConfigTreeTest
     check_vector< Stuff::LA::EigenDenseVector< double > >(config.sub("sub2.subsub1"));
     check_vector< Stuff::LA::EigenMappedDenseVector< double > >(config.sub("sub2.subsub1"));
 #endif // HAVE_EIGEN
+    check_field_matrix< double, 2, 2 >(config.sub("sub2.subsub1"));
+    check_matrix< DynamicMatrix< double > >(config.sub("sub2.subsub1"));
+    check_stuff_matrix< Stuff::LA::CommonDenseMatrix< double > >(config.sub("sub2.subsub1"));
+    check_stuff_matrix< Stuff::LA::EigenDenseMatrix< double > >(config.sub("sub2.subsub1"));
   } // ... behaves_correctly(...)
 }; // struct ConfigTreeTest
 
