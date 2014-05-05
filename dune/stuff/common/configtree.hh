@@ -9,13 +9,17 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <limits>
 #include <initializer_list>
 
 #include <dune/common/parametertree.hh>
 #include <dune/common/parametertreeparser.hh>
 #include <dune/common/fvector.hh>
+#include <dune/common/fmatrix.hh>
 #include <dune/common/dynvector.hh>
+#include <dune/common/dynmatrix.hh>
 #include <dune/common/densevector.hh>
+#include <dune/common/densematrix.hh>
 
 #include <dune/stuff/common/exceptions.hh>
 #include <dune/stuff/common/string.hh>
@@ -41,6 +45,56 @@ class ConfigTree
   template< class T >
   class ChooseBase
   {
+    template< class M >
+    struct MatrixConstructor
+    {
+      static M create(const size_t rows, const size_t cols)
+      {
+        return M(rows, cols);
+      }
+    };
+
+    template< class K, int r, int c >
+    struct MatrixConstructor< FieldMatrix< K, r, c > >
+    {
+      static FieldMatrix< K, r, c > create(const size_t rows, const size_t cols)
+      {
+        return FieldMatrix< K, r, c >();
+      }
+    };
+
+    template< class M >
+    struct MatrixSetter
+    {
+      template< class V >
+      static void set_entry(M& mat, const size_t rr, const size_t cc, const V& val)
+      {
+        mat[rr][cc] = val;
+      }
+    };
+
+    template< class S >
+    struct MatrixSetter< Stuff::LA::CommonDenseMatrix< S > >
+    {
+      template< class V >
+      static void set_entry(Stuff::LA::CommonDenseMatrix< S >& mat, const size_t rr, const size_t cc, const V& val)
+      {
+        mat.set_entry(rr, cc, val);
+      }
+    };
+
+#if HAVE_EIGEN
+    template< class S >
+    struct MatrixSetter< Stuff::LA::EigenDenseMatrix< S > >
+    {
+      template< class V >
+      static void set_entry(Stuff::LA::EigenDenseMatrix< S >& mat, const size_t rr, const size_t cc, const V& val)
+      {
+        mat.set_entry(rr, cc, val);
+      }
+    };
+#endif // HAVE_EIGEN
+
   protected:
     template< class VectorType, class S >
     static VectorType get_vector(const ParameterTree& config, const std::string key, const size_t size)
@@ -49,8 +103,8 @@ class ConfigTree
       // and check if this is a vector
       if (vector_str.substr(0, 1) == "[" && vector_str.substr(vector_str.size() - 1, 1) == "]") {
         vector_str = vector_str.substr(1, vector_str.size() - 2);
-        // we treat this as a vector and split along ';'
-        const auto tokens = tokenize< std::string >(vector_str, ";", boost::algorithm::token_compress_off);
+        // we treat this as a vector and split along ' '
+        const auto tokens = tokenize< std::string >(vector_str, " ", boost::algorithm::token_compress_off);
         if (size > 0 && tokens.size() < size)
           DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
                                 "Vector (see below) to given key '" << key << "' has only " << tokens.size()
@@ -79,18 +133,86 @@ class ConfigTree
         return ret;
       }
     } // ... get_vector(...)
+
+    template< class MatrixType, class S >
+    static MatrixType get_matrix(const ParameterTree& config,
+                                 const std::string key,
+                                 const size_t rows,
+                                 const size_t cols)
+    {
+      std::string matrix_str = config.get< std::string >(key);
+      // and check if this is a matrix
+      if (matrix_str.substr(0, 1) == "[" && matrix_str.substr(matrix_str.size() - 1, 1) == "]") {
+        matrix_str = matrix_str.substr(1, matrix_str.size() - 2);
+        // we treat this as a matrix and split along ';' to obtain the rows
+        const auto row_tokens = tokenize< std::string >(matrix_str, ";", boost::algorithm::token_compress_off);
+        if (rows > 0 && row_tokens.size() < rows)
+          DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
+                                "Matrix (see below) to given key '" << key << "' has only " << row_tokens.size()
+                                << " rows but " << rows << " rows were requested!"
+                                << "\n" << "'[" << matrix_str << "]'");
+        const size_t actual_rows = (rows > 0) ? std::min(row_tokens.size(), rows) : row_tokens.size();
+        // compute the number of columns the matrix will have
+        size_t min_cols = std::numeric_limits< size_t >::max();
+        for (size_t rr = 0; rr < actual_rows; ++rr) {
+          const auto row_token = boost::algorithm::trim_copy(row_tokens[rr]);
+          // we treat this as a vector, so we split along ' '
+          const auto column_tokens = tokenize< std::string >(row_token, " ", boost::algorithm::token_compress_off);
+          min_cols = std::min(min_cols, column_tokens.size());
+        }
+        if (cols > 0 && min_cols < cols)
+          DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
+                                "Matrix (see below) to given key '" << key << "' has only " << min_cols
+                                << " columns but " << cols << " columns were requested!"
+                                << "\n" << "'[" << matrix_str << "]'");
+        const size_t actual_cols = (cols > 0) ? std::min(min_cols, cols) : min_cols;
+        MatrixType ret = MatrixConstructor< MatrixType >::create(actual_rows, actual_cols);
+        // now we do the same again and build the actual matrix
+        for (size_t rr = 0; rr < actual_rows; ++rr) {
+          const auto row_token = boost::algorithm::trim_copy(row_tokens[rr]);
+          const auto column_tokens = tokenize< std::string >(row_token, " ", boost::algorithm::token_compress_off);
+          for (size_t cc = 0; cc < actual_cols; ++cc) {
+            try {
+              MatrixSetter< MatrixType >::set_entry(ret, rr, cc,
+                                                    fromString< S >(boost::algorithm::trim_copy(column_tokens[cc])));
+            } catch (boost::bad_lexical_cast& e) {
+              DUNE_THROW_COLORFULLY(Exceptions::external_error,
+                                    "There was an error in boost while parsing '" << row_tokens[cc] << "': " << e.what());
+            }
+          }
+        }
+        return ret;
+      } else {
+        // we treat this as a scalar
+        if ((rows > 0 && rows != 1) || (cols > 0 && cols != 1))
+          DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
+                                "Matrix (see below) to given key " << key << " has 1 element but " << rows
+                                << " rows and " << cols << " columns were requested!"
+                                << "\n" << "'" << matrix_str << "'");
+        MatrixType ret = MatrixConstructor< MatrixType >::create(1, 1);
+        try {
+          MatrixSetter< MatrixType >::set_entry(ret, 0, 0,
+                                                fromString< S >(boost::algorithm::trim_copy(matrix_str)));
+        } catch (boost::bad_lexical_cast& e) {
+         DUNE_THROW_COLORFULLY(Exceptions::external_error,
+                               "There was an error in boost while parsing '" << matrix_str << "': " << e.what());
+        }
+        return ret;
+      }
+    } // ... get_matrix(...)
   }; // class ChooseBase
 
   /**
-   *  This version is used for non vectors. It just calls the get method of the ParameterTree. Specialize this for any
-   *  vector you want to add und make use of ChooseBase::get_vector().
+   *  This version is used for non containers. It just calls the get method of the ParameterTree. Specialize this for
+   *  any vector or matrix you want to add und make use of ChooseBase::get_vector().
    */
   template< class T >
   class Choose
     : ChooseBase< T >
   {
   public:
-    static T get(const ParameterTree& config, const std::string& key, const size_t /*size*/ = 0)
+    static T get(const ParameterTree& config, const std::string& key,
+                 const size_t /*size*/ = 0, const size_t /*cols*/ = 0)
     {
       return config.get< T >(key);
     }
@@ -103,7 +225,8 @@ class ConfigTree
     typedef ChooseBase< std::vector< T > > BaseType;
     typedef std::vector< T > VectorType;
   public:
-    static VectorType get(const ParameterTree& config, const std::string& key, const size_t size = 0)
+    static VectorType get(const ParameterTree& config, const std::string& key,
+                          const size_t size = 0, const size_t /*cols*/ = 0)
     {
       return BaseType::template get_vector< VectorType, T >(config, key, size);
     }
@@ -116,7 +239,8 @@ class ConfigTree
     typedef ChooseBase< FieldVector< K, d > > BaseType;
     typedef FieldVector< K, d > VectorType;
   public:
-    static VectorType get(const ParameterTree& config, const std::string& key, const size_t size = 0)
+    static VectorType get(const ParameterTree& config, const std::string& key,
+                          const size_t size = 0, const size_t /*cols*/ = 0)
     {
       if (size > 0 && size != d)
         DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
@@ -127,6 +251,25 @@ class ConfigTree
     }
   }; // class Choose< FieldVector< ... > >
 
+  template< class K, int r, int c >
+  class Choose< FieldMatrix< K, r, c > >
+    : ChooseBase< FieldMatrix< K, r, c > >
+  {
+    typedef ChooseBase< FieldMatrix< K, r, c > > BaseType;
+    typedef FieldMatrix< K, r, c > MatrixType;
+  public:
+    static MatrixType get(const ParameterTree& config, const std::string& key,
+                          const size_t size = 0, const size_t cols = 0)
+    {
+      if ((size > 0 && size != r) || (cols > 0 && cols != c))
+        DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
+                              "You requested a '" << Typename< MatrixType >::value() << "' for key '" << key
+                              << "' with a size of " << size << "x" << cols
+                              << " but this type of matrix can not have any size other than " << r << "x" << c << "!");
+      return BaseType::template get_matrix< MatrixType, K >(config, key, r, c);
+    }
+  }; // class Choose< FieldVector< ... > >
+
   template< class T >
   class Choose< DynamicVector< T > >
     : ChooseBase< DynamicVector< T > >
@@ -134,9 +277,26 @@ class ConfigTree
     typedef ChooseBase< DynamicVector< T > > BaseType;
     typedef DynamicVector< T > VectorType;
   public:
-    static VectorType get(const ParameterTree& config, const std::string& key, const size_t size = 0)
+    static VectorType get(const ParameterTree& config, const std::string& key,
+                          const size_t size = 0, const size_t /*cols*/ = 0)
     {
       return BaseType::template get_vector< VectorType, T >(config, key, size);
+    }
+  }; // class Choose< DynamicVector< ... > >
+
+  template< class T >
+  class Choose< DynamicMatrix< T > >
+    : ChooseBase< DynamicMatrix< T > >
+  {
+    typedef ChooseBase< DynamicMatrix< T > > BaseType;
+    typedef DynamicMatrix< T > MatrixType;
+  public:
+    static MatrixType get(const ParameterTree& config,
+                          const std::string& key,
+                          const size_t rows = 0,
+                          const size_t cols = 0)
+    {
+      return BaseType::template get_matrix< MatrixType, T >(config, key, rows, cols);
     }
   }; // class Choose< DynamicVector< ... > >
 
@@ -147,11 +307,26 @@ class ConfigTree
     typedef ChooseBase< LA::CommonDenseVector< S > > BaseType;
     typedef LA::CommonDenseVector< S > VectorType;
   public:
-    static VectorType get(const ParameterTree& config, const std::string& key, const size_t size = 0)
+    static VectorType get(const ParameterTree& config, const std::string& key,
+                          const size_t size = 0, const size_t /*cols*/ = 0)
     {
       return BaseType::template get_vector< VectorType, S >(config, key, size);
     }
   }; // class Choose< LA::CommonDenseVector< ... > >
+
+  template< class S >
+  class Choose< LA::CommonDenseMatrix< S > >
+    : ChooseBase< LA::CommonDenseMatrix< S > >
+  {
+    typedef ChooseBase< LA::CommonDenseMatrix< S > > BaseType;
+    typedef LA::CommonDenseMatrix< S > MatrixType;
+  public:
+    static MatrixType get(const ParameterTree& config, const std::string& key,
+                          const size_t size = 0, const size_t cols = 0)
+    {
+      return BaseType::template get_matrix< MatrixType, S >(config, key, size, cols);
+    }
+  }; // class Choose< LA::CommonDenseMatrix< ... > >
 
 #if HAVE_DUNE_ISTL
   template< class S >
@@ -161,7 +336,8 @@ class ConfigTree
     typedef ChooseBase< LA::IstlDenseVector< S > > BaseType;
     typedef LA::IstlDenseVector< S > VectorType;
   public:
-    static VectorType get(const ParameterTree& config, const std::string& key, const size_t size = 0)
+    static VectorType get(const ParameterTree& config, const std::string& key,
+                          const size_t size = 0, const size_t /*cols*/ = 0)
     {
       return BaseType::template get_vector< VectorType, S >(config, key, size);
     }
@@ -176,11 +352,26 @@ class ConfigTree
     typedef ChooseBase< LA::EigenDenseVector< S > > BaseType;
     typedef LA::EigenDenseVector< S > VectorType;
   public:
-    static VectorType get(const ParameterTree& config, const std::string& key, const size_t size = 0)
+    static VectorType get(const ParameterTree& config, const std::string& key,
+                          const size_t size = 0, const size_t /*cols*/ = 0)
     {
       return BaseType::template get_vector< VectorType, S >(config, key, size);
     }
   }; // class Choose< LA::EigenDenseVector< ... > >
+
+  template< class S >
+  class Choose< LA::EigenDenseMatrix< S > >
+    : ChooseBase< LA::EigenDenseMatrix< S > >
+  {
+    typedef ChooseBase< LA::EigenDenseMatrix< S > > BaseType;
+    typedef LA::EigenDenseMatrix< S > MatrixType;
+  public:
+    static MatrixType get(const ParameterTree& config, const std::string& key,
+                          const size_t size = 0, const size_t cols = 0)
+    {
+      return BaseType::template get_matrix< MatrixType, S >(config, key, size, cols);
+    }
+  }; // class Choose< LA::EigenDenseMatrix< ... > >
 
   template< class S >
   class Choose< LA::EigenMappedDenseVector< S > >
@@ -189,7 +380,8 @@ class ConfigTree
     typedef ChooseBase< LA::EigenMappedDenseVector< S > > BaseType;
     typedef LA::EigenMappedDenseVector< S > VectorType;
   public:
-    static VectorType get(const ParameterTree& config, const std::string& key, const size_t size = 0)
+    static VectorType get(const ParameterTree& config, const std::string& key,
+                          const size_t size = 0, const size_t /*cols*/ = 0)
     {
       return BaseType::template get_vector< VectorType, S >(config, key, size);
     }
@@ -372,11 +564,15 @@ public:
     return BaseType::hasKey(key);
   }
 
+  /**
+   * \param size Determines the size of the returning container (size if T is a vector type, rows if T is a matrix type, 0 means automatic).
+   * \param size Determines the number of columns of the returning matrix if T is a matrix type (0 means automatic, ignored, if T is a vector type).
+   */
   template< typename T >
-  T get(const std::string& key, const T& default_value, const size_t size = 0) const
+  T get(const std::string& key, const T& default_value, const size_t size = 0, const size_t cols = 0) const
   {
     if (has_key(key))
-      return Choose< T >::get(*this, key, size);
+      return Choose< T >::get(*this, key, size, cols);
     else
       return default_value;
   } // ... get(...)
@@ -387,10 +583,11 @@ public:
   }
 
   /**
-   * \param size Determines the size of the returning vector if T is a vector type (0 means automatic).
+   * \param size Determines the size of the returning container (size if T is a vector type, rows if T is a matrix type, 0 means automatic).
+   * \param size Determines the number of columns of the returning matrix if T is a matrix type (0 means automatic, ignored, if T is a vector type).
    */
   template< typename T >
-  T get(const std::string& key, const size_t size = 0) const
+  T get(const std::string& key, const size_t size = 0, const size_t cols = 0) const
   {
     if (empty())
       DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
@@ -402,7 +599,7 @@ public:
                             << key
                             << "\") to check first!"
                             << "\n======================\n" << report_string());
-    return Choose< T >::get(*this, key, size);
+    return Choose< T >::get(*this, key, size, cols);
   } // ... get(...)
 
   void report(std::ostream& out = std::cout, const std::string& prefix = "") const
