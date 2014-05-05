@@ -123,7 +123,7 @@ class ConfigTree
                               "You requested a '" << Typename< VectorType >::value() << "' for key '" << key
                               << "' with a 'size' of " << size
                               << " but this type of vector can not have any size other than " << d << "!");
-      return BaseType::template get_vector< VectorType, K >(config, key, size);
+      return BaseType::template get_vector< VectorType, K >(config, key, d);
     }
   }; // class Choose< FieldVector< ... > >
 
