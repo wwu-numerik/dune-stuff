@@ -144,13 +144,11 @@ class ConfigTree
         return ret;
       } else {
         // we treat this as a scalar
-        if (size > 0 && size != 1)
-          DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
-                                "Vector (see below) to given key " << key << " has 1 element but " << size
-                                << " elements were requested!"
-                                << "\n" << "'" << vector_str << "'");
-        VectorType ret(1);
-        ret[0] = convert_from_string_safely< S >(trim_copy_safely(vector_str));
+        const S val = convert_from_string_safely< S >(trim_copy_safely(vector_str));
+        const size_t actual_size = (size == 0 ? 1 : size);
+        VectorType ret(actual_size);
+        for (size_t ii = 0; ii < actual_size; ++ii)
+          ret[ii] = val;
         return ret;
       }
     } // ... get_vector(...)
@@ -199,14 +197,13 @@ class ConfigTree
         return ret;
       } else {
         // we treat this as a scalar
-        if ((rows > 0 && rows != 1) || (cols > 0 && cols != 1))
-          DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
-                                "Matrix (see below) to given key " << key << " has 1 element but " << rows
-                                << " rows and " << cols << " columns were requested!"
-                                << "\n" << "'" << matrix_str << "'");
-        MatrixType ret = MatrixConstructor< MatrixType >::create(1, 1);
-        MatrixSetter< MatrixType >::set_entry(ret, 0, 0,
-                                              convert_from_string_safely< S >(trim_copy_safely(matrix_str)));
+        const S val = convert_from_string_safely< S >(trim_copy_safely(matrix_str));
+        const size_t actual_rows = (rows == 0 ? 1 : rows);
+        const size_t actual_cols = (cols == 0 ? 1 : cols);
+        MatrixType ret = MatrixConstructor< MatrixType >::create(actual_rows, actual_cols);
+        for (size_t rr = 0; rr < actual_rows; ++rr)
+          for (size_t cc = 0; cc < actual_cols; ++rr)
+            MatrixSetter< MatrixType >::set_entry(ret, rr, cc, val);
         return ret;
       }
     } // ... get_matrix(...)
