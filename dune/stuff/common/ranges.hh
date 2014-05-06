@@ -20,8 +20,8 @@
 
 #if HAVE_DUNE_FEM
 # include <dune/stuff/fem/namespace.hh>
-#   include <dune/stuff/common/disable_warnings.hh>
-#     include <dune/fem/function/common/discretefunction.hh>
+# include <dune/stuff/common/disable_warnings.hh>
+#   include <dune/fem/function/common/discretefunction.hh>
 #   include <dune/fem/gridpart/common/gridpart.hh>
 #   if DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
 #     include <dune/fem/space/lagrangespace/lagrangepoints.hh>
