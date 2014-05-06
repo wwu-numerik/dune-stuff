@@ -95,6 +95,33 @@ class ConfigTree
     };
 #endif // HAVE_EIGEN
 
+    static std::string trim_copy_safely(const std::string& str_in)
+    {
+      const std::string str_out = boost::algorithm::trim_copy(str_in);
+      if (str_out.find(";") != std::string::npos)
+        DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
+                              "There was an error while parsing '" << str_out << "': it contained a ';'!\n"
+                              << "This usually happens if you try to get a matrix expression with a vector type "
+                              << "or if you are missing the white space after the ';'!");
+      return str_out;
+    } // ... trim_copy_safely(...)
+
+    template< class S >
+    static S convert_from_string_safely(const std::string& str_in)
+    {
+      S s_out;
+      try {
+        s_out = fromString< S >(str_in);
+      } catch (std::exception& e) {
+        DUNE_THROW_COLORFULLY(Exceptions::external_error,
+                              "There was an error in the stl while parsing '" << str_in << "': " << e.what());
+      } catch (boost::bad_lexical_cast& e) {
+        DUNE_THROW_COLORFULLY(Exceptions::external_error,
+                              "There was an error in boost while parsing '" << str_in << "': " << e.what());
+      }
+      return s_out;
+    } // ... convert_from_string_safely(...)
+
   protected:
     template< class VectorType, class S >
     static VectorType get_vector(const ParameterTree& config, const std::string key, const size_t size)
@@ -104,7 +131,7 @@ class ConfigTree
       if (vector_str.substr(0, 1) == "[" && vector_str.substr(vector_str.size() - 1, 1) == "]") {
         vector_str = vector_str.substr(1, vector_str.size() - 2);
         // we treat this as a vector and split along ' '
-        const auto tokens = tokenize< std::string >(vector_str, " ", boost::algorithm::token_compress_off);
+        const auto tokens = tokenize< std::string >(vector_str, " ", boost::algorithm::token_compress_on);
         if (size > 0 && tokens.size() < size)
           DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
                                 "Vector (see below) to given key '" << key << "' has only " << tokens.size()
@@ -112,17 +139,8 @@ class ConfigTree
                                 << "\n" << "'[" << vector_str << "]'");
         const size_t actual_size = (size > 0) ? std::min(tokens.size(), size) : tokens.size();
         VectorType ret(actual_size);
-        for (size_t ii = 0; ii < actual_size; ++ii) {
-          try {
-            ret[ii] = fromString< S >(boost::algorithm::trim_copy(tokens[ii]));
-          } catch (std::exception& e) {
-            DUNE_THROW_COLORFULLY(Exceptions::external_error,
-                                  "There was an error in the stl while parsing '" << tokens[ii] << "': " << e.what());
-          } catch (boost::bad_lexical_cast& e) {
-            DUNE_THROW_COLORFULLY(Exceptions::external_error,
-                                  "There was an error in boost while parsing '" << tokens[ii] << "': " << e.what());
-          }
-        }
+        for (size_t ii = 0; ii < actual_size; ++ii)
+          ret[ii] = convert_from_string_safely< S >(trim_copy_safely(tokens[ii]));
         return ret;
       } else {
         // we treat this as a scalar
@@ -131,8 +149,8 @@ class ConfigTree
                                 "Vector (see below) to given key " << key << " has 1 element but " << size
                                 << " elements were requested!"
                                 << "\n" << "'" << vector_str << "'");
-       VectorType ret(1);
-        ret[0] = fromString< S >(vector_str);
+        VectorType ret(1);
+        ret[0] = convert_from_string_safely< S >(trim_copy_safely(vector_str));
         return ret;
       }
     } // ... get_vector(...)
@@ -148,7 +166,7 @@ class ConfigTree
       if (matrix_str.substr(0, 1) == "[" && matrix_str.substr(matrix_str.size() - 1, 1) == "]") {
         matrix_str = matrix_str.substr(1, matrix_str.size() - 2);
         // we treat this as a matrix and split along ';' to obtain the rows
-        const auto row_tokens = tokenize< std::string >(matrix_str, ";", boost::algorithm::token_compress_off);
+        const auto row_tokens = tokenize< std::string >(matrix_str, ";", boost::algorithm::token_compress_on);
         if (rows > 0 && row_tokens.size() < rows)
           DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
                                 "Matrix (see below) to given key '" << key << "' has only " << row_tokens.size()
@@ -160,7 +178,7 @@ class ConfigTree
         for (size_t rr = 0; rr < actual_rows; ++rr) {
           const auto row_token = boost::algorithm::trim_copy(row_tokens[rr]);
           // we treat this as a vector, so we split along ' '
-          const auto column_tokens = tokenize< std::string >(row_token, " ", boost::algorithm::token_compress_off);
+          const auto column_tokens = tokenize< std::string >(row_token, " ", boost::algorithm::token_compress_on);
           min_cols = std::min(min_cols, column_tokens.size());
         }
         if (cols > 0 && min_cols < cols)
@@ -173,19 +191,10 @@ class ConfigTree
         // now we do the same again and build the actual matrix
         for (size_t rr = 0; rr < actual_rows; ++rr) {
           const auto row_token = boost::algorithm::trim_copy(row_tokens[rr]);
-          const auto column_tokens = tokenize< std::string >(row_token, " ", boost::algorithm::token_compress_off);
-          for (size_t cc = 0; cc < actual_cols; ++cc) {
-            try {
-              MatrixSetter< MatrixType >::set_entry(ret, rr, cc,
-                                                    fromString< S >(boost::algorithm::trim_copy(column_tokens[cc])));
-            } catch (std::exception& e) {
-              DUNE_THROW_COLORFULLY(Exceptions::external_error,
-                                    "There was an error in the stl while parsing '" << row_tokens[cc] << "': " << e.what());
-            } catch (boost::bad_lexical_cast& e) {
-              DUNE_THROW_COLORFULLY(Exceptions::external_error,
-                                    "There was an error in boost while parsing '" << row_tokens[cc] << "': " << e.what());
-            }
-          }
+          const auto column_tokens = tokenize< std::string >(row_token, " ", boost::algorithm::token_compress_on);
+          for (size_t cc = 0; cc < actual_cols; ++cc)
+            MatrixSetter< MatrixType >::set_entry(ret, rr, cc,
+                                                  convert_from_string_safely< S >(trim_copy_safely(column_tokens[cc])));
         }
         return ret;
       } else {
@@ -196,16 +205,8 @@ class ConfigTree
                                 << " rows and " << cols << " columns were requested!"
                                 << "\n" << "'" << matrix_str << "'");
         MatrixType ret = MatrixConstructor< MatrixType >::create(1, 1);
-        try {
-          MatrixSetter< MatrixType >::set_entry(ret, 0, 0,
-                                                fromString< S >(boost::algorithm::trim_copy(matrix_str)));
-        } catch (std::exception& e) {
-          DUNE_THROW_COLORFULLY(Exceptions::external_error,
-                                "There was an error in the stl while parsing '" << matrix_str << "': " << e.what());
-        } catch (boost::bad_lexical_cast& e) {
-          DUNE_THROW_COLORFULLY(Exceptions::external_error,
-                                "There was an error in boost while parsing '" << matrix_str << "': " << e.what());
-        }
+        MatrixSetter< MatrixType >::set_entry(ret, 0, 0,
+                                              convert_from_string_safely< S >(trim_copy_safely(matrix_str)));
         return ret;
       }
     } // ... get_matrix(...)
