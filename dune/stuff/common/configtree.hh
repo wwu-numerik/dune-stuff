@@ -115,9 +115,12 @@ class ConfigTree
         for (size_t ii = 0; ii < actual_size; ++ii) {
           try {
             ret[ii] = fromString< S >(boost::algorithm::trim_copy(tokens[ii]));
-          } catch (boost::bad_lexical_cast&) {
+          } catch (std::exception& e) {
             DUNE_THROW_COLORFULLY(Exceptions::external_error,
-                                  "There was an error in boost while parsing '" << tokens[ii] << "'!");
+                                  "There was an error in the stl while parsing '" << tokens[ii] << "': " << e.what());
+          } catch (boost::bad_lexical_cast& e) {
+            DUNE_THROW_COLORFULLY(Exceptions::external_error,
+                                  "There was an error in boost while parsing '" << tokens[ii] << "': " << e.what());
           }
         }
         return ret;
@@ -175,6 +178,9 @@ class ConfigTree
             try {
               MatrixSetter< MatrixType >::set_entry(ret, rr, cc,
                                                     fromString< S >(boost::algorithm::trim_copy(column_tokens[cc])));
+            } catch (std::exception& e) {
+              DUNE_THROW_COLORFULLY(Exceptions::external_error,
+                                    "There was an error in the stl while parsing '" << row_tokens[cc] << "': " << e.what());
             } catch (boost::bad_lexical_cast& e) {
               DUNE_THROW_COLORFULLY(Exceptions::external_error,
                                     "There was an error in boost while parsing '" << row_tokens[cc] << "': " << e.what());
@@ -193,9 +199,12 @@ class ConfigTree
         try {
           MatrixSetter< MatrixType >::set_entry(ret, 0, 0,
                                                 fromString< S >(boost::algorithm::trim_copy(matrix_str)));
+        } catch (std::exception& e) {
+          DUNE_THROW_COLORFULLY(Exceptions::external_error,
+                                "There was an error in the stl while parsing '" << matrix_str << "': " << e.what());
         } catch (boost::bad_lexical_cast& e) {
-         DUNE_THROW_COLORFULLY(Exceptions::external_error,
-                               "There was an error in boost while parsing '" << matrix_str << "': " << e.what());
+          DUNE_THROW_COLORFULLY(Exceptions::external_error,
+                                "There was an error in boost while parsing '" << matrix_str << "': " << e.what());
         }
         return ret;
       }
