@@ -58,7 +58,7 @@ class ConfigTree
     template< class K, int r, int c >
     struct MatrixConstructor< FieldMatrix< K, r, c > >
     {
-      static FieldMatrix< K, r, c > create(const size_t rows, const size_t cols)
+      static FieldMatrix< K, r, c > create(const size_t /*rows*/, const size_t /*cols*/)
       {
         return FieldMatrix< K, r, c >();
       }
@@ -209,7 +209,7 @@ class ConfigTree
         const size_t actual_cols = (cols == 0 ? 1 : cols);
         MatrixType ret = MatrixConstructor< MatrixType >::create(actual_rows, actual_cols);
         for (size_t rr = 0; rr < actual_rows; ++rr)
-          for (size_t cc = 0; cc < actual_cols; ++rr)
+          for (size_t cc = 0; cc < actual_cols; ++cc)
             MatrixSetter< MatrixType >::set_entry(ret, rr, cc, val);
         return ret;
       }
@@ -282,7 +282,7 @@ class ConfigTree
                               << " but this type of matrix can not have any size other than " << r << "x" << c << "!");
       return BaseType::template get_matrix< MatrixType, K >(config, key, r, c);
     }
-  }; // class Choose< FieldVector< ... > >
+  }; // class Choose< FieldMatrix< ... > >
 
   template< class T >
   class Choose< DynamicVector< T > >
