@@ -161,7 +161,6 @@ public:
 
     const auto& space =  target.space();
 
-    // set all DoFs to infinity
     preprocess(target);
 
     const auto endit = space.end();
@@ -195,13 +194,11 @@ public:
       }
 
     postprocess(target);
-
   } // ... project(...)
 
 protected:
   template<class TargetDFImp>
   static void preprocess(Dune::Fem::DiscreteFunctionInterface<TargetDFImp>& func) {
-
     // set all DoFs to zero
     const auto dend = func.dend();
     for( auto dit = func.dbegin(); dit != dend; ++dit )
