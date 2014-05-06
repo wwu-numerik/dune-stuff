@@ -14,6 +14,7 @@
 #include <dune/stuff/common/ranges.hh>
 #include <dune/stuff/grid/walk.hh>
 #include <dune/stuff/aliases.hh>
+#include <dune/stuff/grid/entity.hh>
 
 namespace Dune {
 namespace Stuff {
@@ -86,22 +87,26 @@ struct Dimensions
   typedef typename GridType::template Codim<0>::Entity EntityType;
   CoordLimitsType coord_limits;
   MinMaxAvgType entity_volume;
-
+  MinMaxAvgType entity_width;
+  
   //! gridwalk functor that does the actual work for \ref GridDimensions
   class GridDimensionsFunctor
   {
     CoordLimitsType& coord_limits_;
     MinMaxAvgType& entity_volume_;
+    MinMaxAvgType& entity_width_;
 
     public:
-      GridDimensionsFunctor(CoordLimitsType& c, MinMaxAvgType& e)
+      GridDimensionsFunctor(CoordLimitsType& c, MinMaxAvgType& e, MinMaxAvgType& w)
         : coord_limits_(c)
-        , entity_volume_(e) {}
+        , entity_volume_(e)
+        , entity_width_(w) {}
 
       template< class Entity >
       void operator()(const Entity& ent, const int /*ent_idx*/) {
         const auto& geo = ent.geometry();
         entity_volume_( geo.volume() );
+        entity_width_(entityDiameter(ent));
         for (int i = 0; i < geo.corners(); ++i)
         {
           const auto& corner( geo.corner(i) );
@@ -117,12 +122,12 @@ struct Dimensions
   Dimensions(const GridType& grid) {
     typedef typename GridType::LeafGridView View;
     const auto& view = grid.leafView();
-    GridDimensionsFunctor f(coord_limits, entity_volume);
+    GridDimensionsFunctor f(coord_limits, entity_volume, entity_width);
     GridWalk< View >(view).walkCodim0(f);
   }
 
   Dimensions(const EntityType& entity) {
-    GridDimensionsFunctor f(coord_limits, entity_volume);
+    GridDimensionsFunctor f(coord_limits, entity_volume, entity_width);
     f(entity, 0);
   }
 };
