@@ -59,8 +59,8 @@ public:
     const Common::ConfigTree default_cfg = default_config();
     //create
     return Common::make_unique< ThisType >(
-          cfg.get< RangeType >("value", default_cfg.get< RangeType >("value")),
-          cfg.get("name", default_cfg.get< std::string >("name")));
+          cfg.get("value",  default_cfg.get< RangeType >("value")),
+          cfg.get("name",   default_cfg.get< std::string >("name")));
   } // ... create(...)
 
   explicit Constant(const RangeType& constant, const std::string name = static_id())

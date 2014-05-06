@@ -132,11 +132,11 @@ public:
       values[ii] = RangeType(values_rf[ii]);
     // create
     return Common::make_unique< ThisType >(
-            cfg.get("lower_left", default_cfg.get< std::vector< DomainFieldType > >("lower_left"), dimDomain),
-            cfg.get("upper_right", default_cfg.get< std::vector< DomainFieldType > >("upper_right"), dimDomain),
+            cfg.get("lower_left",   default_cfg.get< std::vector< DomainFieldType > >("lower_left"), dimDomain),
+            cfg.get("upper_right",  default_cfg.get< std::vector< DomainFieldType > >("upper_right"), dimDomain),
             std::move(num_elements),
             std::move(values),
-            cfg.get("name", default_cfg.get< std::string > ("name")));
+            cfg.get("name",         default_cfg.get< std::string > ("name")));
   } // ... create(...)
 
   Checkerboard(std::vector< DomainFieldType >&& lowerLeft,
