@@ -45,7 +45,8 @@ l2distance(const FunctionType_A& function_A, const PDELab::ISTLBlockVectorContai
   typename DifferenceSquared::Traits::RangeType l2errorsquared(0.0);
   const int magic_number_order = 8;
   integrateGridFunction(differencesquared, l2errorsquared, magic_number_order);
-  return sqrt(l2errorsquared);
+  const auto& comm = function_B.gridFunctionSpace().gridView().comm();
+  return sqrt(comm.sum(l2errorsquared));
 }
 
 template <class FunctionType_A, class GFS, class C>
@@ -63,7 +64,8 @@ h1distance(const FunctionType_A& function_A, const PDELab::ISTLBlockVectorContai
   typename H1DifferenceSquared::Traits::RangeType value(0.0);
   const int magic_number_order = 8;
   integrateGridFunction(h1_difference_squared, value, magic_number_order);
-  return std::sqrt(value);
+  const auto& comm = function_B.gridFunctionSpace().gridView().comm();
+  return std::sqrt(comm.sum(value));
 }
 #endif // HAVE_DUNE_PDELAB
 
