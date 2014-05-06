@@ -121,20 +121,20 @@ public:
     // get correct config
     const Common::ConfigTree cfg = config.has_sub(sub_name) ? config.sub(sub_name) : config;
     // extract needed data
-      auto lower_left = cfg.get< std::vector< DomainFieldType > >("lower_left", dimDomain);
-      auto upper_right = cfg.get< std::vector< DomainFieldType > >("upper_right", dimDomain);
-      auto num_elements = cfg.get< std::vector< size_t > >("num_elements");
-      size_t num_values = 1;
-      for (size_t ii = 0; ii < num_elements.size(); ++ii)
-        num_values *= num_elements[ii];
-      auto values_rf = cfg.get< std::vector< RangeFieldType > >("values", num_values);
-      std::vector< RangeType > values(values_rf.size());
-      for (size_t ii = 0; ii < values_rf.size(); ++ii)
-        values[ii] = RangeType(values_rf[ii]);
-      auto nm = static_id();
-      if (cfg.has_key("name"))
-        nm = cfg.get< std::string >("name");
-      return Common::make_unique< ThisType >(std::move(lower_left), std::move(upper_right), std::move(num_elements), std::move(values), nm);
+    auto lower_left = cfg.get< std::vector< DomainFieldType > >("lower_left", dimDomain);
+    auto upper_right = cfg.get< std::vector< DomainFieldType > >("upper_right", dimDomain);
+    auto num_elements = cfg.get< std::vector< size_t > >("num_elements");
+    size_t num_values = 1;
+    for (size_t ii = 0; ii < num_elements.size(); ++ii)
+      num_values *= num_elements[ii];
+    auto values_rf = cfg.get< std::vector< RangeFieldType > >("values", num_values);
+    std::vector< RangeType > values(values_rf.size());
+    for (size_t ii = 0; ii < values_rf.size(); ++ii)
+      values[ii] = RangeType(values_rf[ii]);
+    auto nm = static_id();
+    if (cfg.has_key("name"))
+      nm = cfg.get< std::string >("name");
+    return Common::make_unique< ThisType >(std::move(lower_left), std::move(upper_right), std::move(num_elements), std::move(values), nm);
   } // ... create(...)
 
   Checkerboard(std::vector< DomainFieldType >&& lowerLeft,
