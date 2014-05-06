@@ -200,9 +200,7 @@ protected:
   template<class TargetDFImp>
   static void preprocess(Dune::Fem::DiscreteFunctionInterface<TargetDFImp>& func) {
     // set all DoFs to zero
-    const auto dend = func.dend();
-    for( auto dit = func.dbegin(); dit != dend; ++dit )
-      *dit = 0.0;
+    func.clear();
   }
 
   template<class DofType, class SourceType >
