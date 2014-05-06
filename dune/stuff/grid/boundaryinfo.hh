@@ -185,7 +185,7 @@ public:
   static Common::ConfigTree default_config(const std::string sub_name = "")
   {
     Common::ConfigTree config("type", static_id());
-    config["dirichlet"] = "[1; 2; 3]";
+    config["dirichlet"] = "[1 2 3]";
     config["neumann"] = "[4]";
     if (sub_name.empty())
       return config;
@@ -283,8 +283,8 @@ public:
     Common::ConfigTree config("type", static_id());
     config["default"] = "dirichlet";
     config["compare_tolerance"] = "1e-10";
-    config["neumann.0"] = "[1.0; 0.0]";
-    config["dirichlet.0"] = "[0.0; 1.0]";
+    config["neumann.0"] = "[1.0 0.0]";
+    config["dirichlet.0"] = "[0.0 1.0]";
     if (sub_name.empty())
       return config;
     else {
@@ -612,7 +612,7 @@ public:
   static Dune::ParameterTree defaultSettings(const std::string subName = "")
   {
     Dune::ParameterTree description;
-    description["dirichlet"] = "[1; 2; 3]";
+    description["dirichlet"] = "[1 2 3]";
     description["neumann"] = "[4]";
     if (subName.empty())
       return description;
@@ -732,8 +732,8 @@ public:
     Dune::ParameterTree description;
     description["default"] = "dirichlet";
     description["compare_tolerance"] = "1e-10";
-    description["neumann.0"] = "[1.0; 0.0]";
-    description["dirichlet.0"] = "[0.0; 1.0]";
+    description["neumann.0"] = "[1.0 0.0]";
+    description["dirichlet.0"] = "[0.0 1.0]";
     if (subName.empty())
       return description;
     else {
