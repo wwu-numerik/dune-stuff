@@ -11,6 +11,7 @@
 #include <vector>
 #include <limits>
 #include <initializer_list>
+#include <exception>
 
 #include <dune/common/parametertree.hh>
 #include <dune/common/parametertreeparser.hh>
@@ -95,29 +96,35 @@ class ConfigTree
     };
 #endif // HAVE_EIGEN
 
-    static std::string trim_copy_safely(const std::string& str_in)
+    static std::string trim_copy_safely(const ConfigTree& cfg, const std::string& key, const std::string& str_in)
     {
       const std::string str_out = boost::algorithm::trim_copy(str_in);
       if (str_out.find(";") != std::string::npos)
         DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
-                              "There was an error while parsing '" << str_out << "': it contained a ';'!\n"
+                              "There was an error while parsing the value for key '" << key << "' in the config below. "
+                              << "The value contained a ';': '" << str_out << "'!\n"
                               << "This usually happens if you try to get a matrix expression with a vector type "
-                              << "or if you are missing the white space after the ';'!");
+                              << "or if you are missing the white space after the ';' in a matrix expression!\n\n"
+                              << cfg.report_string());
       return str_out;
     } // ... trim_copy_safely(...)
 
     template< class S >
-    static S convert_from_string_safely(const std::string& str_in)
+    static S convert_from_string_safely(const ConfigTree& cfg, const std::string& key, const std::string& str_in)
     {
       S s_out;
       try {
         s_out = fromString< S >(str_in);
       } catch (std::exception& e) {
         DUNE_THROW_COLORFULLY(Exceptions::external_error,
-                              "There was an error in the stl while parsing '" << str_in << "': " << e.what());
+                              "There was the following error in the stl while parsing the value '" << str_in
+                              << "' for key '" << key << "' in the config below: " << e.what() << "\n\n"
+                              << cfg.report_string());
       } catch (boost::bad_lexical_cast& e) {
         DUNE_THROW_COLORFULLY(Exceptions::external_error,
-                              "There was an error in boost while parsing '" << str_in << "': " << e.what());
+                              "There was the following error in boost while parsing the value '" << str_in
+                              << "' for key '" << key << "' in the config below: " << e.what() << "\n\n"
+                              << cfg.report_string());
       }
       return s_out;
     } // ... convert_from_string_safely(...)
@@ -140,11 +147,11 @@ class ConfigTree
         const size_t actual_size = (size > 0) ? std::min(tokens.size(), size) : tokens.size();
         VectorType ret(actual_size);
         for (size_t ii = 0; ii < actual_size; ++ii)
-          ret[ii] = convert_from_string_safely< S >(trim_copy_safely(tokens[ii]));
+          ret[ii] = convert_from_string_safely< S >(config, key, trim_copy_safely(config, key, tokens[ii]));
         return ret;
       } else {
         // we treat this as a scalar
-        const S val = convert_from_string_safely< S >(trim_copy_safely(vector_str));
+        const S val = convert_from_string_safely< S >(config, key, trim_copy_safely(config, key, vector_str));
         const size_t actual_size = (size == 0 ? 1 : size);
         VectorType ret(actual_size);
         for (size_t ii = 0; ii < actual_size; ++ii)
@@ -192,12 +199,12 @@ class ConfigTree
           const auto column_tokens = tokenize< std::string >(row_token, " ", boost::algorithm::token_compress_on);
           for (size_t cc = 0; cc < actual_cols; ++cc)
             MatrixSetter< MatrixType >::set_entry(ret, rr, cc,
-                                                  convert_from_string_safely< S >(trim_copy_safely(column_tokens[cc])));
+                                                  convert_from_string_safely< S >(config, key, trim_copy_safely(config, key, column_tokens[cc])));
         }
         return ret;
       } else {
         // we treat this as a scalar
-        const S val = convert_from_string_safely< S >(trim_copy_safely(matrix_str));
+        const S val = convert_from_string_safely< S >(config, key, trim_copy_safely(config, key, matrix_str));
         const size_t actual_rows = (rows == 0 ? 1 : rows);
         const size_t actual_cols = (cols == 0 ? 1 : cols);
         MatrixType ret = MatrixConstructor< MatrixType >::create(actual_rows, actual_cols);
