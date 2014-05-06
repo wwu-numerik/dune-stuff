@@ -89,7 +89,7 @@ class Expression
       }
     } // ... evaluate(...)
 
-    virtual void jacobian(const DomainType& /*xx*/, JacobianRangeType& DUNE_UNUSED(ret)) const DS_OVERRIDE
+    virtual void jacobian(const DomainType& /*xx*/, JacobianRangeType& /*ret*/) const DS_OVERRIDE
     {
       DUNE_THROW_COLORFULLY(NotImplemented,
                             "If we decided on the JacobianRangeType of matrix valued functions we have to implement "
