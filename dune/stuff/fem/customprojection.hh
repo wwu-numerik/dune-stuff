@@ -13,7 +13,6 @@
 #include <dune/fem/function/common/discretefunction.hh>
 #include <dune/fem/function/common/gridfunctionadapter.hh>
 
-#include <dune/common/static_assert.hh>
 
 #include <dune/stuff/common/math.hh>
 #include <dune/stuff/fem/namespace.hh>
@@ -92,7 +91,7 @@ public:
                       DiscreteFunctionImp& discFunc,
                       int polOrd = -1)
   {
-    dune_static_assert(!(Conversion< FunctionImp, Dune::Fem::IsDiscreteFunction >::exists),
+    static_assert(!(Conversion< FunctionImp, Dune::Fem::IsDiscreteFunction >::exists),
                        "TimeAwareL2Projection_not_implemented_for_discrete_source_functions");
     DefaultEvaluationFunctor< FunctionImp > functor(func);
     projectCommon(functor, discFunc, polOrd);
@@ -104,7 +103,7 @@ public:
                       DiscreteFunctionImp& discFunc,
                       int polOrd = -1)
   {
-    dune_static_assert(!(Conversion< FunctionImp, Dune::Fem::IsDiscreteFunction >::exists),
+    static_assert(!(Conversion< FunctionImp, Dune::Fem::IsDiscreteFunction >::exists),
                        "TimeAwareL2Projection_not_implemented_for_discrete_source_functions");
     TimeEvaluationFunctor< FunctionImp, TimeProviderType > functor(func, timeProvider);
     projectCommon(functor, discFunc, polOrd);
@@ -207,7 +206,7 @@ struct GradientJacobianToLaplacian
 {
   GradientJacobianToLaplacian(const JacobianRangeType& /*jacobian*/) {
     // Dune::CompileTimeChecker< ( dim == 1 || dim > 3 ) > NotImplemented;
-    dune_static_assert( (dim == 1 || dim > 3), "GradientJacobianToLaplacian not implemented for this dimension!" );
+    static_assert( (dim == 1 || dim > 3), "GradientJacobianToLaplacian not implemented for this dimension!" );
   }
 };
 
