@@ -15,7 +15,6 @@
 #include <iostream>
 
 #include <dune/common/deprecated.hh>
-#include <dune/common/static_assert.hh>
 
 #include <boost/static_assert.hpp>
 #include <boost/fusion/include/void.hpp>
@@ -64,7 +63,7 @@ namespace Common {
 template< class SomeRangeType, class OtherRangeType >
 static double colonProduct(const SomeRangeType& arg1,
                            const OtherRangeType& arg2) {
-  dune_static_assert(SomeRangeType::cols == SomeRangeType::rows
+  static_assert(SomeRangeType::cols == SomeRangeType::rows
                      && OtherRangeType::cols == OtherRangeType::rows
                      && int(OtherRangeType::cols) == int(SomeRangeType::rows), "RangeTypes_dont_fit");
 
@@ -191,7 +190,7 @@ public:
   {}
 
   template< class stl_container_type > MinMaxAvg(const stl_container_type& elements) {
-    dune_static_assert( (boost::is_same< ElementType, typename stl_container_type::value_type >::value),
+    static_assert( (boost::is_same< ElementType, typename stl_container_type::value_type >::value),
                         "cannot assign mismatching types" );
     acc_ = std::for_each(elements.begin(), elements.end(), acc_);
   }

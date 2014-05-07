@@ -14,7 +14,6 @@
 #include <vector>
 #include <boost/shared_ptr.hpp>
 #include <dune/stuff/common/print.hh>
-#include <dune/common/static_assert.hh>
 
 #include <dune/stuff/fem/namespace.hh>
 
@@ -119,7 +118,7 @@ struct GradientJacobianToLaplacian
   : public RangeType
 {
   GradientJacobianToLaplacian(const JacobianRangeType& /*jacobian*/) {
-    dune_static_assert( (dim == 1 || dim > 3), "GradientJacobianToLaplacian is not implemented for this dimension!" );
+    static_assert( (dim == 1 || dim > 3), "GradientJacobianToLaplacian is not implemented for this dimension!" );
     // Dune::CompileTimeChecker< ( dim == 1 || dim > 3 ) > NotImplemented;
   }
 };
