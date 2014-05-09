@@ -19,6 +19,43 @@ namespace Providers {
 
 
 template< class GridImp >
+class ConstDefault
+  : public ConstProviderInterface< GridImp >
+{
+  typedef ConstProviderInterface< GridImp > BaseType;
+public:
+  using typename BaseType::GridType;
+
+  static const std::string static_id()
+  {
+    return BaseType::static_id();
+  }
+
+  ConstDefault(const GridType* grid_ptr)
+    : grid_(grid_ptr)
+  {}
+
+  ConstDefault(std::shared_ptr< const GridType > grid_ptr)
+    : grid_(grid_ptr)
+  {}
+
+  ConstDefault(std::unique_ptr< const GridType >&& grid_ptr)
+    : grid_(grid_ptr)
+  {}
+
+  virtual ~ConstDefault(){}
+
+  virtual std::shared_ptr< const GridType > grid() const DS_OVERRIDE
+  {
+    return grid_;
+  }
+
+private:
+  std::shared_ptr< const GridType > grid_;
+}; // class ConstDefault
+
+
+template< class GridImp >
 class Default
   : public ProviderInterface< GridImp >
 {
@@ -45,12 +82,12 @@ public:
 
   virtual ~Default(){}
 
-  virtual std::shared_ptr< GridType >& grid() DS_OVERRIDE
+  virtual std::shared_ptr< GridType > grid() DS_OVERRIDE
   {
     return grid_;
   }
 
-  virtual const std::shared_ptr< GridType >& grid() const DS_OVERRIDE
+  virtual std::shared_ptr< const GridType > grid() const DS_OVERRIDE
   {
     return grid_;
   }
@@ -61,6 +98,13 @@ private:
 
 
 #else // HAVE_DUNE_GRID
+
+
+template< class GridImp >
+class ConstDefault
+{
+  static_assert(AlwaysFalse< GridImp >::value, "You are missing dune-grid!");
+};
 
 
 template< class GridImp >
