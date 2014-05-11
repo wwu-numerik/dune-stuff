@@ -22,7 +22,9 @@ namespace Dune {
 namespace Stuff {
 
 template<typename T1, typename T2>
-struct DifferenceSquaredAdapter
+struct
+  DUNE_DEPRECATED_MSG("Derive this from LocalizableFunctionInterface or GlobalFunctionInterface or put this somewhere else!")
+        DifferenceSquaredAdapter
   : public PDELab::GridFunctionBase< PDELab::GridFunctionTraits<typename T1::Traits::GridViewType,
                                    typename T1::Traits::RangeFieldType,
                                    1,Dune::FieldVector<typename T1::Traits::RangeFieldType,1> >
@@ -59,7 +61,9 @@ private:
 
 //! T1 needs to have a callable local_function.jacobian method and T2 should be something wrappable into a GridFunction
 template<typename T1, typename T2, class GFS>
-class H1DifferenceSquaredAdapter
+class
+  DUNE_DEPRECATED_MSG("Derive this from LocalizableFunctionInterface or GlobalFunctionInterface or put this somewhere else!")
+      H1DifferenceSquaredAdapter
   : public PDELab::GridFunctionBase< PDELab::GridFunctionTraits<typename T1::Traits::GridViewType,
                                    typename T1::Traits::RangeFieldType,
                                    1,Dune::FieldVector<typename T1::Traits::RangeFieldType,1> >
@@ -112,7 +116,9 @@ public:
 };
 
 template <class DiscreteFunctionType>
-struct FemToPDELabAdapterTraits :
+struct
+  DUNE_DEPRECATED_MSG("Derive this from LocalizableFunctionInterface or GlobalFunctionInterface or put this somewhere else!")
+        FemToPDELabAdapterTraits :
   public PDELab::GridFunctionTraits<typename DiscreteFunctionType::GridPartType::GridType::LeafGridView,
                                     typename DiscreteFunctionType::RangeFieldType,
                                     DiscreteFunctionType::RangeType::dimension, typename DiscreteFunctionType::RangeType >
@@ -120,7 +126,9 @@ struct FemToPDELabAdapterTraits :
 
 //! wrap a discretefunction so pdelab can call its own loca evalute signature on it
 template <class DiscreteFunctionType>
-class FemToPDELabAdapter : public
+class
+  DUNE_DEPRECATED_MSG("Derive this from LocalizableFunctionInterface or GlobalFunctionInterface or put this somewhere else!")
+      FemToPDELabAdapter : public
     PDELab::GridFunctionInterface<FemToPDELabAdapterTraits<DiscreteFunctionType>, FemToPDELabAdapter<DiscreteFunctionType>>
 {
   typedef PDELab::GridFunctionInterface<FemToPDELabAdapterTraits<DiscreteFunctionType>, FemToPDELabAdapter<DiscreteFunctionType>>
@@ -160,7 +168,9 @@ private:
 
 //! wrap a Stuff::GlobalFunction into something usable as a grid function in PDELab
 template <class GridViewType, class GlobalFunctionType>
-struct GlobalGridFunctionAdapter
+struct
+  DUNE_DEPRECATED_MSG("Derive this from LocalizableFunctionInterface or GlobalFunctionInterface or put this somewhere else!")
+        GlobalGridFunctionAdapter
     : public PDELab::AnalyticGridFunctionBase<PDELab::AnalyticGridFunctionTraits<GridViewType,
                                                                                  typename GlobalFunctionType::RangeFieldType,
                                                                                  GlobalFunctionType::dimRange>,
@@ -194,13 +204,16 @@ struct GlobalGridFunctionAdapter
 
 template <class GridViewType, class GlobalFunctionType>
 GlobalGridFunctionAdapter<GridViewType, GlobalFunctionType> globalGridFunctionAdapter(const GridViewType& view,
-                                                                                      const GlobalFunctionType& f)  {
+                                                                                      const GlobalFunctionType& f)
+DUNE_DEPRECATED_MSG("Use the interfaces from interfaces.hh or put this somewhere else!")
+{
   return  GlobalGridFunctionAdapter<GridViewType, GlobalFunctionType>(f, view);
 }
 
 template <class GridViewType, class E, class D, int d, class RF, int r>
 GlobalGridFunctionAdapter<GridViewType,GlobalFunction<E,D,d,RF,r>> pdelabAdapted(const GlobalFunction<E,D,d,RF,r>& f,
                                                                                  const GridViewType& view)
+DUNE_DEPRECATED_MSG("Use the interfaces from interfaces.hh or put this somewhere else!")
 {
   return GlobalGridFunctionAdapter<GridViewType,GlobalFunction<E,D,d,RF,r>>(f, view);
 }
@@ -208,6 +221,7 @@ GlobalGridFunctionAdapter<GridViewType,GlobalFunction<E,D,d,RF,r>> pdelabAdapted
 template <class GridViewType, class TraitsType>
 FemToPDELabAdapter<Dune::Fem::DiscreteFunctionInterface<TraitsType>> pdelabAdapted(const Dune::Fem::DiscreteFunctionInterface<TraitsType>& f,
                                                                                  const GridViewType& view)
+DUNE_DEPRECATED_MSG("Use the interfaces from interfaces.hh or put this somewhere else!")
 {
   return FemToPDELabAdapter<Dune::Fem::DiscreteFunctionInterface<TraitsType> >(f, view);
 }

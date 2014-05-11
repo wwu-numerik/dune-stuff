@@ -23,7 +23,9 @@ namespace Stuff {
  * throw in a LocalizableFunctionInterface derived class and use this adapter in Dune::Fem classes
  */
 template< class EntityImp, class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDim >
-class FemFunctionAdapter
+class
+  DUNE_DEPRECATED_MSG("Derive this from LocalizableFunctionInterface or GlobalFunctionInterface or put this somewhere else!")
+      FemFunctionAdapter
     : public Dune::Fem::Function< Dune::Fem::FunctionSpace< DomainFieldImp, RangeFieldImp, domainDim, rangeDim >,
                                   FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDim > >
     , public Dune::Fem::HasLocalFunction
@@ -80,12 +82,16 @@ private:
 };
 
 template < class F >
-FemFunctionAdapter<typename F::EntityType, typename F::DomainFieldType, F::dimDomain, typename F::RangeFieldType, F::dimRange> femFunctionAdapter(const F& function) {
+FemFunctionAdapter<typename F::EntityType, typename F::DomainFieldType, F::dimDomain, typename F::RangeFieldType, F::dimRange> femFunctionAdapter(const F& function)
+DUNE_DEPRECATED_MSG("Use the interfaces from interfaces.hh or put this somewhere else!")
+{
   return FemFunctionAdapter<typename F::EntityType, typename F::DomainFieldType, F::dimDomain, typename F::RangeFieldType, F::dimRange>(function);
 }
 
 template <class DataType, class GridPartType>
-Dune::Fem::GridFunctionAdapter<DataType, GridPartType> gridFunctionAdapter(const DataType& data, const GridPartType& grid_part) {
+Dune::Fem::GridFunctionAdapter<DataType, GridPartType> gridFunctionAdapter(const DataType& data, const GridPartType& grid_part)
+DUNE_DEPRECATED_MSG("Use the interfaces from interfaces.hh or put this somewhere else!")
+{
   return Dune::Fem::GridFunctionAdapter<DataType, GridPartType> ("", data, grid_part);
 }
 

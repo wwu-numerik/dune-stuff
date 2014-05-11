@@ -10,7 +10,7 @@
 
 #include <dune/common/exceptions.hh>
 
-#include "interfaces.hh"
+#include <dune/stuff/functions/interfaces.hh>
 
 namespace Dune {
 namespace Stuff {
@@ -20,14 +20,18 @@ namespace Functions {
 // forward, to allow for specialization
 template< class DL, int dL, class RL, int rRL, int rCL,
           class DR, int dR, class RR, int rRR, int RCR >
-class FunctionProduct{
+class
+  DUNE_DEPRECATED_MSG("Derive this from LocalizableFunctionInterface or GlobalFunctionInterface or put this somewhere else!")
+      FunctionProduct{
 public:
   FunctionProduct() = delete;
 };
 
 
 template< class DomainFieldImp, int domainDim, class RangeFieldImp >
-class FunctionProduct<  DomainFieldImp, domainDim, RangeFieldImp, 1, 1,
+class
+  DUNE_DEPRECATED_MSG("Derive this from LocalizableFunctionInterface or GlobalFunctionInterface or put this somewhere else!")
+      FunctionProduct<  DomainFieldImp, domainDim, RangeFieldImp, 1, 1,
                         DomainFieldImp, domainDim, RangeFieldImp, 1, 1 >
   : public FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, 1, 1 >
 {

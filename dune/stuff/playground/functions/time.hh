@@ -16,7 +16,9 @@ namespace Stuff {
  * \brief Interface for scalar and vector valued timedependent functions.
  */
 template< class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDim >
-class TimedependentFunctionInterface
+class
+  DUNE_DEPRECATED_MSG("Derive this from LocalizableFunctionInterface or GlobalFunctionInterface or put this somewhere else!")
+      TimedependentFunctionInterface
 {
 public:
   typedef DomainFieldImp                                  DomainFieldType;
@@ -56,7 +58,9 @@ public:
 
 //! use this to throw a stationary function into an algorithm that expects an instationary one
 template< class EntityImp, class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDimRows >
-struct TimeFunctionAdapter
+struct
+  DUNE_DEPRECATED_MSG("Derive this from LocalizableFunctionInterface or GlobalFunctionInterface or put this somewhere else!")
+        TimeFunctionAdapter
   : public Dune::Stuff::TimedependentFunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows >
 {
   typedef Dune::Stuff::GlobalFunction< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows > WrappedType;
@@ -84,6 +88,7 @@ struct TimeFunctionAdapter
 template< class EntityImp, class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDimRows >
 TimeFunctionAdapter< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows >
 timefunctionAdapted(const Dune::Stuff::GlobalFunction< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows >& wrapped)
+DUNE_DEPRECATED_MSG("Use the interfaces from interfaces.hh or put this somewhere else!")
 {
   return TimeFunctionAdapter< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows >(wrapped);
 }

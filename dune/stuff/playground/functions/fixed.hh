@@ -12,14 +12,16 @@
 
 #include <dune/stuff/common/color.hh>
 
-#include "interfaces.hh"
+#include <dune/stuff/functions/interfaces.hh>
 
 namespace Dune {
 namespace Stuff {
 
 
 template< class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDimRows, int rangeDimCols >
-class FunctionFixedTime
+class
+  DUNE_DEPRECATED_MSG("Derive this from LocalizableFunctionInterface or GlobalFunctionInterface or put this somewhere else!")
+      FunctionFixedTime
   : public FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows, rangeDimCols >
 {
   typedef FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows, rangeDimCols > BaseType;

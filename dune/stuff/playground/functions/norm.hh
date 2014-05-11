@@ -6,7 +6,7 @@
 #ifndef DUNE_STUFF_FUNCTION_NORM_HH
 #define DUNE_STUFF_FUNCTION_NORM_HH
 
-#include "interfaces.hh"
+#include <dune/stuff/functions/interfaces.hh>
 
 #if HAVE_DUNE_FEM
 # include <dune/fem/function/common/discretefunction.hh>
@@ -34,6 +34,7 @@ namespace Stuff {
 template <class FunctionType_A, class GFS, class C>
 typename GFS::Traits::FiniteElementType::Traits::LocalBasisType::Traits::RangeFieldType
 l2distance(const FunctionType_A& function_A, const PDELab::ISTLBlockVectorContainer<GFS,C>& function_B)
+DUNE_DEPRECATED_MSG("Use the interfaces from interfaces.hh or put this somewhere else!")
 {
   using namespace PDELab;
   typedef DiscreteGridFunction<GFS,ISTLBlockVectorContainer<GFS,C>> DGF;
@@ -52,6 +53,7 @@ l2distance(const FunctionType_A& function_A, const PDELab::ISTLBlockVectorContai
 template <class FunctionType_A, class GFS, class C>
 typename GFS::Traits::FiniteElementType::Traits::LocalBasisType::Traits::RangeFieldType
 h1distance(const FunctionType_A& function_A, const PDELab::ISTLBlockVectorContainer<GFS,C>& function_B)
+DUNE_DEPRECATED_MSG("Use the interfaces from interfaces.hh or put this somewhere else!")
 {
 //  static_assert(std::is_base_of<Dune::Fem::HasLocalFunction, FunctionType_A>::value, "");
   using namespace PDELab;
@@ -72,12 +74,14 @@ h1distance(const FunctionType_A& function_A, const PDELab::ISTLBlockVectorContai
 #if HAVE_DUNE_FEM
 template <class TraitsType>
 static typename TraitsType::RangeFieldType l2norm(const Dune::Fem::DiscreteFunctionInterface<TraitsType>& function)
+DUNE_DEPRECATED_MSG("Use the interfaces from interfaces.hh or put this somewhere else!")
 {
   return Dune::Fem::L2Norm<typename TraitsType::DiscreteFunctionType::GridPartType>(function.space().gridPart()).norm(function);
 }
 
 template <class FunctionType_A, class TraitsType>
 typename TraitsType::RangeFieldType l2distance(const FunctionType_A& function_A, const Dune::Fem::DiscreteFunctionInterface<TraitsType>& function_B)
+DUNE_DEPRECATED_MSG("Use the interfaces from interfaces.hh or put this somewhere else!")
 {
   static_assert(std::is_base_of<Dune::Fem::HasLocalFunction, FunctionType_A>::value, "");
   Dune::Fem::L2Norm<typename TraitsType::DiscreteFunctionType::GridPartType> norm(function_B.space().gridPart());
@@ -86,6 +90,7 @@ typename TraitsType::RangeFieldType l2distance(const FunctionType_A& function_A,
 
 template <class TraitsType>
 static typename TraitsType::RangeFieldType h1norm(const Dune::Fem::DiscreteFunctionInterface<TraitsType>& function)
+DUNE_DEPRECATED_MSG("Use the interfaces from interfaces.hh or put this somewhere else!")
 {
   const Dune::Fem::H1Norm<typename TraitsType::DiscreteFunctionType::GridPartType> norm(function.space().gridPart());
   return norm.norm(function);
@@ -93,6 +98,7 @@ static typename TraitsType::RangeFieldType h1norm(const Dune::Fem::DiscreteFunct
 
 template <class FunctionType_A, class TraitsType>
 typename TraitsType::RangeFieldType h1distance(const FunctionType_A& function_A, const Dune::Fem::DiscreteFunctionInterface<TraitsType>& function_B)
+DUNE_DEPRECATED_MSG("Use the interfaces from interfaces.hh or put this somewhere else!")
 {
   static_assert(std::is_base_of<Dune::Fem::HasLocalFunction, FunctionType_A>::value, "");
   Dune::Fem::H1Norm<typename TraitsType::DiscreteFunctionType::GridPartType> norm(function_B.space().gridPart());

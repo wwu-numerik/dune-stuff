@@ -19,14 +19,16 @@
 #include <dune/stuff/common/string.hh>
 #include <dune/stuff/common/logging.hh>
 
-#include "interfaces.hh"
+#include <dune/stuff/functions/interfaces.hh>
 
 
 namespace Dune {
 namespace Stuff {
 
 template< class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDimRows, int rangeDimCols >
-class FunctionFromFile
+class
+  DUNE_DEPRECATED_MSG("Derive this from LocalizableFunctionInterface or GlobalFunctionInterface or put this somewhere else!")
+      FunctionFromFile
   : public FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows >
 {
   typedef FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows > BaseType;
@@ -187,7 +189,9 @@ private:
 
 
 template< class DomainFieldImp, int domainDim, class RangeFieldImp>
-class FunctionFromFile< DomainFieldImp, domainDim, RangeFieldImp, 1, 1 >
+class
+  DUNE_DEPRECATED_MSG("Derive this from LocalizableFunctionInterface or GlobalFunctionInterface or put this somewhere else!")
+      FunctionFromFile< DomainFieldImp, domainDim, RangeFieldImp, 1, 1 >
   : public FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, 1 >
 {
   typedef FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, 1 > BaseType;
@@ -342,7 +346,9 @@ private:
 
 
 template< class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDim>
-class FunctionFromFile< DomainFieldImp, domainDim, RangeFieldImp, rangeDim, 1 >
+class
+  DUNE_DEPRECATED_MSG("Derive this from LocalizableFunctionInterface or GlobalFunctionInterface or put this somewhere else!")
+      FunctionFromFile< DomainFieldImp, domainDim, RangeFieldImp, rangeDim, 1 >
   : public FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDim >
 {
   typedef FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDim > BaseType;
