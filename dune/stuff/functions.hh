@@ -49,7 +49,6 @@ public:
   {
     return {
         Functions::Constant< E, D, d, R, r, rC >::static_id()
-      , Functions::Expression< E, D, d, R, r, rC >::static_id()
     };
   } // ... available(...)
 
@@ -57,8 +56,6 @@ public:
   {
     if (type == Functions::Constant< E, D, d, R, r, rC >::static_id())
       return Functions::Constant< E, D, d, R, r, rC >::default_config(sub_name);
-    else if (type == Functions::Expression< E, D, d, R, r, rC >::static_id())
-      return Functions::Expression< E, D, d, R, r, rC >::default_config(sub_name);
     else
       DUNE_THROW_COLORFULLY(Exceptions::wrong_input_given,
                             "Requested type '" << type << "' is not a valid " << InterfaceType::static_id() << "!");
@@ -69,8 +66,6 @@ public:
   {
     if (type == Functions::Constant< E, D, d, R, r, rC >::static_id())
       return call_create< Functions::Constant< E, D, d, R, r, rC > >(config);
-    else if (type == Functions::Expression< E, D, d, R, r, rC >::static_id())
-      return call_create< Functions::Expression< E, D, d, R, r, rC > >(config);
     else
       DUNE_THROW_COLORFULLY(Exceptions::wrong_input_given,
                             "Requested type '" << type << "' is not a valid " << InterfaceType::static_id() << "!");
