@@ -493,11 +493,11 @@ struct ConfigTreeTest
 #if HAVE_EIGEN
     check_vector< Stuff::LA::EigenDenseVector< double > >(config.sub("sub2.subsub1"));
     check_vector< Stuff::LA::EigenMappedDenseVector< double > >(config.sub("sub2.subsub1"));
+    check_stuff_matrix< Stuff::LA::EigenDenseMatrix< double > >(config.sub("sub2.subsub1"));
 #endif // HAVE_EIGEN
     check_field_matrix< double, 2, 2 >(config.sub("sub2.subsub1"));
     check_matrix< DynamicMatrix< double > >(config.sub("sub2.subsub1"));
     check_stuff_matrix< Stuff::LA::CommonDenseMatrix< double > >(config.sub("sub2.subsub1"));
-    check_stuff_matrix< Stuff::LA::EigenDenseMatrix< double > >(config.sub("sub2.subsub1"));
   } // ... behaves_correctly(...)
 }; // struct ConfigTreeTest
 

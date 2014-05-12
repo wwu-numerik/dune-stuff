@@ -66,7 +66,7 @@ template <class Grid>
 struct GTraits {
   typedef double FieldType;
   static constexpr int polynomial_order = 1;
-  typedef Stuff::GridProviderCube<Grid> GridProvider;
+  typedef DSG::Providers::Cube<Grid> GridProvider;
   typedef typename Grid::template Codim<0>::Entity Entity;
   typedef Stuff::GlobalConstantFunction<Entity, typename Grid::ctype,
       Grid::dimension, typename Grid::ctype, 1> ConstantFunction;
