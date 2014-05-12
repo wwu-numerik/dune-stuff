@@ -11,14 +11,13 @@
 
 #include <dune/stuff/grid/provider/cube.hh>
 
+#include <dune/stuff/functions/constant.hh>
 #include <dune/stuff/functions/expression.hh>
 #include <dune/stuff/common/profiler.hh>
 #include <dune/stuff/common/ranges.hh>
-#include <dune/stuff/functions/femadapter.hh>
-#include <dune/stuff/functions/norm.hh>
-#include <dune/stuff/functions/global.hh>
-#include <dune/stuff/functions/pdelabadapter.hh>
-#include <dune/stuff/fem/namespace.hh>
+#include <dune/stuff/playground/functions/femadapter.hh>
+#include <dune/stuff/playground/functions/norm.hh>
+#include <dune/stuff/playground/functions/pdelabadapter.hh>
 #include <dune/stuff/aliases.hh>
 
 #if HAVE_DUNE_FEM
@@ -30,7 +29,6 @@
 # include <dune/fem/operator/lagrangeinterpolation.hh>
 #endif // HAVE_DUNE_FEM
 
-//#define HAVE_DUNE_PDELAB 1
 #if HAVE_DUNE_PDELAB
 # include <dune/pdelab/common/function.hh>
 # include <dune/pdelab/gridfunctionspace/gridfunctionspace.hh>
@@ -68,7 +66,7 @@ struct GTraits {
   static constexpr int polynomial_order = 1;
   typedef DSG::Providers::Cube<Grid> GridProvider;
   typedef typename Grid::template Codim<0>::Entity Entity;
-  typedef Stuff::GlobalConstantFunction<Entity, typename Grid::ctype,
+  typedef Stuff::Functions::Constant<Entity, typename Grid::ctype,
       Grid::dimension, typename Grid::ctype, 1> ConstantFunction;
   typedef Stuff::Functions::Expression< Entity, typename Grid::ctype,
       Grid::dimension, typename Grid::ctype, 1 > ScalarFunction;
