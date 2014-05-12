@@ -8,15 +8,16 @@
 #ifndef DUNE_STUFF_FUNCTION_PDELABADAPTER_HH
 #define DUNE_STUFF_FUNCTION_PDELABADAPTER_HH
 
-#if 1 // HAVE_DUNE_PDELAB
+#if HAVE_DUNE_PDELAB
 
-#include <dune/pdelab/common/function.hh>
-#include <dune/pdelab/gridfunctionspace/gridfunctionspaceutilities.hh>
-#include <dune/stuff/functions/global.hh>
+# include <dune/pdelab/common/function.hh>
+# include <dune/pdelab/gridfunctionspace/gridfunctionspaceutilities.hh>
 
-#if HAVE_DUNE_FEM
-#include <dune/fem/function/common/discretefunction.hh>
-#endif
+# if HAVE_DUNE_FEM
+#   include <dune/fem/function/common/discretefunction.hh>
+# endif
+
+# include <dune/stuff/functions/global.hh>
 
 namespace Dune {
 namespace Stuff {
