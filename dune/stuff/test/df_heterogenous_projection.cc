@@ -187,7 +187,7 @@ void ptest(const std::shared_ptr<SourceGrid>& source_cube, const std::shared_ptr
   typedef typename SourceGrid::template Codim<0>::Entity SourceEntity;
   typedef typename TargetGrid::template Codim<0>::Entity TargetEntity;
 
-  typedef DS::Function::Expression< SourceEntity, typename SourceGrid::ctype,
+  typedef DS::Functions::Expression< SourceEntity, typename SourceGrid::ctype,
       SourceGrid::dimension, typename SourceGrid::ctype, 1 > ScalarFunctionType;
   ScalarFunctionType scalar_f("x", "x[0] + x[1]");
   auto wrapped = femFunctionAdapter(scalar_f);
