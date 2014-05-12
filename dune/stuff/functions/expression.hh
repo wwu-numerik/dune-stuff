@@ -155,6 +155,11 @@ public:
     return *this;
   }
 
+  virtual std::string type() const DS_OVERRIDE DS_FINAL
+  {
+    return BaseType::static_id() + ".expression";
+  }
+
   virtual std::string name() const DS_OVERRIDE
   {
     return name_;
