@@ -60,6 +60,73 @@ typedef SGrid<dim,dim> SourceGrid;
 #endif
 typedef YaspGrid<dim> TargetGrid;
 
+/**
+ * throw in a LocalizableFunctionInterface derived class and use this adapter in Dune::Fem classes
+ */
+template< class EntityImp, class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDim >
+class
+      FemFunctionAdapter
+    : public Dune::Fem::Function< Dune::Fem::FunctionSpace< DomainFieldImp, RangeFieldImp, domainDim, rangeDim >,
+                                  DS::FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDim > >
+    , public Dune::Fem::HasLocalFunction
+{
+  typedef DS::LocalizableFunctionInterface
+      < EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim > InterfaceType;
+  typedef FemFunctionAdapter< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim > ThisType;
+
+  typedef EntityImp EntityType;
+  typedef std::unique_ptr<typename InterfaceType::LocalfunctionType> LocalFunctionPtrType;
+
+  //! hide the virtual lf ptr
+  class LocalFunction
+  {
+  public:
+    LocalFunction(LocalFunctionPtrType ptr)
+      : lf_ptr_(std::move(ptr))
+    {}
+
+    void evaluate(const typename InterfaceType::DomainType& xx, typename InterfaceType::RangeType& ret) const
+    {
+      lf_ptr_->evaluate(xx, ret);
+    }
+
+    template< class Quadrature >
+    void evaluate(const Dune::Fem::QuadraturePointWrapper<Quadrature>& pw, typename InterfaceType::RangeType& ret) const
+    {
+      evaluate(pw.quadrature().point(pw.point()), ret);
+    }
+
+
+    void jacobian(const typename InterfaceType::DomainType& xx, typename InterfaceType::JacobianRangeType& ret) const
+    {
+      lf_ptr_->jacobian(xx, ret);
+    }
+
+  private:
+    LocalFunctionPtrType lf_ptr_;
+  };
+
+public:
+  typedef LocalFunction LocalFunctionType;
+
+  FemFunctionAdapter(const InterfaceType& function)
+    : function_(function)
+  {}
+
+  LocalFunction localFunction(const EntityType& entity) const {
+    return LocalFunction(function_.local_function(entity));
+  }
+
+private:
+  const InterfaceType& function_;
+};
+
+template < class F >
+FemFunctionAdapter<typename F::EntityType, typename F::DomainFieldType, F::dimDomain, typename F::RangeFieldType, F::dimRange> femFunctionAdapter(const F& function)
+{
+  return FemFunctionAdapter<typename F::EntityType, typename F::DomainFieldType, F::dimDomain, typename F::RangeFieldType, F::dimRange>(function);
+}
+
 template <class Grid>
 struct Traits {
   typedef Dune::Fem::AdaptiveLeafGridPart<Grid> GridPart;
@@ -120,18 +187,18 @@ void ptest(const std::shared_ptr<SourceGrid>& source_cube, const std::shared_ptr
   typedef typename SourceGrid::template Codim<0>::Entity SourceEntity;
   typedef typename TargetGrid::template Codim<0>::Entity TargetEntity;
 
-  typedef Stuff::Function::Expression< SourceEntity, typename SourceGrid::ctype,
+  typedef DS::Function::Expression< SourceEntity, typename SourceGrid::ctype,
       SourceGrid::dimension, typename SourceGrid::ctype, 1 > ScalarFunctionType;
   ScalarFunctionType scalar_f("x", "x[0] + x[1]");
-  auto wrapped = Stuff::femFunctionAdapter(scalar_f);
-  LagrangeInterpolation<typename SourceTraits::DiscreteFunction>::apply(wrapped, source_df);
+  auto wrapped = femFunctionAdapter(scalar_f);
+  Dune::LagrangeInterpolation<typename SourceTraits::DiscreteFunction>::apply(wrapped, source_df);
 
   DSC_PROFILER.startTiming("HierarchicSearchStrategy");
-  Stuff::HeterogenousProjection<Stuff::HierarchicSearchStrategy>::project(source_df, target_df);
+  DS::HeterogenousProjection<Stuff::HierarchicSearchStrategy>::project(source_df, target_df);
   DSC_PROFILER.stopTiming("HierarchicSearchStrategy");
 
   DSC_PROFILER.startTiming("EntityInlevelSearch ST");
-  Stuff::HeterogenousProjection<DSG::EntityInlevelSearch>::project(source_df, target_df);
+  DS::HeterogenousProjection<DSG::EntityInlevelSearch>::project(source_df, target_df);
   DSC_PROFILER.stopTiming("EntityInlevelSearch ST");
   vtk_out(source_df);
   vtk_out(target_df);
@@ -142,19 +209,19 @@ void ptest(const std::shared_ptr<SourceGrid>& source_cube, const std::shared_ptr
   // below code uses dune-fem's entity search and therefore cannot handle differently sized domains
   DiscretefunctionShroud<typename SourceTraits::DiscreteFunction> shrouded_source_df(source_df);
   DSC_PROFILER.startTiming("FemProjection ST");
-  LagrangeInterpolation<typename TargetTraits::DiscreteFunction>::apply(shrouded_source_df, fem_target_df);
+  Dune::LagrangeInterpolation<typename TargetTraits::DiscreteFunction>::apply(shrouded_source_df, fem_target_df);
   DSC_PROFILER.stopTiming("FemProjection ST");
   vtk_out(fem_target_df);
 
   DiscretefunctionShroud<typename TargetTraits::DiscreteFunction> shrouded_target_df(target_df);
   DSC_PROFILER.startTiming("FemProjection TS");
-  LagrangeInterpolation<typename SourceTraits::DiscreteFunction>::apply(shrouded_target_df, source_df);
+  Dune::LagrangeInterpolation<typename SourceTraits::DiscreteFunction>::apply(shrouded_target_df, source_df);
   DSC_PROFILER.stopTiming("FemProjection TS");
 }
 
 void ptest(const int macro_elements = 4, const int target_factor = 2) {
-  auto source_cube = Stuff::GridProviderCube<SourceGrid>(0,1,macro_elements).grid();
-  auto target_cube = Stuff::GridProviderCube<TargetGrid>(0,1,macro_elements*target_factor).grid();
+  auto source_cube = DS::GridProviderCube<SourceGrid>(0,1,macro_elements).grid();
+  auto target_cube = DS::GridProviderCube<TargetGrid>(0,1,macro_elements*target_factor).grid();
   source_cube->globalRefine(2);
   target_cube->globalRefine(2*target_factor);
   ptest(source_cube, target_cube, true);
