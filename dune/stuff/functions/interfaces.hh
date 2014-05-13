@@ -375,12 +375,12 @@ public:
   typedef LocalfunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols >
     LocalfunctionType;
   typedef typename LocalfunctionType::DomainFieldType DomainFieldType;
-  static const unsigned int                               dimDomain = LocalfunctionType::dimDomain;
+  static const unsigned int                           dimDomain = LocalfunctionType::dimDomain;
   typedef typename LocalfunctionType::DomainType      DomainType;
 
   typedef typename LocalfunctionType::RangeFieldType  RangeFieldType;
-  static const unsigned int                               dimRange = LocalfunctionType::dimRange;
-  static const unsigned int                               dimRangeCols = LocalfunctionType::dimRangeCols;
+  static const unsigned int                           dimRange = LocalfunctionType::dimRange;
+  static const unsigned int                           dimRangeCols = LocalfunctionType::dimRangeCols;
   typedef typename LocalfunctionType::RangeType       RangeType;
 
   typedef typename LocalfunctionType::JacobianRangeType JacobianRangeType;
