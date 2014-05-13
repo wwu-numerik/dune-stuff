@@ -47,7 +47,7 @@ class BoundaryInfoInterface
     Codim1DomainType;
 #endif
 public:
-  typedef typename BaseType::IntersectionType IntersectionType;
+  typedef IntersectionImp IntersectionType;
 
   static const std::string static_id()
   {
@@ -473,7 +473,7 @@ class
 #endif
 
 public:
-  typedef typename BaseType::IntersectionType IntersectionType;
+  typedef IntersectionImp IntersectionType;
 
   static const std::string id()
   {
@@ -510,7 +510,7 @@ class
 {
   typedef GridboundaryInterface< IntersectionImp >  BaseType;
 public:
-  typedef typename BaseType::IntersectionType IntersectionType;
+  typedef typedef BaseType::IntersectionType IntersectionType;
 
   static const std::string id()
   {
