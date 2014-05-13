@@ -195,11 +195,22 @@ class ConfigTree
         MatrixType ret = MatrixConstructor< MatrixType >::create(actual_rows, actual_cols);
         // now we do the same again and build the actual matrix
         for (size_t rr = 0; rr < actual_rows; ++rr) {
-          const auto row_token = boost::algorithm::trim_copy(row_tokens[rr]);
-          const auto column_tokens = tokenize< std::string >(row_token, " ", boost::algorithm::token_compress_on);
-          for (size_t cc = 0; cc < actual_cols; ++cc)
-            MatrixSetter< MatrixType >::set_entry(ret, rr, cc,
-                                                  convert_from_string_safely< S >(config, key, trim_copy_safely(config, key, column_tokens[cc])));
+          std::string row_token = boost::algorithm::trim_copy(row_tokens[rr]);
+          // check if this is a vector
+          if (row_token.substr(0, 1) == "[" && row_token.substr(row_token.size() - 1, 1) == "]") {
+            row_token = row_token.substr(1, row_token.size() - 2);
+            const auto column_tokens = tokenize< std::string >(row_token, " ", boost::algorithm::token_compress_on);
+            for (size_t cc = 0; cc < actual_cols; ++cc)
+              MatrixSetter< MatrixType >::set_entry(ret, rr, cc,
+                                                    convert_from_string_safely< S >(config, key, trim_copy_safely(config, key, column_tokens[cc])));
+          } else if (actual_cols == 1) {
+            MatrixSetter< MatrixType >::set_entry(ret, rr, 0,
+                                                  convert_from_string_safely< S >(config, key, trim_copy_safely(config, key, row_token)));
+          } else
+            DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
+                                  "Row number " << rr << " in the given matrix (see below) is not a valid expression:\n"
+                                  "  '" << row_token << "'\nIt should be '0' or '[0]' for a scalar and '[0 0]' for a "
+                                  << "vector!\nGiven matrix is:\n  '[" << matrix_str << "]'");
         }
         return ret;
       } else {
