@@ -60,7 +60,7 @@ class FemAdapter
 
     virtual size_t order() const DS_OVERRIDE
     {
-      return 0;
+      return wrapped_localfunction_.order();
     }
 
     virtual void evaluate(const DomainType& xx, RangeType& ret) const DS_OVERRIDE
@@ -112,7 +112,7 @@ public:
 
   virtual std::string name() const DS_OVERRIDE
   {
-    return name_;
+    return df_.name();
   }
 
   //! this intentionally hides
@@ -123,7 +123,6 @@ public:
 
 private:
   const DiscreteFunctionType& df_;
-  std::string name_;
 }; // class Checkerboard
 
 
