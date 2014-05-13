@@ -47,7 +47,7 @@ class BoundaryInfoInterface
     Codim1DomainType;
 #endif
 public:
-  typedef IntersectionImp IntersectionType;
+  typedef typename BaseType::IntersectionType IntersectionType;
 
   static const std::string static_id()
   {
@@ -87,7 +87,7 @@ class AllDirichlet
   typedef Stuff::Grid::BoundaryInfoInterface< IntersectionImp > BaseType;
   typedef AllDirichlet< IntersectionImp > ThisType;
 public:
-  using typename BaseType::IntersectionType;
+  typedef typename BaseType::IntersectionType IntersectionType;
 
   static const std::string static_id()
   {
@@ -131,7 +131,7 @@ class AllNeumann
   typedef Stuff::Grid::BoundaryInfoInterface< IntersectionImp > BaseType;
   typedef AllNeumann< IntersectionImp > ThisType;
 public:
-  using typename BaseType::IntersectionType;
+  typedef typename BaseType::IntersectionType IntersectionType;
 
   static const std::string static_id()
   {
@@ -175,7 +175,7 @@ class IdBased
   typedef Stuff::Grid::BoundaryInfoInterface< IntersectionImp > BaseType;
   typedef IdBased< IntersectionImp > ThisType;
 public:
-  using typename BaseType::IntersectionType;
+  typedef typename BaseType::IntersectionType IntersectionType;
 
   static const std::string static_id()
   {
@@ -267,7 +267,7 @@ class NormalBased
   typedef Stuff::Grid::BoundaryInfoInterface< IntersectionImp > BaseType;
   typedef NormalBased< IntersectionImp > ThisType;
 public:
-  using typename BaseType::IntersectionType;
+  typedef typename BaseType::IntersectionType IntersectionType;
 
   typedef typename IntersectionType::ctype                DomainFieldType;
   static const unsigned int                               dimDomain = IntersectionType::dimension;
@@ -473,7 +473,7 @@ class
 #endif
 
 public:
-  typedef IntersectionImp IntersectionType;
+  typedef typename BaseType::IntersectionType IntersectionType;
 
   static const std::string id()
   {
@@ -510,7 +510,7 @@ class
 {
   typedef GridboundaryInterface< IntersectionImp >  BaseType;
 public:
-  typedef typename BaseType::IntersectionType       IntersectionType;
+  typedef typename BaseType::IntersectionType IntersectionType;
 
   static const std::string id()
   {
@@ -544,7 +544,7 @@ class
 {
   typedef GridboundaryInterface< IntersectionImp >  BaseType;
 public:
-  typedef typename BaseType::IntersectionType       IntersectionType;
+  typedef typename BaseType::IntersectionType IntersectionType;
 
   static const std::string id()
   {
@@ -579,7 +579,7 @@ class
   typedef GridboundaryInterface< IntersectionImp >  BaseType;
 public:
   typedef GridboundaryIdBased< IntersectionImp >    ThisType;
-  typedef typename BaseType::IntersectionType       IntersectionType;
+  typedef typename BaseType::IntersectionType IntersectionType;
 
   static const std::string id()
   {
