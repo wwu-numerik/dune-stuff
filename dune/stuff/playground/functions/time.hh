@@ -88,7 +88,11 @@ struct
 template< class EntityImp, class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDimRows >
 TimeFunctionAdapter< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows >
 timefunctionAdapted(const Dune::Stuff::GlobalFunction< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows >& wrapped)
-DUNE_DEPRECATED_MSG("Use the interfaces from interfaces.hh or put this somewhere else!")
+DUNE_DEPRECATED_MSG("Use the interfaces from interfaces.hh or put this somewhere else!");
+
+template< class EntityImp, class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDimRows >
+TimeFunctionAdapter< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows >
+timefunctionAdapted(const Dune::Stuff::GlobalFunction< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows >& wrapped)
 {
   return TimeFunctionAdapter< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows >(wrapped);
 }

@@ -206,7 +206,11 @@ struct
 template <class GridViewType, class GlobalFunctionType>
 GlobalGridFunctionAdapter<GridViewType, GlobalFunctionType> globalGridFunctionAdapter(const GridViewType& view,
                                                                                       const GlobalFunctionType& f)
-DUNE_DEPRECATED_MSG("Use the interfaces from interfaces.hh or put this somewhere else!")
+DUNE_DEPRECATED_MSG("Use the interfaces from interfaces.hh or put this somewhere else!");
+
+template <class GridViewType, class GlobalFunctionType>
+GlobalGridFunctionAdapter<GridViewType, GlobalFunctionType> globalGridFunctionAdapter(const GridViewType& view,
+                                                                                      const GlobalFunctionType& f)
 {
   return  GlobalGridFunctionAdapter<GridViewType, GlobalFunctionType>(f, view);
 }
@@ -214,7 +218,11 @@ DUNE_DEPRECATED_MSG("Use the interfaces from interfaces.hh or put this somewhere
 template <class GridViewType, class E, class D, int d, class RF, int r>
 GlobalGridFunctionAdapter<GridViewType,GlobalFunction<E,D,d,RF,r>> pdelabAdapted(const GlobalFunction<E,D,d,RF,r>& f,
                                                                                  const GridViewType& view)
-DUNE_DEPRECATED_MSG("Use the interfaces from interfaces.hh or put this somewhere else!")
+DUNE_DEPRECATED_MSG("Use the interfaces from interfaces.hh or put this somewhere else!");
+
+template <class GridViewType, class E, class D, int d, class RF, int r>
+GlobalGridFunctionAdapter<GridViewType,GlobalFunction<E,D,d,RF,r>> pdelabAdapted(const GlobalFunction<E,D,d,RF,r>& f,
+                                                                                 const GridViewType& view)
 {
   return GlobalGridFunctionAdapter<GridViewType,GlobalFunction<E,D,d,RF,r>>(f, view);
 }
@@ -222,12 +230,14 @@ DUNE_DEPRECATED_MSG("Use the interfaces from interfaces.hh or put this somewhere
 template <class GridViewType, class TraitsType>
 FemToPDELabAdapter<Dune::Fem::DiscreteFunctionInterface<TraitsType>> pdelabAdapted(const Dune::Fem::DiscreteFunctionInterface<TraitsType>& f,
                                                                                  const GridViewType& view)
-DUNE_DEPRECATED_MSG("Use the interfaces from interfaces.hh or put this somewhere else!")
+DUNE_DEPRECATED_MSG("Use the interfaces from interfaces.hh or put this somewhere else!");
+
+template <class GridViewType, class TraitsType>
+FemToPDELabAdapter<Dune::Fem::DiscreteFunctionInterface<TraitsType>> pdelabAdapted(const Dune::Fem::DiscreteFunctionInterface<TraitsType>& f,
+                                                                                 const GridViewType& view)
 {
   return FemToPDELabAdapter<Dune::Fem::DiscreteFunctionInterface<TraitsType> >(f, view);
 }
-
-
 
 } // namespace Stuff
 } // namespace Dune
