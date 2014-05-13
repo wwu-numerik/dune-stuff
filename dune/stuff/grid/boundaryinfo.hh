@@ -510,7 +510,7 @@ class
 {
   typedef GridboundaryInterface< IntersectionImp >  BaseType;
 public:
-  typedef typedef BaseType::IntersectionType IntersectionType;
+  typedef typename BaseType::IntersectionType IntersectionType;
 
   static const std::string id()
   {
