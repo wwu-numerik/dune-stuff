@@ -146,34 +146,49 @@ protected:
   static void postprocess(typename Dune::Fem::DiscreteFunctionInterface<TargetDFImp>& /*func*/) { return; }
 
 }; // class HeterogenousProjection
+#endif // HAVE_DUNE_FEM
+
+#if HAVE_DUNE_GDT
+
+template< class ImpTraits, int domainDim, class RangeFieldImp, int rangeDim >
+std::vector<typename GDT::Spaces::ContinuousLagrangeBase< ImpTraits, domainDim, RangeFieldImp, rangeDim, 1 >::DomainType>
+global_evaluation_points(const GDT::Spaces::ContinuousLagrangeBase< ImpTraits, domainDim, RangeFieldImp, rangeDim, 1 >& space,
+         const typename GDT::Spaces::ContinuousLagrangeBase< ImpTraits, domainDim, RangeFieldImp, rangeDim, 1 >::EntityType& target_entity)
+{
+  const auto& target_lagrangepoint_set = space.lagrange_points(target_entity);
+  const auto& target_geometry = target_entity.geometry();
+  const auto quadNop = target_lagrangepoint_set.size();
+  std::vector<typename GDT::Spaces::ContinuousLagrangeBase< ImpTraits, domainDim, RangeFieldImp, rangeDim, 1 >::DomainType> points(quadNop);
+  for(size_t qP = 0; qP < quadNop ; ++qP) {
+    points[qP] = target_geometry.global(target_lagrangepoint_set[qP]);
+  }
+  return points;
+}
 
 template< template< class > class SearchStrategy = Grid::EntityInlevelSearch >
 class MsFEMProjection {
 public:
   //! signature for non-default SearchStrategy constructions
-  template < class SourceDFImp, class TargetDFImp, class SearchStrategyImp >
-  static void project(const Dune::Fem::DiscreteFunctionInterface<SourceDFImp>& source,
-                      Dune::Fem::DiscreteFunctionInterface<TargetDFImp>& target,
+  template < class SourceSpaceImp, class TargetSpaceImp, class SourceVectorImp, class TargetVectorImp, class SearchStrategyImp >
+  static void project(const GDT::ConstDiscreteFunction< SourceSpaceImp, SourceVectorImp >& source,
+                      GDT::DiscreteFunction< TargetSpaceImp, TargetVectorImp >& target,
                       SearchStrategyImp& search)
   {
-    typedef typename TargetDFImp::DiscreteFunctionSpaceType TargetDiscreteFunctionSpaceType;
-    static const int target_dimRange = TargetDiscreteFunctionSpaceType::dimRange;
+    static const int target_dimRange = TargetSpaceImp::dimRange;
 
     const auto& space =  target.space();
 
     preprocess(target);
 
-    const auto endit = space.end();
-    for(auto it = space.begin(); it != endit ; ++it)
+    for(const auto& target_entity : space)
     {
-      const auto& target_entity = *it;
-      auto target_local_function = target.localFunction(target_entity);
+      auto target_local_function = target.local_discrete_function(target_entity);
       const auto global_quads = global_evaluation_points(space, target_entity);
       const auto evaluation_entity_ptrs = search(global_quads);
       assert(evaluation_entity_ptrs.size() >= global_quads.size());
 
       int k = 0;
-      typename TargetDiscreteFunctionSpaceType::RangeType source_value;
+      typename TargetSpaceImp::RangeType source_value;
       for(size_t qP = 0; qP < global_quads.size() ; ++qP)
       {
           const auto& source_entity_unique_ptr = evaluation_entity_ptrs[qP];
@@ -182,10 +197,11 @@ public:
             const auto& source_geometry = source_entity_ptr->geometry();
             const auto& global_point = global_quads[qP];
             const auto& source_local_point = source_geometry.local(global_point);
-            const auto& source_local_function = source.localFunction(*source_entity_ptr);
+            const auto& ent = *source_entity_ptr;
+            const auto& source_local_function = source.local_function(ent);
             source_local_function.evaluate(source_local_point, source_value);
             for(int i = 0; i < target_dimRange; ++i, ++k)
-              setDofValue(target_local_function[k], source_value[i]);
+              setDofValue(target_local_function.get(k), source_value[i]);
           }
           else {
             DUNE_THROW(InvalidStateException, "Did not find the local lagrange point in the source mesh!");
@@ -197,10 +213,10 @@ public:
   } // ... project(...)
 
 protected:
-  template<class TargetDFImp>
-  static void preprocess(Dune::Fem::DiscreteFunctionInterface<TargetDFImp>& func) {
+  template<class TargetSpaceImp, class VectorImp>
+  static void preprocess(GDT::DiscreteFunction< TargetSpaceImp, VectorImp >& func) {
     // set all DoFs to zero
-    func.clear();
+    func.vector() *= 0;
   }
 
   template<class DofType, class SourceType >
@@ -209,20 +225,18 @@ protected:
     dof += value;
   }
 
-  template<class TargetDFImp>
-  static void postprocess(typename Dune::Fem::DiscreteFunctionInterface<TargetDFImp>& func) {
+  template<class TargetSpaceImp, class VectorImp>
+  static void postprocess(GDT::DiscreteFunction< TargetSpaceImp, VectorImp >& func) {
     // compute node to entity relations
-    typedef Dune::Fem::DiscreteFunctionInterface<TargetDFImp> DiscFuncType;
-    const static int dimension = DiscFuncType::DiscreteFunctionSpaceType::GridPartType::GridType::dimension;
-    std::vector<int> nodeToEntity(func.space().gridPart().grid().size(dimension), 0);
-    identifySharedNodes(func.space().gridPart(), nodeToEntity);
+    constexpr static int dimension = TargetSpaceImp::GridViewType::Grid::dimension;
+    std::vector<int> nodeToEntity(func.space().grid_view()->grid().size(dimension), 0);
+    identifySharedNodes(*func.space().grid_view(), nodeToEntity);
 
-    const auto dend = func.dend();
     auto factorsIt = nodeToEntity.begin();
-    for (auto dit = func.dbegin(); dit!=dend; ++dit) {
+    for (auto& dit : func.vector()) {
       assert(factorsIt!=nodeToEntity.end());
       assert(*factorsIt>0);
-      *dit /= *factorsIt;
+      dit /= *factorsIt;
       ++factorsIt;
     }
     return;
@@ -230,7 +244,7 @@ protected:
 
   template<class GridPartType, class MapType>
   static void identifySharedNodes(const GridPartType& gridPart, MapType& map) {
-    typedef typename GridPartType::GridType GridType;
+    typedef typename GridPartType::Grid GridType;
     const auto& indexSet = gridPart.indexSet();
 
     for (auto& entity : DSC::viewRange(gridPart.grid().leafGridView())) {
@@ -247,7 +261,7 @@ protected:
   }
 
 };
-#endif // HAVE_DUNE_FEM
+#endif // HAVE_DUNE_GDT
 
 
 } // namespace Stuff
