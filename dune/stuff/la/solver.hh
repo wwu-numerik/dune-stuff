@@ -45,7 +45,7 @@ public:
 };
 
 
-template< class MatrixImp >
+template< class MatrixImp, class GridView = void >
 class Solver
 {
   static_assert(AlwaysFalse< MatrixImp >::value, "This is the unspecialized version of LA::Solver< ... >. Please include the correct header for your matrix implementation!");
