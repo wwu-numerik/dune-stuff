@@ -41,7 +41,7 @@ void print(const double& d,
            OutStreamType& out = std::cout,
            const std::string prefix = "")
 {
-  out << prefix << name << " = " << d << std::endl;
+  out << prefix << name << " = " << d << "\n";
 } // void print(const double& d, ...)
 
 template< class T, class OutStreamType = std::ostream >
@@ -54,7 +54,7 @@ void print(const std::vector< T >& vector,
   for (unsigned int i = 0; i < (vector.size() - 1); ++i) {
     out << vector[i] << ", ";
   }
-  out << vector[vector.size() - 1] << "];" << std::endl;
+  out << vector[vector.size() - 1] << "];" << "\n";
 } // void print(const std::vector< double >& ds, ...)
 
 template< class VectorImp,
@@ -68,7 +68,7 @@ void print(const Dune::DenseVector< VectorImp >& vector,
   for (unsigned int i = 0; i < (vector.size() - 1); ++i) {
     out << vector[i] << ", ";
   }
-  out << vector[vector.size() - 1] << "];" << std::endl;
+  out << vector[vector.size() - 1] << "];" << "\n";
 } // void print(const Dune::DenseVector< VectorImp >& vector, ...)
 
 template< class FieldImp, int size,
@@ -114,9 +114,9 @@ void print(const Dune::DenseMatrix< MatrixImp >& matrix,
   }
   out << firstRow[firstRow.size() - 1];
   if (matrix.rows() == 1)
-    out << "];" << std::endl;
+    out << "];" << "\n";
   else
-    out << ";" << std::endl;
+    out << ";" << "\n";
   for (unsigned int i = 1; i < matrix.rows(); ++i) {
     out << prefix << whitespaceify(name + " = [");
     const RowType& row = matrix[i];
@@ -126,7 +126,7 @@ void print(const Dune::DenseMatrix< MatrixImp >& matrix,
     out << row[row.size() - 1];
     if (i == matrix.rows() - 1)
       out << "];";
-    out << std::endl;
+    out << "\n";
   }
 } // void print(const Dune::DenseMatrix< MatrixImp >& matrix, ...)
 
@@ -179,7 +179,7 @@ void print(const std::vector< Dune::DenseMatrix< MatrixImp > >& matrices,
    **/
 template< class T, class stream >
 void printFieldVector(T& arg, std::string name, stream& out, std::string prefix = "") {
-  out << "\n" << prefix << "printing " << name << " (Dune::FieldVector)" << std::endl;
+  out << "\n" << prefix << "printing " << name << " (Dune::FieldVector)" << "\n";
   typedef typename T::ConstIterator
   IteratorType;
   IteratorType itEnd = arg.end();
@@ -238,7 +238,7 @@ void printSparseRowMatrixMatlabStyle( const T& arg, std::string name, stream& ou
   name = std::string("fem.") + name;
   const int I = arg.rows();
   const int J = arg.cols();
-  out << boost::format("\n%s =sparse( %d, %d );") % name % I % J << std::endl;
+  out << boost::format("\n%s =sparse( %d, %d );") % name % I % J << "\n";
   for (int row = 0; row < arg.rows(); row++)
   {
     for (int col = 0; col < arg.cols(); col++)
@@ -261,7 +261,7 @@ void printISTLMatrixMatlabStyle( const MatrixType& arg, std::string name, stream
   const int I = arg.N();
   const int J = arg.M();
   typedef typename MatrixType::block_type BlockType;
-  out << boost::format("\n%s =sparse( %d, %d );") % name % (I* BlockType::rows) % (J* BlockType::cols) << std::endl;
+  out << boost::format("\n%s =sparse( %d, %d );") % name % (I* BlockType::rows) % (J* BlockType::cols) << "\n";
   for (unsigned ii = 0; ii < I; ++ii)
   {
     for (unsigned jj = 0; jj < J; ++jj)
@@ -293,16 +293,16 @@ void printISTLMatrixMatlabStyle( const MatrixType& arg, std::string name, stream
    **/
 template< class T, class stream >
 void printDiscreteFunctionMatlabStyle(const T& arg, const std::string name, stream& out) {
-  out << "\n" << name << " = [ " << std::endl;
+  out << "\n" << name << " = [ " << "\n";
   typedef typename T::ConstDofIteratorType
   ConstDofIteratorType;
   ConstDofIteratorType itEnd = arg.dend();
   for (ConstDofIteratorType it = arg.dbegin(); it != itEnd; ++it)
   {
     out << std::setprecision(matlab_output_precision) << *it;
-    out << ";" << std::endl;
+    out << ";" << "\n";
   }
-  out << "];" << std::endl;
+  out << "];" << "\n";
 } // printDiscreteFunctionMatlabStyle
 
 /** \brief print a double vector (or any interface conforming object) to a given stream in matlab (laodable-) format
@@ -310,13 +310,13 @@ void printDiscreteFunctionMatlabStyle(const T& arg, const std::string name, stre
    **/
 template< class T, class stream >
 void printDoubleVectorMatlabStyle(const T* arg, const int size, const std::string name, stream& out) {
-  out << "\n" << name << " = [ " << std::endl;
+  out << "\n" << name << " = [ " << "\n";
   for (int i = 0; i < size; i++)
   {
     out << std::setprecision(matlab_output_precision) << arg[i];
-    out << ";" << std::endl;
+    out << ";" << "\n";
   }
-  out << "];" << std::endl;
+  out << "];" << "\n";
 } // printDoubleVectorMatlabStyle
 
 //! simple vector to stream print
@@ -326,7 +326,7 @@ void printDoubleVec(std::ostream& stream, const Type* vec, const unsigned int N)
   for (unsigned int i = 0; i < N; ++i)
     stream << vec[i] << " ";
 
-  stream << " ] " << std::endl;
+  stream << " ] " << "\n";
 } // printDoubleVec
 
 //! simple discrete function to stream print
@@ -340,7 +340,7 @@ void oneLinePrint(std::ostream& stream, const DiscFunc& func) {
     // double d = 0.10;// + *it; //stupid hack cause setw/prec ain't working for me
     stream << std::setw(6) << std::setprecision(3) << *it << "  ";
   }
-  stream << " ] " << std::endl;
+  stream << " ] " << "\n";
 } // oneLinePrint
 
 /** \brief localmatrix printing functor for use in Stuff::GridWalk
@@ -368,24 +368,24 @@ public:
       = matrix_.localMatrix(en, ne);
     const int rows = localMatrix.rows();
     const int cols = localMatrix.columns();
-    stream_ << "\nlocal_" << name_ << "_Matrix_" << en_idx << "_" << ne_idx << " = [" << std::endl;
+    stream_ << "\nlocal_" << name_ << "_Matrix_" << en_idx << "_" << ne_idx << " = [" << "\n";
     for (int i = 0; i < rows; ++i)
     {
       for (int j = 0; j < cols; ++j)
       {
         stream_ << std::setw(8) << std::setprecision(2) << localMatrix.get(i, j);
       }
-      stream_ << ";" << std::endl;
+      stream_ << ";" << "\n";
     }
-    stream_ << "];" << std::endl;
+    stream_ << "];" << "\n";
   } // ()
 
   void preWalk() {
-    stream_ << "% printing local matrizes of " << name_ << std::endl;
+    stream_ << "% printing local matrizes of " << name_ << "\n";
   }
 
   void postWalk() {
-    stream_ << "\n% done printing local matrizes of " << name_ << std::endl;
+    stream_ << "\n% done printing local matrizes of " << name_ << "\n";
   }
 
 private:
@@ -422,11 +422,11 @@ public:
   } // ()
 
   void preWalk() {
-    stream_ << "% printing local function values of " << name_ << std::endl;
+    stream_ << "% printing local function values of " << name_ << "\n";
   }
 
   void postWalk() {
-    stream_ << "\n% done printing function values of " << name_ << std::endl;
+    stream_ << "\n% done printing function values of " << name_ << "\n";
   }
 
 private:
@@ -459,11 +459,11 @@ public:
   } // ()
 
   void preWalk() {
-    stream_ << "% printing local function values of " << name_ << std::endl;
+    stream_ << "% printing local function values of " << name_ << "\n";
   }
 
   void postWalk() {
-    stream_ << "\n% done printing function values of " << name_ << std::endl;
+    stream_ << "\n% done printing function values of " << name_ << "\n";
   }
 
 private:
@@ -483,7 +483,7 @@ void matrixToGnuplotStream(const Matrix& matrix, std::ostream& stream) {
     for (int col = 0; col < matrix.cols(); ++col)
     {
       if ( matrix.find(row, col) )
-        stream << row << "\t" << col << "\t" << matrix(row, col) << std::endl;
+        stream << row << "\t" << col << "\t" << matrix(row, col) << "\n";
     }
     nz += matrix.numNonZeros(row);
     stream << "#non zeros in row " << row << " " << matrix.numNonZeros(row) << " (of " << matrix.cols() << " cols)\n";
