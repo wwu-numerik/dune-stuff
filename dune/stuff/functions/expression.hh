@@ -118,7 +118,6 @@ public:
     return BaseType::static_id() + ".expression";
   }
 
-
   Expression(const std::string variable,
              const std::string expression,
              const size_t ord = 0,
@@ -209,7 +208,7 @@ public:
     Common::ConfigTree config;
     config["variable"] = "x";
     config["expression"] = "[x[0] sin(x[0]) exp(x[0])]";
-    config["order"] = "1";
+    config["order"] = "3";
     config["name"] = static_id();
     if (sub_name.empty())
       return config;
@@ -236,7 +235,7 @@ public:
 
   Expression(const std::string variable,
              const std::string expression,
-             const size_t ord = 0,
+             const size_t ord = default_config().get< size_t >("order"),
              const std::string nm = static_id(),
              const std::vector< std::vector< std::string > > gradient_expressions
                 = std::vector< std::vector< std::string > >())
@@ -249,7 +248,7 @@ public:
 
   Expression(const std::string variable,
              const std::vector< std::string > expressions,
-             const size_t ord = 0,
+             const size_t ord = default_config().get< size_t >("order"),
              const std::string nm = static_id(),
              const std::vector< std::vector< std::string > > gradient_expressions
                 = std::vector< std::vector< std::string > >())
