@@ -5,13 +5,13 @@
 //
 // Contributors: Sven Kaulmann
 
-#include <config.h>
+#include "config.h"
 #include "configcontainer.hh"
 
 #if HAVE_DUNE_FEM
-  #include <dune/stuff/common/disable_warnings.hh>
-    #include <dune/fem/io/parameter.hh>
-  #include <dune/stuff/common/reenable_warnings.hh>
+# include <dune/stuff/common/disable_warnings.hh>
+#   include <dune/fem/io/parameter.hh>
+# include <dune/stuff/common/reenable_warnings.hh>
 #endif
 
 #ifndef HAVE_DUNE_FEM_PARAMETER_REPLACE

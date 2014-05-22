@@ -3,17 +3,9 @@
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
-#ifndef DUNE_STUFF_FILESYSTEM_HH
-#define DUNE_STUFF_FILESYSTEM_HH
+#include "config.h"
 
-#include "debug.hh"
-#include "string.hh"
-#include "logstreams.hh"
-#include <string>
-#include <fstream>
-
-#include <boost/filesystem.hpp>
-#include <boost/filesystem/fstream.hpp>
+#include "filesystem.hh"
 
 namespace Dune {
 namespace Stuff {
@@ -46,13 +38,13 @@ bool touch(const std::string& _path) {
 }
 
 boost::filesystem::ofstream* make_ofstream(const boost::filesystem::path& path,
-                                           const std::ios_base::openmode mode = std::ios_base::out ) {
+                                           const std::ios_base::openmode mode) {
   testCreateDirectory(path.string());
   return new boost::filesystem::ofstream(path, mode);
 }
 
 boost::filesystem::ifstream* make_ifstream(const boost::filesystem::path& path,
-                                           const std::ios_base::openmode mode = std::ios_base::in) {
+                                           const std::ios_base::openmode mode) {
   testCreateDirectory(path.string());
   return new boost::filesystem::ifstream(path, mode);
 }
@@ -86,5 +78,3 @@ void meminfo(Dune::Stuff::Common::LogStream& stream) {
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
-
-#endif // DUNE_STUFF_FILESYSTEM_HH
