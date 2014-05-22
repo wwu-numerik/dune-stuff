@@ -127,7 +127,7 @@ public:
       typedef SeqILU0< IstlMatrixType, IstlVectorType, IstlVectorType, 1 > SequentialSmootherType;
       typedef BlockPreconditioner< IstlVectorType, IstlVectorType,
                                    CommunicatorType,
-                                   SequentialPreconditionerType> SmootherType;
+                                   SequentialSmootherType> SmootherType;
 
       typedef OverlappingSchwarzOperator< IstlMatrixType, IstlVectorType, IstlVectorType,
                                           CommunicatorType > MatrixOperatorType;
