@@ -16,14 +16,16 @@
 
 #if HAVE_DUNE_ISTL && HAVE_DUNE_FEM
   // for dune-istl
-  #if defined(HAVE_BOOST)
-    #undef HAVE_BOOST
-    #define HAVE_BOOST 1
-  #endif
-  #include <dune/fem/operator/matrix/spmatrix.hh>
-  #include <dune/istl/operators.hh>
-  #include <dune/fem/operator/matrix/istlmatrix.hh>
-  #include <dune/fem/operator/matrix/preconditionerwrapper.hh>
+# if defined(HAVE_BOOST)
+#   undef HAVE_BOOST
+#   define HAVE_BOOST 1
+# endif
+# include <dune/stuff/common/disable_warnings.hh>
+#   include <dune/fem/operator/matrix/spmatrix.hh>
+# include <dune/stuff/common/reenable_warnings.hh>
+# include <dune/istl/operators.hh>
+# include <dune/fem/operator/matrix/istlmatrix.hh>
+# include <dune/fem/operator/matrix/preconditionerwrapper.hh>
 #endif // if HAVE_DUNE_ISTL && HAVE_DUNE_FEM
 
 
