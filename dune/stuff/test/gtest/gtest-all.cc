@@ -34,6 +34,7 @@
 // Sometimes it's desirable to build Google Test by compiling a single file.
 // This file serves this purpose.
 
+#include <dune/stuff/common/disable_warnings.hh>
 // This line ensures that gtest.h can be compiled on its own, even
 // when it's fused.
 #include "gtest.h"
@@ -9116,3 +9117,4 @@ const char* TypedTestCasePState::VerifyRegisteredTestNames(
 
 }  // namespace internal
 }  // namespace testing
+#include <dune/stuff/common/reenable_warnings.hh>

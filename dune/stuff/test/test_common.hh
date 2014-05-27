@@ -22,7 +22,9 @@
 #if HAVE_DUNE_FEM
 # include <dune/fem/misc/mpimanager.hh>
 #endif
-#include <gtest.h>
+#include <dune/stuff/common/disable_warnings.hh>
+# include <gtest.h>
+#include <dune/stuff/common/reenable_warnings.hh>
 
 #include <random>
 #include <fstream>
