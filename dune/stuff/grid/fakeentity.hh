@@ -6,7 +6,9 @@
 #ifndef DUNE_STUFF_GRID_FAKEENTITY_HH
 #define DUNE_STUFF_GRID_FAKEENTITY_HH
 
-#include <dune/geometry/type.hh>
+#include <dune/stuff/common/disable_warnings.hh>
+# include <dune/geometry/type.hh>
+#include <dune/stuff/common/reenable_warnings.hh>
 
 namespace Dune {
 namespace Stuff {
