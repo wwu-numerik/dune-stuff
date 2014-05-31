@@ -188,7 +188,7 @@ public:
       assert(evaluation_entity_ptrs.size() >= global_quads.size());
 
       int k = 0;
-      typename TargetSpaceImp::RangeType source_value;
+      typename GDT::DiscreteFunction< SourceSpaceImp, SourceVectorImp >::RangeType source_value;
       for(size_t qP = 0; qP < global_quads.size() ; ++qP)
       {
           const auto& source_entity_unique_ptr = evaluation_entity_ptrs[qP];
@@ -199,9 +199,10 @@ public:
             const auto& source_local_point = source_geometry.local(global_point);
             const auto& ent = *source_entity_ptr;
             const auto& source_local_function = source.local_function(ent);
-            source_local_function.evaluate(source_local_point, source_value);
-            for(int i = 0; i < target_dimRange; ++i, ++k)
-              setDofValue(target_local_function.get(k), source_value[i]);
+            source_local_function->evaluate(source_local_point, source_value);
+            for(int i = 0; i < target_dimRange; ++i, ++k) {
+              target_local_function.vector().add(source_value[i], foo);
+            }
           }
           else {
             DUNE_THROW(InvalidStateException, "Did not find the local lagrange point in the source mesh!");
