@@ -199,9 +199,9 @@ public:
             const auto& source_local_point = source_geometry.local(global_point);
             const auto& ent = *source_entity_ptr;
             const auto& source_local_function = source.local_function(ent);
-            source_local_function->evaluate(source_local_point, source_value);
+            source_value = source_local_function->evaluate(source_local_point);
             for(int i = 0; i < target_dimRange; ++i, ++k) {
-              target_local_function.vector().add(source_value[i], foo);
+              target_local_function.vector().add(k, source_value[i]);
             }
           }
           else {
