@@ -7,7 +7,7 @@
 #define DUNE_STUFF_GRID_FAKEENTITY_HH
 
 #include <dune/stuff/common/disable_warnings.hh>
-# include <dune/geometry/type.hh>
+#include <dune/geometry/type.hh>
 #include <dune/stuff/common/reenable_warnings.hh>
 
 namespace Dune {
@@ -36,6 +36,7 @@ public:
     return Geometry();
   }
 
+  static constexpr int dimension = dd;
 }; // class FakeEntity
 
 
