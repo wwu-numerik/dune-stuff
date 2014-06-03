@@ -25,6 +25,8 @@
 #include <dune/stuff/common/exceptions.hh>
 #include <dune/stuff/common/string.hh>
 #include <dune/stuff/common/type_utils.hh>
+#include <dune/stuff/common/fvector.hh>
+#include <dune/stuff/common/fmatrix.hh>
 #include <dune/stuff/la/container/common.hh>
 #if HAVE_EIGEN
 # include <dune/stuff/la/container/eigen.hh>
@@ -56,11 +58,11 @@ class ConfigTree
     };
 
     template< class K, int r, int c >
-    struct MatrixConstructor< FieldMatrix< K, r, c > >
+    struct MatrixConstructor< Dune::FieldMatrix< K, r, c > >
     {
-      static FieldMatrix< K, r, c > create(const size_t /*rows*/, const size_t /*cols*/)
+      static Dune::FieldMatrix< K, r, c > create(const size_t /*rows*/, const size_t /*cols*/)
       {
-        return FieldMatrix< K, r, c >();
+        return Dune::FieldMatrix< K, r, c >();
       }
     };
 
@@ -258,11 +260,11 @@ class ConfigTree
   }; // class Choose< std::vector< ... > >
 
   template< class K, int d >
-  class Choose< FieldVector< K, d > >
-    : ChooseBase< FieldVector< K, d > >
+  class Choose< Dune::FieldVector< K, d > >
+    : ChooseBase< Dune::FieldVector< K, d > >
   {
-    typedef ChooseBase< FieldVector< K, d > > BaseType;
-    typedef FieldVector< K, d > VectorType;
+    typedef ChooseBase< Dune::FieldVector< K, d > > BaseType;
+    typedef Dune::FieldVector< K, d > VectorType;
   public:
     static VectorType get(const ParameterTree& config, const std::string& key,
                           const size_t size = 0, const size_t /*cols*/ = 0)
@@ -274,14 +276,33 @@ class ConfigTree
                               << " but this type of vector can not have any size other than " << d << "!");
       return BaseType::template get_vector< VectorType, K >(config, key, d);
     }
-  }; // class Choose< FieldVector< ... > >
+  }; // class Choose< Dune::FieldVector< ... > >
+
+  template< class K, int d >
+  class Choose< Dune::Stuff::Common::FieldVector< K, d > >
+    : ChooseBase< Dune::Stuff::Common::FieldVector< K, d > >
+  {
+    typedef ChooseBase< Dune::Stuff::Common::FieldVector< K, d > > BaseType;
+    typedef Dune::Stuff::Common::FieldVector< K, d > VectorType;
+  public:
+    static VectorType get(const ParameterTree& config, const std::string& key,
+                          const size_t size = 0, const size_t /*cols*/ = 0)
+    {
+      if (size > 0 && size != d)
+        DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
+                              "You requested a '" << Typename< VectorType >::value() << "' for key '" << key
+                              << "' with a 'size' of " << size
+                              << " but this type of vector can not have any size other than " << d << "!");
+      return BaseType::template get_vector< VectorType, K >(config, key, d);
+    }
+  }; // class Choose< Dune::Stuff::Common::FieldVector< ... > >
 
   template< class K, int r, int c >
-  class Choose< FieldMatrix< K, r, c > >
-    : ChooseBase< FieldMatrix< K, r, c > >
+  class Choose< Dune::FieldMatrix< K, r, c > >
+    : ChooseBase< Dune::FieldMatrix< K, r, c > >
   {
-    typedef ChooseBase< FieldMatrix< K, r, c > > BaseType;
-    typedef FieldMatrix< K, r, c > MatrixType;
+    typedef ChooseBase< Dune::FieldMatrix< K, r, c > > BaseType;
+    typedef Dune::FieldMatrix< K, r, c > MatrixType;
   public:
     static MatrixType get(const ParameterTree& config, const std::string& key,
                           const size_t size = 0, const size_t cols = 0)
@@ -293,7 +314,26 @@ class ConfigTree
                               << " but this type of matrix can not have any size other than " << r << "x" << c << "!");
       return BaseType::template get_matrix< MatrixType, K >(config, key, r, c);
     }
-  }; // class Choose< FieldMatrix< ... > >
+  }; // class Choose< Dune::FieldMatrix< ... > >
+
+  template< class K, int r, int c >
+  class Choose< Dune::Stuff::Common::FieldMatrix< K, r, c > >
+    : ChooseBase< Dune::Stuff::Common::FieldMatrix< K, r, c > >
+  {
+    typedef ChooseBase< Dune::Stuff::Common::FieldMatrix< K, r, c > > BaseType;
+    typedef Dune::Stuff::Common::FieldMatrix< K, r, c > MatrixType;
+  public:
+    static MatrixType get(const ParameterTree& config, const std::string& key,
+                          const size_t size = 0, const size_t cols = 0)
+    {
+      if ((size > 0 && size != r) || (cols > 0 && cols != c))
+        DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
+                              "You requested a '" << Typename< MatrixType >::value() << "' for key '" << key
+                              << "' with a size of " << size << "x" << cols
+                              << " but this type of matrix can not have any size other than " << r << "x" << c << "!");
+      return BaseType::template get_matrix< MatrixType, K >(config, key, r, c);
+    }
+  }; // class Choose< Dune::Stuff::Common::FieldMatrix< ... > >
 
   template< class T >
   class Choose< DynamicVector< T > >
