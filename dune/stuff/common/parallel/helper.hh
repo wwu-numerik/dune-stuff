@@ -12,26 +12,30 @@
 
 #if HAVE_DUNE_ISTL
 # include <dune/istl/paamg/pinfo.hh>
-#endif // HAVE_DUNE_ISTL
+#endif
 
 namespace Dune {
 namespace Stuff {
 
+
 //! marker for sequential in MPI-enabled solver stuffs
 struct SequentialCommunication
 #if HAVE_DUNE_ISTL
-    :public Dune::Amg::SequentialInformation
+  : public Dune::Amg::SequentialInformation
 #endif
 {};
 
+
 template <class GridCommImp>
-struct UseParallelCommunication {
+struct UseParallelCommunication
+{
 #if HAVE_MPI && HAVE_DUNE_ISTL
-  static constexpr bool value = std::is_same<GridCommImp, CollectiveCommunication<MPI_Comm>>::value;
+  static constexpr bool value = std::is_same< GridCommImp, CollectiveCommunication< MPI_Comm > >::value;
 #else
   static constexpr bool value = false;
 #endif
 };
+
 
 } // namespace Stuff
 } // namespace Dune
