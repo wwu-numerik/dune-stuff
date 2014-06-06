@@ -13,7 +13,9 @@
 # include <dune/istl/operators.hh>
 # include <dune/istl/preconditioners.hh>
 # include <dune/istl/solvers.hh>
-# include <dune/istl/paamg/amg.hh>
+# include <dune/stuff/common/disable_warnings.hh>
+#   include <dune/istl/paamg/amg.hh>
+# include <dune/stuff/common/reenable_warnings.hh>
 #endif // HAVE_DUNE_ISTL
 
 #include <dune/stuff/common/exceptions.hh>
@@ -21,17 +23,17 @@
 #include <dune/stuff/common/parallel/helper.hh>
 #include <dune/stuff/la/container/istl.hh>
 
-#include "../solver.hh"
-
 namespace Dune {
 namespace Stuff {
 namespace LA {
 
 #if HAVE_DUNE_ISTL
 
+
 //! the general, parallel case
 template< class S, class CommunicatorType >
-class AmgApplicator {
+class AmgApplicator
+{
   typedef IstlRowMajorSparseMatrix< S >  MatrixType;
   typedef typename MatrixType::BackendType           IstlMatrixType;
   typedef typename IstlDenseVector< S >::BackendType IstlVectorType;
@@ -43,8 +45,10 @@ public:
     , communicator_(comm)
   {}
 
-  void call(IstlDenseVector< S >& rhs, IstlDenseVector< S >& solution,
-            const Common::ConfigTree& opts, const Common::ConfigTree& default_opts)
+  InverseOperatorResult call(IstlDenseVector< S >& rhs,
+                             IstlDenseVector< S >& solution,
+                             const Common::ConfigTree& opts,
+                             const Common::ConfigTree& default_opts)
   {
     // define the matrix operator
 
@@ -80,7 +84,7 @@ public:
     amg_parameters.setDefaultValuesAnisotropic(opts.get("preconditioner.anisotropy_dim",
                                                         default_opts.get< size_t >("preconditioner.anisotropy_dim")));
     amg_parameters.setDebugLevel(opts.get("preconditioner.verbose",
-                                          default_opts.get< size_t >("preconditioner.verbose")));
+                                          default_opts.get< int >("preconditioner.verbose")));
     Amg::CoarsenCriterion< Amg::SymmetricCriterion< IstlMatrixType, Amg::FirstDiagonal > >
         amg_criterion(amg_parameters);
     typedef Amg::AMG< MatrixOperatorType, IstlVectorType, SmootherType, CommunicatorType > PreconditionerType;
@@ -92,31 +96,29 @@ public:
                                             preconditioner,
                                             opts.get("precision", default_opts.get< S >("precision")),
                                             opts.get("max_iter", default_opts.get< size_t >("max_iter")),
-                                        #if HAVE_MPI
+#if HAVE_MPI
                                             (communicator_.communicator().rank() == 0)
                                             ? opts.get("verbose", default_opts.get< int >("verbose"))
                                             : 0
-                                          #else // HAVE_MPI
+#else // HAVE_MPI
                                             opts.get("verbose", default_opts.get< int >("verbose"))
-                                        #endif
+#endif
                                             );
 
     InverseOperatorResult stats;
     solver.apply(solution.backend(), rhs.backend(), stats);
-    if (!stats.converged)
-      DUNE_THROW_COLORFULLY(Exceptions::linear_solver_failed_bc_it_did_not_converge,
-                            "The dune-istl backend reported 'InverseOperatorResult.converged == false'!\n"
-                            << "Those were the given options:\n\n"
-                            << opts);
-  }
+    return stats;
+  } // ... call(...)
 protected:
   const MatrixType& matrix_;
   const CommunicatorType& communicator_;
 };
 
+
 //! specialization for our faux type \ref SequentialCommunication
 template< class S >
-class AmgApplicator<S, SequentialCommunication> {
+class AmgApplicator< S, SequentialCommunication >
+{
   typedef IstlRowMajorSparseMatrix< S >  MatrixType;
   typedef typename MatrixType::BackendType           IstlMatrixType;
   typedef typename IstlDenseVector< S >::BackendType IstlVectorType;
@@ -128,10 +130,11 @@ public:
     , communicator_(comm)
   {}
 
-  void call(IstlDenseVector< S >& rhs, IstlDenseVector< S >& solution,
-            const Common::ConfigTree& opts, const Common::ConfigTree& default_opts)
+  InverseOperatorResult call(IstlDenseVector< S >& rhs,
+                             IstlDenseVector< S >& solution,
+                             const Common::ConfigTree& opts,
+                             const Common::ConfigTree& default_opts)
   {
-
     typedef MatrixAdapter< IstlMatrixType, IstlVectorType, IstlVectorType > MatrixOperatorType;
     MatrixOperatorType matrix_operator(matrix_.backend());
 
@@ -162,7 +165,7 @@ public:
     amg_parameters.setDefaultValuesAnisotropic(opts.get("preconditioner.anisotropy_dim",
                                                         default_opts.get< size_t >("preconditioner.anisotropy_dim")));
     amg_parameters.setDebugLevel(opts.get("preconditioner.verbose",
-                                          default_opts.get< size_t >("preconditioner.verbose")));
+                                          default_opts.get< int >("preconditioner.verbose")));
     Amg::CoarsenCriterion< Amg::SymmetricCriterion< IstlMatrixType, Amg::FirstDiagonal > >
         amg_criterion(amg_parameters);
 
@@ -178,23 +181,24 @@ public:
                                             opts.get("verbose", default_opts.get< int >("verbose")));
     InverseOperatorResult stats;
     solver.apply(solution.backend(), rhs.backend(), stats);
-    if (!stats.converged)
-      DUNE_THROW_COLORFULLY(Exceptions::linear_solver_failed_bc_it_did_not_converge,
-                            "The dune-istl backend reported 'InverseOperatorResult.converged == false'!\n"
-                            << "Those were the given options:\n\n"
-                            << opts);
-  }
+    return stats;
+  } // ... call(...)
+
 protected:
   const MatrixType& matrix_;
   const SequentialCommunication& communicator_;
 };
 
+
 #else //HAVE_DUNE_ISTL
 
+
 template< class S, class T >
-class AmgApplicator {
-  static_assert(Dune::AlwaysFalse< S, T >::value,"You are missing dune-istl!");
+class AmgApplicator
+{
+  static_assert(Dune::AlwaysFalse< S, T >::value, "You are missing dune-istl!");
 };
+
 
 #endif //HAVE_DUNE_ISTL
 
