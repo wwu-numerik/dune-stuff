@@ -124,8 +124,7 @@ class AmgApplicator< S, SequentialCommunication >
   typedef typename IstlDenseVector< S >::BackendType IstlVectorType;
 
 public:
-  AmgApplicator(const MatrixType& matrix,
-                const SequentialCommunication& comm)
+  AmgApplicator(const MatrixType& matrix, const SequentialCommunication& comm)
     : matrix_(matrix)
     , communicator_(comm)
   {}
