@@ -36,6 +36,7 @@ public:
     return Geometry();
   }
 
+  static constexpr int dimension = dd;
 }; // class FakeEntity
 
 

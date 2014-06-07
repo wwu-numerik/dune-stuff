@@ -29,7 +29,7 @@ public:
 
   virtual size_t num_refinements() const = 0;
 
-  virtual std::vector< std::string > provided_norms() const  = 0;
+  virtual std::vector< std::string > provided_norms() const = 0;
 
   virtual size_t expected_rate(const std::string type) const = 0;
 

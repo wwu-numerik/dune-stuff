@@ -21,6 +21,11 @@
 # include <dune/stuff/functions/pdelabadapter.hh>
 #endif
 
+#if HAVE_DUNE_GDT
+# include <dune/gdt/products/l2.hh>
+# include <dune/gdt/products/h1.hh>
+#endif
+
 namespace Dune {
 namespace PDELab {
 template<typename GFS, typename C>
@@ -79,11 +84,15 @@ h1distance(const FunctionType_A& function_A, const PDELab::ISTLBlockVectorContai
 }
 #endif // HAVE_DUNE_PDELAB
 
-#if HAVE_DUNE_FEM
-template <class TraitsType>
-static typename TraitsType::RangeFieldType l2norm(const Dune::Fem::DiscreteFunctionInterface<TraitsType>& function)
-DUNE_DEPRECATED_MSG("Use the interfaces from interfaces.hh or put this somewhere else!");
+#if HAVE_DUNE_GDT
+template< class SpaceImp, class VectorImp >
+static typename VectorImp::RangeFieldType l2norm(const GDT::ConstDiscreteFunction<SpaceImp, VectorImp> function)
+{
+  return GDT::Products::L2< typename SpaceImp::GridViewType >(function.space().grid_view()).induced_norm(function);
+}
+#endif
 
+#if HAVE_DUNE_FEM
 template <class TraitsType>
 static typename TraitsType::RangeFieldType l2norm(const Dune::Fem::DiscreteFunctionInterface<TraitsType>& function)
 DUNE_DEPRECATED_MSG("Use the interfaces from interfaces.hh or put this somewhere else!");

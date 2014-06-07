@@ -33,6 +33,16 @@
 namespace Dune {
 namespace Stuff {
 namespace Grid {
+namespace internal {
+
+
+inline static std::string boundary_info_static_id()
+{
+  return "stuff.grid.boundaryinfo";
+}
+
+
+} // namespace internal
 
 
 template< class IntersectionImp >
@@ -44,17 +54,27 @@ class BoundaryInfoInterface
 #if HAVE_DUNE_PDELAB
   typedef PDELab::IntersectionGeometry< IntersectionImp > IntersectionGeometryType;
   typedef FieldVector< typename IntersectionGeometryType::ctype, IntersectionGeometryType::dimension - 1 >
-    Codim1DomainType;
-#endif
+      Codim1DomainType;
+#endif // HAVE_DUNE_PDELAB
 public:
   typedef IntersectionImp IntersectionType;
 
   static const std::string static_id()
   {
-    return "stuff.grid.boundaryinfo";
+    return internal::boundary_info_static_id();
   }
 
   virtual ~BoundaryInfoInterface() {}
+
+  virtual bool has_dirichlet() const
+  {
+    return true;
+  }
+
+  virtual bool has_neumann() const
+  {
+    return true;
+  }
 
   virtual bool dirichlet(const IntersectionType& intersection) const = 0;
 
@@ -77,6 +97,98 @@ public:
 }; // class BoundaryInfoInterface
 
 
+namespace BoundaryInfoConfigs {
+
+
+class AllDirichlet
+{
+public:
+  static const std::string static_id()
+  {
+    return internal::boundary_info_static_id() + ".alldirichlet";
+  }
+
+  static Common::ConfigTree default_config(const std::string sub_name = "")
+  {
+    if (sub_name.empty())
+      return Common::ConfigTree("type", static_id());
+    else
+      return Common::ConfigTree(sub_name + ".type", static_id());
+  }
+}; // class AllDirichlet
+
+
+class AllNeumann
+{
+public:
+  static const std::string static_id()
+  {
+    return internal::boundary_info_static_id() + ".allneumann";
+  }
+
+  static Common::ConfigTree default_config(const std::string sub_name = "")
+  {
+    if (sub_name.empty())
+      return Common::ConfigTree("type", static_id());
+    else
+      return Common::ConfigTree(sub_name + ".type", static_id());
+  }
+}; // class AllNeumann
+
+
+class IdBased
+{
+public:
+  static const std::string static_id()
+  {
+    return internal::boundary_info_static_id() + ".idbased";
+  }
+
+  static Common::ConfigTree default_config(const std::string sub_name = "")
+  {
+    Common::ConfigTree config("type", static_id());
+    config["dirichlet"] = "[1 2 3]";
+    config["neumann"] = "[4]";
+    if (sub_name.empty())
+      return config;
+    else {
+      Common::ConfigTree tmp;
+      tmp.add(config, sub_name);
+      return tmp;
+    }
+  } // ... default_config(...)
+}; // class IdBased
+
+
+class NormalBased
+{
+public:
+  static const std::string static_id()
+  {
+    return internal::boundary_info_static_id() + ".normalbased";
+  }
+
+  static Common::ConfigTree default_config(const std::string sub_name = "")
+  {
+    Common::ConfigTree config("type", static_id());
+    config["default"] = "dirichlet";
+    config["compare_tolerance"] = "1e-10";
+    config["neumann.0"] = "[1.0 0.0]";
+    config["dirichlet.0"] = "[0.0 1.0]";
+    if (sub_name.empty())
+      return config;
+    else {
+      Common::ConfigTree tmp;
+      tmp.add(config, sub_name);
+      return tmp;
+    }
+  } // ... default_config(...)
+}; // class NormalBased
+
+
+} // namespace BoundaryInfoConfigs
+
+
 namespace BoundaryInfos {
 
 
@@ -91,15 +203,12 @@ public:
 
   static const std::string static_id()
   {
-    return BaseType::static_id() + ".alldirichlet";
+    return BoundaryInfoConfigs::AllDirichlet::static_id();
   }
 
   static Common::ConfigTree default_config(const std::string sub_name = "")
   {
-    if (sub_name.empty())
-      return Common::ConfigTree("type", static_id());
-    else
-      return Common::ConfigTree(sub_name + ".type", static_id());
+    return BoundaryInfoConfigs::AllDirichlet::default_config(sub_name);
   }
 
   static std::unique_ptr< ThisType > create(const Common::ConfigTree /*config*/ = default_config(),
@@ -111,6 +220,16 @@ public:
   AllDirichlet() {}
 
   virtual ~AllDirichlet() {}
+
+  virtual bool has_dirichlet() const DS_OVERRIDE DS_FINAL
+  {
+    return true;
+  }
+
+  virtual bool has_neumann() const DS_OVERRIDE DS_FINAL
+  {
+    return false;
+  }
 
   virtual bool dirichlet(const IntersectionType& intersection) const DS_OVERRIDE DS_FINAL
   {
@@ -135,15 +254,12 @@ public:
 
   static const std::string static_id()
   {
-    return BaseType::static_id() + ".allneumann";
+    return BoundaryInfoConfigs::AllNeumann::static_id();
   }
 
   static Common::ConfigTree default_config(const std::string sub_name = "")
   {
-    if (sub_name.empty())
-      return Common::ConfigTree("type", static_id());
-    else
-      return Common::ConfigTree(sub_name + ".type", static_id());
+    return BoundaryInfoConfigs::AllNeumann::default_config(sub_name);
   }
 
   static std::unique_ptr< ThisType > create(const Common::ConfigTree /*config*/ = default_config(),
@@ -155,6 +271,16 @@ public:
   AllNeumann() {}
 
   virtual ~AllNeumann() {}
+
+  virtual bool has_dirichlet() const DS_OVERRIDE DS_FINAL
+  {
+    return false;
+  }
+
+  virtual bool has_neumann() const DS_OVERRIDE DS_FINAL
+  {
+    return true;
+  }
 
   virtual bool dirichlet(const IntersectionType& /*intersection*/) const DS_OVERRIDE DS_FINAL
   {
@@ -179,22 +305,13 @@ public:
 
   static const std::string static_id()
   {
-    return BaseType::static_id() + ".idbased";
+    return BoundaryInfoConfigs::IdBased::static_id();
   }
 
   static Common::ConfigTree default_config(const std::string sub_name = "")
   {
-    Common::ConfigTree config("type", static_id());
-    config["dirichlet"] = "[1 2 3]";
-    config["neumann"] = "[4]";
-    if (sub_name.empty())
-      return config;
-    else {
-      Common::ConfigTree tmp;
-      tmp.add(config, sub_name);
-      return tmp;
-    }
-  } // ... default_config(...)
+    return BoundaryInfoConfigs::IdBased::default_config(sub_name);
+  }
 
   static std::unique_ptr< ThisType > create(const Common::ConfigTree config = default_config(),
                                             const std::string sub_name = static_id())
@@ -219,6 +336,16 @@ public:
   const std::map< std::string, std::set< int > >& id_to_type_map() const
   {
     return id_to_type_map_;
+  }
+
+  virtual bool has_dirichlet() const DS_OVERRIDE DS_FINAL
+  {
+    return hasDirichlet_;
+  }
+
+  virtual bool has_neumann() const DS_OVERRIDE DS_FINAL
+  {
+    return hasNeumann_;
   }
 
   virtual bool dirichlet(const IntersectionType& intersection) const DS_OVERRIDE DS_FINAL
@@ -275,24 +402,13 @@ public:
 
   static const std::string static_id()
   {
-    return BaseType::static_id() + ".normalbased";
+    return BoundaryInfoConfigs::NormalBased::static_id();
   }
 
   static Common::ConfigTree default_config(const std::string sub_name = "")
   {
-    Common::ConfigTree config("type", static_id());
-    config["default"] = "dirichlet";
-    config["compare_tolerance"] = "1e-10";
-    config["neumann.0"] = "[1.0 0.0]";
-    config["dirichlet.0"] = "[0.0 1.0]";
-    if (sub_name.empty())
-      return config;
-    else {
-      Common::ConfigTree tmp;
-      tmp.add(config, sub_name);
-      return tmp;
-    }
-  } // ... default_config(...)
+    return BoundaryInfoConfigs::NormalBased::default_config(sub_name);
+  }
 
   static std::unique_ptr< ThisType > create(const Common::ConfigTree config = default_config(),
                                             const std::string sub_name = static_id())
@@ -336,6 +452,16 @@ public:
   } // NormalBased(...)
 
   virtual ~NormalBased() {}
+
+  virtual bool has_dirichlet() const DS_OVERRIDE DS_FINAL
+  {
+    return default_to_dirichlet_ || (dirichlet_normals_.size() > 0);
+  }
+
+  virtual bool has_neumann() const DS_OVERRIDE DS_FINAL
+  {
+    return !default_to_dirichlet_ || (neumann_normals_.size() > 0);
+  }
 
   virtual bool dirichlet(const IntersectionType& intersection) const DS_OVERRIDE DS_FINAL
   {
