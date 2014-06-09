@@ -305,6 +305,52 @@ class ConfigTree
     }
   }; // class Choose< Dune::FieldMatrix< ... > >
 
+  template< class K, int r >
+  class Choose< Dune::FieldMatrix< K, r, 1 > >
+    : ChooseBase< Dune::FieldMatrix< K, r, 1 > >
+  {
+    static const int c = 1;
+    typedef ChooseBase< Dune::FieldMatrix< K, r, c > > BaseType;
+    typedef Dune::FieldMatrix< K, r, c > MatrixType;
+  public:
+    static MatrixType get(const ParameterTree& config, const std::string& key, const size_t size = 0, const size_t cols = 0)
+    {
+      if ((size > 0 && size != r) || (cols > 0 && cols != c))
+        DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
+                              "You requested a '" << Typename< MatrixType >::value() << "' for key '" << key
+                              << "' with a size of " << size << "x" << cols
+                              << " but this type of matrix can not have any size other than " << r << "x" << c << "!");
+      auto vector = BaseType::template get_vector< Dune::FieldVector< K, r >, K >(config, key, r);
+      MatrixType ret;
+      for (size_t ii = 0; ii < r; ++ii)
+        ret[ii][0] = vector[ii];
+      return ret;
+    }
+  }; // class Choose< Dune::FieldMatrix< ..., 1 > >
+
+  template< class K, int c >
+  class Choose< Dune::FieldMatrix< K, 1, c > >
+    : ChooseBase< Dune::FieldMatrix< K, 1, c > >
+  {
+    static const int r = 1;
+    typedef ChooseBase< Dune::FieldMatrix< K, r, c > > BaseType;
+    typedef Dune::FieldMatrix< K, r, c > MatrixType;
+  public:
+    static MatrixType get(const ParameterTree& config, const std::string& key, const size_t size = 0, const size_t cols = 0)
+    {
+      if ((size > 0 && size != r) || (cols > 0 && cols != c))
+        DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
+                              "You requested a '" << Typename< MatrixType >::value() << "' for key '" << key
+                              << "' with a size of " << size << "x" << cols
+                              << " but this type of matrix can not have any size other than " << r << "x" << c << "!");
+      auto vector = BaseType::template get_vector< Dune::FieldVector< K, c >, K >(config, key, c);
+      MatrixType ret;
+      for (size_t ii = 0; ii < c; ++ii)
+        ret[0][ii] = vector[ii];
+      return ret;
+    }
+  }; // class Choose< Dune::FieldMatrix< ..., 1, ... > >
+
   template< class K, int r, int c >
   class Choose< Dune::Stuff::Common::FieldMatrix< K, r, c > >
     : ChooseBase< Dune::Stuff::Common::FieldMatrix< K, r, c > >
