@@ -23,7 +23,8 @@ template< class EntityImp, class DomainFieldImp, int domainDim, class RangeField
 class Constant
   : public GlobalFunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols>
 {
-  typedef GlobalFunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols > BaseType;
+  typedef GlobalFunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols >
+      BaseType;
   typedef Constant < EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols >  ThisType;
 
   template< class R, int r, int rC >
@@ -33,7 +34,6 @@ class Constant
     for (size_t rr = 0; rr < r; ++rr) {
       if (rr > 0)
         str += "; ";
-      str += "[";
       for (size_t cc = 0; cc < rC; ++cc) {
         if (cc > 0)
           str += " ";
@@ -42,7 +42,6 @@ class Constant
         else
           str += "0";
       }
-      str += "]";
     }
     str += "]";
     return str;
@@ -64,14 +63,7 @@ class Constant
   template< class R, int r >
   struct Get< R, r, 1 >{ static std::string value_str()
   {
-    std::string str = "[";
-    for (size_t rr = 0; rr < r; ++rr) {
-      if (rr > 0)
-        str += " ";
-      str += "1";
-    }
-    str += "]";
-    return str;
+      return Get< R, 1, r >::value_str();
   } };
 
   template< class R >
