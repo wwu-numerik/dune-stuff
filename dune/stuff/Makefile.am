@@ -19,7 +19,7 @@ libstuff_la_SOURCES = \
 	common/parameter/configcontainer.cc \
 	common/parameter/tree.cc \
 	common/signals.cc \
-	common/threadmanager.cc \
+	common/parallel/threadmanager.cc \
 	fem/femeoc.cc \
 	grid/fakeentity.cc \
 	functions/interfaces.cc \
