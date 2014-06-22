@@ -592,13 +592,13 @@ struct TransferredGlobalFunction : public
 /**
  * \brief Interface for scalar and vector valued stationary function.
  */
-template< class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDim >
+template< class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDim, int rangeDimCols = 1 >
 class
   DUNE_DEPRECATED_MSG("Please derive your functions from GlobalFunctionInterface in the future!")
       FunctionInterface
 #if HAVE_DUNE_FEM
   : public Dune::Fem::Function< Dune::Fem::FunctionSpace< DomainFieldImp, RangeFieldImp, domainDim, rangeDim >,
-                                FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDim > >
+                                FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols > >
 #endif // HAVE_DUNE_FEM
 {
 public:
@@ -611,7 +611,7 @@ public:
   typedef Dune::FieldVector< RangeFieldType, dimRange > RangeType;
 #if HAVE_DUNE_FEM
   typedef typename Dune::Fem::Function< Dune::Fem::FunctionSpace< DomainFieldImp, RangeFieldImp, domainDim, rangeDim >,
-                               FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDim > >
+                               FunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols > >
         ::JacobianRangeType JacobianRangeType;
 #else
   typedef Dune::FieldMatrix< RangeFieldType, dimRange, dimDomain > JacobianRangeType;
