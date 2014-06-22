@@ -297,7 +297,7 @@ protected:
     typedef typename std::make_unsigned<SignedSizeType>::type UnsignedSizeType;
     if (UnsignedSizeType(size) > std::numeric_limits< size_t >::max())
       DUNE_THROW_COLORFULLY(Exceptions::index_out_of_range,
-                            "Given size (" << size << ") is to large for size_t (max "
+                            "Given size (" << size << ") is too large for size_t (max "
                             << std::numeric_limits< size_t >::max() << ")!");
     return size_t(size);
   } // ... ssize_t_is_valid(...)
