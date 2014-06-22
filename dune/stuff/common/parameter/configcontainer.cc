@@ -70,9 +70,9 @@ ConfigContainer::ConfigContainer(const Dune::ParameterTree& tree)
     : tree_(tree)
     , record_defaults_(false)
     , logdir_(boost::filesystem::path(get("global.datadir", "data", false)) / get("logging.dir", "log", false))
-    #ifndef NDEBUG
+#ifndef NDEBUG
     , warning_output_(false)
-    #endif
+#endif
 {
     testCreateDirectory(logdir_.string());
 }
@@ -80,9 +80,9 @@ ConfigContainer::ConfigContainer(const Dune::ParameterTree& tree)
 ConfigContainer::ConfigContainer()
     : record_defaults_(false)
     , logdir_(boost::filesystem::path(get("global.datadir", "data", false)) / get("logging.dir", "log", false))
-    #ifndef NDEBUG
+#ifndef NDEBUG
     , warning_output_(true)
-    #endif
+#endif
 {
     testCreateDirectory(logdir_.string());
 }
