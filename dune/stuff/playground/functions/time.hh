@@ -9,6 +9,8 @@
 #include <memory>
 #include <string>
 
+#include <dune/common/fvector.hh>
+
 namespace Dune {
 namespace Stuff {
 
