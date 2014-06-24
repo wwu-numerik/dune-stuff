@@ -29,6 +29,7 @@
 #include <dune/stuff/aliases.hh>
 #include <dune/stuff/common/random.hh>
 #include <dune/stuff/common/print.hh>
+#include <dune/stuff/common/debug.hh>
 #include <dune/stuff/aliases.hh>
 
 #if HAVE_EIGEN
@@ -77,10 +78,10 @@ struct LocalEigenMatrixTraits
 
 template< class DomainSpace, class RangeSpace, class TraitsImp >
 class LocalEigenMatrix
-    : public Dune::LocalMatrixDefault< LocalEigenMatrixTraits<DomainSpace, RangeSpace, TraitsImp > >
+    : public Dune::Fem::LocalMatrixDefault< LocalEigenMatrixTraits<DomainSpace, RangeSpace, TraitsImp > >
 {
   private:
-  typedef Dune::LocalMatrixDefault<LocalEigenMatrixTraits<DomainSpace, RangeSpace, TraitsImp > >
+  typedef Dune::Fem::LocalMatrixDefault<LocalEigenMatrixTraits<DomainSpace, RangeSpace, TraitsImp > >
     BaseType;
   typedef EigenMatrixObject<DomainSpace, RangeSpace, TraitsImp >
     MatrixObjectType;
@@ -191,7 +192,7 @@ public:
   }
 
 private:
-  inline void index_checks(int localRow, int localCol ) const {
+  inline void index_checks(int UNUSED_UNLESS_DEBUG(localRow), int UNUSED_UNLESS_DEBUG(localCol) ) const {
       assert( (localRow >= 0) );
       assert( (localRow < rows()) );
       assert( (localCol >= 0) );
@@ -206,9 +207,9 @@ class LagrangePattern : public DSL::SparsityPatternDefault {
 public:
     template< class D_FunctionSpace, class D_GridPart, int D_polOrder, template< class > class D_Storage,
               class R_FunctionSpace, class R_GridPart, int R_polOrder, template< class > class R_Storage>
-    LagrangePattern(const Dune::LagrangeDiscreteFunctionSpace<D_FunctionSpace,
+    LagrangePattern(const Dune::Fem::LagrangeDiscreteFunctionSpace<D_FunctionSpace,
                                             D_GridPart, D_polOrder, D_Storage>& domain_space,
-                    const Dune::LagrangeDiscreteFunctionSpace<R_FunctionSpace,
+                    const Dune::Fem::LagrangeDiscreteFunctionSpace<R_FunctionSpace,
                                             R_GridPart, R_polOrder, R_Storage>& range_space,
                     const bool non_conform = false)
         : BaseType(domain_space.size())
@@ -222,7 +223,7 @@ public:
             for(auto rowIt = rowMapper.begin( entity );
                 rowIt != rowEnd; ++rowIt )
             {
-              auto& localIndices = BaseType::set( rowIt.global() );
+              auto& localIndices = get( rowIt.global() );
 
               const auto colEnd = colMapper.end( entity );
               auto colIt = colMapper.begin( entity );
@@ -245,7 +246,7 @@ public:
                   for(auto rowIt = rowMapper.begin( entity );
                       rowIt != rowEnd; ++rowIt )
                   {
-                    auto& localIndices =  BaseType::set( rowIt.global() );
+                    auto& localIndices =  get( rowIt.global() );
                     const auto colEnd = colMapper.end( neighbor );
                     for(auto colIt = colMapper.begin( neighbor );
                         colIt != colEnd; ++colIt )
@@ -338,8 +339,8 @@ public:
     return matrix_;
   }
 
-  //! reserve memory corresponnding to size of spaces
-  inline void reserve(bool verbose = false )
+  //! reserve memory corresponding to size of spaces
+  inline void reserve(bool /*verbose*/ = false )
   {
     if( sequence_ != domainSpace_.sequence() )
     {
@@ -351,7 +352,7 @@ public:
   //! mult method of matrix object used by oem solver
   double ddotOEM( const double* v, const double* w ) const
   {
-    typedef Dune::AdaptiveDiscreteFunction< DomainSpaceType > DomainFunctionType;
+    typedef Dune::Fem::AdaptiveDiscreteFunction< DomainSpaceType > DomainFunctionType;
     DomainFunctionType V( "ddot V", domainSpace_, v );
     DomainFunctionType W( "ddot W", domainSpace_, w );
     return V.scalarProductDofs( W );
@@ -372,14 +373,14 @@ public:
     dest_w = matrix_.backend().transpose() * arg_w;
   }
 
-  void apply ( const AdaptiveDiscreteFunction< DomainSpaceType >& arg,
-               AdaptiveDiscreteFunction< RangeSpaceType>& dest ) const
+  void apply ( const Dune::Fem::AdaptiveDiscreteFunction< DomainSpaceType >& arg,
+               Dune::Fem::AdaptiveDiscreteFunction< RangeSpaceType>& dest ) const
   {
     multOEM(arg.leakPointer(), dest.leakPointer());
   }
 
-  void apply_t( const AdaptiveDiscreteFunction< RangeSpaceType >& arg,
-                AdaptiveDiscreteFunction< DomainSpaceType>& dest ) const
+  void apply_t( const Dune::Fem::AdaptiveDiscreteFunction< RangeSpaceType >& arg,
+                Dune::Fem::AdaptiveDiscreteFunction< DomainSpaceType>& dest ) const
   {
     multOEM_t(arg.leakPointer(), dest.leakPointer());
   }
@@ -436,22 +437,22 @@ public:
     , solver_settings_(solver_settings)
   {}
 
-  static Dune::ParameterTree defaultSettings()
-  {
-    auto settings = DSL::BicgstabILUTSolver<MatrixType, EigenVectorWrapperType>::defaultSettings();
-    settings["type"] = "bicgstab.ilut";
-    return settings;
-  }
+//  static Dune::ParameterTree defaultSettings()
+//  {
+//    auto settings = DSL::BicgstabILUTSolver<MatrixType, EigenVectorWrapperType>::defaultSettings();
+//    settings["type"] = "bicgstab.ilut";
+//    return settings;
+//  }
 
-  template <class DomainVector, class RangeVector>
-  void operator()(const DomainVector& arg, RangeVector& x) const {
-      const EigenVectorWrapperType arg_w(const_cast<double*>(arg.leakPointer()), arg.size());
-      EigenVectorWrapperType x_w(x.leakPointer(), x.size());
-      typedef DSL::SolverInterface<MatrixType, EigenVectorWrapperType> SolverType;
-      std::unique_ptr<SolverType> solver(DSL::createSolver<MatrixType,
-                                                           EigenVectorWrapperType>(solver_settings_["type"]));
-      solver->apply(matrix_, arg_w, x_w, solver_settings_);
-  }
+//  template <class DomainVector, class RangeVector>
+//  void operator()(const DomainVector& arg, RangeVector& x) const {
+//      const EigenVectorWrapperType arg_w(const_cast<double*>(arg.leakPointer()), arg.size());
+//      EigenVectorWrapperType x_w(x.leakPointer(), x.size());
+//      typedef DSL::SolverInterface<MatrixType, EigenVectorWrapperType> SolverType;
+//      std::unique_ptr<SolverType> solver(DSL::createSolver<MatrixType,
+//                                                           EigenVectorWrapperType>(solver_settings_["type"]));
+//      solver->apply(matrix_, arg_w, x_w, solver_settings_);
+//  }
 };
 
 #endif // HAVE_EIGEN
@@ -486,11 +487,11 @@ void reserve_matrix(Dune::Fem::SparseRowMatrixObject<DomainSpaceType, RangeSpace
 {
   matrix_object.reserve();
 }
-template <class DomainFunctionType, class RangeFunctionType, class Traits, template <class,class> class StencilType = Dune::Fem::DiagonalAndNeighborStencil>
-void reserve_matrix(Dune::Fem::SparseRowMatrixOperator<DomainFunctionType, RangeFunctionType, Traits>& matrix_object)
-{
-  matrix_object.reserve();
-}
+//template <class DomainFunctionType, class RangeFunctionType, class Traits, template <class,class> class StencilType = Dune::Fem::DiagonalAndNeighborStencil>
+//void reserve_matrix(Dune::Fem::SparseRowMatrixOperator<DomainFunctionType, RangeFunctionType, Traits>& matrix_object)
+//{
+//  matrix_object.reserve();
+//}
 
 } // namespace Fem
 } // namespace Stuff
