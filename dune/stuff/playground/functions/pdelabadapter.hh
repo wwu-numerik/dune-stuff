@@ -10,11 +10,16 @@
 
 #if HAVE_DUNE_PDELAB
 
-# include <dune/pdelab/common/function.hh>
-# include <dune/pdelab/gridfunctionspace/gridfunctionspaceutilities.hh>
+# include <dune/stuff/common/disable_warnings.hh>
+#   include <dune/pdelab/common/function.hh>
+#   include <dune/pdelab/gridfunctionspace/gridfunctionspaceutilities.hh>
+# include <dune/stuff/common/reenable_warnings.hh>
+
 
 # if HAVE_DUNE_FEM
-#   include <dune/fem/function/common/discretefunction.hh>
+#   include <dune/stuff/common/disable_warnings.hh>
+#     include <dune/fem/function/common/discretefunction.hh>
+#   include <dune/stuff/common/reenable_warnings.hh>
 # endif
 
 # include <dune/stuff/functions/global.hh>

@@ -9,15 +9,20 @@
 #include <dune/stuff/functions/interfaces.hh>
 
 #if HAVE_DUNE_FEM
-# include <dune/fem/function/common/discretefunction.hh>
-# include <dune/fem/misc/l2norm.hh>
+# include <dune/stuff/common/disable_warnings.hh>
+#   include <dune/fem/function/common/discretefunction.hh>
+#   include <dune/fem/misc/l2norm.hh>
+# include <dune/stuff/common/reenable_warnings.hh>
+
 # include <dune/fem/misc/h1norm.hh>
 #endif
 
 #if HAVE_DUNE_PDELAB
-# include <dune/pdelab/test/l2difference.hh>
+# include <dune/stuff/common/disable_warnings.hh>
+#   include <dune/pdelab/test/l2difference.hh>
+#   include <dune/pdelab/common/functionutilities.hh>
+# include <dune/stuff/common/reenable_warnings.hh>
 # include <dune/pdelab/common/functionwrappers.hh>
-# include <dune/pdelab/common/functionutilities.hh>
 # include <dune/stuff/functions/pdelabadapter.hh>
 #endif
 

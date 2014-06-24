@@ -8,11 +8,12 @@
 
 #if HAVE_DUNE_FEM
 
-#include <dune/fem/quadrature/cachingquadrature.hh>
+#include <dune/stuff/common/disable_warnings.hh>
+# include <dune/fem/quadrature/cachingquadrature.hh>
+# include <dune/fem/function/common/discretefunction.hh>
+# include <dune/fem/function/common/gridfunctionadapter.hh>
+#include <dune/stuff/common/reenable_warnings.hh>
 #include <dune/fem/operator/common/operator.hh>
-#include <dune/fem/function/common/discretefunction.hh>
-#include <dune/fem/function/common/gridfunctionadapter.hh>
-
 
 #include <dune/stuff/common/math.hh>
 #include <dune/stuff/fem/namespace.hh>

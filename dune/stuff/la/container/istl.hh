@@ -9,8 +9,11 @@
 #define DUNE_STUFF_LA_CONTAINER_ISTL_HH
 
 
-#include <dune/common/fvector.hh>
-#include <dune/common/fmatrix.hh>
+
+#include <dune/stuff/common/disable_warnings.hh>
+# include <dune/common/fmatrix.hh>
+# include <dune/common/fvector.hh>
+#include <dune/stuff/common/reenable_warnings.hh>
 #include <dune/common/typetraits.hh>
 
 #if HAVE_DUNE_ISTL

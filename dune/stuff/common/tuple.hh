@@ -8,7 +8,9 @@
 #ifndef DUNE_STUFF_TUPLE_HH
 #define DUNE_STUFF_TUPLE_HH
 
-#include <dune/common/tuples.hh>
+#include <dune/stuff/common/disable_warnings.hh>
+# include <dune/common/tuples.hh>
+#include <dune/stuff/common/disable_warnings.hh>
 #include <dune/common/typetraits.hh>
 
 #include <boost/mpl/if.hpp>
@@ -61,15 +63,15 @@ struct RightTrimTuple< T1, T2, T3, T4, T5, T6, T7, T8, T9, 2 >
 template< class T1, class T2, class T3, class T4, class T5, class T6, class T7, class T8, class T9 >
 struct RightTrimTuple< T1, T2, T3, T4, T5, T6, T7, T8, T9, 1 >
 { typedef Dune::tuple<T1> type; };
-  
+
 #define TUPLE_TYPEDEFS_2_TUPLE( t_, s_ ) \
   typename RightTrimTuple< TELE(t_,s_,0), TELE(t_,s_,1), TELE(t_,s_,2), TELE(t_,s_,3), TELE(t_,s_,4), TELE(t_,s_,5), TELE(t_,s_,6), TELE(t_,s_,7), TELE(t_,s_,8), Dune::tuple_size< t_ >::value >::type
-	
+
 
 /**
  * @def TUPLE_TYPEDEFS_2_TUPLE( t_, s_ )
- * 
- * @brief extracts types of the elements of a Dune::tuple and 
+ *
+ * @brief extracts types of the elements of a Dune::tuple and
  * creates a new Dune::tuple with these extracted types.
  *
  * first argument: the tuple type
@@ -77,30 +79,30 @@ struct RightTrimTuple< T1, T2, T3, T4, T5, T6, T7, T8, T9, 1 >
  *
  * example:
  * Let two classes be given:
- * 
+ *
  * @code
  * class A
- * { 
- *   public: 
+ * {
+ *   public:
  *   typedef int MyFancyType;
  * };
- * 
+ *
  * class B
- * { 
- *   public: 
- *   typedef int MyFancyType; 
+ * {
+ *   public:
+ *   typedef int MyFancyType;
  * };
  * @endcode
  *
  * Define a tuple, i.e.
- * 
+ *
  * @code
  * typedef Dune::tuple< A, B, B >
  *   MyTuple;
  * @endcode
- * 
+ *
  * Instead of writing
- * 
+ *
  * @code
  * typedef Dune::tuple< typename tuple_element<0,MyTuple>::type::MyFancyType,
  *                      typename tuple_element<1,MyTuple>::type::MyFancyType,
@@ -115,7 +117,7 @@ struct RightTrimTuple< T1, T2, T3, T4, T5, T6, T7, T8, T9, 1 >
  *   MySubTupleType;
  * @endcode
  *
- * without (general) restriction to the size 
+ * without (general) restriction to the size
  * of the tuple @c MyTuple. Enjoy it!
  */
 

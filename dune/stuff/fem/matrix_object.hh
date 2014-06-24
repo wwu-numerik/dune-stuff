@@ -8,14 +8,19 @@
 
 #if HAVE_DUNE_FEM
 
-#include <dune/fem/function/adaptivefunction/adaptivefunction.hh>
-#include <dune/fem/solver/oemsolver.hh>
+#include <dune/stuff/common/disable_warnings.hh>
+# include <dune/fem/function/adaptivefunction/adaptivefunction.hh>
+# include <dune/fem/solver/oemsolver.hh>
+#include <dune/stuff/common/reenable_warnings.hh>
+
 #include <dune/fem/operator/common/operator.hh>
 #include <dune/fem/operator/common/localmatrix.hh>
 #include <dune/fem/operator/common/localmatrixwrapper.hh>
-#include <dune/fem/space/lagrange.hh>
-#include <dune/fem/operator/common/stencil.hh>
-#include <dune/fem/operator/matrix/spmatrix.hh>
+#include <dune/stuff/common/disable_warnings.hh>
+# include <dune/fem/space/lagrange.hh>
+# include <dune/fem/operator/common/stencil.hh>
+# include <dune/fem/operator/matrix/spmatrix.hh>
+#include <dune/stuff/common/reenable_warnings.hh>
 #include <dune/fem/misc/functor.hh>
 #include <dune/stuff/common/matrix.hh>
 #include <dune/stuff/la/container/eigen.hh>
