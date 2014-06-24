@@ -12,6 +12,7 @@
 #include <dune/stuff/common/disable_warnings.hh>
 # include <dune/common/fvector.hh>
 #include <dune/stuff/common/reenable_warnings.hh>
+#include <dune/stuff/functions/interfaces.hh>
 
 namespace Dune {
 namespace Stuff {
@@ -19,7 +20,7 @@ namespace Stuff {
 /**
  * \brief Interface for scalar and vector valued timedependent functions.
  */
-template< class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDim >
+template< class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDim, int rangeDimCols = 1 >
 class
   DUNE_DEPRECATED_MSG("Derive this from LocalizableFunctionInterface or GlobalFunctionInterface or put this somewhere else!")
       TimedependentFunctionInterface
@@ -67,7 +68,7 @@ struct
         TimeFunctionAdapter
   : public Dune::Stuff::TimedependentFunctionInterface< DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows >
 {
-  typedef Dune::Stuff::GlobalFunction< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows > WrappedType;
+  typedef Dune::Stuff::GlobalFunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows > WrappedType;
 
   TimeFunctionAdapter(const WrappedType& wr)
     : wrapped_(wr)
@@ -91,12 +92,12 @@ struct
 
 template< class EntityImp, class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDimRows >
 TimeFunctionAdapter< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows >
-timefunctionAdapted(const Dune::Stuff::GlobalFunction< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows >& wrapped)
+timefunctionAdapted(const Dune::Stuff::GlobalFunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows >& wrapped)
 DUNE_DEPRECATED_MSG("Use the interfaces from interfaces.hh or put this somewhere else!");
 
 template< class EntityImp, class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDimRows >
 TimeFunctionAdapter< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows >
-timefunctionAdapted(const Dune::Stuff::GlobalFunction< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows >& wrapped)
+timefunctionAdapted(const Dune::Stuff::GlobalFunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows >& wrapped)
 {
   return TimeFunctionAdapter< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDimRows >(wrapped);
 }
