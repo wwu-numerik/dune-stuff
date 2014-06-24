@@ -8,6 +8,7 @@
 
 #include <set>
 #include <vector>
+#include <limits>
 
 #include <dune/common/unused.hh>
 #include <dune/stuff/common/debug.hh>
@@ -93,7 +94,8 @@ public:
      */
   inline unsigned int countNonZeros(unsigned int row) {
     ASSERT_LT( row, sparsityPattern_.size() );
-    return sparsityPattern_[row].size();
+    assert(sparsityPattern.size() < std::numeric_limits< unsigned int >::max());
+    return (unsigned int) sparsityPattern_[row].size();
   }
 
   /**
