@@ -13,6 +13,7 @@
 #include <dune/stuff/common/color.hh>
 
 #include <dune/stuff/functions/interfaces.hh>
+#include <dune/stuff/playground/functions/time.hh>
 
 namespace Dune {
 namespace Stuff {
