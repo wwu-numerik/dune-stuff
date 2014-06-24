@@ -17,6 +17,7 @@
 #include <dune/stuff/common/reenable_warnings.hh>
 
 #include <dune/stuff/functions/ESV2007.hh>
+#include <dune/stuff/common/debug.hh>
 
 namespace Dune {
 namespace Stuff {
@@ -171,13 +172,13 @@ class Cutoff
       return 0;
     }
 
-    virtual void evaluate(const DomainType& xx, RangeType& ret) const DS_OVERRIDE DS_FINAL
+    virtual void evaluate(const DomainType& UNUSED_UNLESS_DEBUG(xx), RangeType& ret) const DS_OVERRIDE DS_FINAL
     {
       assert(this->is_a_valid_point(xx));
       ret[0] = value_;
     }
 
-    virtual void jacobian(const DomainType& xx, JacobianRangeType& ret) const DS_OVERRIDE DS_FINAL
+    virtual void jacobian(const DomainType& UNUSED_UNLESS_DEBUG(xx), JacobianRangeType& ret) const DS_OVERRIDE DS_FINAL
     {
       assert(this->is_a_valid_point(xx));
       ret *= RangeFieldType(0);
