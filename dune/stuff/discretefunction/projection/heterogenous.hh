@@ -165,7 +165,7 @@ global_evaluation_points(const GDT::Spaces::ContinuousLagrangeBase< ImpTraits, d
   return points;
 }
 
-template< template< class > class SearchStrategy = Grid::EntityInlevelSearch >
+
 class MsFEMProjection {
 public:
   //! signature for non-default SearchStrategy constructions
