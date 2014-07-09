@@ -666,7 +666,7 @@ public:
 
   /**
    * \param size Determines the size of the returning container (size if T is a vector type, rows if T is a matrix type, 0 means automatic).
-   * \param size Determines the number of columns of the returning matrix if T is a matrix type (0 means automatic, ignored, if T is a vector type).
+   * \param cols Determines the number of columns of the returning matrix if T is a matrix type (0 means automatic, ignored, if T is a vector type).
    */
   template< typename T >
   T get(const std::string& key, const T& default_value, const size_t size = 0, const size_t cols = 0) const
@@ -684,7 +684,7 @@ public:
 
   /**
    * \param size Determines the size of the returning container (size if T is a vector type, rows if T is a matrix type, 0 means automatic).
-   * \param size Determines the number of columns of the returning matrix if T is a matrix type (0 means automatic, ignored, if T is a vector type).
+   * \param cols Determines the number of columns of the returning matrix if T is a matrix type (0 means automatic, ignored, if T is a vector type).
    */
   template< typename T >
   T get(const std::string& key, const size_t size = 0, const size_t cols = 0) const
