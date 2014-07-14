@@ -150,13 +150,13 @@ public:
       DUNE_THROW_COLORFULLY(Exceptions::internal_error,
                             "Given type '" << type << "' is not supported, although it was reported by options()!");
     // check
-    const S post_check_solves_system_theshhold = opts.get("post_check_solves_system",
+    const S post_check_solves_system_threshold = opts.get("post_check_solves_system",
                                                           default_opts.get< S >("post_check_solves_system"));
-    if (post_check_solves_system_theshhold > 0) {
+    if (post_check_solves_system_threshold > 0) {
       auto tmp = rhs.copy();
       tmp.backend() = matrix_.backend() * solution.backend() - rhs.backend();
       const S sup_norm = tmp.sup_norm();
-      if (sup_norm > post_check_solves_system_theshhold || std::isnan(sup_norm) || std::isinf(sup_norm))
+      if (sup_norm > post_check_solves_system_threshold || std::isnan(sup_norm) || std::isinf(sup_norm))
         DUNE_THROW_COLORFULLY(Exceptions::linear_solver_failed_bc_the_solution_does_not_solve_the_system,
                               "The computed solution does not solve the system (although the eigen backend reported "
                               << "'Success') and you requested checking (see options below)!\n"
@@ -477,13 +477,13 @@ public:
                               << "Please report this to the dune-stuff developers!");
     }
     // check
-    const S post_check_solves_system_theshhold = opts.get("post_check_solves_system",
+    const S post_check_solves_system_threshold = opts.get("post_check_solves_system",
                                                           default_opts.get< S >("post_check_solves_system"));
-    if (post_check_solves_system_theshhold > 0) {
+    if (post_check_solves_system_threshold > 0) {
       auto tmp = rhs.copy();
       tmp.backend() = matrix_.backend() * solution.backend() - rhs.backend();
       const S sup_norm = tmp.sup_norm();
-      if (sup_norm > post_check_solves_system_theshhold || std::isnan(sup_norm) || std::isinf(sup_norm))
+      if (sup_norm > post_check_solves_system_threshold || std::isnan(sup_norm) || std::isinf(sup_norm))
         DUNE_THROW_COLORFULLY(Exceptions::linear_solver_failed_bc_the_solution_does_not_solve_the_system,
                               "The computed solution does not solve the system (although the eigen backend reported "
                               << "'Success') and you requested checking (see options below)!\n"
