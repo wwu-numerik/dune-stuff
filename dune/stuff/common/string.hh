@@ -66,7 +66,9 @@ inline std::string toString(const std::string s) {
 //! simple and dumb anything to std::string conversion
 template< class InType >
 inline std::string toString(const InType& s) {
-  return std::to_string(s);
+  std::stringstream ss;
+  ss << std::setprecision(17) << s;
+  return ss.str();
 } // toString
 
 
