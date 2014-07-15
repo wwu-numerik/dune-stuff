@@ -152,8 +152,7 @@ public:
     vtkwriter.write(filename, VTK::appendedraw);
   } // ... visualize(...)
 
-  virtual void visualize(const Common::ConfigTree& boundary_info_cfg,
-                         const std::string filename = static_id()) const
+  virtual void visualize(const Common::ConfigTree& boundary_info_cfg, const std::string filename = static_id()) const
   {
     // boundary info
     typedef Stuff::Grid::BoundaryInfoProvider< typename LeafGridViewType::Intersection > BoundaryInfoProvider;
