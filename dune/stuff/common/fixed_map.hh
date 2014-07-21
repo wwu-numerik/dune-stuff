@@ -135,14 +135,14 @@ public:
   const mapped_type& operator[] (const key_type& key) const {
     const auto it = getIdx(key);
     if (it == N)
-      DUNE_THROW(Dune::RangeError,"missing key in FixedMap");
+      DUNE_THROW(RangeError,"missing key '" << key << "' in FixedMap!");
     return map_[it].second;
   }
 
   mapped_type& operator[] (const key_type& key) {
     const auto it = getIdx(key);
     if (it == N)
-      DUNE_THROW(Dune::RangeError,"missing key in FixedMap");
+      DUNE_THROW(RangeError,"missing key '" << key << "' in FixedMap!");
     return map_[it].second;
   }
 
