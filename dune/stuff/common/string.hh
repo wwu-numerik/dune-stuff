@@ -27,6 +27,8 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 
+#include <dune/stuff/common/exceptions.hh>
+
 namespace Dune {
 namespace Stuff {
 namespace Common {
@@ -36,6 +38,23 @@ template< class ReturnType >
 inline ReturnType fromString(const std::string s) {
   return boost::lexical_cast<ReturnType, std::string>(s);
 } // fromString
+
+/**
+ * \brief Convert std::string to char.
+ * \return String converted to char, if string.size() == 1. Else try to convert string to int and return char(int).
+ */
+template<>
+inline char fromString<char>(const std::string s) {
+  if (s.size()==1)
+    return s[0];
+  else {
+    try {
+      return char(stoi(s));
+    } catch(std::invalid_argument) {
+      DUNE_THROW_COLORFULLY(Stuff::Exceptions::wrong_input_given, "Failed to convert string to char");
+    }
+  }
+}
 
 #define DSC_FRSTR(tn,tns) \
 template<> \
@@ -59,11 +78,15 @@ inline std::string toString(const char* s) {
   return std::string(s);
 } // toString
 
+inline std::string toString(char s) {
+  return std::string(1,s);
+} // toString
+
 inline std::string toString(const std::string s) {
   return std::string(s);
 } // toString
 
-//! simple and dumb anything to std::string conversion
+//! simple and dumb anything (numerical values) to std::string conversion
 template< class InType >
 inline std::string toString(const InType& s) {
   return std::to_string(s);
