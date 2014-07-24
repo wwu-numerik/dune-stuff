@@ -8,31 +8,35 @@
 
 #include "config.h"
 
+#include <random>
+#include <fstream>
+#include <sys/time.h>
+
 #include <dune/stuff/common/disable_warnings.hh>
+# include <gtest.h>
+
 # include <dune/common/float_cmp.hh>
 # include <dune/common/fvector.hh>
 # include <dune/common/fmatrix.hh>
 # include <dune/common/tuples.hh>
 # include <dune/common/tupleutility.hh>
 # include <dune/common/parallel/mpihelper.hh>
+
+# if HAVE_DUNE_FEM
+#   include <dune/fem/misc/mpimanager.hh>
+# endif
 #include <dune/stuff/common/reenable_warnings.hh>
+
 #include <dune/stuff/aliases.hh>
 #include <dune/stuff/common/parameter/configcontainer.hh>
 #include <dune/stuff/common/logging.hh>
-#if HAVE_DUNE_FEM
-# include <dune/stuff/common/disable_warnings.hh>
-#   include <dune/fem/misc/mpimanager.hh>
-# include <dune/stuff/common/reenable_warnings.hh>
-#endif
-#include <dune/stuff/common/disable_warnings.hh>
-# include <gtest/gtest.h>
-#include <dune/stuff/common/reenable_warnings.hh>
-
-#include <random>
-#include <fstream>
-#include <sys/time.h>
-
 #include <dune/stuff/fem/namespace.hh>
+
+
+class errors_are_not_as_expected
+  : public Dune::Exception
+{};
+
 
 template < template <class> class Test >
 struct TestRunner {
@@ -52,10 +56,12 @@ struct TestRunner {
     }
 };
 
+
 template < int i >
 struct Int {
   static const int value = i;
 };
+
 
 //! where sleep only counts toward wall time, this wastes actual cpu time
 void busywait(const int ms)  {

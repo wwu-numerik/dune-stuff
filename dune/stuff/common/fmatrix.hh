@@ -11,9 +11,9 @@
 # include <dune/common/fvector.hh>
 #include <dune/stuff/common/reenable_warnings.hh>
 
-
 #include <dune/stuff/common/exceptions.hh>
 #include <dune/stuff/common/debug.hh>
+#include <dune/stuff/common/fvector.hh>
 
 namespace Dune {
 namespace Stuff {
@@ -28,7 +28,11 @@ class FieldMatrix
   typedef FieldMatrix< K, ROWS, COLS >       ThisType;
 
 public:
-  FieldMatrix(const size_t UNUSED_UNLESS_DEBUG(rr) = ROWS, const size_t UNUSED_UNLESS_DEBUG(cc) = COLS, const K kk = K(0))
+  FieldMatrix(const K kk = K(0))
+    : BaseType(kk)
+  {} // ... FieldMatrix(...)
+
+  FieldMatrix(const size_t UNUSED_UNLESS_DEBUG(rr), const size_t UNUSED_UNLESS_DEBUG(cc), const K kk = K(0))
     : BaseType(kk)
   {
 #ifndef NDEBUG
@@ -42,11 +46,6 @@ public:
   FieldMatrix(const BaseType& other)
     : BaseType(other)
   {}
-
-  ThisType& operator=(const BaseType& other)
-  {
-    return BaseType::operator=(other);
-  }
 
   Dune::FieldVector< K, ROWS > operator*(const Dune::FieldVector< K, COLS >& vec) const
   {
@@ -101,26 +100,20 @@ public:
     : BaseType(other)
   {}
 
-  FieldMatrix(const FieldVector< K, 1 >& other)
+  FieldMatrix(const Dune::Stuff::Common::FieldVector< K, 1 >& other)
     : BaseType(other[0])
   {}
 
-  ThisType& operator=(const BaseType& other)
-  {
-    return BaseType::operator=(other);
-  }
+  FieldMatrix(const Dune::FieldVector< K, 1 >& other)
+    : BaseType(other[0])
+  {}
+
+  using BaseType::operator=;
 
   ThisType& operator=(const FieldVector< K, 1 >& other)
   {
     return BaseType::operator=(other[0]);
   }
-
-  FieldVector< K, ROWS > operator*(const FieldVector< K, COLS >& vec) const
-  {
-    FieldVector< K, ROWS > ret;
-    this->mv(vec, ret);
-    return ret;
-  } // ... operator*(...)
 
   ThisType operator*(const K& scal) const
   {
