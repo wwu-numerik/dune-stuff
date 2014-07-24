@@ -18,6 +18,8 @@
 # endif
 
 # include <dune/stuff/functions/global.hh>
+# include <dune/stuff/aliases.hh>
+# include <dune/stuff/common/memory.hh>
 
 namespace Dune {
 namespace Stuff {

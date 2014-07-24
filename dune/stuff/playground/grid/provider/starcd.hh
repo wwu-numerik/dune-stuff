@@ -34,8 +34,7 @@
 #include <dune/stuff/common/parameter/tree.hh>
 #include <dune/stuff/common/string.hh>
 #include <dune/stuff/common/logging.hh>
-
-#include "interface.hh"
+#include <dune/stuff/grid/provider/interface.hh>
 
 namespace Dune {
 namespace Stuff {
@@ -49,13 +48,13 @@ namespace Stuff {
  */
 template< class GridImp = Dune::SGrid< 2, 2 > >
 class GridProviderStarCD
-  : public GridProviderInterface< GridImp >
+  : public Grid::ProviderInterface< GridImp >
 {
 public:
   //! Type of the provided grid.
   typedef GridImp GridType;
 
-  typedef GridProviderInterface< GridType > BaseType;
+  typedef Grid::ProviderInterface< GridType > BaseType;
 
   typedef GridProviderStarCD< GridType > ThisType;
 

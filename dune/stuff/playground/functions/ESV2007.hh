@@ -10,7 +10,7 @@
 
 #if HAVE_EIGEN
 # include <Eigen/Eigenvalues>
-#endif
+
 
 #include <dune/geometry/quadraturerules.hh>
 
@@ -266,5 +266,7 @@ private:
 } // namespace Functions
 } // namespace Stuff
 } // namespace Dune
+
+#endif // HAVE_EIGEN
 
 #endif // DUNE_STUFF_PLAYGROUND_FUNCTIONS_ESV2007_HH

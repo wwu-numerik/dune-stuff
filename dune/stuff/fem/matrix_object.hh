@@ -481,11 +481,6 @@ void reserve_matrix(Dune::Fem::SparseRowMatrixObject<DomainSpaceType, RangeSpace
 {
   matrix_object.reserve();
 }
-template <class DomainFunctionType, class RangeFunctionType, class Traits, template <class,class> class StencilType = Dune::Fem::DiagonalAndNeighborStencil>
-void reserve_matrix(Dune::Fem::SparseRowMatrixOperator<DomainFunctionType, RangeFunctionType, Traits>& matrix_object)
-{
-  matrix_object.reserve();
-}
 
 } // namespace Fem
 } // namespace Stuff
