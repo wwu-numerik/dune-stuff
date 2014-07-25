@@ -12,7 +12,7 @@
 # include <dune/fem/function/common/function.hh>
 # include <dune/fem/function/common/gridfunctionadapter.hh>
 # include <dune/fem/space/common/functionspace.hh>
-# include <dune/fem/space/discontinuousgalerkin/space.hh>
+# include <dune/fem/space/discontinuousgalerkin.hh>
 # include <dune/fem/function/adaptivefunction.hh>
 #include <dune/stuff/common/reenable_warnings.hh>
 #include <dune/stuff/fem/customprojection.hh>
