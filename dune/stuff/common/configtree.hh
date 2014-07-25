@@ -508,39 +508,39 @@ public:
   }
 
   template< class T >
-  ConfigTree(const std::vector< std::string > keys, const std::vector< T > values)
+  ConfigTree(const std::vector< std::string > keys, const std::vector< T > values_in)
     : BaseType()
   {
-    if (keys.size() != values.size())
+    if (keys.size() != values_in.size())
       DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
                             "The size of 'keys' (" << keys.size() << ") does not match the size of 'values' ("
-                            << values.size() << ")!");
+                            << values_in.size() << ")!");
     for (size_t ii = 0; ii < keys.size(); ++ii)
-      set(keys[ii], values[ii]);
+      set(keys[ii], values_in[ii]);
   }
 
-  ConfigTree(const std::vector< std::string > keys, const std::vector< std::string > values)
+  ConfigTree(const std::vector< std::string > keys, const std::vector< std::string > values_in)
     : BaseType()
   {
-    if (keys.size() != values.size())
+    if (keys.size() != values_in.size())
       DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
                             "The size of 'keys' (" << keys.size() << ") does not match the size of 'values' ("
-                            << values.size() << ")!");
+                            << values_in.size() << ")!");
     for (size_t ii = 0; ii < keys.size(); ++ii)
-      set(keys[ii], values[ii]);
+      set(keys[ii], values_in[ii]);
   }
 
   template< class T >
   ConfigTree(const std::vector< std::string > keys, const std::initializer_list< T > value_list)
     : BaseType()
   {
-    std::vector< T > values(value_list);
-    if (keys.size() != values.size())
+    std::vector< T > tmp_values(value_list);
+    if (keys.size() != tmp_values.size())
       DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
                             "The size of 'keys' (" << keys.size() << ") does not match the size of 'value_list' ("
-                            << values.size() << ")!");
+                            << tmp_values.size() << ")!");
     for (size_t ii = 0; ii < keys.size(); ++ii)
-      set(keys[ii], values[ii]);
+      set(keys[ii], tmp_values[ii]);
   }
 
   explicit ConfigTree(const std::string filename)
