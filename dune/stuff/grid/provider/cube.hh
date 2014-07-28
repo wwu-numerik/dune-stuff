@@ -111,9 +111,9 @@ struct ElementVariant< Dune::ALUGrid< dimGrid, dimWorld, Dune::cube, Dune::nonco
  **/
 template< typename GridImp, int variant = internal::ElementVariant< GridImp >::id >
 class Cube
-  : public Providers::Default< GridImp >
+  : public ProviderInterface< GridImp >
 {
-  typedef Providers::Default< GridImp > BaseType;
+  typedef ProviderInterface< GridImp > BaseType;
   typedef Cube< GridImp, variant > ThisType;
 public:
   using typename BaseType::GridType;
@@ -164,26 +164,36 @@ public:
   Cube(const DomainFieldType lower_left = default_config().get< DomainFieldType >("lower_left"),
        const DomainFieldType upper_right = default_config().get< DomainFieldType >("upper_right"),
        const unsigned int num_elements = default_config().get< std::vector< unsigned int > >("num_elements")[0])
-    : BaseType(create_grid(DomainType(lower_left), DomainType(upper_right), parse_array(num_elements)))
+    : grid_ptr_(create_grid(lower_left, upper_right, parse_array(num_elements)))
   {}
 
   Cube(const std::vector< DomainFieldType >& lower_left,
        const std::vector< DomainFieldType >& upper_right,
        const std::vector< unsigned int > num_elements = default_config().get< std::vector< unsigned int > >("num_elements"))
-    : BaseType(create_grid(parse_vector(lower_left), parse_vector(upper_right), parse_array(num_elements)))
+    : grid_ptr_(create_grid(lower_left, upper_right, parse_array(num_elements)))
   {}
 
   Cube(const DomainType& lower_left,
        const DomainType& upper_right,
        const unsigned int num_elements = default_config().get< std::vector< unsigned int > >("num_elements")[0])
-    : BaseType(create_grid(lower_left, upper_right, parse_array(num_elements)))
+    : grid_ptr_(create_grid(lower_left, upper_right, parse_array(num_elements)))
   {}
 
   Cube(const DomainType& lower_left,
        const DomainType& upper_right,
        const std::vector< unsigned int > num_elements = default_config().get< std::vector< unsigned int > >("num_elements"))
-    : BaseType(create_grid(lower_left, upper_right, parse_array(num_elements)))
+    : grid_ptr_(create_grid(lower_left, upper_right, parse_array(num_elements)))
   {}
+
+  virtual GridType& grid() DS_OVERRIDE
+  {
+    return *grid_ptr_;
+  }
+
+  virtual const GridType& grid() const DS_OVERRIDE
+  {
+    return *grid_ptr_;
+  }
 
 private:
   static std::array< unsigned int, dimDomain > parse_array(const unsigned int in)
@@ -236,6 +246,8 @@ private:
         break;
     }
   } // ... create_grid(...)
+
+  std::shared_ptr<GridType> grid_ptr_;
 }; // class Cube
 
 
