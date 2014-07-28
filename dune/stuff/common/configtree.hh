@@ -119,14 +119,14 @@ class ConfigTree
       S s_out;
       try {
         s_out = fromString< S >(str_in);
-      } catch (std::exception& e) {
-        DUNE_THROW_COLORFULLY(Exceptions::external_error,
-                              "There was the following error in the stl while parsing the value '" << str_in
-                              << "' for key '" << key << "' in the config below: " << e.what() << "\n\n"
-                              << cfg.report_string());
       } catch (boost::bad_lexical_cast& e) {
         DUNE_THROW_COLORFULLY(Exceptions::external_error,
                               "There was the following error in boost while parsing the value '" << str_in
+                              << "' for key '" << key << "' in the config below: " << e.what() << "\n\n"
+                              << cfg.report_string());
+      } catch (std::exception& e) {
+        DUNE_THROW_COLORFULLY(Exceptions::external_error,
+                              "There was the following error in the stl while parsing the value '" << str_in
                               << "' for key '" << key << "' in the config below: " << e.what() << "\n\n"
                               << cfg.report_string());
       }
