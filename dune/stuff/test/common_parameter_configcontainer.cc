@@ -55,7 +55,7 @@ struct ConfigTest : public testing::Test {
       auto key = key_gen();
       DSC_CONFIG.set(key, val);
       //get with default diff from expected
-      auto re = DSC_CONFIG.get(key, val+Epsilon<T>::value);
+      auto re = DSC_CONFIG.get(key, T(val+Epsilon<T>::value));
       EXPECT_EQ(re, val);
     }
   }

@@ -12,10 +12,11 @@
 #include <sstream>
 #include <fstream>
 #include <vector>
+#include <limits>
 
-#include <dune/common/fvector.hh>
 #include <dune/stuff/common/disable_warnings.hh>
-  #include <dune/fem/io/file/iointerface.hh>
+# include <dune/common/fvector.hh>
+# include <dune/fem/io/file/iointerface.hh>
 #include <dune/stuff/common/reenable_warnings.hh>
 #include <boost/format.hpp>
 
@@ -110,7 +111,8 @@ class FemEoc
   size_t addentry(const StrVectorType& descript, size_t size) {
     if (!initial_)
       DUNE_THROW(Dune::InvalidStateException, "");
-    pos_.push_back( error_.size() );
+    assert(error_.size() < std::numeric_limits< int >::max());
+    pos_.push_back( int(error_.size()) );
     for (size_t i = 0; i < size; ++i)
     {
       error_.push_back(0);

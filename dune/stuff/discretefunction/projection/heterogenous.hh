@@ -8,22 +8,29 @@
 #ifndef DUNE_STUFF_DISCRETEFUNCTION_PROJECTION_HETEROGENOUS_HH
 #define DUNE_STUFF_DISCRETEFUNCTION_PROJECTION_HETEROGENOUS_HH
 
-#include <dune/common/fvector.hh>
-#include <dune/grid/common/backuprestore.hh>
-#include <dune/grid/common/grid.hh>
+#include <dune/stuff/common/disable_warnings.hh>
+# include <dune/common/fvector.hh>
+# include <dune/grid/common/backuprestore.hh>
+# include <dune/grid/common/grid.hh>
+#include <dune/stuff/common/reenable_warnings.hh>
 #include <dune/grid/common/entity.hh>
 #include <dune/stuff/common/ranges.hh>
 #include <dune/stuff/aliases.hh>
 #include <dune/stuff/fem/namespace.hh>
 
 #if HAVE_DUNE_FEM
-  #include <dune/fem/function/common/discretefunction.hh>
-  #include <dune/fem/quadrature/cachingquadrature.hh>
-  #include <dune/fem/space/finitevolume.hh>
-  #include <dune/fem/space/lagrange.hh>
+# include <dune/stuff/common/disable_warnings.hh>
+#   include <dune/fem/function/common/discretefunction.hh>
+#   include <dune/fem/quadrature/cachingquadrature.hh>
+#   include <dune/fem/space/lagrange.hh>
+#   include <dune/fem/space/finitevolume.hh>
+# include <dune/stuff/common/reenable_warnings.hh>
+
 #endif
 
-#include <dune/grid/io/file/vtk/function.hh>
+#include <dune/stuff/common/disable_warnings.hh>
+# include <dune/grid/io/file/vtk/function.hh>
+#include <dune/stuff/common/reenable_warnings.hh>
 
 #include <dune/stuff/grid/search.hh>
 

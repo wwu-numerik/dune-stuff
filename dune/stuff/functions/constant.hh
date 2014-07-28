@@ -53,7 +53,7 @@ class Constant
     std::string str = "[";
     for (size_t cc = 0; cc < rC; ++cc) {
       if (cc > 0)
-        str += "; ";
+        str += " ";
       str += "1";
     }
     str += "]";

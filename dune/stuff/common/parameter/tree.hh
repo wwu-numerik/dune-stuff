@@ -23,7 +23,9 @@
 #endif // HAVE_EIGEN
 
 #include <dune/common/exceptions.hh>
-#include <dune/common/parametertreeparser.hh>
+#include <dune/stuff/common/disable_warnings.hh>
+# include <dune/common/parametertreeparser.hh>
+#include <dune/stuff/common/reenable_warnings.hh>
 #include <dune/common/dynvector.hh>
 
 #include <dune/stuff/common/string.hh>

@@ -197,9 +197,9 @@ struct Typename<ValidateAny<T> > {
   }
 };
 
-} //end namesapce Common
-} //end namesapce Stuff
-} //end namesapce Dune
+} //end namespace Common
+} //end namespace Stuff
+} //end namespace Dune
 
 template < class T, class Validator >
 std::ostream operator << ( std::ostream& out,

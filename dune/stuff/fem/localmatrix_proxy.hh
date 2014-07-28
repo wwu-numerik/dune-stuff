@@ -8,7 +8,9 @@
 
 #include <vector>
 #include <assert.h>
-#include <dune/common/float_cmp.hh>
+#include <dune/stuff/common/disable_warnings.hh>
+# include <dune/common/float_cmp.hh>
+#include <dune/stuff/common/reenable_warnings.hh>
 #include <dune/stuff/common/debug.hh>
 #include <dune/stuff/common/type_utils.hh>
 #include <dune/stuff/aliases.hh>
