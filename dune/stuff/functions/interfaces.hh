@@ -697,7 +697,9 @@ public:
 #include "default.hh"
 #include "combined.hh"
 
-#ifdef DUNE_STUFF_FUNCTIONS_TO_LIB
+#if 0 //def DUNE_STUFF_FUNCTIONS_TO_LIB
+the whole  DUNE_STUFF_FUNCTIONS_TO_LIB stuff threw loads of errors, so I disabled it everywhere (Rene)
+
 # define DUNE_STUFF_FUNCTIONS_INTERFACES_LIST_CLASSES(etype, ddim) \
   DUNE_STUFF_FUNCTIONS_INTERFACES_LIST_DIMRANGE(Dune::Stuff::LocalfunctionSetInterface, etype, ddim) \
   DUNE_STUFF_FUNCTIONS_INTERFACES_LIST_DIMRANGE(Dune::Stuff::LocalfunctionInterface, etype, ddim) \
