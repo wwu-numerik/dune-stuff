@@ -95,10 +95,11 @@ std::set<Request> ConfigContainer::getMismatchedDefaults(ConfigContainer::Reques
       return std::set<Request>(std::begin(mismatched), std::end(mismatched));
 }
 
+//Constructors and destructors for ConfigContainer
 ConfigContainer::ConfigContainer(const Dune::ParameterTree& tree)
     : tree_(tree)
     , record_defaults_(false)
-    , logdir_(boost::filesystem::path(get("global.datadir", "data", false)) / get("logging.dir", "log", false))
+    , logdir_(boost::filesystem::path(get("global.datadir", "data", 0,0,false)) / get("logging.dir", "log",0,0,false))
 #ifndef NDEBUG
     , warning_output_(false)
 #endif
@@ -108,7 +109,7 @@ ConfigContainer::ConfigContainer(const Dune::ParameterTree& tree)
 
 ConfigContainer::ConfigContainer()
     : record_defaults_(false)
-    , logdir_(boost::filesystem::path(get("global.datadir", "data", false)) / get("logging.dir", "log", false))
+    , logdir_(boost::filesystem::path(get("global.datadir", "data", 0,0,false)) / get("logging.dir", "log",0,0,false))
 #ifndef NDEBUG
     , warning_output_(true)
 #endif
@@ -116,11 +117,95 @@ ConfigContainer::ConfigContainer()
     testCreateDirectory(logdir_.string());
 }
 
+template< class T >
+ConfigContainer::ConfigContainer(const std::string key, const T& value)
+  : record_defaults_(false)
+  , logdir_(boost::filesystem::path(get("global.datadir", "data", 0,0,false)) / get("logging.dir", "log",0,0,false))
+#ifndef NDEBUG
+  , warning_output_(true)
+#endif
+{
+  set(key, value);
+}
+
+template< class T >
+ConfigContainer::ConfigContainer(const std::string key, const char* value)
+  : record_defaults_(false)
+  , logdir_(boost::filesystem::path(get("global.datadir", "data", 0,0,false)) / get("logging.dir", "log",0,0,false))
+#ifndef NDEBUG
+  , warning_output_(true)
+#endif
+{
+  set(key, value);
+}
+
+template< class T >
+ConfigContainer::ConfigContainer(const std::vector< std::string > keys, const std::vector< T > values_in)
+  : record_defaults_(false)
+  , logdir_(boost::filesystem::path(get("global.datadir", "data", 0,0,false)) / get("logging.dir", "log",0,0,false))
+#ifndef NDEBUG
+  , warning_output_(true)
+#endif
+{
+  if (keys.size() != values_in.size())
+    DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
+                          "The size of 'keys' (" << keys.size() << ") does not match the size of 'values' ("
+                          << values_in.size() << ")!");
+  for (size_t ii = 0; ii < keys.size(); ++ii)
+    set(keys[ii], values_in[ii]);
+}
+
+template< class T >
+ConfigContainer::ConfigContainer(const std::vector< std::string > keys, const std::initializer_list< T > value_list)
+  : record_defaults_(false)
+  , logdir_(boost::filesystem::path(get("global.datadir", "data", 0,0,false)) / get("logging.dir", "log",0,0,false))
+#ifndef NDEBUG
+  , warning_output_(true)
+#endif
+{
+  std::vector< T > tmp_values(value_list);
+  if (keys.size() != tmp_values.size())
+    DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
+                          "The size of 'keys' (" << keys.size() << ") does not match the size of 'value_list' ("
+                          << tmp_values.size() << ")!");
+  for (size_t ii = 0; ii < keys.size(); ++ii)
+    set(keys[ii], tmp_values[ii]);
+}
+
+ConfigContainer::ConfigContainer(const std::vector< std::string > keys, const std::initializer_list< std::string > value_list)
+  : record_defaults_(false)
+  , logdir_(boost::filesystem::path(get("global.datadir", "data", 0,0,false)) / get("logging.dir", "log",0,0,false))
+#ifndef NDEBUG
+  , warning_output_(true)
+#endif
+{
+  std::vector< std::string > tmp_values(value_list);
+  if (keys.size() != tmp_values.size())
+    DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
+                          "The size of 'keys' (" << keys.size() << ") does not match the size of 'value_list' ("
+                          << tmp_values.size() << ")!");
+  for (size_t ii = 0; ii < keys.size(); ++ii)
+    set(keys[ii], tmp_values[ii]);
+}
+
+ConfigContainer::ConfigContainer(const std::string filename)
+  : ConfigContainer::ConfigContainer(initialize(filename))
+{}
+
+ConfigContainer::ConfigContainer(int argc, char** argv)
+  : ConfigContainer::ConfigContainer(initialize(argc, argv))
+{}
+
+ConfigContainer::ConfigContainer(int argc, char** argv, const std::string filename)
+  : ConfigContainer::ConfigContainer(initialize(argc, argv, filename))
+{}
+
 ConfigContainer::~ConfigContainer() {
   std::unique_ptr<boost::filesystem::ofstream> out(DSC::make_ofstream(logdir_ / "dsc_parameter.log"));
   tree_.report(*out);
 }
 
+// method definitions for ConfigContainer
 /**
  * \brief Load all key-value pairs from tree into fem parameter database.
  * \param tree ParameterTree to get values from.
@@ -157,7 +242,7 @@ void ConfigContainer::readCommandLine(int argc, char* argv[]) {
   loadIntoFemParameter(tree_);
 
   // datadir and logdir may be given from the command line...
-  logdir_ = boost::filesystem::path(get("global.datadir", "data", false)) / get("logging.dir", "log", false);
+  logdir_ = boost::filesystem::path(get("global.datadir", "data", 0,0,false)) / get("logging.dir", "log",0,0,false);
 } // ReadCommandLine
 
 //! search command line options for key-value pairs and add them to ConfigContainer
