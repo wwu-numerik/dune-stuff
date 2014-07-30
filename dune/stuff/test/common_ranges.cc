@@ -8,7 +8,9 @@
 
 #if HAVE_DUNE_GRID
 
-#include <dune/grid/sgrid.hh>
+#include <dune/stuff/common/disable_warnings.hh>
+# include <dune/grid/sgrid.hh>
+#include <dune/stuff/common/reenable_warnings.hh>
 #include <dune/stuff/grid/provider/cube.hh>
 #include <dune/stuff/common/ranges.hh>
 
@@ -50,7 +52,7 @@ struct CornerRangeTest : public ::testing::Test
   }
 
   void check() {
-    const auto gv = grid_prv.grid().leafView();
+    const auto gv = grid_prv.grid().leafGridView();
     const auto entities = gv.size(0);
     const auto end = gv.template end<0>();
     for(auto it = gv.template begin<0>(); it != end; ++it)
