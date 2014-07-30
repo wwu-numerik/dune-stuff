@@ -29,9 +29,9 @@
 using namespace Dune;
 using namespace Dune::Stuff;
 
-typedef testing::Types< Dune::SGrid< 1, 1 >
-                      , Dune::SGrid< 2, 2 >
-                      , Dune::SGrid< 3, 3 >
+//! \TODO enable embedded grids
+typedef testing::Types< SGrid<1,1>, SGrid<2,2>, SGrid<3,3>, SGrid<4,4>
+//, SGrid<1,2>, SGrid<2,3>, SGrid<3,4>, SGrid<4,5>,
                       , Dune::YaspGrid< 1 >
                       , Dune::YaspGrid< 2 >
                       , Dune::YaspGrid< 3 >
