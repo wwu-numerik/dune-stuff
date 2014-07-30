@@ -6,7 +6,7 @@
 // This one has to come first (includes the config.h)!
 #include <dune/stuff/test/test_common.hh>
 
-#include <dune/stuff/common/configtree.hh>
+#include <dune/stuff/common/parameter/configcontainer.hh>
 #include <dune/stuff/common/logging.hh>
 #include <dune/stuff/la/container.hh>
 #include <dune/stuff/common/exceptions.hh>
@@ -18,13 +18,13 @@
 std::ostream& test_out = DSC_LOG.devnull();
 
 using namespace Dune;
-using Dune::Stuff::Common::ConfigTree;
+using Dune::Stuff::Common::ConfigContainer;
 using Dune::Stuff::Exceptions::results_are_not_as_expected;
 using namespace Dune::Stuff::Common::FloatCmp;
 
 
-struct CreateByOperator { static ConfigTree create() {
-    ConfigTree config;
+struct CreateByOperator { static ConfigContainer create() {
+    ConfigContainer config;
     config["string"] = "string";
     config["sub1.int"] = "1";
     config["sub2.size_t"] = "1";
@@ -33,30 +33,30 @@ struct CreateByOperator { static ConfigTree create() {
     return config;
 } };
 
-struct CreateByKeyAndValueAndAdd { static ConfigTree create() {
-    ConfigTree config("string", "string");
+struct CreateByKeyAndValueAndAdd { static ConfigContainer create() {
+    ConfigContainer config("string", "string");
     config.set("sub1.int", "1");
     config.set("sub2.size_t", 1);
-    config.add(ConfigTree("vector", "[0 1]"), "sub2.subsub1");
-    config.add(ConfigTree("matrix", "[0 1; 1 2]"), "sub2.subsub1");
+    config.add(ConfigContainer("vector", "[0 1]"), "sub2.subsub1");
+    config.add(ConfigContainer("matrix", "[0 1; 1 2]"), "sub2.subsub1");
     return config;
 } };
 
-struct CreateByKeysAndValues { static ConfigTree create() {
-    return ConfigTree({"string", "sub1.int", "sub2.size_t", "sub2.subsub1.vector", "sub2.subsub1.matrix"},
+struct CreateByKeysAndValues { static ConfigContainer create() {
+    return ConfigContainer({"string", "sub1.int", "sub2.size_t", "sub2.subsub1.vector", "sub2.subsub1.matrix"},
                       {"string", "1",        "1",           "[0 1]",               "[0 1; 1 2]"});
 } };
 
 
-typedef testing::Types< CreateByOperator, CreateByKeyAndValueAndAdd, CreateByKeysAndValues > ConfigTreeCreators;
+typedef testing::Types< CreateByOperator, CreateByKeyAndValueAndAdd, CreateByKeysAndValues > ConfigContainerCreators;
 
-template< class ConfigTreeCreator >
-struct ConfigTreeTest
+template< class ConfigContainerCreator >
+struct ConfigContainerTest
   : public ::testing::Test
 {
 
   template< class VectorType >
-  static void check_vector(const ConfigTree& config)
+  static void check_vector(const ConfigContainer& config)
   {
     VectorType vec = config.get("vector", VectorType(), 1);
     if (vec.size() != 1) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
@@ -101,7 +101,7 @@ struct ConfigTreeTest
   } // ... check_vector< ... >(...)
 
   template< class K, int d >
-  static void check_field_vector(const ConfigTree& config)
+  static void check_field_vector(const ConfigContainer& config)
   {
     typedef FieldVector< K, d > VectorType;
     VectorType vec = config.get("vector", VectorType(), d);
@@ -129,14 +129,15 @@ struct ConfigTreeTest
                                                vec.size() << " vs. 2 with VectorType = "
                                                << Stuff::Common::Typename< VectorType >::value());
     for (size_t ii = 0; ii < d; ++ii)
-      if (FloatCmp::ne(vec[ii], double(ii)))
+      if (FloatCmp::ne(vec[ii], double(ii))) {
         DUNE_THROW_COLORFULLY(results_are_not_as_expected,
                               vec[ii] << " vs. " << ii << " with VectorType = "
                               << Stuff::Common::Typename< VectorType >::value());
+      }
   } // ... check_field_vector< ... >(...)
 
   template< class MatrixType >
-  static void check_matrix(const ConfigTree& config)
+  static void check_matrix(const ConfigContainer& config)
   {
     MatrixType mat = config.get("matrix", MatrixType(), 1, 1);
     if (mat.rows() != 1 || mat.cols() != 1)
@@ -270,7 +271,7 @@ struct ConfigTreeTest
   } // ... check_matrix< ... >(...)
 
   template< class MatrixType >
-  static void check_stuff_matrix(const ConfigTree& config)
+  static void check_stuff_matrix(const ConfigContainer& config)
   {
     MatrixType mat = config.get("matrix", MatrixType(), 1, 1);
     if (mat.rows() != 1 || mat.cols() != 1)
@@ -407,7 +408,7 @@ struct ConfigTreeTest
   } // ... check_stuff_matrix< ... >(...)
 
   template< class K, int r, int c >
-  static void check_field_matrix(const ConfigTree& config)
+  static void check_field_matrix(const ConfigContainer& config)
   {
     typedef FieldMatrix< K, r, c > MatrixType;
     MatrixType mat = config.get("matrix", MatrixType(), r, c);
@@ -451,13 +452,12 @@ struct ConfigTreeTest
 
   static void behaves_correctly()
   {
-    const ConfigTree config = ConfigTreeCreator::create();
+    const ConfigContainer config = ConfigContainerCreator::create();
 //    config.report(); // <- this works as well but will produce output
     config.report(test_out);
     config.report(test_out, "'prefix '");
     test_out << config << std::endl;
     std::string DUNE_UNUSED(report_str) = config.report_string();
-
     std::string str = config.get("string", std::string("foo"));
     if (str != "string") DUNE_THROW_COLORFULLY(results_are_not_as_expected, "'" << str << "'' vs. 'string'");
     str = config.get("foo", std::string("string"));
@@ -466,15 +466,14 @@ struct ConfigTreeTest
     if (str != "string") DUNE_THROW_COLORFULLY(results_are_not_as_expected, "'" << str << "'' vs. 'string'");
 
     if (!config.has_sub("sub1")) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                       "Sub 'sub1' does not exists in this config:\n" << config);
-    ConfigTree sub1_config = config.sub("sub1");
+                                          "Sub 'sub1' does not exists in this config:\n" << config);
+    ConfigContainer sub1_config = config.sub("sub1");
     int nt = sub1_config.get("int", int(0));
     if (nt != 1) DUNE_THROW_COLORFULLY(results_are_not_as_expected, "'" << nt << "'' vs. '1'");
     nt = sub1_config.get("intt", int(1));
     if (nt != 1) DUNE_THROW_COLORFULLY(results_are_not_as_expected, "'" << nt << "'' vs. '1'");
     nt = sub1_config.get< int >("int");
     if (nt != 1) DUNE_THROW_COLORFULLY(results_are_not_as_expected, "'" << nt << "'' vs. '1'");
-
     size_t st = config.get("sub2.size_t", size_t(0));
     if (st != 1) DUNE_THROW_COLORFULLY(results_are_not_as_expected, "'" << st << "'' vs. '1'");
     st = config.get("sub2.size_tt", size_t(1));
@@ -499,10 +498,10 @@ struct ConfigTreeTest
     check_matrix< DynamicMatrix< double > >(config.sub("sub2.subsub1"));
     check_stuff_matrix< Stuff::LA::CommonDenseMatrix< double > >(config.sub("sub2.subsub1"));
   } // ... behaves_correctly(...)
-}; // struct ConfigTreeTest
+}; // struct ConfigContainerTest
 
-TYPED_TEST_CASE(ConfigTreeTest, ConfigTreeCreators);
-TYPED_TEST(ConfigTreeTest, behaves_correctly) {
+TYPED_TEST_CASE(ConfigContainerTest, ConfigContainerCreators);
+TYPED_TEST(ConfigContainerTest, behaves_correctly) {
   this->behaves_correctly();
 }
 
