@@ -6,7 +6,7 @@
 // This one has to come first (includes the config.h)!
 #include <dune/stuff/test/test_common.hh>
 
-#include <dune/stuff/common/parameter/configcontainer.hh>
+#include <dune/stuff/common/parameter/configcontainer.cc>
 #include <dune/stuff/common/logging.hh>
 #include <dune/stuff/la/container.hh>
 #include <dune/stuff/common/exceptions.hh>
