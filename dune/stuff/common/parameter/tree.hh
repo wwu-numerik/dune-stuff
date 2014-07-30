@@ -43,6 +43,7 @@ class ExtendedParameterTree
   : public Dune::ParameterTree {
 
   typedef Dune::ParameterTree BaseType;
+  friend class ConfigContainer;
 
 public:
   ExtendedParameterTree();
@@ -55,7 +56,7 @@ public:
   /**
    *  \brief adds another Dune::ParameterTree
    */
-  void add(const Dune::ParameterTree& _other, const std::string _subName = "");
+  void add(const Dune::ParameterTree& _other, const std::string _subName = "", bool overwrite = false);
   ExtendedParameterTree sub(const std::string& _sub) const;
 
   void report(std::ostream& stream = std::cout, const std::string& prefix = "") const;
