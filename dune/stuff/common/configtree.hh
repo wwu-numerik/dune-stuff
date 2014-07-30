@@ -23,6 +23,7 @@
 #include <dune/common/parametertreeparser.hh>
 #include <dune/common/dynvector.hh>
 #include <dune/common/densevector.hh>
+#include <dune/common/deprecated.hh>
 
 #include <dune/stuff/common/exceptions.hh>
 #include <dune/stuff/common/string.hh>
@@ -42,7 +43,8 @@ namespace Stuff {
 namespace Common {
 
 
-class ConfigTree
+class  DUNE_DEPRECATED_MSG("Use ConfigContainer instead!")
+ConfigTree
   : public ParameterTree
 {
   typedef ParameterTree BaseType;
