@@ -5,7 +5,9 @@
 
 #include "config.h"
 
-#ifdef DUNE_STUFF_FUNCTIONS_TO_LIB
+#if 0 //def DUNE_STUFF_FUNCTIONS_TO_LIB
+the whole  DUNE_STUFF_FUNCTIONS_TO_LIB stuff threw loads of errors, so I disabled it everywhere (Rene)
+
 # include "constant.hh"
 
 # define DUNE_STUFF_FUNCTIONS_CONSTANT_CC_LIST_DIMRANGE(etype, ddim) \

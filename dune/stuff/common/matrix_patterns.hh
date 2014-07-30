@@ -94,7 +94,7 @@ public:
      */
   inline unsigned int countNonZeros(unsigned int row) {
     ASSERT_LT( row, sparsityPattern_.size() );
-    assert(sparsityPattern.size() < std::numeric_limits< unsigned int >::max());
+    assert(sparsityPattern_.size() < std::numeric_limits< unsigned int >::max());
     return (unsigned int) sparsityPattern_[row].size();
   }
 

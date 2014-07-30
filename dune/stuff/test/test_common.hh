@@ -13,7 +13,7 @@
 #include <sys/time.h>
 
 #include <dune/stuff/common/disable_warnings.hh>
-# include <gtest/gtest.h>
+# include <dune/stuff/test/gtest/gtest.h>
 
 # include <dune/common/float_cmp.hh>
 # include <dune/common/fvector.hh>
