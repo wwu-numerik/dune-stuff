@@ -52,7 +52,7 @@ public:
 /**
  *  \brief A dense vector implementation of VectorInterface using the Dune::DynamicVector.
  */
-template< class ScalarImp = double>
+template< class ScalarImp = double >
 class CommonDenseVector
   : public VectorInterface< CommonDenseVectorTraits< ScalarImp > >
   , public ProvidesBackend< CommonDenseVectorTraits< ScalarImp > >
