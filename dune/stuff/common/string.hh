@@ -41,6 +41,7 @@
 #include <dune/stuff/common/exceptions.hh>
 #include <dune/stuff/common/fvector.hh>
 #include <dune/stuff/common/fmatrix.hh>
+#include <dune/stuff/common/debug.hh>
 #include <dune/stuff/la/container/common.hh>
 #if HAVE_EIGEN
 # include <dune/stuff/la/container/eigen.hh>
@@ -267,7 +268,9 @@ class Choose
     : ChooseBase< ReturnType >
 {
 public:
-  static inline ReturnType fromString(const std::string s, size_t rows = 0, size_t cols = 0) {
+  static inline ReturnType fromString(const std::string s, const size_t UNUSED_UNLESS_DEBUG(rows) = 0,
+                                      const size_t UNUSED_UNLESS_DEBUG(cols) = 0) {
+    assert(rows == 0 && cols == 0);
     return boost::lexical_cast<ReturnType, std::string>(s);
   }
 }; // ... Choose < ReturnType >
@@ -281,7 +284,9 @@ class Choose< char >
     : ChooseBase< char >
 {
 public:
-  static inline char fromString(const std::string s, size_t rows = 0, size_t cols = 0) {
+  static inline char fromString(const std::string s, const size_t UNUSED_UNLESS_DEBUG(rows) = 0,
+                                const size_t UNUSED_UNLESS_DEBUG(cols) = 0) {
+    assert(rows == 0 && cols == 0);
     if (s.size()==1)
       return s[0];
     else {
@@ -299,8 +304,10 @@ class Choose< const char * >
     : ChooseBase< const char * >
 {
 public:
-  static inline const char * fromString(const std::string s, size_t rows = 0, size_t cols = 0) {
-  return s.c_str();
+  static inline const char * fromString(const std::string s, const size_t UNUSED_UNLESS_DEBUG(rows) = 0,
+                                        const size_t UNUSED_UNLESS_DEBUG(cols) = 0) {
+    assert(rows == 0 && cols == 0);
+    return s.c_str();
   } // ... fromString(...)
 }; // class Choose < const char * >
 
@@ -311,7 +318,9 @@ class Choose< tn > \
   : ChooseBase< tn > \
 { \
   public: \
-  static inline tn fromString(const std::string s, size_t rows = 0, size_t cols = 0) { \
+  static inline tn fromString(const std::string s, const size_t UNUSED_UNLESS_DEBUG(rows) = 0, \
+                              const size_t UNUSED_UNLESS_DEBUG(cols) = 0) { \
+  assert(rows == 0 && cols == 0); \
   return std::sto##tns(s); \
   } \
 };
@@ -379,7 +388,9 @@ class Choose< VectorType< S > > \
 { \
   typedef ChooseBase< VectorType< S > > BaseType; \
   public: \
-  static inline VectorType < S > fromString(const std::string s, const size_t size = 0, const size_t cols = 0) { \
+  static inline VectorType < S > fromString(const std::string s, const size_t size = 0, \
+                                            const size_t UNUSED_UNLESS_DEBUG(cols) = 0) { \
+    assert(cols == 0); \
     return BaseType::template get_vector_from_string<VectorType< S >, S >(s, size); \
   } \
 };
@@ -405,7 +416,9 @@ class Choose< FieldVectorType< S, SIZE > > \
 { \
   typedef ChooseBase< FieldVectorType< S, SIZE > > BaseType; \
   public: \
-  static inline FieldVectorType < S, SIZE > fromString(const std::string s, const size_t size = 0, const size_t cols = 0) { \
+  static inline FieldVectorType < S, SIZE > fromString(const std::string s, const size_t size = 0, \
+                                                       const size_t UNUSED_UNLESS_DEBUG(cols) = 0) { \
+    assert(cols == 0); \
     if (size > 0 && size != SIZE) \
       DUNE_THROW_COLORFULLY(Exceptions::configuration_error, \
                           "You requested a '" /*<< Typename< VectorType >::value() <<*/ "' with a 'size' of " << size \

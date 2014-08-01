@@ -7,17 +7,23 @@
 #define DUNE_STUFF_GRID_INFORMATION_HH
 
 #include <ostream>
+
 #include <boost/format.hpp>
 #include <boost/range/adaptor/reversed.hpp>
+
+#include <dune/common/unused.hh>
+
 #include <dune/stuff/common/disable_warnings.hh>
 # include <dune/grid/common/gridview.hh>
 #include <dune/stuff/common/reenable_warnings.hh>
+
 #include <dune/stuff/common/math.hh>
 #include <dune/stuff/grid/intersection.hh>
 #include <dune/stuff/common/ranges.hh>
 #include <dune/stuff/grid/walk.hh>
 #include <dune/stuff/aliases.hh>
 #include <dune/stuff/grid/entity.hh>
+
 
 namespace Dune {
 namespace Stuff {
@@ -70,7 +76,7 @@ unsigned int maxNumberOfNeighbors(const GridViewType& gridView)
   unsigned int maxNeighbours = 0;
   for (const auto& entity : viewRange(gridView)) {
     unsigned int neighbours = 0;
-    for (const auto& i : intersectionRange(gridView, entity)) {
+    for (const auto& DUNE_UNUSED(i) : intersectionRange(gridView, entity)) {
       ++neighbours;
     }
     maxNeighbours = std::max(maxNeighbours, neighbours);
@@ -94,7 +100,7 @@ struct Dimensions
   CoordLimitsType coord_limits;
   MinMaxAvgType entity_volume;
   MinMaxAvgType entity_width;
-  
+
   //! gridwalk functor that does the actual work for \ref GridDimensions
   class GridDimensionsFunctor
   {
@@ -140,7 +146,7 @@ template <class GridType>
 Dimensions<typename GridType::LeafGridViewType> dimensions(const GridType& grid) {
   return Dimensions<typename GridType::LeafGridViewType>(grid.leafGridView());
 }
-  
+
 template <class GridViewType >
 Dimensions<GridViewType> dimensions(const GridViewType& gridView) {
   return Dimensions<GridViewType>(gridView);
@@ -161,16 +167,16 @@ inline std::ostream& operator<<(std::ostream& s, const DSG::Dimensions< T >& d) 
   {
     const auto& mma = d.coord_limits[k];
     s << boost::format("x%d\tmin: %e\tavg: %e\tmax: %e\n")
-	    % k
-	    % mma.min()
-	    % mma.average()
-	    % mma.max();
+      % k
+      % mma.min()
+      % mma.average()
+      % mma.max();
   }
   s << boost::format("Entity vol min: %e\tavg: %e\tmax: %e\tQout: %e")
-	  % d.entity_volume.min()
-	  % d.entity_volume.average()
-	  % d.entity_volume.max()
-	  % d.volumeRelation();
+    % d.entity_volume.min()
+    % d.entity_volume.average()
+    % d.entity_volume.max()
+    % d.volumeRelation();
   s << std::endl;
   return s;
 } // <<
