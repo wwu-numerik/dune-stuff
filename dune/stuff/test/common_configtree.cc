@@ -13,9 +13,6 @@
 #include <dune/stuff/common/type_utils.hh>
 #include <dune/stuff/common/float_cmp.hh>
 
-// uncomment this for output
-//std::ostream& test_out = std::cout;
-std::ostream& test_out = DSC_LOG.devnull();
 
 using namespace Dune;
 using Dune::Stuff::Common::ConfigTree;
@@ -451,6 +448,7 @@ struct ConfigTreeTest
 
   static void behaves_correctly()
   {
+    auto& test_out = DSC_LOG.devnull();
     const ConfigTree config = ConfigTreeCreator::create();
 //    config.report(); // <- this works as well but will produce output
     config.report(test_out);
@@ -509,17 +507,6 @@ TYPED_TEST(ConfigTreeTest, behaves_correctly) {
 
 int main(int argc, char** argv)
 {
-  try {
-    test_init(argc, argv);
-    return RUN_ALL_TESTS();
-  } catch (Dune::Exception& e) {
-    std::cerr << "Dune reported error: " << e.what() << std::endl;
-    std::abort();
-  } catch (std::exception& e) {
-    std::cerr << e.what() << std::endl;
-    std::abort();
-  } catch (...) {
-    std::cerr << "Unknown exception thrown!" << std::endl;
-    std::abort();
-  } // try
+  test_init(argc, argv);
+  return RUN_ALL_TESTS();
 }
