@@ -21,6 +21,7 @@ using namespace std;
 //! \TODO enable embedded grids
 typedef testing::Types< SGrid<1,1>, SGrid<2,2>, SGrid<3,3>, SGrid<4,4>
 //  , SGrid<1,2>, SGrid<2,3>, SGrid<3,4>, SGrid<4,5>, SGrid<1,3>, SGrid<2,4>, SGrid<3,5>, SGrid<4,6>
+, YaspGrid<2>
 > Grids;
 
 template < class T >
@@ -57,6 +58,9 @@ struct CornerRangeTest : public ::testing::Test
     {
       check_range(*it, cornerRange(it->geometry()));
       check_range(*it, cornerRange(*it));
+    }
+    for(auto v : DSC::valueRange(T::dimensionworld)) {
+      EXPECT_GE(v, 0);
     }
   }
 };
