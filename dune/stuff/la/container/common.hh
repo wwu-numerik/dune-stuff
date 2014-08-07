@@ -8,6 +8,8 @@
 #ifndef DUNE_STUFF_LA_CONTAINER_COMMON_HH
 #define DUNE_STUFF_LA_CONTAINER_COMMON_HH
 
+#include <config.h>
+
 #include <memory>
 #include <type_traits>
 
@@ -50,7 +52,7 @@ public:
 /**
  *  \brief A dense vector implementation of VectorInterface using the Dune::DynamicVector.
  */
-template< class ScalarImp = double>
+template< class ScalarImp = double >
 class CommonDenseVector
   : public VectorInterface< CommonDenseVectorTraits< ScalarImp > >
   , public ProvidesBackend< CommonDenseVectorTraits< ScalarImp > >

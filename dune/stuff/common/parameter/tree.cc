@@ -37,29 +37,24 @@ ExtendedParameterTree& ExtendedParameterTree::operator=(const Dune::ParameterTre
 /**
  *  \brief adds another Dune::ParameterTree
  */
-void ExtendedParameterTree::add(const Dune::ParameterTree& _other, const std::string _subName /*= ""*/)
+void ExtendedParameterTree::add(const Dune::ParameterTree& _other, const std::string _subName /*= ""*/, bool overwrite /*= false*/)
 {
   if (_subName.empty()) {
     // copy each key/value pair and append subName
     const Dune::ParameterTree::KeyVector& keyVector = _other.getValueKeys();
     for (size_t ii = 0; ii < keyVector.size(); ++ii) {
       const std::string key = keyVector[ii];
-      if (BaseType::hasKey(key))
+      if (BaseType::hasKey(key) && !overwrite && (BaseType::operator[](key) != _other[key]))
         DUNE_THROW(Dune::InvalidStateException,
                    "\n" << DSC::colorStringRed("ERROR:")
-                   << " key '" << key << "' already exists in the follingDune::ParameterTree:\n"
+                   << " key '" << key << "' already exists in the following Dune::ParameterTree:\n"
                    << reportString("  "));
       BaseType::operator[](key) = _other.get< std::string >(key);
     }
   } else {
-    if (BaseType::hasKey(_subName))
-      DUNE_THROW(Dune::InvalidStateException,
-                 "\n" << DSC::colorStringRed("ERROR:")
-                 << " key '" << _subName << "' already exists in the follingDune::ParameterTree:\n"
-                 << reportString("  "));
-    else if (BaseType::hasSub(_subName)) {
+      if (BaseType::hasSub(_subName)) {
       ExtendedParameterTree _sub = BaseType::sub(_subName);
-      _sub.add(_other);
+      _sub.add(_other, "", overwrite);
       BaseType::sub(_subName) = _sub;
     } else
       BaseType::sub(_subName) = _other;
@@ -120,6 +115,8 @@ void ExtendedParameterTree::assertKey(const std::string& key) const
 
 void ExtendedParameterTree::assertSub(const std::string& _sub) const
 {
+  if (_sub.empty())
+    DUNE_THROW_COLORFULLY(Exceptions::configuration_error, "Given sub_id must not be empty!");
   if (!BaseType::hasSub(_sub))
     DUNE_THROW(Dune::RangeError,
                "\n" << DSC::colorStringRed("ERROR:")
@@ -168,7 +165,7 @@ void ExtendedParameterTree::reportAsSub(std::ostream& stream, const std::string&
       stream << prefix << "[" << subPath << pair.first << "]" << std::endl;
     subTree.reportAsSub(stream, prefix, subPath + pair.first + ".");
   }
-} // void report(std::ostream& stream = std::cout, const std::string& prefix = "") const
+} // void reportAsSub(std::ostream& stream = std::cout, const std::string& prefix = "") const
 
 std::string ExtendedParameterTree::findCommonPrefix(const BaseType& subtree, const std::string previousPrefix /*= ""*/) const
 {

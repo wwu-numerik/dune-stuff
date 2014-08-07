@@ -19,7 +19,7 @@
 #endif // HAVE_DUNE_ISTL
 
 #include <dune/stuff/common/exceptions.hh>
-#include <dune/stuff/common/configtree.hh>
+#include <dune/stuff/common/parameter/configcontainer.hh>
 #include <dune/stuff/common/parallel/helper.hh>
 #include <dune/stuff/la/container/istl.hh>
 
@@ -47,8 +47,8 @@ public:
 
   InverseOperatorResult call(IstlDenseVector< S >& rhs,
                              IstlDenseVector< S >& solution,
-                             const Common::ConfigTree& opts,
-                             const Common::ConfigTree& default_opts)
+                             const Common::ConfigContainer& opts,
+                             const Common::ConfigContainer& default_opts)
   {
     // define the matrix operator
 
@@ -131,8 +131,8 @@ public:
 
   InverseOperatorResult call(IstlDenseVector< S >& rhs,
                              IstlDenseVector< S >& solution,
-                             const Common::ConfigTree& opts,
-                             const Common::ConfigTree& default_opts)
+                             const Common::ConfigContainer& opts,
+                             const Common::ConfigContainer& default_opts)
   {
     typedef MatrixAdapter< IstlMatrixType, IstlVectorType, IstlVectorType > MatrixOperatorType;
     MatrixOperatorType matrix_operator(matrix_.backend());
