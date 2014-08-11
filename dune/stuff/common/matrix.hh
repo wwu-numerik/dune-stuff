@@ -37,11 +37,12 @@ namespace Common {
 
 // \todo doc
 template< class MatrixImp >
-inline void clear(Dune::DenseMatrix< MatrixImp >& matrix)
+inline void
+  DUNE_DEPRECATED_MSG("Use *= 0 instead!")
+            clear(Dune::DenseMatrix< MatrixImp >& matrix)
 {
   matrix *= typename Dune::DenseMatrix< MatrixImp >::value_type(0);
 }
-
 
 
 //! TODO
