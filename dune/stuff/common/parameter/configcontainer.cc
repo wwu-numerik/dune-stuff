@@ -74,9 +74,9 @@ ConfigContainer::ConfigContainer(const Dune::ParameterTree& tree)
   : tree_(tree)
   , record_defaults_(false)
   , logdir_(boost::filesystem::path(get("global.datadir", "data")) / get("logging.dir", "log"))
-  #ifndef NDEBUG
+#ifndef NDEBUG
   , warning_output_(false)
-  #endif
+#endif
 {
   testCreateDirectory(logdir_.string());
 }
@@ -84,11 +84,38 @@ ConfigContainer::ConfigContainer(const Dune::ParameterTree& tree)
 ConfigContainer::ConfigContainer()
   : record_defaults_(false)
   , logdir_(boost::filesystem::path(get("global.datadir", "data")) / get("logging.dir", "log"))
-  #ifndef NDEBUG
+#ifndef NDEBUG
   , warning_output_(true)
-  #endif
+#endif
 {
   testCreateDirectory(logdir_.string());
+}
+
+ConfigContainer::ConfigContainer(const std::string key, const char* value)
+  : record_defaults_(false)
+  , logdir_(boost::filesystem::path(get("global.datadir", "data")) / get("logging.dir", "log"))
+#ifndef NDEBUG
+  , warning_output_(true)
+#endif
+{
+  set(key, value);
+}
+
+ConfigContainer::ConfigContainer(const std::vector< std::string > keys,
+                                 const std::initializer_list< std::string > value_list)
+  : record_defaults_(false)
+  , logdir_(boost::filesystem::path(get("global.datadir", "data", 0, 0)) / get("logging.dir", "log", 0, 0))
+#ifndef NDEBUG
+  , warning_output_(true)
+#endif
+{
+  std::vector< std::string > tmp_values(value_list);
+  if (keys.size() != tmp_values.size())
+    DUNE_THROW(Exceptions::shapes_do_not_match,
+                          "The size of 'keys' (" << keys.size() << ") does not match the size of 'value_list' ("
+                          << tmp_values.size() << ")!");
+  for (size_t ii = 0; ii < keys.size(); ++ii)
+    set(keys[ii], tmp_values[ii]);
 }
 
 ConfigContainer::ConfigContainer(const std::string filename)
