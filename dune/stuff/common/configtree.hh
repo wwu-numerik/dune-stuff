@@ -3,6 +3,8 @@
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
+#warning This header is deprecated, include <dune/stuff/common/parameter/configcontainer.hh> instead and use ConfigContainer instead of ConfigTree!
+
 #ifndef DUNE_STUFF_CONFIGTREE_HH
 #define DUNE_STUFF_CONFIGTREE_HH
 
