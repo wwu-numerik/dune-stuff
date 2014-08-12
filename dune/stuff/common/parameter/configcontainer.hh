@@ -240,7 +240,9 @@ public:
    */
   void report(std::ostream& out = std::cout, const std::string& prefix = "") const;
 
-  //! get subtree
+  /**
+   * @attention Please note the difference to Dune::ParameterTree::sub (return: value vs. reference)!
+   */
   ConfigContainer sub(const std::string sub_id) const;
 
   /**
@@ -265,16 +267,6 @@ public:
   T get(const std::string key, T def, size_t size = 0, size_t cols = 0) const{
     return get_valid_value< T, ValidateAny< T > >(key, def, ValidateAny< T >(), size, cols);
   }
-
-  //  //! get without default value, without validation
-  //  template< class T >
-  //  T get(const std::string key, size_t size = 0, size_t cols = 0) {
-  //    if (!has_key(key))
-  //      DUNE_THROW(Exceptions::configuration_error, "");
-  //    Request req(-1, std::string(), key,
-  //                std::string(), Dune::Stuff::Common::getTypename(ValidateAny< T >()));
-  //    return get_< T, ValidateAny< T > >(key, T(), ValidateAny< T >(), req, size, cols, false);
-  //  }
 
   /**
    * \}
@@ -393,15 +385,7 @@ public:
     BaseType::operator[](key) = toString(value);
   } // ... set(..., T, ...)
 
-  void set(const std::string& key, const char* value, const bool overwrite = false)
-  {
-    if (has_key(key) && !overwrite)
-      DUNE_THROW(Exceptions::configuration_error,
-                            "While adding '" << key << "' = '" << value << "' to this (see below), the key '" << key
-                            << "' already exists and you requested no overwrite!"
-                            << "\n======================\n" << report_string());
-    BaseType::operator[](key) = toString(value);
-  } // ... set(..., const char *, ...)
+  void set(const std::string& key, const char* value, const bool overwrite = false);
 
   /**
    * \}
@@ -534,20 +518,22 @@ private:
 
   //! get value from tree and validate with validator
   template< typename T, class Validator >
-  T get_valid_value(std::string key, T def,
+  T get_valid_value(std::string key,
+                    T def,
                     const ValidatorInterface< T, Validator >& validator,
-                    const size_t size, const size_t cols) const
+                    const size_t size,
+                    const size_t cols) const
   {
     std::string valstring = BaseType::get(key, toString(def));
     T val = fromString< T >(valstring, size, cols);
-    if( validator(val) )
+    if (validator(val))
         return val;
     else {
       std::stringstream ss;
       validator.print(ss);
       DUNE_THROW(Exceptions::configuration_error, ss.str());
     }
-  }
+  } // ... get_valid_value(...)
 
   /** \brief all public get signatures call this one
    *  \param key requested key
@@ -573,13 +559,12 @@ private:
   {
     requests_map_[key].insert(request);
 #ifndef NDEBUG
-    if ( warn_on_default_access_ && !has_key(key) )
-    {
-        std::cerr << DSC::colorString("WARNING:", DSC::Colors::brown)
-                  << " using default value for parameter \"" << key << "\"" << std::endl;
+    if (warn_on_default_access_ && !has_key(key)) {
+      std::cerr << DSC::colorString("WARNING:", DSC::Colors::brown)
+                << " using default value for parameter \"" << key << "\"" << std::endl;
     }
 #endif // ifndef NDEBUG
-    if ( record_defaults_ && !has_key(key) && def_provided)
+    if (record_defaults_ && !has_key(key) && def_provided)
       set(key, def);
     return get_valid_value(key, def, validator, size, cols);
   } // get

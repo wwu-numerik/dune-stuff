@@ -273,6 +273,11 @@ bool ConfigContainer::has_sub(const std::string subTreeName) const
   return BaseType::hasSub(subTreeName);
 }
 
+void ConfigContainer::set(const std::string& key, const char* value, const bool overwrite)
+{
+  set(key, std::string(value), overwrite);
+}
+
 void ConfigContainer::add(const ConfigContainer& other, const std::string sub_id /*= ""*/, const bool overwrite/* = false*/)
 {
   add_tree_(other, sub_id, overwrite);
