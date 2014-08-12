@@ -5,7 +5,7 @@
 //
 // Contributors: Kirsten Weber
 
-#warning This header is deprecated, include <dune/stuff/common/configcontainer.hh> instead and use ConfigContainer instead of ExtendedParameterTree!
+#warning This header is deprecated, include <dune/stuff/common/configuration.hh> instead and use ConfigContainer instead of ExtendedParameterTree!
 
 #ifndef DUNE_STUFF_COMMON_PARAMETER_TREE_HH
 #define DUNE_STUFF_COMMON_PARAMETER_TREE_HH

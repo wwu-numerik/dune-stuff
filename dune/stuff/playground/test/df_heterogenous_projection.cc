@@ -23,7 +23,7 @@
 #include <dune/stuff/common/profiler.hh>
 #include <dune/stuff/common/ranges.hh>
 #include <dune/stuff/functions/femadapter.hh>
-#include <dune/stuff/common/configcontainer.hh>
+#include <dune/stuff/common/configuration.hh>
 #include <dune/stuff/fem/namespace.hh>
 #include <dune/stuff/aliases.hh>
 
