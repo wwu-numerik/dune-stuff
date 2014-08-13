@@ -69,7 +69,7 @@ public:
                           << Common::Typename< MatrixType >::value() << "'!");
   }
 
-  static Common::ConfigContainer options(const std::string& /*type*/)
+  static Common::Configuration options(const std::string& /*type*/)
   {
     DUNE_THROW_COLORFULLY(NotImplemented,
                           "This is the unspecialized version of LA::Solver< ... >. "
@@ -100,7 +100,7 @@ public:
   }
 
   template< class RhsType, class SolutionType >
-  void apply(const RhsType& /*rhs*/, SolutionType& /*solution*/, const Common::ConfigContainer& /*options*/) const
+  void apply(const RhsType& /*rhs*/, SolutionType& /*solution*/, const Common::Configuration& /*options*/) const
   {
     DUNE_THROW_COLORFULLY(NotImplemented,
                           "This is the unspecialized version of LA::Solver< ... >. "

@@ -3,7 +3,7 @@
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
-#warning This header is deprecated, include <dune/stuff/common/configuration.hh> instead and use ConfigContainer instead of ConfigTree!
+#warning This header is deprecated, include <dune/stuff/common/configuration.hh> instead and use Configuration instead of ConfigTree!
 
 #ifndef DUNE_STUFF_CONFIGTREE_HH
 #define DUNE_STUFF_CONFIGTREE_HH
@@ -45,7 +45,7 @@ namespace Stuff {
 namespace Common {
 
 
-class  DUNE_DEPRECATED_MSG("Use ConfigContainer instead!")
+class  DUNE_DEPRECATED_MSG("Use Configuration instead!")
 ConfigTree
   : public ParameterTree
 {

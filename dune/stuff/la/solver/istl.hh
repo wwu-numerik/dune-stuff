@@ -59,10 +59,10 @@ public:
            };
   } // ... options()
 
-  static Common::ConfigContainer options(const std::string& type)
+  static Common::Configuration options(const std::string& type)
   {
     SolverUtils::check_given(type, options());
-    Common::ConfigContainer iterative_options({"max_iter", "precision", "verbose"},
+    Common::Configuration iterative_options({"max_iter", "precision", "verbose"},
                                          {"10000",    "1e-10",     "0"});
     iterative_options.set("post_check_solves_system", "1e-5");
     if (type == "bicgstab.amg.ilu0") {
@@ -101,7 +101,7 @@ public:
   /**
    *  \note does a copy of the rhs
    */
-  void apply(const IstlDenseVector< S >& rhs, IstlDenseVector< S >& solution, const Common::ConfigContainer& opts) const
+  void apply(const IstlDenseVector< S >& rhs, IstlDenseVector< S >& solution, const Common::Configuration& opts) const
   {
     try {
       if (!opts.has_key("type"))
@@ -109,7 +109,7 @@ public:
                               "Given options (see below) need to have at least the key 'type' set!\n\n" << opts);
       const auto type = opts.get< std::string >("type");
       SolverUtils::check_given(type, options());
-      const Common::ConfigContainer default_opts = options(type);
+      const Common::Configuration default_opts = options(type);
       IstlDenseVector< S > writable_rhs = rhs.copy();
       // solve
       if (type == "bicgstab.amg.ilu0") {

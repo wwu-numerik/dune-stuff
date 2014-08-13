@@ -31,8 +31,8 @@ using namespace Dune::Stuff::Common;
 using Dune::Stuff::Exceptions::results_are_not_as_expected;
 using namespace Dune::Stuff::Common::FloatCmp;
 
-struct CreateByOperator { static ConfigContainer create() {
-    ConfigContainer config;
+struct CreateByOperator { static Configuration create() {
+    Configuration config;
     config["string"] = "string";
     config["sub1.int"] = "1";
     config["sub2.size_t"] = "1";
@@ -41,29 +41,29 @@ struct CreateByOperator { static ConfigContainer create() {
     return config;
 } };
 
-struct CreateByOperatorAndAssign { static ConfigContainer create() {
-    ConfigContainer config;
+struct CreateByOperatorAndAssign { static Configuration create() {
+    Configuration config;
     config["string"] = "string";
     config["sub1.int"] = "1";
     config["sub2.size_t"] = "1";
     config["sub2.subsub1.vector"] = "[0 1]";
     config["sub2.subsub1.matrix"] = "[0 1; 1 2]";
-    ConfigContainer config2;
+    Configuration config2;
     config2=config;
     return config2;
 } };
 
-struct CreateByKeyAndValueAndAddConfigContainer { static ConfigContainer create() {
-    ConfigContainer config("string", "string");
+struct CreateByKeyAndValueAndAddConfiguration { static Configuration create() {
+    Configuration config("string", "string");
     config.set("sub1.int", "1");
     config.set("sub2.size_t", 1);
-    config.add(ConfigContainer("vector", "[0 1]"), "sub2.subsub1");
-    config.add(ConfigContainer("matrix", "[0 1; 1 2]"), "sub2.subsub1");
+    config.add(Configuration("vector", "[0 1]"), "sub2.subsub1");
+    config.add(Configuration("matrix", "[0 1; 1 2]"), "sub2.subsub1");
     return config;
 } };
 
-struct CreateByKeyAndValueAndAddParameterTree { static ConfigContainer create() {
-    ConfigContainer config("string", "string");
+struct CreateByKeyAndValueAndAddParameterTree { static Configuration create() {
+    Configuration config("string", "string");
     config.set("sub1.int", "1");
     config.set("sub2.size_t", 1);
     Dune::ParameterTree paramtree;
@@ -73,19 +73,19 @@ struct CreateByKeyAndValueAndAddParameterTree { static ConfigContainer create() 
     return config;
 } };
 
-struct CreateByKeysAndValues { static ConfigContainer create() {
-    return ConfigContainer({"string", "sub1.int", "sub2.size_t", "sub2.subsub1.vector", "sub2.subsub1.matrix"},
-                      {"string", "1",        "1",           "[0 1]",               "[0 1; 1 2]"});
+struct CreateByKeysAndValues { static Configuration create() {
+    return Configuration({"string", "sub1.int", "sub2.size_t", "sub2.subsub1.vector", "sub2.subsub1.matrix"},
+                         {"string", "1",        "1",           "[0 1]",               "[0 1; 1 2]"});
 } };
 
-struct CreateByParameterTree { static ConfigContainer create() {
+struct CreateByParameterTree { static Configuration create() {
     Dune::ParameterTree paramtree;
     paramtree["string"] = "string";
     paramtree["sub1.int"] = "1";
     paramtree["sub2.size_t"] = "1";
     paramtree["sub2.subsub1.vector"] = "[0 1]";
     paramtree["sub2.subsub1.matrix"] = "[0 1; 1 2]";
-    return ConfigContainer(paramtree);
+    return Configuration(paramtree);
 } };
 
 
@@ -94,12 +94,12 @@ typedef testing::Types<double, float, std::string,
    int, unsigned int, unsigned long, long long, char> TestTypes;
 
 typedef testing::Types< CreateByOperator
-                      , CreateByKeyAndValueAndAddConfigContainer
+                      , CreateByKeyAndValueAndAddConfiguration
                       , CreateByKeyAndValueAndAddParameterTree
                       , CreateByKeysAndValues
                       , CreateByParameterTree
                       , CreateByOperatorAndAssign
-                      > ConfigContainerCreators;
+                      > ConfigurationCreators;
 
 
 template < class T >
@@ -151,13 +151,13 @@ struct ConfigTest : public testing::Test {
 }; // struct ConfigTest
 
 
-template< class ConfigContainerCreator >
-struct ConfigContainerTest
+template< class ConfigurationCreator >
+struct ConfigurationTest
   : public ::testing::Test
 {
 
   template< class VectorType >
-  static void check_vector(const ConfigContainer& config)
+  static void check_vector(const Configuration& config)
   {
     VectorType vec = config.get("vector", VectorType(), 1);
     if (vec.size() != 1) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
@@ -202,7 +202,7 @@ struct ConfigContainerTest
   } // ... check_vector< ... >(...)
 
   template< class K, int d >
-  static void check_field_vector(const ConfigContainer& config)
+  static void check_field_vector(const Configuration& config)
   {
     typedef FieldVector< K, d > VectorType;
     VectorType vec = config.get("vector", VectorType(), d);
@@ -238,7 +238,7 @@ struct ConfigContainerTest
   } // ... check_field_vector< ... >(...)
 
   template< class MatrixType >
-  static void check_matrix(const ConfigContainer& config)
+  static void check_matrix(const Configuration& config)
   {
     MatrixType mat = config.get("matrix", MatrixType(), 1, 1);
     if (mat.rows() != 1 || mat.cols() != 1)
@@ -372,7 +372,7 @@ struct ConfigContainerTest
   } // ... check_matrix< ... >(...)
 
   template< class MatrixType >
-  static void check_stuff_matrix(const ConfigContainer& config)
+  static void check_stuff_matrix(const Configuration& config)
   {
     MatrixType mat = config.get("matrix", MatrixType(), 1, 1);
     if (mat.rows() != 1 || mat.cols() != 1)
@@ -509,7 +509,7 @@ struct ConfigContainerTest
   } // ... check_stuff_matrix< ... >(...)
 
   template< class K, int r, int c >
-  static void check_field_matrix(const ConfigContainer& config)
+  static void check_field_matrix(const Configuration& config)
   {
     typedef FieldMatrix< K, r, c > MatrixType;
     MatrixType mat = config.get("matrix", MatrixType(), r, c);
@@ -553,7 +553,7 @@ struct ConfigContainerTest
 
   static void behaves_correctly()
   {
-    const ConfigContainer config = ConfigContainerCreator::create();
+    const Configuration config = ConfigurationCreator::create();
 //    config.report(); // <- this works as well but will produce output
     config.report(test_out);
     config.report(test_out, "'prefix '");
@@ -568,7 +568,7 @@ struct ConfigContainerTest
 
     if (!config.has_sub("sub1")) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
                                           "Sub 'sub1' does not exists in this config:\n" << config);
-    ConfigContainer sub1_config = config.sub("sub1");
+    Configuration sub1_config = config.sub("sub1");
     int nt = sub1_config.get("int", int(0));
     if (nt != 1) DUNE_THROW_COLORFULLY(results_are_not_as_expected, "'" << nt << "'' vs. '1'");
     nt = sub1_config.get("intt", int(1));
@@ -599,7 +599,7 @@ struct ConfigContainerTest
     check_matrix< Dune::DynamicMatrix< double > >(config.sub("sub2.subsub1"));
     check_stuff_matrix< Dune::Stuff::LA::CommonDenseMatrix< double > >(config.sub("sub2.subsub1"));
   } // ... behaves_correctly(...)
-}; // struct ConfigContainerTest
+}; // struct ConfigurationTest
 
 
 TYPED_TEST_CASE(ConfigTest, TestTypes);
@@ -613,8 +613,8 @@ TYPED_TEST(ConfigTest, Other) {
   this->other();
 }
 
-TYPED_TEST_CASE(ConfigContainerTest, ConfigContainerCreators);
-TYPED_TEST(ConfigContainerTest, behaves_correctly) {
+TYPED_TEST_CASE(ConfigurationTest, ConfigurationCreators);
+TYPED_TEST(ConfigurationTest, behaves_correctly) {
   this->behaves_correctly();
 }
 

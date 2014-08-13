@@ -5,8 +5,8 @@
 //
 // Contributors: Sven Kaulmann
 
-#ifndef DUNE_STUFF_CONFIGCONTAINER_HH_INCLUDED
-#define DUNE_STUFF_CONFIGCONTAINER_HH_INCLUDED
+#ifndef DUNE_STUFF_COMMON_CONFIGURATION_HH
+#define DUNE_STUFF_COMMON_CONFIGURATION_HH
 
 #include <set>
 #include <sstream>
@@ -84,66 +84,66 @@ class
 namespace internal {
 
 
-static const bool config_container_record_defaults = false;
-static const bool config_container_log_on_exit = false;
-static const bool config_container_warn_on_default_access = false;
-static const std::string config_container_logfile = "data/log/dsc_parameter.log";
+static const bool configuration_record_defaults = false;
+static const bool configuration_warn_on_default_access = false;
+static const bool configuration_log_on_exit = false;
+static const std::string configuration_logfile = "data/log/dsc_parameter.log";
 
 
 } // namespace internal
 
 
-class ConfigContainer
+class Configuration
   : public Dune::ParameterTree
 {
   typedef Dune::ParameterTree BaseType;
   typedef std::map< std::string, std::set< Request > > RequestMapType;
 
 public:
-  ConfigContainer(const bool record_defaults = internal::config_container_record_defaults,
-                  const bool warn_on_default_access = internal::config_container_warn_on_default_access,
-                  const bool log_on_exit = internal::config_container_log_on_exit,
-                  const std::string logfile = internal::config_container_logfile);
+  Configuration(const bool record_defaults = internal::configuration_record_defaults,
+                  const bool warn_on_default_access = internal::configuration_warn_on_default_access,
+                  const bool log_on_exit = internal::configuration_log_on_exit,
+                  const std::string logfile = internal::configuration_logfile);
 
-  ConfigContainer(const ParameterTree& tree,
-                  const bool record_defaults = internal::config_container_record_defaults,
-                  const bool warn_on_default_access = internal::config_container_warn_on_default_access,
-                  const bool log_on_exit = internal::config_container_log_on_exit,
-                  const std::string logfile = internal::config_container_logfile);
+  Configuration(const ParameterTree& tree,
+                  const bool record_defaults = internal::configuration_record_defaults,
+                  const bool warn_on_default_access = internal::configuration_warn_on_default_access,
+                  const bool log_on_exit = internal::configuration_log_on_exit,
+                  const std::string logfile = internal::configuration_logfile);
 
-  ConfigContainer(const ConfigContainer& other);
+  Configuration(const Configuration& other);
 
-  //! read ParameterTree from file and call ConfigContainer(const ParameterTree& tree)
-  explicit ConfigContainer(const std::string filename,
+  //! read ParameterTree from file and call Configuration(const ParameterTree& tree)
+  explicit Configuration(const std::string filename,
                            const bool record_defaults,
                            const bool warn_on_default_access,
                            const bool log_on_exit,
                            const std::string logfile);
 
-  //! read ParameterTree from given arguments and call ConfigContainer(const ParameterTree& tree)
-  ConfigContainer(int argc,
+  //! read ParameterTree from given arguments and call Configuration(const ParameterTree& tree)
+  Configuration(int argc,
                   char** argv,
-                  const bool record_defaults = internal::config_container_record_defaults,
-                  const bool warn_on_default_access = internal::config_container_warn_on_default_access,
-                  const bool log_on_exit = internal::config_container_log_on_exit,
-                  const std::string logfile = internal::config_container_logfile);
+                  const bool record_defaults = internal::configuration_record_defaults,
+                  const bool warn_on_default_access = internal::configuration_warn_on_default_access,
+                  const bool log_on_exit = internal::configuration_log_on_exit,
+                  const std::string logfile = internal::configuration_logfile);
 
-  //! read ParameterTree from given arguments and file and call ConfigContainer(const ParameterTree& tree)
-  ConfigContainer(int argc,
+  //! read ParameterTree from given arguments and file and call Configuration(const ParameterTree& tree)
+  Configuration(int argc,
                   char** argv,
                   const std::string filename,
-                  const bool record_defaults = internal::config_container_record_defaults,
-                  const bool warn_on_default_access = internal::config_container_warn_on_default_access,
-                  const bool log_on_exit = internal::config_container_log_on_exit,
-                  const std::string logfile = internal::config_container_logfile);
+                  const bool record_defaults = internal::configuration_record_defaults,
+                  const bool warn_on_default_access = internal::configuration_warn_on_default_access,
+                  const bool log_on_exit = internal::configuration_log_on_exit,
+                  const std::string logfile = internal::configuration_logfile);
 
   template< class T >
-  ConfigContainer(const std::string key,
+  Configuration(const std::string key,
                   const T& value,
-                  const bool record_defaults = internal::config_container_record_defaults,
-                  const bool warn_on_default_access = internal::config_container_warn_on_default_access,
-                  const bool log_on_exit = internal::config_container_log_on_exit,
-                  const std::string logfile = internal::config_container_logfile)
+                  const bool record_defaults = internal::configuration_record_defaults,
+                  const bool warn_on_default_access = internal::configuration_warn_on_default_access,
+                  const bool log_on_exit = internal::configuration_log_on_exit,
+                  const std::string logfile = internal::configuration_logfile)
     : BaseType()
     , requests_map_()
     , record_defaults_(record_defaults)
@@ -155,28 +155,28 @@ public:
     setup_();
   }
 
-  ConfigContainer(const std::string key,
+  Configuration(const std::string key,
                   const char* value,
-                  const bool record_defaults = internal::config_container_record_defaults,
-                  const bool warn_on_default_access = internal::config_container_warn_on_default_access,
-                  const bool log_on_exit = internal::config_container_log_on_exit,
-                  const std::string logfile = internal::config_container_logfile);
+                  const bool record_defaults = internal::configuration_record_defaults,
+                  const bool warn_on_default_access = internal::configuration_warn_on_default_access,
+                  const bool log_on_exit = internal::configuration_log_on_exit,
+                  const std::string logfile = internal::configuration_logfile);
 
-  ConfigContainer(const char* key,
+  Configuration(const char* key,
                   const char* value,
-                  const bool record_defaults = internal::config_container_record_defaults,
-                  const bool warn_on_default_access = internal::config_container_warn_on_default_access,
-                  const bool log_on_exit = internal::config_container_log_on_exit,
-                  const std::string logfile = internal::config_container_logfile);
+                  const bool record_defaults = internal::configuration_record_defaults,
+                  const bool warn_on_default_access = internal::configuration_warn_on_default_access,
+                  const bool log_on_exit = internal::configuration_log_on_exit,
+                  const std::string logfile = internal::configuration_logfile);
 
   //! operator[](keys[ii]) = values[ii] for 0 <= ii <= keys.size()
   template< class T >
-  ConfigContainer(const std::vector< std::string > keys,
+  Configuration(const std::vector< std::string > keys,
                   const std::vector< T > values_in,
-                  const bool record_defaults = internal::config_container_record_defaults,
-                  const bool warn_on_default_access = internal::config_container_warn_on_default_access,
-                  const bool log_on_exit = internal::config_container_log_on_exit,
-                  const std::string logfile = internal::config_container_logfile)
+                  const bool record_defaults = internal::configuration_record_defaults,
+                  const bool warn_on_default_access = internal::configuration_warn_on_default_access,
+                  const bool log_on_exit = internal::configuration_log_on_exit,
+                  const std::string logfile = internal::configuration_logfile)
     : BaseType()
     , requests_map_()
     , record_defaults_(record_defaults)
@@ -194,15 +194,15 @@ public:
   }
 
   /** creates std::vector< T > from value_list and then behaves exactly like
-   * ConfigContainer(const std::vector< std::string > keys, const std::vector< T > values_in) */
+   * Configuration(const std::vector< std::string > keys, const std::vector< T > values_in) */
   template< class T >
-  ConfigContainer(const std::vector< std::string > keys,
+  Configuration(const std::vector< std::string > keys,
                   const std::initializer_list< T > value_list,
-                  const bool record_defaults = internal::config_container_record_defaults,
-                  const bool warn_on_default_access = internal::config_container_warn_on_default_access,
-                  const bool log_on_exit = internal::config_container_log_on_exit,
-                  const std::string logfile = internal::config_container_logfile)
-    : ConfigContainer(keys,
+                  const bool record_defaults = internal::configuration_record_defaults,
+                  const bool warn_on_default_access = internal::configuration_warn_on_default_access,
+                  const bool log_on_exit = internal::configuration_log_on_exit,
+                  const std::string logfile = internal::configuration_logfile)
+    : Configuration(keys,
                       std::vector< T >(value_list),
                       record_defaults,
                       warn_on_default_access,
@@ -211,16 +211,16 @@ public:
   {}
 
   // explicit specialization of the constructor above
-  ConfigContainer(const std::vector< std::string > keys,
+  Configuration(const std::vector< std::string > keys,
                   const std::initializer_list< std::string > value_list,
-                  const bool record_defaults = internal::config_container_record_defaults,
-                  const bool warn_on_default_access = internal::config_container_warn_on_default_access,
-                  const bool log_on_exit = internal::config_container_log_on_exit,
-                  const std::string logfile = internal::config_container_logfile);
+                  const bool record_defaults = internal::configuration_record_defaults,
+                  const bool warn_on_default_access = internal::configuration_warn_on_default_access,
+                  const bool log_on_exit = internal::configuration_log_on_exit,
+                  const std::string logfile = internal::configuration_logfile);
 
-  ~ConfigContainer();
+  ~Configuration();
 
-  ConfigContainer& operator=(const ConfigContainer& other);
+  Configuration& operator=(const Configuration& other);
 
   /**
    * \defgroup base ´´These methods replace or override those from Dune::ParameterTree.``
@@ -242,7 +242,7 @@ public:
   /**
    * @attention Please note the difference to Dune::ParameterTree::sub (return: value vs. reference)!
    */
-  ConfigContainer sub(const std::string sub_id) const;
+  Configuration sub(const std::string sub_id) const;
 
   /**
    * \}
@@ -257,7 +257,7 @@ public:
   template< class T >
   T get(const std::string key, size_t size = 0, size_t cols = 0) const {
     if (!has_key(key))
-      DUNE_THROW(Exceptions::configuration_error, "ConfigContainer does not have this key and there was no default value provided");
+      DUNE_THROW(Exceptions::configuration_error, "Configuration does not have this key and there was no default value provided");
     return get_valid_value< T, ValidateAny< T > >(key, T(), ValidateAny< T >(), size, cols);
   }
 
@@ -280,7 +280,7 @@ public:
   template< class T, class Validator >
   T get(const std::string key, const ValidatorInterface< T, Validator >& validator, size_t size = 0, size_t cols = 0) const {
     if (!has_key(key))
-      DUNE_THROW(Exceptions::configuration_error, "ConfigContainer does not have this key and there was no default value provided");
+      DUNE_THROW(Exceptions::configuration_error, "Configuration does not have this key and there was no default value provided");
     return get_valid_value(key, T(), validator, size, cols);
   }
 
@@ -374,7 +374,7 @@ public:
    * \{
    */
 
-  //! set value to key in ConfigContainer
+  //! set value to key in Configuration
   template< class T >
   void set(const std::string key, const T& value, const bool overwrite = false)
   {
@@ -397,12 +397,12 @@ public:
    * \{
    */
 
-  /** \brief add another ConfigContainer to this (merge tree_s and requests_map_s)
-   *  \param other ConfigContainer to add
+  /** \brief add another Configuration to this (merge tree_s and requests_map_s)
+   *  \param other Configuration to add
    *  \param sub_id if not empty, other.tree_ is merged in as a sub "sub_id" of tree_
    *  \param overwrite if true, existing values are overwritten by other's values to the same key
    */
-  void add(const ConfigContainer& other, const std::string sub_id = "", const bool overwrite = false);
+  void add(const Configuration& other, const std::string sub_id = "", const bool overwrite = false);
 
   /** \brief add a Dune::ParameterTree paramtree to this (merge tree_ and paramtree)
    *  \param paramtree ParameterTree to add
@@ -411,23 +411,23 @@ public:
    */
   void add(const ParameterTree& other, const std::string sub_id = "", const bool overwrite = false);
 
-  //! add another ConfigContainer to this (merge tree_s and requests_map_s)
-  ConfigContainer& operator+=(ConfigContainer& other);
+  //! add another Configuration to this (merge tree_s and requests_map_s)
+  Configuration& operator+=(Configuration& other);
 
-  //! add this and another ConfigContainer (merge tree_s and requests_map_s)
-  ConfigContainer operator+(ConfigContainer& other);
+  //! add this and another Configuration (merge tree_s and requests_map_s)
+  Configuration operator+(Configuration& other);
 
   /**
    * \}
    */
 
-  void set_record_defaults(const bool value = internal::config_container_record_defaults);
+  void set_record_defaults(const bool value = internal::configuration_record_defaults);
 
-  void set_warn_on_default_access(const bool value = internal::config_container_warn_on_default_access);
+  void set_warn_on_default_access(const bool value = internal::configuration_warn_on_default_access);
 
-  void set_log_on_exit(const bool value = internal::config_container_log_on_exit);
+  void set_log_on_exit(const bool value = internal::configuration_log_on_exit);
 
-  void set_logfile(const std::string logfile = internal::config_container_logfile);
+  void set_logfile(const std::string logfile = internal::configuration_logfile);
 
   //! check if tree_ is empty (if tree_ is empty return true even if requests_map_ is not empty)
   bool empty() const;
@@ -435,11 +435,11 @@ public:
   //! store output of report(..., prefix) in std::string
   std::string report_string(const std::string& prefix = "") const;
 
-  /** get parameters from parameter file or key-value pairs given on the command line and store in ConfigContainer (and
+  /** get parameters from parameter file or key-value pairs given on the command line and store in Configuration (and
   load into fem parameter, if available) */
   void read_command_line(int argc, char* argv[]);
 
-  //! search command line options for key-value pairs and add them to ConfigContainer
+  //! search command line options for key-value pairs and add them to Configuration
   void read_options(int argc, char* argv[]);
 
   //! return requests_map_
@@ -507,7 +507,7 @@ public:
   //! return tree_
   const
     DUNE_DEPRECATED_MSG("Use *this instead!")
-        ConfigContainer& tree() const;
+        Configuration& tree() const;
 
   /**
    * \}
@@ -516,7 +516,7 @@ public:
 private:
   void setup_();
 
-  void add_tree_(const ConfigContainer& other, const std::string sub_id, const bool overwrite);
+  void add_tree_(const Configuration& other, const std::string sub_id, const bool overwrite);
 
   //! get value from tree and validate with validator
   template< typename T, class Validator >
@@ -547,8 +547,8 @@ private:
    *  \param cols Determines the number of columns of the returning matrix if T is a matrix type
    *  (0 means automatic, ignored, if T is a vector or scalar type).
    *  \param def_provided bool to indicate if the calling get method provides a default value
-   *  \return value associated to key in ConfigContainer (interpreted as type T),
-   *  def if key does not exist in ConfigContainer
+   *  \return value associated to key in Configuration (interpreted as type T),
+   *  def if key does not exist in Configuration
    */
   template< typename T, class Validator >
   T get_(std::string key,
@@ -592,16 +592,16 @@ private:
   bool warn_on_default_access_;
   bool log_on_exit_;
   std::string logfile_;
-}; // class ConfigContainer
+}; // class Configuration
 
 
-std::ostream& operator<<(std::ostream& out, const ConfigContainer& config);
+std::ostream& operator<<(std::ostream& out, const Configuration& config);
 
 
-//! global ConfigContainer instance
-inline ConfigContainer& Config()
+//! global Configuration instance
+inline Configuration& Config()
 {
-  static ConfigContainer parameters(false, true, true);
+  static Configuration parameters(false, true, true);
   return parameters;
 }
 
@@ -622,4 +622,4 @@ inline ConfigContainer& Config()
 #define DSC_CONFIG_GETB(key,def,use_logger) \
   DSC_CONFIG.get(key,def,Dune::Stuff::Common::Request(__LINE__, __FILE__,key,Dune::Stuff::Common::toString(def), "none" ), use_logger)
 
-#endif // DUNE_STUFF_CONFIGCONTAINER_HH_INCLUDED
+#endif // DUNE_STUFF_COMMON_CONFIGURATION_HH
