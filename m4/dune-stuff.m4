@@ -53,5 +53,5 @@ to the PKG_CONFIG_PATH environment variable.])])
 
 AC_DEFUN([DUNE_STUFF_CHECK_MODULE],
 [
-    DUNE_CHECK_MODULES([dune-stuff], [stuff/common/logging.hh], [Dune::Stuff::Common::Logger()])
+    DUNE_CHECK_MODULES([dune-stuff], [stuff/common/exceptions.hh], [Dune::Stuff::Exceptions::CRTP_check_failed()])
 ])
