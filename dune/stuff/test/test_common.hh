@@ -92,7 +92,7 @@ typedef Dune::tuple<double, float, //Dune::bigunsignedint,
   int, unsigned int, unsigned long, long long, char> BasicTypes;
 
 
-void test_init(int argc, char** argv)
+void DUNE_DEPRECATED_MSG("Just include dune/stuff/test/test_main.hh") test_init(int argc, char** argv)
 {
   testing::InitGoogleTest(&argc, argv);
   DSC_CONFIG.readOptions(argc, argv);
