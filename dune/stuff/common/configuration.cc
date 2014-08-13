@@ -61,9 +61,9 @@ std::ostream& operator <<(std::ostream& out, const Request& r) {
 
 
 Configuration::Configuration(const bool record_defaults,
-                                 const bool warn_on_default_access,
-                                 const bool log_on_exit,
-                                 const std::string logfile)
+                             const bool warn_on_default_access,
+                             const bool log_on_exit,
+                             const std::string logfile)
   : BaseType()
   , requests_map_()
   , record_defaults_(record_defaults)
@@ -75,10 +75,10 @@ Configuration::Configuration(const bool record_defaults,
 }
 
 Configuration::Configuration(const Dune::ParameterTree& tree,
-                                 const bool record_defaults,
-                                 const bool warn_on_default_access,
-                                 const bool log_on_exit,
-                                 const std::string logfile)
+                             const bool record_defaults,
+                             const bool warn_on_default_access,
+                             const bool log_on_exit,
+                             const std::string logfile)
   : BaseType(tree)
   , requests_map_()
   , record_defaults_(record_defaults)
@@ -99,41 +99,39 @@ Configuration::Configuration(const Configuration& other)
 {}
 
 Configuration::Configuration(const std::string filename,
-                                 const bool record_defaults,
-                                 const bool warn_on_default_access,
-                                 const bool log_on_exit,
-                                 const std::string logfile)
-  : Configuration::Configuration(initialize(filename),
-                                     record_defaults, warn_on_default_access, log_on_exit, logfile)
+                             const bool record_defaults,
+                             const bool warn_on_default_access,
+                             const bool log_on_exit,
+                             const std::string logfile)
+  : Configuration::Configuration(initialize(filename), record_defaults, warn_on_default_access, log_on_exit, logfile)
 {}
 
 Configuration::Configuration(int argc,
-                                 char** argv,
-                                 const bool record_defaults,
-                                 const bool warn_on_default_access,
-                                 const bool log_on_exit,
-                                 const std::string logfile)
-  : Configuration::Configuration(initialize(argc, argv),
-                                     record_defaults, warn_on_default_access, log_on_exit, logfile)
+                             char** argv,
+                             const bool record_defaults,
+                             const bool warn_on_default_access,
+                             const bool log_on_exit,
+                             const std::string logfile)
+  : Configuration::Configuration(initialize(argc, argv), record_defaults, warn_on_default_access, log_on_exit, logfile)
 {}
 
 Configuration::Configuration(int argc,
-                                 char** argv,
-                                 const std::string filename,
-                                 const bool record_defaults,
-                                 const bool warn_on_default_access,
-                                 const bool log_on_exit,
-                                 const std::string logfile)
+                             char** argv,
+                             const std::string filename,
+                             const bool record_defaults,
+                             const bool warn_on_default_access,
+                             const bool log_on_exit,
+                             const std::string logfile)
   : Configuration::Configuration(initialize(argc, argv, filename),
-                                     record_defaults, warn_on_default_access, log_on_exit, logfile)
+                                 record_defaults, warn_on_default_access, log_on_exit, logfile)
 {}
 
 Configuration::Configuration(const std::string key,
-                                 const char* value,
-                                 const bool record_defaults,
-                                 const bool warn_on_default_access,
-                                 const bool log_on_exit,
-                                 const std::string logfile)
+                             const char* value,
+                             const bool record_defaults,
+                             const bool warn_on_default_access,
+                             const bool log_on_exit,
+                             const std::string logfile)
   : BaseType()
   , requests_map_()
   , record_defaults_(record_defaults)
@@ -146,11 +144,11 @@ Configuration::Configuration(const std::string key,
 }
 
 Configuration::Configuration(const char* key,
-                                 const char* value,
-                                 const bool record_defaults,
-                                 const bool warn_on_default_access,
-                                 const bool log_on_exit,
-                                 const std::string logfile)
+                             const char* value,
+                             const bool record_defaults,
+                             const bool warn_on_default_access,
+                             const bool log_on_exit,
+                             const std::string logfile)
   : BaseType()
   , requests_map_()
   , record_defaults_(record_defaults)
@@ -163,11 +161,11 @@ Configuration::Configuration(const char* key,
 }
 
 Configuration::Configuration(const std::vector< std::string > keys,
-                                 const std::initializer_list< std::string > value_list,
-                                 const bool record_defaults,
-                                 const bool warn_on_default_access,
-                                 const bool log_on_exit,
-                                 const std::string logfile)
+                             const std::initializer_list< std::string > value_list,
+                             const bool record_defaults,
+                             const bool warn_on_default_access,
+                             const bool log_on_exit,
+                             const std::string logfile)
   : Configuration(keys,
                     std::vector< std::string >(value_list),
                     record_defaults,
@@ -270,11 +268,6 @@ Configuration Configuration::sub(const std::string sub_id) const
   return Configuration(BaseType::sub(sub_id));
 } // ... sub(...)
 
-//std::string& Configuration::operator[](std::string key)
-//{
-//  return tree_[key];
-//}
-
 bool Configuration::has_sub(const std::string subTreeName) const
 {
   return BaseType::hasSub(subTreeName);
@@ -285,7 +278,7 @@ void Configuration::set(const std::string& key, const char* value, const bool ov
   set(key, std::string(value), overwrite);
 }
 
-void Configuration::add(const Configuration& other, const std::string sub_id /*= ""*/, const bool overwrite/* = false*/)
+void Configuration::add(const Configuration& other, const std::string sub_id, const bool overwrite)
 {
   add_tree_(other, sub_id, overwrite);
   for (auto pair : other.requests_map_)
@@ -293,7 +286,7 @@ void Configuration::add(const Configuration& other, const std::string sub_id /*=
       requests_map_[pair.first].insert(request);
 } // ... add(...)
 
-void Configuration::add(const ParameterTree& other, const std::string sub_id/* = ""*/, const bool overwrite/* = false*/)
+void Configuration::add(const ParameterTree& other, const std::string sub_id, const bool overwrite)
 {
   add_tree_(other, sub_id, overwrite);
 } // ... add(...)
@@ -324,20 +317,22 @@ Configuration& Configuration::operator=(const Configuration& other)
   return *this;
 } // ... operator=(...)
 
-const Configuration& Configuration::tree() const {
+const Configuration& Configuration::tree() const
+{
   return *this;
-} // ... tree()
+}
 
-const typename Configuration::RequestMapType& Configuration::requests_map() const {
+const typename Configuration::RequestMapType& Configuration::requests_map() const
+{
   return requests_map_;
-} // ... requests_map()
+}
 
 bool Configuration::empty() const
 {
   return this->getValueKeys().empty() && this->getSubKeys().empty();
-} // ... empty()
+}
 
-void Configuration::report(std::ostream& out/* = std::cout*/, const std::string& prefix/* = ""*/) const
+void Configuration::report(std::ostream& out, const std::string& prefix) const
 {
   if (!empty()) {
     if (subKeys.size() == 0) {
@@ -397,7 +392,8 @@ void Configuration::printRequests(std::ostream& out) const
   print_requests(out);
 }
 
-void Configuration::print_requests(std::ostream& out) const {
+void Configuration::print_requests(std::ostream& out) const
+{
   out << "Config requests:";
   for( const auto& pair : requests_map_ ) {
     out << "Key: " << pair.first;
@@ -413,7 +409,8 @@ Configuration::RequestMapType Configuration::getMismatchedDefaultsMap() const
   return get_mismatched_defaults_map();
 }
 
-Configuration::RequestMapType Configuration::get_mismatched_defaults_map() const {
+Configuration::RequestMapType Configuration::get_mismatched_defaults_map() const
+{
   RequestMapType ret;
   for( const auto& pair : requests_map_ ) {
     auto mismatches = get_mismatched_defaults(pair);
@@ -442,8 +439,9 @@ void Configuration::print_mismatched_defaults(std::ostream& out) const
   }
 }
 
-void Configuration::setRecordDefaults(bool record) {
-  record_defaults_ = record;
+void Configuration::setRecordDefaults(bool record)
+{
+  set_record_defaults(record);
 }
 
 void Configuration::setup_()
