@@ -160,45 +160,45 @@ struct ConfigurationTest
   static void check_vector(const Configuration& config)
   {
     VectorType vec = config.get("vector", VectorType(), 1);
-    if (vec.size() != 1) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                               vec.size() << " vs. 1 with VectorType = "
-                                               << Typename< VectorType >::value());
-    if (FloatCmp::ne(vec[0], 0.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                         vec[0] << " vs. 0 with VectorType = "
-                                                                << Typename< VectorType >::value());
+    if (vec.size() != 1)
+      DUNE_THROW(results_are_not_as_expected,
+                 vec.size() << " vs. 1 with VectorType = " << Typename< VectorType >::value());
+    if (FloatCmp::ne(vec[0], 0.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 vec[0] << " vs. 0 with VectorType = " << Typename< VectorType >::value());
     vec = config.get("vector", VectorType(), 2);
-    if (vec.size() != 2) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                               vec.size() << " vs. 2 with VectorType = "
-                                               << Typename< VectorType >::value());
+    if (vec.size() != 2)
+      DUNE_THROW(results_are_not_as_expected,
+                 vec.size() << " vs. 2 with VectorType = " << Typename< VectorType >::value());
     for (auto ii : {0.0, 1.0})
-      if (FloatCmp::ne(vec[ii], ii)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                           vec[ii] << " vs. " << ii << " with VectorType = "
-                                                           << Typename< VectorType >::value());
+      if (FloatCmp::ne(vec[ii], ii))
+        DUNE_THROW(results_are_not_as_expected,
+                   vec[ii] << " vs. " << ii << " with VectorType = " << Typename< VectorType >::value());
 
     vec = config.get< VectorType >("vector", 1);
-    if (vec.size() != 1) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                               vec.size() << " vs. 1 with VectorType = "
-                                               << Typename< VectorType >::value());
-    if (FloatCmp::ne(vec[0], 0.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                         vec[0] << " vs. 0 with VectorType = "
-                                                                << Typename< VectorType >::value());
+    if (vec.size() != 1)
+      DUNE_THROW(results_are_not_as_expected,
+                 vec.size() << " vs. 1 with VectorType = " << Typename< VectorType >::value());
+    if (FloatCmp::ne(vec[0], 0.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 vec[0] << " vs. 0 with VectorType = " << Typename< VectorType >::value());
     vec = config.get< VectorType >("vector", 2);
-    if (vec.size() != 2) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                               vec.size() << " vs. 2 with VectorType = "
-                                               << Typename< VectorType >::value());
+    if (vec.size() != 2)
+      DUNE_THROW(results_are_not_as_expected,
+                 vec.size() << " vs. 2 with VectorType = " << Typename< VectorType >::value());
     for (auto ii : {0.0, 1.0})
-      if (FloatCmp::ne(vec[ii], ii)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                           vec[ii] << " vs. " << ii << " with VectorType = "
-                                                           << Typename< VectorType >::value());
+      if (FloatCmp::ne(vec[ii], ii))
+        DUNE_THROW(results_are_not_as_expected,
+                   vec[ii] << " vs. " << ii << " with VectorType = " << Typename< VectorType >::value());
 
     vec = config.get< VectorType >("vector");
-    if (vec.size() != 2) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                               vec.size() << " vs. 2 with VectorType = "
-                                               << Typename< VectorType >::value());
+    if (vec.size() != 2)
+      DUNE_THROW(results_are_not_as_expected,
+                 vec.size() << " vs. 2 with VectorType = " << Typename< VectorType >::value());
     for (auto ii : {0.0, 1.0})
-      if (FloatCmp::ne(vec[ii], ii)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                               vec[ii] << " vs. " << ii << " with VectorType = "
-                                               << Typename< VectorType >::value());
+      if (FloatCmp::ne(vec[ii], ii))
+        DUNE_THROW(results_are_not_as_expected,
+                   vec[ii] << " vs. " << ii << " with VectorType = " << Typename< VectorType >::value());
   } // ... check_vector< ... >(...)
 
   template< class K, int d >
@@ -206,34 +206,31 @@ struct ConfigurationTest
   {
     typedef FieldVector< K, d > VectorType;
     VectorType vec = config.get("vector", VectorType(), d);
-    if (vec.size() != d) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                               vec.size() << " vs. 2 with VectorType = "
-                                               << Typename< VectorType >::value());
+    if (vec.size() != d)
+      DUNE_THROW(results_are_not_as_expected,
+                 vec.size() << " vs. 2 with VectorType = " << Typename< VectorType >::value());
     for (size_t ii = 0; ii < d; ++ii)
       if (FloatCmp::ne(vec[ii], double(ii)))
-        DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                              vec[ii] << " vs. " << ii << " with VectorType = "
-                              << Typename< VectorType >::value());
+        DUNE_THROW(results_are_not_as_expected,
+                   vec[ii] << " vs. " << ii << " with VectorType = " << Typename< VectorType >::value());
 
     vec = config.get< VectorType >("vector", d);
-    if (vec.size() != d) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                               vec.size() << " vs. 2 with VectorType = "
-                                               << Typename< VectorType >::value());
+    if (vec.size() != d)
+      DUNE_THROW(results_are_not_as_expected,
+                 vec.size() << " vs. 2 with VectorType = " << Typename< VectorType >::value());
     for (size_t ii = 0; ii < d; ++ii)
       if (FloatCmp::ne(vec[ii], double(ii)))
-        DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                              vec[ii] << " vs. " << ii << " with VectorType = "
-                              << Typename< VectorType >::value());
+        DUNE_THROW(results_are_not_as_expected,
+                   vec[ii] << " vs. " << ii << " with VectorType = " << Typename< VectorType >::value());
 
     vec = config.get< VectorType >("vector");
-    if (vec.size() != d) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                               vec.size() << " vs. 2 with VectorType = "
-                                               << Typename< VectorType >::value());
+    if (vec.size() != d)
+      DUNE_THROW(results_are_not_as_expected,
+                 vec.size() << " vs. 2 with VectorType = " << Typename< VectorType >::value());
     for (size_t ii = 0; ii < d; ++ii)
       if (FloatCmp::ne(vec[ii], double(ii))) {
-        DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                              vec[ii] << " vs. " << ii << " with VectorType = "
-                              << Typename< VectorType >::value());
+        DUNE_THROW(results_are_not_as_expected,
+                   vec[ii] << " vs. " << ii << " with VectorType = " << Typename< VectorType >::value());
       }
   } // ... check_field_vector< ... >(...)
 
@@ -242,133 +239,132 @@ struct ConfigurationTest
   {
     MatrixType mat = config.get("matrix", MatrixType(), 1, 1);
     if (mat.rows() != 1 || mat.cols() != 1)
-      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                            mat.rows() << " vs. 1 and " << mat.cols() << "vs. 1 with MatrixType = "
-                            << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat[0][0], 0.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat[0][0] << " vs. 0 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.rows() << " vs. 1 and " << mat.cols() << "vs. 1 with MatrixType = " << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[0][0], 0.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat[0][0] << " vs. 0 with MatrixType = " << Typename< MatrixType >::value());
     mat = config.get("matrix", MatrixType(), 1, 2);
     if (mat.rows() != 1 || mat.cols() != 2)
-      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                            mat.rows() << " vs. 1 and " << mat.cols() << "vs. 2 with MatrixType = "
-                            << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat[0][0], 0.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat[0][0] << " vs. 0 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat[0][1], 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat[0][1] << " vs. 1 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.rows() << " vs. 1 and " << mat.cols() << "vs. 2 with MatrixType = "
+                 << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[0][0], 0.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat[0][0] << " vs. 0 with MatrixType = " << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[0][1], 1.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat[0][1] << " vs. 1 with MatrixType = " << Typename< MatrixType >::value());
     mat = config.get("matrix", MatrixType(), 2, 1);
     if (mat.rows() != 2 || mat.cols() != 1)
-      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                            mat.rows() << " vs. 2 and " << mat.cols() << "vs. 1 with MatrixType = "
-                            << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat[0][0], 0.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat[0][0] << " vs. 0 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat[1][0], 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat[1][0] << " vs. 1 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.rows() << " vs. 2 and " << mat.cols() << "vs. 1 with MatrixType = "
+                 << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[0][0], 0.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat[0][0] << " vs. 0 with MatrixType = " << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[1][0], 1.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat[1][0] << " vs. 1 with MatrixType = " << Typename< MatrixType >::value());
     mat = config.get("matrix", MatrixType(), 2, 2);
     if (mat.rows() != 2 || mat.cols() != 2)
-      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                            mat.rows() << " vs. 2 and " << mat.cols() << "vs. 2 with MatrixType = "
-                            << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat[0][0], 0.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat[0][0] << " vs. 0 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat[0][1], 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat[0][1] << " vs. 1 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat[1][0], 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat[1][0] << " vs. 1 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat[1][1], 2.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat[1][1] << " vs. 2 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.rows() << " vs. 2 and " << mat.cols() << "vs. 2 with MatrixType = "
+                 << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[0][0], 0.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat[0][0] << " vs. 0 with MatrixType = " << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[0][1], 1.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat[0][1] << " vs. 1 with MatrixType = " << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[1][0], 1.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat[1][0] << " vs. 1 with MatrixType = " << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[1][1], 2.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat[1][1] << " vs. 2 with MatrixType = " << Typename< MatrixType >::value());
     mat = config.get("matrix", MatrixType());
     if (mat.rows() != 2 || mat.cols() != 2)
-      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                            mat.rows() << " vs. 2 and " << mat.cols() << "vs. 2 with MatrixType = "
-                            << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat[0][0], 0.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat[0][0] << " vs. 0 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat[0][1], 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat[0][1] << " vs. 1 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat[1][0], 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat[1][0] << " vs. 1 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat[1][1], 2.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat[1][1] << " vs. 2 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.rows() << " vs. 2 and " << mat.cols() << "vs. 2 with MatrixType = "
+                 << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[0][0], 0.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat[0][0] << " vs. 0 with MatrixType = " << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[0][1], 1.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat[0][1] << " vs. 1 with MatrixType = " << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[1][0], 1.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat[1][0] << " vs. 1 with MatrixType = " << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[1][1], 2.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat[1][1] << " vs. 2 with MatrixType = " << Typename< MatrixType >::value());
 
     mat = config.get< MatrixType >("matrix", 1, 1);
     if (mat.rows() != 1 || mat.cols() != 1)
-      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                            mat.rows() << " vs. 1 and " << mat.cols() << "vs. 1 with MatrixType = "
-                            << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat[0][0], 0.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat[0][0] << " vs. 0 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.rows() << " vs. 1 and " << mat.cols() << "vs. 1 with MatrixType = "
+                 << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[0][0], 0.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat[0][0] << " vs. 0 with MatrixType = " << Typename< MatrixType >::value());
     mat = config.get< MatrixType >("matrix", 1, 2);
     if (mat.rows() != 1 || mat.cols() != 2)
-      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                            mat.rows() << " vs. 1 and " << mat.cols() << "vs. 2 with MatrixType = "
-                            << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat[0][0], 0.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat[0][0] << " vs. 0 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat[0][1], 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat[0][1] << " vs. 1 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.rows() << " vs. 1 and " << mat.cols() << "vs. 2 with MatrixType = "
+                 << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[0][0], 0.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat[0][0] << " vs. 0 with MatrixType = " << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[0][1], 1.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat[0][1] << " vs. 1 with MatrixType = " << Typename< MatrixType >::value());
     mat = config.get< MatrixType >("matrix", 2, 1);
     if (mat.rows() != 2 || mat.cols() != 1)
-      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                            mat.rows() << " vs. 2 and " << mat.cols() << "vs. 1 with MatrixType = "
-                            << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat[0][0], 0.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat[0][0] << " vs. 0 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat[1][0], 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat[1][0] << " vs. 1 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.rows() << " vs. 2 and " << mat.cols() << "vs. 1 with MatrixType = "
+                 << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[0][0], 0.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat[0][0] << " vs. 0 with MatrixType = " << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[1][0], 1.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat[1][0] << " vs. 1 with MatrixType = " << Typename< MatrixType >::value());
     mat = config.get< MatrixType >("matrix", 2, 2);
     if (mat.rows() != 2 || mat.cols() != 2)
-      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                            mat.rows() << " vs. 2 and " << mat.cols() << "vs. 2 with MatrixType = "
-                            << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat[0][0], 0.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat[0][0] << " vs. 0 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat[0][1], 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat[0][1] << " vs. 1 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat[1][0], 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat[1][0] << " vs. 1 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat[1][1], 2.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat[1][1] << " vs. 2 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.rows() << " vs. 2 and " << mat.cols() << "vs. 2 with MatrixType = "
+                 << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[0][0], 0.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat[0][0] << " vs. 0 with MatrixType = " << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[0][1], 1.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat[0][1] << " vs. 1 with MatrixType = " << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[1][0], 1.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat[1][0] << " vs. 1 with MatrixType = " << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[1][1], 2.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat[1][1] << " vs. 2 with MatrixType = " << Typename< MatrixType >::value());
     mat = config.get< MatrixType >("matrix");
     if (mat.rows() != 2 || mat.cols() != 2)
-      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                            mat.rows() << " vs. 2 and " << mat.cols() << "vs. 2 with MatrixType = "
-                            << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat[0][0], 0.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat[0][0] << " vs. 0 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat[0][1], 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat[0][1] << " vs. 1 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat[1][0], 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat[1][0] << " vs. 1 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat[1][1], 2.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat[1][1] << " vs. 2 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.rows() << " vs. 2 and " << mat.cols() << "vs. 2 with MatrixType = "
+                 << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[0][0], 0.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat[0][0] << " vs. 0 with MatrixType = " << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[0][1], 1.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat[0][1] << " vs. 1 with MatrixType = " << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[1][0], 1.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat[1][0] << " vs. 1 with MatrixType = " << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat[1][1], 2.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat[1][1] << " vs. 2 with MatrixType = " << Typename< MatrixType >::value());
   } // ... check_matrix< ... >(...)
 
   template< class MatrixType >
@@ -376,136 +372,133 @@ struct ConfigurationTest
   {
     MatrixType mat = config.get("matrix", MatrixType(), 1, 1);
     if (mat.rows() != 1 || mat.cols() != 1)
-      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                            mat.rows() << " vs. 1 and " << mat.cols() << "vs. 1 with MatrixType = "
-                            << Typename< MatrixType >::value());
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.rows() << " vs. 1 and " << mat.cols() << "vs. 1 with MatrixType = "
+                 << Typename< MatrixType >::value());
     if (FloatCmp::ne(mat.get_entry(0, 0), 0.0))
-      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                            mat.get_entry(0, 0) << " vs. 0 with MatrixType = "
-                            << Typename< MatrixType >::value());
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.get_entry(0, 0) << " vs. 0 with MatrixType = " << Typename< MatrixType >::value());
     mat = config.get("matrix", MatrixType(), 1, 2);
     if (mat.rows() != 1 || mat.cols() != 2)
-      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                            mat.rows() << " vs. 1 and " << mat.cols() << "vs. 2 with MatrixType = "
-                            << Typename< MatrixType >::value());
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.rows() << " vs. 1 and " << mat.cols() << "vs. 2 with MatrixType = "
+                 << Typename< MatrixType >::value());
     if (FloatCmp::ne(mat.get_entry(0, 0), 0.0))
-      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                            mat.get_entry(0, 0) << " vs. 0 with MatrixType = "
-                            << Typename< MatrixType >::value());
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.get_entry(0, 0) << " vs. 0 with MatrixType = " << Typename< MatrixType >::value());
     if (FloatCmp::ne(mat.get_entry(0, 1), 1.0))
-      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                            mat.get_entry(0, 1) << " vs. 1 with MatrixType = "
-                            << Typename< MatrixType >::value());
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.get_entry(0, 1) << " vs. 1 with MatrixType = " << Typename< MatrixType >::value());
     mat = config.get("matrix", MatrixType(), 2, 1);
     if (mat.rows() != 2 || mat.cols() != 1)
-      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                            mat.rows() << " vs. 2 and " << mat.cols() << "vs. 1 with MatrixType = "
-                            << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat.get_entry(0, 0), 0.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat.get_entry(0, 0) << " vs. 0 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat.get_entry(1, 0), 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat.get_entry(1, 0) << " vs. 1 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.rows() << " vs. 2 and " << mat.cols() << "vs. 1 with MatrixType = "
+                 << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(0, 0), 0.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.get_entry(0, 0) << " vs. 0 with MatrixType = " << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(1, 0), 1.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.get_entry(1, 0) << " vs. 1 with MatrixType = " << Typename< MatrixType >::value());
     mat = config.get("matrix", MatrixType(), 2, 2);
     if (mat.rows() != 2 || mat.cols() != 2)
-      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                            mat.rows() << " vs. 2 and " << mat.cols() << "vs. 2 with MatrixType = "
-                            << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat.get_entry(0, 0), 0.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat.get_entry(0, 0) << " vs. 0 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat.get_entry(0, 1), 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat.get_entry(0, 1) << " vs. 1 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat.get_entry(1, 0), 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat.get_entry(1, 0) << " vs. 1 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat.get_entry(1, 1), 2.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat.get_entry(1, 1) << " vs. 2 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.rows() << " vs. 2 and " << mat.cols() << "vs. 2 with MatrixType = "
+                 << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(0, 0), 0.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.get_entry(0, 0) << " vs. 0 with MatrixType = " << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(0, 1), 1.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.get_entry(0, 1) << " vs. 1 with MatrixType = " << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(1, 0), 1.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.get_entry(1, 0) << " vs. 1 with MatrixType = " << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(1, 1), 2.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.get_entry(1, 1) << " vs. 2 with MatrixType = " << Typename< MatrixType >::value());
     mat = config.get("matrix", MatrixType());
     if (mat.rows() != 2 || mat.cols() != 2)
-      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                            mat.rows() << " vs. 2 and " << mat.cols() << "vs. 2 with MatrixType = "
-                            << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat.get_entry(0, 0), 0.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat.get_entry(0, 0) << " vs. 0 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat.get_entry(0, 1), 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat.get_entry(0, 1) << " vs. 1 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat.get_entry(1, 0), 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat.get_entry(1, 0) << " vs. 1 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat.get_entry(1, 1), 2.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat.get_entry(1, 1) << " vs. 2 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.rows() << " vs. 2 and " << mat.cols() << "vs. 2 with MatrixType = "
+                 << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(0, 0), 0.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.get_entry(0, 0) << " vs. 0 with MatrixType = " << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(0, 1), 1.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.get_entry(0, 1) << " vs. 1 with MatrixType = " << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(1, 0), 1.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.get_entry(1, 0) << " vs. 1 with MatrixType = " << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(1, 1), 2.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.get_entry(1, 1) << " vs. 2 with MatrixType = " << Typename< MatrixType >::value());
 
     mat = config.get< MatrixType >("matrix", 1, 1);
     if (mat.rows() != 1 || mat.cols() != 1)
-      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                            mat.rows() << " vs. 1 and " << mat.cols() << "vs. 1 with MatrixType = "
-                            << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat.get_entry(0, 0), 0.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat.get_entry(0, 0) << " vs. 0 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.rows() << " vs. 1 and " << mat.cols() << "vs. 1 with MatrixType = "
+                 << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(0, 0), 0.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.get_entry(0, 0) << " vs. 0 with MatrixType = " << Typename< MatrixType >::value());
     mat = config.get< MatrixType >("matrix", 1, 2);
     if (mat.rows() != 1 || mat.cols() != 2)
-      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                            mat.rows() << " vs. 1 and " << mat.cols() << "vs. 2 with MatrixType = "
-                            << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat.get_entry(0, 0), 0.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat.get_entry(0, 0) << " vs. 0 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat.get_entry(0, 1), 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat.get_entry(0, 1) << " vs. 1 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.rows() << " vs. 1 and " << mat.cols() << "vs. 2 with MatrixType = "
+                 << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(0, 0), 0.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.get_entry(0, 0) << " vs. 0 with MatrixType = " << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(0, 1), 1.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.get_entry(0, 1) << " vs. 1 with MatrixType = " << Typename< MatrixType >::value());
     mat = config.get< MatrixType >("matrix", 2, 1);
     if (mat.rows() != 2 || mat.cols() != 1)
-      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                            mat.rows() << " vs. 2 and " << mat.cols() << "vs. 1 with MatrixType = "
-                            << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat.get_entry(0, 0), 0.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat.get_entry(0, 0) << " vs. 0 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat.get_entry(1, 0), 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat.get_entry(1, 0) << " vs. 1 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.rows() << " vs. 2 and " << mat.cols() << "vs. 1 with MatrixType = "
+                 << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(0, 0), 0.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.get_entry(0, 0) << " vs. 0 with MatrixType = " << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(1, 0), 1.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.get_entry(1, 0) << " vs. 1 with MatrixType = " << Typename< MatrixType >::value());
     mat = config.get< MatrixType >("matrix", 2, 2);
     if (mat.rows() != 2 || mat.cols() != 2)
-      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                            mat.rows() << " vs. 2 and " << mat.cols() << "vs. 2 with MatrixType = "
-                            << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat.get_entry(0, 0), 0.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat.get_entry(0, 0) << " vs. 0 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat.get_entry(0, 1), 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat.get_entry(0, 1) << " vs. 1 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat.get_entry(1, 0), 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat.get_entry(1, 0) << " vs. 1 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat.get_entry(1, 1), 2.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat.get_entry(1, 1) << " vs. 2 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.rows() << " vs. 2 and " << mat.cols() << "vs. 2 with MatrixType = "
+                 << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(0, 0), 0.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.get_entry(0, 0) << " vs. 0 with MatrixType = " << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(0, 1), 1.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.get_entry(0, 1) << " vs. 1 with MatrixType = " << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(1, 0), 1.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.get_entry(1, 0) << " vs. 1 with MatrixType = " << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(1, 1), 2.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.get_entry(1, 1) << " vs. 2 with MatrixType = " << Typename< MatrixType >::value());
     mat = config.get< MatrixType >("matrix");
     if (mat.rows() != 2 || mat.cols() != 2)
-      DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                            mat.rows() << " vs. 2 and " << mat.cols() << "vs. 2 with MatrixType = "
-                            << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat.get_entry(0, 0), 0.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat.get_entry(0, 0) << " vs. 0 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat.get_entry(0, 1), 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat.get_entry(0, 1) << " vs. 1 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat.get_entry(1, 0), 1.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat.get_entry(1, 0) << " vs. 1 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
-    if (FloatCmp::ne(mat.get_entry(1, 1), 2.0)) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                                            mat.get_entry(1, 1) << " vs. 2 with MatrixType = "
-                                                                      << Typename< MatrixType >::value());
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.rows() << " vs. 2 and " << mat.cols() << "vs. 2 with MatrixType = "
+                 << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(0, 0), 0.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.get_entry(0, 0) << " vs. 0 with MatrixType = " << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(0, 1), 1.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.get_entry(0, 1) << " vs. 1 with MatrixType = " << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(1, 0), 1.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.get_entry(1, 0) << " vs. 1 with MatrixType = " << Typename< MatrixType >::value());
+    if (FloatCmp::ne(mat.get_entry(1, 1), 2.0))
+      DUNE_THROW(results_are_not_as_expected,
+                 mat.get_entry(1, 1) << " vs. 2 with MatrixType = " << Typename< MatrixType >::value());
   } // ... check_stuff_matrix< ... >(...)
 
   template< class K, int r, int c >
@@ -516,18 +509,16 @@ struct ConfigurationTest
     for (size_t cc = 0; cc < c; ++cc) {
       for (size_t rr = 0; rr < r; ++rr) {
         if (FloatCmp::ne(mat[rr][cc], double(rr + cc)))
-          DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                mat[rr][cc] << " vs. " << rr + cc << " with MatrixType = "
-                                << Typename< MatrixType >::value());
+          DUNE_THROW(results_are_not_as_expected,
+                     mat[rr][cc] << " vs. " << rr + cc << " with MatrixType = " << Typename< MatrixType >::value());
       }
     }
     mat = config.get("matrix", MatrixType());
     for (size_t cc = 0; cc < c; ++cc) {
       for (size_t rr = 0; rr < r; ++rr) {
         if (FloatCmp::ne(mat[rr][cc], double(rr + cc)))
-          DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                mat[rr][cc] << " vs. " << rr + cc << " with MatrixType = "
-                                << Typename< MatrixType >::value());
+          DUNE_THROW(results_are_not_as_expected,
+                     mat[rr][cc] << " vs. " << rr + cc << " with MatrixType = " << Typename< MatrixType >::value());
       }
     }
 
@@ -535,18 +526,16 @@ struct ConfigurationTest
     for (size_t cc = 0; cc < c; ++cc) {
       for (size_t rr = 0; rr < r; ++rr) {
         if (FloatCmp::ne(mat[rr][cc], double(rr + cc)))
-          DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                mat[rr][cc] << " vs. " << rr + cc << " with MatrixType = "
-                                << Typename< MatrixType >::value());
+          DUNE_THROW(results_are_not_as_expected,
+                     mat[rr][cc] << " vs. " << rr + cc << " with MatrixType = " << Typename< MatrixType >::value());
       }
     }
     mat = config.get< MatrixType >("matrix");
     for (size_t cc = 0; cc < c; ++cc) {
       for (size_t rr = 0; rr < r; ++rr) {
         if (FloatCmp::ne(mat[rr][cc], double(rr + cc)))
-          DUNE_THROW_COLORFULLY(results_are_not_as_expected,
-                                mat[rr][cc] << " vs. " << rr + cc << " with MatrixType = "
-                                << Typename< MatrixType >::value());
+          DUNE_THROW(results_are_not_as_expected,
+                     mat[rr][cc] << " vs. " << rr + cc << " with MatrixType = " << Typename< MatrixType >::value());
       }
     }
   } // ... check_field_matrix< ... >(...)
@@ -560,27 +549,27 @@ struct ConfigurationTest
     test_out << config << std::endl;
     std::string DUNE_UNUSED(report_str) = config.report_string();
     std::string str = config.get("string", std::string("foo"));
-    if (str != "string") DUNE_THROW_COLORFULLY(results_are_not_as_expected, "'" << str << "'' vs. 'string'");
+    if (str != "string") DUNE_THROW(results_are_not_as_expected, "'" << str << "'' vs. 'string'");
     str = config.get("foo", std::string("string"));
-    if (str != "string") DUNE_THROW_COLORFULLY(results_are_not_as_expected, "'" << str << "'' vs. 'string'");
+    if (str != "string") DUNE_THROW(results_are_not_as_expected, "'" << str << "'' vs. 'string'");
     str = config.get< std::string >("string");
-    if (str != "string") DUNE_THROW_COLORFULLY(results_are_not_as_expected, "'" << str << "'' vs. 'string'");
+    if (str != "string") DUNE_THROW(results_are_not_as_expected, "'" << str << "'' vs. 'string'");
 
-    if (!config.has_sub("sub1")) DUNE_THROW_COLORFULLY(results_are_not_as_expected,
+    if (!config.has_sub("sub1")) DUNE_THROW(results_are_not_as_expected,
                                           "Sub 'sub1' does not exists in this config:\n" << config);
     Configuration sub1_config = config.sub("sub1");
     int nt = sub1_config.get("int", int(0));
-    if (nt != 1) DUNE_THROW_COLORFULLY(results_are_not_as_expected, "'" << nt << "'' vs. '1'");
+    if (nt != 1) DUNE_THROW(results_are_not_as_expected, "'" << nt << "'' vs. '1'");
     nt = sub1_config.get("intt", int(1));
-    if (nt != 1) DUNE_THROW_COLORFULLY(results_are_not_as_expected, "'" << nt << "'' vs. '1'");
+    if (nt != 1) DUNE_THROW(results_are_not_as_expected, "'" << nt << "'' vs. '1'");
     nt = sub1_config.get< int >("int");
-    if (nt != 1) DUNE_THROW_COLORFULLY(results_are_not_as_expected, "'" << nt << "'' vs. '1'");
+    if (nt != 1) DUNE_THROW(results_are_not_as_expected, "'" << nt << "'' vs. '1'");
     size_t st = config.get("sub2.size_t", size_t(0));
-    if (st != 1) DUNE_THROW_COLORFULLY(results_are_not_as_expected, "'" << st << "'' vs. '1'");
+    if (st != 1) DUNE_THROW(results_are_not_as_expected, "'" << st << "'' vs. '1'");
     st = config.get("sub2.size_tt", size_t(1));
-    if (st != 1) DUNE_THROW_COLORFULLY(results_are_not_as_expected, "'" << st << "'' vs. '1'");
+    if (st != 1) DUNE_THROW(results_are_not_as_expected, "'" << st << "'' vs. '1'");
     st = config.get< size_t >("sub2.size_t");
-    if (st != 1) DUNE_THROW_COLORFULLY(results_are_not_as_expected, "'" << st << "'' vs. '1'");
+    if (st != 1) DUNE_THROW(results_are_not_as_expected, "'" << st << "'' vs. '1'");
 
     check_vector< std::vector< double > >(config.sub("sub2.subsub1"));
     check_field_vector< double, 1 >(config.sub("sub2.subsub1"));

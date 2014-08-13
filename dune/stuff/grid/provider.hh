@@ -58,8 +58,8 @@ public:
     if (type == Providers::Cube< GridType >::static_id())
       return Providers::Cube< GridType >::default_config(subname);
     else
-      DUNE_THROW_COLORFULLY(Exceptions::wrong_input_given,
-                            "'" << type << "' is not a valid " << InterfaceType::static_id() << "!");
+      DUNE_THROW(Exceptions::wrong_input_given,
+                 "'" << type << "' is not a valid " << InterfaceType::static_id() << "!");
   } // ... default_config(...)
 
       static std::unique_ptr< InterfaceType >
@@ -69,8 +69,8 @@ public:
     if (type == Providers::Cube< GridType >::static_id())
       return call_create< Providers::Cube< GridType > >(config);
     else
-      DUNE_THROW_COLORFULLY(Exceptions::wrong_input_given,
-                            "'" << type << "' is not a valid " << InterfaceType::static_id() << "!");
+      DUNE_THROW(Exceptions::wrong_input_given,
+                 "'" << type << "' is not a valid " << InterfaceType::static_id() << "!");
   } // ... create(...)
 }; // class GridProviders
 
