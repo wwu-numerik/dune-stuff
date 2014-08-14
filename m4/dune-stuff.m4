@@ -1,5 +1,5 @@
 # This file is part of the dune-stuff project:
-#   http://users.dune-project.org/projects/dune-stuff
+#   https://github.com/wwu-numerik/dune-stuff
 # Copyright holders: Rene Milk, Felix Schindler
 # License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 #
@@ -53,5 +53,5 @@ to the PKG_CONFIG_PATH environment variable.])])
 
 AC_DEFUN([DUNE_STUFF_CHECK_MODULE],
 [
-    DUNE_CHECK_MODULES([dune-stuff], [stuff/common/logging.hh], [Dune::Stuff::Common::Logger()])
+    DUNE_CHECK_MODULES([dune-stuff], [stuff/common/exceptions.hh], [Dune::Stuff::Exceptions::CRTP_check_failed()])
 ])

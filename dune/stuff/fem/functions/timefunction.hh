@@ -1,5 +1,5 @@
 // This file is part of the dune-stuff project:
-//   https://users.dune-project.org/projects/dune-stuff
+//   https://github.com/wwu-numerik/dune-stuff
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
@@ -33,23 +33,15 @@ struct ConstTimeProvider
    **/
 template< class FunctionSpaceImp, class FunctionImp, class TimeProviderImp >
 class TimeFunction
-#if DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
   : public Dune::Fem::BartonNackmanInterface< TimeFunction< FunctionSpaceImp, FunctionImp, TimeProviderImp >, FunctionImp >
-#else
-  : public Dune::Fem::BartonNackmanInterface< TimeFunction< FunctionSpaceImp, FunctionImp, TimeProviderImp >, FunctionImp >
-#endif
-    , public Dune::Fem::Function< FunctionSpaceImp, TimeFunction< FunctionSpaceImp, FunctionImp, TimeProviderImp > >
+  , public Dune::Fem::Function< FunctionSpaceImp, TimeFunction< FunctionSpaceImp, FunctionImp, TimeProviderImp > >
 {
 protected:
   typedef TimeFunction< FunctionSpaceImp, FunctionImp, TimeProviderImp >
     ThisType;
   typedef Dune::Fem::Function< FunctionSpaceImp, ThisType >
     BaseType;
-#if DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
   typedef Dune::Fem::BartonNackmanInterface< ThisType, FunctionImp > Interface;
-#else
-  typedef Dune::Fem::BartonNackmanInterface< ThisType, FunctionImp > Interface;
-#endif
 
   //!TODO having both here is just plain weird
   TimeProviderImp* timeProviderPtr_;          // in case we cosntruct our own
@@ -130,23 +122,15 @@ public:
    **/
 template< class FunctionSpaceImp, class FunctionImp, class TimeProviderImp >
 class IntersectionTimeFunction
-#if DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
   : public Dune::Fem::BartonNackmanInterface< IntersectionTimeFunction< FunctionSpaceImp, FunctionImp, TimeProviderImp >, FunctionImp >
-#else
-  : public Dune::Fem::BartonNackmanInterface< IntersectionTimeFunction< FunctionSpaceImp, FunctionImp, TimeProviderImp >, FunctionImp >
-#endif
-    , public Dune::Fem::Function< FunctionSpaceImp, IntersectionTimeFunction< FunctionSpaceImp, FunctionImp, TimeProviderImp > >
+  , public Dune::Fem::Function< FunctionSpaceImp, IntersectionTimeFunction< FunctionSpaceImp, FunctionImp, TimeProviderImp > >
 {
 protected:
   typedef IntersectionTimeFunction< FunctionSpaceImp, FunctionImp, TimeProviderImp >
     ThisType;
   typedef Dune::Fem::Function< FunctionSpaceImp, ThisType >
     BaseType;
-#if DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
   typedef Dune::Fem::BartonNackmanInterface< ThisType, FunctionImp > Interface;
-#else
-  typedef Dune::Fem::BartonNackmanInterface< ThisType, FunctionImp > Interface;
-#endif
 
   const TimeProviderImp& timeProvider_;
 
