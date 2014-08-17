@@ -28,7 +28,7 @@
 #include <dune/stuff/common/reenable_warnings.hh>
 
 #include <dune/stuff/aliases.hh>
-#include <dune/stuff/common/parameter/configcontainer.hh>
+#include <dune/stuff/common/configuration.hh>
 #include <dune/stuff/common/logging.hh>
 #include <dune/stuff/fem/namespace.hh>
 
@@ -95,7 +95,7 @@ typedef Dune::tuple<double, float, //Dune::bigunsignedint,
 void DUNE_DEPRECATED_MSG("Just include dune/stuff/test/test_main.hh") test_init(int argc, char** argv)
 {
   testing::InitGoogleTest(&argc, argv);
-  DSC_CONFIG.readOptions(argc, argv);
+  DSC_CONFIG.read_options(argc, argv);
 #if HAVE_DUNE_FEM
   Dune::Fem::MPIManager::initialize(argc, argv);
 #else
