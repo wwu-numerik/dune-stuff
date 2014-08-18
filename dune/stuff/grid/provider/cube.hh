@@ -194,6 +194,16 @@ public:
     return *grid_ptr_;
   }
 
+  std::shared_ptr< GridType > grid_ptr()
+  {
+    return grid_ptr_;
+  }
+
+  std::shared_ptr< const GridType > grid_ptr() const
+  {
+    return grid_ptr_;
+  }
+
 private:
   static std::array< unsigned int, dimDomain > parse_array(const unsigned int in)
   {
@@ -246,7 +256,7 @@ private:
     }
   } // ... create_grid(...)
 
-  std::shared_ptr<GridType> grid_ptr_;
+  std::shared_ptr< GridType > grid_ptr_;
 }; // class Cube
 
 
