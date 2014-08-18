@@ -193,10 +193,3 @@ TEST(StringTest, Tokenizer) {
 TEST(StringTest, TimeString) {
   string ts = stringFromTime(-1);
 }
-
-// Run tests
-int main(int argc, char** argv)
-{
-  test_init(argc, argv);
-  return RUN_ALL_TESTS();
-}

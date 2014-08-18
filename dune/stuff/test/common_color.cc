@@ -39,10 +39,4 @@ TEST(Color, All) {
   for (int i = 0; i < 256; ++i)
     std::cout << highlightString("hello world - ", i);
   std::cout << std::endl;
-} // main
-
-int main(int argc, char** argv)
-{
-  test_init(argc, argv);
-  return RUN_ALL_TESTS();
 }

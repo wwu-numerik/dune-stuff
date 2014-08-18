@@ -73,9 +73,3 @@ TYPED_TEST(CornerRangeTest, Misc) {
 }
 
 #endif // #if HAVE_DUNE_GRID
-
-int main(int argc, char** argv)
-{
-  test_init(argc, argv);
-  return RUN_ALL_TESTS();
-}
