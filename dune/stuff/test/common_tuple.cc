@@ -53,9 +53,3 @@ TEST(Product, All) {
                   >::Generate<> base_generator_type;
   base_generator_type::Run();
 }
-
-int main(int argc, char** argv)
-{
-  test_init(argc, argv);
-  return RUN_ALL_TESTS();
-}
