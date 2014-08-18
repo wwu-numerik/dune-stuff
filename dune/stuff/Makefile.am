@@ -16,8 +16,7 @@ libstuff_la_SOURCES = \
 	common/logstreams.cc \
 	common/math.cc \
 	common/profiler.cc \
-	common/parameter/configcontainer.cc \
-	common/parameter/tree.cc \
+	common/configuration.cc \
 	common/signals.cc \
 	common/parallel/threadmanager.cc \
 	fem/femeoc.cc \

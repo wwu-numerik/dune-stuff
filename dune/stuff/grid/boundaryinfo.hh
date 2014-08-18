@@ -23,7 +23,7 @@
 #include <dune/stuff/common/color.hh>
 #include <dune/stuff/common/vector.hh>
 #include <dune/stuff/common/float_cmp.hh>
-#include <dune/stuff/common/parameter/configcontainer.hh>
+#include <dune/stuff/common/configuration.hh>
 #include <dune/stuff/common/memory.hh>
 
 #if HAVE_DUNE_PDELAB
@@ -109,12 +109,12 @@ public:
     return internal::boundary_info_static_id() + ".alldirichlet";
   }
 
-  static Common::ConfigContainer default_config(const std::string sub_name = "")
+  static Common::Configuration default_config(const std::string sub_name = "")
   {
     if (sub_name.empty())
-      return Common::ConfigContainer("type", static_id());
+      return Common::Configuration("type", static_id());
     else
-      return Common::ConfigContainer(sub_name + ".type", static_id());
+      return Common::Configuration(sub_name + ".type", static_id());
   }
 }; // class AllDirichlet
 
@@ -127,12 +127,12 @@ public:
     return internal::boundary_info_static_id() + ".allneumann";
   }
 
-  static Common::ConfigContainer default_config(const std::string sub_name = "")
+  static Common::Configuration default_config(const std::string sub_name = "")
   {
     if (sub_name.empty())
-      return Common::ConfigContainer("type", static_id());
+      return Common::Configuration("type", static_id());
     else
-      return Common::ConfigContainer(sub_name + ".type", static_id());
+      return Common::Configuration(sub_name + ".type", static_id());
   }
 }; // class AllNeumann
 
@@ -145,15 +145,15 @@ public:
     return internal::boundary_info_static_id() + ".idbased";
   }
 
-  static Common::ConfigContainer default_config(const std::string sub_name = "")
+  static Common::Configuration default_config(const std::string sub_name = "")
   {
-    Common::ConfigContainer config("type", static_id());
+    Common::Configuration config("type", static_id());
     config["default_to_dirichlet"] = "true";
     config["neumann"] = "[4]";
     if (sub_name.empty())
       return config;
     else {
-      Common::ConfigContainer tmp;
+      Common::Configuration tmp;
       tmp.add(config, sub_name);
       return tmp;
     }
@@ -169,9 +169,9 @@ public:
     return internal::boundary_info_static_id() + ".normalbased";
   }
 
-  static Common::ConfigContainer default_config(const std::string sub_name = "")
+  static Common::Configuration default_config(const std::string sub_name = "")
   {
-    Common::ConfigContainer config("type", static_id());
+    Common::Configuration config("type", static_id());
     config["default"] = "dirichlet";
     config["compare_tolerance"] = "1e-10";
     config["neumann.0"] = "[1.0 0.0]";
@@ -179,7 +179,7 @@ public:
     if (sub_name.empty())
       return config;
     else {
-      Common::ConfigContainer tmp;
+      Common::Configuration tmp;
       tmp.add(config, sub_name);
       return tmp;
     }
@@ -207,12 +207,12 @@ public:
     return BoundaryInfoConfigs::AllDirichlet::static_id();
   }
 
-  static Common::ConfigContainer default_config(const std::string sub_name = "")
+  static Common::Configuration default_config(const std::string sub_name = "")
   {
     return BoundaryInfoConfigs::AllDirichlet::default_config(sub_name);
   }
 
-  static std::unique_ptr< ThisType > create(const Common::ConfigContainer /*config*/ = default_config(),
+  static std::unique_ptr< ThisType > create(const Common::Configuration /*config*/ = default_config(),
                                             const std::string /*sub_name*/ = static_id())
   {
     return Common::make_unique< ThisType >();
@@ -258,12 +258,12 @@ public:
     return BoundaryInfoConfigs::AllNeumann::static_id();
   }
 
-  static Common::ConfigContainer default_config(const std::string sub_name = "")
+  static Common::Configuration default_config(const std::string sub_name = "")
   {
     return BoundaryInfoConfigs::AllNeumann::default_config(sub_name);
   }
 
-  static std::unique_ptr< ThisType > create(const Common::ConfigContainer /*config*/ = default_config(),
+  static std::unique_ptr< ThisType > create(const Common::Configuration /*config*/ = default_config(),
                                             const std::string /*sub_name*/ = static_id())
   {
     return Common::make_unique< ThisType >();
@@ -309,15 +309,15 @@ public:
     return BoundaryInfoConfigs::IdBased::static_id();
   }
 
-  static Common::ConfigContainer default_config(const std::string sub_name = "")
+  static Common::Configuration default_config(const std::string sub_name = "")
   {
     return BoundaryInfoConfigs::IdBased::default_config(sub_name);
   }
 
-  static std::unique_ptr< ThisType > create(const Common::ConfigContainer config = default_config(),
+  static std::unique_ptr< ThisType > create(const Common::Configuration config = default_config(),
                                             const std::string sub_name = static_id())
   {
-    const Common::ConfigContainer cfg = config.has_sub(sub_name) ? config.sub(sub_name) : config;
+    const Common::Configuration cfg = config.has_sub(sub_name) ? config.sub(sub_name) : config;
     std::map< std::string, std::set< int > > id_to_type_map;
     for (const std::string& type : {"dirichlet", "neumann"})
       if (cfg.has_key(type)) {
@@ -416,20 +416,20 @@ public:
     return BoundaryInfoConfigs::NormalBased::static_id();
   }
 
-  static Common::ConfigContainer default_config(const std::string sub_name = "")
+  static Common::Configuration default_config(const std::string sub_name = "")
   {
     return BoundaryInfoConfigs::NormalBased::default_config(sub_name);
   }
 
-  static std::unique_ptr< ThisType > create(const Common::ConfigContainer config = default_config(),
+  static std::unique_ptr< ThisType > create(const Common::Configuration config = default_config(),
                                             const std::string sub_name = static_id())
   {
-    const Common::ConfigContainer cfg = config.has_sub(sub_name) ? config.sub(sub_name) : config;
-    const Common::ConfigContainer default_cfg = default_config();
+    const Common::Configuration cfg = config.has_sub(sub_name) ? config.sub(sub_name) : config;
+    const Common::Configuration default_cfg = default_config();
     // get default
     const std::string default_type = cfg.get("default", default_cfg.get< std::string >("default"));
     if (default_type != "dirichlet" && default_type != "neumann")
-      DUNE_THROW_COLORFULLY(Exceptions::configuration_error, "Wrong default '" << default_type << "' given!");
+      DUNE_THROW(Exceptions::configuration_error, "Wrong default '" << default_type << "' given!");
     const bool default_to_dirichlet = default_type == "dirichlet";
     // get tolerance
     const DomainFieldType tol = cfg.get("compare_tolerance", default_cfg.get< DomainFieldType >("compare_tolerance"));
@@ -457,8 +457,8 @@ public:
     // sanity check
     for (auto& dirichletNormal : dirichlet_normals_) {
       if (contains(dirichletNormal, neumann_normals_))
-        DUNE_THROW_COLORFULLY(Exceptions::wrong_input_given,
-                              "Given normals are too close for given tolerance '" << tol << "'!");
+        DUNE_THROW(Exceptions::wrong_input_given,
+                   "Given normals are too close for given tolerance '" << tol << "'!");
     }
   } // NormalBased(...)
 
@@ -503,7 +503,7 @@ public:
   } // ... neumann(...)
 
 private:
-  static std::vector< DomainType > getVectors(const Common::ConfigContainer& config, const std::string key)
+  static std::vector< DomainType > getVectors(const Common::Configuration& config, const std::string key)
   {
     std::vector< DomainType > ret;
     if (config.has_sub(key)) {
@@ -557,7 +557,7 @@ public:
     };
   } // ... available(...)
 
-  static Common::ConfigContainer default_config(const std::string type, const std::string subname = "")
+  static Common::Configuration default_config(const std::string type, const std::string subname = "")
   {
     using namespace Stuff::Grid::BoundaryInfos;
     if (type == BoundaryInfos::AllDirichlet< I >::static_id())
@@ -569,12 +569,12 @@ public:
     else if (type == BoundaryInfos::NormalBased< I >::static_id())
       return BoundaryInfos::NormalBased< I >::default_config(subname);
     else
-      DUNE_THROW_COLORFULLY(Exceptions::wrong_input_given,
-                            "'" << type << "' is not a valid " << InterfaceType::static_id() << "!");
+      DUNE_THROW(Exceptions::wrong_input_given,
+                 "'" << type << "' is not a valid " << InterfaceType::static_id() << "!");
   } // ... default_config(...)
 
   static std::unique_ptr< InterfaceType > create(const std::string& type = available()[0],
-                                                 const Common::ConfigContainer config = default_config(available()[0]))
+                                                 const Common::Configuration config = default_config(available()[0]))
   {
     using namespace Stuff::Grid::BoundaryInfos;
     if (type == BoundaryInfos::AllDirichlet< I >::static_id())
@@ -586,8 +586,8 @@ public:
     else if (type == BoundaryInfos::NormalBased< I >::static_id())
       return BoundaryInfos::NormalBased< I >::create(config);
     else
-      DUNE_THROW_COLORFULLY(Exceptions::wrong_input_given,
-                            "'" << type << "' is not a valid " << InterfaceType::static_id() << "!");
+      DUNE_THROW(Exceptions::wrong_input_given,
+                 "'" << type << "' is not a valid " << InterfaceType::static_id() << "!");
   } // ... create(...)
 }; // class BoundaryInfoProvider
 
