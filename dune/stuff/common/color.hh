@@ -110,6 +110,10 @@ int templateColorChooser(int i) {
   return i % 256;
 }
 
+
+bool terminal_supports_color();
+
+
 /**
  * @brief Highlights templates depending on the "template"-level.
  *
@@ -130,9 +134,9 @@ inline std::string highlightString(std::string str, int colornr = 0) {
   return "\033[38;5;" + std::to_string(colornr % 256) + "m" + str + "\033[0m"; //"\033[38;5;0m";
 }
 
-std::string colorString(const std::string _string, const std::string _color = Colors::brown);
+std::string colorString(const std::string str, const std::string clr = Colors::brown);
 
-std::string colorStringRed(const std::string _string);
+std::string colorStringRed(const std::string str);
 
 /**
  * @brief Highlights a substring of another string in a specified color.
