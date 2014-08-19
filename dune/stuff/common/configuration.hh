@@ -269,7 +269,9 @@ public:
 
   //! const get with default value, without validation
   template< class T >
-  typename internal::Typer<T>::type get(const std::string key, const T& def, const size_t size = 0, const size_t cols = 0) const
+  typename internal::Typer<T>::type get(const std::string key,
+                                        const T& def, const size_t size = 0,
+                                        const size_t cols = 0) const
   {
     typedef typename internal::Typer<T>::type Tt;
     const auto def_t = static_cast<Tt>(def);
@@ -300,10 +302,10 @@ public:
   //! const get with default value, with validation
   template< class T , class Validator>
   typename internal::Typer<T>::type get(const std::string key,
-        const T& def,
-        const ValidatorInterface< typename internal::Typer<T>::type, Validator >& validator,
-        const size_t size = 0,
-        const size_t cols = 0) const
+                                        const T& def,
+                                        const ValidatorInterface< typename internal::Typer< T >::type, Validator >& validator,
+                                        const size_t size = 0,
+                                        const size_t cols = 0) const
   {
     // static cast is either a noop or char* to string
     const auto def_t = static_cast<typename internal::Typer<T>::type>(def);
@@ -331,8 +333,11 @@ public:
 
   //! get variation with default value, without validation, request needs to be provided
   template< typename T >
-  typename internal::Typer<T>::type get(const std::string key, const T& def, Request req,
-                                        const size_t size = 0, const size_t cols = 0)
+  typename internal::Typer<T>::type get(const std::string key,
+                                        const T& def,
+                                        Request req,
+                                        const size_t size = 0,
+                                        const size_t cols = 0)
   {
     const auto def_t = static_cast<typename internal::Typer<T>::type>(def);
     return get_(key, def_t, ValidateAny< typename internal::Typer<T>::type >(), req, size, cols, true);
@@ -341,9 +346,11 @@ public:
   //! get variation with default value and validation, request needs to be provided
   template< typename T, class Validator >
   typename internal::Typer<T>::type get(const std::string key,
-        const T& def,
-        const ValidatorInterface< typename internal::Typer<T>::type, Validator >& validator,
-        Request req, const size_t size = 0, const size_t cols = 0)
+                                        const T& def,
+                                        const ValidatorInterface< typename internal::Typer< T >::type, Validator >& validator,
+                                        Request req,
+                                        const size_t size = 0,
+                                        const size_t cols = 0)
   {
     return get_(key, def, validator, req, size, cols, true);
   }
@@ -351,11 +358,11 @@ public:
   //! get variation with default value, validation
   template< typename T, class Validator >
   typename internal::Typer<T>::type get(const std::string key,
-        const T& def,
-        const size_t size = 0,
-        const size_t cols = 0,
-        const ValidatorInterface< typename internal::Typer<T>::type, Validator >& validator
-                                        = ValidateAny< typename internal::Typer<T>::type >())
+                                        const T& def,
+                                        const size_t size = 0,
+                                        const size_t cols = 0,
+                                        const ValidatorInterface< typename internal::Typer< T >::type, Validator >& validator
+                                            = ValidateAny< typename internal::Typer<T>::type >())
   {
     const auto def_t = static_cast<typename internal::Typer<T>::type>(def);
     Request req(-1, std::string(), key,
@@ -367,10 +374,10 @@ public:
   //! get variation with default value, validation
   template< typename T , class Validator >
   typename internal::Typer<T>::type get(const std::string key,
-        const T& def,
-        const ValidatorInterface< typename internal::Typer<T>::type, Validator >& validator,
-        const size_t size = 0,
-        const size_t cols = 0)
+                                        const T& def,
+                                        const ValidatorInterface< typename internal::Typer<T>::type, Validator >& validator,
+                                        const size_t size = 0,
+                                        const size_t cols = 0)
   {
     const auto def_t = static_cast<typename internal::Typer<T>::type>(def);
     Request req(-1, std::string(), key,
@@ -384,12 +391,12 @@ public:
    */
 
   //! get std::vector< T > from tree_
-  template< typename T, class Validator = ValidateAny< typename internal::Typer<T>::type > >
+  template< typename T, class Validator = ValidateAny< typename internal::Typer< T >::type > >
   std::vector< typename internal::Typer<T>::type > getList(const std::string key,
-                           const T& def = T(),
-                           const std::string separators = ";",
-                           const ValidatorInterface< typename internal::Typer<T>::type, Validator >& validator
-                                                           = ValidateAny< typename internal::Typer<T>::type >()) const
+                                                           const T& def = T(),
+                                                           const std::string separators = ";",
+                                                           const ValidatorInterface< typename internal::Typer<T>::type, Validator >& validator
+                                                              = ValidateAny< typename internal::Typer<T>::type >()) const
   {
     typedef typename internal::Typer<T>::type Tt;
     const auto def_t = static_cast<Tt>(def);
