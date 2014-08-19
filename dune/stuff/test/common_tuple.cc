@@ -53,3 +53,5 @@ TEST(Product, All) {
                   >::Generate<> base_generator_type;
   base_generator_type::Run();
 }
+
+#include <dune/stuff/test/test_main.cxx>

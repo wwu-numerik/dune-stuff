@@ -46,3 +46,5 @@ TEST(FixedMapTest, All) {
   //death test segfaults inside gtest -> disabled
 //  EXPECT_DEATH(*too_big.end(), ".*");
 }
+
+#include <dune/stuff/test/test_main.cxx>

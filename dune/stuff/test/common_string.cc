@@ -193,3 +193,5 @@ TEST(StringTest, Tokenizer) {
 TEST(StringTest, TimeString) {
   string ts = stringFromTime(-1);
 }
+
+#include <dune/stuff/test/test_main.cxx>

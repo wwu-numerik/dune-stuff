@@ -107,9 +107,9 @@ struct ConfigTest : public testing::Test {
   static const int count = 2;
   DefaultRNG<T> rng;
   RandomStrings key_gen;
-  //std::array is not assignable from list_of it seems. Don't make the following two boost::arrays const (triggers intel compiler bug, at least with icpc version 14.0.3).
-  boost::array<T, count> values;
-  boost::array<std::string, count> keys;
+  //std::array is not assignable from list_of it seems
+  const boost::array<T, count> values;
+  const boost::array<std::string, count> keys;
   ConfigTest()
     : key_gen(8)
     , values(boost::assign::list_of<T>().repeat_fun(values.size()-1,rng))
@@ -606,3 +606,5 @@ TYPED_TEST_CASE(ConfigurationTest, ConfigurationCreators);
 TYPED_TEST(ConfigurationTest, behaves_correctly) {
   this->behaves_correctly();
 }
+
+#include <dune/stuff/test/test_main.cxx>
