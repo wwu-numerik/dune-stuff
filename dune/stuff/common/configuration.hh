@@ -389,7 +389,7 @@ public:
                            const T& def = T(),
                            const std::string separators = ";",
                            const ValidatorInterface< typename internal::Typer<T>::type, Validator >& validator
-                                                           = ValidateAny< typename internal::Typer<T>::type >())
+                                                           = ValidateAny< typename internal::Typer<T>::type >()) const
   {
     typedef typename internal::Typer<T>::type Tt;
     const auto def_t = static_cast<Tt>(def);
