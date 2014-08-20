@@ -92,9 +92,9 @@ void busywait(const int ms)
   const int milliseconds = (ms/10)*10 + 10;
   timeval start, end;
   gettimeofday(&start, NULL);
-  do  {
+  do {
    gettimeofday(&end, NULL);
-  } while( ((end.tv_sec - start.tv_sec )*1e6) + ((end.tv_usec - start.tv_usec)) < milliseconds * 1000 );
+  } while (((end.tv_sec - start.tv_sec)*1e6) + ((end.tv_usec - start.tv_usec)) < milliseconds*1000);
 }
 
 
@@ -114,6 +114,7 @@ int main(int argc, char** argv)
 #ifdef DUNE_STUFF_TEST_MAIN_CATCH_EXCEPTIONS
   try {
 #endif
+
     testing::InitGoogleTest(&argc, argv);
     DSC_CONFIG.read_options(argc, argv);
 #if HAVE_DUNE_FEM
@@ -124,6 +125,7 @@ int main(int argc, char** argv)
     DSC::Logger().create(DSC::LOG_CONSOLE | DSC::LOG_ERROR);
 
     return RUN_ALL_TESTS();
+
 #ifdef DUNE_STUFF_TEST_MAIN_CATCH_EXCEPTIONS
   } catch (Dune::Exception& e) {
     std::cerr << "\nDune reported error: " << e.what() << std::endl;
