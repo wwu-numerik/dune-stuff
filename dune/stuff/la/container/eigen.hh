@@ -410,6 +410,9 @@ public:
     this->backend_ = backend_ptr;
   }
 
+  using BaseType::operator=;
+  using VectorInterfaceType::operator=;
+
   /**
    *  \note Does a deep copy.
    */
@@ -545,6 +548,9 @@ public:
   {
     this->backend_ = backend_ptr;
   }
+
+  using BaseType::operator=;
+  using VectorInterfaceType::operator=;
 
   /**
    * \brief does a deep copy;
