@@ -3,7 +3,7 @@
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
-#warning This header is deprecated! Include <dune/stuff/test/main.hh> instead!
+#warning This header is deprecated! Include <dune/stuff/test/main.hh> instead (20.08.2014)!
 
 int main(int argc, char** argv)
 {

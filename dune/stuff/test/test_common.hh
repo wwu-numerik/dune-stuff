@@ -3,7 +3,7 @@
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
-#warning This header is deprecated! Include <dune/stuff/test/main.hh> instead and to not provide a custom main()!
+#warning This header is deprecated! Include <dune/stuff/test/main.hh> instead and do not provide a custom main() (20.08.2014)!
 
 #ifndef DUNE_STUFF_TEST_TOOLS_HH
 #define DUNE_STUFF_TEST_TOOLS_HH
