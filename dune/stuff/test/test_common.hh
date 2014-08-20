@@ -31,7 +31,6 @@
 #include <dune/stuff/common/configuration.hh>
 #include <dune/stuff/common/logging.hh>
 #include <dune/stuff/fem/namespace.hh>
-#include <dune/stuff/test/test_main.hh>
 
 
 class errors_are_not_as_expected
