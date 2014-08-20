@@ -3,7 +3,11 @@
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
-int main(int argc, char** argv)
+#warning This header is deprecated! Include <dune/stuff/test/main.hh> instead!
+
+int
+  DUNE_DEPRECATED_MSG("use -DDUNE_STUFF_TEST_MAIN_CATCH_EXCEPTIONS=1")
+    main(int argc, char** argv)
 {
   try {
     testing::InitGoogleTest(&argc, argv);
