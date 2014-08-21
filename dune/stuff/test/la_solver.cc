@@ -86,3 +86,5 @@ TYPED_TEST_CASE(SolverTest, MatrixVectorCombinations);
 TYPED_TEST(SolverTest, behaves_correctly) {
   this->produces_correct_results();
 }
+
+#include <dune/stuff/test/test_main.cxx>

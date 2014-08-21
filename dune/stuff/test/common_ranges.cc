@@ -54,7 +54,7 @@ struct CornerRangeTest : public ::testing::Test
 
   void check() {
     const auto gv = grid_prv.grid().leafGridView();
-    const auto entities = gv.size(0);
+    const auto DUNE_UNUSED(entities) = gv.size(0);
     const auto end = gv.template end<0>();
     for(auto it = gv.template begin<0>(); it != end; ++it)
     {
@@ -73,3 +73,5 @@ TYPED_TEST(CornerRangeTest, Misc) {
 }
 
 #endif // #if HAVE_DUNE_GRID
+
+#include <dune/stuff/test/test_main.cxx>

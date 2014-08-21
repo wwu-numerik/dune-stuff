@@ -139,3 +139,5 @@ TEST(OtherMath, FloatCmp) {
   EXPECT_TRUE(DSC::FloatCmp::lt(ones, twos));
   EXPECT_TRUE(DSC::FloatCmp::gt(twos, ones));
 }
+
+#include <dune/stuff/test/test_main.cxx>
