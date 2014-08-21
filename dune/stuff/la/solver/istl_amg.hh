@@ -19,7 +19,7 @@
 #endif // HAVE_DUNE_ISTL
 
 #include <dune/stuff/common/exceptions.hh>
-#include <dune/stuff/common/parameter/configcontainer.hh>
+#include <dune/stuff/common/configuration.hh>
 #include <dune/stuff/common/parallel/helper.hh>
 #include <dune/stuff/la/container/istl.hh>
 
@@ -47,8 +47,8 @@ public:
 
   InverseOperatorResult call(IstlDenseVector< S >& rhs,
                              IstlDenseVector< S >& solution,
-                             const Common::ConfigContainer& opts,
-                             const Common::ConfigContainer& default_opts)
+                             const Common::Configuration& opts,
+                             const Common::Configuration& default_opts)
   {
     // define the matrix operator
 
@@ -131,8 +131,8 @@ public:
 
   InverseOperatorResult call(IstlDenseVector< S >& rhs,
                              IstlDenseVector< S >& solution,
-                             const Common::ConfigContainer& opts,
-                             const Common::ConfigContainer& default_opts)
+                             const Common::Configuration& opts,
+                             const Common::Configuration& default_opts)
   {
     typedef MatrixAdapter< IstlMatrixType, IstlVectorType, IstlVectorType > MatrixOperatorType;
     MatrixOperatorType matrix_operator(matrix_.backend());
@@ -195,7 +195,7 @@ protected:
 template< class S, class T >
 class AmgApplicator
 {
-  static_assert(Dune::AlwaysFalse< S, T >::value, "You are missing dune-istl!");
+  static_assert(Dune::AlwaysFalse< S >::value, "You are missing dune-istl!");
 };
 
 

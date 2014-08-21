@@ -3,6 +3,8 @@
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
+#warning This header is deprecated! Include <dune/stuff/test/main.hh> instead and do not provide a custom main() (20.08.2014)!
+
 #ifndef DUNE_STUFF_TEST_TOOLS_HH
 #define DUNE_STUFF_TEST_TOOLS_HH
 
@@ -28,7 +30,7 @@
 #include <dune/stuff/common/reenable_warnings.hh>
 
 #include <dune/stuff/aliases.hh>
-#include <dune/stuff/common/parameter/configcontainer.hh>
+#include <dune/stuff/common/configuration.hh>
 #include <dune/stuff/common/logging.hh>
 #include <dune/stuff/fem/namespace.hh>
 
@@ -95,7 +97,7 @@ typedef Dune::tuple<double, float, //Dune::bigunsignedint,
 void DUNE_DEPRECATED_MSG("Just include dune/stuff/test/test_main.hh") test_init(int argc, char** argv)
 {
   testing::InitGoogleTest(&argc, argv);
-  DSC_CONFIG.readOptions(argc, argv);
+  DSC_CONFIG.read_options(argc, argv);
 #if HAVE_DUNE_FEM
   Dune::Fem::MPIManager::initialize(argc, argv);
 #else

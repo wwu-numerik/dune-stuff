@@ -5,6 +5,8 @@
 //
 // Contributors: Kirsten Weber
 
+#warning This header is deprecated, include <dune/stuff/common/configuration.hh> instead and use Configuration instead of ExtendedParameterTree!
+
 #ifndef DUNE_STUFF_COMMON_PARAMETER_TREE_HH
 #define DUNE_STUFF_COMMON_PARAMETER_TREE_HH
 
@@ -39,11 +41,13 @@ namespace Common {
 
 //! ParameterTree extension for nicer output
 //! \todo TODO The report method should go into dune-common
-class ExtendedParameterTree
+class
+  DUNE_DEPRECATED_MSG("Use Configuration instead!")
+      ExtendedParameterTree
   : public Dune::ParameterTree {
 
   typedef Dune::ParameterTree BaseType;
-  friend class ConfigContainer;
+  friend class Configuration;
 
 public:
   ExtendedParameterTree();

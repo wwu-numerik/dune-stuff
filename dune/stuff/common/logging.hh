@@ -58,7 +58,7 @@ public:
   void create( int logflags = (LOG_FILE | LOG_CONSOLE | LOG_ERROR),
                const std::string logfile = "dune_stuff_log",
                const std::string datadir = "data",
-               const std::string _logdir = std::string("logs") );
+               const std::string _logdir = std::string("log") );
 
   //! \attention This will probably not do wht we want it to!
   void setPrefix(std::string prefix);

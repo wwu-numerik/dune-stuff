@@ -37,9 +37,9 @@ public:
   {
 #ifndef NDEBUG
     if (rr != ROWS || cc != COLS)
-      DUNE_THROW_COLORFULLY(Exceptions::wrong_input_given,
-                            "You are trying to construct a FieldMatrix< ..., " << ROWS << ", " << COLS << " > (of "
-                            << "static size) with " << rr << " rows and " << cc << " columns!");
+      DUNE_THROW(Exceptions::wrong_input_given,
+                 "You are trying to construct a FieldMatrix< ..., " << ROWS << ", " << COLS << " > (of "
+                 << "static size) with " << rr << " rows and " << cc << " columns!");
 #endif // NDEBUG
   } // ... FieldMatrix(...)
 
@@ -90,9 +90,9 @@ public:
   {
 #ifndef NDEBUG
     if (rr != ROWS || cc != COLS)
-      DUNE_THROW_COLORFULLY(Exceptions::wrong_input_given,
-                            "You are trying to construct a FieldMatrix< ..., " << ROWS << ", " << COLS << " > (of "
-                            << "static size) with " << rr << " rows and " << cc << " columns!");
+      DUNE_THROW(Exceptions::wrong_input_given,
+                 "You are trying to construct a FieldMatrix< ..., " << ROWS << ", " << COLS << " > (of "
+                 << "static size) with " << rr << " rows and " << cc << " columns!");
 #endif // NDEBUG
   } // ... FieldMatrix(...)
 

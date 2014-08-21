@@ -42,13 +42,10 @@
 #include <dune/stuff/common/fvector.hh>
 #include <dune/stuff/common/fmatrix.hh>
 #include <dune/stuff/common/debug.hh>
+#include <dune/stuff/la/container/interfaces.hh>
 #include <dune/stuff/la/container/common.hh>
-#if HAVE_EIGEN
-# include <dune/stuff/la/container/eigen.hh>
-#endif
-#if HAVE_DUNE_ISTL
-# include <dune/stuff/la/container/istl.hh>
-#endif
+#include <dune/stuff/la/container/eigen.hh>
+#include <dune/stuff/la/container/istl.hh>
 
 namespace Dune {
 namespace Stuff {
@@ -59,6 +56,10 @@ is used, which does not depend on the get_*_from_string methods, so no cyclic de
 template < class T = std::string >
 inline std::vector<T> tokenize( const std::string& msg, const std::string& separators,
                                 const boost::algorithm::token_compress_mode_type mode = boost::algorithm::token_compress_off );
+
+
+namespace internal {
+
 
 /* forward to use Choose< S >::fromString in convert_from_string_safely method below. As Choose< S >::fromString does
 not depend on convert_from_string_safely for scalar types, there should be no endless recursion */
@@ -119,6 +120,7 @@ class ChooseBase
     }
   };
 #endif // HAVE_EIGEN
+
 public:
   template< class M >
   struct MatrixGetter
@@ -151,16 +153,17 @@ public:
     }
   };
 #endif // HAVE_EIGEN
+
 private:
   static std::string trim_copy_safely(const std::string& str_in)
   {
     const std::string str_out = boost::algorithm::trim_copy(str_in);
     if (str_out.find(";") != std::string::npos)
-      DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
-                            "There was an error while parsing the string below. "
-                            << "The value contained a ';': '" << str_out << "'!\n"
-                            << "This usually happens if you try to get a matrix expression with a vector type "
-                            << "or if you are missing the white space after the ';' in a matrix expression!\n");
+      DUNE_THROW(Exceptions::configuration_error,
+                 "There was an error while parsing the string below. "
+                 << "The value contained a ';': '" << str_out << "'!\n"
+                 << "This usually happens if you try to get a matrix expression with a vector type "
+                 << "or if you are missing the white space after the ';' in a matrix expression!\n");
     return str_out;
   } // ... trim_copy_safely(...)
 
@@ -171,11 +174,11 @@ private:
     try {
       s_out = Choose< S >::fromString(str_in);
     }  catch (boost::bad_lexical_cast& e) {
-      DUNE_THROW_COLORFULLY(Exceptions::external_error,
-                            "Error " << e.what() << " in boost while parsing the value " << str_in << ". \n");
+      DUNE_THROW(Exceptions::external_error,
+                 "Error " << e.what() << " in boost while parsing the value " << str_in << ". \n");
     } catch (std::exception& e) {
-      DUNE_THROW_COLORFULLY(Exceptions::external_error,
-                            "Error " << e.what() << " in the stl while parsing the value " << str_in << ". \n");
+      DUNE_THROW(Exceptions::external_error,
+                 "Error " << e.what() << " in the stl while parsing the value " << str_in << ". \n");
     }
     return s_out;
   } // ... convert_from_string_safely(...)
@@ -190,9 +193,9 @@ protected:
       // we treat this as a matrix and split along ';' to obtain the rows
       const auto row_tokens = tokenize< std::string >(matrix_str, ";", boost::algorithm::token_compress_on);
       if (rows > 0 && row_tokens.size() < rows)
-        DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
-                              "Matrix (see below) has only " << row_tokens.size() << " rows but " << rows
-                              << " rows were requested!" << "\n" << "'[" << matrix_str << "]'");
+        DUNE_THROW(Exceptions::configuration_error,
+                   "Matrix (see below) has only " << row_tokens.size() << " rows but " << rows
+                   << " rows were requested!" << "\n" << "'[" << matrix_str << "]'");
       const size_t actual_rows = (rows > 0) ? std::min(row_tokens.size(), rows) : row_tokens.size();
       // compute the number of columns the matrix will have
       size_t min_cols = std::numeric_limits< size_t >::max();
@@ -203,9 +206,9 @@ protected:
         min_cols = std::min(min_cols, column_tokens.size());
       }
       if (cols > 0 && min_cols < cols)
-        DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
-                              "Matrix (see below) has only " << min_cols << " columns but " << cols
-                              << " columns were requested!" << "\n" << "'[" << matrix_str << "]'");
+        DUNE_THROW(Exceptions::configuration_error,
+                   "Matrix (see below) has only " << min_cols << " columns but " << cols
+                   << " columns were requested!" << "\n" << "'[" << matrix_str << "]'");
       const size_t actual_cols = (cols > 0) ? std::min(min_cols, cols) : min_cols;
       MatrixType ret = MatrixConstructor< MatrixType >::create(actual_rows, actual_cols);
       // now we do the same again and build the actual matrix
@@ -240,10 +243,10 @@ protected:
       // we treat this as a vector and split along ' '
       const auto tokens = tokenize< std::string >(vector_str, " ", boost::algorithm::token_compress_on);
       if (size > 0 && tokens.size() < size)
-        DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
-                              "Vector (see below) has only " << tokens.size()
-                              << " elements but " << size << " elements were requested!"
-                              << "\n" << "'[" << vector_str << "]'");
+        DUNE_THROW(Exceptions::configuration_error,
+                   "Vector (see below) has only " << tokens.size()
+                   << " elements but " << size << " elements were requested!"
+                   << "\n" << "'[" << vector_str << "]'");
       const size_t actual_size = (size > 0) ? std::min(tokens.size(), size) : tokens.size();
       VectorType ret(actual_size);
       for (size_t ii = 0; ii < actual_size; ++ii)
@@ -265,12 +268,13 @@ protected:
 //! simple and dumb std::string to anything conversion
 template< class ReturnType >
 class Choose
-    : ChooseBase< ReturnType >
+  : ChooseBase< ReturnType >
 {
 public:
   static inline ReturnType fromString(const std::string s, const size_t UNUSED_UNLESS_DEBUG(rows) = 0,
                                       const size_t UNUSED_UNLESS_DEBUG(cols) = 0) {
-    assert(rows == 0 && cols == 0);
+    assert(rows == 0);
+    assert(cols == 0);
     return boost::lexical_cast<ReturnType, std::string>(s);
   }
 }; // ... Choose < ReturnType >
@@ -286,27 +290,29 @@ class Choose< char >
 public:
   static inline char fromString(const std::string s, const size_t UNUSED_UNLESS_DEBUG(rows) = 0,
                                 const size_t UNUSED_UNLESS_DEBUG(cols) = 0) {
-    assert(rows == 0 && cols == 0);
+    assert(rows == 0);
+    assert(cols == 0);
     if (s.size()==1)
       return s[0];
     else {
       try {
         return char(stoi(s));
       } catch(std::invalid_argument) {
-        DUNE_THROW_COLORFULLY(Stuff::Exceptions::wrong_input_given, "Failed to convert string to char");
+        DUNE_THROW(Stuff::Exceptions::wrong_input_given, "Failed to convert string to char");
       }
     }
   } // ... fromString(...)
 }; // class Choose < char >
 
 template<>
-class Choose< const char * >
-    : ChooseBase< const char * >
+class Choose< const char* >
+    : ChooseBase< const char* >
 {
 public:
-  static inline const char * fromString(const std::string s, const size_t UNUSED_UNLESS_DEBUG(rows) = 0,
+  static inline const char* fromString(const std::string s, const size_t UNUSED_UNLESS_DEBUG(rows) = 0,
                                         const size_t UNUSED_UNLESS_DEBUG(cols) = 0) {
-    assert(rows == 0 && cols == 0);
+    assert(rows == 0);
+    assert(cols == 0);
     return s.c_str();
   } // ... fromString(...)
 }; // class Choose < const char * >
@@ -320,7 +326,8 @@ class Choose< tn > \
   public: \
   static inline tn fromString(const std::string s, const size_t UNUSED_UNLESS_DEBUG(rows) = 0, \
                               const size_t UNUSED_UNLESS_DEBUG(cols) = 0) { \
-  assert(rows == 0 && cols == 0); \
+  assert(rows == 0); \
+  assert(cols == 0); \
   return std::sto##tns(s); \
   } \
 };
@@ -367,10 +374,10 @@ class Choose< FieldMatrixType< S, ROWS, COLS > >  \
   public: \
   static inline FieldMatrixType< S, ROWS, COLS > fromString(const std::string s, const size_t rows = 0, const size_t cols = 0) { \
     if ((rows > 0 && rows != ROWS) || (cols > 0 && cols != COLS)) \
-      DUNE_THROW_COLORFULLY(Exceptions::configuration_error, \
-                          "You requested a '" /*<< Typename< FieldMatrixType >::value() <<*/ "' with a size of " << rows << "x" \
-                          << cols << " but this type of matrix can not have any size other than " \
-                          << ROWS << "x" << COLS << "!"); \
+      DUNE_THROW(Exceptions::configuration_error, \
+                 "You requested a '" << getTypename( FieldMatrixType < S, ROWS, COLS >()) << "' with a size of " \
+                 << rows << "x" << cols << " but this type of matrix can not have any size other than " \
+                 << ROWS << "x" << COLS << "!"); \
     return BaseType::template get_matrix_from_string< FieldMatrixType< S, ROWS, COLS >, S >(s, ROWS, COLS); \
   } \
 };
@@ -420,9 +427,9 @@ class Choose< FieldVectorType< S, SIZE > > \
                                                        const size_t UNUSED_UNLESS_DEBUG(cols) = 0) { \
     assert(cols == 0); \
     if (size > 0 && size != SIZE) \
-      DUNE_THROW_COLORFULLY(Exceptions::configuration_error, \
-                          "You requested a '" /*<< Typename< VectorType >::value() <<*/ "' with a 'size' of " << size \
-                          << " but this type of vector can not have any size other than " << SIZE << "!"); \
+      DUNE_THROW(Exceptions::configuration_error, \
+                 "You requested a '" /*<< Typename< VectorType >::value() <<*/ "' with a 'size' of " << size \
+                 << " but this type of vector can not have any size other than " << SIZE << "!"); \
     return BaseType::template get_vector_from_string< FieldVectorType< S, SIZE >, S >(s, SIZE); \
   } \
 };
@@ -431,6 +438,9 @@ DSC_FIELDVECTORFRSTR(Dune::FieldVector)
 DSC_FIELDVECTORFRSTR(Dune::Stuff::Common::FieldVector)
 
 #undef DSC_FIELDVECTORFRSTR
+
+
+} // namespace internal
 
 
 /** \brief Read an object of type ReturnType from a string
@@ -442,7 +452,7 @@ DSC_FIELDVECTORFRSTR(Dune::Stuff::Common::FieldVector)
  */
 template < class ReturnType >
 ReturnType fromString(const std::string s, const size_t size = 0, const size_t cols = 0) {
-  return Choose< ReturnType >::fromString(s, size, cols);
+  return internal::Choose< ReturnType >::fromString(s, size, cols);
 } // class fromString(...)
 
 
@@ -525,7 +535,7 @@ inline std::string toString(const MatrixType< S > matrix) { \
       for (size_t cc = 0; cc < matrix.cols(); ++cc) { \
         if (cc > 0) \
           str += " "; \
-        str += toString(ChooseBase< MatrixType< S > >::template MatrixGetter \
+        str += toString(internal::ChooseBase< MatrixType< S > >::template MatrixGetter \
         <MatrixType< S > >::template get_entry< S >(matrix, rr, cc)); \
       } \
     } \
@@ -552,7 +562,7 @@ inline std::string toString(const FieldMatrixType< S, ROWS, COLS > matrix) { \
       for (size_t cc = 0; cc < COLS; ++cc) { \
         if (cc > 0) \
           str += " "; \
-        str += toString(ChooseBase< FieldMatrixType< S, ROWS, COLS > >::template MatrixGetter \
+        str += toString(internal::ChooseBase< FieldMatrixType< S, ROWS, COLS > >::template MatrixGetter \
         <FieldMatrixType< S, ROWS, COLS > >::template get_entry< S >(matrix, rr, cc)); \
       } \
     } \
