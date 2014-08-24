@@ -178,6 +178,12 @@ std::map< std::string, std::vector< double > > ConvergenceStudy::run(const bool 
 } // ... run(...)
 
 
+std::vector< double > ConvergenceStudy::expected_results(const std::string /*type*/) const
+{
+  DUNE_THROW(Exceptions::you_have_to_implement_this, "If you want to use this within the test suite!");
+}
+
+
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
