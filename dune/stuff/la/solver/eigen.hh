@@ -210,12 +210,12 @@ public:
            , "cg.identity.upper"       // <- does only work with symmetric matrices, may produce correct results
 //           , "spqr"                  // <- does not compile
 //           , "llt.cholmodsupernodal" // <- does not compile
-#if HAVE_UMFPACK
+//#if HAVE_UMFPACK
 //           , "lu.umfpack"            // <- untested
-#endif
-#if HAVE_SUPERLU
+//#endif
+//#if HAVE_SUPERLU
 //           , "superlu"               // <- untested
-#endif
+//#endif
     };
   } // ... options()
 
@@ -438,7 +438,7 @@ public:
 //      solution.backend() = solver.solve(rhs.backend());
 //      if (solver.info() != ::Eigen::Success)
 //        return solver.info();
-#if HAVE_SUPERLU
+//#if HAVE_SUPERLU
 //    } else if (type == "superlu") {
 //      typedef ::Eigen::SuperLU< typename MatrixType::BackendType > SolverType;
 //      SolverType solver;
@@ -446,7 +446,7 @@ public:
 //      solver.factorize(matrix_.backend());
 //      solution.backend() = solver.solve(rhs.backend());
 //      info = solver.info();
-#endif // HAVE_SUPERLU
+//#endif // HAVE_SUPERLU
     } else
       DUNE_THROW(Exceptions::internal_error,
                  "Given type '" << type << "' is not supported, although it was reported by options()!");
