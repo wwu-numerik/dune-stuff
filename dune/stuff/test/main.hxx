@@ -3,7 +3,7 @@
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
-
+#include "config.h"
 
 #include <string>
 #include <vector>
@@ -28,7 +28,7 @@
 #include <dune/stuff/common/logging.hh>
 #include <dune/stuff/common/convergence-study.hh>
 
-#include "main_header.hh"
+#include "common.hh"
 
 
 class
