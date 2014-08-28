@@ -29,7 +29,8 @@ libstuff_la_SOURCES = \
 	functions/expression.cc \
 	functions/spe10.cc \
 	functions.cc \
-	la/container/pattern.cc
+	la/container/pattern.cc \
+	test/main_header.cxx
 
 libstuff_la_LIBADD = common $(BOOST_FILESYSTEM_LIB) $(BOOST_SYSTEM_LIB) \
 	$(BOOST_TIMER_LIB) $(BOOST_CHRONO_LIB) $(ALUGRID_LIBS)
