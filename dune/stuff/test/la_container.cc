@@ -5,7 +5,7 @@
 //
 // Contributors: Tobias Leibner
 
-#include <dune/stuff/test/test_common.hh>
+#include <dune/stuff/test/main.cxx>
 
 #include <type_traits>
 #include <memory>
@@ -995,4 +995,3 @@ TYPED_TEST(MatrixTest, produces_correct_results) {
   this->produces_correct_results();
 }
 
-#include <dune/stuff/test/test_main.cxx>
