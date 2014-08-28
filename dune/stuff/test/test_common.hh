@@ -15,9 +15,6 @@
 #include <sys/time.h>
 
 #include <dune/stuff/common/disable_warnings.hh>
-# include <dune/stuff/test/gtest/gtest.h>
-
-# include <dune/common/float_cmp.hh>
 # include <dune/common/fvector.hh>
 # include <dune/common/fmatrix.hh>
 # include <dune/common/tuples.hh>
@@ -29,6 +26,8 @@
 # endif
 #include <dune/stuff/common/reenable_warnings.hh>
 
+#include <dune/common/float_cmp.hh>
+#include <dune/stuff/test/gtest/gtest.h>
 #include <dune/stuff/aliases.hh>
 #include <dune/stuff/common/configuration.hh>
 #include <dune/stuff/common/logging.hh>
