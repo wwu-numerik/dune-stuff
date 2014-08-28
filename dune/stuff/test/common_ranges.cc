@@ -4,7 +4,7 @@
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
-#include "main.cxx"
+#include "main.hxx"
 
 #if HAVE_DUNE_GRID
 
