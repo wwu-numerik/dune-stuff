@@ -3,10 +3,7 @@
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
-#ifndef DUNE_STUFF_TEST_MAIN_HXX
-#define DUNE_STUFF_TEST_MAIN_HXX
 
-#include "config.h"
 
 #include <string>
 #include <vector>
@@ -95,4 +92,3 @@ int main(int argc, char** argv)
 #endif // DUNE_STUFF_TEST_MAIN_CATCH_EXCEPTIONS
 } // ... main(...)
 
-#endif // DUNE_STUFF_TEST_MAIN_HXX
