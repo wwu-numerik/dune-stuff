@@ -75,8 +75,8 @@ std::pair< size_t, ssize_t > convert_to_scientific(const double number, const si
 } // namespace internal
 
 
-void check_for_success(const Dune::Stuff::Common::ConvergenceStudy& study,
-                       const std::map< std::string, std::vector< double > >& errors_map);
+void check_eoc_study_for_success(const Dune::Stuff::Common::ConvergenceStudy& study,
+                                 const std::map< std::string, std::vector< double > >& errors_map);
 
 
 } // namespace Test
