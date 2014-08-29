@@ -48,7 +48,7 @@ public:
 
   std::vector< std::string > used_norms() const;
 
-  std::map< std::string, std::vector< double > > run(const bool relative = true,
+  std::map< std::string, std::vector< double > > run(const bool relative = false,
                                                      std::ostream& out = std::cout,
                                                      const bool print_timings = true);
 
