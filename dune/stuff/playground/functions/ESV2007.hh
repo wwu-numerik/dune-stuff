@@ -8,6 +8,8 @@
 
 #include <limits>
 
+#include <boost/numeric/conversion/cast.hpp>
+
 #if HAVE_EIGEN
 # include <Eigen/Eigenvalues>
 
@@ -129,7 +131,7 @@ class Cutoff
         assert(eigen_solver.info() == ::Eigen::Success);
         const auto eigenvalues = eigen_solver.eigenvalues(); // <- this should be an Eigen vector of std::complex
         RangeFieldType min_ev = std::numeric_limits< RangeFieldType >::max();
-        for (size_t ii = 0; ii < eigenvalues.size(); ++ii) {
+        for (size_t ii = 0; ii < boost::numeric_cast< size_t >(eigenvalues.size()); ++ii) {
           // assert this is real
           assert(std::abs(eigenvalues[ii].imag()) < 1e-15);
           // assert that this eigenvalue is positive

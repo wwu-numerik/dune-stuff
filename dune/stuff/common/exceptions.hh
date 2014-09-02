@@ -105,7 +105,9 @@ class external_error : public Dune::Exception {};
 
 class linear_solver_failed : public Dune::Exception {};
 
-class you_have_to_implement_this : public Dune::NotImplemented {} ;
+class you_have_to_implement_this : public Dune::NotImplemented {};
+
+class test_results_missing : public Dune::NotImplemented {};
 
 
 } // namespace Exceptions

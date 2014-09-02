@@ -47,7 +47,8 @@ inline void
 
 //! TODO
 template< class MatrixImp >
-struct PrecondionWrapperDummy
+struct DUNE_DEPRECATED_MSG("deprecated dune-fem util, use stuff/la instead")
+  PrecondionWrapperDummy
 {
   typedef typename MatrixImp::RowDiscreteFunctionType::DofStorageType X;
   typedef typename MatrixImp::ColDiscreteFunctionType::DofStorageType Y;
@@ -103,7 +104,8 @@ public:
 
 //! produces a NxN Identity matrix object compatible with parent type
 template< class MatrixObjectType >
-class IdentityMatrixObject
+class DUNE_DEPRECATED_MSG("deprecated dune-fem util, use stuff/la instead")
+IdentityMatrixObject
   : public MatrixObjectType
 {
 public:

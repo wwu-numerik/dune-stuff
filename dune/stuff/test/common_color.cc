@@ -5,7 +5,7 @@
 //
 // Contributors: Stefan Girke
 
-#include "test_common.hh"
+#include "main.hxx"
 #include <dune/stuff/common/color.hh>
 
 using namespace Dune::Stuff::Common;
@@ -41,4 +41,3 @@ TEST(Color, All) {
   std::cout << std::endl;
 } // main
 
-#include <dune/stuff/test/test_main.cxx>
