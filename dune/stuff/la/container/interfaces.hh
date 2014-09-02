@@ -432,8 +432,8 @@ public:
 
   virtual bool valid() const
   {
-    for(const auto& val : *this) {
-      if(std::isnan(val) || std::isinf(val))
+    for (const auto& val : *this) {
+      if (std::isnan(val) || std::isinf(val))
         return false;
     }
     return true;
@@ -659,6 +659,13 @@ public:
     for (size_t ii = 0; ii < size(); ++ii)
       set_entry(ii, get_entry(ii) - other.get_entry(ii));
   } // ... isub(...)
+
+  virtual derived_type& operator=(const ScalarType& value)
+  {
+    for (auto& element : *this)
+      element = value;
+    return this->as_imp(*this);
+  }
 
   /**
    *  \brief  Multiplies every component of this by a scalar.

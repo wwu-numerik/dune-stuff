@@ -3,7 +3,7 @@
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
-#include "test_common.hh"
+#include "main.hxx"
 
 #include <dune/stuff/common/disable_warnings.hh>
 # include <dune/common/dynmatrix.hh>
@@ -140,4 +140,3 @@ TEST(OtherMath, FloatCmp) {
   EXPECT_TRUE(DSC::FloatCmp::gt(twos, ones));
 }
 
-#include <dune/stuff/test/test_main.cxx>
