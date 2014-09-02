@@ -13,6 +13,7 @@ libstuff_la_SOURCES = \
 	common/filesystem.cc \
 	common/color.cc \
 	common/convergence-study.cc \
+	common/localization-study.cc \
 	common/logging.cc \
 	common/logstreams.cc \
 	common/math.cc \
