@@ -4,6 +4,9 @@
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
 #include <config.h>
+
+#include <boost/numeric/conversion/cast.hpp>
+
 #include <dune/stuff/fem/namespace.hh>
 
 #include "femeoc.hh"
@@ -89,11 +92,11 @@ void FemEoc::init(const std::string& name, const std::string& descript, const st
         inputTex << (char) input.get();
       }
       std::string input_str = inputTex.str();
-      int pos = input_str.find("DESCRIPTION", 0);
+      int pos = boost::numeric_cast< int >(input_str.find("DESCRIPTION", 0));
       input_str.replace(pos, 11, "");
       input_str.insert(pos, descript);
 
-      pos = input_str.find("BODYFILE", 0);
+      pos = boost::numeric_cast< int >(input_str.find("BODYFILE", 0));
       input_str.replace(pos, 8, "");
       input_str.insert(pos, bodyfile);
 
@@ -109,7 +112,7 @@ void FemEoc::init(const std::string& name, const std::string& descript, const st
 size_t FemEoc::addentry(const std::string& descript) {
   if (!initial_)
     DUNE_THROW(Dune::InvalidStateException, "");
-  pos_.push_back( error_.size() );
+  pos_.push_back(boost::numeric_cast< int >(error_.size()));
   error_.push_back(0);
   prevError_.push_back(0);
   description_.push_back(descript);
