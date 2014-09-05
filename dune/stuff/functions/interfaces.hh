@@ -249,25 +249,24 @@ public:
     return ret;
   }
 
-#if HAVE_DUNE_GEOMETRY
   //! evaluate at N quadrature points into vector of size >= N
-  void evaluate(const Dune::QuadratureRule<DomainFieldImp, domainDim>& quadrature, std::vector< RangeType >& ret)
+  void evaluate(const Dune::QuadratureRule< DomainFieldType, dimDomain >& quadrature, std::vector< RangeType >& ret)
   {
-    assert(ret.size()>=quadrature.size());
+    assert(ret.size() >= quadrature.size());
     std::size_t i = 0;
-    for(const auto& point : quadrature)
+    for (const auto& point : quadrature)
       evaluate(point.position(), ret[i++]);
   }
 
   //! jacobian at N quadrature points into vector of size >= N
-  void jacobian(const Dune::QuadratureRule<DomainFieldImp, domainDim>& quadrature, std::vector< JacobianRangeType >& ret)
+  void jacobian(const Dune::QuadratureRule< DomainFieldType, dimDomain >& quadrature,
+                std::vector< JacobianRangeType >& ret)
   {
-    assert(ret.size()>=quadrature.size());
+    assert(ret.size() >= quadrature.size());
     std::size_t i = 0;
-    for(const auto& point : quadrature)
+    for (const auto& point : quadrature)
       jacobian(point.position(), ret[i++]);
   }
-#endif
   /* @} */
 }; // class LocalfunctionInterface
 
