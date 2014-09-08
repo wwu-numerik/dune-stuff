@@ -177,7 +177,7 @@ Configuration::Configuration(const std::vector< std::string > keys,
 Configuration::~Configuration()
 {
   if (log_on_exit_ && !empty()) {
-    testCreateDirectory(pathOnly(logfile_));
+    testCreateDirectory(directoryOnly(logfile_));
     std::unique_ptr< boost::filesystem::ofstream > out(DSC::make_ofstream(logfile_));
     report(*out);
     print_requests(*out);
@@ -197,7 +197,7 @@ void Configuration::set_warn_on_default_access(const bool value)
 void Configuration::set_log_on_exit(const bool value)
 {
   if (!log_on_exit_ && value)
-    testCreateDirectory(pathOnly(logfile_));
+    testCreateDirectory(directoryOnly(logfile_));
   log_on_exit_ = value;
 }
 
@@ -206,7 +206,7 @@ void Configuration::set_logfile(const std::string logfile)
   if (logfile.empty())
     DUNE_THROW(Exceptions::wrong_input_given, "logfile must not be empty!");
   if (log_on_exit_)
-    testCreateDirectory(pathOnly(logfile_));
+    testCreateDirectory(directoryOnly(logfile_));
 }
 
 std::set<Request> Configuration::getMismatchedDefaults(Configuration::RequestMapType::value_type pair) const
