@@ -98,6 +98,9 @@ TYPED_TEST_CASE(FlatTopFunctionTest, DimDomains);
 TYPED_TEST(FlatTopFunctionTest, static_interface_check) {
   this->static_interface_check();
 }
+TYPED_TEST(FlatTopFunctionTest, static_create_check) {
+  this->static_create_check();
+}
 TYPED_TEST(FlatTopFunctionTest, dynamic_interface_check) {
   this->dynamic_interface_check(*(this->create()), *(this->create_grid()));
 }
@@ -131,7 +134,11 @@ TYPED_TEST(FlatTopFunctionTest, evaluate_check) {
 #else // HAVE_DUNE_GRID
 
 
-TYPED_TEST(DISABLED_FlatTopFunctionTest, static_interface_check) {};
+TYPED_TEST(DISABLED_FlatTopFunctionTest, static_interface_check) {}
+TYPED_TEST(DISABLED_FlatTopFunctionTest, static_create_check) {}
+TYPED_TEST(DISABLED_FlatTopFunctionTest, dynamic_interface_check) {}
+TYPED_TEST(DISABLED_FlatTopFunctionTest, copy_check) {}
+TYPED_TEST(DISABLED_FlatTopFunctionTest, evaluate_check) {}
 
 
 #endif // HAVE_DUNE_GRID
