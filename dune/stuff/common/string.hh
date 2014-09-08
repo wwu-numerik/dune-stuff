@@ -170,17 +170,17 @@ private:
   template< class S >
   static S convert_from_string_safely(const std::string& str_in)
   {
-    S s_out;
     try {
-      s_out = Choose< S >::fromString(str_in);
+      return Choose< S >::fromString(str_in);
     }  catch (boost::bad_lexical_cast& e) {
       DUNE_THROW(Exceptions::external_error,
-                 "Error " << e.what() << " in boost while parsing the value " << str_in << ". \n");
+                 "Error in boost while converting the string '" << str_in << "' to type '"
+                 << Typename< T >::value() << "':\n" << e.what());
     } catch (std::exception& e) {
       DUNE_THROW(Exceptions::external_error,
-                 "Error " << e.what() << " in the stl while parsing the value " << str_in << ". \n");
+                 "Error in the stl while converting the string '" << str_in << "' to type '"
+                 << Typename< T >::value() << "':\n" << e.what());
     }
-    return s_out;
   } // ... convert_from_string_safely(...)
 
 protected:
@@ -233,7 +233,6 @@ protected:
     }
   } // ... get_matrix_from_string(...)
 
-
   template< class VectorType, class S >
   static VectorType get_vector_from_string(std::string vector_str, const size_t size)
   {
@@ -271,11 +270,23 @@ class Choose
   : ChooseBase< ReturnType >
 {
 public:
-  static inline ReturnType fromString(const std::string s, const size_t UNUSED_UNLESS_DEBUG(rows) = 0,
-                                      const size_t UNUSED_UNLESS_DEBUG(cols) = 0) {
+  static inline ReturnType fromString(const std::string s,
+                                      const size_t UNUSED_UNLESS_DEBUG(rows) = 0,
+                                      const size_t UNUSED_UNLESS_DEBUG(cols) = 0)
+  {
     assert(rows == 0);
     assert(cols == 0);
-    return boost::lexical_cast<ReturnType, std::string>(s);
+    try {
+      return boost::lexical_cast< ReturnType, std::string >(s);
+    } catch (boost::bad_lexical_cast& e) {
+      DUNE_THROW(Exceptions::external_error,
+                 "Error in boost while converting the string '" << s << "' to type '"
+                 << Typename< ReturnType >::value() << "':\n" << e.what());
+    } catch (std::exception& e) {
+      DUNE_THROW(Exceptions::external_error,
+                 "Error in the stl while converting the string '" << s << "' to type '"
+                 << Typename< ReturnType >::value() << "':\n" << e.what());
+    }
   }
 }; // ... Choose < ReturnType >
 
@@ -285,11 +296,13 @@ public:
  */
 template<>
 class Choose< char >
-    : ChooseBase< char >
+  : ChooseBase< char >
 {
 public:
-  static inline char fromString(const std::string s, const size_t UNUSED_UNLESS_DEBUG(rows) = 0,
-                                const size_t UNUSED_UNLESS_DEBUG(cols) = 0) {
+  static inline char fromString(const std::string s,
+                                const size_t UNUSED_UNLESS_DEBUG(rows) = 0,
+                                const size_t UNUSED_UNLESS_DEBUG(cols) = 0)
+  {
     assert(rows == 0);
     assert(cols == 0);
     if (s.size()==1)
@@ -297,8 +310,10 @@ public:
     else {
       try {
         return char(stoi(s));
-      } catch(std::invalid_argument) {
-        DUNE_THROW(Stuff::Exceptions::wrong_input_given, "Failed to convert string to char");
+      } catch(std::invalid_argument& e) {
+        DUNE_THROW(Stuff::Exceptions::wrong_input_given,
+                   "Error in the stl while converting the string '" << s << "' to type '"
+                   << Typename< char >::value() << "':\n" << e.what());
       }
     }
   } // ... fromString(...)
@@ -306,11 +321,13 @@ public:
 
 template<>
 class Choose< const char* >
-    : ChooseBase< const char* >
+  : ChooseBase< const char* >
 {
 public:
-  static inline const char* fromString(const std::string s, const size_t UNUSED_UNLESS_DEBUG(rows) = 0,
-                                        const size_t UNUSED_UNLESS_DEBUG(cols) = 0) {
+  static inline const char* fromString(const std::string s,
+                                       const size_t UNUSED_UNLESS_DEBUG(rows) = 0,
+                                       const size_t UNUSED_UNLESS_DEBUG(cols) = 0)
+  {
     assert(rows == 0);
     assert(cols == 0);
     return s.c_str();
