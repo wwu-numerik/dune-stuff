@@ -23,13 +23,7 @@ libstuff_la_SOURCES = \
 	common/parallel/threadmanager.cc \
 	fem/femeoc.cc \
 	grid/fakeentity.cc \
-	functions/interfaces.cc \
-	functions/checkerboard.cc \
-	functions/constant.cc \
 	functions/expression/mathexpr.cc \
-	functions/expression.cc \
-	functions/spe10.cc \
-	functions.cc \
 	la/container/pattern.cc \
 	test/common.cxx
 
