@@ -43,7 +43,15 @@ public:
     : tt_(tt)
   {}
 
+  ConstAccessByReference(const ConstAccessByReference< T >& other) = delete;
+
+  ConstAccessByReference(ConstAccessByReference< T >&& source) = delete;
+
   virtual ~ConstAccessByReference() {}
+
+  ConstAccessByReference< T >& operator=(const ConstAccessByReference< T >& other) = delete;
+
+  ConstAccessByReference< T >& operator=(ConstAccessByReference< T >&& source) = delete;
 
   virtual const T& access() const
   {
@@ -68,11 +76,19 @@ public:
     : tt_(tt)
   {}
 
-  ConstAccessByPointer(std::shared_ptr<const  T > tt)
+  ConstAccessByPointer(std::shared_ptr< const T > tt)
     : tt_(tt)
   {}
 
+  ConstAccessByPointer(const ConstAccessByPointer< T >& other) = delete;
+
+  ConstAccessByPointer(ConstAccessByPointer< T >&& source) = delete;
+
   virtual ~ConstAccessByPointer() {}
+
+  ConstAccessByPointer< T >& operator=(const ConstAccessByPointer< T >& other) = delete;
+
+  ConstAccessByPointer< T >& operator=(ConstAccessByPointer< T >&& source) = delete;
 
   virtual const T& access() const
   {
@@ -105,7 +121,15 @@ public:
     : tt_(tt)
   {}
 
+  AccessByReference(const AccessByReference< T >& other) = delete;
+
+  AccessByReference(AccessByReference< T >&& source) = delete;
+
   virtual ~AccessByReference() {}
+
+  AccessByReference< T >& operator=(const AccessByReference< T >& other) = delete;
+
+  AccessByReference< T >& operator=(AccessByReference< T >&& source) = delete;
 
   virtual T& access()
   {
@@ -139,7 +163,15 @@ public:
     : tt_(tt)
   {}
 
+  AccessByPointer(const AccessByPointer< T >& other) = delete;
+
+  AccessByPointer(AccessByPointer< T >&& source) = delete;
+
   virtual ~AccessByPointer() {}
+
+  AccessByPointer< T >& operator=(const AccessByPointer< T >& other) = delete;
+
+  AccessByPointer< T >& operator=(AccessByPointer< T >&& source) = delete;
 
   virtual T& access()
   {
@@ -184,11 +216,11 @@ public:
    */
   ConstStorageProvider(const ConstStorageProvider< T >& other) = delete;
 
-  ConstStorageProvider(ConstStorageProvider< T >&& other)
-    : provide_(other.provide_)
-  {}
+  ConstStorageProvider(ConstStorageProvider< T >&& source) = delete;
 
-  ConstStorageProvider< T > operator=(const ConstStorageProvider< T >& /*other*/) = delete;
+  ConstStorageProvider< T > operator=(const ConstStorageProvider< T >& other) = delete;
+
+  ConstStorageProvider< T > operator=(ConstStorageProvider< T >&& source) = delete;
 
   const T& storage_access() const
   {
@@ -225,11 +257,11 @@ public:
    */
   StorageProvider(const StorageProvider< T >& other) = delete;
 
-  StorageProvider(StorageProvider< T >&& other)
-    : provide_(other.provide_)
-  {}
+  StorageProvider(StorageProvider< T >&& source) = delete;
 
-  StorageProvider< T > operator=(const StorageProvider< T >& /*other*/) = delete;
+  StorageProvider< T > operator=(const StorageProvider< T >& other) = delete;
+
+  StorageProvider< T > operator=(StorageProvider< T >&& source) = delete;
 
   T& storage_access()
   {
