@@ -575,13 +575,20 @@ private:
                     const size_t cols) const
   {
     std::string valstring = BaseType::get(key, toString(def));
-    T val = fromString< T >(valstring, size, cols);
-    if (validator(val))
+    try {
+      T val = fromString< T >(valstring, size, cols);
+      if (validator(val))
         return val;
-    else {
-      std::stringstream ss;
-      validator.print(ss);
-      DUNE_THROW(Exceptions::configuration_error, ss.str());
+      else
+        DUNE_THROW(Exceptions::configuration_error, validator.msg());
+    } catch (boost::bad_lexical_cast& e) {
+      DUNE_THROW(Exceptions::external_error,
+                 "Error in boost while converting the string '" << valstring << "' to type '"
+                 << Typename< T >::value() << "':\n" << e.what());
+    } catch (std::exception& e) {
+      DUNE_THROW(Exceptions::external_error,
+                 "Error in the stl while converting the string '" << valstring << "' to type '"
+                 << Typename< T >::value() << "':\n" << e.what());
     }
   } // ... get_valid_value(...)
 
