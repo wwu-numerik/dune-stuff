@@ -13,10 +13,7 @@ namespace Common {}
 namespace Grid {}
 namespace Fem {}
 namespace Functions {}
-
-namespace LA {
-  namespace Algorithm{}
-}
+namespace LA {}
 
 }
 }
@@ -27,6 +24,5 @@ namespace DSG = Dune::Stuff::Grid;
 namespace DSFe = Dune::Stuff::Fem;
 namespace DSFu = Dune::Stuff::Functions;
 namespace DSL = Dune::Stuff::LA;
-namespace DSLA = Dune::Stuff::LA::Algorithm;
 
 #endif // DUNE_STUFF_ALIASES_HH
