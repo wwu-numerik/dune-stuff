@@ -10,6 +10,8 @@
 #include <vector>
 #include <utility>
 
+#include <dune/common/static_assert.hh>
+
 #include <dune/stuff/common/fvector.hh>
 
 #include "../../functions/interfaces.hh"
@@ -19,12 +21,19 @@ namespace Stuff {
 namespace Functions {
 
 
-template< class E, class D, int d, class R >
+template< class E, class D, int d, class R, int r = 1, int rC = 1 >
 class Indicator
+{
+  static_assert(AlwaysFalse< E >::value, "Not implemented for these dimensions!");
+};
+
+
+template< class E, class D, int d, class R >
+class Indicator< E, D, d, R, 1 >
   : public LocalizableFunctionInterface< E, D, d, R, 1 >
 {
   typedef LocalizableFunctionInterface< E, D, d, R, 1 > BaseType;
-  typedef Indicator< E, D, d, R > ThisType;
+  typedef Indicator< E, D, d, R, 1 >                    ThisType;
 
   class Localfunction
     : public LocalfunctionInterface< E, D, d, R, 1 >
@@ -64,11 +73,17 @@ class Indicator
 
 public:
   using typename BaseType::EntityType;
-  typedef Common::FieldVector< D, d > DomainType;
+  using typename BaseType::DomainType;
   using typename BaseType::RangeType;
   using typename BaseType::LocalfunctionType;
 
   Indicator(std::vector< std::pair< std::pair< DomainType, DomainType >, R > > values,
+            const std::string name = "indicator")
+    : values_(values)
+    , name_(name)
+  {}
+
+  Indicator(std::vector< std::pair< std::pair< Common::FieldVector< D, d >, Common::FieldVector< D, d > >, R > > values,
             const std::string name = "indicator")
     : values_(values)
     , name_(name)
