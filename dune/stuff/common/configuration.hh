@@ -263,7 +263,9 @@ public:
   T get(const std::string key, const size_t size = 0, const size_t cols = 0) const
   {
     if (!has_key(key))
-      DUNE_THROW(Exceptions::configuration_error, "Configuration does not have this key and there was no default value provided");
+      DUNE_THROW(Exceptions::configuration_error,
+                 "This configuration (see below) does not contain the key '" << key << "' and there was no default "
+                 << "value provided!\n\n" << report_string());
     return get_valid_value< T, ValidateAny< T > >(key, T(), ValidateAny< T >(), size, cols);
   } // ... get(...)
 
