@@ -138,13 +138,25 @@ public:
   } // ... create(...)
 
   Spe10Model1(const std::string& filename,
-              std::vector< DomainFieldType >&& lowerLeft,
-              std::vector< DomainFieldType >&& upperRight,
+              const std::vector< DomainFieldType >& lowerLeft,
+              const std::vector< DomainFieldType >& upperRight,
               const RangeFieldType min = minValue,
               const RangeFieldType max = maxValue,
               const std::string nm = static_id())
-    : BaseType(std::move(lowerLeft),
-               std::move(upperRight),
+    : BaseType(lowerLeft,
+               upperRight,
+               {numXelements, numZelements},
+               read_values_from_file(filename, min, max), nm)
+  {}
+
+  Spe10Model1(const std::string& filename,
+              const DomainType& lowerLeft,
+              const DomainType& upperRight,
+              const RangeFieldType min = minValue,
+              const RangeFieldType max = maxValue,
+              const std::string nm = static_id())
+    : BaseType(lowerLeft,
+               upperRight,
                {numXelements, numZelements},
                read_values_from_file(filename, min, max), nm)
   {}
@@ -248,7 +260,8 @@ public:
     }
   } // ... default_config(...)
 
-  static std::unique_ptr< ThisType > create(const Common::Configuration config = default_config(), const std::string sub_name = static_id())
+  static std::unique_ptr< ThisType > create(const Common::Configuration config = default_config(),
+                                            const std::string sub_name = static_id())
   {
     // get correct config
     const Common::Configuration cfg = config.has_sub(sub_name) ? config.sub(sub_name) : config;
@@ -264,13 +277,25 @@ public:
   } // ... create(...)
 
   Spe10Model1(const std::string& filename,
-              std::vector< DomainFieldType >&& lowerLeft,
-              std::vector< DomainFieldType >&& upperRight,
+              const std::vector< DomainFieldType >& lowerLeft,
+              const std::vector< DomainFieldType >& upperRight,
               const RangeFieldType min = minValue,
               const RangeFieldType max = maxValue,
               const std::string nm = static_id())
-    : BaseType(std::move(lowerLeft),
-               std::move(upperRight),
+    : BaseType(lowerLeft,
+               upperRight,
+               {numXelements, numZelements},
+               read_values_from_file(filename, min, max), nm)
+  {}
+
+  Spe10Model1(const std::string& filename,
+              const DomainType& lowerLeft,
+              const DomainType& upperRight,
+              const RangeFieldType min = minValue,
+              const RangeFieldType max = maxValue,
+              const std::string nm = static_id())
+    : BaseType(lowerLeft,
+               upperRight,
                {numXelements, numZelements},
                read_values_from_file(filename, min, max), nm)
   {}
