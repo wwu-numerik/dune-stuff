@@ -77,15 +77,15 @@ public:
   using typename BaseType::RangeType;
   using typename BaseType::LocalfunctionType;
 
-  Indicator(std::vector< std::pair< std::pair< DomainType, DomainType >, R > > values,
+  Indicator(const std::vector< std::tuple< DomainType, DomainType, R > >& values,
             const std::string name = "indicator")
     : values_(values)
     , name_(name)
   {}
 
-  Indicator(std::vector< std::pair< std::pair< Common::FieldVector< D, d >, Common::FieldVector< D, d > >, R > > values,
+  Indicator(const std::vector< std::pair< std::pair< Common::FieldVector< D, d >, Common::FieldVector< D, d > >, R > >& values,
             const std::string name = "indicator")
-    : values_(values)
+    : values_(convert(values))
     , name_(name)
   {}
 
@@ -104,20 +104,22 @@ public:
   virtual std::unique_ptr< LocalfunctionType > local_function(const EntityType& entity) const DS_OVERRIDE DS_FINAL
   {
     const auto center = entity.geometry().center();
-    for (const auto& element : values_) {
-      const auto& domain = element.first;
-      const auto& lower_left = domain.first;
-      const auto& upper_right = domain.second;
-      if (Common::FloatCmp::le(lower_left, center) && Common::FloatCmp::lt(center, upper_right)) {
-        const auto& value = element.second;
-        return Common::make_unique< Localfunction >(entity, value);
-      }
-    }
+    for (const auto& element : values_)
+      if (Common::FloatCmp::le(std::get< 0 >(element), center) && Common::FloatCmp::lt(center, std::get< 1 >(element)))
+        return Common::make_unique< Localfunction >(entity, std::get< 2 >(element));
     return Common::make_unique< Localfunction >(entity, 0.0);
   } // ... local_function(...)
 
 private:
-  const std::vector< std::pair< std::pair< DomainType, DomainType >, R > > values_;
+  static std::vector< std::tuple< DomainType, DomainType, R > > convert(const std::vector< std::pair< std::pair< Common::FieldVector< D, d >, Common::FieldVector< D, d > >, R > >& values)
+  {
+    std::vector< std::tuple< DomainType, DomainType, R > > ret;
+    for (const auto& element : values)
+      ret.emplace_back(element.first.first, element.first.second, element.second);
+    return ret;
+  } // convert(...)
+
+  const std::vector< std::tuple< DomainType, DomainType, R > > values_;
   const std::string name_;
 }; // class Indicator
 
