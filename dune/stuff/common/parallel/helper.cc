@@ -10,7 +10,9 @@
 
 int Dune::Stuff::abort_all_mpi_processes() {
 #if HAVE_MPI
-  return MPI_Abort(MPIHelper::getCommunicator(), 1);
+  if (MPIHelper::getCollectiveCommunication().size() > 1)
+    return MPI_Abort(MPIHelper::getCommunicator(), 1);
+  else
 #endif
   return 1;
 }
