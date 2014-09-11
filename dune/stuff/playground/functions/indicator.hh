@@ -13,6 +13,9 @@
 #include <dune/common/static_assert.hh>
 
 #include <dune/stuff/common/fvector.hh>
+#include <dune/stuff/common/string.hh>
+#include <dune/stuff/common/memory.hh>
+#include <dune/stuff/common/configuration.hh>
 
 #include "../../functions/interfaces.hh"
 
@@ -73,9 +76,64 @@ class Indicator< E, D, d, R, 1 >
 
 public:
   using typename BaseType::EntityType;
+  using typename BaseType::DomainFieldType;
   using typename BaseType::DomainType;
   using typename BaseType::RangeType;
+  using typename BaseType::RangeFieldType;
   using typename BaseType::LocalfunctionType;
+
+  static std::string static_id()
+  {
+    return BaseType::static_id() + ".indicator";
+  }
+
+  static Common::Configuration default_config(const std::string sub_name = "")
+  {
+    Common::Configuration cfg;
+    cfg["name"] = static_id();
+    if (d == 1)
+      cfg["0.domain"] = "[0.25 0.75]";
+    else if (d == 2)
+      cfg["0.domain"] = "[0.25 0.75; 0.25 0.75]";
+    else if (d == 3)
+      cfg["0.domain"] = "[0.25 0.75; 0.25 0.75; 0.25 0.75]";
+    else
+      DUNE_THROW(NotImplemented, "Indeed!");
+    cfg["0.value"] = "1";
+    if (sub_name.empty())
+      return cfg;
+    else {
+      Common::Configuration tmp;
+      tmp.add(cfg, sub_name);
+      return tmp;
+    }
+  } // ... default_config(...)
+
+  static std::unique_ptr< ThisType > create(const Common::Configuration config = default_config(),
+                                            const std::string sub_name = static_id())
+  {
+    const Common::Configuration cfg = config.has_sub(sub_name) ? config.sub(sub_name) : config;
+    const Common::Configuration def_cfg = default_config();
+    std::vector< std::tuple< DomainType, DomainType, RangeFieldType > > values;
+    DomainType tmp_lower;
+    DomainType tmp_upper;
+    size_t cc = 0;
+    while (cfg.has_sub(DSC::toString(cc))) {
+      const Stuff::Common::Configuration local_cfg = cfg.sub(DSC::toString(cc));
+      if (local_cfg.has_key("domain") && local_cfg.has_key("value")) {
+        auto domains = local_cfg.get< FieldMatrix< DomainFieldType, d, 2 > >("domain");
+        for (size_t dd = 0; dd < d; ++dd) {
+          tmp_lower[dd] = domains[dd][0];
+          tmp_upper[dd] = domains[dd][1];
+        }
+        auto val = local_cfg.get< RangeFieldType >("value");
+        values.emplace_back(tmp_lower, tmp_upper, val);
+      } else
+        break;
+      ++cc;
+    }
+    return Common::make_unique< ThisType >(values, cfg.get("name", def_cfg.get< std::string >("name")));
+  } // ... create(...)
 
   Indicator(const std::vector< std::tuple< DomainType, DomainType, R > >& values,
             const std::string name = "indicator")
