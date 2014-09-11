@@ -24,10 +24,11 @@ namespace Stuff {
 namespace Functions {
 
 
-template< class E, class D, int d, class R, int r = 1, int rC = 1 >
+template< class E, class D, int d, class R, int r, int rC = 1 >
 class Indicator
+  : public LocalizableFunctionInterface< E, D, d, R, r, rC >
 {
-  static_assert(AlwaysFalse< E >::value, "Not implemented for these dimensions!");
+  Indicator() { static_assert(AlwaysFalse< E >::value, "Not available for these dimensions!"); }
 };
 
 

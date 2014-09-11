@@ -190,10 +190,11 @@ private:
 namespace ESV2007 {
 
 
-template< class EntityImp, class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDim, int rangeDimCols = 1 >
+template< class E, class D, int d, class R, int r, int rC = 1 >
 class Testcase1Force
+  : public LocalizableFunctionInterface< E, D, d, R, r, rC >
 {
-  static_assert(AlwaysFalse< EntityImp >::value, "Not available for these dimensions!");
+  Testcase1Force() { static_assert(AlwaysFalse< E >::value, "Not available for these dimensions!"); }
 };
 
 
@@ -209,6 +210,8 @@ public:
   using typename BaseType::DomainType;
   using typename BaseType::RangeType;
   using typename BaseType::JacobianRangeType;
+
+  static const bool available = true;
 
   static std::string static_id()
   {
@@ -298,10 +301,11 @@ private:
 }; // class Testcase1Force
 
 
-template< class EntityImp, class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDim, int rangeDimCols = 1 >
+template< class E, class D, int d, class R, int r, int rC = 1 >
 class Testcase1ExactSolution
+  : public LocalizableFunctionInterface< E, D, d, R, r, rC >
 {
-  static_assert(AlwaysFalse< EntityImp >::value, "Not available for these dimensions!");
+  Testcase1ExactSolution() { static_assert(AlwaysFalse< E >::value, "Not available for these dimensions!"); }
 };
 
 
@@ -317,6 +321,8 @@ public:
   using typename BaseType::DomainType;
   using typename BaseType::RangeType;
   using typename BaseType::JacobianRangeType;
+
+  static const bool available = true;
 
   static std::string static_id()
   {

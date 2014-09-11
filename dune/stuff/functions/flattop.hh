@@ -26,8 +26,9 @@ namespace Functions {
  */
 template< class E, class D, int d, class R, int r, int rC = 1 >
 class FlatTop
+  : public LocalizableFunctionInterface< E, D, d, R, r, rC >
 {
-  static_assert(AlwaysFalse< E >::value, "Not available for these dimensions!");
+  FlatTop() { static_assert(AlwaysFalse< E >::value, "Not available for these dimensions!"); }
 };
 
 
@@ -45,6 +46,8 @@ public:
   typedef typename BaseType::DomainType      DomainType;
   typedef typename BaseType::RangeType       RangeType;
   typedef typename BaseType::RangeFieldType  RangeFieldType;
+
+  static const bool available = true;
 
   static std::string static_id()
   {
