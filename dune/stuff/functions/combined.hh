@@ -86,7 +86,7 @@ private:
 
 public:
   static const unsigned int r  = Choose< LeftType, RightType >::r;
-  static const unsigned int rC = Choose< LeftType, RightType >::r;
+  static const unsigned int rC = Choose< LeftType, RightType >::rC;
 
   typedef typename LeftType::LocalfunctionType  LeftLocalfunctionType;
   typedef typename RightType::LocalfunctionType RightLocalfunctionType;
