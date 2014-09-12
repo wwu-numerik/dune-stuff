@@ -127,19 +127,9 @@ TYPED_TEST(ExpressionFunctionYaspGridEntityTest, provides_required_methods) {
   this->check();
 }
 
-# if HAVE_ALUGRID_SERIAL_H || HAVE_ALUGRID_PARALLEL_H
-
-#   undef HAVE_GRIDTYPE
-#   undef WORLDDIM
-#   undef GRIDDIM
-#   undef GRIDTYPE
-#   undef ENABLE_ALUGRID
-#   undef HAVE_ALUGRID
-#   define ENABLE_ALUGRID 1
-#   define HAVE_ALUGRID 1
-
+# if HAVE_ALUGRID
 #   include <dune/stuff/common/disable_warnings.hh>
-#    include <dune/grid/alugrid.hh>
+#     include <dune/grid/alugrid.hh>
 #   include <dune/stuff/common/reenable_warnings.hh>
 
 typedef Dune::ALUGrid< 2, 2, Dune::simplex, Dune::nonconforming>::Codim< 0 >::Entity  DuneAluSimplexGrid2dEntityType;
