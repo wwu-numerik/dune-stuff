@@ -72,10 +72,8 @@ public:
                  << "static size) from a list of size " << list.size() << "!");
 #endif // NDEBUG
     size_t ii = 0;
-    for (auto element : list) {
-      this->operator[](ii) = element;
-      ++ii;
-    }
+    for (auto element : list)
+      this->operator[](ii++) = element;
   } // FieldVector(...)
 
   ThisType& operator=(const BaseType& other)
