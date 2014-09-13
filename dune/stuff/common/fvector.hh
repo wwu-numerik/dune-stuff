@@ -83,6 +83,15 @@ public:
     BaseType::operator=(other);
     return *this;
   }
+
+  using BaseType::operator*;
+
+  ThisType operator*(const K& scalar) const
+  {
+    ThisType ret(*this);
+    ret *= scalar;
+    return ret;
+  }
 }; // class FieldVector
 
 
