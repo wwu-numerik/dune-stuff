@@ -12,15 +12,17 @@
 #include <vector>
 #include <array>
 
+#include <boost/numeric/conversion/cast.hpp>
+
 #include <dune/stuff/common/disable_warnings.hh>
 # include <dune/grid/utility/structuredgridfactory.hh>
 # include <dune/grid/sgrid.hh>
+# include <dune/grid/yaspgrid.hh>
+# if HAVE_ALUGRID
+#   include <dune/grid/alugrid.hh>
+# endif
 #include <dune/stuff/common/reenable_warnings.hh>
 
-#include <dune/grid/yaspgrid.hh>
-#if HAVE_ALUGRID
-# include <dune/grid/alugrid.hh>
-#endif
 
 #include <dune/stuff/common/exceptions.hh>
 #include <dune/stuff/common/configuration.hh>
@@ -131,6 +133,7 @@ public:
     config["lower_left"] = "[0.0 0.0 0.0 0.0]";
     config["upper_right"] = "[1.0 1.0 1.0 1.0]";
     config["num_elements"] = "[8 8 8 8]";
+    config["num_refinements"] = "0";
     if (sub_name.empty())
       return config;
     else {
@@ -148,7 +151,8 @@ public:
     const Common::Configuration default_cfg = default_config();
     return Common::make_unique< ThisType >(cfg.get("lower_left", default_cfg.get< DomainType >("lower_left")),
                                            cfg.get("upper_right", default_cfg.get< DomainType >("upper_right")),
-                                           cfg.get("num_elements", default_cfg.get< std::vector< unsigned int > >("num_elements"), dimDomain));
+                                           cfg.get("num_elements", default_cfg.get< std::vector< unsigned int > >("num_elements"), dimDomain),
+                                           cfg.get("num_refinements", default_cfg.get< size_t >("num_refinements")));
   } // ... create(...)
 
   /**
@@ -162,26 +166,30 @@ public:
    **/
   Cube(const DomainFieldType lower_left = default_config().get< DomainFieldType >("lower_left"),
        const DomainFieldType upper_right = default_config().get< DomainFieldType >("upper_right"),
-       const unsigned int num_elements = default_config().get< std::vector< unsigned int > >("num_elements")[0])
-    : grid_ptr_(create_grid(DomainType(lower_left), DomainType(upper_right), parse_array(num_elements)))
+       const unsigned int num_elements = default_config().get< std::vector< unsigned int > >("num_elements")[0],
+       const size_t num_refinements = default_config().get< size_t >("num_refinements"))
+    : grid_ptr_(create_grid(DomainType(lower_left), DomainType(upper_right), parse_array(num_elements), num_refinements))
   {}
 
   Cube(const std::vector< DomainFieldType >& lower_left,
        const std::vector< DomainFieldType >& upper_right,
-       const std::vector< unsigned int > num_elements = default_config().get< std::vector< unsigned int > >("num_elements"))
-    : grid_ptr_(create_grid(parse_vector(lower_left), parse_vector(upper_right), parse_array(num_elements)))
+       const std::vector< unsigned int > num_elements = default_config().get< std::vector< unsigned int > >("num_elements"),
+       const size_t num_refinements = default_config().get< size_t >("num_refinements"))
+    : grid_ptr_(create_grid(parse_vector(lower_left), parse_vector(upper_right), parse_array(num_elements), num_refinements))
   {}
 
   Cube(const DomainType& lower_left,
        const DomainType& upper_right,
-       const unsigned int num_elements = default_config().get< std::vector< unsigned int > >("num_elements")[0])
-    : grid_ptr_(create_grid(lower_left, upper_right, parse_array(num_elements)))
+       const unsigned int num_elements = default_config().get< std::vector< unsigned int > >("num_elements")[0],
+       const size_t num_refinements = default_config().get< size_t >("num_refinements"))
+    : grid_ptr_(create_grid(lower_left, upper_right, parse_array(num_elements), num_refinements))
   {}
 
   Cube(const DomainType& lower_left,
        const DomainType& upper_right,
-       const std::vector< unsigned int > num_elements = default_config().get< std::vector< unsigned int > >("num_elements"))
-    : grid_ptr_(create_grid(lower_left, upper_right, parse_array(num_elements)))
+       const std::vector< unsigned int > num_elements = default_config().get< std::vector< unsigned int > >("num_elements"),
+       const size_t num_refinements = default_config().get< size_t >("num_refinements"))
+    : grid_ptr_(create_grid(lower_left, upper_right, parse_array(num_elements), num_refinements))
   {}
 
   virtual GridType& grid() DS_OVERRIDE
@@ -236,7 +244,8 @@ private:
 
   static std::shared_ptr< GridType > create_grid(DomainType lower_left,
                                                  DomainType upper_right,
-                                                 const std::array< unsigned int, dimDomain >& num_elements)
+                                                 const std::array< unsigned int, dimDomain >& num_elements,
+                                                 const size_t num_refinements)
   {
     static_assert(variant == 1 || variant == 2, "variant has to be 1 or 2!");
     for (unsigned int dd = 0; dd < dimDomain; ++dd) {
@@ -245,15 +254,18 @@ private:
                    "lower_left has to be elementwise smaller than upper_right!\n\n"
                    << lower_left[dd] << " vs. " << upper_right[dd]);
     }
+    std::shared_ptr< GridType > grd_ptr(nullptr);
     switch (variant) {
       case 1:
-        return Dune::StructuredGridFactory< GridType >::createCubeGrid(lower_left, upper_right, num_elements);
+        grd_ptr = Dune::StructuredGridFactory< GridType >::createCubeGrid(lower_left, upper_right, num_elements);
         break;
       case 2:
     default:
-        return Dune::StructuredGridFactory< GridType >::createSimplexGrid(lower_left, upper_right, num_elements);
+        grd_ptr = Dune::StructuredGridFactory< GridType >::createSimplexGrid(lower_left, upper_right, num_elements);
         break;
     }
+    grd_ptr->globalRefine(boost::numeric_cast< int >(num_refinements));
+    return grd_ptr;
   } // ... create_grid(...)
 
   std::shared_ptr< GridType > grid_ptr_;
