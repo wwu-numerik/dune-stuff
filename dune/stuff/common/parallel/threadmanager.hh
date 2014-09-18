@@ -77,7 +77,7 @@ public:
 
   template <class BinaryOperation>
   ValueType accumulate(ValueType init, BinaryOperation op) const {
-    return std::accumulate(values_.begin(), values_.end(), init);
+    return std::accumulate(values_.begin(), values_.end(), init, op);
   }
 
   ValueType sum() const {
