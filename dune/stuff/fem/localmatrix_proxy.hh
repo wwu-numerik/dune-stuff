@@ -14,6 +14,7 @@
 #include <dune/stuff/common/debug.hh>
 #include <dune/stuff/common/type_utils.hh>
 #include <dune/stuff/aliases.hh>
+#include <dune/stuff/fem/namespace.hh>
 
 namespace Dune {
 namespace Stuff {
