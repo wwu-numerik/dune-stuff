@@ -5,37 +5,22 @@
 
 #include "config.h"
 
-#include "logging.hh"
+#include <boost/format.hpp>
 
-#include <fstream>
-#include <ostream>
-#include <sstream>
-#include <ctime>
-#include <iomanip>
-#include <map>
-#include <assert.h>
-
-// dune-common
-#include <dune/common/exceptions.hh>
-
-#include "misc.hh"
+#include "memory.hh"
+#include "exceptions.hh"
 #include "filesystem.hh"
-#include "logstreams.hh"
-#include "string.hh"
 
-#include <dune/stuff/common/memory.hh>
-
-#include <boost/filesystem.hpp>
-#include <boost/filesystem/path.hpp>
+#include "logging.hh"
 
 namespace Dune {
 namespace Stuff {
 namespace Common {
 
 Logging::Logging()
-    : streamIDs_({LOG_ERROR, LOG_DEBUG, LOG_INFO})
-    , logflags_(LOG_NONE)
-    , emptyLogStream_(logflags_)
+  : streamIDs_({LOG_ERROR, LOG_DEBUG, LOG_INFO})
+  , logflags_(LOG_NONE)
+  , emptyLogStream_(logflags_)
 {
   for (const auto id : streamIDs_)
     streammap_[id] = make_unique<EmptyLogStream>(logflags_);
@@ -56,10 +41,10 @@ Logging::~Logging()
   deinit();
 }
 
-void Logging::create( int logflags,
-             const std::string logfile,
-             const std::string datadir,
-             const std::string _logdir)
+void Logging::create(int logflags,
+                     const std::string logfile,
+                     const std::string datadir,
+                     const std::string _logdir)
 {
   using namespace boost::filesystem;
   const auto& comm = Dune::MPIHelper::getCollectiveCommunication();

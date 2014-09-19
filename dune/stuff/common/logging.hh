@@ -10,34 +10,30 @@
 #ifndef LOGGING_HH_INCLUDED
 #define LOGGING_HH_INCLUDED
 
-#include <dune/common/exceptions.hh>
+#include <map>
+#include <string>
+
+#include <fstream>
+#include <ostream>
+#include <sstream>
+
+#include <boost/filesystem.hpp>
+#include <boost/filesystem/fstream.hpp>
+
 #include <dune/stuff/common/disable_warnings.hh>
 # include <dune/common/parallel/mpihelper.hh>
 #include <dune/stuff/common/reenable_warnings.hh>
 
-#include "misc.hh"
-#include "filesystem.hh"
 #include "logstreams.hh"
-#include "string.hh"
-
-#include <boost/range/adaptors.hpp>
-#include <boost/foreach.hpp>
-#include <boost/filesystem.hpp>
-#include <boost/filesystem/path.hpp>
-#include <fstream>
-#include <ostream>
-#include <sstream>
-#include <ctime>
-#include <iomanip>
-#include <map>
-#include <assert.h>
 
 namespace Dune {
 namespace Stuff {
 namespace Common {
 
+
 class Logging;
 Logging& Logger();
+
 
 /** \brief handles all logging
   **/
@@ -55,10 +51,10 @@ public:
      *  \param logflags any OR'd combination of flags
      *  \param logfile filename for log, can contain paths, but creation will fail if dir is non-existant
      **/
-  void create( int logflags = (LOG_FILE | LOG_CONSOLE | LOG_ERROR),
-               const std::string logfile = "dune_stuff_log",
-               const std::string datadir = "data",
-               const std::string _logdir = std::string("log") );
+  void create(int logflags = (LOG_FILE | LOG_CONSOLE | LOG_ERROR),
+              const std::string logfile = "dune_stuff_log",
+              const std::string datadir = "data",
+              const std::string _logdir = std::string("log"));
 
   //! \attention This will probably not do wht we want it to!
   void setPrefix(std::string prefix);
@@ -69,7 +65,8 @@ public:
      * \{
      */
   template< class T >
-  void log(T c, int streamID) {
+  void log(T c, int streamID)
+  {
     getStream(streamID) << c;
   } // Log
 
@@ -124,7 +121,7 @@ private:
   boost::filesystem::ofstream logfile_;
   typedef std::map< int, int > FlagMap;
   FlagMap flagmap_;
-  typedef std::map< int, std::unique_ptr<LogStream> > StreamMap;
+  typedef std::map< int, std::unique_ptr<  LogStream> > StreamMap;
   StreamMap streammap_;
   typedef std::vector< int > IdVec;
   IdVec streamIDs_;
@@ -137,8 +134,9 @@ private:
   Logging& operator=(const Logging&) = delete;
 };
 
-//!global Logging instance
-inline Logging& Logger() {
+//! global Logging instance
+inline Logging& Logger()
+{
   static Logging log;
   return log;
 }
