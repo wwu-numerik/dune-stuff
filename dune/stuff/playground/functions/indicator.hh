@@ -9,7 +9,8 @@
 #include <memory>
 #include <vector>
 #include <utility>
-#include <type_traits>
+
+#include <dune/common/static_assert.hh>
 
 #include <dune/stuff/common/fvector.hh>
 #include <dune/stuff/common/string.hh>
