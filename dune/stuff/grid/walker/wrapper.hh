@@ -32,8 +32,10 @@ template<class GridViewType, class Codim0FunctorType>
 class Codim0FunctorWrapper
   : public Codim0Object<GridViewType>
 {
-  typedef typename GridViewType::template Codim<0>::Entity EntityType;
+  typedef Codim0Object< GridViewType > BaseType;
 public:
+  typedef typename BaseType::EntityType EntityType;
+
   Codim0FunctorWrapper(Codim0FunctorType& wrapped_functor,
                        const ApplyOn::WhichEntity< GridViewType >* where)
     : wrapped_functor_(wrapped_functor)
@@ -72,9 +74,10 @@ template <class GridViewType>
 class Codim1Object
   : public Functor::Codim1< GridViewType >
 {
-  typedef typename GridViewType::Intersection IntersectionType;
-  typedef typename GridViewType::template Codim<0>::Entity EntityType;
+  typedef Functor::Codim1< GridViewType > BaseType;
 public:
+  typedef typename BaseType::IntersectionType IntersectionType;
+
   ~Codim1Object() {}
   virtual bool apply_on(const GridViewType& grid_view, const IntersectionType& intersection) const = 0;
 };
@@ -84,9 +87,11 @@ template<class GridViewType, class Codim1FunctorType>
 class Codim1FunctorWrapper
   : public Codim1Object<GridViewType>
 {
-  typedef typename GridViewType::Intersection IntersectionType;
-  typedef typename GridViewType::template Codim<0>::Entity EntityType;
+  typedef Codim1Object< GridViewType > BaseType;
 public:
+  typedef typename BaseType::EntityType       EntityType;
+  typedef typename BaseType::IntersectionType IntersectionType;
+
   Codim1FunctorWrapper(Codim1FunctorType& wrapped_functor,
                        const ApplyOn::WhichIntersection< GridViewType >* where)
     : wrapped_functor_(wrapped_functor)
@@ -126,9 +131,10 @@ class WalkerWrapper
   : public Codim0Object<GridViewType>
   , public Codim1Object<GridViewType>
 {
-  typedef typename GridViewType::template Codim<0>::Entity EntityType;
-  typedef typename GridViewType::Intersection IntersectionType;
 public:
+  typedef typename Codim1Object< GridViewType >::EntityType       EntityType;
+  typedef typename Codim1Object< GridViewType >::IntersectionType IntersectionType;
+
   WalkerWrapper(WalkerType& grid_walker,
                 const ApplyOn::WhichEntity< GridViewType >* which_entities)
     : grid_walker_(grid_walker)
