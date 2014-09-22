@@ -99,9 +99,9 @@ public:
               = new ApplyOn::AllIntersections< GridViewType >())
   {
     if (&other == this)
-      DUNE_THROW(Stuff::Exceptions::internal_error, "Do not add a Walker to itself!");
-    codim0_functors_.emplace_back(new internal::WalkerWrapper<GridViewType, ThisType>(other, which_entities));
-    codim1_functors_.emplace_back(new internal::WalkerWrapper<GridViewType, ThisType>(other, which_intersections));
+      DUNE_THROW(Stuff::Exceptions::you_are_using_this_wrong, "Do not add a Walker to itself!");
+    codim0_functors_.emplace_back(new internal::WalkerWrapper< GridViewType, ThisType >(other, which_entities));
+    codim1_functors_.emplace_back(new internal::WalkerWrapper< GridViewType, ThisType >(other, which_intersections));
   } // ... add(...)
 
   void add(ThisType& other,
@@ -109,9 +109,9 @@ public:
            const ApplyOn::WhichEntity< GridViewType >* which_entities = new ApplyOn::AllEntities< GridViewType >())
   {
     if (&other == this)
-      DUNE_THROW(Stuff::Exceptions::internal_error, "Do not add a Walker to itself!");
-    codim0_functors_.emplace_back(new internal::WalkerWrapper<GridViewType, ThisType>(other, which_entities));
-    codim1_functors_.emplace_back(new internal::WalkerWrapper<GridViewType, ThisType>(other, which_intersections));
+      DUNE_THROW(Stuff::Exceptions::you_are_using_this_wrong, "Do not add a Walker to itself!");
+    codim0_functors_.emplace_back(new internal::WalkerWrapper< GridViewType, ThisType >(other, which_entities));
+    codim1_functors_.emplace_back(new internal::WalkerWrapper< GridViewType, ThisType >(other, which_intersections));
   } // ... add(...)
 
   void clear()
@@ -185,22 +185,29 @@ public:
     if (clear_stack) clear();
   } // ... walk(...)
 
-protected:
 #if HAVE_TBB
+
+protected:
   template< class PartioningType, class WalkerType >
   struct Body
   {
-    Body(WalkerType& walker, PartioningType& partitioning) :
-      walker_(walker), partitioning_(partitioning) {}
-    Body(Body& other, tbb::split /*split*/)
-      : walker_(other.walker_), partitioning_(other.partitioning_) {}
+    Body(WalkerType& walker, PartioningType& partitioning)
+      : walker_(walker)
+      , partitioning_(partitioning)
+    {}
 
-    void operator()(const tbb::blocked_range<std::size_t> &range)
+    Body(Body& other, tbb::split /*split*/)
+      : walker_(other.walker_)
+      , partitioning_(other.partitioning_)
+    {}
+
+    void operator()(const tbb::blocked_range< std::size_t > &range)
     {
       // for all partitions in tbb-range
       for(std::size_t p = range.begin(); p != range.end(); ++p)
         walker_.walk_range(partitioning_.partition(p));
     }
+
     void join(Body& /*other*/)
     {}
 
@@ -218,10 +225,9 @@ public:
     // only do something, if we have to
     if ((codim0_functors_.size() + codim1_functors_.size()) > 0) {
       tbb::blocked_range< std::size_t > range(0, partitioning.partitions());
-
       Body< PartioningType, ThisType > body(*this, partitioning);
       tbb::parallel_reduce(range, body);
-    } // only do something, if we have to
+    }
 
     // finalize functors
     finalize();
@@ -229,7 +235,8 @@ public:
     // clear the stack of functors
     if (clear_stack) clear();
   } // ... tbb_walk(...)
-#endif
+
+#endif // HAVE_TBB
 
 protected:
   template< class EntityRange >
@@ -237,10 +244,10 @@ protected:
   {
 #ifdef __INTEL_COMPILER
     const auto it_end = entity_range.end();
-    for(auto it = entity_range.begin(); it != it_end; ++it) {
+    for (auto it = entity_range.begin(); it != it_end; ++it) {
       const EntityType& entity = *it;
 #else
-    for(const EntityType& entity : entity_range) {
+    for (const EntityType& entity : entity_range) {
 #endif
       // apply codim0 functors
       apply_local(entity);
@@ -265,7 +272,7 @@ protected:
         } // walk the intersections
       } // only walk the intersections, if there are codim1 functors present
     }
-  }
+  } // ... walk_range(...)
 
   const GridViewType& grid_view_;
   std::vector< std::unique_ptr< internal::Codim0Object<GridViewType> > > codim0_functors_;
