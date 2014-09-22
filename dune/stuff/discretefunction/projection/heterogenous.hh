@@ -255,7 +255,7 @@ protected:
     typedef typename GridPartType::Grid GridType;
     const auto& indexSet = gridPart.indexSet();
 
-    for (auto& entity : DSC::viewRange(gridPart.grid().leafGridView())) {
+    for (auto& entity : DSC::entityRange(gridPart.grid().leafGridView())) {
       int number_of_nodes_in_entity = entity.template count<GridType::dimension>();
       for (int i = 0; i < number_of_nodes_in_entity; ++i) {
         const auto node = entity.template subEntity<GridType::dimension>(i);

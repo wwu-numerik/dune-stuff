@@ -46,7 +46,7 @@ struct ElementVisualization {
           mapper(grid);
 
       std::vector<double> values(mapper.size());
-      for (const auto& entity : DSC::viewRange(gridView))
+      for (const auto& entity : DSC::entityRange(gridView))
       {
         values[mapper.map(entity)] = f(entity);
       }
