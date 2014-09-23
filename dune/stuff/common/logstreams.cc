@@ -11,14 +11,14 @@ namespace Dune {
 namespace Stuff {
 namespace Common {
 
+
 SuspendableStrBuffer::SuspendableStrBuffer(int loglevel, int& logflags)
   : logflags_(logflags)
   , loglevel_(loglevel)
   , suspended_logflags_(logflags)
   , is_suspended_(false)
   , suspend_priority_(default_suspend_priority)
-{
-}
+{}
 
 void SuspendableStrBuffer::suspend(PriorityType priority ) {
   suspend_priority_ = std::max(priority, suspend_priority_);
@@ -65,14 +65,16 @@ int SuspendableStrBuffer::pubsync() {
   return 0;
 }
 
-LogStream& LogStream::flush() {
-  assert(this->buffer_);
-  this->buffer_->pubsync();
+
+LogStream& LogStream::flush()
+{
+  assert(&this->storage_access());
+  this->storage_access().pubsync();
   return *this;
 }
 
 
-int FileLogStream::FileBuffer::sync() {
+int FileBuffer::sync() {
   // flush buffer into stream
   std::lock_guard<std::mutex> guard(sync_mutex_);
   std::cout << str();
@@ -85,7 +87,7 @@ int FileLogStream::FileBuffer::sync() {
 
 
 
-int EmptyLogStream::EmptyBuffer::sync() {
+int EmptyBuffer::sync() {
   str("");
   return 0;
 }
