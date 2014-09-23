@@ -19,6 +19,7 @@
 
 #include <dune/stuff/grid/entity.hh>
 #include <dune/stuff/grid/intersection.hh>
+#include <dune/stuff/common/parallel/threadmanager.hh>
 
 #include "walker/functors.hh"
 #include "walker/apply-on.hh"
@@ -204,15 +205,17 @@ protected:
     void operator()(const tbb::blocked_range< std::size_t > &range)
     {
       // for all partitions in tbb-range
-      for(std::size_t p = range.begin(); p != range.end(); ++p)
-        walker_.walk_range(partitioning_.partition(p));
+      for(std::size_t p = range.begin(); p != range.end(); ++p) {
+        auto partition = partitioning_.partition(p);
+        walker_.walk_range(partition);
+      }
     }
 
     void join(Body& /*other*/)
     {}
 
     WalkerType& walker_;
-    PartioningType& partitioning_;
+    const PartioningType& partitioning_;
   }; // struct Body
 
 public:
