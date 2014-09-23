@@ -44,16 +44,21 @@ TEST(LoggerTest, all) {
   DSC_LOG_ERROR << "in output\n";
   balh(DSC_LOG_ERROR);
 
-    //this should do nothing whatsoever
-    balh(DSC::dev_null);
-    DSC::Logger().flush();
+  //this should do nothing whatsoever
+  balh(DSC::dev_null);
+  DSC::Logger().flush();
 
-    // this is the desired result:
-    DSC::LogStream& err = DSC::Logger().error();
-    std::cout << "begin std::cout test" << std::endl;
-    do_something_that_takes_long(std::cout);
-    std::cout << "end   std::cout test" << std::endl;
-    std::cout << "begin Logger().error() test" << std::endl;
-    do_something_that_takes_long(err);
-    std::cout << "end   Logger().error() test" << std::endl;
+  // this is the desired result:
+  DSC::LogStream& err = DSC::Logger().error();
+  std::cout << "begin std::cout test" << std::endl;
+  do_something_that_takes_long(std::cout);
+  std::cout << "end   std::cout test" << std::endl;
+  std::cout << "begin Logger().error() test" << std::endl;
+  do_something_that_takes_long(err);
+  std::cout << "end   Logger().error() test" << std::endl;
+}
+
+TEST(LoggerTest, file) {
+  DSC::Logger().create(DSC::LOG_INFO | DSC::LOG_CONSOLE | DSC::LOG_FILE, "test_common_logger", "", "");
+  DSC::Logger().info() << "This output should be in 'test_common_logger.log'" << std::endl;
 }
