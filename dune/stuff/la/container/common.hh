@@ -318,6 +318,9 @@ public:
    */
 
 private:
+  /**
+   * \see ContainerInterface
+   */
   inline void ensure_uniqueness() const
   {
     if (!backend_.unique())
@@ -572,6 +575,9 @@ public:
    */
 
 private:
+  /**
+   * \see ContainerInterface
+   */
   inline void ensure_uniqueness() const
   {
     if (!backend_.unique())

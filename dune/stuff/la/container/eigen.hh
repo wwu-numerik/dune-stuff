@@ -78,6 +78,9 @@ public:
   typedef typename Traits::derived_type VectorImpType;
 private:
 
+  /**
+   * \see ContainerInterface
+   */
   void ensure_uniqueness() const
   {
     /** the CHECK_AND_CALL_CRTP macro fails here because we have two different CrtpInterface<...> base
@@ -450,6 +453,9 @@ public:
   using BaseType::backend;
 
 private:
+  /**
+   * \see ContainerInterface
+   */
   inline void ensure_uniqueness() const
   {
     if (!this->backend_.unique())
@@ -603,6 +609,9 @@ public:
   using BaseType::backend;
 
 private:
+  /**
+   * \see ContainerInterface
+   */
   inline void ensure_uniqueness() const
   {
     if (!this->backend_.unique()) {
@@ -901,6 +910,9 @@ public:
    */
 
 private:
+  /**
+   * \see ContainerInterface
+   */
   inline void ensure_uniqueness() const
   {
     if (!backend_.unique())
@@ -1216,6 +1228,9 @@ private:
     return IndexType(size);
   } // ... assert_is_IndexType_compatible_and_convert(...)
 
+  /**
+   * \see ContainerInterface
+   */
   inline void ensure_uniqueness() const
   {
     if (!backend_.unique())
