@@ -103,9 +103,7 @@ public:
     }
   }
 
-  IstlDenseVector(const ThisType& other)
-    : backend_(other.backend_)
-  {}
+  IstlDenseVector(const ThisType& other) = default;
 
   IstlDenseVector(const BackendType& other)
     : backend_(new BackendType(other))
@@ -414,9 +412,7 @@ public:
                                BackendType::row_wise))
   {}
 
-  IstlRowMajorSparseMatrix(const ThisType& other)
-    : backend_(other.backend_)
-  {}
+  IstlRowMajorSparseMatrix(const ThisType& other) = default;
 
   IstlRowMajorSparseMatrix(const BackendType& other)
     : backend_(new BackendType(other))

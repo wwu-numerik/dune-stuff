@@ -157,11 +157,7 @@ public:
     , name_(nm)
   {}
 
-  ESV2007Cutoff(const ThisType& other)
-    : diffusion_(other.diffusion_)
-    , poincare_constant_(other.poincare_constant_)
-    , name_(other.name_)
-  {}
+  ESV2007Cutoff(const ThisType& other) = default;
 
   ThisType& operator=(const ThisType& other) = delete;
 
@@ -546,11 +542,7 @@ public:
     , name_(nm)
   {}
 
-  Cutoff(const ThisType& other)
-    : diffusion_(other.diffusion_)
-    , poincare_constant_(other.poincare_constant_)
-    , name_(other.name_)
-  {}
+  Cutoff(const ThisType& other) = default;
 
   ThisType& operator=(const ThisType& other) = delete;
 

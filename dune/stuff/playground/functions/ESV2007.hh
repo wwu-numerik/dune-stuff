@@ -232,12 +232,7 @@ public:
     , name_(nm)
   {}
 
-  Cutoff(const ThisType& other)
-    : diffusion_factor_(other.diffusion_factor_)
-    , diffusion_tensor_(other.diffusion_tensor_)
-    , poincare_constant_(other.poincare_constant_)
-    , name_(other.name_)
-  {}
+  Cutoff(const ThisType& other) = default;
 
   ThisType& operator=(const ThisType& other) = delete;
 
