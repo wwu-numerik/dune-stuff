@@ -70,7 +70,7 @@ int SuspendableStrBuffer::pubsync() {
 
 TimedPrefixedStreamBuffer::TimedPrefixedStreamBuffer(const Timer& timer, const std::string prefix, std::ostream& out)
   : timer_(timer)
-  , prefix_(prefix.empty() ? "" : prefix + ": ")
+  , prefix_(prefix)
   , out_(out)
   , prefix_needed_(true)
 {}
