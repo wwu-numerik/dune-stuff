@@ -95,7 +95,7 @@ protected:
    **/
   CRTPInterface() = default;
   CRTPInterface(const CRTPInterface& ) {}
-  CRTPInterface& operator=(const CRTPInterface&) {}
+  CRTPInterface& operator=(const CRTPInterface&) { return *this; }
 
   mutable std::recursive_mutex crtp_mutex_;
 #endif
