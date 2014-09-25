@@ -249,6 +249,9 @@ T clamp(const T var, const T min, const T max) {
 //! no-branch sign function
 inline long sign(long x) { return long(x != 0) | (long(x >= 0) - 1);  }
 
+/** enable us to use DSC::numeric_limits for all types, even when no specialization is avaliable.
+ * If there is one, it's used. Otherwise we default to numerical_limtis of double
+ **/
 template <class T, typename = void>
 class numeric_limits
     : public std::numeric_limits<double> {};

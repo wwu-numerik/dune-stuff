@@ -53,7 +53,6 @@ public:
    *  - User can set as many (even nested) named sections whose total (=system+user) time will be computed across all program
    * instances.\n
    *  - Provides csv-conform output of process-averaged runtimes.
-   * \todo this could go into libdune-stuff
    **/
 class Profiler
 {

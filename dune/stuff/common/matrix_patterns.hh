@@ -175,7 +175,7 @@ template< class AnsatzSpaceType, class TestSpaceType >
 class ElementNeighborStencil
 {
 public:
-  /** @brief
+  /**
      *
      * Matrices have size @f$ H \times H @f$ where @f$H@f$ is the number
      * of degrees of freedom in the discrete function space @f$ { \cal X }_H @f$.
@@ -243,7 +243,7 @@ template< class AnsatzSpaceType, class TestSpaceType >
 class ElementStencil
 {
 public:
-  /** @brief
+  /**
      *
      * Matrices have size @f$ H \times H @f$ where @f$H@f$ is the number
      * of degrees of freedom in the discrete function space @f$ { \cal X }_H @f$.

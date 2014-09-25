@@ -14,6 +14,7 @@ namespace Dune {
 namespace Stuff {
 namespace Common {
 
+//! Helper class to abstract away selecting an integer or real valued distribution
 template < typename T, bool = std::is_integral<T>::value >
 struct UniformDistributionSelector {
 };
@@ -29,7 +30,13 @@ struct UniformDistributionSelector<T,false> {
         type;
 };
 
-template < class T, class DistributionImp , class EngineImp >
+/** RandomNumberGenerator adapter
+ * \template T type of generated numbers
+ * \template EngineImp randomization algorithm/engine implementation
+ * \template DistributionImp class with an EngineImp accepting call operator that returns the actual RNGs
+ * \ref DefaultRNG for default choice of distribution, engine and init args
+ **/
+template <class T, class DistributionImp , class EngineImp = std::mt19937>
 struct RNG {
   typedef DistributionImp DistributionType;
   typedef EngineImp EngineType;
@@ -56,6 +63,7 @@ const std::string other_printables(
         "`~-_=+[{]{\\|;:'\",<.>/? ");
 }
 
+//! RNG that represents strings of given length
 class RandomStrings : public RNG<std::string,
                                 std::uniform_int_distribution<int>,
                                 std::mt19937 >
@@ -84,6 +92,7 @@ private:
     }
 };
 
+//! defaultrng with choice of uniform distribution and stl's default random engine based on T and its numeric_limits
 template < class T >
 class DefaultRNG : public RNG<T,
                                 typename UniformDistributionSelector<T>::type,
