@@ -8,16 +8,14 @@
 #ifndef __EXECUTIONTIMER_HH__
 #define __EXECUTIONTIMER_HH__
 
+#include <dune/common/deprecated.hh>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 namespace Dune {
 namespace Stuff {
 namespace Common {
 
-/**
- * deprecate in favor of Profiler?
- **/
-class ExecutionTimer
+class DUNE_DEPRECATED_MSG("Use Profiler instead") ExecutionTimer
 {
 public:
   static void startTimer() {
