@@ -79,21 +79,6 @@ public:
   const MatrixType& matrix() const { return *this; }
 }; // class IdentityMatrix
 
-//! produces a NxN Identity matrix object compatible with parent type
-template< class MatrixObjectType >
-class DUNE_DEPRECATED_MSG("deprecated dune-fem util, use stuff/la instead")
-IdentityMatrixObject
-  : public MatrixObjectType
-{
-public:
-  IdentityMatrixObject(const typename MatrixObjectType::DomainSpaceType& domain_space,
-                       const typename MatrixObjectType::RangeSpaceType& range_space)
-    : MatrixObjectType(domain_space, range_space) {
-    MatrixObjectType::reserve();
-    for (int i = 0; i < MatrixObjectType::matrix().rows(); ++i)
-      MatrixObjectType::matrix().set(i, i, 1.0);
-  }
-};
 
 //! adds the missing setDiag function to SparseRowMatrix
 template< class DiscFuncType, class MatrixType >
