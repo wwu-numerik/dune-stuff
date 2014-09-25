@@ -8,9 +8,7 @@
 
 #include <vector>
 
-#include <dune/stuff/common/disable_warnings.hh>
-# include <dune/common/dynmatrix.hh>
-#include <dune/stuff/common/reenable_warnings.hh>
+#include <dune/common/dynmatrix.hh>
 #include <dune/common/dynvector.hh>
 #include <dune/stuff/common/parallel/threadmanager.hh>
 
@@ -29,6 +27,12 @@ protected:
 
 public:
 
+  /**
+   * \brief constructs the appropriate amount of matrix and indices storage
+   *
+   *        We construct 4 indices vectors since this is the maximum amount needed for discretizations (at least that
+   *        we know of atm), namely one for each entity/neighbor and ansatz/test combination.
+   */
   TmpMatricesStorage(const std::vector< size_t >& num_tmp_objects,
            const size_t max_rows,
            const size_t max_cols)
