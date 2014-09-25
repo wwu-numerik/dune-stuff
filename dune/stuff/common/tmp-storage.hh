@@ -52,8 +52,8 @@ public:
   }
 
 protected:
-  DS::PerThreadValue< LocalMatrixContainerType > matrices_;
-  DS::PerThreadValue< std::vector< DynamicVector< size_t > > > indices_;
+  PerThreadValue< LocalMatrixContainerType > matrices_;
+  PerThreadValue< std::vector< DynamicVector< size_t > > > indices_;
 }; // class Matrices
 
 
@@ -87,8 +87,8 @@ protected:
   }
 
 protected:
-  DS::PerThreadValue< std::vector< std::vector< LocalVectorType > > > vectors_;
-  DS::PerThreadValue< Dune::DynamicVector< size_t > > indices_;
+  PerThreadValue< std::vector< std::vector< LocalVectorType > > > vectors_;
+  PerThreadValue< Dune::DynamicVector< size_t > > indices_;
 }; // class Vectors
 
 
