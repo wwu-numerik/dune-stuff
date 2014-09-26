@@ -40,6 +40,10 @@
 
 #include "common.hh"
 
+#if HAVE_TBB
+# include <thread>
+# include <tbb/task_scheduler_init.h>
+#endif
 
 class
   DUNE_DEPRECATED_MSG("Use the expectation macros of the gtest test suite (20.08.2014)!")
@@ -87,7 +91,9 @@ int main(int argc, char** argv)
                          DSC::LOG_CONSOLE | DSC::LOG_ERROR
 #endif
                                                                                            , "", "", "");
-
+#if HAVE_TBB
+    tbb::task_scheduler_init tbb_init(DSC_CONFIG_GET("threading.max_count", 1));
+#endif
     return RUN_ALL_TESTS();
 
 #if DUNE_STUFF_TEST_MAIN_CATCH_EXCEPTIONS
