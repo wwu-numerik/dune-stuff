@@ -335,7 +335,10 @@ public:
 
   virtual ThisType*
     DUNE_DEPRECATED_MSG("Will be removed, does not work (05.09.2014)!")
-                    copy() const = 0;
+                    copy() const
+  {
+    DUNE_THROW(NotImplemented, "");
+  }
   /* @} */
 
   /** \defgroup info ´´These methods should be implemented in order to identify the function.'' */
