@@ -40,6 +40,8 @@ template <class ValueImp>
 class PerThreadValue {
 public:
   typedef ValueImp ValueType;
+  static_assert(std::is_copy_assignable<ValueImp>::value || std::is_move_assignable<ValueImp>::value,
+                "ValueImp not usable in a std::vector");
 
 private:
   typedef PerThreadValue<ValueImp> ThisType;
@@ -51,11 +53,18 @@ public:
     : values_( ThreadManager::max_threads(), value)
   {}
 
+  PerThreadValue(const PerThreadValue<ValueImp>& other) = default;
+  PerThreadValue(PerThreadValue<ValueImp>&& other) = default;
+  PerThreadValue& operator = (const PerThreadValue<ValueImp>& other) = default;
+  PerThreadValue& operator = (PerThreadValue<ValueImp>&& other) = default;
+
   //! Initialization by in-place construction ValueType with \param ctor_args
   template < class... InitTypes >
-  PerThreadValue( InitTypes&& ...ctor_args )
+  explicit PerThreadValue( InitTypes&& ...ctor_args )
     : values_( ThreadManager::max_threads(), ValueType(std::forward<InitTypes>(ctor_args)...) )
   {}
+
+  operator ValueImp() const { return this->operator *(); }
 
   ValueType& operator * () {
     return values_[ThreadManager::thread()];
@@ -71,10 +80,6 @@ public:
 
   const ValueType* operator -> () const {
     return &values_[ThreadManager::thread()];
-  }
-
-  typename ContainerType::size_type size() const {
-    return values_.size();
   }
 
   template <class BinaryOperation>
