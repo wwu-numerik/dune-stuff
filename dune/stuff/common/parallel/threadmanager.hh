@@ -70,6 +70,12 @@ public:
     : values_( ThreadManager::max_threads(), ValueType(std::forward<InitTypes>(ctor_args)...) )
   {}
 
+  ThisType& operator = (const ValueType& value) {
+    values_ = ContainerType(ThreadManager::max_threads(), value);
+    return *this;
+  }
+
+
   operator ValueImp() const { return this->operator *(); }
 
   ValueType& operator * () {
