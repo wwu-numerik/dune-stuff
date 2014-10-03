@@ -149,10 +149,11 @@ public:
     // get correct config
     const Common::Configuration cfg = config.has_sub(sub_name) ? config.sub(sub_name) : config;
     const Common::Configuration default_cfg = default_config();
-    return Common::make_unique< ThisType >(cfg.get("lower_left", default_cfg.get< DomainType >("lower_left")),
-                                           cfg.get("upper_right", default_cfg.get< DomainType >("upper_right")),
-                                           cfg.get("num_elements", default_cfg.get< std::vector< unsigned int > >("num_elements"), dimDomain),
-                                           cfg.get("num_refinements", default_cfg.get< size_t >("num_refinements")));
+    return Common::make_unique< ThisType >(
+          cfg.get("lower_left", default_cfg.get< DomainType >("lower_left")),
+          cfg.get("upper_right", default_cfg.get< DomainType >("upper_right")),
+          cfg.get("num_elements", default_cfg.get< std::vector< unsigned int > >("num_elements"), dimDomain),
+          cfg.get("num_refinements", default_cfg.get< size_t >("num_refinements")));
   } // ... create(...)
 
   /**
@@ -168,7 +169,10 @@ public:
        const DomainFieldType upper_right = default_config().get< DomainFieldType >("upper_right"),
        const unsigned int num_elements = default_config().get< std::vector< unsigned int > >("num_elements")[0],
        const size_t num_refinements = default_config().get< size_t >("num_refinements"))
-    : grid_ptr_(create_grid(DomainType(lower_left), DomainType(upper_right), parse_array(num_elements), num_refinements))
+    : grid_ptr_(create_grid(DomainType(lower_left),
+                            DomainType(upper_right),
+                            parse_array(num_elements),
+                            num_refinements))
   {}
 
   Cube(const DSC::FieldVector< DomainFieldType, dimDomain >& lower_left,
@@ -224,17 +228,6 @@ private:
       ret[ii] = in[ii];
     return ret;
   } // ... parse_array(...)
-
-  static DomainType parse_vector(const std::vector< DomainFieldType >& in)
-  {
-    if (in.size() < dimDomain)
-      DUNE_THROW(Exceptions::wrong_input_given,
-                 "Given vector is too short: should be " << dimDomain << ", is " << in.size() << "!");
-    DomainType ret;
-    for (unsigned int ii = 0; ii < dimDomain; ++ii)
-      ret[ii] = in[ii];
-    return ret;
-  } // ... parse_vector(...)
 
   static std::shared_ptr< GridType > create_grid(DomainType lower_left,
                                                  DomainType upper_right,
