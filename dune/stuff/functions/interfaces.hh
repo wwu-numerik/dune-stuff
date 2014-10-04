@@ -10,6 +10,7 @@
 #include <memory>
 #include <string>
 #include <ostream>
+#include <type_traits>
 
 #include <dune/stuff/common/disable_warnings.hh>
 # include <dune/common/fmatrix.hh>
@@ -643,29 +644,34 @@ public:
 }; // class GlobalFunctionInterface< ..., 1 >
 
 template < class OtherEntityImp, class GlobalFunctionImp >
-struct TransferredGlobalFunction : public
-    GlobalFunctionInterface< OtherEntityImp, typename GlobalFunctionImp::DomainFieldType,
-                             GlobalFunctionImp::dimDomain, typename GlobalFunctionImp::RangeFieldType,
-                             GlobalFunctionImp::dimRange, GlobalFunctionImp::dimRangeCols > {
-
+class TransferredGlobalFunction
+  : public GlobalFunctionInterface< OtherEntityImp, typename GlobalFunctionImp::DomainFieldType,
+                                    GlobalFunctionImp::dimDomain, typename GlobalFunctionImp::RangeFieldType,
+                                    GlobalFunctionImp::dimRange, GlobalFunctionImp::dimRangeCols >
+{
   typedef GlobalFunctionInterface< OtherEntityImp, typename GlobalFunctionImp::DomainFieldType,
                                    GlobalFunctionImp::dimDomain, typename GlobalFunctionImp::RangeFieldType,
-                                   GlobalFunctionImp::dimRange, GlobalFunctionImp::dimRangeCols >
-          BaseType;
+                                   GlobalFunctionImp::dimRange, GlobalFunctionImp::dimRangeCols > BaseType;
+
+public:
   TransferredGlobalFunction(const GlobalFunctionImp& function)
     : function_(function)
   {}
 
-  virtual size_t order() const {
+  virtual size_t order() const
+  {
     return function_.order();
   }
 
-  virtual void evaluate(const typename BaseType::DomainType& x, typename BaseType::RangeType& ret) const {
+  virtual void evaluate(const typename BaseType::DomainType& x, typename BaseType::RangeType& ret) const
+  {
     function_.evaluate(x, ret);
   }
 
+private:
   const GlobalFunctionImp& function_;
-};
+}; // class TransferredGlobalFunction
+
 
 //! Utility to generate a complete Function Type from an existing one and a template
 template <class FunctionImp, template <class, class, int, class, int, int> class OutTemplate>
@@ -674,6 +680,46 @@ struct FunctionTypeGenerator {
   FunctionImp::dimDomain, typename FunctionImp::RangeFieldType,
   FunctionImp::dimRange, FunctionImp::dimRangeCols> type;
 };
+
+
+namespace internal {
+
+
+template< class LF >
+class IsLocalizableFunctionHelper
+{
+  static const bool tagged = std::is_base_of< Tags::LocalizableFunction, LF >::value;
+
+  template< class F, bool anything = false >
+  struct Choose
+    : public std::false_type
+  {};
+
+  // If you get an error here you have manually derived from Tags::LocalizableFunction but not from
+  // LocalizableFunctionInterface, which is beyond reason!
+  template< class F >
+  struct Choose< F, true >
+    : public std::is_base_of< LocalizableFunctionInterface< typename F::EntityType,
+                                                            typename F::DomainFieldType, F::dimDomain,
+                                                            typename F::RangeFieldType, F::dimRange, F::dimRangeCols >,
+                              F >
+  {};
+
+public:
+  static const bool value = Choose< LF, tagged >::value;
+}; // class IsLocalizableFunctionHelper
+
+
+} // namespace internal
+
+
+
+template< class LF >
+struct is_localizable_function
+  : public std::integral_constant< bool, internal::IsLocalizableFunctionHelper< LF >::value >
+{};
+
+
 
 } // namespace Stuff
 } // namespace Dune
