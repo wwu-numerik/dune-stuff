@@ -626,6 +626,15 @@ struct VectorTest
         DUNE_THROW(Dune::Exception, "check copy-on-write");
     }
 
+    //test operator= for scalars
+    VectorImp result_eq = countingup;
+    result_eq = ScalarType(0);
+    EXPECT_EQ(zeros, result_eq);
+    result_eq = ScalarType(-2.25);
+    VectorImp result_eq_expected = ones;
+    result_eq_expected *= ScalarType(-2.25);
+    EXPECT_EQ(result_eq_expected, result_eq);
+
     //test axpy
     VectorImp result_axpy = zeros;
     result_axpy.axpy(ScalarType(1), ones);
