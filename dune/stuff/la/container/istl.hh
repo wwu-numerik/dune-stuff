@@ -58,11 +58,11 @@ public:
  */
 template< class ScalarImp = double>
 class IstlDenseVector
-  : public VectorInterface< IstlDenseVectorTraits< ScalarImp > >
+  : public VectorInterface< IstlDenseVectorTraits< ScalarImp >, ScalarImp >
   , public ProvidesBackend< IstlDenseVectorTraits< ScalarImp > >
 {
   typedef IstlDenseVector< ScalarImp >                           ThisType;
-  typedef VectorInterface< IstlDenseVectorTraits< ScalarImp > >  VectorInterfaceType;
+  typedef VectorInterface< IstlDenseVectorTraits< ScalarImp >, ScalarImp >  VectorInterfaceType;
   static_assert(!std::is_same< DUNE_STUFF_SSIZE_T, int >::value,
                 "You have to manually disable the constructor below which uses DUNE_STUFF_SSIZE_T!");
 public:
@@ -337,7 +337,7 @@ private:
       backend_ = std::make_shared< BackendType >(*backend_);
   } // ... ensure_uniqueness(...)
 
-  friend class VectorInterface< IstlDenseVectorTraits< ScalarType > >;
+  friend class VectorInterface< IstlDenseVectorTraits< ScalarType >, ScalarType >;
   friend class IstlRowMajorSparseMatrix< ScalarType >;
 
   mutable std::shared_ptr< BackendType > backend_;
@@ -361,7 +361,7 @@ public:
  */
 template< class ScalarImp = double >
 class IstlRowMajorSparseMatrix
-  : public MatrixInterface< IstlRowMajorSparseMatrixTraits< ScalarImp > >
+  : public MatrixInterface< IstlRowMajorSparseMatrixTraits< ScalarImp >, ScalarImp >
   , public ProvidesBackend< IstlRowMajorSparseMatrixTraits< ScalarImp > >
 {
   typedef IstlRowMajorSparseMatrix< ScalarImp > ThisType;
