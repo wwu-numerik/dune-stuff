@@ -67,8 +67,15 @@ public:
   explicit FallbackPerThreadValue( InitTypes&& ...ctor_args )
     : values_( ThreadManager::max_threads() )
   {
+#if __GNUC__
+    // cannot unpack in lambda due to https://gcc.gnu.org/bugzilla/show_bug.cgi?id=47226
+    ValueType v(ctor_args...);
     std::generate(values_.begin(), values_.end(),
-                  [=](){return Common::make_unique<ValueType>(ctor_args...);});
+                  [&](){return Common::make_unique<ValueType>(v);});
+#else
+    std::generate(values_.begin(), values_.end(),
+                  [&](){return Common::make_unique<ValueType>(ctor_args...);});
+#endif
   }
 
   ThisType& operator = (ConstValueType&& value) {
@@ -124,14 +131,19 @@ private:
 
 public:
   //! Initialization by copy construction of ValueType
-  explicit TBBPerThreadValue( ConstValueType& value )
+  explicit TBBPerThreadValue( ValueType value )
     : values_(new ContainerType([=](){return Common::make_unique<ValueType>(value);}))
   {}
 
   //! Initialization by in-place construction ValueType with \param ctor_args
   template < class... InitTypes >
   explicit TBBPerThreadValue( InitTypes&& ...ctor_args )
+#if __GNUC__
+  // cannot unpack in lambda due to https://gcc.gnu.org/bugzilla/show_bug.cgi?id=47226
+    : TBBPerThreadValue(ValueType(ctor_args...))
+#else
     : values_(new ContainerType([=](){return Common::make_unique<ValueType>(ctor_args...);}))
+#endif
   {}
 
   ThisType& operator = (ValueType&& value) {
