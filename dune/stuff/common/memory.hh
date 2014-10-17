@@ -193,6 +193,11 @@ public:
 
   const T& storage_access() const
   {
+    return access();
+  }
+
+  const T& access() const
+  {
     return provide_->access();
   }
 
@@ -223,10 +228,20 @@ public:
 
   T& storage_access()
   {
-    return provide_->access();
+    return access();
   }
 
   const T& storage_access() const
+  {
+    return access();
+  }
+
+  T& access()
+  {
+    return provide_->access();
+  }
+
+  const T& access() const
   {
     return provide_->access();
   }
