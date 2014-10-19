@@ -413,7 +413,7 @@ std::ostream& operator<<(std::ostream& out,
 
 
 template < class OtherEntityImp, class GlobalFunctionImp >
-struct TransferredGlobalFunction ;
+class TransferredGlobalFunction;
 
 
 /**
