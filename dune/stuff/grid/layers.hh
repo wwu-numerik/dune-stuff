@@ -68,11 +68,11 @@ struct Layer< GridType, ChooseLayer::level, ChoosePartView::view >
 {
   typedef typename GridType::LevelGridView Type;
 
-  static std::shared_ptr< Type > create(GridType& grid, const int level)
+  static Type create(GridType& grid, const int level)
   {
     assert(level >= 0);
     assert(level <= grid.maxLevel());
-    return std::make_shared< Type >(grid.levelGridView(level));
+    return grid.levelGridView(level);
   } // ... create(...)
 }; // struct Layer< ..., level, view >
 
@@ -82,9 +82,9 @@ struct Layer< GridType, ChooseLayer::leaf, ChoosePartView::view >
 {
   typedef typename GridType::LeafGridView Type;
 
-  static std::shared_ptr< Type > create(GridType& grid, const int /*level*/ = 0)
+  static Type create(GridType& grid, const int /*level*/ = 0)
   {
-    return std::make_shared< Type >(grid.leafGridView());
+    return grid.leafGridView();
   }
 }; // struct Layer< ..., leaf, view >
 
@@ -114,7 +114,7 @@ struct LevelPartView< GridType, ChoosePartView::view >
 {
   typedef typename Layer< GridType, ChooseLayer::level, ChoosePartView::view >::Type Type;
 
-  static std::shared_ptr< Type > create(GridType& grid, const int level)
+  static Type create(GridType& grid, const int level)
   {
     return Layer< GridType, ChooseLayer::level, ChoosePartView::view >::create(grid, level);
   }
@@ -126,7 +126,7 @@ struct LeafPartView< GridType, ChoosePartView::view >
 {
   typedef typename Layer< GridType, ChooseLayer::leaf, ChoosePartView::view >::Type Type;
 
-  static std::shared_ptr< Type > create(GridType& grid, const int /*level*/ = 0)
+  static Type create(GridType& grid, const int /*level*/ = 0)
   {
     return Layer< GridType, ChooseLayer::leaf, ChoosePartView::view >::create(grid);
   }
@@ -138,7 +138,7 @@ struct LayerView< GridType, ChooseLayer::level >
 {
   typedef typename Layer< GridType, ChooseLayer::level, ChoosePartView::view >::Type Type;
 
-  static std::shared_ptr< Type > create(GridType& grid, const int level)
+  static Type create(GridType& grid, const int level)
   {
     return Layer< GridType, ChooseLayer::level, ChoosePartView::view >::create(grid, level);
   }
@@ -150,7 +150,7 @@ struct LayerView< GridType, ChooseLayer::leaf >
 {
   typedef typename Layer< GridType, ChooseLayer::leaf, ChoosePartView::view >::Type Type;
 
-  static std::shared_ptr< Type > create(GridType& grid, const int /*level*/ = 0)
+  static Type create(GridType& grid, const int /*level*/ = 0)
   {
     return Layer< GridType, ChooseLayer::level, ChoosePartView::view >::create(grid);
   }
@@ -165,11 +165,11 @@ struct Layer< GridType, ChooseLayer::level, ChoosePartView::part >
 {
   typedef Dune::Fem::LevelGridPart< GridType > Type;
 
-  static std::shared_ptr< Type > create(GridType& grid, const int level)
+  static Type create(GridType& grid, const int level)
   {
     assert(level >= 0);
     assert(level <= grid.maxLevel());
-    return std::make_shared< Type >(grid, level);
+    return Type(grid, level);
   } // ... create(...)
 }; // struct Layer< ..., level, part >
 
@@ -179,9 +179,9 @@ struct Layer< GridType, ChooseLayer::leaf, ChoosePartView::part >
 {
   typedef Dune::Fem::LeafGridPart< GridType > Type;
 
-  static std::shared_ptr< Type > create(GridType& grid, const int /*level*/ = 0)
+  static Type create(GridType& grid, const int /*level*/ = 0)
   {
-    return std::make_shared< Type >(grid);
+    return Type(grid);
   }
 }; // struct Layer< ..., leaf, part >
 
@@ -211,7 +211,7 @@ struct LevelPartView< GridType, ChoosePartView::part >
 {
   typedef typename Layer< GridType, ChooseLayer::level, ChoosePartView::part >::Type Type;
 
-  static std::shared_ptr< Type > create(GridType& grid, const int level)
+  static Type create(GridType& grid, const int level)
   {
     return Layer< GridType, ChooseLayer::level, ChoosePartView::part >::create(grid, level);
   }
@@ -223,7 +223,7 @@ struct LeafPartView< GridType, ChoosePartView::part >
 {
   typedef typename Layer< GridType, ChooseLayer::leaf, ChoosePartView::part >::Type Type;
 
-  static std::shared_ptr< Type > create(GridType& grid, const int /*level*/ = 0)
+  static Type create(GridType& grid, const int /*level*/ = 0)
   {
     return Layer< GridType, ChooseLayer::leaf, ChoosePartView::part >::create(grid);
   }
@@ -235,7 +235,7 @@ struct LayerPart< GridType, ChooseLayer::level >
 {
   typedef typename Layer< GridType, ChooseLayer::level, ChoosePartView::part >::Type Type;
 
-  static std::shared_ptr< Type > create(GridType& grid, const int level)
+  static Type create(GridType& grid, const int level)
   {
     return Layer< GridType, ChooseLayer::level, ChoosePartView::part >::create(grid, level);
   }
@@ -247,7 +247,7 @@ struct LayerPart< GridType, ChooseLayer::leaf >
 {
   typedef typename Layer< GridType, ChooseLayer::leaf, ChoosePartView::part >::Type Type;
 
-  static std::shared_ptr< Type > create(GridType& grid, const int /*level*/ = 0)
+  static Type create(GridType& grid, const int /*level*/ = 0)
   {
     return Layer< GridType, ChooseLayer::leaf, ChoosePartView::part >::create(grid);
   }
