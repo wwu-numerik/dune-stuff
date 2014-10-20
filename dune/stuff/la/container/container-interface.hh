@@ -113,7 +113,7 @@ public:
   }
 \endcode
  */
-template< class Traits, class ScalarImp >
+template< class Traits, class ScalarImp = typename Traits::ScalarType >
 class ContainerInterface
   : public Tags::ContainerInterface
   , public CRTPInterface< ContainerInterface< Traits, ScalarImp >, Traits >
