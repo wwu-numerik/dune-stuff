@@ -22,16 +22,20 @@
 namespace Dune {
 namespace Stuff {
 namespace LA {
-namespace internal {
 
 
-// forwards
-template< class Traits, class ScalarImp >
-class EigenBaseVector;
+template< class ScalarImp >
+class EigenDenseMatrix;
 
-class EigenVectorInterfaceDynamic {};
+template< class ScalarType >
+class EigenRowMajorSparseMatrix;
+
 
 #if HAVE_EIGEN
+
+
+template< class Traits, class ScalarImp >
+class EigenBaseVector;
 
 
 /**
@@ -39,11 +43,10 @@ class EigenVectorInterfaceDynamic {};
  */
 template< class ImpTraits, class ScalarImp = double >
 class EigenBaseVector
-  : public VectorInterface< ImpTraits >
-  , public EigenVectorInterfaceDynamic
+  : public VectorInterface< ImpTraits, ScalarImp >
   , public ProvidesBackend< ImpTraits >
 {
-  typedef VectorInterface< ImpTraits > VectorInterfaceType;
+  typedef VectorInterface< ImpTraits, ScalarImp > VectorInterfaceType;
 public:
   typedef ImpTraits Traits;
   typedef typename Traits::ScalarType   ScalarType;
@@ -302,7 +305,7 @@ public:
    */
 
 private:
-  friend class VectorInterface< Traits >;
+  friend class VectorInterface< Traits, ScalarType >;
   friend class EigenDenseMatrix< ScalarType >;
   friend class EigenRowMajorSparseMatrix< ScalarType >;
 
@@ -320,7 +323,6 @@ class EigenBaseVector{ static_assert(Dune::AlwaysFalse< ScalarImp >::value, "You
 
 #endif // HAVE_EIGEN
 
-} // namespace internal
 } // namespace LA
 } // namespace Stuff
 } // namespace Dune
