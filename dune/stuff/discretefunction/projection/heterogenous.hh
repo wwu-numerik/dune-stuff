@@ -237,8 +237,8 @@ protected:
   static void postprocess(GDT::DiscreteFunction< TargetSpaceImp, VectorImp >& func) {
     // compute node to entity relations
     constexpr static int dimension = TargetSpaceImp::GridViewType::Grid::dimension;
-    std::vector<int> nodeToEntity(func.space().grid_view()->grid().size(dimension), 0);
-    identifySharedNodes(*func.space().grid_view(), nodeToEntity);
+    std::vector<int> nodeToEntity(func.space().grid_view().grid().size(dimension), 0);
+    identifySharedNodes(func.space().grid_view(), nodeToEntity);
 
     auto factorsIt = nodeToEntity.begin();
     for (auto& dit : func.vector()) {
