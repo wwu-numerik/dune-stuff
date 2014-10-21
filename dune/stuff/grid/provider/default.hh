@@ -33,7 +33,7 @@ public:
     return BaseType::static_id();
   }
 
-  ConstDefault(const GridType& grid_in)
+  explicit ConstDefault(const GridType& grid_in)
     : grid_(grid_in)
   {}
 
@@ -64,22 +64,22 @@ public:
     return GridProviderBaseType::static_id();
   }
 
-  Default(GridType& grid_in)
+  explicit Default(GridType& grid_in)
     : StorageProviderBaseType(grid_in)
   {}
 
   /**
    * \note Takes ownership of grid_ptr in the sense that you must not delete it manually!
    */
-  Default(GridType* grid_ptr)
+  explicit Default(GridType* grid_ptr)
     : StorageProviderBaseType(grid_ptr)
   {}
 
-  Default(std::shared_ptr< GridType > grid_ptr)
+  explicit Default(std::shared_ptr< GridType > grid_ptr)
     : StorageProviderBaseType(grid_ptr)
   {}
 
-  Default(std::unique_ptr< GridType >&& grid_ptr)
+  explicit Default(std::unique_ptr< GridType >&& grid_ptr)
     : StorageProviderBaseType(grid_ptr)
   {}
 

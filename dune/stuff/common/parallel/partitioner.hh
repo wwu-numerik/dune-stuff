@@ -15,7 +15,7 @@ template <class GridViewType>
 struct IndexSetPartitioner {
   typedef typename GridViewType::IndexSet IndexSetType;
   typedef typename GridViewType::template Codim<0>::Entity EntityType;
-  IndexSetPartitioner(const IndexSetType& index_set)
+  explicit IndexSetPartitioner(const IndexSetType& index_set)
     : index_set_(index_set)
   {}
 

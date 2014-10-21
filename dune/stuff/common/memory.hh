@@ -48,7 +48,7 @@ class ConstAccessByReference
   : public ConstAccessInterface< T >, public boost::noncopyable, public nonmoveable
 {
 public:
-  ConstAccessByReference(const T& tt)
+  explicit ConstAccessByReference(const T& tt)
     : tt_(tt)
   {}
 
@@ -69,15 +69,15 @@ class ConstAccessByPointer
   : public ConstAccessInterface< T >, public boost::noncopyable, public nonmoveable
 {
 public:
-  ConstAccessByPointer(const T* tt)
+  explicit ConstAccessByPointer(const T* tt)
     : tt_(tt)
   {}
 
-  ConstAccessByPointer(std::unique_ptr< const T >&& tt)
+  explicit ConstAccessByPointer(std::unique_ptr< const T >&& tt)
     : tt_(tt)
   {}
 
-  ConstAccessByPointer(std::shared_ptr< const T > tt)
+  explicit ConstAccessByPointer(std::shared_ptr< const T > tt)
     : tt_(tt)
   {}
 
@@ -110,7 +110,7 @@ class AccessByReference
   : public AccessInterface< T >, public boost::noncopyable, public nonmoveable
 {
 public:
-  AccessByReference(T& tt)
+  explicit AccessByReference(T& tt)
     : tt_(tt)
   {}
 
@@ -136,15 +136,15 @@ class AccessByPointer
   : public AccessInterface< T >, public boost::noncopyable, public nonmoveable
 {
 public:
-  AccessByPointer(T* tt)
+  explicit AccessByPointer(T* tt)
     : tt_(tt)
   {}
 
-  AccessByPointer(std::unique_ptr< T >&& tt)
+  explicit AccessByPointer(std::unique_ptr< T >&& tt)
     : tt_(tt)
   {}
 
-  AccessByPointer(std::shared_ptr< T > tt)
+  explicit AccessByPointer(std::shared_ptr< T > tt)
     : tt_(tt)
   {}
 
@@ -173,23 +173,23 @@ class ConstStorageProvider
   : public boost::noncopyable
 {
 public:
-  ConstStorageProvider(const T& tt)
+  explicit ConstStorageProvider(const T& tt)
     : provide_(make_unique< internal::ConstAccessByReference< T > >(tt))
   {}
 
-  ConstStorageProvider(const T* tt)
+  explicit ConstStorageProvider(const T* tt)
     : provide_(make_unique< internal::ConstAccessByPointer< T > >(tt))
   {}
 
-  ConstStorageProvider(std::unique_ptr< const T >&& tt)
+  explicit ConstStorageProvider(std::unique_ptr< const T >&& tt)
     : provide_(make_unique< internal::ConstAccessByPointer< T > >(tt))
   {}
 
-  ConstStorageProvider(std::shared_ptr< const T > tt)
+  explicit ConstStorageProvider(std::shared_ptr< const T > tt)
     : provide_(make_unique< internal::ConstAccessByPointer< T > >(tt))
   {}
 
-  ConstStorageProvider(ConstStorageProvider< T >&& source) = default;
+  explicit ConstStorageProvider(ConstStorageProvider< T >&& source) = default;
 
   const T& storage_access() const
   {
@@ -210,19 +210,19 @@ template< class T >
 class StorageProvider: public boost::noncopyable, public nonmoveable
 {
 public:
-  StorageProvider(T& tt)
+  explicit StorageProvider(T& tt)
     : provide_(make_unique< internal::AccessByReference< T > >(tt))
   {}
 
-  StorageProvider(T* tt)
+  explicit StorageProvider(T* tt)
     : provide_(make_unique< internal::AccessByPointer< T > >(tt))
   {}
 
-  StorageProvider(std::unique_ptr< T >&& tt)
+  explicit StorageProvider(std::unique_ptr< T >&& tt)
     : provide_(make_unique< internal::AccessByPointer< T > >(tt))
   {}
 
-  StorageProvider(std::shared_ptr< T > tt)
+  explicit StorageProvider(std::shared_ptr< T > tt)
     : provide_(make_unique< internal::AccessByPointer< T > >(tt))
   {}
 
