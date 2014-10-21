@@ -65,12 +65,11 @@ public:
  */
 template< class ScalarImp = double >
 class EigenRowMajorSparseMatrix
-  : public MatrixInterface< internal::EigenRowMajorSparseMatrixTraits< ScalarImp > >
-  , public EigenMatrixInterfaceDynamic
+  : public MatrixInterface< internal::EigenRowMajorSparseMatrixTraits< ScalarImp >, ScalarImp >
   , public ProvidesBackend< internal::EigenRowMajorSparseMatrixTraits< ScalarImp > >
 {
-  typedef EigenRowMajorSparseMatrix< ScalarImp >                          ThisType;
-  typedef MatrixInterface< internal::EigenRowMajorSparseMatrixTraits< ScalarImp > > MatrixInterfaceType;
+  typedef EigenRowMajorSparseMatrix< ScalarImp >                                              ThisType;
+  typedef MatrixInterface< internal::EigenRowMajorSparseMatrixTraits< ScalarImp >,ScalarImp > MatrixInterfaceType;
   static_assert(!std::is_same< DUNE_STUFF_SSIZE_T, int >::value,
                 "You have to manually disable the constructor below which uses DUNE_STUFF_SSIZE_T!");
 public:
