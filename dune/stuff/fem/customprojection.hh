@@ -3,8 +3,8 @@
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
-#ifndef CUSTOMPROJECTION_HH
-#define CUSTOMPROJECTION_HH
+#ifndef DUNE_STUFF_FEM_FUNCTIONS_CUSTOMPROJECTION_HH
+#define DUNE_STUFF_FEM_FUNCTIONS_CUSTOMPROJECTION_HH
 
 #if HAVE_DUNE_FEM
 
@@ -361,4 +361,4 @@ public:
 
 #endif // #if HAVE_DUNE_FEM
 
-#endif // CUSTOMPROJECTION_HH
+#endif // DUNE_STUFF_FEM_FUNCTIONS_CUSTOMPROJECTION_HH
