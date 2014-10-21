@@ -140,9 +140,9 @@ public:
    *        unconditionally throws a GridError.
    */
   static shared_ptr<GridType>
-  createSimplexGrid(const FieldVector< ctype, dim >& DUNE_UNUSED(lowerLeft),
-                    const FieldVector< ctype, dim>& DUNE_UNUSED(upperRight),
-                    const array< unsigned int,dim >& DUNE_UNUSED(elements))
+  createSimplexGrid(const FieldVector< ctype, dim >& /*lowerLeft*/,
+                    const FieldVector< ctype, dim>& /*upperRight*/,
+                    const array< unsigned int,dim >& /*elements*/)
   {
     DUNE_THROW(GridError, className< StructuredGridFactory >()
                << "::createSimplexGrid(): Simplices are not supported "

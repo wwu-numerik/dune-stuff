@@ -482,9 +482,9 @@ private:
     : public LocalfunctionType
   {
   public:
-    Localfunction(const EntityImp& entity, const ThisType& global_function)
-      : LocalfunctionType(entity)
-      , geometry_(entity.geometry())
+    Localfunction(const EntityImp& entity_in, const ThisType& global_function)
+      : LocalfunctionType(entity_in)
+      , geometry_(entity_in.geometry())
       , global_function_(global_function)
     {}
 
@@ -603,9 +603,9 @@ private:
     : public LocalfunctionType
   {
   public:
-    Localfunction(const EntityImp& entity, const ThisType& global_function)
-      : LocalfunctionType(entity)
-      , geometry_(entity.geometry())
+    Localfunction(const EntityImp& entity_in, const ThisType& global_function)
+      : LocalfunctionType(entity_in)
+      , geometry_(entity_in.geometry())
       , global_function_(global_function)
     {}
 
