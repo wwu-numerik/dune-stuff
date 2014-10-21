@@ -3,8 +3,8 @@
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
-#ifndef DUNE_STUFF_WALK_HH_INCLUDED
-#define DUNE_STUFF_WALK_HH_INCLUDED
+#ifndef DUNE_STUFF_GRID_WALK_HH
+#define DUNE_STUFF_GRID_WALK_HH
 
 #include <dune/stuff/common/disable_warnings.hh>
 # include <dune/common/fvector.hh>
@@ -101,4 +101,4 @@ GridWalk< Dune::GridView<ViewImp>, codim > make_gridwalk(const Dune::GridView<Vi
 } // namespace Stuff
 } // namespace Dune
 
-#endif // ifndef DUNE_STUFF_WALK_HH_INCLUDED
+#endif // DUNE_STUFF_GRID_WALK_HH
