@@ -23,7 +23,7 @@ class Codim0Object
 public:
   typedef typename BaseType::EntityType EntityType;
 
-  ~Codim0Object() {}
+  virtual ~Codim0Object() {}
 
   virtual bool apply_on(const GridViewType& grid_view, const EntityType& entity) const = 0;
 };
@@ -78,7 +78,7 @@ class Codim1Object
 public:
   typedef typename BaseType::IntersectionType IntersectionType;
 
-  ~Codim1Object() {}
+  virtual ~Codim1Object() {}
 
   virtual bool apply_on(const GridViewType& grid_view, const IntersectionType& intersection) const = 0;
 };
