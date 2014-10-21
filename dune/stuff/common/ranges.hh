@@ -13,19 +13,17 @@
 #include <boost/serialization/static_warning.hpp>
 #include <boost/iterator/iterator_facade.hpp>
 
-#include <dune/stuff/common/disable_warnings.hh>
-# if HAVE_DUNE_GRID
-#   include <dune/grid/common/gridview.hh>
-#   include <dune/grid/common/geometry.hh>
-#   include <dune/grid/common/entity.hh>
-# endif // HAVE_DUNE_GRID
+#if HAVE_DUNE_GRID
+# include <dune/grid/common/gridview.hh>
+# include <dune/grid/common/geometry.hh>
+# include <dune/grid/common/entity.hh>
+#endif // HAVE_DUNE_GRID
 
-# if HAVE_DUNE_FEM
-#   include <dune/fem/function/common/discretefunction.hh>
-#   include <dune/fem/gridpart/common/gridpart.hh>
-#   include <dune/fem/space/lagrange/lagrangepoints.hh>
-# endif // HAVE_DUNE_FEM
-#include <dune/stuff/common/reenable_warnings.hh>
+#if HAVE_DUNE_FEM
+# include <dune/fem/function/common/discretefunction.hh>
+# include <dune/fem/gridpart/common/gridpart.hh>
+# include <dune/fem/space/lagrange/lagrangepoints.hh>
+#endif // HAVE_DUNE_FEM
 
 #include <dune/stuff/common/math.hh>
 #include <dune/stuff/fem/namespace.hh>

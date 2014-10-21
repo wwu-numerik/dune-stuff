@@ -12,18 +12,16 @@
 #include <fstream>
 #include <limits>
 
-#include <dune/stuff/common/disable_warnings.hh>
-# include <dune/fem/io/file/vtkio.hh>
-#include <dune/stuff/common/reenable_warnings.hh>
+#include <dune/common/deprecated.hh>
+#include <dune/common/fvector.hh>
+#include <dune/common/math.hh>
+
+#include <dune/fem/io/file/vtkio.hh>
+
 #include <dune/stuff/fem/localmassmatrix.hh>
 #include <dune/stuff/common/misc.hh>
 #include <dune/stuff/common/math.hh>
 #include <dune/stuff/common/string.hh>
-#include <dune/common/deprecated.hh>
-#include <dune/stuff/common/disable_warnings.hh>
-# include <dune/common/fvector.hh>
-#include <dune/stuff/common/reenable_warnings.hh>
-#include <dune/common/math.hh>
 
 namespace Dune {
 namespace Stuff {

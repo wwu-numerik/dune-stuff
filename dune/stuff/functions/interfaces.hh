@@ -12,32 +12,30 @@
 #include <ostream>
 #include <type_traits>
 
-#include <dune/stuff/common/disable_warnings.hh>
-# include <dune/common/fmatrix.hh>
-# include <dune/common/fvector.hh>
-# include <dune/common/dynvector.hh>
-# include <dune/common/version.hh>
-# include <dune/common/deprecated.hh>
-# include <dune/common/parallel/mpihelper.hh>
+#include <dune/common/fmatrix.hh>
+#include <dune/common/fvector.hh>
+#include <dune/common/dynvector.hh>
+#include <dune/common/version.hh>
+#include <dune/common/deprecated.hh>
+#include <dune/common/parallel/mpihelper.hh>
 
-# include <dune/geometry/referenceelements.hh>
-# include <dune/geometry/quadraturerules.hh>
+#include <dune/geometry/referenceelements.hh>
+#include <dune/geometry/quadraturerules.hh>
 
-# if HAVE_DUNE_GRID
-#   include <dune/grid/io/file/vtk.hh>
-#   include <dune/stuff/common/filesystem.hh>
-# endif
+#if HAVE_DUNE_GRID
+# include <dune/grid/io/file/vtk.hh>
+# include <dune/stuff/common/filesystem.hh>
+#endif
 
-# if HAVE_DUNE_FEM
-#  include <dune/fem/function/common/function.hh>
-#  include <dune/fem/space/common/functionspace.hh>
-# endif // HAVE_DUNE_FEM
+#if HAVE_DUNE_FEM
+#include <dune/fem/function/common/function.hh>
+#include <dune/fem/space/common/functionspace.hh>
+#endif
 
-# if HAVE_DUNE_PDELAB
-#  include <dune/typetree/nodetags.hh>
-#  include <dune/pdelab/common/function.hh>
-# endif // HAVE_DUNE_PDELAB
-#include <dune/stuff/common/reenable_warnings.hh>
+#if HAVE_DUNE_PDELAB
+#include <dune/typetree/nodetags.hh>
+#include <dune/pdelab/common/function.hh>
+#endif
 
 #include <dune/stuff/common/memory.hh>
 #include <dune/stuff/common/exceptions.hh>

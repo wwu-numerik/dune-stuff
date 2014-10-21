@@ -10,14 +10,11 @@
 
 #if HAVE_DUNE_FEM
 
+#include <dune/fem/quadrature/cachingquadrature.hh>
+#include <dune/fem/function/common/discretefunction.hh>
+
 #include <dune/stuff/fem/localmassmatrix.hh>
 #include <dune/stuff/common/ranges.hh>
-#include <dune/stuff/common/disable_warnings.hh>
-# include <dune/fem/quadrature/cachingquadrature.hh>
-# include <dune/fem/function/common/discretefunction.hh>
-#include <dune/stuff/common/reenable_warnings.hh>
-
-
 #include <dune/stuff/fem/namespace.hh>
 
 namespace Dune {

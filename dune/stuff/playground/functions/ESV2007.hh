@@ -11,15 +11,13 @@
 #include <boost/numeric/conversion/cast.hpp>
 
 #if HAVE_EIGEN
+
 # include <Eigen/Eigenvalues>
 
-
-#include <dune/stuff/common/disable_warnings.hh>
 # include <dune/geometry/quadraturerules.hh>
-#include <dune/stuff/common/reenable_warnings.hh>
 
-#include <dune/stuff/functions/ESV2007.hh>
-#include <dune/stuff/common/debug.hh>
+# include <dune/stuff/functions/ESV2007.hh>
+# include <dune/stuff/common/debug.hh>
 
 namespace Dune {
 namespace Stuff {

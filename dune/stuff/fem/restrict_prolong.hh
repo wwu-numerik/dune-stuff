@@ -10,9 +10,7 @@
 
 #include <set>
 
-#include <dune/stuff/common/disable_warnings.hh>
-# include <dune/fem/space/common/restrictprolonginterface.hh>
-#include <dune/stuff/common/reenable_warnings.hh>
+#include <dune/fem/space/common/restrictprolonginterface.hh>
 
 #include <dune/stuff/fem/namespace.hh>
 

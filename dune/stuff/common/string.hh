@@ -27,16 +27,14 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 
-#include <dune/stuff/common/disable_warnings.hh>
-# include <dune/common/array.hh>
-# include <dune/common/deprecated.hh>
-# include <dune/common/fmatrix.hh>
-# include <dune/common/densematrix.hh>
-# include <dune/common/fvector.hh>
-# include <dune/common/dynmatrix.hh>
-# include <dune/common/dynvector.hh>
-# include <dune/common/densevector.hh>
-#include <dune/stuff/common/reenable_warnings.hh>
+#include <dune/common/array.hh>
+#include <dune/common/deprecated.hh>
+#include <dune/common/fmatrix.hh>
+#include <dune/common/densematrix.hh>
+#include <dune/common/fvector.hh>
+#include <dune/common/dynmatrix.hh>
+#include <dune/common/dynvector.hh>
+#include <dune/common/densevector.hh>
 
 #include <dune/stuff/common/exceptions.hh>
 #include <dune/stuff/common/fvector.hh>

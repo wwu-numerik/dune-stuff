@@ -8,13 +8,12 @@
 
 #if HAVE_DUNE_FEM
 
-#include <dune/stuff/common/disable_warnings.hh>
-# include <dune/fem/function/common/function.hh>
-# include <dune/fem/function/common/gridfunctionadapter.hh>
-# include <dune/fem/space/common/functionspace.hh>
-# include <dune/fem/space/discontinuousgalerkin.hh>
-# include <dune/fem/function/adaptivefunction.hh>
-#include <dune/stuff/common/reenable_warnings.hh>
+#include <dune/fem/function/common/function.hh>
+#include <dune/fem/function/common/gridfunctionadapter.hh>
+#include <dune/fem/space/common/functionspace.hh>
+#include <dune/fem/space/discontinuousgalerkin.hh>
+#include <dune/fem/function/adaptivefunction.hh>
+
 #include <dune/stuff/fem/customprojection.hh>
 #include <dune/stuff/common/debug.hh>
 #include <dune/stuff/fem/localmassmatrix.hh>

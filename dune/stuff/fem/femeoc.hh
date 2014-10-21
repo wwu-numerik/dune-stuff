@@ -14,11 +14,11 @@
 #include <vector>
 #include <limits>
 
-#include <dune/stuff/common/disable_warnings.hh>
-# include <dune/common/fvector.hh>
-# include <dune/fem/io/file/iointerface.hh>
-#include <dune/stuff/common/reenable_warnings.hh>
 #include <boost/format.hpp>
+
+#include <dune/common/fvector.hh>
+
+#include <dune/fem/io/file/iointerface.hh>
 
 namespace Dune {
 namespace Stuff {

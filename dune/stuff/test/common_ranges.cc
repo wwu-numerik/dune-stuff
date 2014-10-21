@@ -8,9 +8,8 @@
 
 #if HAVE_DUNE_GRID
 
-#include <dune/stuff/common/disable_warnings.hh>
-# include <dune/grid/sgrid.hh>
-#include <dune/stuff/common/reenable_warnings.hh>
+#include <dune/grid/sgrid.hh>
+
 #include <dune/stuff/grid/provider/cube.hh>
 #include <dune/stuff/common/ranges.hh>
 
