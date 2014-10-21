@@ -39,7 +39,7 @@
   };
 // TEST_STRUCT_GENERATOR
 
-//#if HAVE_DUNE_GRID
+#if HAVE_DUNE_GRID
 
 # include <dune/stuff/common/disable_warnings.hh>
 #   include <dune/grid/sgrid.hh>
@@ -172,5 +172,4 @@ TYPED_TEST(ConstantFunctionAluGridEntityTest, provides_required_methods) {
 }
 
 # endif // HAVE_ALUGRID
-//#endif // HAVE_DUNE_GRID
-
+#endif // HAVE_DUNE_GRID
