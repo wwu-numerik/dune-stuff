@@ -182,7 +182,7 @@ public:
 
   static std::string type_this() { return Common::Typename< derived_type >::value(); }
 
-  virtual derived_type& operator*=(const ScalarType alpha)
+  virtual derived_type& operator*=(const ScalarType& alpha)
   {
     scal(alpha);
     return this->as_imp(*this);
