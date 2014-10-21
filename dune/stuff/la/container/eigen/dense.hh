@@ -11,6 +11,8 @@
 #include <vector>
 #include <initializer_list>
 
+#include <boost/numeric/conversion/cast.hpp>
+
 #if HAVE_EIGEN
 # include <dune/stuff/common/disable_warnings.hh>
 #   include <Eigen/Core>
@@ -184,6 +186,8 @@ public:
     this->backend_ = backend_ptr;
   }
 
+  using BaseType::operator=;
+
   /**
    *  \note Does a deep copy.
    */
@@ -221,7 +225,7 @@ class EigenMappedDenseVector
 {
   typedef EigenMappedDenseVector< ScalarImp >                                               ThisType;
   typedef VectorInterface< internal::EigenMappedDenseVectorTraits< ScalarImp >, ScalarImp > VectorInterfaceType;
-  typedef EigenBaseVector< internal::EigenMappedDenseVectorTraits< ScalarImp > >  BaseType;
+  typedef EigenBaseVector< internal::EigenMappedDenseVectorTraits< ScalarImp > >            BaseType;
   static_assert(std::is_same< ScalarImp, double >::value, "Undefined behaviour for non-double data!");
   static_assert(!std::is_same< DUNE_STUFF_SSIZE_T, int >::value,
                 "You have to manually disable the constructor below which uses DUNE_STUFF_SSIZE_T!");
@@ -324,6 +328,8 @@ public:
     this->backend_ = backend_ptr;
   }
 
+  using BaseType::operator=;
+
   /**
    * \brief does a deep copy;
    */
@@ -381,8 +387,7 @@ public:
 
   /// This constructor is needed for the python bindings.
   explicit EigenDenseMatrix(const DUNE_STUFF_SSIZE_T rr, const DUNE_STUFF_SSIZE_T cc = 0, const ScalarType value = ScalarType(0))
-    : backend_(new BackendType(MatrixInterfaceType::assert_is_size_t_compatible_and_convert(rr),
-                               MatrixInterfaceType::assert_is_size_t_compatible_and_convert(cc)))
+    : backend_(new BackendType(boost::numeric_cast< size_t >(rr), boost::numeric_cast< size_t >(cc)))
   {
     if (FloatCmp::eq(value, ScalarType(0)))
       backend_->setZero();
@@ -393,8 +398,7 @@ public:
   }
 
   explicit EigenDenseMatrix(const int rr, const int cc = 0, const ScalarType value = ScalarType(0))
-    : backend_(new BackendType(MatrixInterfaceType::assert_is_size_t_compatible_and_convert(rr),
-                               MatrixInterfaceType::assert_is_size_t_compatible_and_convert(cc)))
+    : backend_(new BackendType(boost::numeric_cast< size_t >(rr), boost::numeric_cast< size_t >(cc)))
   {
     if (FloatCmp::eq(value, ScalarType(0)))
       backend_->setZero();
@@ -406,8 +410,7 @@ public:
 
   /// This constructors ignores the given pattern and initializes the matrix with 0.
   EigenDenseMatrix(const size_t rr, const size_t cc, const SparsityPatternDefault& /*pattern*/)
-    : backend_(new BackendType(MatrixInterfaceType::assert_is_size_t_compatible_and_convert(rr),
-                               MatrixInterfaceType::assert_is_size_t_compatible_and_convert(cc)))
+    : backend_(new BackendType(boost::numeric_cast< size_t >(rr), boost::numeric_cast< size_t >(cc)))
   {
     backend_->setZero();
   }

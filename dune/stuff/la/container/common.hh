@@ -114,11 +114,17 @@ public:
     : backend_(backend_ptr)
   {}
 
-  using VectorInterfaceType::operator=;
-
   ThisType& operator=(const ThisType& other)
   {
     backend_ = other.backend_;
+    return *this;
+  } // ... operator=(...)
+
+  ThisType& operator=(const ScalarType& value)
+  {
+    ensure_uniqueness();
+    for (auto& element : *this)
+      element = value;
     return *this;
   } // ... operator=(...)
 
