@@ -89,7 +89,7 @@ Configuration::Configuration(const Dune::ParameterTree& tree_in,
   setup_();
 }
 
-Configuration::Configuration(const ParameterTree& tree, const std::string sub_id)
+Configuration::Configuration(const ParameterTree& tree_in, const std::string sub_id)
   : BaseType()
   , requests_map_()
   , record_defaults_(internal::configuration_record_defaults)
@@ -98,7 +98,7 @@ Configuration::Configuration(const ParameterTree& tree, const std::string sub_id
   , logfile_(internal::configuration_logfile)
 {
   setup_();
-  add(tree, sub_id);
+  add(tree_in, sub_id);
 }
 
 Configuration::Configuration(const Configuration& other)

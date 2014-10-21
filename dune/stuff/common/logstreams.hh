@@ -146,7 +146,7 @@ public:
   typedef SuspendableStrBuffer::PriorityType PriorityType;
   static const PriorityType default_suspend_priority = SuspendableStrBuffer::default_suspend_priority;
 
-  LogStream(SuspendableStrBuffer* buffer)
+  explicit LogStream(SuspendableStrBuffer* buffer)
     : StorageBaseType(buffer)
     , BaseType(&this->storage_access())
   {}
@@ -212,7 +212,7 @@ class TimedPrefixedLogStream
   typedef std::basic_ostream< char, std::char_traits< char > > OstreamBaseType;
 
 public:
-  TimedPrefixedLogStream(const Timer& timer, const std::string prefix, std::ostream& out);
+  TimedPrefixedLogStream(const Timer& timer, const std::string prefix, std::ostream& outstream);
 
   virtual ~TimedPrefixedLogStream();
 }; // TimedPrefixedLogStream
@@ -234,7 +234,7 @@ class EmptyLogStream
   : public LogStream
 {
 public:
-  EmptyLogStream(int& logflags)
+  explicit EmptyLogStream(int& logflags)
     : LogStream(new EmptyBuffer(int(LOG_NONE), logflags))
   {}
 }; // class EmptyLogStream
