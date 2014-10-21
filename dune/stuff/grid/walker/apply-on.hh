@@ -52,7 +52,7 @@ public:
   typedef typename BaseType::GridViewType GridViewType;
   typedef typename BaseType::EntityType   EntityType;
 
-  virtual bool apply_on(const GridViewType& /*grid_view*/, const EntityType& /*entity*/) const DS_OVERRIDE DS_FINAL
+  virtual bool apply_on(const GridViewType& /*grid_view*/, const EntityType& /*entity*/) const override final
   {
     return true;
   }
@@ -71,7 +71,7 @@ public:
   typedef typename BaseType::GridViewType GridViewType;
   typedef typename BaseType::EntityType   EntityType;
 
-  virtual bool apply_on(const GridViewType& /*grid_view*/, const EntityType& entity) const DS_OVERRIDE DS_FINAL
+  virtual bool apply_on(const GridViewType& /*grid_view*/, const EntityType& entity) const override final
   {
     return entity.hasBoundaryIntersections();
   }
@@ -116,7 +116,7 @@ public:
   typedef typename BaseType::IntersectionType IntersectionType;
 
   virtual bool apply_on(const GridViewType& /*grid_view*/,
-                        const IntersectionType& /*intersection*/) const DS_OVERRIDE DS_FINAL
+                        const IntersectionType& /*intersection*/) const override final
   {
     return true;
   }
@@ -142,7 +142,7 @@ public:
   typedef typename BaseType::IntersectionType IntersectionType;
 
   virtual bool apply_on(const GridViewType& /*grid_view*/,
-                        const IntersectionType& intersection) const DS_OVERRIDE DS_FINAL
+                        const IntersectionType& intersection) const override final
   {
     return intersection.neighbor() && !intersection.boundary();
   }
@@ -168,7 +168,7 @@ public:
   typedef typename BaseType::GridViewType     GridViewType;
   typedef typename BaseType::IntersectionType IntersectionType;
 
-  virtual bool apply_on(const GridViewType& grid_view, const IntersectionType& intersection) const DS_OVERRIDE DS_FINAL
+  virtual bool apply_on(const GridViewType& grid_view, const IntersectionType& intersection) const override final
   {
     if (intersection.neighbor() && !intersection.boundary()) {
       const auto insideEntityPtr = intersection.inside();
@@ -192,7 +192,7 @@ public:
   typedef typename BaseType::IntersectionType IntersectionType;
 
   virtual bool apply_on(const GridViewType& /*grid_view*/,
-                        const IntersectionType& intersection) const DS_OVERRIDE DS_FINAL
+                        const IntersectionType& intersection) const override final
   {
     return intersection.boundary();
   }
@@ -213,7 +213,7 @@ public:
   {}
 
   virtual bool apply_on(const GridViewType& /*grid_view*/,
-                        const IntersectionType& intersection) const DS_OVERRIDE DS_FINAL
+                        const IntersectionType& intersection) const override final
   {
     return boundary_info_.dirichlet(intersection);
   }
@@ -237,7 +237,7 @@ public:
   {}
 
   virtual bool apply_on(const GridViewType& /*grid_view*/,
-                        const IntersectionType& intersection) const DS_OVERRIDE DS_FINAL
+                        const IntersectionType& intersection) const override final
   {
     return boundary_info_.neumann(intersection);
   }

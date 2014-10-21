@@ -237,7 +237,7 @@ public:
    * \{
    */
 
-  virtual ScalarType dot(const ThisType& other) const DS_OVERRIDE DS_FINAL
+  virtual ScalarType dot(const ThisType& other) const override final
   {
     if (other.size() != size())
       DUNE_THROW(Exceptions::shapes_do_not_match,
@@ -245,22 +245,22 @@ public:
     return backend_->operator*(*(other.backend_));
   } // ... dot(...)
 
-  virtual ScalarType l1_norm() const DS_OVERRIDE DS_FINAL
+  virtual ScalarType l1_norm() const override final
   {
     return backend_->one_norm();
   }
 
-  virtual ScalarType l2_norm() const DS_OVERRIDE DS_FINAL
+  virtual ScalarType l2_norm() const override final
   {
     return backend_->two_norm();
   }
 
-  virtual ScalarType sup_norm() const DS_OVERRIDE DS_FINAL
+  virtual ScalarType sup_norm() const override final
   {
     return backend_->infinity_norm();
   }
 
-  virtual void add(const ThisType& other, ThisType& result) const DS_OVERRIDE DS_FINAL
+  virtual void add(const ThisType& other, ThisType& result) const override final
   {
     if (other.size() != size())
       DUNE_THROW(Exceptions::shapes_do_not_match,
@@ -273,7 +273,7 @@ public:
       result_ref[ii] = backend_->operator[](ii) + other.backend_->operator[](ii);
   } // ... add(...)
 
-  virtual void iadd(const ThisType& other) DS_OVERRIDE DS_FINAL
+  virtual void iadd(const ThisType& other) override final
   {
     if (other.size() != size())
       DUNE_THROW(Exceptions::shapes_do_not_match,
@@ -281,7 +281,7 @@ public:
     backend() += *(other.backend_);
   } // ... iadd(...)
 
-  virtual void sub(const ThisType& other, ThisType& result) const DS_OVERRIDE DS_FINAL
+  virtual void sub(const ThisType& other, ThisType& result) const override final
   {
     if (other.size() != size())
       DUNE_THROW(Exceptions::shapes_do_not_match,
@@ -294,7 +294,7 @@ public:
       result_ref[ii] = backend_->operator[](ii) - other.backend_->operator[](ii);
   } // ... sub(...)
 
-  virtual void isub(const ThisType& other) DS_OVERRIDE DS_FINAL
+  virtual void isub(const ThisType& other) override final
   {
     if (other.size() != size())
       DUNE_THROW(Exceptions::shapes_do_not_match,

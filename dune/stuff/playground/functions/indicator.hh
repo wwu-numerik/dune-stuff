@@ -54,18 +54,18 @@ class Indicator< E, D, d, R, 1 >
       , value_(value)
     {}
 
-    virtual size_t order() const DS_OVERRIDE DS_FINAL
+    virtual size_t order() const override final
     {
       return 0;
     }
 
-    virtual void evaluate(const DomainType& xx, RangeType& ret) const DS_OVERRIDE DS_FINAL
+    virtual void evaluate(const DomainType& xx, RangeType& ret) const override final
     {
       assert(this->is_a_valid_point(xx));
       ret = value_;
     }
 
-    virtual void jacobian(const DomainType& xx, JacobianRangeType& ret) const DS_OVERRIDE DS_FINAL
+    virtual void jacobian(const DomainType& xx, JacobianRangeType& ret) const override final
     {
       assert(this->is_a_valid_point(xx));
       ret *= 0.0;
@@ -152,17 +152,17 @@ public:
 
   virtual ~Indicator() {}
 
-  virtual ThisType* copy() const DS_OVERRIDE DS_FINAL
+  virtual ThisType* copy() const override final
   {
     DUNE_THROW(NotImplemented, "");
   }
 
-  virtual std::string name() const DS_OVERRIDE DS_FINAL
+  virtual std::string name() const override final
   {
     return name_;
   }
 
-  virtual std::unique_ptr< LocalfunctionType > local_function(const EntityType& entity) const DS_OVERRIDE DS_FINAL
+  virtual std::unique_ptr< LocalfunctionType > local_function(const EntityType& entity) const override final
   {
     const auto center = entity.geometry().center();
     for (const auto& element : values_)

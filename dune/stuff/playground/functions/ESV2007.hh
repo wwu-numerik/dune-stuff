@@ -169,18 +169,18 @@ class Cutoff
 
     Localfunction& operator=(const Localfunction& /*other*/) = delete;
 
-    virtual size_t order() const DS_OVERRIDE DS_FINAL
+    virtual size_t order() const override final
     {
       return 0;
     }
 
-    virtual void evaluate(const DomainType& UNUSED_UNLESS_DEBUG(xx), RangeType& ret) const DS_OVERRIDE DS_FINAL
+    virtual void evaluate(const DomainType& UNUSED_UNLESS_DEBUG(xx), RangeType& ret) const override final
     {
       assert(this->is_a_valid_point(xx));
       ret[0] = value_;
     }
 
-    virtual void jacobian(const DomainType& UNUSED_UNLESS_DEBUG(xx), JacobianRangeType& ret) const DS_OVERRIDE DS_FINAL
+    virtual void jacobian(const DomainType& UNUSED_UNLESS_DEBUG(xx), JacobianRangeType& ret) const override final
     {
       assert(this->is_a_valid_point(xx));
       ret *= RangeFieldType(0);
@@ -236,17 +236,17 @@ public:
 
   ThisType& operator=(const ThisType& other) = delete;
 
-  virtual ThisType* copy() const DS_OVERRIDE DS_FINAL
+  virtual ThisType* copy() const override final
   {
     return new ThisType(*this);
   }
 
-  virtual std::string name() const DS_OVERRIDE DS_FINAL
+  virtual std::string name() const override final
   {
     return name_;
   }
 
-  virtual std::unique_ptr< LocalfunctionType > local_function(const EntityType& entity) const DS_OVERRIDE DS_FINAL
+  virtual std::unique_ptr< LocalfunctionType > local_function(const EntityType& entity) const override final
   {
     return std::unique_ptr< Localfunction >(new Localfunction(entity,
                                                               diffusion_factor_,

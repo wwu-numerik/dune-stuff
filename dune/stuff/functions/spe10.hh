@@ -151,7 +151,7 @@ public:
                nm)
   {}
 
-  virtual std::string type() const DS_OVERRIDE
+  virtual std::string type() const override
   {
     return BaseType::static_id() + ".spe10.model1";
   }

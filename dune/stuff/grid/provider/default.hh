@@ -39,7 +39,7 @@ public:
 
   virtual ~ConstDefault(){}
 
-  virtual const GridType& grid() const DS_OVERRIDE
+  virtual const GridType& grid() const override
   {
     return grid_;
   }
@@ -85,12 +85,12 @@ public:
 
   virtual ~Default(){}
 
-  virtual GridType& grid() DS_OVERRIDE
+  virtual GridType& grid() override
   {
     return this->storage_access();
   }
 
-  virtual const GridType& grid() const DS_OVERRIDE
+  virtual const GridType& grid() const override
   {
     return this->storage_access();
   }
