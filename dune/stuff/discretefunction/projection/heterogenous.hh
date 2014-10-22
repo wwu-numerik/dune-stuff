@@ -201,7 +201,7 @@ public:
             const auto& source_local_function = source.local_function(ent);
             source_value = source_local_function->evaluate(source_local_point);
             for(int i = 0; i < target_dimRange; ++i, ++k) {
-              target_local_function.vector().add(k, source_value[i]);
+              target_local_function->vector().add(k, source_value[i]);
             }
           }
           else {
