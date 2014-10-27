@@ -63,7 +63,7 @@ public:
     : matrix_(matrix)
   {}
 
-  static std::vector< std::string > options()
+  static std::vector< std::string > types()
   {
     return {
              "lu.partialpiv"
@@ -74,15 +74,16 @@ public:
            , "qr.fullpivhouseholder"
            , "lu.fullpiv"
            };
-  } // ... options()
+  } // ... types()
 
-  static Common::Configuration options(const std::string& type)
+  static Common::Configuration options(const std::string type = "")
   {
-    SolverUtils::check_given(type, options());
+    const std::string tp = !type.empty() ? type : types()[0];
+    SolverUtils::check_given(tp, types());
     Common::Configuration default_options({"type", "post_check_solves_system"},
-                                       {type,   "1e-5"});
+                                          {tp,     "1e-5"});
     // * for symmetric matrices
-    if (type == "ldlt" || type == "llt") {
+    if (tp == "ldlt" || tp == "llt") {
       default_options.set("pre_check_symmetry", "1e-8");
     }
     return default_options;
@@ -92,7 +93,7 @@ public:
   template< class T1, class T2 >
   void apply(const EigenBaseVector< T1, S >& rhs, EigenBaseVector< T2, S >& solution) const
   {
-    apply(rhs, solution, options()[0]);
+    apply(rhs, solution, types()[0]);
   }
 
   template< class T1, class T2 >
@@ -110,7 +111,7 @@ public:
       DUNE_THROW(Exceptions::configuration_error,
                  "Given options (see below) need to have at least the key 'type' set!\n\n" << opts);
     const auto type = opts.get< std::string >("type");
-    SolverUtils::check_given(type, options());
+    SolverUtils::check_given(type, types());
     const Common::Configuration default_opts = options(type);
     // check for symmetry (if solver needs it)
     if (type == "ldlt" || type == "llt") {
@@ -145,7 +146,7 @@ public:
       solution.backend() = matrix_.backend().partialPivLu().solve(rhs.backend());
     else
       DUNE_THROW(Exceptions::internal_error,
-                 "Given type '" << type << "' is not supported, although it was reported by options()!");
+                 "Given type '" << type << "' is not supported, although it was reported by types()!");
     // check
     const S post_check_solves_system_threshold = opts.get("post_check_solves_system",
                                                           default_opts.get< S >("post_check_solves_system"));
@@ -193,7 +194,7 @@ public:
     : matrix_(matrix)
   {}
 
-  static std::vector< std::string > options()
+  static std::vector< std::string > types()
   {
     return { "bicgstab.ilut"
            , "lu.sparse"
@@ -215,32 +216,33 @@ public:
 //           , "superlu"               // <- untested
 //#endif
     };
-  } // ... options()
+  } // ... types()
 
-  static Common::Configuration options(const std::string& type)
+  static Common::Configuration options(const std::string type = "")
   {
+    const std::string tp = !type.empty() ? type : types()[0];
     // check
-    SolverUtils::check_given(type, options());
+    SolverUtils::check_given(tp, types());
     // default config
     Common::Configuration default_options({"type", "post_check_solves_system", "check_for_inf_nan"},
-                                       {type,   "1e-5",                     "1"});
+                                          {tp,     "1e-5",                     "1"});
     Common::Configuration iterative_options({"max_iter", "precision"},
-                                         {"10000",    "1e-10"});
+                                            {"10000",    "1e-10"});
     iterative_options += default_options;
     // direct solvers
-    if (type == "lu.sparse" || type == "qr.sparse" || type == "lu.umfpack" || type == "spqr"
-        || type == "llt.cholmodsupernodal" || type == "superlu")
+    if (tp == "lu.sparse" || tp == "qr.sparse" || tp == "lu.umfpack" || tp == "spqr"
+        || tp == "llt.cholmodsupernodal" || tp == "superlu")
       return default_options;
     // * for symmetric matrices
-    if (type == "ldlt.simplicial" || type == "llt.simplicial") {
+    if (tp == "ldlt.simplicial" || tp == "llt.simplicial") {
       default_options.set("pre_check_symmetry", "1e-8");
       return default_options;
     }
     // iterative solvers
-    if (type == "bicgstab.ilut") {
+    if (tp == "bicgstab.ilut") {
       iterative_options.set("preconditioner.fill_factor", "10");
       iterative_options.set("preconditioner.drop_tol", "1e-4");
-    } else if (type.substr(0, 3) == "cg.")
+    } else if (tp.substr(0, 3) == "cg.")
       iterative_options.set("pre_check_symmetry", "1e-8");
     return iterative_options;
   } // ... options(...)
@@ -248,7 +250,7 @@ public:
   template< class T1, class T2 >
   void apply(const EigenBaseVector< T1, S >& rhs, EigenBaseVector< T2, S >& solution) const
   {
-    apply(rhs, solution, options()[0]);
+    apply(rhs, solution, types()[0]);
   }
 
   template< class T1, class T2 >
@@ -266,7 +268,7 @@ public:
       DUNE_THROW(Exceptions::configuration_error,
                  "Given options (see below) need to have at least the key 'type' set!\n\n" << opts);
     const auto type = opts.get< std::string >("type");
-    SolverUtils::check_given(type, options());
+    SolverUtils::check_given(type, types());
     const Common::Configuration default_opts = options(type);
     // check for symmetry (if solver needs it)
     if (type.substr(0, 3) == "cg." || type == "ldlt.simplicial" || type == "llt.simplicial") {
@@ -447,7 +449,7 @@ public:
 //#endif // HAVE_SUPERLU
     } else
       DUNE_THROW(Exceptions::internal_error,
-                 "Given type '" << type << "' is not supported, although it was reported by options()!");
+                 "Given type '" << type << "' is not supported, although it was reported by types()!");
     // handle eigens info
     if (info != ::Eigen::Success) {
       if (info == ::Eigen::NumericalIssue)
