@@ -25,5 +25,10 @@
 # define DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE 0
 #endif // HAVE_DUNE_FEM
 
+#if HAVE_DUNE_FEM
+# define WITH_DUNE_FEM(expression) expression
+#else
+# define WITH_DUNE_FEM(expression)
+#endif
 
 #endif // DUNE_STUFF_FEM_NAMESPACE_HH
