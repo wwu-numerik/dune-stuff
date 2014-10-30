@@ -63,7 +63,7 @@ void TimingData::stop() {
 TimingData::DeltaType TimingData::delta() const
 {
     const auto weight = 1.0 / double(boost::timer::nanosecond_type(1e6));
-    return std::make_pair((timer_->elapsed().user + timer_->elapsed().system) * weight / double(ThreadManager::current_threads()),
+    return std::make_pair((timer_->elapsed().user + timer_->elapsed().system) * weight / double(threadManager().current_threads()),
                           timer_->elapsed().wall * weight);
 }
 
