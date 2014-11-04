@@ -248,6 +248,7 @@ public:
 
     // finalize functors
     finalize();
+    clear();
   } // ... tbb_walk(...)
 
 #endif // HAVE_TBB
