@@ -36,15 +36,18 @@
 
 #include <map>
 #include <string>
-#include <boost/foreach.hpp>
-#include <boost/format.hpp>
-#include <boost/filesystem.hpp>
-#include <boost/filesystem/fstream.hpp>
-#include <boost/foreach.hpp>
-#include <boost/format.hpp>
-#include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/config.hpp>
-#include <boost/timer/timer.hpp>
+
+#include <dune/stuff/common/disable_warnings.hh>
+# include <boost/foreach.hpp>
+# include <boost/format.hpp>
+# include <boost/filesystem.hpp>
+# include <boost/filesystem/fstream.hpp>
+# include <boost/foreach.hpp>
+# include <boost/format.hpp>
+# include <boost/date_time/posix_time/posix_time.hpp>
+# include <boost/config.hpp>
+# include <boost/timer/timer.hpp>
+#include <dune/stuff/common/reenable_warnings.hh>
 
 
 namespace Dune {
