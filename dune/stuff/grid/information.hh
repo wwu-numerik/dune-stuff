@@ -116,7 +116,7 @@ struct Dimensions
       void operator()(const Entity& ent, const int /*ent_idx*/) {
         const auto& geo = ent.geometry();
         entity_volume_( geo.volume() );
-        entity_width_(entityDiameter(ent));
+        entity_width_(entity_diameter(ent));
         for (int i = 0; i < geo.corners(); ++i)
         {
           const auto& corner( geo.corner(i) );
