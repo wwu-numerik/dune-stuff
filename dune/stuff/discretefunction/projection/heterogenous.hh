@@ -179,8 +179,8 @@ public:
     const auto& space =  target.space();
 
     preprocess(target);
-
-    for(const auto& target_entity : space)
+    const auto interior = space.grid_view().grid().template leafGridView<Interior_Partition>();
+    for(const auto& target_entity : DSC::entityRange(interior))
     {
       auto target_local_function = target.local_discrete_function(target_entity);
       const auto global_quads = global_evaluation_points(space, target_entity);
