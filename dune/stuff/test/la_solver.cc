@@ -56,8 +56,7 @@ struct SolverTest
     // dynamic test
     const SolverType solver(matrix);
     solver.apply(rhs, solution);
-    if (!solution.almost_equal(rhs))
-      DUNE_THROW(Exceptions::results_are_not_as_expected, "Wrong solution!");
+    EXPECT_TRUE(solution.almost_equal(rhs));
     solution.scal(0);
 
     // static tests
@@ -71,13 +70,11 @@ struct SolverTest
 
       // dynamic tests
       solver.apply(rhs, solution, opt);
-      if (!solution.almost_equal(rhs))
-        DUNE_THROW(Exceptions::results_are_not_as_expected, "Wrong solution!");
+      EXPECT_TRUE(solution.almost_equal(rhs));
       solution.scal(0);
 
       solver.apply(rhs, solution, detailed_opts);
-      if (!solution.almost_equal(rhs))
-        DUNE_THROW(Exceptions::results_are_not_as_expected, "Wrong solution!");
+      EXPECT_TRUE(solution.almost_equal(rhs));
     }
   } // ... produces_correct_results(...)
 }; // struct SolverTest
