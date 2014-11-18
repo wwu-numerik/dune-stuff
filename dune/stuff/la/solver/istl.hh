@@ -13,6 +13,7 @@
 # include <dune/istl/operators.hh>
 # include <dune/istl/preconditioners.hh>
 # include <dune/istl/solvers.hh>
+# include <dune/istl/umfpack.hh>
 #endif // HAVE_DUNE_ISTL
 
 #include <dune/stuff/common/exceptions.hh>
@@ -52,6 +53,9 @@ public:
   {
     return { "bicgstab.amg.ilu0"
            , "bicgstab.ilut"
+#if HAVE_UMFPACK
+           , "umfpack"
+#endif
            };
   } // ... options()
 
@@ -75,6 +79,10 @@ public:
     } else if (type == "bicgstab.ilut") {
         iterative_options.set("preconditioner.iterations", "2");
         iterative_options.set("preconditioner.relaxation_factor", "1.0");
+#if HAVE_UMFPACK
+    } else if (type == "umfpack") {
+      iterative_options = Common::Configuration({"post_check_solves_system", "verbose"}, {"1e-5", "0"});
+#endif
     } else
       DUNE_THROW(Exceptions::internal_error,
                  "Given type '" << type << "' is not supported, although it was reported by options()!");
@@ -144,6 +152,13 @@ public:
           DUNE_THROW(Exceptions::linear_solver_failed_bc_it_did_not_converge,
                      "The dune-istl backend reported 'InverseOperatorResult.converged == false'!\n"
                      << "Those were the given options:\n\n" << opts);
+#if HAVE_UMFPACK
+      } else if (type == "umfpack") {
+        UMFPack<typename MatrixType::BackendType> solver(matrix_.backend(),
+                                                         opts.get("verbose", default_opts.get< int >("verbose")));
+        InverseOperatorResult stat;
+        solver.apply(solution.backend(), writable_rhs.backend(), stat);
+#endif
       } else
         DUNE_THROW(Exceptions::internal_error,
                    "Given type '" << type << "' is not supported, although it was reported by options()!");
