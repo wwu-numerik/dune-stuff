@@ -43,7 +43,8 @@ class Expression
   class Localfunction
     : public LocalfunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols >
   {
-    typedef LocalfunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols > BaseType;
+    typedef LocalfunctionInterface
+        < EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols > BaseType;
   public:
     typedef typename BaseType::EntityType EntityType;
 
@@ -175,8 +176,8 @@ class Expression< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim,
   : public GlobalFunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim >
 {
   typedef GlobalFunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim > BaseType;
-  typedef Expression< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, 1 > ThisType;
-  typedef MathExpressionBase < DomainFieldImp, domainDim, RangeFieldImp, rangeDim > MathExpressionFunctionType;
+  typedef Expression< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, 1 >           ThisType;
+  typedef MathExpressionBase < DomainFieldImp, domainDim, RangeFieldImp, rangeDim >  MathExpressionFunctionType;
   typedef MathExpressionBase < DomainFieldImp, domainDim, RangeFieldImp, domainDim > MathExpressionGradientType;
 
 public:
@@ -217,7 +218,8 @@ public:
     }
   } // ... default_config(...)
 
-  static std::unique_ptr< ThisType > create(const Common::Configuration config = default_config(), const std::string sub_name = static_id())
+  static std::unique_ptr< ThisType > create(const Common::Configuration config = default_config(),
+                                            const std::string sub_name = static_id())
   {
     // get correct config
     const Common::Configuration cfg = config.has_sub(sub_name) ? config.sub(sub_name) : config;
@@ -242,6 +244,7 @@ public:
     , name_(nm)
   {
     build_gradients(variable, gradient_expressions);
+    set_state();
   }
 
   Expression(const std::string variable,
@@ -255,6 +258,12 @@ public:
     , name_(nm)
   {
     build_gradients(variable, gradient_expressions);
+    set_state();
+  }
+
+  virtual Common::Configuration state() const override
+  {
+    return state_;
   }
 
   virtual ThisType* copy() const override
@@ -310,6 +319,7 @@ public:
       gradients_[ii]->evaluate(xx, ret[ii]);
     }
   } // ... jacobian(...)
+
 private:
   void build_gradients(const std::string variable,
                        const std::vector< std::vector< std::string > >& gradient_expressions)
@@ -323,10 +333,21 @@ private:
       }
   } // ... build_gradients(...)
 
+  void set_state()
+  {
+    state_.set("variable",   function_->variable());
+    state_.set("expression", function_->expression());
+    state_.set("order",      order_);
+    state_.set("name",       name_);
+    for (size_t ii = 0; ii < gradients_.size(); ++ii)
+      state_.set("gradient_" + DSC::toString(ii), gradients_[ii]->expression());
+  } // ... set_state(...)
+
   std::shared_ptr< const MathExpressionFunctionType > function_;
   size_t order_;
   std::string name_;
   std::vector< std::shared_ptr< const MathExpressionGradientType > > gradients_;
+  Common::Configuration state_;
 }; // class Expression< ..., 1 >
 
 
