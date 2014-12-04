@@ -485,6 +485,16 @@ public:
     return Common::make_unique< Localfunction >(entity, *this);
   }
 
+  virtual std::string type() const override
+  {
+    return "stuff.globalfunction";
+  }
+
+  virtual std::string name() const override
+  {
+    return "stuff.globalfunction";
+  }
+
 private:
   class Localfunction
     : public LocalfunctionType
@@ -606,6 +616,17 @@ public:
   {
     return Common::make_unique< Localfunction >(entity, *this);
   }
+
+  virtual std::string type() const override
+  {
+    return "stuff.globalfunction";
+  }
+
+  virtual std::string name() const override
+  {
+    return "stuff.globalfunction";
+  }
+
 private:
   class Localfunction
     : public LocalfunctionType
