@@ -37,6 +37,7 @@
 #include <dune/pdelab/common/function.hh>
 #endif
 
+#include <dune/stuff/common/configuration.hh>
 #include <dune/stuff/common/exceptions.hh>
 #include <dune/stuff/common/memory.hh>
 
@@ -357,6 +358,15 @@ public:
     return "stuff.function";
   }
   /* @} */
+
+  virtual Common::Configuration state() const
+  {
+    DUNE_THROW(NotImplemented,
+               "This function does not implement state()!\n\n"
+               << "type: " << type() << "\n"
+               << "name: " << name());
+    return Common::Configuration();
+  }
 
   DifferenceType operator-(const ThisType& other) const
   {
