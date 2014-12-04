@@ -430,6 +430,22 @@ std::ostream& operator<<(std::ostream& out,
 } // ... operator<<(...)
 
 
+template< class E, class D, int d, class R, int r, int rC >
+bool operator==(const LocalizableFunctionInterface< E, D, d, R, r, rC >& left,
+                const LocalizableFunctionInterface< E, D, d, R, r, rC >& right)
+{
+  return left.state() == right.state();
+}
+
+
+template< class E, class D, int d, class R, int r, int rC >
+bool operator!=(const LocalizableFunctionInterface< E, D, d, R, r, rC >& left,
+                const LocalizableFunctionInterface< E, D, d, R, r, rC >& right)
+{
+  return !(left == right);
+}
+
+
 template < class OtherEntityImp, class GlobalFunctionImp >
 class TransferredGlobalFunction;
 
