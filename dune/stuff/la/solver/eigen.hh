@@ -12,7 +12,8 @@
 #include <sstream>
 #include <cmath>
 
-#if HAVE_EIGEN
+#include <dune/stuff/common/disable_warnings.hh>
+# if HAVE_EIGEN
 #   include <Eigen/Dense>
 #   include <Eigen/SparseCore>
 #   include <Eigen/IterativeLinearSolvers>
@@ -27,7 +28,8 @@
 //#   if HAVE_SUPERLU
 //#     include <Eigen/SuperLUSupport>
 //#   endif
-#endif // HAVE_EIGEN
+# endif // HAVE_EIGEN
+#include <dune/stuff/common/reenable_warnings.hh>
 
 #include <dune/stuff/common/exceptions.hh>
 #include <dune/stuff/common/configuration.hh>
