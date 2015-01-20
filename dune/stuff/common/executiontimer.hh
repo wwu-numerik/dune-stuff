@@ -9,7 +9,10 @@
 #define __EXECUTIONTIMER_HH__
 
 #include <dune/common/deprecated.hh>
-#include <boost/date_time/posix_time/posix_time.hpp>
+
+#include <dune/stuff/common/disable_warnings.hh>
+# include <boost/date_time/posix_time/posix_time.hpp>
+#include <dune/stuff/common/reenable_warnings.hh>
 
 namespace Dune {
 namespace Stuff {
