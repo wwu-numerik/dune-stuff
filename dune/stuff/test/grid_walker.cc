@@ -7,14 +7,14 @@
 
 #if HAVE_DUNE_GRID
 
-#include <dune/stuff/grid/walker.hh>
-#include <dune/stuff/grid/provider/cube.hh>
-#include <dune/stuff/common/parallel/partitioner.hh>
-#include <dune/stuff/common/logstreams.hh>
+# include <dune/stuff/grid/walker.hh>
+# include <dune/stuff/grid/provider/cube.hh>
+# include <dune/stuff/common/parallel/partitioner.hh>
+# include <dune/stuff/common/logstreams.hh>
 
-#if DUNE_VERSION_NEWER(DUNE_COMMON,3,9) && HAVE_TBB //EXADUNE
-# include <dune/grid/utility/partitioning/seedlist.hh>
-#endif
+# if DUNE_VERSION_NEWER(DUNE_COMMON,3,9) && HAVE_TBB // EXADUNE
+#   include <dune/grid/utility/partitioning/seedlist.hh>
+# endif
 
 using namespace Dune::Stuff;
 using namespace Dune::Stuff::Common;
@@ -45,7 +45,7 @@ struct GridWalkerTest : public ::testing::Test
     auto test1 = [&]{ walker.add(counter); walker.walk(false); };
     auto test2 = [&]{ walker.add(counter); walker.walk(true); };
     list<function<void()>> tests({ test1, test2 });
-  #if DUNE_VERSION_NEWER(DUNE_COMMON,3,9) //EXADUNE
+# if DUNE_VERSION_NEWER(DUNE_COMMON,3,9) // EXADUNE
     auto test3 = [&]{
                     IndexSetPartitioner<GridViewType> partitioner(gv.grid().leafIndexSet());
                     Dune::SeedListPartitioning<GridType, 0> partitioning(gv, partitioner);
@@ -53,7 +53,7 @@ struct GridWalkerTest : public ::testing::Test
                     walker.walk(partitioning);
                   };
     tests.push_back(test3);
-  #endif // DUNE_VERSION_NEWER(DUNE_COMMON,3,9) && HAVE_TBB
+# endif // DUNE_VERSION_NEWER(DUNE_COMMON,3,9) // EXADUNE
 
     for (const auto& test : tests) {
       count = 0;
@@ -68,6 +68,6 @@ TYPED_TEST(GridWalkerTest, Misc) {
   this->check();
 }
 
-#endif // #if HAVE_DUNE_GRID
+# endif // HAVE_DUNE_GRID
 
 
