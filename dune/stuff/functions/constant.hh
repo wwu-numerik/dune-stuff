@@ -150,14 +150,14 @@ public:
           cfg.get("name",   default_cfg.get< std::string >("name")));
   } // ... create(...)
 
-  explicit Constant(const RangeType& constant, const std::string name = static_id())
+  explicit Constant(const RangeType& constant, const std::string name_in = static_id())
     : constant_(constant)
-    , name_(name)
+    , name_(name_in)
   {}
 
-  explicit Constant(const RangeFieldImp& constant, const std::string name = static_id())
+  explicit Constant(const RangeFieldImp& constant, const std::string name_in = static_id())
     : constant_(constant)
-    , name_(name)
+    , name_(name_in)
   {}
 
   Constant(const ThisType& other) = default;

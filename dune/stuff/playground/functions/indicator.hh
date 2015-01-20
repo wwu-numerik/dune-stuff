@@ -139,15 +139,15 @@ public:
   } // ... create(...)
 
   Indicator(const std::vector< std::tuple< DomainType, DomainType, R > >& values,
-            const std::string name = "indicator")
+            const std::string name_in = "indicator")
     : values_(values)
-    , name_(name)
+    , name_(name_in)
   {}
 
   Indicator(const std::vector< std::pair< std::pair< Common::FieldVector< D, d >, Common::FieldVector< D, d > >, R > >& values,
-            const std::string name = "indicator")
+            const std::string name_in = "indicator")
     : values_(convert(values))
-    , name_(name)
+    , name_(name_in)
   {}
 
   virtual ~Indicator() {}

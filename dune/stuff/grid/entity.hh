@@ -64,9 +64,10 @@ void printEntity(const EntityType& entity,
 
 
 #if HAVE_DUNE_GRID
+
 template< int codim, int worlddim, class GridImp, template< int, int, class > class EntityImp >
-double entityDiameter(const Dune::Entity< codim, worlddim, GridImp, EntityImp >& entity) {
-  auto min_dist = std::numeric_limits<typename GridImp::ctype>::max();
+double entity_diameter(const Dune::Entity< codim, worlddim, GridImp, EntityImp >& entity) {
+  auto max_dist = std::numeric_limits<typename GridImp::ctype>::min();
   const auto& geometry = entity.geometry();
   for (int i=0; i < geometry.corners(); ++i)
   {
@@ -75,12 +76,17 @@ double entityDiameter(const Dune::Entity< codim, worlddim, GridImp, EntityImp >&
     {
       auto xj = geometry.corner(j);
       xj -= xi;
-      min_dist = std::min(min_dist, xj.two_norm());
+      max_dist = std::max(max_dist, xj.two_norm());
     }
   }
-  return min_dist;
-} // geometryDiameter
+  return max_dist;
+} // entity_diameter
 
+template< int codim, int worlddim, class GridImp, template< int, int, class > class EntityImp >
+double DUNE_DEPRECATED_MSG("use entity_diameter instead, but: changed meaning from min conerdistance to max corner distance")
+entityDiameter(const Dune::Entity< codim, worlddim, GridImp, EntityImp >& entity) {
+  return entity_diameter(entity);
+} //entityDiameter
 
 #endif // HAVE_DUNE_GRID
 
