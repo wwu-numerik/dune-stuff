@@ -260,9 +260,12 @@ class ProviderInterface
 public:
   using typename BaseType::GridType;
   using typename BaseType::LevelGridViewType;
-  using typename BaseType::LevelGridPartType;
   using typename BaseType::LeafGridViewType;
+
+#if HAVE_DUNE_FEM
+  using typename BaseType::LevelGridPartType;
   using typename BaseType::LeafGridPartType;
+#endif
 
   static const std::string static_id()
   {
