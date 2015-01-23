@@ -28,9 +28,7 @@ namespace Grid {
 enum class ChoosePartView
 {
     view
-#if HAVE_DUNE_FEM
   , part
-#endif
 }; // enum class ChoosePartView
 
 
