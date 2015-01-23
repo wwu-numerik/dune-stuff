@@ -657,6 +657,25 @@ class EigenDenseMatrix{ static_assert(Dune::AlwaysFalse< ScalarImp >::value, "Yo
 #endif // HAVE_EIGEN
 
 } // namespace LA
+namespace Common {
+
+#if HAVE_EIGEN
+
+
+template< class T >
+struct VectorAbstraction< LA::EigenDenseVector< T > >
+  : public LA::internal::VectorAbstractionBase< LA::EigenDenseVector< T > >
+{};
+
+template< class T >
+struct VectorAbstraction< LA::EigenMappedDenseVector< T > >
+  : public LA::internal::VectorAbstractionBase< LA::EigenMappedDenseVector< T > >
+{};
+
+
+#endif // HAVE_EIGEN
+
+} // namespace Common
 } // namespace Stuff
 } // namespace Dune
 
