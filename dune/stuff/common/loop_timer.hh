@@ -10,7 +10,10 @@
 #include "profiler.hh"
 
 #include <dune/common/exceptions.hh>
-#include <boost/date_time/posix_time/posix_time.hpp>
+
+#include <dune/stuff/common/disable_warnings.hh>
+# include <boost/date_time/posix_time/posix_time.hpp>
+#include <dune/stuff/common/reenable_warnings.hh>
 
 namespace Dune {
 namespace Stuff {

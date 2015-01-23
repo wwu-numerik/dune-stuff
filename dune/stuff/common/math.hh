@@ -17,15 +17,17 @@
 
 #include <dune/common/deprecated.hh>
 
-#include <boost/static_assert.hpp>
-#include <boost/fusion/include/void.hpp>
-#include <boost/format.hpp>
-#include <boost/accumulators/accumulators.hpp>
-#include <boost/accumulators/statistics/stats.hpp>
-#include <boost/accumulators/statistics/max.hpp>
-#include <boost/accumulators/statistics/min.hpp>
-#include <boost/accumulators/statistics/mean.hpp>
-#include <boost/math/special_functions/fpclassify.hpp>
+#include <dune/stuff/common/disable_warnings.hh>
+# include <boost/static_assert.hpp>
+# include <boost/fusion/include/void.hpp>
+# include <boost/format.hpp>
+# include <boost/accumulators/accumulators.hpp>
+# include <boost/accumulators/statistics/stats.hpp>
+# include <boost/accumulators/statistics/max.hpp>
+# include <boost/accumulators/statistics/min.hpp>
+# include <boost/accumulators/statistics/mean.hpp>
+# include <boost/math/special_functions/fpclassify.hpp>
+#include <dune/stuff/common/reenable_warnings.hh>
 
 #include <dune/stuff/common/type_utils.hh>
 

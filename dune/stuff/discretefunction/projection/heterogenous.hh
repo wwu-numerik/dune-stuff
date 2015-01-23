@@ -151,14 +151,14 @@ protected:
 #if HAVE_DUNE_GDT
 
 template< class ImpTraits, int domainDim, class RangeFieldImp, int rangeDim >
-std::vector<typename GDT::Spaces::ContinuousLagrangeBase< ImpTraits, domainDim, RangeFieldImp, rangeDim, 1 >::DomainType>
-global_evaluation_points(const GDT::Spaces::ContinuousLagrangeBase< ImpTraits, domainDim, RangeFieldImp, rangeDim, 1 >& space,
-         const typename GDT::Spaces::ContinuousLagrangeBase< ImpTraits, domainDim, RangeFieldImp, rangeDim, 1 >::EntityType& target_entity)
+std::vector<typename GDT::Spaces::CGInterface< ImpTraits, domainDim, RangeFieldImp, rangeDim, 1 >::DomainType>
+global_evaluation_points(const GDT::Spaces::CGInterface< ImpTraits, domainDim, RangeFieldImp, rangeDim, 1 >& space,
+         const typename GDT::Spaces::CGInterface< ImpTraits, domainDim, RangeFieldImp, rangeDim, 1 >::EntityType& target_entity)
 {
   const auto& target_lagrangepoint_set = space.lagrange_points(target_entity);
   const auto& target_geometry = target_entity.geometry();
   const auto quadNop = target_lagrangepoint_set.size();
-  std::vector<typename GDT::Spaces::ContinuousLagrangeBase< ImpTraits, domainDim, RangeFieldImp, rangeDim, 1 >::DomainType> points(quadNop);
+  std::vector<typename GDT::Spaces::CGInterface< ImpTraits, domainDim, RangeFieldImp, rangeDim, 1 >::DomainType> points(quadNop);
   for(size_t qP = 0; qP < quadNop ; ++qP) {
     points[qP] = target_geometry.global(target_lagrangepoint_set[qP]);
   }

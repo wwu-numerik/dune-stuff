@@ -8,10 +8,11 @@
 #ifndef DUNE_STUFF_LA_CONTAINER_COMMON_HH
 #define DUNE_STUFF_LA_CONTAINER_COMMON_HH
 
+#include <cmath>
+#include <initializer_list>
 #include <memory>
 #include <type_traits>
 #include <vector>
-#include <initializer_list>
 
 #include <boost/numeric/conversion/cast.hpp>
 
@@ -572,6 +573,19 @@ public:
     backend_->operator[](jj)[jj] = ScalarType(1);
   } // ... unit_col(...)
 
+  bool valid() const
+  {
+    for (size_t ii = 0; ii < rows(); ++ii) {
+      const auto& row_vec = backend_->operator[](ii);
+      for (size_t jj = 0; jj < cols(); ++jj) {
+        const auto& entry = row_vec[jj];
+        if (std::isnan(entry) || std::isinf(entry))
+          return false;
+      }
+    }
+    return true;
+  } // ... valid(...)
+
   /**
    * \}
    */
@@ -591,6 +605,16 @@ private:
 
 
 } // namespace LA
+namespace Common {
+
+
+template< class T >
+struct VectorAbstraction< LA::CommonDenseVector< T > >
+  : public LA::internal::VectorAbstractionBase< LA::CommonDenseVector< T > >
+{};
+
+
+} // namespace Common
 } // namespace Stuff
 } // namespace Dune
 

@@ -10,10 +10,12 @@
 
 #include <memory>
 
-#if HAVE_EIGEN
-# include <Eigen/IterativeLinearSolvers>
-# include <Eigen/SparseCholesky>
-#endif
+#include <dune/stuff/common/disable_warnings.hh>
+# if HAVE_EIGEN
+#   include <Eigen/IterativeLinearSolvers>
+#   include <Eigen/SparseCholesky>
+# endif
+#include <dune/stuff/common/reenable_warnings.hh>
 
 #include <dune/fem/function/adaptivefunction/adaptivefunction.hh>
 #include <dune/fem/solver/oemsolver.hh>
