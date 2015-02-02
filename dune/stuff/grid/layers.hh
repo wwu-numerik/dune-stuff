@@ -257,7 +257,7 @@ struct LayerView< GridType, ChooseLayer::level >
 #if HAVE_DUNE_FEM
 
 /**
- * \brief Allows to statically creates a leaf or level part or view (leaf part variant, only from a non-const grid).
+ * \brief Allows to statically create a leaf or level part or view (leaf part variant, only from a non-const grid).
  */
 template< class GridType >
 struct Layer< GridType, ChooseLayer::leaf, ChoosePartView::part >
@@ -287,7 +287,7 @@ struct Layer< GridType, ChooseLayer::leaf, ChoosePartView::part >
 #endif // HAVE_DUNE_FEM
 
 /**
- * \brief Allows to statically creates a leaf or level part or view (leaf view variant).
+ * \brief Allows to statically create a leaf or level part or view (leaf view variant).
  */
 template< class GridType >
 struct Layer< GridType, ChooseLayer::leaf, ChoosePartView::view >
@@ -303,7 +303,7 @@ struct Layer< GridType, ChooseLayer::leaf, ChoosePartView::view >
 #if HAVE_DUNE_FEM
 
 /**
- * \brief Allows to statically creates a leaf or level part or view (level part variant, only from a non-const grid).
+ * \brief Allows to statically create a leaf or level part or view (level part variant, only from a non-const grid).
  */
 template< class GridType >
 struct Layer< GridType, ChooseLayer::level, ChoosePartView::part >
@@ -333,7 +333,7 @@ struct Layer< GridType, ChooseLayer::level, ChoosePartView::part >
 #endif // HAVE_DUNE_FEM
 
 /**
- * \brief Allows to statically creates a leaf or level part or view (leaf view variant).
+ * \brief Allows to statically create a leaf or level part or view (leaf view variant).
  */
 template< class GridType >
 struct Layer< GridType, ChooseLayer::level, ChoosePartView::view >
