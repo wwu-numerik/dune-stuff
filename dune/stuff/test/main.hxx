@@ -70,6 +70,14 @@ std::vector< double >
 } // ... truncate_vector(...)
 
 
+size_t dsc_grid_elements()
+{
+  return DSC_CONFIG.has_key("test.gridelements")                                              // <- doing this so complicated to
+         ? DSC_CONFIG.get< size_t >("test.gridelements", 3u, DSC::ValidateLess< size_t >(2u)) //    silence the WARNING: ...
+         : 3u;
+} // ... dsc_grid_elements(...)
+
+
 int main(int argc, char** argv)
 {
 #if DUNE_STUFF_TEST_MAIN_CATCH_EXCEPTIONS
@@ -126,7 +134,3 @@ int main(int argc, char** argv)
   } // try
 #endif // DUNE_STUFF_TEST_MAIN_CATCH_EXCEPTIONS
 } // ... main(...)
-
-size_t dsc_grid_elements() {
-  return DSC_CONFIG.get<size_t>("test.gridelements", 3u, DSC::ValidateLess<size_t>(2u));
-}
