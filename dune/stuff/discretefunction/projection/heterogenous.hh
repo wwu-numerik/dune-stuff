@@ -250,7 +250,7 @@ protected:
 
     for (auto& entity : DSC::entityRange(gridPart.grid().leafGridView())) {
       const auto number_of_nodes_in_entity = entity.template count<GridType::dimension>();
-      for (decltype(number_of_nodes_in_entity) i = 0; i < number_of_nodes_in_entity; ++i) {
+      for (auto i : DSC::valueRange(number_of_nodes_in_entity)) {
         const auto node = entity.template subEntity<GridType::dimension>(i);
         const auto global_index_node = indexSet.index(*node);
 
