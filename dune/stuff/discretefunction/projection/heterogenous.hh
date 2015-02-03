@@ -96,7 +96,7 @@ public:
       const auto evaluation_entity_ptrs = search(global_quads);
       assert(evaluation_entity_ptrs.size() >= global_quads.size());
 
-      int k = 0;
+      size_t k = 0;
       typename TargetDiscreteFunctionSpaceType::RangeType source_value;
       for(size_t qP = 0; qP < global_quads.size() ; ++qP)
       {
@@ -110,7 +110,7 @@ public:
             const auto& source_local_point = source_geometry.local(global_point);
             const auto& source_local_function = source.localFunction(*source_entity_ptr);
             source_local_function.evaluate(source_local_point, source_value);
-            for(int i = 0; i < target_dimRange; ++i, ++k)
+            for(size_t i = 0; i < target_dimRange; ++i, ++k)
               setDofValue(target_local_function[k], source_value[i]);
           }
           else {
@@ -187,7 +187,7 @@ public:
       const auto evaluation_entity_ptrs = search(global_quads);
       assert(evaluation_entity_ptrs.size() >= global_quads.size());
 
-      int k = 0;
+      size_t k = 0;
       typename GDT::DiscreteFunction< SourceSpaceImp, SourceVectorImp >::RangeType source_value;
       for(size_t qP = 0; qP < global_quads.size() ; ++qP)
       {
@@ -200,7 +200,7 @@ public:
             const auto& ent = *source_entity_ptr;
             const auto& source_local_function = source.local_function(ent);
             source_value = source_local_function->evaluate(source_local_point);
-            for(int i = 0; i < target_dimRange; ++i, ++k) {
+            for(size_t i = 0; i < target_dimRange; ++i, ++k) {
               target_local_function->vector().add(k, source_value[i]);
             }
           }
@@ -229,7 +229,7 @@ protected:
   template<class TargetSpaceImp, class VectorImp>
   static void postprocess(GDT::DiscreteFunction< TargetSpaceImp, VectorImp >& func) {
     // compute node to entity relations
-    constexpr static int dimension = TargetSpaceImp::GridViewType::Grid::dimension;
+    constexpr static size_t dimension = TargetSpaceImp::GridViewType::Grid::dimension;
     std::vector<int> nodeToEntity(func.space().grid_view().grid().size(dimension), 0);
     identifySharedNodes(func.space().grid_view(), nodeToEntity);
 
@@ -249,8 +249,8 @@ protected:
     const auto& indexSet = gridPart.indexSet();
 
     for (auto& entity : DSC::entityRange(gridPart.grid().leafGridView())) {
-      int number_of_nodes_in_entity = entity.template count<GridType::dimension>();
-      for (int i = 0; i < number_of_nodes_in_entity; ++i) {
+      const auto number_of_nodes_in_entity = entity.template count<GridType::dimension>();
+      for (decltype(number_of_nodes_in_entity) i = 0; i < number_of_nodes_in_entity; ++i) {
         const auto node = entity.template subEntity<GridType::dimension>(i);
         const auto global_index_node = indexSet.index(*node);
 
