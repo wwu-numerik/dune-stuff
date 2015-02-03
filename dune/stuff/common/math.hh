@@ -68,7 +68,7 @@ static double colonProduct(const SomeRangeType& arg1,
                            const OtherRangeType& arg2) {
   static_assert(SomeRangeType::cols == SomeRangeType::rows
                      && OtherRangeType::cols == OtherRangeType::rows
-                     && int(OtherRangeType::cols) == int(SomeRangeType::rows), "RangeTypes_dont_fit");
+                     && ssize_t(OtherRangeType::cols) == ssize_t(SomeRangeType::rows), "RangeTypes_dont_fit");
 
   double ret = 0.0;
   // iterators
