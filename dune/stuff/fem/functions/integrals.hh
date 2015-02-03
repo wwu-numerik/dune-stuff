@@ -10,6 +10,8 @@
 
 #if HAVE_DUNE_FEM
 
+#include <boost/numeric/conversion/cast.hpp>
+
 #include <dune/fem/quadrature/cachingquadrature.hh>
 #include <dune/fem/function/common/discretefunction.hh>
 
@@ -74,7 +76,7 @@ integralAndVolume(const Dune::Fem::DiscreteFunctionInterface<FunctionTraits>& fu
   const auto& quadrature = make_quadrature(entity, function.space(), order);
 
   const auto& geometry = entity.geometry();
-  const int quadNop = quadrature.nop();
+  const auto quadNop = quadrature.nop();
 
   std::vector<RangeType> evals(quadNop);
   const auto localFunction = function.localFunction(entity);
@@ -107,7 +109,7 @@ integralAndVolume(const Dune::Fem::DiscreteFunctionInterface<FunctionTraits>& fu
   const auto& quadrature = make_quadrature(intersection, function.space(), order, inside);
 
   const auto& geometry = intersection.geometry();
-  const int quadNop = quadrature.nop();
+  const auto quadNop = quadrature.nop();
 
   const auto entityPtr = (inside) ? intersection.inside() : intersection.outside();
   const auto& entity = *entityPtr;
@@ -265,7 +267,7 @@ double boundaryIntegral(const FunctionType& function,
   double integral_value = 0;
   double total_volume = 0;
   typename DiscreteFunctionSpaceType::RangeType ret(0.0);
-  const int quadOrd = std::max(2 * space.order() + 2, polOrd);
+  const auto quadOrd = boost::numeric_cast< int >(std::max(2 * space.order() + 2, polOrd));
   // create local mass matrix object
   LocalMassMatrixType massMatrix(space, quadOrd);
   // check whether geometry mappings are affine or not
@@ -286,8 +288,8 @@ double boundaryIntegral(const FunctionType& function,
                                   *intIt,
                                   quadOrd,
                                   QuadratureType::INSIDE);
-        const int quadNop = quad.nop();
-        for (int qP = 0; qP < quadNop; ++qP)
+        const auto quadNop = quad.nop();
+        for (decltype(quadNop) qP = 0; qP < quadNop; ++qP)
         {
           const double intel = (affineMapping) ?
                                quad.weight(qP) : // affine case
