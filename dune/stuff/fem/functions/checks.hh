@@ -22,6 +22,7 @@
 #include <dune/stuff/common/misc.hh>
 #include <dune/stuff/common/math.hh>
 #include <dune/stuff/common/string.hh>
+#include <dune/stuff/common/ranges.hh>
 
 namespace Dune {
 namespace Stuff {
@@ -128,9 +129,9 @@ bool FunctionContainsNanOrInf(const LeakPointerType function, size_t size) {
 //! return true if any entry is nan or inf
 template< class MatrixType >
 bool MatrixContainsNanOrInf(const MatrixType& matrix) {
-  for (decltype(matrix.rows()) row = 0; row < matrix.rows(); ++row)
+  for (auto row : DSC::valueRange(matrix.rows()))
   {
-    for (decltype(matrix.cols()) col = 0; col < matrix.cols(); ++col)
+    for (auto col DSC::valueRange(matrix.cols()))
     {
       if ( std::isnan( matrix(row, col) ) || std::isinf( matrix(row, col) ) )
         return true;
