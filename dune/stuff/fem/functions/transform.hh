@@ -6,6 +6,9 @@
 #ifndef STUFF_FUNCTION_TRANSFORM_HH
 #define STUFF_FUNCTION_TRANSFORM_HH
 
+#include <dune/stuff/common/ranges.hh>
+#include <dune/stuff/aliases.hh>
+
 namespace Dune {
 namespace Stuff {
 namespace Fem {
@@ -17,7 +20,7 @@ void DiagonalMult(const Matrix& matrix, Function& f) {
   matrix.getDiag(diag);
   auto diag_it = diag.dbegin();
   auto f_it = f.dbegin();
-  for (decltype(matrix.size(0)) row = 0; row < matrix.size(0); row++)
+  for (auto row : DSC::valueRange(matrix.size(0)))
   {
     (*f_it) *= (*diag_it);
     ++f_it;
@@ -55,7 +58,7 @@ void switchDofs(Function& f) {
   auto front = f.dbegin();
   auto back = f.dend();
   const auto numdofs = f.size();
-  for (decltype(numdofs) i = 0; i < numdofs / 2; ++i)
+  for (auto i : DSC::valueRange(numdofs / 2))
   {
     auto tmp = *back;
     *back = *front;
