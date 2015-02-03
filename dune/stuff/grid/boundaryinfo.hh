@@ -508,7 +508,7 @@ private:
     std::vector< WorldType > ret;
     if (config.has_sub(key)) {
       bool found = true;
-      unsigned int counter = 0;
+      size_t counter = 0;
       while (found) {
         const std::string localKey = key + "." + Dune::Stuff::Common::toString(counter);
         if (config.has_key(localKey))
