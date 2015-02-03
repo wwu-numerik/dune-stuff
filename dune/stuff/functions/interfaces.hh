@@ -200,15 +200,10 @@ class LocalfunctionInterface
 public:
   typedef EntityImp EntityType;
 
-  typedef typename BaseType::DomainFieldType  DomainFieldType;
-  static const unsigned int                   dimDomain = BaseType::dimDomain;
-  typedef typename BaseType::DomainType       DomainType;
-
-  typedef typename BaseType::RangeFieldType RangeFieldType;
-  static const unsigned int                 dimRange = BaseType::dimRange;
-  static const unsigned int                 dimRangeCols = BaseType::dimRangeCols;
-  typedef typename BaseType::RangeType      RangeType;
-
+  typedef typename BaseType::DomainFieldType   DomainFieldType;
+  static const unsigned int                    dimDomain = BaseType::dimDomain;
+  typedef typename BaseType::DomainType        DomainType;
+  typedef typename BaseType::RangeType         RangeType;
   typedef typename BaseType::JacobianRangeType JacobianRangeType;
 
   LocalfunctionInterface(const EntityType& ent)
@@ -437,15 +432,8 @@ class GlobalFunctionInterface
       ThisType;
 public:
   typedef typename BaseType::LocalfunctionType LocalfunctionType;
-  typedef typename BaseType::DomainFieldType DomainFieldType;
-  static const unsigned int                  dimDomain = BaseType::dimDomain;
-  typedef typename BaseType::DomainType      DomainType;
-
-  typedef typename BaseType::RangeFieldType  RangeFieldType;
-  static const unsigned int                  dimRange = BaseType::dimRange;
-  static const unsigned int                  dimRangeCols = BaseType::dimRangeCols;
-  typedef typename BaseType::RangeType       RangeType;
-
+  typedef typename BaseType::DomainType        DomainType;
+  typedef typename BaseType::RangeType         RangeType;
   typedef typename BaseType::JacobianRangeType JacobianRangeType;
 
   virtual ~GlobalFunctionInterface() {}
@@ -562,20 +550,13 @@ class GlobalFunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldI
   typedef GlobalFunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, 1 > ThisType;
 public:
   typedef typename BaseType::LocalfunctionType LocalfunctionType;
-  typedef typename BaseType::DomainFieldType DomainFieldType;
-  static const unsigned int                  dimDomain = BaseType::dimDomain;
-  typedef typename BaseType::DomainType      DomainType;
-
-  typedef typename BaseType::RangeFieldType  RangeFieldType;
-  static const unsigned int                  dimRange = BaseType::dimRange;
-  static const unsigned int                  dimRangeCols = BaseType::dimRangeCols;
-  typedef typename BaseType::RangeType       RangeType;
-
+  typedef typename BaseType::DomainType        DomainType;
+  typedef typename BaseType::RangeType         RangeType;
 #if HAVE_DUNE_FEM
   typedef typename Dune::Fem::Function
       < Dune::Fem::FunctionSpace< DomainFieldImp, RangeFieldImp, domainDim, rangeDim >
       , GlobalFunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, 1 > >::JacobianRangeType
-    JacobianRangeType;
+                                               JacobianRangeType;
 #else
   typedef typename BaseType::JacobianRangeType JacobianRangeType;
 #endif
