@@ -76,11 +76,11 @@ void getMinMaxOfDiscreteFunction(const FunctionType& function,
 
 //! count dofs of f1,f2 with abs(f1[i] - f2[i]) > tolerance
 template< class FunctionType >
-unsigned int getNumDiffDofs(const FunctionType& f1,
+size_t getNumDiffDofs(const FunctionType& f1,
                             const FunctionType& f2,
                             const double tolerance) {
   assert( f1.size() == f2.size() ); // should be implicit cause they're of the same type...
-  unsigned int numDiffs = 0;
+  size_t numDiffs = 0;
   auto itEnd = f1.dend();
   auto f2it = f2.dbegin();
   for (auto f1it = f1.dbegin(); f1it != itEnd; ++f1it, ++f2it)
@@ -95,7 +95,7 @@ unsigned int getNumDiffDofs(const FunctionType& f1,
 template< class Function >
 typename Function::FieldType getFuncAvg(const Function& f) {
   auto it = f.dbegin();
-  const unsigned int numdofs = f.size();
+  const auto numdofs = f.size();
   typename Function::FieldType sum = 0;
   for ( ; it != f.dend(); ++it)
     sum += *it;
