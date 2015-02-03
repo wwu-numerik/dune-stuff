@@ -58,7 +58,7 @@ typedef Dune::tuple< double
 
 
 //! where sleep only counts toward wall time, this wastes actual cpu time
-void busywait(const int ms);
+void busywait(const size_t ms);
 
 
 namespace Dune {
