@@ -49,8 +49,7 @@ class Checkerboard
 
     typedef typename BaseType::JacobianRangeType JacobianRangeType;
 
-    Localfunction(const EntityType& ent,
-                  const RangeType value)
+    Localfunction(const EntityType& ent, const RangeType value)
       : BaseType(ent)
       , value_(value)
     {}
