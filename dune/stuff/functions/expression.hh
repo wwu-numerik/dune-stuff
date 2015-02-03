@@ -47,10 +47,7 @@ class Expression
   public:
     typedef typename BaseType::EntityType EntityType;
 
-    typedef typename BaseType::DomainFieldType  DomainFieldType;
-    static const unsigned int                   dimDomain = BaseType::dimDomain;
-    typedef typename BaseType::DomainType       DomainType;
-
+    typedef typename BaseType::DomainType     DomainType;
     typedef typename BaseType::RangeFieldType RangeFieldType;
     static const unsigned int                 dimRange = BaseType::dimRange;
     static const unsigned int                 dimRangeCols = BaseType::dimRangeCols;
@@ -103,15 +100,6 @@ class Expression
 public:
   typedef typename BaseType::EntityType         EntityType;
   typedef typename BaseType::LocalfunctionType  LocalfunctionType;
-
-  typedef typename BaseType::DomainFieldType  DomainFieldType;
-  static const unsigned int                   dimDomain = BaseType::dimDomain;
-  typedef typename BaseType::DomainType       DomainType;
-
-  typedef typename BaseType::RangeFieldType     RangeFieldType;
-  static const unsigned int                     dimRange = BaseType::dimRange;
-  static const unsigned int                     dimRangeCols = BaseType::dimRangeCols;
-  typedef typename LocalfunctionType::RangeType RangeType;
 
   static std::string static_id()
   {
@@ -183,14 +171,11 @@ public:
   typedef typename BaseType::EntityType         EntityType;
   typedef typename BaseType::LocalfunctionType  LocalfunctionType;
 
-  typedef typename BaseType::DomainFieldType DomainFieldType;
-  static const unsigned int                  dimDomain = BaseType::dimDomain;
-  typedef typename BaseType::DomainType      DomainType;
+  static const unsigned int             dimDomain = BaseType::dimDomain;
+  typedef typename BaseType::DomainType DomainType;
 
-  typedef typename BaseType::RangeFieldType RangeFieldType;
-  static const unsigned int                 dimRange = BaseType::dimRange;
-  static const unsigned int                 dimRangeCols = BaseType::dimRangeCols;
-  typedef typename BaseType::RangeType      RangeType;
+  static const unsigned int             dimRange = BaseType::dimRange;
+  typedef typename BaseType::RangeType  RangeType;
 
   typedef typename BaseType::JacobianRangeType JacobianRangeType;
 
