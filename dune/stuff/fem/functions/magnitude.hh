@@ -18,6 +18,7 @@
 
 #include <dune/stuff/fem/customprojection.hh>
 #include <dune/stuff/common/debug.hh>
+#include <dune/stuff/common/ranges.hh>
 #include <dune/stuff/fem/localmassmatrix.hh>
 #include <dune/stuff/aliases.hh>
 #include <dune/stuff/fem/namespace.hh>
@@ -64,9 +65,8 @@ public:
       const QuadratureType quad(en, quadOrd);
       auto lf = magnitude_disretefunction_.localFunction(en);
       const auto& baseset = lf.baseFunctionSet();
-      const auto quadNop = quad.nop();
       const auto numDofs = lf.numDofs();
-      for (decltype(quadNop) qP = 0; qP < quadNop; ++qP)
+      for (auto qP : DSC::valueRange(quad.nop()))
       {
         const double intel = (affineMapping) ?
                              quad.weight(qP) :    // affine case
@@ -75,7 +75,7 @@ public:
         typename DiscreteFunctionType::RangeType val;
         _discreteFunction.localFunction(en).evaluate(quad.point(qP), val);
         ret = val.two_norm();
-        for (decltype(numDofs) i = 0; i < numDofs; ++i)
+        for (auto i : DSC::valueRange(numDofs))
         {
           baseset.evaluate(i, quad[qP], phi);
           lf[i] += intel * (ret * phi);
