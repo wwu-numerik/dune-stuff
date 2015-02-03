@@ -29,7 +29,7 @@ class GlobalLambdaFunction
       BaseType;
 public:
   typedef typename BaseType::DomainType DomainType;
-  typedef typename BaseType::RangeType RangeType;
+  typedef typename BaseType::RangeType  RangeType;
 
 private:
   typedef std::function< RangeType(DomainType) > LambdaType;
