@@ -28,7 +28,7 @@ typedef testing::Types< SGrid<1,1>, SGrid<2,2>, SGrid<3,3>, SGrid<4,4>
 template < class T >
 struct CornerRangeTest : public ::testing::Test
 {
-  static const unsigned int level = 4;
+  static const size_t level = 4;
   typedef T GridType;
   static const int dim_grid = GridType::dimension;
   const DSG::Providers::Cube<GridType> grid_prv;
