@@ -36,7 +36,7 @@ TEST(Color, All) {
   std::cout << StreamModifiers::underline << "a highlighted 'hello world'-template only showing two levels: " << StreamModifiers::endunderline
             << highlightTemplate("Hello< World, Hello< World, Hello< World< Hello, World > > > >", 2) << std::endl;
   std::cout << StreamModifiers::underline << "colored 'hello world' for all available colors( 0 - 255): " << StreamModifiers::endunderline << std::endl;
-  for (int i = 0; i < 256; ++i)
+  for (size_t i = 0; i < 256; ++i)
     std::cout << highlightString("hello world - ", i);
   std::cout << std::endl;
 } // main
