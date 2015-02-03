@@ -84,7 +84,7 @@ void setMatrixDiag(MatrixType& matrix, DiscFuncType& diag) {
   //! the size of the matrix
   DofIteratorType it = diag.dbegin();
 
-  for (int row = 0; row < matrix.rows(); row++)
+  for (size_t row = 0; row < matrix.rows(); row++)
   {
     if (*it != 0.0)
       matrix.set(row, row, *it);
@@ -99,9 +99,9 @@ bool areTransposed(const MatrixType& a, const MatrixType& b, const double tolera
   if ( ( a.rows() != b.cols() ) || ( b.rows() != a.cols() ) )
     return false;
 
-  for (int row = 0; row < a.rows(); ++row)
+  for (decltype(a.rows()) row = 0; row < a.rows(); ++row)
   {
-    for (int col = 0; col < a.cols(); ++col)
+    for (decltype(a.cols()) col = 0; col < a.cols(); ++col)
     {
       if (std::fabs( a(row, col) - b(col, row) ) > tolerance)
         return false;
@@ -113,8 +113,8 @@ bool areTransposed(const MatrixType& a, const MatrixType& b, const double tolera
 //! extern matrix addition that ignore 0 entries
 template< class MatrixType >
 void addMatrix(MatrixType& dest, const MatrixType& arg, const double eps = 1e-14) {
-  for (int i = 0; i < arg.rows(); ++i)
-    for (int j = 0; j < arg.cols(); ++j)
+  for (decltype(arg.rows()) i = 0; i < arg.rows(); ++i)
+    for (decltype(arg.cols()) j = 0; j < arg.cols(); ++j)
     {
       const double value = arg(i, j);
       if (std::fabs(value) > eps)
@@ -131,12 +131,12 @@ void addMatrix(MatrixType& dest, const MatrixType& arg, const double eps = 1e-14
 template< class SparseMatrixImpl, class Output >
 void writeSparseMatrix(const SparseMatrixImpl& matrix,
                        Output& out) {
-  const unsigned int nRows = matrix.rows();
-  const unsigned int nCols = matrix.cols();
+  const auto nRows = matrix.rows();
+  const auto nCols = matrix.cols();
 
-  for (int i = 0; i != nRows; ++i)
+  for (decltype(nRows) i = 0; i != nRows; ++i)
   {
-    for (int j = 0; j != nCols; ++j)
+    for (decltype(nCols) j = 0; j != nCols; ++j)
     {
       if ( matrix.find(i, j) )
       {
@@ -242,8 +242,8 @@ void forceTranspose(const M& arg, M& dest) {
   assert( arg.cols() == dest.rows() );
   assert( dest.cols() == arg.rows() );
 // dest.clear();
-  for (int i = 0; i < arg.cols(); ++i)
-    for (int j = 0; j < arg.rows(); ++j)
+  for (decltype(arg.cols()) i = 0; i < arg.cols(); ++i)
+    for (decltype(arg.rows()) j = 0; j < arg.rows(); ++j)
       dest.set( j, i, arg(i, j) );
 } // forceTranspose
 
