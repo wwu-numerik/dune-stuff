@@ -334,7 +334,7 @@ public:
         velocity_local.jacobian(quad[qP], velocity_jacobian_eval);
 
         // do projection
-        for (int i = 0; i < numDofs; ++i)
+        for (decltype(numDofs) i = 0; i < numDofs; ++i)
         {
           typename DiscreteFunctionType::DiscreteFunctionSpaceType::RangeType phi(0.0);
           baseset.evaluate(i, quad[qP], phi);
