@@ -58,7 +58,7 @@ void printEntity(const EntityType& entity,
   if (!name.empty())
     out << prefix << name << ":\n";
   const auto& geometry = entity.geometry();
-  for (int ii = 0; ii < geometry.corners(); ++ii)
+  for (decltype(geometry.corners()) ii = 0; ii < geometry.corners(); ++ii)
     Common::print(geometry.corner(ii), "corner " + Common::toString(ii), out, prefix + "  ");
 } // ... printEntity(...)
 
@@ -69,10 +69,10 @@ template< int codim, int worlddim, class GridImp, template< int, int, class > cl
 double entity_diameter(const Dune::Entity< codim, worlddim, GridImp, EntityImp >& entity) {
   auto max_dist = std::numeric_limits<typename GridImp::ctype>::min();
   const auto& geometry = entity.geometry();
-  for (int i=0; i < geometry.corners(); ++i)
+  for (decltype(geometry.corners()) i=0; i < geometry.corners(); ++i)
   {
     const auto xi = geometry.corner(i);
-    for (int j=i+1; j < geometry.corners(); ++j)
+    for (decltype(geometry.corners()) j=i+1; j < geometry.corners(); ++j)
     {
       auto xj = geometry.corner(j);
       xj -= xi;
