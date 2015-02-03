@@ -17,7 +17,7 @@ void DiagonalMult(const Matrix& matrix, Function& f) {
   matrix.getDiag(diag);
   auto diag_it = diag.dbegin();
   auto f_it = f.dbegin();
-  for (int row = 0; row < matrix.size(0); row++)
+  for (decltype(matrix.size(0)) row = 0; row < matrix.size(0); row++)
   {
     (*f_it) *= (*diag_it);
     ++f_it;
