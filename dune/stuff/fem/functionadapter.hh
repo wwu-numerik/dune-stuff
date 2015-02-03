@@ -17,6 +17,7 @@
 #include <dune/stuff/fem/localmassmatrix.hh>
 #include <dune/stuff/common/print.hh>
 #include <dune/stuff/fem/namespace.hh>
+#include <dune/stuff/common/ranges.hh>
 
 namespace Dune {
 namespace Stuff {
@@ -78,10 +79,9 @@ public:
       {
         auto local_function = this->at(d)->localFunction(entity);
         const auto& baseset = local_function.baseFunctionSet();
-        const auto quadNop = quad.nop();
         const auto numDofs = local_function.numDofs();
         // volume part
-        for (decltype(quadNop) qP = 0; qP < quadNop; ++qP)
+        for (auto qP : DSC::valueRange(quad.nop()))
         {
           const auto xLocal = quad.point(qP);
           const double intel = (affineMapping) ?
@@ -96,7 +96,7 @@ public:
             jacobian_row[e] = gradient_eval(d, e);
           }
           // do projection
-          for (decltype(numDofs) i = 0; i < numDofs; ++i)
+          for (auto i : DSC::valueRange(numDofs))
           {
             typename DiscreteFunctionType::RangeType phi(0.0);
             baseset.evaluate(i, quad[qP], phi);
@@ -204,11 +204,10 @@ public:
       auto self_local = BaseType::localFunction(entity);
       const auto velocity_local = velocity.localFunction(entity);
       const auto& baseset = self_local.baseFunctionSet();
-      const auto quadNop = quad.nop();
       const auto numDofs = self_local.numDofs();
 
       // volume part
-      for (decltype(quadNop) qP = 0; qP < quadNop; ++qP)
+      for (auto qP : DSC::valueRange(quad.nop()))
       {
         const auto xLocal = quad.point(qP);
         const double intel = (affineMapping) ?
@@ -223,7 +222,7 @@ public:
           velocity_jacobian_eval;
         velocity_local.jacobian(quad[qP], velocity_jacobian_eval);
         // do projection
-        for (decltype(numDofs) i = 0; i < numDofs; ++i)
+        for (auto i : DSC::valueRange(numDofs))
         {
           typename DiscreteFunctionType::DiscreteFunctionSpaceType::RangeType phi(0.0);
           baseset.evaluate(i, quad[qP], phi);
@@ -289,11 +288,10 @@ public:
       auto self_local = BaseType::localFunction(entity);
       const auto gradient_local = gradient.localFunction(entity);
       const auto& baseset = self_local.baseFunctionSet();
-      const auto quadNop = quad.nop();
       const auto numDofs = self_local.numDofs();
 
       // volume part
-      for (decltype(quadNop) qP = 0; qP < quadNop; ++qP)
+      for (auto qP : DSC::valueRange(quad.nop()))
       {
         const auto xLocal = quad.point(qP);
         const double intel = (affineMapping) ?
@@ -310,7 +308,7 @@ public:
           velocity_real_laplacian(gradient_jacobian_eval);
 
         // do projection
-        for (decltype(numDofs) i = 0; i < numDofs; ++i)
+        for (auto i : DSC::valueRange(numDofs))
         {
           typename DiscreteFunctionType::DiscreteFunctionSpaceType::RangeType phi(0.0);
           baseset.evaluate(i, quad[qP], phi);
