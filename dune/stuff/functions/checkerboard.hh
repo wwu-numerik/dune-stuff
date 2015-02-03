@@ -38,15 +38,9 @@ class Checkerboard
   public:
     typedef typename BaseType::EntityType EntityType;
 
-    typedef typename BaseType::DomainFieldType  DomainFieldType;
-    static const unsigned int                   dimDomain = BaseType::dimDomain;
-    typedef typename BaseType::DomainType       DomainType;
-
-    typedef typename BaseType::RangeFieldType RangeFieldType;
-    static const unsigned int                 dimRange = BaseType::dimRange;
-    static const unsigned int                 dimRangeCols = BaseType::dimRangeCols;
-    typedef typename BaseType::RangeType      RangeType;
-
+    typedef typename BaseType::DomainType        DomainType;
+    typedef typename BaseType::RangeFieldType    RangeFieldType;
+    typedef typename BaseType::RangeType         RangeType;
     typedef typename BaseType::JacobianRangeType JacobianRangeType;
 
     Localfunction(const EntityType& ent, const RangeType value)
@@ -85,14 +79,9 @@ public:
 
   typedef typename BaseType::DomainFieldType  DomainFieldType;
   static const int                            dimDomain = BaseType::dimDomain;
-  typedef typename BaseType::DomainType       DomainType;
 
   typedef typename BaseType::RangeFieldType RangeFieldType;
-  static const int                          dimRange = BaseType::dimRange;
-  static const int                          dimRangeCols = BaseType::dimRangeCols;
   typedef typename BaseType::RangeType      RangeType;
-
-  typedef typename BaseType::JacobianRangeType JacobianRangeType;
 
   static const bool available = true;
 
