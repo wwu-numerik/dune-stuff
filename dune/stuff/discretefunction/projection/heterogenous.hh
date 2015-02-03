@@ -80,7 +80,7 @@ public:
                       SearchStrategyImp& search)
   {
     typedef typename TargetDFImp::DiscreteFunctionSpaceType TargetDiscreteFunctionSpaceType;
-    static const int target_dimRange = TargetDiscreteFunctionSpaceType::dimRange;
+    static const size_t target_dimRange = TargetDiscreteFunctionSpaceType::dimRange;
 
     const auto& space =  target.space();
 
@@ -174,7 +174,7 @@ public:
                       GDT::DiscreteFunction< TargetSpaceImp, TargetVectorImp >& target,
                       SearchStrategyImp& search)
   {
-    static const int target_dimRange = TargetSpaceImp::dimRange;
+    static const size_t target_dimRange = TargetSpaceImp::dimRange;
 
     const auto& space =  target.space();
 
