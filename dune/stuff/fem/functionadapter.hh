@@ -8,13 +8,14 @@
 
 #if HAVE_DUNE_FEM
 
+#include <vector>
+
+#include <boost/numeric/conversion/cast.hpp>
+#include <boost/shared_ptr.hpp>
+
 #include <dune/stuff/common/math.hh>
 #include <dune/stuff/fem/localmassmatrix.hh>
-
-#include <vector>
-#include <boost/shared_ptr.hpp>
 #include <dune/stuff/common/print.hh>
-
 #include <dune/stuff/fem/namespace.hh>
 
 namespace Dune {
@@ -61,7 +62,7 @@ public:
     // type of local mass matrix
     typedef Dune::Stuff::Fem::LocalMassMatrix< DiscreteFunctionSpaceType, VolumeQuadratureType > LocalMassMatrixType;
 
-    const int quadOrd = ( 2 * space.order() );
+    const auto quadOrd = boost::numeric_cast< int >(2*space.order());
 
     // create local mass matrix object
     const LocalMassMatrixType massMatrix(space, quadOrd);
@@ -77,10 +78,10 @@ public:
       {
         auto local_function = this->at(d)->localFunction(entity);
         const auto& baseset = local_function.baseFunctionSet();
-        const int quadNop = quad.nop();
-        const int numDofs = local_function.numDofs();
+        const auto quadNop = quad.nop();
+        const auto numDofs = local_function.numDofs();
         // volume part
-        for (int qP = 0; qP < quadNop; ++qP)
+        for (decltype(quadNop) qP = 0; qP < quadNop; ++qP)
         {
           const auto xLocal = quad.point(qP);
           const double intel = (affineMapping) ?
@@ -95,7 +96,7 @@ public:
             jacobian_row[e] = gradient_eval(d, e);
           }
           // do projection
-          for (int i = 0; i < numDofs; ++i)
+          for (decltype(numDofs) i = 0; i < numDofs; ++i)
           {
             typename DiscreteFunctionType::RangeType phi(0.0);
             baseset.evaluate(i, quad[qP], phi);
@@ -203,11 +204,11 @@ public:
       auto self_local = BaseType::localFunction(entity);
       const auto velocity_local = velocity.localFunction(entity);
       const auto& baseset = self_local.baseFunctionSet();
-      const int quadNop = quad.nop();
-      const int numDofs = self_local.numDofs();
+      const auto quadNop = quad.nop();
+      const auto numDofs = self_local.numDofs();
 
       // volume part
-      for (int qP = 0; qP < quadNop; ++qP)
+      for (decltype(quadNop) qP = 0; qP < quadNop; ++qP)
       {
         const auto xLocal = quad.point(qP);
         const double intel = (affineMapping) ?
@@ -222,7 +223,7 @@ public:
           velocity_jacobian_eval;
         velocity_local.jacobian(quad[qP], velocity_jacobian_eval);
         // do projection
-        for (int i = 0; i < numDofs; ++i)
+        for (decltype(numDofs) i = 0; i < numDofs; ++i)
         {
           typename DiscreteFunctionType::DiscreteFunctionSpaceType::RangeType phi(0.0);
           baseset.evaluate(i, quad[qP], phi);
@@ -276,7 +277,7 @@ public:
     const DiscreteFunctionSpaceType& space = BaseType::space();
     typedef Dune::Fem::CachingQuadrature< GridPartType, 0 > VolumeQuadratureType;
     typedef Dune::Stuff::Fem::LocalMassMatrix< DiscreteFunctionSpaceType, VolumeQuadratureType > LocalMassMatrixType;
-    const int quadOrd = std::max(2 * space.order() + 2, polOrd);
+    const auto quadOrd = boost::numeric_cast< int >(std::max(2 * space.order() + 2, polOrd));
     const LocalMassMatrixType massMatrix(space, quadOrd);
     const bool affineMapping = massMatrix.affine();
     BaseType::clear();
@@ -288,11 +289,11 @@ public:
       auto self_local = BaseType::localFunction(entity);
       const auto gradient_local = gradient.localFunction(entity);
       const auto& baseset = self_local.baseFunctionSet();
-      const int quadNop = quad.nop();
-      const int numDofs = self_local.numDofs();
+      const auto quadNop = quad.nop();
+      const auto numDofs = self_local.numDofs();
 
       // volume part
-      for (int qP = 0; qP < quadNop; ++qP)
+      for (decltype(quadNop) qP = 0; qP < quadNop; ++qP)
       {
         const auto xLocal = quad.point(qP);
         const double intel = (affineMapping) ?
@@ -309,7 +310,7 @@ public:
           velocity_real_laplacian(gradient_jacobian_eval);
 
         // do projection
-        for (int i = 0; i < numDofs; ++i)
+        for (decltype(numDofs) i = 0; i < numDofs; ++i)
         {
           typename DiscreteFunctionType::DiscreteFunctionSpaceType::RangeType phi(0.0);
           baseset.evaluate(i, quad[qP], phi);
