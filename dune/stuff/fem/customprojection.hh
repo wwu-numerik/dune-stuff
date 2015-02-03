@@ -44,7 +44,7 @@ public:
     {
       auto lf = discFunc.localFunction(e);
       auto baseFunctionset = space_.baseFunctionSet(e);
-      unsigned int intersection_count = 0;
+      size_t intersection_count = 0;
       const auto intItEnd = gridPart_.iend(e);
       for (auto intIt = gridPart_.ibegin(e);
            intIt != intItEnd;
@@ -161,7 +161,7 @@ protected:
     typename DiscreteFunctionSpaceType::RangeType ret(0.0);
     typename DiscreteFunctionSpaceType::RangeType phi(0.0);
     const auto& space = discFunc.space();
-    const int quadOrd = std::max(2 * space.order() + 2, polOrd);
+    const auto quadOrd = std::max(2 * space.order() + 2, polOrd);
     const Dune::Fem::LocalMassMatrix< DiscreteFunctionSpaceType, QuadratureType > massMatrix(space, quadOrd);
     const bool affineMapping = massMatrix.affine();
     discFunc.clear();
@@ -172,9 +172,9 @@ protected:
       const QuadratureType quad(en, quadOrd);
       auto lf = discFunc.localFunction(en);
       const auto& baseset = lf.baseFunctionSet();
-      const int quadNop = quad.nop();
-      const int numDofs = lf.numDofs();
-      for (int qP = 0; qP < quadNop; ++qP)
+      const auto quadNop = quad.nop();
+      const auto numDofs = lf.numDofs();
+      for (decltype(quadNop) qP = 0; qP < quadNop; ++qP)
       {
         const double intel = (affineMapping) ?
                              quad.weight(qP) : // affine case
@@ -182,7 +182,7 @@ protected:
 
         const auto x = geo.global( quad.point(qP) );
         evalutionFunctor.evaluate(x, ret);
-        for (int i = 0; i < numDofs; ++i)
+        for (decltype(numDofs) i = 0; i < numDofs; ++i)
         {
           baseset.evaluate(i, quad[qP], phi);
           lf[i] += intel * (ret * phi);
@@ -277,7 +277,7 @@ public:
     // type of local mass matrix
     typedef Dune::Stuff::Fem::LocalMassMatrix< DiscreteFunctionSpaceType, VolumeQuadratureType > LocalMassMatrixType;
 
-    const int quadOrd = std::max(2 * space.order() + 2, polOrd);
+    const auto quadOrd = std::max(2 * space.order() + 2, polOrd);
 
     // create local mass matrix object
     LocalMassMatrixType massMatrix(space, quadOrd);
@@ -309,11 +309,11 @@ public:
       // get base function set
       const BaseFunctionSetType& baseset = self_local.baseFunctionSet();
 
-      const int quadNop = quad.nop();
-      const int numDofs = self_local.numDofs();
+      const auto quadNop = quad.nop();
+      const auto numDofs = self_local.numDofs();
 
       // volume part
-      for (int qP = 0; qP < quadNop; ++qP)
+      for (decltype(quadNop) qP = 0; qP < quadNop; ++qP)
       {
         const typename DiscreteFunctionSpaceType::DomainType xLocal = quad.point(qP);
 
