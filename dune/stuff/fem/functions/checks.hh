@@ -128,9 +128,9 @@ bool FunctionContainsNanOrInf(const LeakPointerType function, size_t size) {
 //! return true if any entry is nan or inf
 template< class MatrixType >
 bool MatrixContainsNanOrInf(const MatrixType& matrix) {
-  for (int row = 0; row < int( matrix.rows() ); ++row)
+  for (decltype(matrix.rows()) row = 0; row < matrix.rows(); ++row)
   {
-    for (int col = 0; col < int( matrix.cols() ); ++col)
+    for (decltype(matrix.cols()) col = 0; col < matrix.cols(); ++col)
     {
       if ( std::isnan( matrix(row, col) ) || std::isinf( matrix(row, col) ) )
         return true;
