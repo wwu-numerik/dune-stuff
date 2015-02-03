@@ -15,6 +15,7 @@
 #include <limits>
 
 #include <boost/format.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 
 #include <dune/common/fvector.hh>
 
@@ -90,7 +91,7 @@ class FemEoc
 
     writer.putStaticCols(outputFile_);
 
-    for (unsigned int i = 0; i < 2; ++i)
+    for (size_t i = 0; i < 2; ++i)
     {
       writer.putErrorCol(outputFile_, prevError_[i], error_[i], prevh_, initial_);
       prevError_[i] = error_[i];
@@ -112,7 +113,7 @@ class FemEoc
     if (!initial_)
       DUNE_THROW(Dune::InvalidStateException, "");
     assert(error_.size() < std::numeric_limits< int >::max());
-    pos_.push_back( int(error_.size()) );
+    pos_.push_back( boost::numeric_convertion< int >(error_.size()) );
     for (size_t i = 0; i < size; ++i)
     {
       error_.push_back(0);

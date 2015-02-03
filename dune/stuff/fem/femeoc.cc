@@ -129,14 +129,14 @@ void FemEoc::writeerr(double h, double size, double time, int counter) {
   if (initial_)
   {
     outputFile_ << "\\begin{tabular}{|c|c|c|c|c|";
-    for (unsigned int i = 0; i < error_.size(); i++)
+    for (size_t i = 0; i < error_.size(); i++)
     {
       outputFile_ << "|cc|";
     }
     outputFile_ << "}\n"
                 << "\\hline \n"
                 << "level & h & size & CPU-time & counter";
-    for (unsigned int i = 0; i < error_.size(); i++)
+    for (size_t i = 0; i < error_.size(); i++)
     {
       outputFile_ << " & " << description_[i]
                   << " & EOC ";
@@ -151,7 +151,7 @@ void FemEoc::writeerr(double h, double size, double time, int counter) {
               << size << " & "
               << time << " & "
               << counter;
-  for (unsigned int i = 0; i < error_.size(); ++i)
+  for (size_t i = 0; i < error_.size(); ++i)
   {
     outputFile_ << " & " << error_[i] << " & ";
     if (initial_)
