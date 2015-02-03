@@ -60,8 +60,8 @@ class LocalMatrixProxy
   typedef Dune::FloatCmp::DefaultEpsilon<typename CompareType::EpsilonType, CompareType::cstyle> DefaultEpsilon;
   LocalMatrixType local_matrix_;
   const double eps_;
-  const unsigned int rows_;
-  const unsigned int cols_;
+  const size_t rows_;
+  const size_t cols_;
   std::vector< FieldType > entries_;
 
 public:
@@ -74,7 +74,7 @@ public:
     , entries_( rows_ * cols_, FieldType(0.0) )
   {}
 
-  inline void add(const unsigned int row, const unsigned int col, const FieldType val) {
+  inline void add(const size_t row, const unsigned int col, const FieldType val) {
     ASSERT_LT(row, rows_);
     ASSERT_LT(col, cols_);
     entries_[row * cols_ + col] += val;
@@ -100,9 +100,9 @@ public:
 
   ~LocalMatrixProxy() {
     const auto comp = CompareType(eps_);
-    for (unsigned int i = 0; i < rows_; ++i)
+    for (size_t i = 0; i < rows_; ++i)
     {
-      for (unsigned int j = 0; j < cols_; ++j)
+      for (size_t j = 0; j < cols_; ++j)
       {
         const FieldType& i_j = entries_[i * cols_ + j];
         if ( comp.ne(i_j, 0.0) )
@@ -111,11 +111,11 @@ public:
     }
   }
 
-  unsigned int rows() const { return rows_; }
-  unsigned int cols() const { return cols_; }
-  unsigned int columns() const { return cols_; }
+  size_t rows() const { return rows_; }
+  size_t cols() const { return cols_; }
+  size_t columns() const { return cols_; }
 
-  void unitRow(unsigned int row)
+  void unitRow(size_t row)
   {
     local_matrix_.clearRow(row);
     local_matrix_.set(row, row, 1.);
