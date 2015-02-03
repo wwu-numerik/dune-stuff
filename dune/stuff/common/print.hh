@@ -29,7 +29,7 @@ namespace Stuff {
 namespace Common {
 
 //! ensure matlab output is done with highest precision possible, otherwise weird effects are bound to happen
-static const unsigned int matlab_output_precision = std::numeric_limits< double >::digits10 + 1;
+static const auto matlab_output_precision = std::numeric_limits< double >::digits10 + 1;
 
 template< class OutStreamType = std::ostream >
 void print(const double& d,
@@ -50,7 +50,7 @@ void print(const std::vector< T >& vector,
     print(vector[0], name, out, prefix);
   else {
     out << prefix << name << " = [";
-    for (unsigned int i = 0; i < (vector.size() - 1); ++i) {
+    for (size_t i = 0; i < (vector.size() - 1); ++i) {
       out << vector[i] << ", ";
     }
     out << vector[vector.size() - 1] << "];" << "\n";
@@ -68,7 +68,7 @@ void print(const Dune::DenseVector< VectorImp >& vector,
     print(vector[0], name, out, prefix);
   else {
     out << prefix << name << " = [";
-    for (unsigned int i = 0; i < (vector.size() - 1); ++i) {
+    for (size_t i = 0; i < (vector.size() - 1); ++i) {
       out << vector[i] << ", ";
     }
     out << vector[vector.size() - 1] << "];" << "\n";
@@ -85,7 +85,7 @@ void print(const std::vector< Dune::FieldVector< FieldImp, size > >& vectors,
   if (vectors.size() == 1)
     print(vectors[0], name, out, prefix);
   else {
-    for (unsigned int i = 0; i < vectors.size(); ++i) {
+    for (size_t i = 0; i < vectors.size(); ++i) {
       print(vectors[i], name + "[" + Dune::Stuff::Common::toString(i) + "]", out, prefix);
     }
   }
@@ -105,7 +105,7 @@ void print(const std::vector< Dune::DenseVector< VectorImp > >& vectors,
   if (vectors.size() == 1)
     print(vectors[0], name, out, prefix);
   else {
-    for (unsigned int i = 0; i < vectors.size(); ++i) {
+    for (size_t i = 0; i < vectors.size(); ++i) {
       print(vectors[i], name + "[" + Dune::Stuff::Common::toString(i) + "]", out, prefix);
     }
   }
@@ -124,7 +124,7 @@ void print(const Dune::DenseMatrix< MatrixImp >& matrix,
     out << prefix << name << " = [";
     typedef typename Dune::DenseMatrix< MatrixImp >::const_row_reference RowType;
     const RowType& firstRow = matrix[0];
-    for (unsigned int j = 0; j < (firstRow.size() - 1); ++j) {
+    for (size_t j = 0; j < (firstRow.size() - 1); ++j) {
       out << firstRow[j] << ", ";
     }
     out << firstRow[firstRow.size() - 1];
@@ -132,10 +132,10 @@ void print(const Dune::DenseMatrix< MatrixImp >& matrix,
       out << "];" << "\n";
     else
       out << ";" << "\n";
-    for (unsigned int i = 1; i < matrix.rows(); ++i) {
+    for (size_t i = 1; i < matrix.rows(); ++i) {
       out << prefix << whitespaceify(name + " = [");
       const RowType& row = matrix[i];
-      for (unsigned int j = 0; j < (row.size() - 1); ++j) {
+      for (size_t j = 0; j < (row.size() - 1); ++j) {
         out << row[j] << ", ";
       }
       out << row[row.size() - 1];
@@ -162,7 +162,7 @@ void print(const std::vector< Dune::FieldMatrix< FieldImp, rows, cols > >& matri
   if (matrices.size() == 1)
     print(matrices[0], name, out, prefix);
   else {
-    for (unsigned int i = 0; i < matrices.size(); ++i) {
+    for (size_t i = 0; i < matrices.size(); ++i) {
       print(matrices[i], name + "[" + Dune::Stuff::Common::toString(i) + "]", out, prefix);
     }
   }
@@ -178,7 +178,7 @@ void print(const std::vector< Dune::DenseMatrix< MatrixImp > >& matrices,
   if (matrices.size() == 1)
     print(matrices[0], name, out, prefix);
   else {
-    for (unsigned int i = 0; i < matrices.size(); ++i) {
+    for (size_t i = 0; i < matrices.size(); ++i) {
       print(matrices[i], name + "[" + Dune::Stuff::Common::toString(i) + "]", out, prefix);
     }
   }
@@ -239,7 +239,7 @@ void printFieldMatrix(T& arg, std::string name, stream& out, std::string prefix 
   RowIteratorType;
   typedef typename T::row_type::ConstIterator
   VectorInRowIteratorType;
-  unsigned int row = 1;
+  size_t row = 1;
   RowIteratorType rItEnd = arg.end();
   for (RowIteratorType rIt = arg.begin(); rIt != rItEnd; ++rIt)
   {
@@ -260,12 +260,12 @@ template< class T, class stream >
 void printSparseRowMatrixMatlabStyle( const T& arg, std::string name, stream& out,
                                       const double eps = Config().get("eps", 1e-14) ) {
   name = std::string("fem.") + name;
-  const int I = arg.rows();
-  const int J = arg.cols();
+  const size_t I = arg.rows();
+  const size_t J = arg.cols();
   out << boost::format("\n%s =sparse( %d, %d );") % name % I % J << "\n";
-  for (int row = 0; row < arg.rows(); row++)
+  for (size_t row = 0; row < arg.rows(); row++)
   {
-    for (int col = 0; col < arg.cols(); col++)
+    for (size_t col = 0; col < arg.cols(); col++)
     {
       const typename T::Ttype val = arg(row, col);
       if (std::fabs(val) > eps)
@@ -282,8 +282,8 @@ template< class MatrixType, class stream >
 void printISTLMatrixMatlabStyle( const MatrixType& arg, std::string name, stream& out,
                                  const double eps = Config().get("eps", 1e-14) ) {
   name = std::string("istl.") + name;
-  const int I = arg.N();
-  const int J = arg.M();
+  const size_t I = arg.N();
+  const size_t J = arg.M();
   typedef typename MatrixType::block_type BlockType;
   out << boost::format("\n%s =sparse( %d, %d );") % name % (I* BlockType::rows) % (J* BlockType::cols) << "\n";
   for (unsigned ii = 0; ii < I; ++ii)
@@ -293,15 +293,15 @@ void printISTLMatrixMatlabStyle( const MatrixType& arg, std::string name, stream
       if ( arg.exists(ii, jj) )
       {
         const auto& block = arg[ii][jj];
-        for (int i = 0; i < block.N(); ++i)
+        for (size_t i = 0; i < block.N(); ++i)
         {
-          for (int j = 0; j < block.M(); ++j)
+          for (size_t j = 0; j < block.M(); ++j)
           {
             const auto value = block[i][j];
             if (std::fabs(value) > eps)
             {
-              int real_row = BlockType::rows * ii + i + 1;
-              int real_col = BlockType::cols * jj + j + 1;
+              size_t real_row = BlockType::rows * ii + i + 1;
+              size_t real_col = BlockType::cols * jj + j + 1;
               out << name << "(" << real_row << "," << real_col << ")="
                   << std::setprecision(matlab_output_precision) << value << ";\n";
             }
@@ -333,9 +333,9 @@ void printDiscreteFunctionMatlabStyle(const T& arg, const std::string name, stre
    * \ingroup Matlab
    **/
 template< class T, class stream >
-void printDoubleVectorMatlabStyle(const T* arg, const int size, const std::string name, stream& out) {
+void printDoubleVectorMatlabStyle(const T* arg, const size_t size, const std::string name, stream& out) {
   out << "\n" << name << " = [ " << "\n";
-  for (int i = 0; i < size; i++)
+  for (size_t i = 0; i < size; i++)
   {
     out << std::setprecision(matlab_output_precision) << arg[i];
     out << ";" << "\n";
@@ -345,9 +345,9 @@ void printDoubleVectorMatlabStyle(const T* arg, const int size, const std::strin
 
 //! simple vector to stream print
 template< class Type >
-void printDoubleVec(std::ostream& stream, const Type* vec, const unsigned int N) {
+void printDoubleVec(std::ostream& stream, const Type* vec, const size_t N) {
   stream << "\n [ " << std::setw(5);
-  for (unsigned int i = 0; i < N; ++i)
+  for (size_t i = 0; i < N; ++i)
     stream << vec[i] << " ";
 
   stream << " ] " << "\n";
@@ -387,15 +387,15 @@ public:
   {}
 
   template< class Entity >
-  void operator()(const Entity& en, const Entity& ne, const int en_idx, const int ne_idx) {
+  void operator()(const Entity& en, const Entity& ne, const size_t en_idx, const size_t ne_idx) {
     typename GlobalMatrix::LocalMatrixType localMatrix
       = matrix_.localMatrix(en, ne);
-    const int rows = localMatrix.rows();
-    const int cols = localMatrix.columns();
+    const auto rows = localMatrix.rows();
+    const auto cols = localMatrix.columns();
     stream_ << "\nlocal_" << name_ << "_Matrix_" << en_idx << "_" << ne_idx << " = [" << "\n";
-    for (int i = 0; i < rows; ++i)
+    for (size_t i = 0; i < rows; ++i)
     {
-      for (int j = 0; j < cols; ++j)
+      for (size_t j = 0; j < cols; ++j)
       {
         stream_ << std::setw(8) << std::setprecision(2) << localMatrix.get(i, j);
       }
@@ -432,7 +432,7 @@ public:
   {}
 
   template< class Entity >
-  void operator()(const Entity& en, const Entity& /*ne*/, const int /*en_idx*/, const int /*ne_idx */) {
+  void operator()(const Entity& en, const Entity& /*ne*/, const size_t /*en_idx*/, const size_t /*ne_idx */) {
     typename DiscreteFunctionType::LocalFunctionType lf = discrete_function_.localFunction(en);
     QuadratureType quad(en, 2 * discrete_function_.space().order() + 2);
     for (size_t qp = 0; qp < quad.nop(); ++qp)
@@ -473,7 +473,7 @@ public:
   {}
 
   template< class Entity >
-  void operator()(const Entity& en, const Entity& /*ne*/, const int /*en_idx*/, const int /*ne_idx */) {
+  void operator()(const Entity& en, const Entity& /*ne*/, const size_t /*en_idx*/, const size_t /*ne_idx */) {
     typename DiscreteFunctionType::LocalFunctionType lf = discrete_function_.localFunction(en);
 
     for (size_t qp = 0; qp < lf.numDofs(); ++qp)
@@ -502,9 +502,9 @@ void matrixToGnuplotStream(const Matrix& matrix, std::ostream& stream) {
   unsigned long nz = 0;
 
   // don't try to be clever and use an unsigned counter here
-  for (int row = 0; row < matrix.rows(); ++row)
+  for (decltype(matrix.rows()) row = 0; row < matrix.rows(); ++row)
   {
-    for (int col = 0; col < matrix.cols(); ++col)
+    for (decltype(matrix.rows()) col = 0; col < matrix.cols(); ++col)
     {
       if ( matrix.find(row, col) )
         stream << row << "\t" << col << "\t" << matrix(row, col) << "\n";
@@ -528,7 +528,7 @@ void matrixToGnuplotFile(const Matrix& matrix, std::string filename) {
 } // matrixToGnuplotFile
 
 //! maps 1,2,3 to x,y,z / X,Y,Z
-inline std::string dimToAxisName(const unsigned int dim, const bool capitalize = false) {
+inline std::string dimToAxisName(const size_t dim, const bool capitalize = false) {
   char c = 'x';
 
   c += dim;
