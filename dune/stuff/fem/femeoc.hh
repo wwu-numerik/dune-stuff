@@ -112,7 +112,6 @@ class FemEoc
   size_t addentry(const StrVectorType& descript, size_t size) {
     if (!initial_)
       DUNE_THROW(Dune::InvalidStateException, "");
-    assert(error_.size() < std::numeric_limits< int >::max());
     pos_.push_back( boost::numeric_convertion< int >(error_.size()) );
     for (size_t i = 0; i < size; ++i)
     {
