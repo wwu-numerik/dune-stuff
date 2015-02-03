@@ -289,7 +289,7 @@ double boundaryIntegral(const FunctionType& function,
                                   quadOrd,
                                   QuadratureType::INSIDE);
         const auto quadNop = quad.nop();
-        for (decltype(quadNop) qP = 0; qP < quadNop; ++qP)
+        for (auto qP : DSC::valueRange(quadNop))
         {
           const double intel = (affineMapping) ?
                                quad.weight(qP) : // affine case
