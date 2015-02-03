@@ -54,8 +54,8 @@ template< class Function >
 void switchDofs(Function& f) {
   auto front = f.dbegin();
   auto back = f.dend();
-  const unsigned int numdofs = f.size();
-  for (unsigned int i = 0; i < numdofs / 2; ++i)
+  const auto numdofs = f.size();
+  for (decltype(numdofs) i = 0; i < numdofs / 2; ++i)
   {
     auto tmp = *back;
     *back = *front;
