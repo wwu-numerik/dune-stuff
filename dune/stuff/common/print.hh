@@ -205,13 +205,10 @@ void print(const std::vector< Dune::DenseMatrix< MatrixImp > >& matrices,
 template< class T, class stream >
 void printFieldVector(T& arg, std::string name, stream& out, std::string prefix = "") {
   out << "\n" << prefix << "printing " << name << " (Dune::FieldVector)" << "\n";
-  typedef typename T::ConstIterator
-  IteratorType;
-  IteratorType itEnd = arg.end();
   out << prefix;
-  for (IteratorType it = arg.begin(); it != itEnd; ++it)
+  for (auto value : arg)
   {
-    out << std::setw(14) << std::setprecision(6) << *it;
+    out << std::setw(14) << std::setprecision(6) << value;
   }
   out << '\n';
 } // printFieldVector
@@ -236,20 +233,11 @@ void printFieldVector(T& arg, std::string name, stream& out, std::string prefix 
 template< class T, class stream >
 void printFieldMatrix(T& arg, std::string name, stream& out, std::string prefix = "") {
   out << "\n" << prefix << "printing " << name << " (Dune::FieldMatrix)";
-  typedef typename T::ConstRowIterator
-  RowIteratorType;
-  typedef typename T::row_type::ConstIterator
-  VectorInRowIteratorType;
   size_t row = 1;
-  RowIteratorType rItEnd = arg.end();
-  for (RowIteratorType rIt = arg.begin(); rIt != rItEnd; ++rIt)
-  {
+  for (auto rIt : arg) {
     out << "\n" << prefix << "  row " << row << ":";
-    VectorInRowIteratorType vItEnd = rIt->end();
-    for (VectorInRowIteratorType vIt = rIt->begin(); vIt != vItEnd; ++vIt)
-    {
-      out << std::setw(14) << std::setprecision(6) << *vIt;
-    }
+    for (auto vIt : rIt)
+      out << std::setw(14) << std::setprecision(6) << vIt;
     row += 1;
   }
 } // printFieldMatrix
@@ -261,12 +249,10 @@ template< class T, class stream >
 void printSparseRowMatrixMatlabStyle( const T& arg, std::string name, stream& out,
                                       const double eps = Config().get("eps", 1e-14) ) {
   name = std::string("fem.") + name;
-  const size_t I = arg.rows();
-  const size_t J = arg.cols();
-  out << boost::format("\n%s =sparse( %d, %d );") % name % I % J << "\n";
-  for (size_t row = 0; row < arg.rows(); row++)
+  out << boost::format("\n%s =sparse( %d, %d );") % name % arg.rows() % arg.cols() << "\n";
+  for (auto row : valueRange(arg.rows()))
   {
-    for (size_t col = 0; col < arg.cols(); col++)
+    for (auto col : valueRange(arg.cols()))
     {
       const typename T::Ttype val = arg(row, col);
       if (std::fabs(val) > eps)
@@ -319,12 +305,9 @@ void printISTLMatrixMatlabStyle( const MatrixType& arg, std::string name, stream
 template< class T, class stream >
 void printDiscreteFunctionMatlabStyle(const T& arg, const std::string name, stream& out) {
   out << "\n" << name << " = [ " << "\n";
-  typedef typename T::ConstDofIteratorType
-  ConstDofIteratorType;
-  ConstDofIteratorType itEnd = arg.dend();
-  for (ConstDofIteratorType it = arg.dbegin(); it != itEnd; ++it)
+  for (auto val : arg)
   {
-    out << std::setprecision(matlab_output_precision) << *it;
+    out << std::setprecision(matlab_output_precision) << val;
     out << ";" << "\n";
   }
   out << "];" << "\n";
