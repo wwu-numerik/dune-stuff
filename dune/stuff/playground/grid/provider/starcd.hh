@@ -105,7 +105,7 @@ public:
         if (items.size() != dim + 1)
           DUNE_THROW(Dune::IOError,
                      "Error: " << items.size() << " = items.size() != dim + 1 = " << dim + 1 << "!");
-        for (unsigned int ii = 0; ii < dim; ++ii)
+        for (size_t ii = 0; ii < dim; ++ii)
           position[ii] = items[ii + 1];
         factory.insertVertex(position);
     }
@@ -127,14 +127,14 @@ public:
       DUNE_THROW(Dune::IOError, "File " << elementFileName << " is too short!");
 
     // read the elements
-    unsigned int numberOfElements = 0;
-    unsigned int numberOfPrisms = 0;
-    unsigned int numberOfCubes = 0;
-    unsigned int numberOfVerticesCube = (unsigned int)pow(2, dim);
-    unsigned int numberOfVerticesPrism = 6;
+    size_t numberOfElements = 0;
+    size_t numberOfPrisms = 0;
+    size_t numberOfCubes = 0;
+    size_t numberOfVerticesCube = pow(2, dim);
+    size_t numberOfVerticesPrism = 6;
 
-    std::vector<unsigned int> cubeVertices(numberOfVerticesCube);
-    std::vector<unsigned int> prismVertices(numberOfVerticesPrism);
+    std::vector<size_t> cubeVertices(numberOfVerticesCube);
+    std::vector<size_t> prismVertices(numberOfVerticesPrism);
     std::string firstLine;
     std::string secondLine;
     out << "Reading " << elementFileName << " ...   " << std::flush;
@@ -156,7 +156,7 @@ public:
         if (items2.size() == numberOfVerticesCube + 1) //cube
         {
           numberOfCubes++;
-          for (unsigned int k = 0; k < numberOfVerticesCube; k++)
+          for (size_t k = 0; k < numberOfVerticesCube; k++)
           {
             cubeVertices[k] = items2[k+1] - 1;
           }
@@ -169,7 +169,7 @@ public:
         else if ((items2.size() == numberOfVerticesPrism + 1) && (dim==3)) //prism
         {
           numberOfPrisms++;
-          for (unsigned int k = 0; k < numberOfVerticesPrism; k++)
+          for (size_t k = 0; k < numberOfVerticesPrism; k++)
           {
             prismVertices[k] = items2[k+1] - 1;
           }
