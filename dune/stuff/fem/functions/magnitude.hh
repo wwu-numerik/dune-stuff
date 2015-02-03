@@ -8,6 +8,8 @@
 
 #if HAVE_DUNE_FEM
 
+#include <boost/numeric/conversion/cast.hpp>
+
 #include <dune/fem/function/common/function.hh>
 #include <dune/fem/function/common/gridfunctionadapter.hh>
 #include <dune/fem/space/common/functionspace.hh>
@@ -51,7 +53,7 @@ public:
     typename MagnitudeDiscreteFunctionSpaceType::RangeType phi(0.0);
     const auto& space = _discreteFunction.space();
 
-    const int quadOrd = 2 * space.order() + 2;
+    const auto quadOrd = boost::numeric_cast< int >(2 * space.order() + 2);
     DSFe::LocalMassMatrix< MagnitudeDiscreteFunctionSpaceType, QuadratureType > massMatrix(magnitude_disretefunctionspace_, quadOrd);
     const bool affineMapping = massMatrix.affine();
     magnitude_disretefunction_.clear();
@@ -62,9 +64,9 @@ public:
       const QuadratureType quad(en, quadOrd);
       auto lf = magnitude_disretefunction_.localFunction(en);
       const auto& baseset = lf.baseFunctionSet();
-      const int quadNop = quad.nop();
-      const int numDofs = lf.numDofs();
-      for (int qP = 0; qP < quadNop; ++qP)
+      const auto quadNop = quad.nop();
+      const auto numDofs = lf.numDofs();
+      for (decltype(quadNop) qP = 0; qP < quadNop; ++qP)
       {
         const double intel = (affineMapping) ?
                              quad.weight(qP) :    // affine case
@@ -73,7 +75,7 @@ public:
         typename DiscreteFunctionType::RangeType val;
         _discreteFunction.localFunction(en).evaluate(quad.point(qP), val);
         ret = val.two_norm();
-        for (int i = 0; i < numDofs; ++i)
+        for (decltype(numDofs) i = 0; i < numDofs; ++i)
         {
           baseset.evaluate(i, quad[qP], phi);
           lf[i] += intel * (ret * phi);
