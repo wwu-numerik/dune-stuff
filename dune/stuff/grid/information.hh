@@ -30,10 +30,10 @@ namespace Grid {
 using namespace Dune::Stuff::Common;
 
 struct Statistics {
-  int numberOfEntities;
-  int numberOfIntersections;
-  int numberOfInnerIntersections;
-  int numberOfBoundaryIntersections;
+  size_t numberOfEntities;
+  size_t numberOfIntersections;
+  size_t numberOfInnerIntersections;
+  size_t numberOfBoundaryIntersections;
   double maxGridWidth;
   template <class GridViewType>
   Statistics(const GridViewType& gridView)
@@ -113,11 +113,11 @@ struct Dimensions
         , entity_width_(w) {}
 
       template< class Entity >
-      void operator()(const Entity& ent, const int /*ent_idx*/) {
+      void operator()(const Entity& ent, const size_t /*ent_idx*/) {
         const auto& geo = ent.geometry();
         entity_volume_( geo.volume() );
         entity_width_(entity_diameter(ent));
-        for (int i = 0; i < geo.corners(); ++i)
+        for (decltype(geo.corners()) i = 0; i < geo.corners(); ++i)
         {
           const auto& corner( geo.corner(i) );
           for (size_t k = 0; k < GridType::dimensionworld; ++k)
