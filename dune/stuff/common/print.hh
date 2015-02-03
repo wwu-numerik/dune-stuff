@@ -22,6 +22,7 @@
 
 #include <dune/stuff/common/configuration.hh>
 #include <dune/stuff/common/filesystem.hh>
+#include <dune/stuff/common/ranges.hh>
 #include <dune/stuff/common/string.hh>
 
 namespace Dune {
@@ -50,7 +51,7 @@ void print(const std::vector< T >& vector,
     print(vector[0], name, out, prefix);
   else {
     out << prefix << name << " = [";
-    for (size_t i = 0; i < (vector.size() - 1); ++i) {
+    for (auto i : valueRange(vector.size() - 1)) {
       out << vector[i] << ", ";
     }
     out << vector[vector.size() - 1] << "];" << "\n";
@@ -68,7 +69,7 @@ void print(const Dune::DenseVector< VectorImp >& vector,
     print(vector[0], name, out, prefix);
   else {
     out << prefix << name << " = [";
-    for (size_t i = 0; i < (vector.size() - 1); ++i) {
+    for (auto i : valueRange(vector.size() - 1)) {
       out << vector[i] << ", ";
     }
     out << vector[vector.size() - 1] << "];" << "\n";
@@ -85,7 +86,7 @@ void print(const std::vector< Dune::FieldVector< FieldImp, size > >& vectors,
   if (vectors.size() == 1)
     print(vectors[0], name, out, prefix);
   else {
-    for (size_t i = 0; i < vectors.size(); ++i) {
+    for (auto i : valueRange(vectors.size())) {
       print(vectors[i], name + "[" + Dune::Stuff::Common::toString(i) + "]", out, prefix);
     }
   }
@@ -105,7 +106,7 @@ void print(const std::vector< Dune::DenseVector< VectorImp > >& vectors,
   if (vectors.size() == 1)
     print(vectors[0], name, out, prefix);
   else {
-    for (size_t i = 0; i < vectors.size(); ++i) {
+    for (auto i : valueRange(vectors.size())) {
       print(vectors[i], name + "[" + Dune::Stuff::Common::toString(i) + "]", out, prefix);
     }
   }
@@ -124,7 +125,7 @@ void print(const Dune::DenseMatrix< MatrixImp >& matrix,
     out << prefix << name << " = [";
     typedef typename Dune::DenseMatrix< MatrixImp >::const_row_reference RowType;
     const RowType& firstRow = matrix[0];
-    for (size_t j = 0; j < (firstRow.size() - 1); ++j) {
+    for (auto j : valueRange((firstRow.size() - 1))) {
       out << firstRow[j] << ", ";
     }
     out << firstRow[firstRow.size() - 1];
@@ -135,7 +136,7 @@ void print(const Dune::DenseMatrix< MatrixImp >& matrix,
     for (size_t i = 1; i < matrix.rows(); ++i) {
       out << prefix << whitespaceify(name + " = [");
       const RowType& row = matrix[i];
-      for (size_t j = 0; j < (row.size() - 1); ++j) {
+      for (auto j : valueRange(row.size() - 1)) {
         out << row[j] << ", ";
       }
       out << row[row.size() - 1];
@@ -162,7 +163,7 @@ void print(const std::vector< Dune::FieldMatrix< FieldImp, rows, cols > >& matri
   if (matrices.size() == 1)
     print(matrices[0], name, out, prefix);
   else {
-    for (size_t i = 0; i < matrices.size(); ++i) {
+    for (auto i : valueRange(matrices.size())) {
       print(matrices[i], name + "[" + Dune::Stuff::Common::toString(i) + "]", out, prefix);
     }
   }
@@ -178,7 +179,7 @@ void print(const std::vector< Dune::DenseMatrix< MatrixImp > >& matrices,
   if (matrices.size() == 1)
     print(matrices[0], name, out, prefix);
   else {
-    for (size_t i = 0; i < matrices.size(); ++i) {
+    for (auto i : valueRange(matrices.size())) {
       print(matrices[i], name + "[" + Dune::Stuff::Common::toString(i) + "]", out, prefix);
     }
   }
@@ -282,20 +283,20 @@ template< class MatrixType, class stream >
 void printISTLMatrixMatlabStyle( const MatrixType& arg, std::string name, stream& out,
                                  const double eps = Config().get("eps", 1e-14) ) {
   name = std::string("istl.") + name;
-  const size_t I = arg.N();
-  const size_t J = arg.M();
+  const auto I = arg.N();
+  const auto J = arg.M();
   typedef typename MatrixType::block_type BlockType;
   out << boost::format("\n%s =sparse( %d, %d );") % name % (I* BlockType::rows) % (J* BlockType::cols) << "\n";
-  for (unsigned ii = 0; ii < I; ++ii)
+  for (auto ii : valueRange(I))
   {
-    for (unsigned jj = 0; jj < J; ++jj)
+    for (auto jj : valueRange(J))
     {
       if ( arg.exists(ii, jj) )
       {
         const auto& block = arg[ii][jj];
-        for (size_t i = 0; i < block.N(); ++i)
+        for (auto i : valueRange(block.N()))
         {
-          for (size_t j = 0; j < block.M(); ++j)
+          for (auto j : valueRange(block.M()))
           {
             const auto value = block[i][j];
             if (std::fabs(value) > eps)
@@ -335,7 +336,7 @@ void printDiscreteFunctionMatlabStyle(const T& arg, const std::string name, stre
 template< class T, class stream >
 void printDoubleVectorMatlabStyle(const T* arg, const size_t size, const std::string name, stream& out) {
   out << "\n" << name << " = [ " << "\n";
-  for (size_t i = 0; i < size; i++)
+  for (auto i : valueRange(size))
   {
     out << std::setprecision(matlab_output_precision) << arg[i];
     out << ";" << "\n";
@@ -347,7 +348,7 @@ void printDoubleVectorMatlabStyle(const T* arg, const size_t size, const std::st
 template< class Type >
 void printDoubleVec(std::ostream& stream, const Type* vec, const size_t N) {
   stream << "\n [ " << std::setw(5);
-  for (size_t i = 0; i < N; ++i)
+  for (auto i : valueRange(N))
     stream << vec[i] << " ";
 
   stream << " ] " << "\n";
@@ -393,9 +394,9 @@ public:
     const auto rows = localMatrix.rows();
     const auto cols = localMatrix.columns();
     stream_ << "\nlocal_" << name_ << "_Matrix_" << en_idx << "_" << ne_idx << " = [" << "\n";
-    for (size_t i = 0; i < rows; ++i)
+    for (auto i : valueRange(rows))
     {
-      for (size_t j = 0; j < cols; ++j)
+      for (auto j : valueRange(cols))
       {
         stream_ << std::setw(8) << std::setprecision(2) << localMatrix.get(i, j);
       }
@@ -435,7 +436,7 @@ public:
   void operator()(const Entity& en, const Entity& /*ne*/, const size_t /*en_idx*/, const size_t /*ne_idx */) {
     typename DiscreteFunctionType::LocalFunctionType lf = discrete_function_.localFunction(en);
     QuadratureType quad(en, 2 * discrete_function_.space().order() + 2);
-    for (size_t qp = 0; qp < quad.nop(); ++qp)
+    for (auto qp : valueRange(quad.nop()))
     {
       typename DiscreteFunctionType::RangeType eval(0);
       typename DiscreteFunctionType::DomainType xLocal = quad.point(qp);
@@ -476,7 +477,7 @@ public:
   void operator()(const Entity& en, const Entity& /*ne*/, const size_t /*en_idx*/, const size_t /*ne_idx */) {
     typename DiscreteFunctionType::LocalFunctionType lf = discrete_function_.localFunction(en);
 
-    for (size_t qp = 0; qp < lf.numDofs(); ++qp)
+    for (auto qp : valueRange(lf.numDofs()))
     {
       stream_ << boost::format("%s dof %d value value %f\n") % name_ % qp % lf[qp];
     }
@@ -501,10 +502,10 @@ template< class Matrix >
 void matrixToGnuplotStream(const Matrix& matrix, std::ostream& stream) {
   unsigned long nz = 0;
 
-  // don't try to be clever and use an unsigned counter here
-  for (decltype(matrix.rows()) row = 0; row < matrix.rows(); ++row)
+  const auto cols = matrix.cols();
+  for (auto row : valueRange(matrix.rows()))
   {
-    for (decltype(matrix.rows()) col = 0; col < matrix.cols(); ++col)
+    for (auto col : valueRange(cols))
     {
       if ( matrix.find(row, col) )
         stream << row << "\t" << col << "\t" << matrix(row, col) << "\n";
