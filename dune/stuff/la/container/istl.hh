@@ -553,6 +553,9 @@ public:
 
   void unit_row(const size_t ii)
   {
+    if (ii >= cols())
+      DUNE_THROW(Exceptions::index_out_of_range,
+                 "Given ii (" << ii << ") is larger than the cols of this (" << cols() << ")!");
     if (ii >= rows())
       DUNE_THROW(Exceptions::index_out_of_range,
                  "Given ii (" << ii << ") is larger than the rows of this (" << rows() << ")!");
@@ -569,6 +572,9 @@ public:
     if (jj >= cols())
       DUNE_THROW(Exceptions::index_out_of_range,
                  "Given jj (" << jj << ") is larger than the cols of this (" << cols() << ")!");
+    if (jj >= rows())
+      DUNE_THROW(Exceptions::index_out_of_range,
+                 "Given jj (" << jj << ") is larger than the rows of this (" << rows() << ")!");
     if (!backend_->exists(jj, jj))
       DUNE_THROW(Exceptions::index_out_of_range,
                  "Diagonal entry (" << jj << ", " << jj << ") is not contained in the sparsity pattern!");
