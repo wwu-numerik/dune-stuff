@@ -25,16 +25,14 @@
 #include <fstream>
 #include <limits>
 
-#include <dune/stuff/common/disable_warnings.hh>
-# include <dune/common/float_cmp.hh>
-# include <dune/common/fvector.hh>
-# include <dune/common/fmatrix.hh>
-# include <dune/common/parallel/mpihelper.hh>
+#include <dune/common/float_cmp.hh>
+#include <dune/common/fvector.hh>
+#include <dune/common/fmatrix.hh>
+#include <dune/common/parallel/mpihelper.hh>
 
-# if HAVE_DUNE_FEM
-#   include <dune/fem/misc/mpimanager.hh>
-# endif
-#include <dune/stuff/common/reenable_warnings.hh>
+#if HAVE_DUNE_FEM
+# include <dune/fem/misc/mpimanager.hh>
+#endif
 
 #include <dune/stuff/test/gtest/gtest.h>
 #include <dune/stuff/aliases.hh>
