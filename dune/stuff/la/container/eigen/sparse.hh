@@ -10,11 +10,11 @@
 #include <type_traits>
 #include <vector>
 
-#if HAVE_EIGEN
-# include <dune/stuff/common/disable_warnings.hh>
+#include <dune/stuff/common/disable_warnings.hh>
+# if HAVE_EIGEN
 #   include <Eigen/SparseCore>
-# include <dune/stuff/common/reenable_warnings.hh>
-#endif // HAVE_EIGEN
+# endif
+#include <dune/stuff/common/reenable_warnings.hh>
 
 #include <dune/common/typetraits.hh>
 
