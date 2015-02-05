@@ -35,8 +35,8 @@ class VectorInputIterator
 {
   typedef VectorInputIterator< Traits, ScalarImp > ThisType;
 public:
-  typedef VectorInterface< Traits, ScalarImp > VectorType;
-  typedef typename VectorType::ScalarType ScalarType;
+  typedef VectorInterface< Traits, ScalarImp >     VectorType;
+  typedef typename VectorType::ScalarType          ScalarType;
 
 private:
   struct ConstHolder
@@ -46,7 +46,7 @@ private:
     {}
 
     const VectorType& element;
-  };
+  }; // struct ConstHolder
 
 public:
   explicit VectorInputIterator(const VectorType& vec, const bool end = false)
@@ -62,7 +62,7 @@ public:
     else
       end_ = true;
     return *this;
-  }
+  } // ... operator++()
 
   bool operator==(const ThisType& other)
   {
@@ -98,10 +98,11 @@ class VectorOutputIterator
   typedef VectorOutputIterator< Traits, ScalarImp > ThisType;
 public:
   typedef VectorInterface< Traits, ScalarImp > VectorType;
-  typedef typename VectorType::ScalarType ScalarType;
-  static_assert(std::is_same< ScalarImp, ScalarType >::value, "");
+  typedef typename VectorType::ScalarType      ScalarType;
 
 private:
+  static_assert(std::is_same< ScalarImp, ScalarType >::value, "");
+
   struct Holder
   {
     explicit Holder(VectorType& vec)
@@ -109,7 +110,7 @@ private:
     {}
 
     VectorType& element;
-  };
+  }; // struct Holder
 
 public:
   explicit VectorOutputIterator(VectorType& vec, const bool end = false)
@@ -122,7 +123,7 @@ public:
     if (this->end_)
       DUNE_THROW(Exceptions::you_are_using_this_wrong, "This is the end!");
     return holder_->element[this->position_];
-  }
+  } // ... operator*()
 
 private:
   std::shared_ptr< Holder > holder_;

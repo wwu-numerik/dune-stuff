@@ -21,7 +21,7 @@ private:
   typedef std::vector< std::vector< size_t > > BaseType;
 
 public:
-  typedef BaseType::value_type  InnerType;
+  typedef BaseType::value_type              InnerType;
   typedef typename BaseType::const_iterator ConstOuterIteratorType;
 
   explicit SparsityPatternDefault(const size_t _size = 0);

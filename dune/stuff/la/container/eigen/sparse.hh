@@ -76,8 +76,8 @@ class EigenRowMajorSparseMatrix
                 "You have to manually disable the constructor below which uses DUNE_STUFF_SSIZE_T!");
 public:
   typedef internal::EigenRowMajorSparseMatrixTraits< ScalarImp > Traits;
-  typedef typename Traits::BackendType  BackendType;
-  typedef typename Traits::ScalarType   ScalarType;
+  typedef typename Traits::BackendType                           BackendType;
+  typedef typename Traits::ScalarType                            ScalarType;
 
   /**
    * \brief This is the constructor of interest which creates a sparse matrix.
@@ -111,7 +111,7 @@ public:
       backend_->finalize();
       backend_->makeCompressed();
     }
-  }
+  } // EigenRowMajorSparseMatrix(...)
 
   explicit EigenRowMajorSparseMatrix(const size_t rr = 0, const size_t cc = 0)
   {
@@ -128,10 +128,7 @@ public:
   explicit EigenRowMajorSparseMatrix(const int rr, const int cc = 0)
     : EigenRowMajorSparseMatrix(MatrixInterfaceType::assert_is_size_t_compatible_and_convert(rr),
                                 MatrixInterfaceType::assert_is_size_t_compatible_and_convert(cc))
-  {
-//    backend_ = std::make_shared<BackendType>(assert_is_IndexType_compatible_and_convert(rr),
-//                                             assert_is_IndexType_compatible_and_convert(cc));
-  }
+  {}
 
   EigenRowMajorSparseMatrix(const ThisType& other)
     : backend_(other.backend_)
@@ -156,7 +153,7 @@ public:
   {
     backend_ = other.backend_;
     return *this;
-  } // ... operator=(...)
+  }
 
   /**
    *  \note Does a deep copy.
@@ -165,32 +162,26 @@ public:
   {
     backend_ = std::make_shared< BackendType >(other);
     return *this;
-  } // ... operator=(...)
+  }
 
-  /**
-   * \defgroup backend ´´These methods are required by the ProvidesBackend interface.``
-   * \{
-   */
+  /// \name Required by the ProvidesBackend interface.
+  /// \{
 
   BackendType& backend()
   {
     ensure_uniqueness();
     return *backend_;
-  } // ... backend(...)
+  }
 
   const BackendType& backend() const
   {
     ensure_uniqueness();
     return *backend_;
-  } // ... backend(...)
-  /**
-   * \}
-   */
+  }
 
-  /**
-   * \defgroup container ´´These methods are required by ContainerInterface.``
-   * \{
-   */
+  /// \}
+  /// \name Required by ContainerInterface.
+  /// \{
 
   ThisType copy() const
   {
@@ -216,14 +207,10 @@ public:
   {
     return (rows() == other.rows()) && (cols() == other.cols());
   }
-  /**
-   * \}
-   */
 
-  /**
-   * \defgroup matrix_required ´´These methods are required by MatrixInterface.``
-   * \{
-   */
+  /// \}
+  /// \name Required by MatrixInterface.
+  /// \{
 
   inline size_t rows() const
   {
@@ -246,14 +233,14 @@ public:
     assert(these_are_valid_indices(ii, jj));
     backend().coeffRef(assert_is_IndexType_compatible_and_convert(ii),
                        assert_is_IndexType_compatible_and_convert(jj)) += value;
-  } // ... add_to_entry(...)
+  }
 
   void set_entry(const size_t ii, const size_t jj, const ScalarType& value)
   {
     assert(these_are_valid_indices(ii, jj));
     backend().coeffRef(assert_is_IndexType_compatible_and_convert(ii),
                        assert_is_IndexType_compatible_and_convert(jj)) = value;
-  } // ... set_entry(...)
+  }
 
   ScalarType get_entry(const size_t ii, const size_t jj) const
   {
@@ -261,7 +248,7 @@ public:
     assert(jj < cols());
     return backend_->coeff(assert_is_IndexType_compatible_and_convert(ii),
                            assert_is_IndexType_compatible_and_convert(jj));
-  } // ... get_entry(...)
+  }
 
   void clear_row(const size_t ii)
   {
@@ -269,7 +256,7 @@ public:
       DUNE_THROW(Exceptions::index_out_of_range,
                  "Given ii (" << ii << ") is larger than the rows of this (" << rows() << ")!");
     backend().row(assert_is_IndexType_compatible_and_convert(ii)) *= ScalarType(0);
-  } // ... clear_row(...)
+  }
 
   void clear_col(const size_t jj)
   {
@@ -332,11 +319,9 @@ public:
     // serialize matrix (no copy done here)
     auto& non_const_ref = const_cast< BackendType& >(*backend_);
     return EigenMappedDenseVector< ScalarType >(non_const_ref.valuePtr(), non_const_ref.nonZeros()).valid();
-  } // ... valid(...)
+  }
 
-  /**
-   * \}
-   */
+  /// \}
 
 private:
   typedef typename BackendType::Index   IndexType;

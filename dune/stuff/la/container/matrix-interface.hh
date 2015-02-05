@@ -26,7 +26,7 @@ namespace LA {
 
 
 /**
- *  \brief  Contains tags mostly needed for python bindings.
+ * \brief Contains tags mostly needed for python bindings.
  */
 namespace Tags {
 
@@ -44,14 +44,12 @@ class MatrixInterface
 {
 public:
   typedef typename Traits::derived_type derived_type;
-  typedef ScalarImp ScalarType;
+  typedef ScalarImp                     ScalarType;
 
   virtual ~MatrixInterface() {}
 
-  /**
-   * \defgroup haveto ´´These methods have to be implemented by a derived class in addition to the ones required by ContainerInterface!``
-   * \{
-   */
+  /// \name Have to be implemented by a derived class in addition to the ones required by ContainerInterface!
+  /// \{
 
   inline size_t rows() const
   {
@@ -69,14 +67,6 @@ public:
   inline void mv(const XX& xx, YY& yy) const
   {
     CHECK_AND_CALL_CRTP(this->as_imp().mv(xx, yy));
-  }
-
-  template< class XX >
-  typename XX::derived_type operator*(const VectorInterface< XX, ScalarType >& xx) const
-  {
-    typename XX::derived_type yy(cols());
-    mv(xx.as_imp(xx), yy);
-    return yy;
   }
 
   inline void add_to_entry(const size_t ii, const size_t jj, const ScalarType& value)
@@ -125,9 +115,18 @@ public:
     return this->as_imp().valid();
   }
 
-  /**
-   * \}
-   */
+  /// \}
+  /// \name Provided by the interface for convenience.
+  /// \note Those marked with vitual should be overriden by any devired class that can do better.
+  /// \{
+
+  template< class XX >
+  typename XX::derived_type operator*(const VectorInterface< XX, ScalarType >& xx) const
+  {
+    typename XX::derived_type yy(cols());
+    mv(xx.as_imp(xx), yy);
+    return yy;
+  }
 
   ScalarType sup_norm() const
   {
@@ -136,12 +135,11 @@ public:
       for (size_t jj = 0; jj < cols(); ++jj)
         ret = std::max(ret, std::abs(get_entry(ii, jj)));
     return ret;
-  }
+  } // ... sup_norm(...)
 
-  /**
-   * \defgroup python_bindings ´´These methods are necesarry for the python bindings. They are provided by the interface!``
-   * \{
-   */
+  /// \}
+  /// \name Necesarry for the python bindings.
+  /// \{
 
   inline DUNE_STUFF_SSIZE_T pb_rows() const
   {
@@ -201,9 +199,7 @@ public:
     unit_col(this->assert_is_size_t_compatible_and_convert(jj));
   }
 
-  /**
-   * \}
-   */
+  /// \}
 
 private:
   template< class T, class S >

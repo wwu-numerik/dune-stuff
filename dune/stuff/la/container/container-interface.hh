@@ -13,8 +13,8 @@
 #include <type_traits>
 
 #include <dune/stuff/common/crtp.hh>
-#include <dune/stuff/common/type_utils.hh>
 #include <dune/stuff/common/exceptions.hh>
+#include <dune/stuff/common/type_utils.hh>
 
 namespace Dune {
 namespace Stuff {
@@ -123,10 +123,8 @@ public:
 
   virtual ~ContainerInterface() {}
 
-  /**
-   * \defgroup haveto ´´These methods have to be implemented by a derived class!``
-   * \{
-   */
+  /// \name Have to be implemented by a derived class!
+  /// \{
 
   /**
    * \brief   Creates a (deep) copy of the underlying resource
@@ -167,26 +165,25 @@ public:
     return this->as_imp().has_equal_shape(other);
   }
 
-  /**
-   * \}
-   */
+  /// \}
+  /// \name Are provided by the interface for convenience!
+  /// \note Those marked as virtual may be implemented more efficiently in a derived class!
+  /// \{
 
-  /**
-   * \defgroup provided ´´These methods are provided by the interface for convenience! Those marked as virtual may be implemented more efficiently in a derived class!``
-   * \{
-   */
 
-  static std::string type_this() { return Common::Typename< derived_type >::value(); }
+  static std::string type_this()
+  {
+    return Common::Typename< derived_type >::value();
+  }
 
   virtual derived_type& operator*=(const ScalarType& alpha)
   {
     scal(alpha);
     return this->as_imp(*this);
   }
+  /// \}
+}; // class ContainerInterface
 
-  /**
-   * \}
-   */
 
 protected:
   template< class SignedSizeType >

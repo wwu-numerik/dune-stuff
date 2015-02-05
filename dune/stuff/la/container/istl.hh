@@ -38,7 +38,9 @@ class IstlRowMajorSparseMatrix;
 
 #if HAVE_DUNE_ISTL
 
-/// Traits for IstlDenseVector.
+/**
+ * \brief Traits for IstlDenseVector.
+ */
 template< class ScalarImp >
 class IstlDenseVectorTraits
 {
@@ -97,7 +99,7 @@ public:
       backend_->operator[](ii)[0] = element;
       ++ii;
     }
-  }
+  } // IstlDenseVector(...)
 
   IstlDenseVector(const ThisType& other) = default;
 
@@ -120,7 +122,7 @@ public:
   {
     backend_ = other.backend_;
     return *this;
-  } // ... operator=(...)
+  }
 
   /**
    *  \note Does a deep copy.
@@ -129,12 +131,10 @@ public:
   {
     backend_ = std::make_shared< BackendType >(other);
     return *this;
-  } // ... operator=(...)
+  }
 
-  /**
-   * \defgroup backend ´´These methods are required by the ProvidesBackend interface.``
-   * \{
-   */
+  /// \name Required by the ProvidesBackend interface.
+  /// \{
 
   ThisType& operator=(const ScalarType& value)
   {
@@ -142,27 +142,23 @@ public:
     for (auto& element : *this)
       element = value;
     return *this;
-  } // ... operator=(...)
+  }
 
   BackendType& backend()
   {
     ensure_uniqueness();
     return *backend_;
-  } // ... backend(...)
+  }
 
   const BackendType& backend() const
   {
     ensure_uniqueness();
     return *backend_;
-  } // ... backend(...)
-  /**
-   * \}
-   */
+  }
 
-  /**
-   * \defgroup container ´´These methods are required by ContainerInterface.``
-   * \{
-   */
+  /// \}
+  /// \name Required by ContainerInterface.
+  /// \{
 
   ThisType copy() const
   {
@@ -172,7 +168,7 @@ public:
   void scal(const ScalarType& alpha)
   {
     backend() *= alpha;
-  } // ... scal(...)
+  }
 
   void axpy(const ScalarType& alpha, const ThisType& xx)
   {
@@ -180,20 +176,16 @@ public:
       DUNE_THROW(Exceptions::shapes_do_not_match,
                  "The size of x (" << xx.size() << ") does not match the size of this (" << size() << ")!");
     backend().axpy(alpha, *(xx.backend_));
-  } // ... axpy(...)
+  }
 
   bool has_equal_shape(const ThisType& other) const
   {
     return size() == other.size();
   }
-  /**
-   * \}
-   */
 
-  /**
-   * \defgroup vector_required ´´These methods are required by VectorInterface.``
-   * \{
-   */
+  /// \}
+  /// \name Required by VectorInterface.
+  /// \{
 
   inline size_t size() const
   {
@@ -207,19 +199,19 @@ public:
   {
     assert(ii < size());
     backend()[ii][0] += value;
-  } // ... add_to_entry(...)
+  }
 
   void set_entry(const size_t ii, const ScalarType& value)
   {
     assert(ii < size());
     backend()[ii][0] = value;
-  } // ... set_entry(...)
+  }
 
   ScalarType get_entry(const size_t ii) const
   {
     assert(ii < size());
     return backend_->operator[](ii)[0];
-  } // ... get_entry(...)
+  }
 
 private:
   inline ScalarType& get_entry_ref(const size_t ii)
@@ -233,14 +225,10 @@ private:
   }
 
 public:
-  /**
-   * \}
-   */
 
-  /**
-   * \defgroup vector_overrides ´´These methods override default implementations from VectorInterface.``
-   * \{
-   */
+  /// \}
+  /// \name These methods override default implementations from VectorInterface..
+  /// \{
 
   virtual ScalarType dot(const ThisType& other) const override final
   {
@@ -292,7 +280,7 @@ public:
     if (other.size() != size())
       DUNE_THROW(Exceptions::shapes_do_not_match,
                  "The size of other (" << other.size() << ") does not match the size of this (" << size() << ")!");
-    backend()+=(*(other.backend_));
+    backend() += *(other.backend_);
   } // ... iadd(...)
 
   virtual void sub(const ThisType& other, ThisType& result) const override final
@@ -325,9 +313,7 @@ public:
     backend()-=(*(other.backend_));
   } // ... isub(...)
 
-  /**
-   * \}
-   */
+  /// \}
 
 private:
   /**
@@ -394,7 +380,7 @@ public:
       ++row_index;
     }
     backend_->operator*=(ScalarType(0));
-  }
+  } // IstlRowMajorSparseMatrix(...)
 
   explicit IstlRowMajorSparseMatrix(const size_t rr = 0, const size_t cc = 0)
     : backend_(new BackendType(rr, cc, BackendType::row_wise))
@@ -407,7 +393,7 @@ public:
                                BackendType::row_wise))
   {}
 
-  /// This constructor is needed because marking the above one as explicit had no effect.
+  /// This constructor is needed for the python bindings.
   explicit IstlRowMajorSparseMatrix(const int rr, const int cc = 0)
     : backend_(new BackendType(this->assert_is_size_t_compatible_and_convert(rr),
                                this->assert_is_size_t_compatible_and_convert(cc),
@@ -446,30 +432,24 @@ public:
     return *this;
   } // ... operator=(...)
 
-  /**
-   * \defgroup backend ´´These methods are required by the ProvidesBackend interface.``
-   * \{
-   */
+  /// \name Required by the ProvidesBackend interface.
+  /// \{
 
   BackendType& backend()
   {
     ensure_uniqueness();
     return *backend_;
-  } // ... backend(...)
+  }
 
   const BackendType& backend() const
   {
     ensure_uniqueness();
     return *backend_;
-  } // ... backend(...)
-  /**
-   * \}
-   */
+  }
 
-  /**
-   * \defgroup container ´´These methods are required by ContainerInterface.``
-   * \{
-   */
+  /// \}
+  /// \name Required by ContainerInterface.
+  /// \{
 
   ThisType copy() const
   {
@@ -479,7 +459,7 @@ public:
   void scal(const ScalarType& alpha)
   {
     backend() *= alpha;
-  } // ... scal(...)
+  }
 
   void axpy(const ScalarType& alpha, const ThisType& xx)
   {
@@ -494,14 +474,10 @@ public:
   {
     return (rows() == other.rows()) && (cols() == other.cols());
   }
-  /**
-   * \}
-   */
 
-  /**
-   * \defgroup matrix_required ´´These methods are required by MatrixInterface.``
-   * \{
-   */
+  /// \}
+  /// \name Required by MatrixInterface.
+  /// \{
 
   inline size_t rows() const
   {
@@ -528,13 +504,13 @@ public:
   {
     assert(these_are_valid_indices(ii, jj));
     backend()[ii][jj][0][0] += value;
-  } // ... add_to_entry(...)
+  }
 
   void set_entry(const size_t ii, const size_t jj, const ScalarType& value)
   {
     assert(these_are_valid_indices(ii, jj));
     backend()[ii][jj][0][0] = value;
-  } // ... set_entry(...)
+  }
 
   ScalarType get_entry(const size_t ii, const size_t jj) const
   {
@@ -612,9 +588,7 @@ public:
     return true;
   } // ... valid(...)
 
-  /**
-   * \}
-   */
+  /// \}
 
 private:
   bool these_are_valid_indices(const size_t ii, const size_t jj) const
@@ -676,10 +650,16 @@ std::ostream& operator<<(std::ostream& out, const IstlRowMajorSparseMatrix< S >&
 
 
 template< class ScalarImp >
-class IstlDenseVector{ static_assert(Dune::AlwaysFalse< ScalarImp >::value, "You are missing dune-istl!"); };
+class IstlDenseVector
+{
+  static_assert(Dune::AlwaysFalse< ScalarImp >::value, "You are missing dune-istl!");
+};
 
 template< class ScalarImp >
-class IstlRowMajorSparseMatrix{ static_assert(Dune::AlwaysFalse< ScalarImp >::value, "You are missing dune-istl!"); };
+class IstlRowMajorSparseMatrix
+{
+  static_assert(Dune::AlwaysFalse< ScalarImp >::value, "You are missing dune-istl!");
+};
 
 
 #endif // HAVE_DUNE_ISTL
