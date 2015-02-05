@@ -207,7 +207,6 @@ private:
 template< class ScalarImp = double >
 class EigenMappedDenseVector
   : public EigenBaseVector< internal::EigenMappedDenseVectorTraits< ScalarImp > >
-  , public ProvidesBackend< internal::EigenMappedDenseVectorTraits< ScalarImp > >
 {
   typedef EigenMappedDenseVector< ScalarImp >                                               ThisType;
   typedef VectorInterface< internal::EigenMappedDenseVectorTraits< ScalarImp >, ScalarImp > VectorInterfaceType;
