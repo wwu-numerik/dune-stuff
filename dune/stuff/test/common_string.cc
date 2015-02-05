@@ -106,13 +106,9 @@ typedef testing::Types< Dune::DynamicMatrix< double >
                     > MatrixTypesDouble;
 
 typedef testing::Types< Dune::DynamicMatrix< char >
-                    , Dune::Stuff::LA::CommonDenseMatrix< char >
                     , Dune::Stuff::Common::FieldMatrix< char, 2, 2 >
                     , Dune::FieldMatrix< char, 2, 2 >
-#if HAVE_EIGEN
-                    , Dune::Stuff::LA::EigenDenseMatrix< char >
-#endif
-                    > MatrixTypesChar;
+                   > MatrixTypesChar;
 
 // fromString/toString tests for vector and matrix types
 TYPED_TEST_CASE(MatrixStringTestDouble, MatrixTypesDouble);
