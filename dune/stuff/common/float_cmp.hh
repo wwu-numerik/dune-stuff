@@ -289,7 +289,7 @@ struct Call< FirstType, SecondType, ToleranceType, Style::numpy >
                            style >:: id (first, second, rtol, atol); \
   } \
   \
-  template< class FirstType, class SecondType, class ToleranceType = typename VectorAbstraction< FirstType >::ScalarType > \
+  template< class FirstType, class SecondType, class ToleranceType = typename VectorAbstraction< FirstType >::S > \
       typename std::enable_if<    (   std::is_arithmetic< FirstType >::value \
                                    && std::is_same< FirstType, SecondType >::value) \
                                || (std::is_arithmetic< ToleranceType >::value \
