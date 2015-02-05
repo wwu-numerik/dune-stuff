@@ -95,8 +95,8 @@ class Cutoff
         RangeFieldType minimum = std::numeric_limits< RangeFieldType >::max();
         const auto local_diffusion_factor = diffusion_factor.local_function(ent);
         const size_t ord = local_diffusion_factor->order();
-        assert(ord < std::numeric_limits< int >::max());
-        const auto& quadrature = QuadratureRules< DomainFieldType, dimDomain >::rule(ent.type(), int(ord));
+        const auto& quadrature = QuadratureRules< DomainFieldType, dimDomain >::rule(ent.type(),
+                                                                                     boost::numeric_cast< int >(ord));
         const auto quad_point_it_end = quadrature.end();
         for (auto quad_point_it = quadrature.begin(); quad_point_it != quad_point_it_end; ++quad_point_it) {
           local_diffusion_factor->evaluate(quad_point_it->position(), tmp_value);
