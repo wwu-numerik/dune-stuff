@@ -686,6 +686,12 @@ struct VectorAbstraction< LA::IstlDenseVector< T > >
 {};
 
 
+template< class T >
+struct MatrixAbstraction< LA::IstlRowMajorSparseMatrix< T > >
+  : public LA::internal::MatrixAbstractionBase< LA::IstlRowMajorSparseMatrix< T > >
+{};
+
+
 #endif // HAVE_DUNE_ISTL
 
 } // namespace Common

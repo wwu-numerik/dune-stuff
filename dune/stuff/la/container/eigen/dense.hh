@@ -647,6 +647,12 @@ struct VectorAbstraction< LA::EigenMappedDenseVector< T > >
 {};
 
 
+template< class T >
+struct MatrixAbstraction< LA::EigenDenseMatrix< T > >
+  : public LA::internal::MatrixAbstractionBase< LA::EigenDenseMatrix< T > >
+{};
+
+
 #endif // HAVE_EIGEN
 
 } // namespace Common

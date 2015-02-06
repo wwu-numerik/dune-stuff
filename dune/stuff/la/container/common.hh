@@ -589,6 +589,12 @@ struct VectorAbstraction< LA::CommonDenseVector< T > >
 {};
 
 
+template< class T >
+struct MatrixAbstraction< LA::CommonDenseMatrix< T > >
+  : public LA::internal::MatrixAbstractionBase< LA::CommonDenseMatrix< T > >
+{};
+
+
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
