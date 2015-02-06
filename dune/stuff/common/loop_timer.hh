@@ -78,7 +78,7 @@ public:
   ThisType& operator++() {
     ++iteration_;
     step_timer_.stop();
-    avg_time_per_iteration_(weight_.apply(std::abs( step_timer_.delta().second ), iteration_, iteration_count_));
+    avg_time_per_iteration_(weight_.apply(std::abs( step_timer_.delta()[1]), iteration_, iteration_count_));
     const long remaining_steps = iteration_count_ - iteration_;
     const double remaining_ms = remaining_steps * avg_time_per_iteration_.average();
     const boost::posix_time::time_duration diff = boost::posix_time::microseconds(remaining_ms);
