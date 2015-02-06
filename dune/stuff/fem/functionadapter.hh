@@ -191,8 +191,8 @@ public:
     typedef Dune::Fem::CachingQuadrature< GridPartType, 0 > VolumeQuadratureType;
     // type of local mass matrix
     typedef DSFe::LocalMassMatrix< DiscreteFunctionSpaceType, VolumeQuadratureType > LocalMassMatrixType;
-    const int quadOrd = std::max(2 * space.order() + 2, polOrd);
-    const LocalMassMatrixType massMatrix(space, quadOrd);
+    const auto quadOrd = std::max(2 * space.order() + 2, polOrd);
+    const LocalMassMatrixType massMatrix(space, boost::numeric_cast< int >(quadOrd);
     const bool affineMapping = massMatrix.affine();
     // clear destination
     BaseType::clear();
