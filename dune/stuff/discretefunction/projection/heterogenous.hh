@@ -150,7 +150,7 @@ protected:
 
 #if HAVE_DUNE_GDT
 
-template< class ImpTraits, int domainDim, class RangeFieldImp, int rangeDim >
+template< class ImpTraits, size_t domainDim, class RangeFieldImp, size_t rangeDim >
 std::vector<typename GDT::Spaces::CGInterface< ImpTraits, domainDim, RangeFieldImp, rangeDim, 1 >::DomainType>
 global_evaluation_points(const GDT::Spaces::CGInterface< ImpTraits, domainDim, RangeFieldImp, rangeDim, 1 >& space,
          const typename GDT::Spaces::CGInterface< ImpTraits, domainDim, RangeFieldImp, rangeDim, 1 >::EntityType& target_entity)

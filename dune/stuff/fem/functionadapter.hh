@@ -113,7 +113,7 @@ public:
   }
 };
 
-template< int dim, class RangeType, class JacobianRangeType >
+template< size_t dim, class RangeType, class JacobianRangeType >
 struct GradientJacobianToLaplacian
   : public RangeType
 {

@@ -47,7 +47,7 @@ protected:
   const TimeProviderImp& timeProvider_;
 
   using Interface::asImp;
-  static const int dim_ = FunctionSpaceImp::dimDomain;
+  static const size_t dim_ = FunctionSpaceImp::dimDomain;
 
 public:
   typedef TimeProviderImp
@@ -102,7 +102,7 @@ public:
      *  \param[in]  x             evaluation point
      *  \param[out] ret           value of the derivative in x
      */
-  template< int diffOrder >
+  template< size_t diffOrder >
   inline void evaluate(const FieldVector< int, diffOrder >& diffVariable,
                        const typename BaseType::DomainType& x,
                        typename BaseType::RangeType& ret) const {
@@ -134,7 +134,7 @@ protected:
   const TimeProviderImp& timeProvider_;
 
   using Interface::asImp;
-  static const int dim_ = FunctionSpaceImp::dimDomain;
+  static const size_t dim_ = FunctionSpaceImp::dimDomain;
 
 public:
   typedef TimeProviderImp
@@ -192,7 +192,7 @@ public:
      *  \param[in]  x             evaluation point
      *  \param[out] ret           value of the derivative in x
      */
-  template< int diffOrder >
+  template< size_t diffOrder >
   inline void evaluate(const FieldVector< int, diffOrder >& /*diffVariable*/,
                        const typename BaseType::DomainType& /*x*/,
                        typename BaseType::RangeType& /*ret*/) const {

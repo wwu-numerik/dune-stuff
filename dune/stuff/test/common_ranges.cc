@@ -30,7 +30,7 @@ struct CornerRangeTest : public ::testing::Test
 {
   static const size_t level = 4;
   typedef T GridType;
-  static const int dim_grid = GridType::dimension;
+  static const size_t dim_grid = GridType::dimension;
   const DSG::Providers::Cube<GridType> grid_prv;
   CornerRangeTest()
     :grid_prv(0.,1.,level)

@@ -28,7 +28,7 @@ namespace Stuff {
 namespace Fem {
 
 //! Wrap a DiscreteFunction to a scalar function representing its two-norm
-template< class DiscreteFunctionImp, int polOrder = 3 >
+template< class DiscreteFunctionImp, size_t polOrder = 3 >
 class MagnitudeFunction
 {
 public:
@@ -103,7 +103,7 @@ private:
   MagnitudeDiscreteFunctionType magnitude_disretefunction_;
 };
 
-template< class DF, int I >
+template< class DF, size_t I >
 const typename MagnitudeFunction< DF, I >::MagnitudeSpaceType
 MagnitudeFunction< DF, I >::magnitude_space_ = typename MagnitudeFunction< DF, I >::MagnitudeSpaceType();
 

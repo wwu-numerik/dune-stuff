@@ -24,7 +24,7 @@ namespace Stuff {
 namespace Functions {
 
 
-template< class E, class D, int d, class R, int r, int rC = 1 >
+template< class E, class D, size_t d, class R, size_t r, size_t rC = 1 >
 class Indicator
   : public LocalizableFunctionInterface< E, D, d, R, r, rC >
 {
@@ -32,7 +32,7 @@ class Indicator
 };
 
 
-template< class E, class D, int d, class R >
+template< class E, class D, size_t d, class R >
 class Indicator< E, D, d, R, 1 >
   : public LocalizableFunctionInterface< E, D, d, R, 1 >
 {

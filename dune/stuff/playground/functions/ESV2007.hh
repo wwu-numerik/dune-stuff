@@ -40,7 +40,7 @@ class Cutoff
                 "DiffusionTensorType has to be tagged as a LocalizableFunction!");
   typedef typename DiffusionFactorType::EntityType E_;
   typedef typename DiffusionFactorType::DomainFieldType D_;
-  static const unsigned int d_ = DiffusionFactorType::dimDomain;
+  static const size_t d_ = DiffusionFactorType::dimDomain;
   typedef typename DiffusionFactorType::RangeFieldType R_;
   typedef LocalizableFunctionInterface< E_, D_, d_, R_, 1 >  BaseType;
   typedef Cutoff< DiffusionFactorType, DiffusionTensorType > ThisType;
@@ -63,19 +63,19 @@ class Cutoff
   public:
     typedef typename BaseType::EntityType EntityType;
 
-    typedef typename BaseType::DomainFieldType  DomainFieldType;
-    static const unsigned int                   dimDomain = BaseType::dimDomain;
-    typedef typename BaseType::DomainType       DomainType;
+    typedef typename BaseType::DomainFieldType DomainFieldType;
+    static const size_t                        dimDomain = BaseType::dimDomain;
+    typedef typename BaseType::DomainType      DomainType;
 
     typedef typename BaseType::RangeFieldType RangeFieldType;
-    static const unsigned int                 dimRange = BaseType::dimRange;
-    static const unsigned int                 dimRangeCols = BaseType::dimRangeCols;
+    static const size_t                       dimRange = BaseType::dimRange;
+    static const size_t                       dimRangeCols = BaseType::dimRangeCols;
     typedef typename BaseType::RangeType      RangeType;
 
     typedef typename BaseType::JacobianRangeType JacobianRangeType;
 
   private:
-    template< class DF, int r, int rR >
+    template< class DF, size_t r, size_t rR >
     struct ComputeDiffusionFactor
     {
       static_assert(AlwaysFalse< DF >::value, "Not implemented for these dimensions!");
@@ -106,13 +106,13 @@ class Cutoff
       } // ... min_of(...)
     }; // class ComputeDiffusionFactor< ..., 1, 1 >
 
-    template< class DT, int r, int rR >
+    template< class DT, size_t r, size_t rR >
     struct ComputeDiffusionTensor
     {
       static_assert(AlwaysFalse< DT >::value, "Not implemented for these dimensions!");
     };
 
-    template< class DT, int d >
+    template< class DT, size_t d >
     struct ComputeDiffusionTensor< DT, d, d >
     {
       static RangeFieldType min_eigenvalue_of(const DT& diffusion_tensor, const EntityType& ent)
@@ -207,13 +207,13 @@ public:
   typedef typename BaseType::EntityType         EntityType;
   typedef typename BaseType::LocalfunctionType  LocalfunctionType;
 
-  typedef typename BaseType::DomainFieldType  DomainFieldType;
-  static const unsigned int                   dimDomain = BaseType::dimDomain;
-  typedef typename BaseType::DomainType       DomainType;
+  typedef typename BaseType::DomainFieldType DomainFieldType;
+  static const size_t                        dimDomain = BaseType::dimDomain;
+  typedef typename BaseType::DomainType      DomainType;
 
   typedef typename BaseType::RangeFieldType RangeFieldType;
-  static const unsigned int                 dimRange = BaseType::dimRange;
-  static const unsigned int                 dimRangeCols = BaseType::dimRangeCols;
+  static const size_t                       dimRange = BaseType::dimRange;
+  static const size_t                       dimRangeCols = BaseType::dimRangeCols;
   typedef typename BaseType::RangeType      RangeType;
 
   static std::string static_id()

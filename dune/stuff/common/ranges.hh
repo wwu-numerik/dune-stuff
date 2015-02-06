@@ -75,7 +75,7 @@ namespace Common {
 
 
 //! adapter enabling view usage in range-based for
-template< class GridPartViewType, int codim = 0 >
+template< class GridPartViewType, size_t codim = 0 >
 class EntityRange
 {
   const GridPartViewType& part_view_;
@@ -99,7 +99,7 @@ public:
 }; // class EntityRange
 
 
-template< class GridPartViewType, int codim = 0 >
+template< class GridPartViewType, size_t codim = 0 >
 class
   DUNE_DEPRECATED_MSG("Use EntityRange instead (22.09.2014)!")
       ViewRange
@@ -113,7 +113,7 @@ class
 }; // class ViewRange
 
 
-template< class GridViewTraits, int codim = 0>
+template< class GridViewTraits, size_t codim = 0>
 EntityRange< Dune::GridView< GridViewTraits >, codim >
   DUNE_DEPRECATED_MSG("Use entityRange instead (22.09.2014)!")
                                                        viewRange(const Dune::GridView< GridViewTraits >& view)
@@ -121,7 +121,7 @@ EntityRange< Dune::GridView< GridViewTraits >, codim >
   return EntityRange< Dune::GridView< GridViewTraits >, codim >(view);
 }
 
-template< class GridViewTraits, int codim = 0>
+template< class GridViewTraits, size_t codim = 0>
 EntityRange< Dune::GridView< GridViewTraits >, codim > entityRange(const Dune::GridView< GridViewTraits >& view)
 {
   return EntityRange< Dune::GridView< GridViewTraits >, codim >(view);
@@ -131,7 +131,7 @@ EntityRange< Dune::GridView< GridViewTraits >, codim > entityRange(const Dune::G
 # if HAVE_DUNE_FEM
 
 
-template< class GP, int codim = 0 >
+template< class GP, size_t codim = 0 >
 EntityRange< Dune::Fem::GridPartInterface< GP >, codim >
   DUNE_DEPRECATED_MSG("Use entityRange instead (22.09.2014)!")
                                                                viewRange(const Dune::Fem::GridPartInterface< GP>& part)
@@ -139,7 +139,7 @@ EntityRange< Dune::Fem::GridPartInterface< GP >, codim >
   return EntityRange< Dune::Fem::GridPartInterface< GP >, codim >(part);
 }
 
-template< class GP, int codim = 0 >
+template< class GP, size_t codim = 0 >
 EntityRange< Dune::Fem::GridPartInterface< GP >, codim > entityRange(const Dune::Fem::GridPartInterface< GP>& part)
 {
   return EntityRange< Dune::Fem::GridPartInterface< GP >, codim >(part);
@@ -284,15 +284,15 @@ public:
   }
 };
 
-template < int codim, class DiscreteFunctionspaceType, class EntityType >
+template < size_t codim, class DiscreteFunctionspaceType, class EntityType >
 LagrangePointSetRange<typename DiscreteFunctionspaceType::GridPartType, DiscreteFunctionspaceType::polynomialOrder, codim>
 lagrangePointSetRange(const DiscreteFunctionspaceType& space, const EntityType& entity, const size_t subEntity) {
   return LagrangePointSetRange<typename DiscreteFunctionspaceType::GridPartType, DiscreteFunctionspaceType::polynomialOrder, codim>(space, entity, subEntity);
 }
 
-template < class LgPointSetType, int codim = 1 >
+template < class LgPointSetType, size_t codim = 1 >
 LagrangePointSetRange<typename LgPointSetType::GridPartType, LgPointSetType::polynomialOrder, codim>
-lagrangePointSetRange(const LgPointSetType& lpset, const int subEntity) {
+lagrangePointSetRange(const LgPointSetType& lpset, const size_t subEntity) {
   return LagrangePointSetRange<typename LgPointSetType::GridPartType, LgPointSetType::polynomialOrder, codim>(lpset, subEntity);
 }
 

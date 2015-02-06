@@ -63,7 +63,7 @@ public:
   typedef Dune::CpGrid GridType;
 
   //! Dimension of the provided grid.
-  static const int dim = 3;
+  static const size_t dim = 3;
 
   //! Type of the grids coordinates.
   typedef Dune::FieldVector< GridType::ctype, dim > CoordinateType;
@@ -99,7 +99,7 @@ public:
   const GridType& grid() const;
 
 private:
-  template< int dim >
+  template< size_t dim >
   struct P0Layout
   {
     bool contains(Dune::GeometryType& geometry)

@@ -212,7 +212,7 @@ public:
   /** \brief add a vector in a FieldVector of error values for the given id (returned by
      *         addEntry)
      */
-  template< int SIZE >
+  template< size_t SIZE >
   static void setErrors(size_t id, const Dune::FieldVector< double, SIZE >& err) {
     instance().seterrors(id, err);
   }
