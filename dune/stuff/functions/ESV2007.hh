@@ -52,11 +52,8 @@ class
     static const unsigned int                   dimDomain = BaseType::dimDomain;
     typedef typename BaseType::DomainType       DomainType;
 
-    typedef typename BaseType::RangeFieldType RangeFieldType;
-    static const unsigned int                 dimRange = BaseType::dimRange;
-    static const unsigned int                 dimRangeCols = BaseType::dimRangeCols;
-    typedef typename BaseType::RangeType      RangeType;
-
+    typedef typename BaseType::RangeFieldType    RangeFieldType;
+    typedef typename BaseType::RangeType         RangeType;
     typedef typename BaseType::JacobianRangeType JacobianRangeType;
 
   private:
@@ -131,17 +128,9 @@ class
   }; // class Localfunction
 
 public:
-  typedef typename BaseType::EntityType         EntityType;
-  typedef typename BaseType::LocalfunctionType  LocalfunctionType;
-
-  typedef typename BaseType::DomainFieldType  DomainFieldType;
-  static const unsigned int                   dimDomain = BaseType::dimDomain;
-  typedef typename BaseType::DomainType       DomainType;
-
-  typedef typename BaseType::RangeFieldType RangeFieldType;
-  static const unsigned int                 dimRange = BaseType::dimRange;
-  static const unsigned int                 dimRangeCols = BaseType::dimRangeCols;
-  typedef typename BaseType::RangeType      RangeType;
+  typedef typename BaseType::EntityType        EntityType;
+  typedef typename BaseType::LocalfunctionType LocalfunctionType;
+  typedef typename BaseType::RangeFieldType    RangeFieldType;
 
   static std::string static_id()
   {
@@ -516,17 +505,9 @@ class Cutoff< DiffusionType, void >
   }; // class Localfunction
 
 public:
-  typedef typename BaseType::EntityType         EntityType;
-  typedef typename BaseType::LocalfunctionType  LocalfunctionType;
-
-  typedef typename BaseType::DomainFieldType  DomainFieldType;
-  static const unsigned int                   dimDomain = BaseType::dimDomain;
-  typedef typename BaseType::DomainType       DomainType;
-
-  typedef typename BaseType::RangeFieldType RangeFieldType;
-  static const unsigned int                 dimRange = BaseType::dimRange;
-  static const unsigned int                 dimRangeCols = BaseType::dimRangeCols;
-  typedef typename BaseType::RangeType      RangeType;
+  typedef typename BaseType::EntityType        EntityType;
+  typedef typename BaseType::LocalfunctionType LocalfunctionType;
+  typedef typename BaseType::RangeFieldType    RangeFieldType;
 
   static std::string static_id()
   {
