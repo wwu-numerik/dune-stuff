@@ -74,7 +74,7 @@ public:
     , entries_( rows_ * cols_, FieldType(0.0) )
   {}
 
-  inline void add(const size_t row, const unsigned int col, const FieldType val) {
+  inline void add(const size_t row, const size_t col, const FieldType val) {
     ASSERT_LT(row, rows_);
     ASSERT_LT(col, cols_);
     entries_[row * cols_ + col] += val;
