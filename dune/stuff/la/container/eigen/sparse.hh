@@ -370,7 +370,10 @@ private:
 
 
 template< class ScalarImp >
-class EigenRowMajorSparseMatrix{ static_assert(Dune::AlwaysFalse< ScalarImp >::value, "You are missing Eigen!"); };
+class EigenRowMajorSparseMatrix
+{
+  static_assert(AlwaysFalse< ScalarImp >::value, "You are missing Eigen!");
+};
 
 
 #endif // HAVE_EIGEN
