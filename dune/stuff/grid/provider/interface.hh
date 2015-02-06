@@ -194,7 +194,7 @@ private:
       const auto& entity = *it;
       const auto& index = gridView.indexSet().index(entity);
       data[index] = 0.0;
-      int numberOfBoundarySegments = 0;
+      size_t numberOfBoundarySegments = 0;
       bool isOnBoundary = false;
       for (auto intersectionIt = gridView.ibegin(entity);
            intersectionIt != gridView.iend(entity);
