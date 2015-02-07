@@ -95,6 +95,8 @@ class requirements_not_met: public you_are_using_this_wrong {};
 
 class configuration_error : public Dune::Exception {};
 
+class conversion_error : public Dune::Exception {};
+
 class results_are_not_as_expected : public Dune::Exception {};
 
 class internal_error : public Dune::Exception {};
