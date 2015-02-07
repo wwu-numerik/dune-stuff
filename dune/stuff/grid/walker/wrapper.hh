@@ -15,7 +15,7 @@ namespace Grid {
 namespace internal {
 
 
-template <class GridViewType>
+template< class GridViewType >
 class Codim0Object
   : public Functor::Codim0< GridViewType >
 {
