@@ -35,7 +35,7 @@ struct MatrixStringTestDouble
   void check() const
   {
     EXPECT_EQ("[1.000000 2.000000; 3.000000 4.000000]", toString(fromString<MatrixType>("[1.0 2; 3.0 4]")));
-    EXPECT_THROW(fromString<MatrixType>("[1 2; 3 4]", 3, 3), Dune::Stuff::Exceptions::configuration_error);
+    EXPECT_THROW(fromString<MatrixType>("[1 2; 3 4]", 3, 3), Dune::Stuff::Exceptions::conversion_error);
   }
 };
 
@@ -46,7 +46,7 @@ struct MatrixStringTestChar
   void check() const
   {
     EXPECT_EQ("[1 2; 3 4]", toString(fromString<MatrixType>("[1 2; 3 4]")));
-    EXPECT_THROW(fromString<MatrixType>("[1 2; 3 4]", 3, 3), Dune::Stuff::Exceptions::configuration_error);
+    EXPECT_THROW(fromString<MatrixType>("[1 2; 3 4]", 3, 3), Dune::Stuff::Exceptions::conversion_error);
   }
 };
 
@@ -57,7 +57,7 @@ struct VectorStringTestDouble
   void check() const
   {
     EXPECT_EQ("[1.000000 2.000000 3.000000]", toString(fromString<VectorType>("[1.0 2 3.0]")));
-    EXPECT_THROW(fromString<VectorType>("[1.0 2 3.0]", 4), Dune::Stuff::Exceptions::configuration_error);
+    EXPECT_THROW(fromString<VectorType>("[1.0 2 3.0]", 4), Dune::Stuff::Exceptions::conversion_error);
   }
 };
 
@@ -68,7 +68,7 @@ struct VectorStringTestInt
   void check() const
   {
     EXPECT_EQ("[1 2 3]", toString(fromString<VectorType>("[1 2 3]")));
-    EXPECT_THROW(fromString<VectorType>("[1 2 3]", 4), Dune::Stuff::Exceptions::configuration_error);
+    EXPECT_THROW(fromString<VectorType>("[1 2 3]", 4), Dune::Stuff::Exceptions::conversion_error);
   }
 };
 
@@ -152,7 +152,7 @@ TEST(StringTest, ConvertFrom) {
   EXPECT_EQ(0,fromString<int>("0"));
   EXPECT_EQ('p',fromString<char>(toString('p')));
   EXPECT_EQ(-1,fromString<char>(toString(char(-1))));
-  EXPECT_THROW(fromString<char>("sd"),Dune::Stuff::Exceptions::wrong_input_given);
+  EXPECT_THROW(fromString<char>("sd"),Dune::Stuff::Exceptions::conversion_error);
   EXPECT_EQ(true,fromString<bool>("1"));
   EXPECT_EQ(true,fromString<bool>("true"));
   EXPECT_EQ(true,fromString<bool>("True"));
