@@ -85,7 +85,7 @@ class Constant
     return str;
   } };
 
-  template< class R, int rC >
+  template< class R, size_t rC >
   struct Get< R, 1, rC >{ static std::string value_str()
   {
     std::string str = "[";
@@ -98,7 +98,7 @@ class Constant
     return str;
   } };
 
-  template< class R, int r >
+  template< class R, size_t r >
   struct Get< R, r, 1 >{ static std::string value_str()
   {
       return Get< R, 1, r >::value_str();
@@ -129,6 +129,7 @@ public:
     Common::Configuration config;
     config["value"] = Get< RangeFieldImp, rangeDim, rangeDimCols >::value_str();
     config["name"] = static_id();
+    config.report();
     if (sub_name.empty())
       return config;
     else {
@@ -145,8 +146,8 @@ public:
     const Common::Configuration cfg = config.has_sub(sub_name) ? config.sub(sub_name) : config;
     const Common::Configuration default_cfg = default_config();
     return Common::make_unique< ThisType >(
-          cfg.get("value",  default_cfg.get< RangeType >("value")),
-          cfg.get("name",   default_cfg.get< std::string >("name")));
+          cfg.get("value", default_cfg.get< RangeType >("value")),
+          cfg.get("name",  default_cfg.get< std::string >("name")));
   } // ... create(...)
 
   explicit Constant(const RangeType& constant, const std::string name_in = static_id())
