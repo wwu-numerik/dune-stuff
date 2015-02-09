@@ -3,12 +3,11 @@
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
-#warning Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!
+#warning Include dune/stuff/fem.hh instead (09.02.2015)!
 
 #ifndef DUNE_STUFF_FEM_NAMESPACE_HH
 #define DUNE_STUFF_FEM_NAMESPACE_HH
 
-#include <dune/common/deprecated.hh>
 #include <dune/common/version.hh>
 
 #if HAVE_DUNE_FEM
