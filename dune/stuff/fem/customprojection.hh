@@ -20,7 +20,7 @@
 #include <dune/stuff/aliases.hh>
 #include <dune/stuff/common/math.hh>
 #include <dune/stuff/common/ranges.hh>
-#include <dune/stuff/fem/namespace.hh>
+#include <dune/stuff/fem.hh>
 
 #include "localmassmatrix.hh"
 
@@ -183,7 +183,7 @@ protected:
       auto lf = discFunc.localFunction(en);
       const auto& baseset = lf.baseFunctionSet();
       const auto numDofs = lf.numDofs();
-      for (auto qP : DSC::valueRange(quad.nop()))
+      for (auto qP : Dune::Stuff::Common::valueRange(quad.nop()))
       {
         const double intel = (affineMapping) ?
                              quad.weight(qP) : // affine case
@@ -191,7 +191,7 @@ protected:
 
         const auto x = geo.global( quad.point(qP) );
         evalutionFunctor.evaluate(x, ret);
-        for (auto i : DSC::valueRange(numDofs))
+        for (auto i : Dune::Stuff::Common::valueRange(numDofs))
         {
           baseset.evaluate(i, quad[qP], phi);
           lf[i] += intel * (ret * phi);
@@ -329,7 +329,7 @@ public:
       const auto numDofs = self_local.numDofs();
 
       // volume part
-      for (auto qP : DSC::valueRange(quad.nop()))
+      for (auto qP : Dune::Stuff::Common::valueRange(quad.nop()))
       {
         const typename DiscreteFunctionSpaceType::DomainType xLocal = quad.point(qP);
 
@@ -350,7 +350,7 @@ public:
         velocity_local.jacobian(quad[qP], velocity_jacobian_eval);
 
         // do projection
-        for (auto i : DSC::valueRange(numDofs))
+        for (auto i : Dune::Stuff::Common::valueRange(numDofs))
         {
           typename DiscreteFunctionType::DiscreteFunctionSpaceType::RangeType phi(0.0);
           baseset.evaluate(i, quad[qP], phi);

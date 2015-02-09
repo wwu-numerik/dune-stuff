@@ -20,7 +20,7 @@
 #include <dune/stuff/common/math.hh>
 #include <dune/stuff/fem/localmassmatrix.hh>
 #include <dune/stuff/common/print.hh>
-#include <dune/stuff/fem/namespace.hh>
+#include <dune/stuff/fem.hh>
 #include <dune/stuff/common/ranges.hh>
 
 namespace Dune {
