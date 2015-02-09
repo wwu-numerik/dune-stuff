@@ -3,8 +3,12 @@
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
+#warning Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!
+
 #ifndef DUNE_STUFF_GRID_FAKEENTITY_HH
 #define DUNE_STUFF_GRID_FAKEENTITY_HH
+
+#include <dune/common/deprecated.hh>
 
 #include <dune/geometry/type.hh>
 
@@ -14,7 +18,9 @@ namespace Grid {
 
 
 template< int dd >
-class FakeEntity
+class
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+      FakeEntity
 {
 public:
   GeometryType type() const;
