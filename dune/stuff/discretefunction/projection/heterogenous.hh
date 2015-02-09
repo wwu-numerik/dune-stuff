@@ -5,9 +5,12 @@
 //
 // Contributors: Sven Kaulmann
 
+#warning Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!
+
 #ifndef DUNE_STUFF_DISCRETEFUNCTION_PROJECTION_HETEROGENOUS_HH
 #define DUNE_STUFF_DISCRETEFUNCTION_PROJECTION_HETEROGENOUS_HH
 
+#include <dune/common/deprecated.hh>
 #include <dune/common/fvector.hh>
 
 #include <dune/grid/common/backuprestore.hh>
@@ -35,6 +38,7 @@ namespace Stuff {
 
 template< class F, class G, int p, template< class > class S >
 std::vector<typename Dune::Fem::LagrangeDiscreteFunctionSpace<F,G,p,S>::DomainType>
+DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
 global_evaluation_points(const Dune::Fem::LagrangeDiscreteFunctionSpace<F,G,p,S>& space,
          const typename Dune::Fem::LagrangeDiscreteFunctionSpace<F,G,p,S>::EntityType& target_entity)
 {
@@ -50,6 +54,7 @@ global_evaluation_points(const Dune::Fem::LagrangeDiscreteFunctionSpace<F,G,p,S>
 
 template< class F, class G, int p, template< class > class S >
 std::vector<typename Dune::Fem::FiniteVolumeSpace<F,G,p,S>::DomainType>
+DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
 global_evaluation_points(const Dune::Fem::FiniteVolumeSpace<F,G,p,S>& /*space*/,
          const typename Dune::Fem::FiniteVolumeSpace<F,G,p,S>::EntityType& target_entity)
 {
@@ -59,7 +64,9 @@ global_evaluation_points(const Dune::Fem::FiniteVolumeSpace<F,G,p,S>& /*space*/,
 }
 
 template< template< class > class SearchStrategy = Grid::EntityInlevelSearch >
-class HeterogenousProjection
+class
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+      HeterogenousProjection
 {
 public:
   /** If your SearchStrategy only takes a leafview of the source grid, you may use this signature.
@@ -152,6 +159,7 @@ protected:
 
 template< class ImpTraits, size_t domainDim, class RangeFieldImp, size_t rangeDim >
 std::vector<typename GDT::Spaces::CGInterface< ImpTraits, domainDim, RangeFieldImp, rangeDim, 1 >::DomainType>
+DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
 global_evaluation_points(const GDT::Spaces::CGInterface< ImpTraits, domainDim, RangeFieldImp, rangeDim, 1 >& space,
          const typename GDT::Spaces::CGInterface< ImpTraits, domainDim, RangeFieldImp, rangeDim, 1 >::EntityType& target_entity)
 {
@@ -166,7 +174,9 @@ global_evaluation_points(const GDT::Spaces::CGInterface< ImpTraits, domainDim, R
 }
 
 
-class MsFEMProjection {
+class
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+      MsFEMProjection {
 public:
   //! signature for non-default SearchStrategy constructions
   template < class SourceSpaceImp, class TargetSpaceImp, class SourceVectorImp, class TargetVectorImp, class SearchStrategyImp >
