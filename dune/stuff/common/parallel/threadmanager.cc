@@ -54,7 +54,7 @@ void Dune::Stuff::ThreadManager::set_max_threads(const size_t count)
   max_threads_ = count;
   WITH_DUNE_FEM(Dune::Fem::ThreadManager::setMaxNumberThreads(boost::numeric_cast< int >(count));)
 #if HAVE_EIGEN
-      Eigen::setNbThreads(boost::numeric_cast< int >(count));
+  Eigen::setNbThreads(boost::numeric_cast< int >(count));
 #endif
   tbb_init_->terminate();
   tbb_init_->initialize(boost::numeric_cast< int >(count));
