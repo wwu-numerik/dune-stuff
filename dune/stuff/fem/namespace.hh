@@ -5,6 +5,8 @@
 
 #warning Include dune/stuff/fem.hh instead (09.02.2015)!
 
+#include <dune/stuff/fem.hh>
+
 #ifndef DUNE_STUFF_FEM_NAMESPACE_HH
 #define DUNE_STUFF_FEM_NAMESPACE_HH
 
@@ -26,11 +28,5 @@
 #else
 # define DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE 0
 #endif // HAVE_DUNE_FEM
-
-#if HAVE_DUNE_FEM
-# define WITH_DUNE_FEM(expression) expression
-#else
-# define WITH_DUNE_FEM(expression)
-#endif
 
 #endif // DUNE_STUFF_FEM_NAMESPACE_HH
