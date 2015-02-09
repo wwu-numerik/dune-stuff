@@ -6,9 +6,12 @@
 #ifndef DUNE_STUFF_LOOP_TIMER_HH
 #define DUNE_STUFF_LOOP_TIMER_HH
 
+#warning Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!
+
 #include "math.hh"
 #include "profiler.hh"
 
+#include <dune/common/deprecated.hh>
 #include <dune/common/exceptions.hh>
 
 #include <dune/stuff/common/disable_warnings.hh>
@@ -19,28 +22,36 @@ namespace Dune {
 namespace Stuff {
 namespace Common {
 
-struct IdentityWeights
+struct
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+      IdentityWeights
 {
   double apply(const double to_weigh, const int /*current*/, const int /*max*/) {
     return to_weigh;
   }
 };
 
-struct LinearWeights
+struct
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+       LinearWeights
 {
   double apply(const double to_weigh, const int current, const int max) {
     return to_weigh / ( current / double(max) );
   }
 };
 
-struct QuadraticWeights
+struct
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+       QuadraticWeights
 {
   double apply(const double to_weigh, const int current, const int max) {
     return to_weigh / std::pow(current / double(max), 2.0);
   }
 };
 
-struct ProgressiveWeights
+struct
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+       ProgressiveWeights
 {
   const int prog_;
   ProgressiveWeights(const int prog)
@@ -53,7 +64,9 @@ struct ProgressiveWeights
 /** \brief helper class to estimate time needed to complete a loop with given counter
   **/
 template< class CounterType, class WeightType = IdentityWeights >
-class LoopTimer
+class
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+      LoopTimer
 {
   typedef LoopTimer< CounterType, WeightType >
     ThisType;
