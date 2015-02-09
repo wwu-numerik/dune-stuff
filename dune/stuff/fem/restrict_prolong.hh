@@ -16,7 +16,7 @@
 
 #include <dune/fem/space/common/restrictprolonginterface.hh>
 
-#include <dune/stuff/fem/namespace.hh>
+#include <dune/stuff/fem.hh>
 
 namespace Dune {
 namespace Stuff {

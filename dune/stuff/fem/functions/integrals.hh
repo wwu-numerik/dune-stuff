@@ -21,7 +21,7 @@
 
 #include <dune/stuff/fem/localmassmatrix.hh>
 #include <dune/stuff/common/ranges.hh>
-#include <dune/stuff/fem/namespace.hh>
+#include <dune/stuff/fem.hh>
 
 namespace Dune {
 namespace Stuff {
@@ -307,7 +307,7 @@ double
                                   quadOrd,
                                   QuadratureType::INSIDE);
         const auto quadNop = quad.nop();
-        for (auto qP : DSC::valueRange(quadNop))
+        for (auto qP : Dune::Stuff::Common::valueRange(quadNop))
         {
           const double intel = (affineMapping) ?
                                quad.weight(qP) : // affine case

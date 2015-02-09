@@ -27,7 +27,7 @@
 
 #include <dune/stuff/common/ranges.hh>
 #include <dune/stuff/aliases.hh>
-#include <dune/stuff/fem/namespace.hh>
+#include <dune/stuff/fem.hh>
 #include <dune/stuff/grid/search.hh>
 
 namespace Dune {

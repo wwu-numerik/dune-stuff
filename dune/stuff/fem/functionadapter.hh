@@ -20,7 +20,7 @@
 #include <dune/stuff/common/math.hh>
 #include <dune/stuff/fem/localmassmatrix.hh>
 #include <dune/stuff/common/print.hh>
-#include <dune/stuff/fem/namespace.hh>
+#include <dune/stuff/fem.hh>
 #include <dune/stuff/common/ranges.hh>
 
 namespace Dune {
@@ -210,7 +210,7 @@ public:
     // type of local mass matrix
     typedef DSFe::LocalMassMatrix< DiscreteFunctionSpaceType, VolumeQuadratureType > LocalMassMatrixType;
     const auto quadOrd = std::max(2 * space.order() + 2, polOrd);
-    const LocalMassMatrixType massMatrix(space, boost::numeric_cast< int >(quadOrd);
+    const LocalMassMatrixType massMatrix(space, boost::numeric_cast< int >(quadOrd));
     const bool affineMapping = massMatrix.affine();
     // clear destination
     BaseType::clear();
