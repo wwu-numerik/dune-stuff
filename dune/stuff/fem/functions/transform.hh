@@ -3,8 +3,12 @@
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
+#warning Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!
+
 #ifndef STUFF_FUNCTION_TRANSFORM_HH
 #define STUFF_FUNCTION_TRANSFORM_HH
+
+#include <dune/common/deprecated.hh>
 
 #include <dune/stuff/common/ranges.hh>
 #include <dune/stuff/aliases.hh>
@@ -15,7 +19,9 @@ namespace Fem {
 
 //! (inplace) multiplies given function with matrix diagonal
 template< class Matrix, class Function >
-void DiagonalMult(const Matrix& matrix, Function& f) {
+void
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+     DiagonalMult(const Matrix& matrix, Function& f) {
   Function diag( "temp", f.space() );
   matrix.getDiag(diag);
   auto diag_it = diag.dbegin();
@@ -31,7 +37,9 @@ void DiagonalMult(const Matrix& matrix, Function& f) {
 
 //! return true if any dof is nan or inf
 template< class DiscreteFunctionType >
-void divideFunctionDofs(DiscreteFunctionType& target, const DiscreteFunctionType& divider) {
+void
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+     divideFunctionDofs(DiscreteFunctionType& target, const DiscreteFunctionType& divider) {
   auto it = target.dbegin();
   auto cit = divider.dbegin();
   for ( ; it != target.dend(); ++it, ++cit)
@@ -42,7 +50,9 @@ void divideFunctionDofs(DiscreteFunctionType& target, const DiscreteFunctionType
 
 /** \todo RENE needs to doc me **/
 template< class DiscreteFunctionType >
-void invertFunctionDofs(DiscreteFunctionType& function) {
+void
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+     invertFunctionDofs(DiscreteFunctionType& function) {
   auto it = function.dbegin();
   for ( ; it != function.dend(); ++it)
   {
@@ -54,7 +64,9 @@ void invertFunctionDofs(DiscreteFunctionType& function) {
 
 //! inverts dof order
 template< class Function >
-void switchDofs(Function& f) {
+void
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+     switchDofs(Function& f) {
   auto front = f.dbegin();
   auto back = f.dend();
   const auto numdofs = f.size();
@@ -73,7 +85,9 @@ void switchDofs(Function& f) {
    * this is the actual functions value, no multiplication with basefunctions afterwards
    **/
 template< class Function >
-void addScalarToFunc(Function& f, double sc) {
+void
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+     addScalarToFunc(Function& f, double sc) {
   auto it = f.dbegin();
   for ( ; it != f.dend(); ++it)
     *it += sc;

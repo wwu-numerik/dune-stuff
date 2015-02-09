@@ -3,6 +3,8 @@
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
+#warning Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!
+
 #ifndef DUNE_STUFF_ERROR_HH
 #define DUNE_STUFF_ERROR_HH
 
@@ -11,6 +13,8 @@
 #include <utility>
 
 #include <boost/format.hpp>
+
+#include <dune/common/deprecated.hh>
 
 #include <dune/fem/misc/l2norm.hh>
 #include <dune/fem/misc/h1norm.hh>
@@ -25,7 +29,9 @@ namespace Fem {
    * \tparam NormType
    **/
 template< class GridPartType, class NormType = Dune::Fem::L2Norm< GridPartType > >
-class L2Error
+class
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+      L2Error
 {
   typedef NormType
   L2NormType;

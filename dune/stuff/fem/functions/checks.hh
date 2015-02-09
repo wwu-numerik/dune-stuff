@@ -3,6 +3,8 @@
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
+#warning Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!
+
 #ifndef STUFF_FUNCTIONS_HH_INCLUDED
 #define STUFF_FUNCTIONS_HH_INCLUDED
 
@@ -36,6 +38,7 @@ namespace Fem {
    **/
 template< class FunctionType >
 Dune::Stuff::Common::MinMaxAvg<typename FunctionType::RangeFieldType>
+DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
 getMinMaxOfDiscreteFunction(const FunctionType& function)
 {
   Dune::Stuff::Common::MinMaxAvg<typename FunctionType::RangeFieldType> mm;
@@ -52,6 +55,7 @@ getMinMaxOfDiscreteFunction(const FunctionType& function)
 
 template< class FunctionType >
 void
+DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
 getMinMaxOfDiscreteFunction(const FunctionType& function, const std::string name, std::ostream& out)
 {
   auto mm = getMinMaxOfDiscreteFunction(function);
@@ -66,7 +70,9 @@ getMinMaxOfDiscreteFunction(const FunctionType& function, const std::string name
    *  \attention  works only for constant base function = sqrt(2) atm
    **/
 template< class FunctionType >
-void getMinMaxOfDiscreteFunction(const FunctionType& function,
+void
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+     getMinMaxOfDiscreteFunction(const FunctionType& function,
                                  double& min,
                                  double& max) {
   auto mm = getMinMaxOfDiscreteFunction(function);
@@ -77,7 +83,9 @@ void getMinMaxOfDiscreteFunction(const FunctionType& function,
 
 //! count dofs of f1,f2 with abs(f1[i] - f2[i]) > tolerance
 template< class FunctionType >
-size_t getNumDiffDofs(const FunctionType& f1,
+size_t
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+       getNumDiffDofs(const FunctionType& f1,
                             const FunctionType& f2,
                             const double tolerance) {
   assert( f1.size() == f2.size() ); // should be implicit cause they're of the same type...
@@ -94,7 +102,9 @@ size_t getNumDiffDofs(const FunctionType& f1,
 
 //! returns arithmetic mean of function's dofs
 template< class Function >
-typename Function::FieldType getFuncAvg(const Function& f) {
+typename Function::FieldType
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+                             getFuncAvg(const Function& f) {
   auto it = f.dbegin();
   const auto numdofs = f.size();
   typename Function::FieldType sum = 0;
@@ -106,7 +116,9 @@ typename Function::FieldType getFuncAvg(const Function& f) {
 
 //! return true if any dof is nan or inf
 template< class DiscreteFunctionType >
-bool FunctionContainsNanOrInf(const DiscreteFunctionType& function) {
+bool
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+     FunctionContainsNanOrInf(const DiscreteFunctionType& function) {
   auto it = function.dbegin();
   for ( ; it != function.dend(); ++it)
   {
@@ -117,7 +129,9 @@ bool FunctionContainsNanOrInf(const DiscreteFunctionType& function) {
 } // FunctionContainsNanOrInf
 
 template< class LeakPointerType >
-bool FunctionContainsNanOrInf(const LeakPointerType function, size_t size) {
+bool
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+     FunctionContainsNanOrInf(const LeakPointerType function, size_t size) {
   for (size_t i = 0; i < size; ++i)
   {
     if ( boost::math::isnan(function[i]) || boost::math::isinf(function[i]) )
@@ -128,7 +142,9 @@ bool FunctionContainsNanOrInf(const LeakPointerType function, size_t size) {
 
 //! return true if any entry is nan or inf
 template< class MatrixType >
-bool MatrixContainsNanOrInf(const MatrixType& matrix) {
+bool
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+     MatrixContainsNanOrInf(const MatrixType& matrix) {
   for (auto row : DSC::valueRange(matrix.rows()))
   {
     for (auto col DSC::valueRange(matrix.cols()))

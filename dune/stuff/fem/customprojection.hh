@@ -3,10 +3,14 @@
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
+#warning Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!
+
 #ifndef DUNE_STUFF_FEM_FUNCTIONS_CUSTOMPROJECTION_HH
 #define DUNE_STUFF_FEM_FUNCTIONS_CUSTOMPROJECTION_HH
 
 #if HAVE_DUNE_FEM
+
+#include <dune/common/deprecated.hh>
 
 #include <dune/fem/quadrature/cachingquadrature.hh>
 #include <dune/fem/function/common/discretefunction.hh>
@@ -30,7 +34,9 @@ namespace Fem {
      * \note output currently somewhat meaningless
      * \see analyticaldata.hh
      **/
-class CustomProjection
+class
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+     CustomProjection
 {
 public:
   template< class OriginFunctionType, class DestinationFunctionType >
@@ -79,7 +85,9 @@ public:
 };
 
 //! basically the fem L2Projection with a function evaluate that converts between compatible types instead of failing
-class BetterL2Projection
+class
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+      BetterL2Projection
 {
 protected:
   template< class FunctionType >
@@ -200,7 +208,9 @@ protected:
 namespace Experimental {
 
 template< size_t dim, class RangeType, class JacobianRangeType >
-struct GradientJacobianToLaplacian
+struct
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+       GradientJacobianToLaplacian
   : public RangeType
 {
   GradientJacobianToLaplacian(const JacobianRangeType& /*jacobian*/) {
@@ -210,7 +220,9 @@ struct GradientJacobianToLaplacian
 };
 
 template< class RangeType, class JacobianRangeType >
-struct GradientJacobianToLaplacian< 2, RangeType, JacobianRangeType >
+struct
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+       GradientJacobianToLaplacian< 2, RangeType, JacobianRangeType >
   : public RangeType
 {
   GradientJacobianToLaplacian(const JacobianRangeType& jacobian) {
@@ -220,7 +232,9 @@ struct GradientJacobianToLaplacian< 2, RangeType, JacobianRangeType >
 };
 
 template< class RangeType, class JacobianRangeType >
-struct GradientJacobianToLaplacian< 3, RangeType, JacobianRangeType >
+struct
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+       GradientJacobianToLaplacian< 3, RangeType, JacobianRangeType >
   : public RangeType
 {
   GradientJacobianToLaplacian(const JacobianRangeType& jacobian) {
@@ -233,7 +247,9 @@ struct GradientJacobianToLaplacian< 3, RangeType, JacobianRangeType >
 template< class TimeProviderType,
           class DiscreteVelocityFunctionType,
           class SigmaFunctionType >
-class GradientAdapterFunction
+class
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+      GradientAdapterFunction
   : public SigmaFunctionType
 {
 protected:

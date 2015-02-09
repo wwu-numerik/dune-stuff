@@ -3,6 +3,8 @@
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
+#warning Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!
+
 #ifndef DUNE_STUFF_FEMEOC_HH
 #define DUNE_STUFF_FEMEOC_HH
 
@@ -17,6 +19,7 @@
 #include <boost/format.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 
+#include <dune/common/deprecated.hh>
 #include <dune/common/fvector.hh>
 
 #include <dune/fem/io/file/iointerface.hh>
@@ -47,7 +50,9 @@ namespace Fem {
    *  to the eoc table.
    *  \note copy/paste from fem with certain adjustments
    */
-class FemEoc
+class
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+      FemEoc
 {
   std::ofstream outputFile_;
   int level_;

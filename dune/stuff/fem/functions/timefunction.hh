@@ -3,11 +3,14 @@
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
+#warning Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!
+
 #ifndef STUFF_TIMEFUNCTION_HH
 #define STUFF_TIMEFUNCTION_HH
 
 #if HAVE_DUNE_FEM
 
+#include <dune/common/deprecated.hh>
 #include <dune/common/bartonnackmanifcheck.hh>
 
 #include <dune/fem/function/common/function.hh>
@@ -19,7 +22,9 @@ namespace Stuff {
 namespace Fem {
 
 //! a dummy timeprovider for usage in Stuff::RuntimeFunction
-struct ConstTimeProvider
+struct
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+       ConstTimeProvider
 {
   const double time_;
   ConstTimeProvider(double time = 0.0)
@@ -31,7 +36,9 @@ struct ConstTimeProvider
    *
    **/
 template< class FunctionSpaceImp, class FunctionImp, class TimeProviderImp >
-class TimeFunction
+class
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+      TimeFunction
   : public Dune::Fem::BartonNackmanInterface< TimeFunction< FunctionSpaceImp, FunctionImp, TimeProviderImp >, FunctionImp >
   , public Dune::Fem::Function< FunctionSpaceImp, TimeFunction< FunctionSpaceImp, FunctionImp, TimeProviderImp > >
 {
@@ -120,7 +127,9 @@ public:
    *
    **/
 template< class FunctionSpaceImp, class FunctionImp, class TimeProviderImp >
-class IntersectionTimeFunction
+class
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+      IntersectionTimeFunction
   : public Dune::Fem::BartonNackmanInterface< IntersectionTimeFunction< FunctionSpaceImp, FunctionImp, TimeProviderImp >, FunctionImp >
   , public Dune::Fem::Function< FunctionSpaceImp, IntersectionTimeFunction< FunctionSpaceImp, FunctionImp, TimeProviderImp > >
 {

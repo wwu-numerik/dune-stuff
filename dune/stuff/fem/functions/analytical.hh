@@ -3,10 +3,14 @@
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
+#warning Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!
+
 #ifndef DUNE_STUFF_ANALYTICAL_HH
 #define DUNE_STUFF_ANALYTICAL_HH
 
 #if HAVE_DUNE_FEM
+
+#include <dune/common/deprecated.hh>
 
 #include "timefunction.hh"
 
@@ -15,7 +19,9 @@ namespace Stuff {
 namespace Fem {
 
 template< class FunctionSpaceImp >
-class ConstantFunction
+class
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+      ConstantFunction
   : public Dune::Fem::Function< FunctionSpaceImp, ConstantFunction< FunctionSpaceImp > >
 {
 public:
@@ -79,7 +85,9 @@ private:
 };
 
 template< class FunctionSpaceImp, class TimeProviderImp >
-class ConstantFunctionTP
+class
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+      ConstantFunctionTP
   : public TimeFunction< FunctionSpaceImp,
                                ConstantFunctionTP< FunctionSpaceImp, TimeProviderImp >, TimeProviderImp >
 {
@@ -110,7 +118,9 @@ private:
 };
 
 template< class FunctionSpaceImp, class TimeProviderImp >
-class ConstantIntersectionTimeFunction
+class
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+      ConstantIntersectionTimeFunction
   : public IntersectionTimeFunction< FunctionSpaceImp,
                                            ConstantIntersectionTimeFunction< FunctionSpaceImp,
                                                                              TimeProviderImp >, TimeProviderImp >
@@ -164,21 +174,21 @@ private:
 
 #define NULLFUNCTION_TP(classname) \
   template< class T, class P > \
-  struct classname \
+  struct DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!") classname \
     : public Dune::Stuff::Fem::ConstantFunctionTP< T, P > \
   { classname(const P &p, const T &t, double = 0.0, double = 0.0) \
       : Dune::Stuff::Fem::ConstantFunctionTP< T, P >(p, t) {} };
 
 #define NULLFUNCTION_TP_BOUNDARY(classname) \
   template< class T, class P > \
-  struct classname \
+  struct DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!") classname \
     : public Dune::Stuff::Fem::ConstantIntersectionTimeFunction< T, P > \
   { classname(const P &p, const T &t, double = 0.0, double = 0.0) \
       : Dune::Stuff::Fem::ConstantIntersectionTimeFunction< T, P >(p, t) {} };
 
 #define NULLFUNCTION(classname) \
   template< class T > \
-  struct classname \
+  struct DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!") classname \
     : public Dune::Stuff::Fem::ConstantFunction< T > \
   { classname(const double /*d*/, const T &t, double = 0.0, double = 0.0) \
       : Dune::Stuff::Fem::ConstantFunction< T >(t) {} \
@@ -189,7 +199,7 @@ private:
 
 #define CONSTANTFUNCTION(classname, constant) \
   template< class T > \
-  struct classname \
+  struct DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!") classname \
     : public Dune::Stuff::Fem::ConstantFunction< T > \
   { classname() \
       : Dune::Stuff::Fem::ConstantFunction< T >(typename T::RangeType(constant)) {} };

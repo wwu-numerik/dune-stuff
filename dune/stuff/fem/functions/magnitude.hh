@@ -3,12 +3,16 @@
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
+#warning Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!
+
 #ifndef DUNE_STUFF_MAGNITUDEFUNCTION_HH
 #define DUNE_STUFF_MAGNITUDEFUNCTION_HH
 
 #if HAVE_DUNE_FEM
 
 #include <boost/numeric/conversion/cast.hpp>
+
+#include <dune/common/deprecated.hh>
 
 #include <dune/fem/function/common/function.hh>
 #include <dune/fem/function/common/gridfunctionadapter.hh>
@@ -29,7 +33,9 @@ namespace Fem {
 
 //! Wrap a DiscreteFunction to a scalar function representing its two-norm
 template< class DiscreteFunctionImp, size_t polOrder = 3 >
-class MagnitudeFunction
+class
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+      MagnitudeFunction
 {
 public:
   typedef Dune::Fem::FunctionSpace< typename DiscreteFunctionImp::FunctionSpaceType::DomainFieldType,

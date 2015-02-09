@@ -3,6 +3,8 @@
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
+#warning Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!
+
 #ifndef DUNE_STUFF_FUNCTIONADAPTER_HH
 #define DUNE_STUFF_FUNCTIONADAPTER_HH
 
@@ -12,6 +14,8 @@
 
 #include <boost/numeric/conversion/cast.hpp>
 #include <boost/shared_ptr.hpp>
+
+#include <dune/common/deprecated.hh>
 
 #include <dune/stuff/common/math.hh>
 #include <dune/stuff/fem/localmassmatrix.hh>
@@ -30,7 +34,9 @@ namespace Fem {
    * G_k= \sum_K\int_K \sum_{l=1..d}a_{kl} \phi_{l} dx\f}
    **/
 template< class DiscreteFunctionType, class DiscreteGradientFunctionType >
-class GradientSplitterFunction
+class
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+      GradientSplitterFunction
   : public std::vector< std::shared_ptr< DiscreteFunctionType > >
 {
   typedef std::vector< DiscreteFunctionType >
@@ -114,7 +120,9 @@ public:
 };
 
 template< size_t dim, class RangeType, class JacobianRangeType >
-struct GradientJacobianToLaplacian
+struct
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+       GradientJacobianToLaplacian
   : public RangeType
 {
   GradientJacobianToLaplacian(const JacobianRangeType& /*jacobian*/) {
@@ -124,7 +132,9 @@ struct GradientJacobianToLaplacian
 };
 
 template< class RangeType, class JacobianRangeType >
-struct GradientJacobianToLaplacian< 2, RangeType, JacobianRangeType >
+struct
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+       GradientJacobianToLaplacian< 2, RangeType, JacobianRangeType >
   : public RangeType
 {
   GradientJacobianToLaplacian(const JacobianRangeType& jacobian) {
@@ -134,7 +144,9 @@ struct GradientJacobianToLaplacian< 2, RangeType, JacobianRangeType >
 };
 
 template< class RangeType, class JacobianRangeType >
-struct GradientJacobianToLaplacian< 3, RangeType, JacobianRangeType >
+struct
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+       GradientJacobianToLaplacian< 3, RangeType, JacobianRangeType >
   : public RangeType
 {
   GradientJacobianToLaplacian(const JacobianRangeType& jacobian) {
@@ -144,7 +156,9 @@ struct GradientJacobianToLaplacian< 3, RangeType, JacobianRangeType >
   }
 };
 
-struct ProductFunctorMatrices
+struct
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+       ProductFunctorMatrices
 {
   template< class R1, class R2 >
   static double call(const R1& r1, const R2& r2) {
@@ -152,7 +166,9 @@ struct ProductFunctorMatrices
   }
 };
 
-struct ProductFunctorMatrixVector
+struct
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+       ProductFunctorMatrixVector
 {
   template< class R1, class R2 >
   static double call(const R1& r1, const R2& r2) {
@@ -165,7 +181,9 @@ struct ProductFunctorMatrixVector
 template< class DiscreteVelocityFunctionType,
           class SigmaFunctionType,
           class ProductFunctor >
-class GradientAdapterFunction
+class
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+      GradientAdapterFunction
   : public SigmaFunctionType
 {
 protected:
@@ -244,7 +262,9 @@ public:
 template< class DiscreteVelocityFunctionType,
           class SigmaFunctionType,
           class ProductFunctor >
-class LaplaceAdapterFunction
+class
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+      LaplaceAdapterFunction
   : public DiscreteVelocityFunctionType
 {
 protected:

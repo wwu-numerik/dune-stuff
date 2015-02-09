@@ -3,6 +3,8 @@
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
+#warning Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!
+
 #ifndef DUNE_STUFF_MATRIX_OBJECT_HH
 #define DUNE_STUFF_MATRIX_OBJECT_HH
 
@@ -16,6 +18,8 @@
 #   include <Eigen/SparseCholesky>
 # endif
 #include <dune/stuff/common/reenable_warnings.hh>
+
+#include <dune/common/deprecated.hh>
 
 #include <dune/fem/function/adaptivefunction/adaptivefunction.hh>
 #include <dune/fem/solver/oemsolver.hh>
@@ -46,7 +50,9 @@ template< class DomainSpace, class RangeSpace, class TraitsImp >
 class EigenMatrixObject;
 
 template <class DomainSpace, class RangeSpace = DomainSpace>
-struct EigenMatrixObjectTraits
+struct
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+       EigenMatrixObjectTraits
 {
   typedef DomainSpace RowSpaceType;
   typedef RangeSpace ColumnSpaceType;
@@ -63,7 +69,9 @@ template< class DomainSpace, class RangeSpace, class TraitsImp >
 class LocalEigenMatrix;
 
 template< class DomainSpace, class RangeSpace, class TraitsImp >
-struct LocalEigenMatrixTraits
+struct
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+       LocalEigenMatrixTraits
 {
   typedef DomainSpace DomainSpaceType;
   typedef RangeSpace RangeSpaceType;
@@ -75,7 +83,9 @@ struct LocalEigenMatrixTraits
 };
 
 template< class DomainSpace, class RangeSpace, class TraitsImp >
-class LocalEigenMatrix
+class
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+      LocalEigenMatrix
     : public Dune::Fem::LocalMatrixDefault< LocalEigenMatrixTraits<DomainSpace, RangeSpace, TraitsImp > >
 {
   private:
@@ -199,7 +209,9 @@ private:
 
 };
 
-class LagrangePattern : public DSL::SparsityPatternDefault {
+class
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+      LagrangePattern : public DSL::SparsityPatternDefault {
 
     typedef DSL::SparsityPatternDefault BaseType;
 public:
@@ -262,7 +274,9 @@ public:
 
 
 template< class DomainSpace, class RangeSpace, class TraitsImp >
-class EigenMatrixObject //: public Dune::OEMMatrix
+class
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+      EigenMatrixObject //: public Dune::OEMMatrix
 {
   typedef typename DomainSpace::EntityType  DomainEntityType ;
   typedef typename RangeSpace::EntityType   RangeEntityType ;
@@ -386,7 +400,9 @@ public:
 };
 
 template< class DomainFunction, class RangeFunction, class TraitsImp >
-class EigenMatrixOperator
+class
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+      EigenMatrixOperator
 : public EigenMatrixObject< typename DomainFunction::DiscreteFunctionSpaceType, typename RangeFunction::DiscreteFunctionSpaceType, TraitsImp >,
   public Operator< typename DomainFunction::RangeFieldType, typename RangeFunction::RangeFieldType, DomainFunction, RangeFunction >
 {
@@ -421,7 +437,9 @@ public:
 
 
 template< class DomainDiscreteFunctionType, class MatrixOperatorType >
-class EigenInverseOperator {
+class
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+      EigenInverseOperator {
 
     typedef DSL::EigenMappedDenseVector<typename DomainDiscreteFunctionType::RangeFieldType> EigenVectorWrapperType;
     typedef typename MatrixOperatorType::MatrixType MatrixType;
@@ -458,6 +476,7 @@ public:
 template <class MatrixObject, template <class,class> class StencilType = Dune::Fem::DiagonalAndNeighborStencil>
 StencilType<typename MatrixObject::DomainSpaceType,
                            typename MatrixObject::DomainSpaceType>
+DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
   diagonalAndNeighborStencil(const MatrixObject& object)
 {
   return StencilType<typename MatrixObject::DomainSpaceType,
@@ -467,6 +486,7 @@ StencilType<typename MatrixObject::DomainSpaceType,
 template <class MatrixObject, template <class,class> class StencilType = Dune::Fem::DiagonalAndNeighborStencil>
 StencilType<typename MatrixObject::DomainSpaceType,
                            typename MatrixObject::RangeSpaceType>
+DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
   diagonalAndNeighborStencil(const typename MatrixObject::DomainSpaceType& domainSpace,
                              const typename MatrixObject::RangeSpaceType& rangeSpace)
 {
@@ -475,13 +495,17 @@ StencilType<typename MatrixObject::DomainSpaceType,
 }
 
 template <class MatrixObject, template <class,class> class StencilType = Dune::Fem::DiagonalAndNeighborStencil>
-void reserve_matrix(MatrixObject& matrix_object)
+void
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+     reserve_matrix(MatrixObject& matrix_object)
 {
   matrix_object.reserve(diagonalAndNeighborStencil(matrix_object));
 }
 
 template <class DomainSpaceType, class RangeSpaceType, template <class,class> class StencilType = Dune::Fem::DiagonalAndNeighborStencil>
-void reserve_matrix(Dune::Fem::SparseRowMatrixObject<DomainSpaceType, RangeSpaceType>& matrix_object)
+void
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+     reserve_matrix(Dune::Fem::SparseRowMatrixObject<DomainSpaceType, RangeSpaceType>& matrix_object)
 {
   matrix_object.reserve();
 }

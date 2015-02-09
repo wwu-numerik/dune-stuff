@@ -5,12 +5,16 @@
 //
 // Contributors: Sven Kaulmann
 
+#warning Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!
+
 #ifndef DUNE_STUFF_INTEGRALS_HH
 #define DUNE_STUFF_INTEGRALS_HH
 
 #if HAVE_DUNE_FEM
 
 #include <boost/numeric/conversion/cast.hpp>
+
+#include <dune/common/deprecated.hh>
 
 #include <dune/fem/quadrature/cachingquadrature.hh>
 #include <dune/fem/function/common/discretefunction.hh>
@@ -32,6 +36,7 @@ namespace Fem {
  */
 template <class SpaceTraits, class GridImp, template <int, int, class> class EntityImp>
 Dune::Fem::CachingQuadrature<typename SpaceTraits::GridPartType, 0>
+DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
 make_quadrature(const Dune::Entity<0, GridImp::dimension, GridImp, EntityImp>& entity,
                 const Dune::Fem::DiscreteFunctionSpaceInterface<SpaceTraits>& space, int order = -1) {
   order = order > -1 ? order : 2 * space.order() + 2;
@@ -47,7 +52,9 @@ make_quadrature(const Dune::Entity<0, GridImp::dimension, GridImp, EntityImp>& e
  *  @return Returns a caching quadrature of order order (or 2*space.order()+2 if no order was provided) on the entity.
  */
 template <class SpaceTraits, class IntersectionImp>
-Dune::Fem::CachingQuadrature<typename SpaceTraits::GridPartType, 1> make_quadrature(
+Dune::Fem::CachingQuadrature<typename SpaceTraits::GridPartType, 1>
+DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+make_quadrature(
     const IntersectionImp& intersection,
     const Dune::Fem::DiscreteFunctionSpaceInterface<SpaceTraits>& space, int order = -1, bool inside = true) {
   order = order > -1 ? order : 2 * space.order() + 2;
@@ -68,6 +75,7 @@ Dune::Fem::CachingQuadrature<typename SpaceTraits::GridPartType, 1> make_quadrat
 */
 template< class FunctionTraits >
 std::pair< typename FunctionTraits::RangeType, double >
+DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
 integralAndVolume(const Dune::Fem::DiscreteFunctionInterface<FunctionTraits>& function,
                   const typename FunctionTraits::DiscreteFunctionSpaceType::EntityType& entity,
                   const int order = -1) {
@@ -100,6 +108,7 @@ integralAndVolume(const Dune::Fem::DiscreteFunctionInterface<FunctionTraits>& fu
 */
 template< class FunctionTraits >
 std::pair< typename FunctionTraits::RangeType, double >
+DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
 integralAndVolume(const Dune::Fem::DiscreteFunctionInterface<FunctionTraits>& function,
                   const typename FunctionTraits::DiscreteFunctionSpaceType::IntersectionType& intersection,
                   int order = -1,
@@ -136,6 +145,7 @@ integralAndVolume(const Dune::Fem::DiscreteFunctionInterface<FunctionTraits>& fu
 */
 template< class FunctionTraits >
 std::pair< typename FunctionTraits::RangeType, double >
+DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
 integralAndVolume(const Dune::Fem::DiscreteFunctionInterface<FunctionTraits>& function,
                   const int order = -1) {
   typedef typename FunctionTraits::RangeType RangeType;
@@ -165,6 +175,7 @@ integralAndVolume(const Dune::Fem::DiscreteFunctionInterface<FunctionTraits>& fu
 */
 template< class FunctionTraits >
 typename FunctionTraits::RangeType
+DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
 meanValue(const Dune::Fem::DiscreteFunctionInterface<FunctionTraits>& function,
           const typename FunctionTraits::DiscreteFunctionSpaceType::EntityType& entity,
           const int order = -1) {
@@ -182,6 +193,7 @@ meanValue(const Dune::Fem::DiscreteFunctionInterface<FunctionTraits>& function,
 */
 template< class FunctionTraits >
 typename FunctionTraits::RangeType
+DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
 meanValue(const Dune::Fem::DiscreteFunctionInterface<FunctionTraits>& function,
           const typename FunctionTraits::DiscreteFunctionSpaceType::IntersectionType& intersection,
           const int order = -1,
@@ -200,6 +212,7 @@ meanValue(const Dune::Fem::DiscreteFunctionInterface<FunctionTraits>& function,
 */
 template< class FunctionTraits >
 typename FunctionTraits::RangeType
+DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
 meanValue(const Dune::Fem::DiscreteFunctionInterface<FunctionTraits>& function,
           const int order = -1) {
   const auto& intAndVol = integralAndVolume(function, order);
@@ -209,6 +222,7 @@ meanValue(const Dune::Fem::DiscreteFunctionInterface<FunctionTraits>& function,
 /** \todo RENE needs to doc me **/
 template< class FunctionType, class SpaceTraits >
 std::pair< typename FunctionType::RangeType, double >
+DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
 integralAndVolume(const FunctionType& function,
                   const Dune::Fem::DiscreteFunctionSpaceInterface<SpaceTraits>& space,
                   const int polOrd = -1)
@@ -246,7 +260,9 @@ integralAndVolume(const FunctionType& function,
 
 /** \todo RENE needs to doc me **/
 template< class FunctionType, class SpaceTraits >
-typename FunctionType::RangeType meanValue(const FunctionType& function,
+typename FunctionType::RangeType
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+                                 meanValue(const FunctionType& function,
                                            const Dune::Fem::DiscreteFunctionSpaceInterface<SpaceTraits>& space,
                                            const int polOrd = -1) {
   std::pair< typename FunctionType::RangeType, double > pair = integralAndVolume(function, space, polOrd);
@@ -256,7 +272,9 @@ typename FunctionType::RangeType meanValue(const FunctionType& function,
 
 /** \todo RENE needs to doc me **/
 template< class FunctionType, class DiscreteFunctionSpaceType >
-double boundaryIntegral(const FunctionType& function,
+double
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+       boundaryIntegral(const FunctionType& function,
                         const DiscreteFunctionSpaceType& space,
                         const int polOrd = -1)
 {

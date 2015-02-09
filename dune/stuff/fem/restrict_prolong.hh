@@ -3,12 +3,16 @@
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
+#warning Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!
+
 #ifndef DUNE_STUFF_RESTRICT_PROLONG_HH
 #define DUNE_STUFF_RESTRICT_PROLONG_HH
 
 #if HAVE_DUNE_FEM
 
 #include <set>
+
+#include <dune/common/deprecated.hh>
 
 #include <dune/fem/space/common/restrictprolonginterface.hh>
 
@@ -25,7 +29,9 @@ namespace Fem {
    * \note This set does not take ownership of added operators.
    */
 template< class RestrictProlongOperatorPointerType >
-class RestrictProlongOperatorSet
+class
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+      RestrictProlongOperatorSet
   : public Dune::Fem::RestrictProlongInterface< Dune::Fem::RestrictProlongTraits<
                                        RestrictProlongOperatorSet< RestrictProlongOperatorPointerType >, double > >
 {

@@ -3,12 +3,15 @@
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
+#warning Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!
+
 #ifndef LOCALMATRIX_PROXY_HH
 #define LOCALMATRIX_PROXY_HH
 
 #include <vector>
 #include <assert.h>
 
+#include <dune/common/deprecated.hh>
 #include <dune/common/float_cmp.hh>
 
 #include <dune/stuff/common/debug.hh>
@@ -22,7 +25,9 @@ namespace Fem {
 
 
 template <class MatrixObjectType, class Enable = void>
-struct LocalMatrixProxyTraits
+struct
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+       LocalMatrixProxyTraits
 {
     typedef typename MatrixObjectType::LocalMatrixType LocalMatrixType;
     typedef typename MatrixObjectType::DomainSpaceType DomainSpaceType;
@@ -35,7 +40,9 @@ struct LocalMatrixProxyTraits
 
 
 template <class MatrixObjectType>
-struct LocalMatrixProxyTraits<MatrixObjectType, typename std::enable_if<DSC::is_smart_ptr<MatrixObjectType>::value>::type>
+struct
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+       LocalMatrixProxyTraits<MatrixObjectType, typename std::enable_if<DSC::is_smart_ptr<MatrixObjectType>::value>::type>
 {
     typedef typename MatrixObjectType::element_type::LocalMatrixType LocalMatrixType;
     typedef typename MatrixObjectType::element_type::DomainSpaceType DomainSpaceType;
@@ -48,7 +55,9 @@ struct LocalMatrixProxyTraits<MatrixObjectType, typename std::enable_if<DSC::is_
 
 //! a small proxy object that automagically prevents near-0 value fill-in
 template< class MatrixObjectType>
-class LocalMatrixProxy
+class
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+      LocalMatrixProxy
 {
   typedef LocalMatrixProxyTraits<MatrixObjectType> TraitsType;
   typedef typename TraitsType::LocalMatrixType LocalMatrixType;
