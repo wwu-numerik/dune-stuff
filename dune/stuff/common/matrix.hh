@@ -8,6 +8,7 @@
 #ifndef DUNE_STUFF_COMMON_MATRIX_HH
 #define DUNE_STUFF_COMMON_MATRIX_HH
 
+#include <dune/common/deprecated.hh>
 #include <dune/common/dynmatrix.hh>
 #include <dune/common/fmatrix.hh>
 
@@ -258,7 +259,9 @@ create(const size_t sz, const typename MatrixAbstraction< MatrixType >::S& val)
    *functions for this (putting the diagonal into DiscreteFunctions tho
    **/
 template< class FieldMatrixType >
-class MatrixDiagonal
+class
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+      MatrixDiagonal
   : public FieldVector< typename FieldMatrixType::field_type,
                         FieldMatrixType::rows >
 {
@@ -274,7 +277,9 @@ public:
 
 //! returns Sum of matrix' diagonal entries
 template< class FieldMatrixType >
-typename FieldMatrixType::field_type matrixTrace(const FieldMatrixType& matrix) {
+typename FieldMatrixType::field_type
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+                                     matrixTrace(const FieldMatrixType& matrix) {
   MatrixDiagonal< FieldMatrixType > diag(matrix);
   typename FieldMatrixType::field_type trace = typename FieldMatrixType::field_type(0);
   for (auto i : valueRange(FieldMatrixType::rows))
@@ -302,7 +307,9 @@ public:
 
 //! adds the missing setDiag function to SparseRowMatrix
 template< class DiscFuncType, class MatrixType >
-void setMatrixDiag(MatrixType& matrix, DiscFuncType& diag) {
+void
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+     setMatrixDiag(MatrixType& matrix, DiscFuncType& diag) {
   typedef typename DiscFuncType::DofIteratorType DofIteratorType;
 
   //! we assume that the dimension of the functionspace of f is the same as
@@ -320,7 +327,9 @@ void setMatrixDiag(MatrixType& matrix, DiscFuncType& diag) {
 
 //! return false if <pre>abs( a(row,col) - b(col,row) ) > tolerance<pre> for any col,row
 template< class MatrixType >
-bool areTransposed(const MatrixType& a, const MatrixType& b, const double tolerance = 1e-8) {
+bool
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+     areTransposed(const MatrixType& a, const MatrixType& b, const double tolerance = 1e-8) {
   if ( ( a.rows() != b.cols() ) || ( b.rows() != a.cols() ) )
     return false;
 
@@ -337,7 +346,9 @@ bool areTransposed(const MatrixType& a, const MatrixType& b, const double tolera
 
 //! extern matrix addition that ignore 0 entries
 template< class MatrixType >
-void addMatrix(MatrixType& dest, const MatrixType& arg, const double eps = 1e-14) {
+void
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+     addMatrix(MatrixType& dest, const MatrixType& arg, const double eps = 1e-14) {
   for (auto i : valueRange(arg.rows()))
     for (auto j : valueRange(arg.cols()))
     {
@@ -354,7 +365,9 @@ void addMatrix(MatrixType& dest, const MatrixType& arg, const double eps = 1e-14
    *  @param[in] out    The outgoing stream
    */
 template< class SparseMatrixImpl, class Output >
-void writeSparseMatrix(const SparseMatrixImpl& matrix,
+void
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+     writeSparseMatrix(const SparseMatrixImpl& matrix,
                        Output& out) {
   for (auto i : valueRange(matrix.rows()))
   {
@@ -378,7 +391,9 @@ void writeSparseMatrix(const SparseMatrixImpl& matrix,
    *  @param[in]  in     The ingoing stream
    */
 template< class SparseMatrixImpl, class Input >
-void readSparseMatrix(SparseMatrixImpl& matrix,
+void
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+     readSparseMatrix(SparseMatrixImpl& matrix,
                       Input& in) {
   matrix.clear();
   std::string row;
@@ -416,7 +431,9 @@ void readSparseMatrix(SparseMatrixImpl& matrix,
    *  \todo   doc
    **/
 template< class FieldMatrixImp >
-FieldMatrixImp rowWiseMatrixMultiplication(const FieldMatrixImp& arg1,
+FieldMatrixImp
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+               rowWiseMatrixMultiplication(const FieldMatrixImp& arg1,
                                            const FieldMatrixImp& arg2) {
   typedef FieldMatrixImp
   FieldMatrixType;
@@ -447,7 +464,9 @@ FieldMatrixImp rowWiseMatrixMultiplication(const FieldMatrixImp& arg1,
 
 //! prints actual memusage of matrix in kB
 template< class MatrixType >
-void printMemUsage(const MatrixType& matrix, std::ostream& stream, std::string name = "") {
+void
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+     printMemUsage(const MatrixType& matrix, std::ostream& stream, std::string name = "") {
   long size = matrix.numberOfValues() * sizeof(typename MatrixType::Ttype) / 1024.f;
 
   stream << "matrix size " << name << "\t\t" << size << std::endl;
@@ -455,12 +474,16 @@ void printMemUsage(const MatrixType& matrix, std::ostream& stream, std::string n
 
 //! prints actual memusage of matrixobject in kB
 template< class MatrixObjectType>
-void printMemUsageObject(const MatrixObjectType& matrix_object, std::ostream& stream, std::string name = "") {
+void
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+     printMemUsageObject(const MatrixObjectType& matrix_object, std::ostream& stream, std::string name = "") {
   printMemUsage(matrix_object.matrix(), stream, name);
 }
 
 template< class M >
-void forceTranspose(const M& arg, M& dest) {
+void
+  DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+     forceTranspose(const M& arg, M& dest) {
   assert( arg.cols() == dest.rows() );
   assert( dest.cols() == arg.rows() );
 // dest.clear();
