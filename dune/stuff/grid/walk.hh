@@ -53,6 +53,7 @@ template < class GridViewImp, size_t codim = 0 >
 class GridWalk {
   typedef Dune::GridView<typename GridViewImp::Traits> GridViewType;
 public:
+  DUNE_DEPRECATED_MSG("use DSG::Walker from dune/stuff/grid/walker.hh instead")
   GridWalk ( GridViewType gp )
     : gridView_( gp )
   {}
