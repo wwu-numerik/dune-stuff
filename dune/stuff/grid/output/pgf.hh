@@ -92,19 +92,19 @@ template <class GridViewType>
 class PgfEntityFunctorIntersections : public Functor::Codim0And1<GridViewType>{
   typedef Functor::Codim0And1<GridViewType> BaseType;
 public:
-  PgfEntityFunctorIntersections(std::ostream& file,
+  PgfEntityFunctorIntersections(const GridViewType& grid_view,
+                                std::ostream& file,
                                 const std::string color = "black",
                                 const bool printEntityIndex = false)
     : file_(file)
-      , color_(color)
-      , printEntityIndex_(printEntityIndex)
+    , color_(color)
+    , printEntityIndex_(printEntityIndex)
+    , grid_view_(grid_view)
   {}
 
   virtual void apply_local(const typename BaseType::EntityType& entity)
   {
-    assert(false);
-    // mapper -> ent_id ??
-    auto ent_idx = 0;
+    const auto ent_idx = grid_view_.indexSet().index(entity);
     maybePrintEntityIndex( entity, ent_idx );
   }
 
@@ -136,6 +136,7 @@ protected:
   std::ostream& file_;
   const std::string color_;
   const bool printEntityIndex_;
+  const GridViewType& grid_view_;
 };
 
 /** \brief print a tex(tikz) representation of each entity to strean
@@ -151,11 +152,12 @@ template <class GridViewType>
 class PgfEntityFunctorIntersectionsWithShift : public PgfEntityFunctorIntersections<GridViewType> {
   typedef PgfEntityFunctorIntersections<GridViewType> BaseType;
 public:
-  PgfEntityFunctorIntersectionsWithShift(std::ostream& file,
+  PgfEntityFunctorIntersectionsWithShift(const GridViewType& grid_view,
+                                         std::ostream& file,
                                          const std::string color = "black",
                                          const int level = 0,
                                          bool printEntityIndex = false)
-    : BaseType(file,color,printEntityIndex)
+    : BaseType(grid_view,file,color,printEntityIndex)
     , level_(level)
   {}
 
@@ -209,7 +211,7 @@ public:
     else
       file <<	"\\begin{tikzpicture}\n";
     Walker<typename GridType::LeafGridView> gridWalk( grid_.leafGridView() );
-    PgfEntityFunctorIntersections<typename GridType::LeafGridView> pgf( file );
+    PgfEntityFunctorIntersections<typename GridType::LeafGridView> pgf( grid_.leafGridView(), file );
     gridWalk.add( pgf );
     gridWalk.walk();
 
@@ -245,7 +247,8 @@ public:
           ViewType;
       const ViewType& view = grid_.levelGridView(i);
       Walker<ViewType> gridWalk( view );
-      PgfEntityFunctorIntersectionsWithShift<ViewType> pgf( file, texcolors_[std::min(i,int(texcolors_.size()))], i, true);
+      PgfEntityFunctorIntersectionsWithShift<ViewType> pgf( view, file, texcolors_[std::min(i,int(texcolors_.size()))],
+          i, true);
       gridWalk.add( pgf );
       gridWalk.walk();
       file << "%%%%%%%%%%%%%%%" << view.size( 0 ) << "%%%%%%%%%%%%%%%%\n";
@@ -288,7 +291,7 @@ public:
         std::snprintf(buffer, 80, "\\subfloat[Level %d]{\n\\begin{tikzpicture}[scale=\\gridplotscale]\n", i);
         file << buffer;
         Walker<ViewType> gridWalk( view );
-        PgfEntityFunctorIntersections<ViewType> thisLevel( file, "black", true);
+        PgfEntityFunctorIntersections<ViewType> thisLevel( view, file, "black", true);
         gridWalk.add( thisLevel );
         gridWalk.walk();
       }
