@@ -21,6 +21,7 @@
 #include <dune/stuff/grid/walker.hh>
 #include <dune/stuff/aliases.hh>
 #include <dune/stuff/grid/entity.hh>
+#include <dune/stuff/grid/walker/functors.hh>
 
 
 namespace Dune {
@@ -100,7 +101,7 @@ struct Dimensions
   MinMaxAvgType entity_width;
 
   //! gridwalk functor that does the actual work for \ref GridDimensions
-  class GridDimensionsFunctor
+  class GridDimensionsFunctor : public Functor::Codim0<GridViewType>
   {
     CoordLimitsType& coord_limits_;
     MinMaxAvgType& entity_volume_;
@@ -112,8 +113,7 @@ struct Dimensions
         , entity_volume_(e)
         , entity_width_(w) {}
 
-      template< class Entity >
-      void operator()(const Entity& ent, const size_t /*ent_idx*/) {
+      virtual void apply_local(const EntityType& ent) {
         const auto& geo = ent.geometry();
         entity_volume_( geo.volume() );
         entity_width_(entity_diameter(ent));
