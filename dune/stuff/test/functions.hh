@@ -64,8 +64,10 @@ protected:
   template< class GridType >
   void dynamic_interface_check(const FunctionImp& func, GridType& grid) const
   {
+#if HAVE_DUNE_GRID
     for (const auto& entity : Common::entityRange(grid.leafGridView()))
       std::unique_ptr< LocalfunctionType > local_func = func.local_function(entity);
+#endif
     std::string tp = func.type();
     std::string nm = func.name();
   } // ... dynamic_interface_check(...)
