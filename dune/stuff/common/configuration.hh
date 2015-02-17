@@ -130,7 +130,7 @@ public:
                 const std::string logfile);
 
   //! read ParameterTree from given arguments and call Configuration(const ParameterTree& tree)
-  explicit Configuration(int argc,
+  Configuration(int argc,
                          char** argv,
                          const bool record_defaults = internal::configuration_record_defaults,
                          const bool warn_on_default_access = internal::configuration_warn_on_default_access,
@@ -138,7 +138,7 @@ public:
                          const std::string logfile = internal::configuration_logfile);
 
   //! read ParameterTree from given arguments and file and call Configuration(const ParameterTree& tree)
-  explicit Configuration(int argc,
+  Configuration(int argc,
                          char** argv,
                          const std::string filename,
                          const bool record_defaults = internal::configuration_record_defaults,
@@ -164,14 +164,14 @@ public:
     setup_();
   }
 
-  explicit Configuration(const std::string key,
+  Configuration(const std::string key,
                          const char* value,
                          const bool record_defaults = internal::configuration_record_defaults,
                          const bool warn_on_default_access = internal::configuration_warn_on_default_access,
                          const bool log_on_exit = internal::configuration_log_on_exit,
                          const std::string logfile = internal::configuration_logfile);
 
-  explicit Configuration(const char* key,
+  Configuration(const char* key,
                          const char* value,
                          const bool record_defaults = internal::configuration_record_defaults,
                          const bool warn_on_default_access = internal::configuration_warn_on_default_access,
@@ -180,7 +180,7 @@ public:
 
   //! operator[](keys[ii]) = values[ii] for 0 <= ii <= keys.size()
   template< class T >
-  explicit Configuration(const std::vector< std::string > keys,
+  Configuration(const std::vector< std::string > keys,
                          const std::vector< T > values_in,
                          const bool record_defaults = internal::configuration_record_defaults,
                          const bool warn_on_default_access = internal::configuration_warn_on_default_access,
@@ -205,7 +205,7 @@ public:
   /** creates std::vector< T > from value_list and then behaves exactly like
    * Configuration(const std::vector< std::string > keys, const std::vector< T > values_in) */
   template< class T >
-  explicit Configuration(const std::vector< std::string > keys,
+  Configuration(const std::vector< std::string > keys,
                          const std::initializer_list< T > value_list,
                          const bool record_defaults = internal::configuration_record_defaults,
                          const bool warn_on_default_access = internal::configuration_warn_on_default_access,
@@ -220,7 +220,7 @@ public:
   {}
 
   // specialization of the constructor above for std::string
-  explicit Configuration(const std::vector< std::string > keys,
+  Configuration(const std::vector< std::string > keys,
                          const std::initializer_list< std::string > value_list,
                          const bool record_defaults = internal::configuration_record_defaults,
                          const bool warn_on_default_access = internal::configuration_warn_on_default_access,
