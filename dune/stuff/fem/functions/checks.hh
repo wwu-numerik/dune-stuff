@@ -25,6 +25,7 @@
 #include <dune/stuff/common/math.hh>
 #include <dune/stuff/common/string.hh>
 #include <dune/stuff/common/ranges.hh>
+#include <dune/stuff/aliases.hh>
 
 namespace Dune {
 namespace Stuff {
@@ -147,7 +148,7 @@ bool
      MatrixContainsNanOrInf(const MatrixType& matrix) {
   for (auto row : DSC::valueRange(matrix.rows()))
   {
-    for (auto col DSC::valueRange(matrix.cols()))
+    for (auto col : Dune::Stuff::Common::valueRange(matrix.cols()))
     {
       if ( std::isnan( matrix(row, col) ) || std::isinf( matrix(row, col) ) )
         return true;

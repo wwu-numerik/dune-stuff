@@ -307,7 +307,7 @@ double
                                   quadOrd,
                                   QuadratureType::INSIDE);
         const auto quadNop = quad.nop();
-        for (auto qP : DSC::valueRange(quadNop))
+        for (auto qP : Dune::Stuff::Common::valueRange(quadNop))
         {
           const double intel = (affineMapping) ?
                                quad.weight(qP) : // affine case
