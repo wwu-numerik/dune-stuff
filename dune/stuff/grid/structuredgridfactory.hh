@@ -8,6 +8,9 @@
 #ifndef DUNE_STUFF_GRID_STRUCTURED_GRID_FACTORY_HH
 #define DUNE_STUFF_GRID_STRUCTURED_GRID_FACTORY_HH
 
+//nothing here will compile w/o grid present
+#if HAVE_DUNE_GRID
+
 #include <dune/common/unused.hh>
 
 #include <dune/grid/utility/structuredgridfactory.hh>
@@ -149,5 +152,7 @@ public:
 };
 
 }  // namespace Dune
+
+#endif // HAVE_DUNE_GRID
 
 #endif // DUNE_STUFF_GRID_STRUCTURED_GRID_FACTORY_HH
