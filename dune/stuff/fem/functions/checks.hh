@@ -25,6 +25,7 @@
 #include <dune/stuff/common/math.hh>
 #include <dune/stuff/common/string.hh>
 #include <dune/stuff/common/ranges.hh>
+#include <dune/stuff/aliases.hh>
 
 namespace Dune {
 namespace Stuff {

@@ -6,6 +6,9 @@
 #ifndef DUNE_STUFF_GRID_WALK_HH
 #define DUNE_STUFF_GRID_WALK_HH
 
+//nothing here will compile w/o grid present
+#if HAVE_DUNE_GRID
+
 #include <vector>
 
 #include <boost/format.hpp>
@@ -102,5 +105,7 @@ GridWalk< Dune::GridView<ViewImp>, codim > make_gridwalk(const Dune::GridView<Vi
 } // namespace Grid
 } // namespace Stuff
 } // namespace Dune
+
+#endif // HAVE_DUNE_GRID
 
 #endif // DUNE_STUFF_GRID_WALK_HH
