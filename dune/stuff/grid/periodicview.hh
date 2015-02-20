@@ -77,7 +77,7 @@ public:
       return BaseType::boundary();
   }
 
-  bool is_periodic() const
+  bool periodic() const
   {
     return periodic_;
   }
@@ -303,7 +303,7 @@ public:
     const auto& it_end = real_grid_view_.template end< 0 >();
     const IndexSet& index_set = real_grid_view_.indexSet();
     size_t entitycount = 0;
-    size_t step = 1000;
+    size_t step = 100;
     size_t numsteps = 1;
     CoordinateType periodic_neighbor_coords;
     std::map< IntersectionIndexType, std::pair< bool, EntityPointerType > > intersection_neighbor_map;
@@ -315,41 +315,39 @@ public:
       }
       intersection_neighbor_map.clear();
       const auto& entity = *it;
-        const auto& i_it_end = real_grid_view_.iend(entity);
-        for (auto i_it = real_grid_view_.ibegin(entity); i_it != i_it_end; ++i_it) {
-          const RealIntersectionType& intersection = *i_it;
-          const IntersectionIndexType index_in_inside = intersection.indexInInside();
-          bool is_periodic = false;
-          if (intersection.boundary()) {
-            periodic_neighbor_coords = intersection.geometry().center();
-            size_t num_boundary_coords = 0;
-            for (std::size_t ii = 0; ii < dimDomain; ++ii) {
+      const auto& i_it_end = real_grid_view_.iend(entity);
+      for (auto i_it = real_grid_view_.ibegin(entity); i_it != i_it_end; ++i_it) {
+        const RealIntersectionType& intersection = *i_it;
+        const IntersectionIndexType index_in_inside = intersection.indexInInside();
+        bool is_periodic = false;
+        if (intersection.boundary()) {
+          periodic_neighbor_coords = intersection.geometry().center();
+          size_t num_boundary_coords = 0;
+          for (std::size_t ii = 0; ii < dimDomain; ++ii) {
+            if (periodic_directions_[ii]) {
               if (Dune::Stuff::Common::FloatCmp::eq(periodic_neighbor_coords[ii], 0.0)) {
-                if (periodic_directions_[ii]) {
-                  is_periodic = true;
-                  periodic_neighbor_coords[ii] = 1.0;
-                  ++num_boundary_coords;
-                }
+                is_periodic = true;
+                periodic_neighbor_coords[ii] = 1.0;
+                ++num_boundary_coords;
               } else if (Dune::Stuff::Common::FloatCmp::eq(periodic_neighbor_coords[ii], 1.0)) {
-                if (periodic_directions_[ii]) {
-                  is_periodic = true;
-                  periodic_neighbor_coords[ii] = 0.0;
-                  ++num_boundary_coords;
-                }
+                is_periodic = true;
+                periodic_neighbor_coords[ii] = 0.0;
+                ++num_boundary_coords;
               }
             }
-            assert(num_boundary_coords = 1);
-            if (is_periodic) {
-              EntityPointerType periodic_neighbor = *(Dune::Stuff::Grid::EntityInlevelSearch< RealGridViewType >(real_grid_view_).operator()(std::vector< CoordinateType >(1,  periodic_neighbor_coords))[0]);
-              intersection_neighbor_map.insert(std::make_pair(index_in_inside, std::make_pair(is_periodic, periodic_neighbor)));
-            } else {
-              intersection_neighbor_map.insert(std::make_pair(index_in_inside, std::make_pair(is_periodic, EntityPointerType(entity))));
-            }
-          } else {
-            intersection_neighbor_map.insert(std::make_pair(index_in_inside, std::make_pair(bool(false), EntityPointerType(entity))));
           }
+          assert(num_boundary_coords = 1);
+          if (is_periodic) {
+            EntityPointerType periodic_neighbor = *(Dune::Stuff::Grid::EntityInlevelSearch< RealGridViewType >(real_grid_view_).operator()(std::vector< CoordinateType >(1,  periodic_neighbor_coords))[0]);
+            intersection_neighbor_map.insert(std::make_pair(index_in_inside, std::make_pair(is_periodic, periodic_neighbor)));
+          } else {
+            intersection_neighbor_map.insert(std::make_pair(index_in_inside, std::make_pair(is_periodic, EntityPointerType(entity))));
+          }
+        } else {
+          intersection_neighbor_map.insert(std::make_pair(index_in_inside, std::make_pair(bool(false), EntityPointerType(entity))));
         }
-        entity_to_intersection_map_map_.insert( std::make_pair(index_set.index(entity), intersection_neighbor_map));
+      }
+      entity_to_intersection_map_map_.insert( std::make_pair(index_set.index(entity), intersection_neighbor_map));
     }
   }
 
