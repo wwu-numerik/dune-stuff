@@ -582,7 +582,7 @@ public:
 
   virtual void jacobian(const DomainType& /*x*/, JacobianRangeType& /*ret*/) const
   {
-    DUNE_THROW(NotImplemented, "You have to imlement it if you intend to use it!");
+    DUNE_THROW(NotImplemented, "You have to implement it if you intend to use it!");
   }
 
   virtual RangeType evaluate(const DomainType& xx) const
