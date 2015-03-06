@@ -148,18 +148,29 @@ TEST(StringTest, ConvertTo) {
 }
 
 TEST(StringTest, ConvertFrom) {
-  EXPECT_EQ(9,fromString<int>("9"));
-  EXPECT_EQ(0,fromString<int>("0"));
-  EXPECT_EQ('p',fromString<char>(toString('p')));
-  EXPECT_EQ(-1,fromString<char>(toString(char(-1))));
+  EXPECT_EQ(9, fromString<int>("9"));
+  EXPECT_EQ(0, fromString<int>("0"));
+  EXPECT_EQ('p', fromString<char>(toString('p')));
+  EXPECT_EQ(-1, fromString<char>(toString(char(-1))));
   EXPECT_THROW(fromString<char>("sd"),Dune::Stuff::Exceptions::conversion_error);
-  EXPECT_EQ(true,fromString<bool>("1"));
-  EXPECT_EQ(true,fromString<bool>("true"));
-  EXPECT_EQ(true,fromString<bool>("True"));
-  EXPECT_EQ(false,fromString<bool>("0"));
-  EXPECT_EQ(false,fromString<bool>("false"));
-  EXPECT_EQ(false,fromString<bool>("False"));
+  EXPECT_EQ(true, fromString<bool>("1"));
+  EXPECT_EQ(true, fromString<bool>("true"));
+  EXPECT_EQ(true, fromString<bool>("True"));
+  EXPECT_EQ(false, fromString<bool>("0"));
+  EXPECT_EQ(false, fromString<bool>("false"));
+  EXPECT_EQ(false, fromString<bool>("False"));
   EXPECT_THROW(fromString<int>(""), std::invalid_argument);
+  // test nested containers
+  typedef std::vector< Dune::FieldVector< int, 3 > > VectorofVectors;
+  EXPECT_EQ(6, fromString< VectorofVectors >("[[1 2 3] [4 5 6]]", 2)[1][2]);
+  typedef std::vector< Dune::Stuff::LA::CommonDenseMatrix< double > > VectorofMatrices;
+  EXPECT_EQ(double(7), fromString< VectorofMatrices >("[[1 2; 3 4] [5 6; 7 8]]", 2)[1].get_entry(1, 0));
+  typedef Dune::Stuff::Common::FieldMatrix< std::vector< double >, 2, 2 > MatrixofVectors;
+  EXPECT_EQ(double(11), fromString< MatrixofVectors >("[[1 2 3] [4 5 6]; [7 8 9] [10 11 12]]", 2, 2)[1][1][1]);
+  typedef Dune::DynamicMatrix< Dune::DynamicMatrix< double > > MatrixofMatrices;
+  EXPECT_EQ(double(16), fromString< MatrixofMatrices >("[[1 2; 3 4] [5 6; 7 8]; [9 10; 11 12] [13 14; 15 16]]", 2, 2)[1][1][1][1]);
+  typedef std::vector< std::vector < std::vector < double > > > TripleVector;
+  EXPECT_EQ(double(8), fromString< TripleVector >("[[[1 2] [3 4]] [[5 6] [7 8]]]")[1][1][1]);
 }
 
 // Hex, whitespacify, tokenize, stringFromTime tests
