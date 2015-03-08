@@ -42,7 +42,8 @@ public:
   static const size_t dimDomain = RealGridViewType::dimension;
 
   //! \brief Constructor from real intersection
-  PeriodicIntersection(const BaseType& real_intersection, const RealGridViewType& real_grid_view,
+  PeriodicIntersection(const BaseType& real_intersection,
+                       const RealGridViewType& real_grid_view,
                        const std::pair< bool, EntityPointer >& periodic_pair)
     : BaseType(real_intersection)
     , periodic_(periodic_pair.first)
@@ -102,7 +103,8 @@ public:
 
 private:
   // tries to find intersection in outside (works only if periodic_ == true)
-  const RealIntersectionIteratorType find_intersection_in_outside() const {
+  const RealIntersectionIteratorType find_intersection_in_outside() const
+  {
     const GlobalCoordinate coords = this->geometry().center();
     RealIntersectionIteratorType outside_i_it = real_grid_view_.ibegin(*outside());
     const RealIntersectionIteratorType outside_i_it_end = real_grid_view_.iend(*outside());
@@ -132,6 +134,7 @@ protected:
   EntityPointer outside_;
   const RealGridViewType& real_grid_view_;
 }; // ... class PeriodicIntersection ...
+
 
 template< class RealGridViewImp >
 class PeriodicIntersectionIterator
@@ -183,7 +186,8 @@ public:
   }
 
 private:
-  std::unique_ptr< Intersection > create_current_intersection() const {
+  std::unique_ptr< Intersection > create_current_intersection() const
+  {
     return DSC::make_unique< Intersection >(BaseType::operator*(),
                                             real_grid_view_,
                                             has_boundary_intersections_
@@ -191,7 +195,8 @@ private:
                                             : std::make_pair(bool(false), EntityPointerType(entity_)));
   }
 
-  std::unique_ptr< Intersection > create_current_intersection_safely() const {
+  std::unique_ptr< Intersection > create_current_intersection_safely() const
+  {
     return DSC::make_unique< Intersection >(*this == real_grid_view_.iend(entity_)
                                             ? *real_grid_view_.ibegin(entity_)
                                             : BaseType::operator*(),
@@ -210,11 +215,11 @@ private:
   mutable std::unique_ptr< Intersection > current_intersection_;
 }; // ... class PeriodicIntersectionIterator ...
 
-//forward
-template < class RealGridViewImp >
+// forward
+template< class RealGridViewImp >
 class PeriodicGridViewImp;
 
-template < class RealGridViewImp >
+template< class RealGridViewImp >
 class PeriodicGridViewTraits
 {
 public:
@@ -284,17 +289,9 @@ public:
   {
     const auto it_end = real_grid_view_.template end< 0 >();
     const IndexSet& index_set = real_grid_view_.indexSet();
-//    size_t entitycount = 0;
-//    size_t step = 100;
-//    size_t numsteps = 1;
     CoordinateType periodic_neighbor_coords;
     std::map< IntersectionIndexType, std::pair< bool, EntityPointerType > > intersection_neighbor_map;
     for (auto it = real_grid_view_.template begin< 0 >(); it != it_end; ++it) {
-//      ++entitycount;
-//      if (entitycount == numsteps*step) {
-//        std::cout << numsteps*step << " Entities done..." << std::endl;
-//        ++numsteps;
-//      }
       intersection_neighbor_map.clear();
       const auto& entity = *it;
       if (entity.hasBoundaryIntersections()) {
@@ -321,8 +318,6 @@ public:
             }
             assert(num_boundary_coords = 1);
             if (is_periodic) {
-//              EntityPointerType outside = *(EntityInlevelSearch< RealGridViewType >(real_grid_view_).operator()(
-//                                              std::vector< CoordinateType >(1,  periodic_neighbor_coords))[0]);
               std::vector< std::unique_ptr< EntityPointerType > > outside_vector = EntityInlevelSearch< RealGridViewType >(real_grid_view_).operator()(
                                                             std::vector< CoordinateType >(1,  periodic_neighbor_coords));
               std::unique_ptr< EntityPointerType > outside_ptr_ptr = std::move(outside_vector.at(0));
@@ -474,7 +469,8 @@ public:
     : ConstStorProv(other.access())
     , BaseType(ConstStorProv::access())
   {}
-}; // ... class PeriodicGridView ...
+}; // class PeriodicGridView
+
 
 } // namespace Grid
 } // namespace Stuff

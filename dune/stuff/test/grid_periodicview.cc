@@ -59,7 +59,8 @@ struct PeriodicViewTestCube
   typedef typename GridViewType::CollectiveCommunication  CollectiveCommunication;
   static const size_t dimDomain = GridViewType::dimension;
 
-  void check(const bool is_simplex) {
+  void check(const bool is_simplex)
+  {
     const bool is_cube = !is_simplex;
     GridProviderType grid_provider = *(GridProviderType::create());
     const std::shared_ptr< const GridType > grid = grid_provider.grid_ptr();
