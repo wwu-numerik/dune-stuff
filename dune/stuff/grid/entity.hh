@@ -54,7 +54,8 @@ public:
 template< class EntityType >
 void printEntity(const EntityType& entity,
                  const std::string name = Common::Typename< EntityType >::value(),
-                 std::ostream& out = std::cout, const std::string prefix = "")
+                 std::ostream& out = std::cout,
+                 const std::string prefix = "")
 {
   if (!name.empty())
     out << prefix << name << ":\n";
