@@ -53,9 +53,9 @@ struct PeriodicViewTestCube
   typedef typename Dune::Stuff::Grid::template PeriodicGridView< GridViewType >      PeriodicGridViewType;
   typedef typename PeriodicGridViewType::template Codim< 0 >::Entity    EntityType;
   typedef typename PeriodicGridViewType::template Codim< 0 >::Iterator  EntityIteratorType;
-  typedef typename Dune::Stuff::Grid::template PeriodicIntersectionIterator< GridViewType >   PeriodicIntersectionIteratorType;
-  typedef typename Dune::Stuff::Grid::template PeriodicIntersection< GridViewType >           PeriodicIntersectionType;
-  typedef typename PeriodicIntersectionType::EntityPointer                                    EntityPointerType;
+  typedef typename Dune::Stuff::Grid::internal::template PeriodicIntersectionIterator< GridViewType > PeriodicIntersectionIteratorType;
+  typedef typename Dune::Stuff::Grid::internal::template PeriodicIntersection< GridViewType >         PeriodicIntersectionType;
+  typedef typename PeriodicIntersectionType::EntityPointer                                            EntityPointerType;
   typedef typename GridViewType::CollectiveCommunication  CollectiveCommunication;
   static const size_t dimDomain = GridViewType::dimension;
 
