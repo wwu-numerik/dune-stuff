@@ -65,6 +65,8 @@ inline std::vector< T > tokenize(const std::string& msg,
                                  const std::string& separators,
                                  const boost::algorithm::token_compress_mode_type mode
                                     = boost::algorithm::token_compress_off);
+//forward
+inline std::vector< std::string > tokenize_container(const std::string msg, const bool get_matrix_rows = false);
 
 
 namespace internal {
@@ -73,12 +75,12 @@ namespace internal {
 static inline std::string trim_copy_safely(const std::string& str_in)
 {
   const std::string str_out = boost::algorithm::trim_copy(str_in);
-  if (str_out.find(";") != std::string::npos)
-    DUNE_THROW(Exceptions::conversion_error,
-               "There was an error while parsing the string below. "
-               << "The value contained a ';': '" << str_out << "'!\n"
-               << "This usually happens if you try to get a matrix expression with a vector type "
-               << "or if you are missing the white space after the ';' in a matrix expression!\n");
+//  if (str_out.find(";") != std::string::npos)
+//    DUNE_THROW(Exceptions::conversion_error,
+//               "There was an error while parsing the string below. "
+//               << "The value contained a ';': '" << str_out << "'!\n"
+//               << "This usually happens if you try to get a matrix expression with a vector type "
+//               << "or if you are missing the white space after the ';' in a matrix expression!\n");
   return str_out;
 } // ... trim_copy_safely(...)
 
@@ -156,7 +158,7 @@ DUNE_STUFF_COMMON_STRING_GENERATE_HELPER(long double, ld)
 // variant for everything that is not a matrix or a vector
 template< class T >
 static inline
-  typename std::enable_if< !is_vector< T >::value && !is_matrix< T > ::value, T >::type
+  typename std::enable_if< !is_vector< T >::value && !is_matrix< T >::value, T >::type
               from_string(const std::string ss,
                           const size_t UNUSED_UNLESS_DEBUG(rows) = 0,
                           const size_t UNUSED_UNLESS_DEBUG(cols) = 0)
@@ -166,19 +168,28 @@ static inline
   return Helper< T >::from_string(ss);
 }
 
+// forward to allow for getting vectors of matrices from string
+template< class MatrixType >
+static inline
+  typename std::enable_if< is_matrix< MatrixType >::value, MatrixType >::type
+              from_string(std::string matrix_str, const size_t rows = 0, const size_t cols = 0);
+
+// variant for vectors
 template< class VectorType >
 static inline
   typename std::enable_if< is_vector< VectorType >::value, VectorType >::type
-              from_string(const std::string& ss, const size_t size, const size_t UNUSED_UNLESS_DEBUG(cols) = 0)
+              from_string(const std::string ss, const size_t size = 0, const size_t UNUSED_UNLESS_DEBUG(cols) = 0)
 {
-  auto vector_str = ss;
-  typedef typename VectorAbstraction< VectorType >::S S;
   assert(cols == 0);
+  std::string vector_str = ss;
+  typedef typename VectorAbstraction< VectorType >::S S;
   // check if this is a vector
   if (vector_str.substr(0, 1) == "[" && vector_str.substr(vector_str.size() - 1, 1) == "]") {
     vector_str = vector_str.substr(1, vector_str.size() - 2);
-    // we treat this as a vector and split along ' '
-    const auto tokens = tokenize< std::string >(vector_str, " ", boost::algorithm::token_compress_on);
+    // check if this is a vector of containers or a vector of scalars
+    const auto tokens = is_vector< S >::value || is_matrix< S >::value
+                        ? tokenize_container(vector_str)
+                        : tokenize< std::string >(vector_str, " ", boost::algorithm::token_compress_on);
     if (size > 0 && tokens.size() < size)
       DUNE_THROW(Exceptions::conversion_error,
                  "Vector expression (see below) has only " << tokens.size() << " elements but " << size <<
@@ -194,27 +205,15 @@ static inline
                  << "'[" << vector_str << "]'");
     VectorType ret = VectorAbstraction< VectorType >::create(actual_size);
     for (size_t ii = 0; ii < actual_size; ++ii)
-      ret[ii] = from_string< S >(trim_copy_safely(tokens[ii]));
+      ret[ii] = from_string< S >(trim_copy_safely(tokens[ii]), 0, 0);
     return ret;
   } else {
-    // we treat this as a scalar
-    const auto val = from_string< S >(trim_copy_safely(vector_str));
-    const size_t automatic_size = (size == 0 ? 1 : size);
-    const size_t actual_size = VectorAbstraction< VectorType >::has_static_size
-                               ? VectorAbstraction< VectorType >::static_size
-                               : automatic_size;
-    if (actual_size > automatic_size)
-      DUNE_THROW(Exceptions::conversion_error,
-                 "Vector expression (see below) has only " << automatic_size << " elements but " << actual_size
-                 << " elements are required for this VectorType (" << Typename< VectorType >::value() << ")!" << "\n"
-                 << "'[" << vector_str << "]'");
-    VectorType ret = VectorAbstraction< VectorType >::create(actual_size);
-    for (size_t ii = 0; ii < std::min(actual_size, ret.size()); ++ii)
-      ret[ii] = val;
-    return ret;
+    // we just add the braces and start over again
+    return from_string< VectorType >("[" + vector_str + "]", size, cols);
   }
-} // ... from_string(...)
+}
 
+// variant for matrices
 template< class MatrixType >
 static inline
   typename std::enable_if< is_matrix< MatrixType >::value, MatrixType >::type
@@ -224,8 +223,10 @@ static inline
   // check if this is a matrix
   if (matrix_str.substr(0, 1) == "[" && matrix_str.substr(matrix_str.size() - 1, 1) == "]") {
     matrix_str = matrix_str.substr(1, matrix_str.size() - 2);
-    // we treat this as a matrix and split along ';' to obtain the rows
-    const auto row_tokens = tokenize< std::string >(matrix_str, ";", boost::algorithm::token_compress_on);
+    // check if this is a matrix of containers or a matrix of scalars
+    const auto row_tokens = is_vector< S >::value || is_matrix< S >::value
+                            ? tokenize_container(matrix_str, true)
+                            : tokenize< std::string >(matrix_str, ";", boost::algorithm::token_compress_on);
     if (rows > 0 && row_tokens.size() < rows)
       DUNE_THROW(Exceptions::conversion_error,
                  "Matrix expression (see below) has only " << row_tokens.size() << " rows but " << rows
@@ -242,9 +243,10 @@ static inline
     // compute the number of columns the matrix will have
     size_t min_cols = std::numeric_limits< size_t >::max();
     for (size_t rr = 0; rr < actual_rows; ++rr) {
-      const auto row_token = boost::algorithm::trim_copy(row_tokens[rr]);
-      // we treat this as a vector, so we split along ' '
-      const auto column_tokens = tokenize< std::string >(row_token, " ", boost::algorithm::token_compress_on);
+      auto row_token = boost::algorithm::trim_copy(row_tokens[rr]);
+      const auto column_tokens = is_vector< S >::value || is_matrix< S >::value
+                                 ? tokenize_container(row_token)
+                                 : tokenize< std::string >(row_token, " ", boost::algorithm::token_compress_on);
       min_cols = std::min(min_cols, column_tokens.size());
     }
     if (cols > 0 && min_cols < cols)
@@ -263,38 +265,17 @@ static inline
     MatrixType ret = MatrixAbstraction< MatrixType >::create(actual_rows, actual_cols);
     // now we do the same again and build the actual matrix
     for (size_t rr = 0; rr < actual_rows; ++rr) {
-      const std::string row_token = boost::algorithm::trim_copy(row_tokens[rr]);
-      const auto column_tokens = tokenize< std::string >(row_token, " ", boost::algorithm::token_compress_on);
+      auto row_token = boost::algorithm::trim_copy(row_tokens[rr]);
+      const auto column_tokens = is_vector< S >::value || is_matrix< S >::value
+                                 ? tokenize_container(row_token)
+                                 : tokenize< std::string >(row_token, " ", boost::algorithm::token_compress_on);
       for (size_t cc = 0; cc < actual_cols; ++cc)
         MatrixAbstraction< MatrixType >::set_entry(ret, rr, cc, from_string< S >(trim_copy_safely(column_tokens[cc])));
     }
     return ret;
   } else {
-    // we treat this as a scalar
-    const S val = from_string< S >(trim_copy_safely(matrix_str));
-    const size_t automatic_rows = (rows == 0 ? 1 : rows);
-    const size_t actual_rows = MatrixAbstraction< MatrixType >::has_static_size
-                               ? MatrixAbstraction< MatrixType >::static_rows
-                               : automatic_rows;
-    if (actual_rows > automatic_rows)
-      DUNE_THROW(Exceptions::conversion_error,
-                 "Matrix expression (see below) has only " << automatic_rows << " rows but " << actual_rows
-                 << " rows are required for this MatrixType (" << Typename< MatrixType >::value() << ")!" << "\n"
-                 << "'[" << matrix_str << "]'");
-    const size_t automatic_cols = (cols == 0 ? 1 : cols);
-    const size_t actual_cols = MatrixAbstraction< MatrixType >::has_static_size
-                               ? MatrixAbstraction< MatrixType >::static_cols
-                               : automatic_cols;
-    if (actual_cols > automatic_cols)
-      DUNE_THROW(Exceptions::conversion_error,
-                 "Matrix expression (see below) has only " << automatic_cols << " cols but " << actual_cols
-                 << " cols are required for this MatrixType (" << Typename< MatrixType >::value() << ")!" << "\n"
-                 << "'[" << matrix_str << "]'");
-    MatrixType ret = MatrixAbstraction< MatrixType >::create(actual_rows, actual_cols);
-    for (size_t rr = 0; rr < std::min(actual_rows, MatrixAbstraction< MatrixType >::rows(ret)); ++rr)
-      for (size_t cc = 0; cc < std::min(actual_cols, MatrixAbstraction< MatrixType >::cols(ret)); ++cc)
-        MatrixAbstraction< MatrixType >::set_entry(ret, rr, cc, val);
-    return ret;
+    // we just add the braces and start over again
+    return from_string< MatrixType >("[" + matrix_str + "]", rows, cols);
   }
 } // ... from_string(...)
 
@@ -429,6 +410,43 @@ inline std::vector< std::string > tokenize(const std::string& msg,
     std::vector< std::string > strings;
     boost::algorithm::split(strings, msg, boost::algorithm::is_any_of(separators), mode);
     return strings;
+}
+
+inline std::vector< std::string > tokenize_container(const std::string msg, const bool get_matrix_rows)
+{
+  std::string container_str = msg;
+  std::vector< std::string > tokens;
+  while (!container_str.empty()) {
+    if (container_str.substr(0, 1) == "[") {
+      size_t pos = 0;
+      size_t brace_count = 1;
+      bool end_of_search = false;
+      while (!end_of_search) {
+        ++pos;
+        if (container_str.substr(pos,1) == "[")
+          ++brace_count;
+        if (container_str.substr(pos,1) == "]")
+          --brace_count;
+        //we stop at the end of the inner container (brace_count == 0) or the current row (';' or end of string)
+        if ((brace_count == 0 && !get_matrix_rows)
+            || (brace_count == 0 && get_matrix_rows && container_str.substr(pos+1,1) == ";")
+            || (brace_count == 0 && get_matrix_rows && (pos + 1) == container_str.size()))
+          end_of_search = true;
+        if (pos == container_str.size())
+          DUNE_THROW(Exceptions::conversion_error,
+                     "Number of right and left braces ('[' and ']') does not seem to match!");
+      }
+      tokens.emplace_back(container_str.substr(0,pos+1));
+      // start again after last ';'
+      container_str = pos+1 == container_str.size()
+                      ? std::string()
+                      : internal::trim_copy_safely(container_str.substr(pos+2));
+    } else
+      DUNE_THROW(Exceptions::conversion_error,
+                 "Could not make a vector/matrix from this string: " << container_str << "\n"
+                 << "You may have forgotten the whitespace between columns.");
+  }
+  return tokens;
 }
 
 

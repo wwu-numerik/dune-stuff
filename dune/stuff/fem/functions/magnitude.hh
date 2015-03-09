@@ -25,7 +25,7 @@
 #include <dune/stuff/common/ranges.hh>
 #include <dune/stuff/fem/localmassmatrix.hh>
 #include <dune/stuff/aliases.hh>
-#include <dune/stuff/fem/namespace.hh>
+#include <dune/stuff/fem.hh>
 
 namespace Dune {
 namespace Stuff {

@@ -146,7 +146,7 @@ template< class MatrixType >
 bool
   DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
      MatrixContainsNanOrInf(const MatrixType& matrix) {
-  for (auto row : DSC::valueRange(matrix.rows()))
+  for (auto row : Dune::Stuff::Common::valueRange(matrix.rows()))
   {
     for (auto col : Dune::Stuff::Common::valueRange(matrix.cols()))
     {

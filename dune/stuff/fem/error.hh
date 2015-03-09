@@ -19,7 +19,7 @@
 #include <dune/fem/misc/l2norm.hh>
 #include <dune/fem/misc/h1norm.hh>
 
-#include <dune/stuff/fem/namespace.hh>
+#include <dune/stuff/fem.hh>
 
 namespace Dune {
 namespace Stuff {
