@@ -69,7 +69,7 @@ public:
   typedef DynamicVector< FieldType > LocalVectorType;
 protected:
   typedef std::vector< std::vector< LocalVectorType > > LocalVectorContainerType;
-
+public:
   TmpVectorsStorage(const std::vector< size_t >& num_tmp_objects,
           const size_t max_size)
     : vectors_(LocalVectorContainerType({std::vector< LocalVectorType >(num_tmp_objects.at(0),
