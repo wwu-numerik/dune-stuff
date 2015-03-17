@@ -99,11 +99,6 @@ public:
     return name_;
   }
 
-  virtual ThisType* copy() const override final
-  {
-    return new ThisType(*this);
-  }
-
   virtual size_t order() const override final
   {
     return order_;
@@ -208,11 +203,6 @@ public:
   virtual std::string name() const override final
   {
     return name_;
-  }
-
-  virtual ThisType* copy() const override final
-  {
-    return new ThisType(*this);
   }
 
   virtual size_t order() const override final

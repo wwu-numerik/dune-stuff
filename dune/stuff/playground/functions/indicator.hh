@@ -152,11 +152,6 @@ public:
 
   virtual ~Indicator() {}
 
-  virtual ThisType* copy() const override final
-  {
-    DUNE_THROW(NotImplemented, "");
-  }
-
   virtual std::string name() const override final
   {
     return name_;

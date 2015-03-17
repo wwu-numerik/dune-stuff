@@ -332,13 +332,6 @@ public:
    * @{
    **/
   virtual std::unique_ptr< LocalfunctionType > local_function(const EntityType& /*entity*/) const = 0;
-
-  virtual ThisType*
-    DUNE_DEPRECATED_MSG("Will be removed, does not work (05.09.2014)!")
-                    copy() const
-  {
-    DUNE_THROW(NotImplemented, "");
-  }
   /* @} */
 
   /** \defgroup info ´´These methods should be implemented in order to identify the function.'' */
@@ -437,13 +430,6 @@ public:
   typedef typename BaseType::JacobianRangeType JacobianRangeType;
 
   virtual ~GlobalFunctionInterface() {}
-
-  virtual ThisType*
-    DUNE_DEPRECATED_MSG("Will be removed, does not work (05.09.2014)!")
-                    copy() const
-  {
-    DUNE_THROW(NotImplemented, "not needed, no meaningful default implementation possible -> exception");
-  }
 
   virtual size_t order() const = 0;
 
@@ -568,13 +554,6 @@ public:
 #endif
 
   virtual ~GlobalFunctionInterface() {}
-
-  virtual ThisType*
-    DUNE_DEPRECATED_MSG("Will be removed, does not work (05.09.2014)!")
-                    copy() const
-  {
-    DUNE_THROW(NotImplemented, "not needed, no meaningful default implementation possible -> exception");
-  }
 
   virtual size_t order() const = 0;
 
