@@ -99,9 +99,6 @@ TYPED_TEST(FlatTopFunctionTest, static_create_check) {
 TYPED_TEST(FlatTopFunctionTest, dynamic_interface_check) {
   this->dynamic_interface_check(*(TestFixture::FunctionType::create()), *(this->create_grid()));
 }
-TYPED_TEST(FlatTopFunctionTest, copy_check) {
-  this->copy_check(*(TestFixture::FunctionType::create()));
-}
 TYPED_TEST(FlatTopFunctionTest, evaluate_check) {
   auto grid_ptr = this->create_grid();
   typedef DSC::FieldVector< double, TypeParam::value > DomainType;
