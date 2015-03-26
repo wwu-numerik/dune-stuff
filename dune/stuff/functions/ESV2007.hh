@@ -367,11 +367,6 @@ public:
 
   ThisType& operator=(const ThisType& other) = delete;
 
-  virtual ThisType* copy() const override final
-  {
-    return new ThisType(*this);
-  }
-
   virtual std::string name() const override final
   {
     return name_;
