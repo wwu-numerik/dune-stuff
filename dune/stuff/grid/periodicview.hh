@@ -69,7 +69,7 @@ public:
       return true;
     else
       return BaseType::neighbor();
-  }
+  } // bool neighbor() const
 
   EntityPointer outside() const
   {
@@ -77,7 +77,7 @@ public:
       return outside_;
     else
       return BaseType::outside();
-  }
+  } // ... outside() const
 
   LocalGeometry geometryInOutside() const
   {
@@ -87,7 +87,7 @@ public:
     } else {
       return BaseType::geometryInOutside();
     }
-  } //geometryInOutSide
+  } // ... geometryInOutside() const
 
   int indexInOutside() const
   {
@@ -97,7 +97,7 @@ public:
     } else {
       return BaseType::indexInOutside();
     }
-  }
+  } // int indexInOutside() const
 
 private:
   // tries to find intersection in outside (works only if periodic_ == true)
@@ -124,7 +124,7 @@ private:
     }
     DUNE_THROW(Dune::InvalidStateException, "Could not find outside intersection!");
     return real_grid_view_->access().ibegin(*outside());
-  }
+  } // ... find_intersection_in_outside() const
 
 protected:
   bool periodic_;
@@ -190,7 +190,7 @@ private:
                                             has_boundary_intersections_
                                             ? intersection_map_.at((BaseType::operator*()).indexInInside())
                                             : (const PeriodicPairType&)nonperiodic_pair_);
-  }
+  } // ... create_current_intersection() const
 
   std::unique_ptr< Intersection > create_current_intersection_safely() const
   {
@@ -201,12 +201,12 @@ private:
                                             has_boundary_intersections_
                                             ? intersection_map_.at(real_intersection.indexInInside())
                                             : (const PeriodicPairType&)nonperiodic_pair_);
-  }
+  } // ... create_current_intersection_safely() const
 
   const RealGridViewType& real_grid_view_;
   const EntityType& entity_;
   const bool has_boundary_intersections_;
-  const std::map< IntersectionIndexType, std::pair< bool, EntityPointerType > >& intersection_map_;
+  const std::map< IntersectionIndexType, PeriodicPairType >& intersection_map_;
   PeriodicPairType nonperiodic_pair_;
   mutable std::unique_ptr< Intersection > current_intersection_;
 }; // ... class PeriodicIntersectionIterator ...
@@ -336,7 +336,7 @@ public:
         entity_to_intersection_map_map_.insert(std::make_pair(this->indexSet().index(entity), intersection_neighbor_map));
       }
     }
-  }
+  } // constructor PeriodicGridViewImp(...)
 
   IntersectionIterator ibegin(const typename Codim< 0 >::Entity& entity) const
   {
@@ -347,7 +347,7 @@ public:
                                 ? entity_to_intersection_map_map_.at(this->indexSet().index(entity))
                                 : (const IntersectionMapType&)empty_intersection_map_);
 
-  }
+  } // ... ibegin(...)
 
   IntersectionIterator iend(const typename Codim< 0 >::Entity& entity) const
   {
@@ -357,7 +357,7 @@ public:
                                 entity.hasBoundaryIntersections()
                                 ? entity_to_intersection_map_map_.at(this->indexSet().index(entity))
                                 : (const IntersectionMapType&)empty_intersection_map_);
-  }
+  } // ... iend(...)
 
 private:
   std::map< EntityIndexType, IntersectionMapType > entity_to_intersection_map_map_;
@@ -367,6 +367,7 @@ private:
 
 
 } // namespace internal
+
 
 /** \brief GridView that takes an arbitrary Dune::GridView and adds periodic boundaries
  *
