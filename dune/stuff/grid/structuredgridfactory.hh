@@ -66,7 +66,8 @@ namespace Dune {
     createCubeGrid(const FieldVector<ctype,dimworld>& lowerLeft,
                    const FieldVector<ctype,dimworld>& upperRight,
                    const array<unsigned int,dim>& elements,
-                   const array<unsigned int,dim>& overlap)
+                   const array<unsigned int,dim>& overlap,
+                   Dune::MPIHelper::MPICommunicator communicator = Dune::MPIHelper::getCommunicator())
     {
       Dune::array< int, dim > cells;
       Dune::array< int, dim > over;
@@ -74,7 +75,7 @@ namespace Dune {
         cells[i] = elements[i];
         over[i] = overlap[i];
       }
-      return std::make_shared<GridType>(lowerLeft, upperRight, cells, over);
+      return std::make_shared<GridType>(lowerLeft, upperRight, cells, over, communicator);
     }
 
     /** \brief Create a structured simplex grid
