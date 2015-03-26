@@ -149,9 +149,8 @@ struct PeriodicViewTestCube
                 differing_coordinate = ii;
               }
             }
-            if (intersection.periodic()) {
-              EXPECT_TRUE(intersection_in_outside.periodic());
-              EXPECT_FALSE(intersection_in_outside.boundary());
+            if (intersection.boundary() && intersection.neighbor()) {
+              EXPECT_TRUE(intersection_in_outside.boundary() && intersection_in_outside.neighbor());
               EXPECT_EQ(size_t(1), coord_difference_count);
               EXPECT_TRUE((Dune::Stuff::Common::FloatCmp::eq(global_outside_intersection_coords[differing_coordinate], ctype(1)) && Dune::Stuff::Common::FloatCmp::eq(global_intersection_coords[differing_coordinate], ctype(0)))
                           || (Dune::Stuff::Common::FloatCmp::eq(global_outside_intersection_coords[differing_coordinate], ctype(0)) && Dune::Stuff::Common::FloatCmp::eq(global_intersection_coords[differing_coordinate], ctype(1))));
@@ -160,10 +159,8 @@ struct PeriodicViewTestCube
                 EXPECT_EQ(size_t(0), differing_coordinate);
             }
           }
-          if (intersection.boundary()) {
+          if (intersection.boundary() && !intersection.neighbor()) {
             ++boundary_count;
-            EXPECT_FALSE(intersection.periodic());
-            EXPECT_FALSE(intersection.neighbor());
           }
         }
       }
