@@ -21,7 +21,6 @@
 #include <dune/stuff/common/float_cmp.hh>
 #include <dune/stuff/common/ranges.hh>
 #include <dune/stuff/grid/search.hh>
-#include <dune/stuff/grid/information.hh>
 
 namespace Dune {
 namespace Stuff {
@@ -49,7 +48,6 @@ class PeriodicIntersection
 
 public:
   typedef typename BaseType::LocalGeometry                LocalGeometry;
-  typedef typename BaseType::Geometry::GlobalCoordinate   GlobalCoordinate;
   typedef typename BaseType::EntityPointer                EntityPointer;
   typedef typename RealGridViewType::IntersectionIterator RealIntersectionIteratorType;
   static const size_t dimDomain = RealGridViewType::dimension;
@@ -105,14 +103,14 @@ private:
   // tries to find intersection in outside (works only if periodic_ == true)
   RealIntersectionIteratorType find_intersection_in_outside() const
   {
-    const GlobalCoordinate coords = this->geometry().center();
+    const auto coords = this->geometry().center();
     RealIntersectionIteratorType outside_i_it = real_grid_view_->access().ibegin(*outside());
     const RealIntersectionIteratorType outside_i_it_end = real_grid_view_->access().iend(*outside());
     // walk over outside intersections and find an intersection on the boundary that differs only in one coordinate
     for ( ; outside_i_it != outside_i_it_end; ++outside_i_it) {
       const BaseType& curr_outside_intersection = *outside_i_it;
       if (curr_outside_intersection.boundary()) {
-        const GlobalCoordinate curr_outside_intersection_coords = curr_outside_intersection.geometry().center();
+        const auto curr_outside_intersection_coords = curr_outside_intersection.geometry().center();
         size_t coord_difference_count = 0;
         for (size_t ii = 0; ii < dimDomain; ++ii) {
           if (Dune::Stuff::Common::FloatCmp::ne(curr_outside_intersection_coords[ii], coords[ii])) {
@@ -147,7 +145,6 @@ class PeriodicIntersectionIterator
     : public RealGridViewImp::IntersectionIterator
 {
   typedef RealGridViewImp                                         RealGridViewType;
-  typedef PeriodicIntersectionIterator< RealGridViewType >        ThisType;
   typedef typename RealGridViewType::IntersectionIterator         BaseType;
 
 public:
@@ -183,12 +180,6 @@ public:
   {
     current_intersection_ = create_current_intersection();
     return &(*current_intersection_);
-  }
-
-  ThisType& operator++()
-  {
-    BaseType::operator++();
-    return *this;
   }
 
 private:
@@ -274,19 +265,18 @@ class PeriodicGridViewImp
     : public RealGridViewImp
 {
   typedef RealGridViewImp                     BaseType;
-  typedef PeriodicGridViewImp< BaseType >     ThisType;
   typedef PeriodicGridViewTraits< BaseType >  Traits;
 
 public:
-  typedef typename BaseType::Grid                             Grid;
-  typedef typename BaseType::IndexSet                         IndexSet;
-  typedef PeriodicIntersectionIterator< BaseType >            IntersectionIterator;
-  typedef typename IntersectionIterator::RealIntersectionType RealIntersectionType;
-  typedef typename BaseType::IndexSet::IndexType              EntityIndexType;
-  typedef int                                                 IntersectionIndexType;
-  typedef typename RealIntersectionType::GlobalCoordinate     CoordinateType;
-  typedef PeriodicIntersection< BaseType >                    Intersection;
-  typedef typename Grid::template Codim< 0 >::EntityPointer   EntityPointerType;
+  typedef typename BaseType::Grid                                                   Grid;
+  typedef typename BaseType::IndexSet                                               IndexSet;
+  typedef PeriodicIntersectionIterator< BaseType >                                  IntersectionIterator;
+  typedef typename IntersectionIterator::RealIntersectionType                       RealIntersectionType;
+  typedef typename BaseType::IndexSet::IndexType                                    EntityIndexType;
+  typedef int                                                                       IntersectionIndexType;
+  typedef typename RealIntersectionType::GlobalCoordinate                           CoordinateType;
+  typedef PeriodicIntersection< BaseType >                                          Intersection;
+  typedef typename Grid::template Codim< 0 >::EntityPointer                         EntityPointerType;
   typedef std::map< IntersectionIndexType, std::pair< bool, EntityPointerType > >   IntersectionMapType;
   static const size_t dimDomain = BaseType::dimension;
 
@@ -384,7 +374,7 @@ private:
  * underlying GridView except for the ibegin and iend methods. These methods return a PeriodicIntersectionIterator
  * which again behaves like the underlying IntersectionIterator except that it returns a PeriodicIntersection in its
  * operator*. The PeriodicIntersection again behaves like an Intersection of the underlying GridView, but may return
- * boundary() == false and an outside() entity even if it is on the boundary. The outside() entity is the entity
+ * neighbor() == true and an outside() entity even if it is on the boundary. The outside() entity is the entity
  * adjacent to the intersection if it is identified with the intersection on the other side of the grid.
  * In the constructor, PeriodicGridViewImp will build a map mapping boundary entity indices to a map mapping local
  * intersection indices to a std::pair containing the information whether this intersection shall be periodic and the
