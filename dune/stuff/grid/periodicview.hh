@@ -441,7 +441,7 @@ public:
 
   PeriodicGridView(const RealGridViewType& real_grid_view,
                    const std::bitset< dimension > periodic_directions = std::bitset< dimension >().set(),
-                   const bool auto_detect_period = false,
+                   const bool auto_detect_period = true,
                    DomainType lower_left = DomainType(0.0),
                    DomainType upper_right = DomainType(1.0))
     : ConstStorProv(new internal::PeriodicGridViewImp< RealGridViewType >(real_grid_view,
