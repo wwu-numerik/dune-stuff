@@ -532,6 +532,8 @@ private:
       , global_function_(global_function)
     {}
 
+    virtual ~Localfunction() {}
+
     virtual void evaluate(const DomainType& xx, RangeType& ret) const override final
     {
       const auto xx_global = geometry_.global(xx);
