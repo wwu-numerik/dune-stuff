@@ -58,8 +58,13 @@ public:
                  "'" << type << "' is not a valid " << InterfaceType::static_id() << "!");
   } // ... default_config(...)
 
-      static std::unique_ptr< InterfaceType >
-  create(const std::string& type = available()[0], const Common::Configuration config = Common::Configuration())
+  static std::unique_ptr< InterfaceType > create(const Common::Configuration& config)
+  {
+    return create(config.get< std::string >("type"), config);
+  }
+
+  static std::unique_ptr< InterfaceType > create(const std::string& type = available()[0],
+                                                 const Common::Configuration config = Common::Configuration())
   {
     namespace Providers = Stuff::Grid::Providers;
     if (type == Providers::Cube< GridType >::static_id())
