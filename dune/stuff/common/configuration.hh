@@ -433,9 +433,8 @@ public:
   {
     if (has_key(key) && !overwrite)
       DUNE_THROW(Exceptions::configuration_error,
-                            "While adding '" << key << "' = '" << value << "' to this (see below), the key '" << key
-                            << "' already exists and you requested no overwrite!"
-                            << "\n======================\n" << report_string());
+                 "While setting '" << key << "' in this configuration (see below), it already exists and you requested "
+                 << "no overwrite!\n======================\n" << report_string());
     BaseType::operator[](key) = toString(value);
   } // ... set(..., T, ...)
 
