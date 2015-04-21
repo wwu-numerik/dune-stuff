@@ -347,7 +347,7 @@ struct Layer< GridType, ChooseLayer::level, ChoosePartView::view >
 }; // struct Layer< ..., level, view >
 
 
-# if 0 // HAVE_DUNE_GRID_MULTISCALE
+# if HAVE_DUNE_GRID_MULTISCALE
 
 
 template< class GridType >

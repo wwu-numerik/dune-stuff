@@ -202,7 +202,7 @@ static inline
     const size_t actual_size = VectorAbstraction< VectorType >::has_static_size
                                ? VectorAbstraction< VectorType >::static_size
                                : automatic_size;
-    if (actual_size > automatic_size)
+    if (actual_size > automatic_size && automatic_size != 1)
       DUNE_THROW(Exceptions::conversion_error,
                  "Vector expression (see below) has only " << automatic_size << " elements but " << actual_size
                  << " elements are required for this VectorType (" << Typename< VectorType >::value() << ")!" << "\n"
