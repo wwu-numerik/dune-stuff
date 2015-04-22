@@ -30,6 +30,7 @@
 #include <dune/stuff/common/reenable_warnings.hh>
 
 #include <dune/common/array.hh>
+#include <dune/common/bigunsignedint.hh>
 #include <dune/common/fmatrix.hh>
 #include <dune/common/densematrix.hh>
 #include <dune/common/fvector.hh>
@@ -305,6 +306,14 @@ static inline
               to_string(const T& ss)
 {
   return std::to_string(ss);
+}
+
+template <int size>
+static inline std::string to_string(const Dune::bigunsignedint<size>& ss)
+{
+  std::stringstream os;
+  os << ss;
+  return os.str();
 }
 
 inline std::string to_string(const char* ss)
