@@ -130,20 +130,20 @@ public:
 
   //! read ParameterTree from given arguments and call Configuration(const ParameterTree& tree)
   Configuration(int argc,
-                         char** argv,
-                         const bool record_defaults = internal::configuration_record_defaults,
-                         const bool warn_on_default_access = internal::configuration_warn_on_default_access,
-                         const bool log_on_exit = internal::configuration_log_on_exit,
-                         const std::string logfile = internal::configuration_logfile);
+                char** argv,
+                const bool record_defaults = internal::configuration_record_defaults,
+                const bool warn_on_default_access = internal::configuration_warn_on_default_access,
+                const bool log_on_exit = internal::configuration_log_on_exit,
+                const std::string logfile = internal::configuration_logfile);
 
   //! read ParameterTree from given arguments and file and call Configuration(const ParameterTree& tree)
   Configuration(int argc,
-                         char** argv,
-                         const std::string filename,
-                         const bool record_defaults = internal::configuration_record_defaults,
-                         const bool warn_on_default_access = internal::configuration_warn_on_default_access,
-                         const bool log_on_exit = internal::configuration_log_on_exit,
-                         const std::string logfile = internal::configuration_logfile);
+                char** argv,
+                const std::string filename,
+                const bool record_defaults = internal::configuration_record_defaults,
+                const bool warn_on_default_access = internal::configuration_warn_on_default_access,
+                const bool log_on_exit = internal::configuration_log_on_exit,
+                const std::string logfile = internal::configuration_logfile);
 
   template< class T >
   explicit Configuration(const std::string key,
