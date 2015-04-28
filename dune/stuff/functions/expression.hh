@@ -254,10 +254,9 @@ public:
   template< int rows, int cols >
   Expression(const std::string variable,
              const std::string expression,
-             const size_t ord = default_config().get< size_t >("order"),
-             const std::string nm = static_id(),
-             const Dune::FieldMatrix< std::string, rows, cols > jacobian
-                = Dune::FieldMatrix< std::string, 0, 0 >())
+             const size_t ord,
+             const std::string nm,
+             const Dune::FieldMatrix< std::string, rows, cols > jacobian)
     : function_(new MathExpressionFunctionType(variable, expression))
     , order_(ord)
     , name_(nm)
@@ -268,10 +267,9 @@ public:
   template< int rows, int cols >
   Expression(const std::string variable,
              const std::vector< std::string > expressions,
-             const size_t ord = default_config().get< size_t >("order"),
-             const std::string nm = static_id(),
-             const Dune::FieldMatrix< std::string, rows, cols > jacobian
-                = Dune::FieldMatrix< std::string, 0, 0 >())
+             const size_t ord,
+             const std::string nm,
+             const Dune::FieldMatrix< std::string, rows, cols > jacobian)
     : function_(new MathExpressionFunctionType(variable, expressions))
     , order_(ord)
     , name_(nm)
