@@ -23,6 +23,7 @@
 #endif
 
 #include <dune/stuff/common/float_cmp.hh>
+#include <dune/stuff/common/profiler.hh>
 
 #include "interfaces.hh"
 #include "pattern.hh"
@@ -375,6 +376,8 @@ public:
   typedef typename Traits::BackendType                          BackendType;
   typedef typename Traits::ScalarType                           ScalarType;
 
+  static std::string static_id() { return "stuff.la.container.istl.istlrowmajorsparsematrix"; }
+
   /**
    * \brief This is the constructor of interest which creates a sparse matrix.
    */
@@ -510,6 +513,7 @@ public:
 
   inline void mv(const IstlDenseVector< ScalarType >& xx, IstlDenseVector< ScalarType >& yy) const
   {
+    DUNE_STUFF_PROFILE_SCOPE(static_id() + ".mv");
     backend_->mv(*(xx.backend_), yy.backend());
   }
 
@@ -643,6 +647,7 @@ public:
 private:
   void build_sparse_matrix(const size_t rr, const size_t cc, const SparsityPatternDefault& patt)
   {
+    DUNE_STUFF_PROFILE_SCOPE(static_id() + ".build");
     backend_ = std::make_shared< BackendType >(rr, cc, BackendType::row_wise);
     for (auto row = backend_->createbegin(); row != backend_->createend(); ++row) {
       assert(row.index() < patt.size());
