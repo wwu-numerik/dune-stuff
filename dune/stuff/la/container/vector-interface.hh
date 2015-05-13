@@ -50,9 +50,9 @@ class VectorInterface
   , public Tags::VectorInterface
 {
 public:
-  typedef typename Traits::derived_type derived_type;
+  typedef typename Traits::derived_type                       derived_type;
   typedef typename Dune::FieldTraits< ScalarImp >::field_type ScalarType;
-  typedef typename Dune::FieldTraits< ScalarImp >::real_type RealScalarType;
+  typedef typename Dune::FieldTraits< ScalarImp >::real_type  RealType;
 
   typedef internal::VectorInputIterator< Traits, ScalarType >  const_iterator;
   typedef internal::VectorOutputIterator< Traits, ScalarType > iterator;
@@ -169,9 +169,9 @@ public:
    *  \return A pair of the lowest index at which the maximum is attained and the absolute maximum value.
    *  \note   If you override this method please use exceptions instead of assertions (for the python bindings).
    */
-  virtual std::pair< size_t, RealScalarType > amax() const
+  virtual std::pair< size_t, RealType > amax() const
   {
-    auto result = std::make_pair(size_t(0), RealScalarType(0));
+    auto result = std::make_pair(size_t(0), RealType(0));
     for (size_t ii = 0; ii < size(); ++ii) {
       const auto value = std::abs(get_entry_ref(ii));
       if (value > result.second) {
@@ -192,7 +192,7 @@ public:
    *  \note   If you override this method please use exceptions instead of assertions (for the python bindings).
    */
   virtual bool almost_equal(const derived_type& other,
-                            const RealScalarType epsilon = Stuff::Common::FloatCmp::DefaultEpsilon< RealScalarType >::value()) const
+                            const RealType epsilon = Stuff::Common::FloatCmp::DefaultEpsilon< RealType >::value()) const
   {
     if (other.size() != size())
       DUNE_THROW(Exceptions::shapes_do_not_match,
@@ -211,7 +211,7 @@ public:
    */
   template< class T >
   bool almost_equal(const VectorInterface< T >& other,
-                    const RealScalarType epsilon = Stuff::Common::FloatCmp::DefaultEpsilon< RealScalarType >::value()) const
+                    const RealType epsilon = Stuff::Common::FloatCmp::DefaultEpsilon< RealType >::value()) const
   {
     if (other.size() != size())
       DUNE_THROW(Exceptions::shapes_do_not_match,
@@ -243,9 +243,9 @@ public:
    *  \return The l1-norm of the vector.
    *  \note   If you override this method please use exceptions instead of assertions (for the python bindings).
    */
-  virtual RealScalarType l1_norm() const
+  virtual RealType l1_norm() const
   {
-    RealScalarType result = 0;
+    RealType result = 0;
     for (size_t ii = 0; ii < size(); ++ii)
       result += std::abs(get_entry_ref(ii));
     return result;
@@ -256,7 +256,7 @@ public:
    *  \return The l2-norm of the vector.
    *  \note   If you override this method please use exceptions instead of assertions (for the python bindings).
    */
-  virtual RealScalarType l2_norm() const
+  virtual RealType l2_norm() const
   {
     return std::sqrt(std::abs(dot(this->as_imp(*this)))); //std::abs is only needed for the right return type:
                                                          //v.dot(v) should always be a ScalarType with zero imaginary part
@@ -267,7 +267,7 @@ public:
    *  \return The l-infintiy-norm of the vector.
    *  \note   If you override this method please use exceptions instead of assertions (for the python bindings).
    */
-  virtual RealScalarType sup_norm() const
+  virtual RealType sup_norm() const
   {
     return amax().second;
   }
@@ -555,15 +555,15 @@ public:
    * \brief Variant of amax() needed for the python bindings.
    * \see   amax()
    */
-  std::vector< RealScalarType > pb_amax() const
+  std::vector< RealType > pb_amax() const
   {
     const auto max = amax();
     try {
-      return { boost::numeric_cast< RealScalarType >(max.first), max.second};
+      return { boost::numeric_cast< RealType >(max.first), max.second};
     } catch (boost::bad_numeric_cast& ee) {
       DUNE_THROW(Exceptions::external_error,
                  "There was an error in boost converting '" << max.first << "' to '"
-                 << Common::Typename< RealScalarType >::value() << "': " << ee.what());
+                 << Common::Typename< RealType >::value() << "': " << ee.what());
     }
   } // ... pb_amax(...)
 
@@ -668,9 +668,9 @@ struct VectorAbstractionBase
 
   typedef typename std::conditional< is_vector, VectorImp, void >::type                      VectorType;
   typedef typename std::conditional< is_vector, typename VectorImp::ScalarType, void >::type ScalarType;
+  typedef typename std::conditional< is_vector, typename VectorImp::RealType, void >::type   RealType;
   typedef ScalarType S;
-  typedef typename std::conditional< is_vector, typename VectorImp::RealScalarType, void >::type RealScalarType;
-  typedef RealScalarType R;
+  typedef RealType   R;
 
   static inline
     typename std::enable_if< is_vector, VectorType >::type

@@ -59,7 +59,7 @@ class EigenBaseVector
 public:
   typedef ImpTraits Traits;
   typedef typename Traits::ScalarType   ScalarType;
-  typedef typename Traits::RealScalarType RealScalarType;
+  typedef typename Traits::RealType     RealType;
   typedef typename Traits::BackendType  BackendType;
   typedef typename Traits::derived_type VectorImpType;
 
@@ -165,13 +165,13 @@ public:
   /// \name These methods override default implementations from VectorInterface.
   /// \{
 
-  virtual std::pair< size_t, RealScalarType > amax() const override final
+  virtual std::pair< size_t, RealType > amax() const override final
   {
-    auto result = std::make_pair(size_t(0), RealScalarType(0));
+    auto result = std::make_pair(size_t(0), RealType(0));
     size_t min_index = 0;
     size_t max_index = 0;
-    const RealScalarType minimum = (backend_->cwiseAbs()).minCoeff(&min_index);
-    const RealScalarType maximum = (backend_->cwiseAbs()).maxCoeff(&max_index);
+    const RealType minimum = (backend_->cwiseAbs()).minCoeff(&min_index);
+    const RealType maximum = (backend_->cwiseAbs()).maxCoeff(&max_index);
     if (maximum < minimum
         || (Common::FloatCmp::eq(maximum, minimum) && max_index > min_index)) {
       result.first = min_index;
@@ -197,17 +197,17 @@ public:
     return this->template dot< Traits >(other);
   }
 
-  virtual RealScalarType l1_norm() const override final
+  virtual RealType l1_norm() const override final
   {
     return backend_->template lpNorm< 1 >();
   }
 
-  virtual RealScalarType l2_norm() const override final
+  virtual RealType l2_norm() const override final
   {
     return backend_->template lpNorm< 2 >();
   }
 
-  virtual RealScalarType sup_norm() const override final
+  virtual RealType sup_norm() const override final
   {
     return backend_->template lpNorm< ::Eigen::Infinity >();
   }

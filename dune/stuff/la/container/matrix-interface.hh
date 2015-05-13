@@ -46,9 +46,9 @@ class MatrixInterface
   , public Tags::MatrixInterface
 {
 public:
-  typedef typename Traits::derived_type derived_type;
+  typedef typename Traits::derived_type                       derived_type;
   typedef typename Dune::FieldTraits< ScalarImp >::field_type ScalarType;
-  typedef typename Dune::FieldTraits< ScalarImp >::real_type RealScalarType;
+  typedef typename Dune::FieldTraits< ScalarImp >::real_type  RealType;
 
   virtual ~MatrixInterface() {}
 
@@ -132,9 +132,9 @@ public:
     return yy;
   }
 
-  virtual RealScalarType sup_norm() const
+  virtual RealType sup_norm() const
   {
-    RealScalarType ret = 0;
+    RealType ret = 0;
     for (size_t ii = 0; ii < rows(); ++ii)
       for (size_t jj = 0; jj < cols(); ++jj)
         ret = std::max(ret, std::abs(get_entry(ii, jj)));

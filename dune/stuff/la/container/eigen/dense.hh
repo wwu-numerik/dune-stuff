@@ -62,9 +62,9 @@ template< class ScalarImp = double >
 class EigenDenseVectorTraits
 {
 public:
-  typedef typename Dune::FieldTraits< ScalarImp >::field_type ScalarType;
-  typedef typename Dune::FieldTraits< ScalarImp >::real_type RealScalarType;
-  typedef EigenDenseVector< ScalarType > derived_type;
+  typedef typename Dune::FieldTraits< ScalarImp >::field_type         ScalarType;
+  typedef typename Dune::FieldTraits< ScalarImp >::real_type          RealType;
+  typedef EigenDenseVector< ScalarType >                              derived_type;
   typedef typename ::Eigen::Matrix< ScalarType, ::Eigen::Dynamic, 1 > BackendType;
 }; // class EigenDenseVectorTraits
 
@@ -78,9 +78,9 @@ class EigenMappedDenseVectorTraits
   typedef typename ::Eigen::Matrix< ScalarImp, ::Eigen::Dynamic, 1 > PlainBackendType;
 public:
   typedef typename Dune::FieldTraits< ScalarImp >::field_type ScalarType;
-  typedef typename Dune::FieldTraits< ScalarImp >::real_type RealScalarType;
-  typedef EigenMappedDenseVector< ScalarType > derived_type;
-  typedef Eigen::Map< PlainBackendType >       BackendType;
+  typedef typename Dune::FieldTraits< ScalarImp >::real_type  RealType;
+  typedef EigenMappedDenseVector< ScalarType >                derived_type;
+  typedef Eigen::Map< PlainBackendType >                      BackendType;
 }; // class EigenMappedDenseVectorTraits
 
 
@@ -91,9 +91,9 @@ template< class ScalarImp = double >
 class EigenDenseMatrixTraits
 {
 public:
-  typedef typename Dune::FieldTraits< ScalarImp >::field_type ScalarType;
-  typedef typename Dune::FieldTraits< ScalarImp >::real_type RealScalarType;
-  typedef EigenDenseMatrix< ScalarType > derived_type;
+  typedef typename Dune::FieldTraits< ScalarImp >::field_type                        ScalarType;
+  typedef typename Dune::FieldTraits< ScalarImp >::real_type                         RealType;
+  typedef EigenDenseMatrix< ScalarType >                                             derived_type;
   typedef typename ::Eigen::Matrix< ScalarType, ::Eigen::Dynamic, ::Eigen::Dynamic > BackendType;
 }; // class EigenDenseMatrixTraits
 
@@ -111,13 +111,13 @@ class EigenDenseVector
 {
   typedef EigenDenseVector< ScalarImp >                                               ThisType;
   typedef VectorInterface< internal::EigenDenseVectorTraits< ScalarImp >, ScalarImp > VectorInterfaceType;
-  typedef EigenBaseVector< internal::EigenDenseVectorTraits< ScalarImp >, ScalarImp >            BaseType;
+  typedef EigenBaseVector< internal::EigenDenseVectorTraits< ScalarImp >, ScalarImp > BaseType;
   static_assert(!std::is_same< DUNE_STUFF_SSIZE_T, int >::value,
                 "You have to manually disable the constructor below which uses DUNE_STUFF_SSIZE_T!");
 public:
   typedef internal::EigenDenseVectorTraits< ScalarImp > Traits;
   typedef typename Traits::ScalarType                   ScalarType;
-  typedef typename Traits::RealScalarType               RealScalarType;
+  typedef typename Traits::RealType                     RealType;
   typedef typename Traits::BackendType                  BackendType;
 
 private:
@@ -216,7 +216,7 @@ class EigenMappedDenseVector
 {
   typedef EigenMappedDenseVector< ScalarImp >                                               ThisType;
   typedef VectorInterface< internal::EigenMappedDenseVectorTraits< ScalarImp >, ScalarImp > VectorInterfaceType;
-  typedef EigenBaseVector< internal::EigenMappedDenseVectorTraits< ScalarImp >, ScalarImp >            BaseType;
+  typedef EigenBaseVector< internal::EigenMappedDenseVectorTraits< ScalarImp >, ScalarImp > BaseType;
   static_assert(std::is_same< ScalarImp, double >::value, "Undefined behaviour for non-double data!");
   static_assert(!std::is_same< DUNE_STUFF_SSIZE_T, int >::value,
                 "You have to manually disable the constructor below which uses DUNE_STUFF_SSIZE_T!");
@@ -224,7 +224,7 @@ public:
   typedef internal::EigenMappedDenseVectorTraits< ScalarImp > Traits;
   typedef typename Traits::BackendType                        BackendType;
   typedef typename Traits::ScalarType                         ScalarType;
-  typedef typename Traits::RealScalarType                     RealScalarType;
+  typedef typename Traits::RealType                           RealType;
 
 private:
   typedef typename BackendType::Index EIGEN_size_t;
@@ -364,7 +364,7 @@ public:
   typedef internal::EigenDenseMatrixTraits< ScalarImp > Traits;
   typedef typename Traits::BackendType                  BackendType;
   typedef typename Traits::ScalarType                   ScalarType;
-  typedef typename Traits::RealScalarType               RealScalarType;
+  typedef typename Traits::RealType                     RealType;
 
 private:
   typedef typename BackendType::Index EIGEN_size_t;
