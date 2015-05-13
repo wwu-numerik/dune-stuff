@@ -15,6 +15,31 @@ namespace Dune {
 namespace Stuff {
 namespace Common {
 
+namespace internal {
+
+
+template< class Tt >
+struct is_complex_helper
+{
+  DSC_has_typedef_initialize_once(value_type)
+
+  static const bool is_candidate = DSC_has_typedef(value_type)< Tt >::value;
+}; // class is_complex_helper
+
+
+} // namespace internal
+
+
+template< class T, bool candidate = internal::is_complex_helper< T >::is_candidate >
+struct is_complex
+  : public std::is_base_of< std::complex< typename T::value_type >, T >
+{};
+
+
+template< class T >
+struct is_complex< T, false >
+  : public std::false_type
+{};
 
 // forwards (include is below)
 template< class VecType >
@@ -98,6 +123,14 @@ float_cmp(const T& xx, const T& yy, const T& rtol, const T& atol)
 }
 
 
+template< class T >
+    typename std::enable_if< is_complex< T >::value, bool >::type
+float_cmp(const T& xx, const T& yy, const typename T::value_type& rtol, const typename T::value_type& atol )
+{
+  return (float_cmp(std::real(xx), std::real(yy), rtol, atol) && float_cmp(std::imag(xx), std::imag(yy), rtol, atol));
+}
+
+
 template< class XType, class YType, class TolType >
     typename std::enable_if<    is_vector< XType >::value
                              && is_vector< YType >::value
@@ -111,7 +144,7 @@ float_cmp(const XType& xx, const YType& yy, const TolType& rtol, const TolType& 
   if (yy.size() != sz)
     return false;
   for (size_t ii = 0; ii < sz; ++ii)
-    if (!float_cmp(std::real(xx[ii]), std::real(yy[ii]), rtol, atol) || !float_cmp(std::imag(xx[ii]), std::imag(yy[ii]), rtol, atol))
+    if (!float_cmp(xx[ii], yy[ii], rtol, atol))
       return false;
   return true;
 } // ... float_cmp(...)
