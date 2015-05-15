@@ -146,7 +146,7 @@ struct VectorAbstraction< Dune::Stuff::Common::FieldVector< K, SIZE > >
 {
   typedef Dune::Stuff::Common::FieldVector< K, SIZE >  VectorType;
   typedef typename Dune::FieldTraits< K >::field_type  ScalarType;
-    typedef typename Dune::FieldTraits< K >::real_type RealType;
+  typedef typename Dune::FieldTraits< K >::real_type RealType;
   typedef ScalarType S;
   typedef RealType   R;
 
