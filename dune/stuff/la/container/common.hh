@@ -71,6 +71,7 @@ template< class ScalarImp = double >
 class CommonDenseVector
   : public VectorInterface< internal::CommonDenseVectorTraits< ScalarImp >, ScalarImp >
   , public ProvidesBackend< internal::CommonDenseVectorTraits< ScalarImp > >
+  , public ProvidesDataAccess< internal::CommonDenseVectorTraits< ScalarImp > >
 {
   typedef CommonDenseVector< ScalarImp >                                               ThisType;
   typedef VectorInterface< internal::CommonDenseVectorTraits< ScalarImp >, ScalarImp > VectorInterfaceType;
@@ -167,6 +168,15 @@ public:
     ensure_uniqueness();
     return *backend_;
   } // ... backend(...)
+
+  /// \}
+  /// \name Required by ProvidesDataAccess.
+  /// \{
+
+  ScalarType* data()
+  {
+    return &(backend()[0]);
+  }
 
   /// \}
   /// \name Required by ContainerInterface.
