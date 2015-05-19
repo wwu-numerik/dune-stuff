@@ -5,8 +5,8 @@
 //
 // Contributors: Tobias Leibner
 
-#ifndef DUNE_STUFF_FUNCTIONS_LINEAR_HH
-#define DUNE_STUFF_FUNCTIONS_LINEAR_HH
+#ifndef DUNE_STUFF_FUNCTIONS_AFFINE_HH
+#define DUNE_STUFF_FUNCTIONS_AFFINE_HH
 
 #include <memory>
 
@@ -20,18 +20,18 @@ namespace Stuff {
 namespace Functions {
 
 template< class EntityImp, class DomainFieldImp, size_t domainDim, class RangeFieldImp, size_t rangeDim, size_t rangeDimCols = 1 >
-class Linear
+class Affine
 {
-  Linear() { static_assert(AlwaysFalse< EntityImp >::value, "Not available for rangeDimCols > 1!"); }
+  Affine() { static_assert(AlwaysFalse< EntityImp >::value, "Not available for rangeDimCols > 1!"); }
 };
 
 
 template< class EntityImp, class DomainFieldImp, size_t domainDim, class RangeFieldImp, size_t rangeDim >
-class Linear< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, 1 >
+class Affine< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, 1 >
   : public GlobalFunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, 1 >
 {
   typedef GlobalFunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, 1 > BaseType;
-  typedef Linear< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, 1 >                  ThisType;
+  typedef Affine< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, 1 >                  ThisType;
 
 public:
   typedef typename BaseType::DomainType                                     DomainType;
@@ -45,14 +45,14 @@ public:
 
   static std::string static_id()
   {
-    return BaseType::static_id() + ".linear";
+    return BaseType::static_id() + ".affine";
   }
 
   static Common::Configuration default_config(const std::string sub_name = "")
   {
     Common::Configuration config;
-    config["matrix"] = internal::Get< RangeFieldImp, rangeDim, domainDim >::value_str();
-    config["vector"] = internal::Get< RangeFieldImp, rangeDim, 1 >::value_str();
+    config["A"] = internal::Get< RangeFieldImp, rangeDim, domainDim >::value_str();
+    config["b"] = internal::Get< RangeFieldImp, rangeDim, 1 >::value_str();
     config["name"] = static_id();
     if (sub_name.empty())
       return config;
@@ -70,22 +70,22 @@ public:
     const Common::Configuration cfg = config.has_sub(sub_name) ? config.sub(sub_name) : config;
     const Common::Configuration default_cfg = default_config();
     return Common::make_unique< ThisType >(
-          cfg.get("matrix", default_cfg.get< MatrixType >("matrix")),
-          cfg.get("vector", default_cfg.get< RangeType >("vector")),
+          cfg.get("A", default_cfg.get< MatrixType >("A")),
+          cfg.get("b", default_cfg.get< RangeType >("b")),
           cfg.get("name",  default_cfg.get< std::string >("name")));
   } // ... create(...)
 
-  explicit Linear(const MatrixType& matrix, const RangeType& vector, const std::string name_in = static_id())
-    : matrix_(matrix)
-    , vector_(vector)
+  explicit Affine(const MatrixType& matrix, const RangeType& vector, const std::string name_in = static_id())
+    : A_(matrix)
+    , b_(vector)
     , name_(name_in)
   {}
 
-  Linear(const ThisType& other) = default;
+  Affine(const ThisType& other) = default;
 
   virtual std::string type() const override final
   {
-    return BaseType::static_id() + ".linear";
+    return BaseType::static_id() + ".affine";
   }
 
   virtual size_t order() const override final
@@ -95,14 +95,14 @@ public:
 
   virtual void evaluate(const DomainType& x, RangeType& ret) const override final
   {
-    matrix_.mv(x, ret);
-    ret += vector_;
+    A_.mv(x, ret);
+    ret += b_;
     return ret;
   }
 
   virtual void jacobian(const DomainType& /*x*/, JacobianRangeType& ret) const override final
   {
-    ret = matrix_;
+    ret = A_;
   }
 
   virtual std::string name() const override final
@@ -111,8 +111,8 @@ public:
   }
 
 private:
-  const MatrixType matrix_;
-  const RangeType vector_;
+  const MatrixType A_;
+  const RangeType b_;
   const std::string name_;
 };
 
@@ -121,4 +121,4 @@ private:
 } // namespace Stuff
 } // namespace Dune
 
-#endif // DUNE_STUFF_FUNCTIONS_LINEAR_HH
+#endif // DUNE_STUFF_FUNCTIONS_AFFINE_HH
