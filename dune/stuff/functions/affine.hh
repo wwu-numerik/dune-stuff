@@ -100,7 +100,6 @@ public:
   {
     A_.mv(x, ret);
     ret += b_;
-    return ret;
   }
 
   virtual void jacobian(const DomainType& /*x*/, JacobianRangeType& ret) const override final
