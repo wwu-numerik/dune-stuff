@@ -301,7 +301,7 @@ struct Call< FirstType, SecondType, ToleranceType, Style::numpy >
 
 #define DUNE_STUFF_COMMON_FLOAT_CMP_GENERATOR(id) \
   template< Style style, class FirstType, class SecondType, class ToleranceType = typename VectorAbstraction< FirstType >::R > \
-      typename std::enable_if<    (   std::is_arithmetic< FirstType >::value \
+      typename std::enable_if<    (   (std::is_arithmetic< FirstType >::value || is_complex< FirstType >::value) \
                                    && std::is_same< FirstType, SecondType >::value) \
                                || (std::is_arithmetic< ToleranceType >::value \
                                    && is_vector< FirstType >::value \
@@ -325,7 +325,7 @@ struct Call< FirstType, SecondType, ToleranceType, Style::numpy >
   } \
   \
   template< class FirstType, class SecondType, class ToleranceType = typename VectorAbstraction< FirstType >::R > \
-      typename std::enable_if<    (   std::is_arithmetic< FirstType >::value \
+      typename std::enable_if<    (   (std::is_arithmetic< FirstType >::value || is_complex< FirstType >::value) \
                                    && std::is_same< FirstType, SecondType >::value) \
                                || (std::is_arithmetic< ToleranceType >::value \
                                    && is_vector< FirstType >::value \
