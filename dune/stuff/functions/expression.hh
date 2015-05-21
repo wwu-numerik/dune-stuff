@@ -148,8 +148,8 @@ public:
              const std::vector< std::string > expressions,
              const size_t ord = default_config().get< size_t >("order"),
              const std::string nm = static_id(),
-             const ExpressionStringVectorType gradient_expressions
-                = ExpressionStringVectorType())
+             const std::vector< std::vector< std::string > > gradient_expressions
+                = std::vector< std::vector< std::string > >())
     : function_(new MathExpressionFunctionType(variable, expressions))
     , order_(ord)
     , name_(nm)
