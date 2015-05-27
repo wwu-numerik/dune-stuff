@@ -32,7 +32,8 @@ namespace LA {
 template< class S, class CommunicatorType >
 class AmgApplicator
 {
-  typedef IstlRowMajorSparseMatrix< S >  MatrixType;
+  typedef IstlRowMajorSparseMatrix< S >              MatrixType;
+  typedef typename MatrixType::RealType              R;
   typedef typename MatrixType::BackendType           IstlMatrixType;
   typedef typename IstlDenseVector< S >::BackendType IstlVectorType;
 
@@ -66,7 +67,7 @@ public:
     smoother_parameters.iterations = opts.get("smoother.iterations",
                                               default_opts.get< size_t >("smoother.iterations"));
     smoother_parameters.relaxationFactor = opts.get("smoother.relaxation_factor",
-                                                    default_opts.get< S >("smoother.relaxation_factor"));
+                                                    default_opts.get< R >("smoother.relaxation_factor"));
 
     // define the AMG as the preconditioner for the BiCGStab solver
     Amg::Parameters amg_parameters(opts.get("preconditioner.max_level",
@@ -74,9 +75,9 @@ public:
                                    opts.get("preconditioner.coarse_target",
                                             default_opts.get< size_t >("preconditioner.coarse_target")),
                                    opts.get("preconditioner.min_coarse_rate",
-                                            default_opts.get< S >("preconditioner.min_coarse_rate")),
+                                            default_opts.get< R >("preconditioner.min_coarse_rate")),
                                    opts.get("preconditioner.prolong_damp",
-                                            default_opts.get< S >("preconditioner.prolong_damp")));
+                                            default_opts.get< R >("preconditioner.prolong_damp")));
     amg_parameters.setDefaultValuesIsotropic(opts.get("preconditioner.isotropy_dim",
                                                       default_opts.get< size_t >("preconditioner.isotropy_dim")));
     amg_parameters.setDefaultValuesAnisotropic(opts.get("preconditioner.anisotropy_dim",
@@ -92,7 +93,7 @@ public:
     BiCGSTABSolver< IstlVectorType > solver(matrix_operator,
                                             scalar_product,
                                             preconditioner,
-                                            opts.get("precision", default_opts.get< S >("precision")),
+                                            opts.get("precision", default_opts.get< R >("precision")),
                                             opts.get("max_iter", default_opts.get< size_t >("max_iter")),
 #if HAVE_MPI
                                             (communicator_.communicator().rank() == 0)
@@ -117,7 +118,8 @@ protected:
 template< class S >
 class AmgApplicator< S, SequentialCommunication >
 {
-  typedef IstlRowMajorSparseMatrix< S >  MatrixType;
+  typedef IstlRowMajorSparseMatrix< S >              MatrixType;
+  typedef typename MatrixType::RealType              R;
   typedef typename MatrixType::BackendType           IstlMatrixType;
   typedef typename IstlDenseVector< S >::BackendType IstlVectorType;
 
@@ -146,7 +148,7 @@ public:
     smoother_parameters.iterations = opts.get("smoother.iterations",
                                               default_opts.get< int >("smoother.iterations"));
     smoother_parameters.relaxationFactor = opts.get("smoother.relaxation_factor",
-                                                    default_opts.get< S >("smoother.relaxation_factor"));
+                                                    default_opts.get< R >("smoother.relaxation_factor"));
 
     // define the AMG as the preconditioner for the BiCGStab solver
     Amg::Parameters amg_parameters(opts.get("preconditioner.max_level",
@@ -154,9 +156,9 @@ public:
                                    opts.get("preconditioner.coarse_target",
                                             default_opts.get< int >("preconditioner.coarse_target")),
                                    opts.get("preconditioner.min_coarse_rate",
-                                            default_opts.get< S >("preconditioner.min_coarse_rate")),
+                                            default_opts.get< R >("preconditioner.min_coarse_rate")),
                                    opts.get("preconditioner.prolong_damp",
-                                            default_opts.get< S >("preconditioner.prolong_damp")));
+                                            default_opts.get< R >("preconditioner.prolong_damp")));
     amg_parameters.setDefaultValuesIsotropic(opts.get("preconditioner.isotropy_dim",
                                                       default_opts.get< size_t >("preconditioner.isotropy_dim")));
     amg_parameters.setDefaultValuesAnisotropic(opts.get("preconditioner.anisotropy_dim",
@@ -173,7 +175,7 @@ public:
     BiCGSTABSolver< IstlVectorType > solver(matrix_operator,
                                             scalar_product,
                                             preconditioner,
-                                            opts.get("precision", default_opts.get< S >("precision")),
+                                            opts.get("precision", default_opts.get< R >("precision")),
                                             opts.get("max_iter", default_opts.get< int >("max_iter")),
                                             opts.get("verbose", default_opts.get< int >("verbose")));
     InverseOperatorResult stats;
