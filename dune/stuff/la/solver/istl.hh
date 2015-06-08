@@ -102,7 +102,7 @@ public:
 #endif // !HAVE_MPI && HAVE_SUPERLU
     } else
       DUNE_THROW(Exceptions::internal_error,
-                 "Given type '" << tp << "' is not supported, although it was reported by types()!");
+                 "Given solver type '" << tp << "' has no default options");
     return Common::Configuration();
   } // ... options(...)
 
