@@ -76,7 +76,7 @@ public:
     Common::Configuration iterative_options({"max_iter", "precision"},
                                             {"10000",    "1e-10"});
     iterative_options += general_opts;
-    if (tp.substr(0, 13) == "bicgstab.amg.") {
+    if (tp.substr(0, 13) == "bicgstab.amg." || tp == "bicgstab") {
       iterative_options.set("smoother.iterations", "1");
       iterative_options.set("smoother.relaxation_factor", "1");
       iterative_options.set("smoother.verbose", "0");
@@ -171,7 +171,7 @@ public:
                      << "Those were the given options:\n\n" << opts);
 
       } else if (type == "bicgstab") {
-        auto result = AmgApplicator< S, CommunicatorType >(matrix_, communicator_.storage_access()).call(writable_rhs,
+        const auto result = AmgApplicator< S, CommunicatorType >(matrix_, communicator_.storage_access()).call(writable_rhs,
                                                                                                          solution,
                                                                                                          opts,
                                                                                                          default_opts,
