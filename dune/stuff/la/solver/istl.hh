@@ -169,7 +169,7 @@ public:
           DUNE_THROW(Exceptions::linear_solver_failed_bc_it_did_not_converge,
                      "The dune-istl backend reported 'InverseOperatorResult.converged == false'!\n"
                      << "Those were the given options:\n\n" << opts);
-#if HAVE_UMFPACK
+
       } else if (type == "bicgstab") {
         auto result = AmgApplicator< S, CommunicatorType >(matrix_, communicator_.storage_access()).call(writable_rhs,
                                                                                                          solution,
@@ -181,8 +181,8 @@ public:
                      "The dune-istl backend reported 'InverseOperatorResult.converged == false'!\n"
                      << "Those were the given options:\n\n"
                      << opts);
-      }
-      else if (type == "umfpack") {
+#if HAVE_UMFPACK
+      } else if (type == "umfpack") {
         UMFPack<typename MatrixType::BackendType> solver(matrix_.backend(),
                                                          opts.get("verbose", default_opts.get< int >("verbose")));
         InverseOperatorResult stat;
