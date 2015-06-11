@@ -110,7 +110,7 @@ public:
            , "bicgstab.amg.ilu0"
            , "bicgstab.ilut"
            , "bicgstab.ssor"
-//           , "bicgstab"
+           , "bicgstab"
 #if HAVE_UMFPACK
            , "umfpack"
 #endif
