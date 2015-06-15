@@ -64,6 +64,11 @@ public:
   {
     return this->storage_access();
   }
+
+  virtual std::unique_ptr< Default< GridType > > copy() override
+  {
+    return Common::make_unique< Default< GridType > >(grid());
+  }
 }; // class Default
 
 

@@ -232,6 +232,11 @@ public:
     return grid_ptr_;
   }
 
+  virtual std::unique_ptr< BaseType > copy() override
+  {
+    return Common::make_unique< Cube< GridType > >(*this);
+  }
+
 private:
   static std::array< unsigned int, dimDomain > parse_array(const unsigned int in)
   {

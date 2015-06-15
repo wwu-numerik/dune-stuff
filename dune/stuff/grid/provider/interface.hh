@@ -137,6 +137,8 @@ public:
     visualize_with_boundary(boundary_info_cfg, filename);
   }
 
+  virtual std::unique_ptr< ConstProviderInterface< GridType > > copy() const = 0;
+
 private:
   virtual void visualize_plain(const std::string filename) const
   {
@@ -284,6 +286,13 @@ public:
   using BaseType::grid;
 
   virtual GridType& grid() = 0;
+
+  virtual std::unique_ptr< ProviderInterface< GridType > > copy() = 0;
+
+  virtual std::unique_ptr< ConstProviderInterface< GridType > > copy() const override
+  {
+    return const_cast< ProviderInterface< GridType >* >(this)->copy();
+  }
 
   using BaseType::layer;
 
