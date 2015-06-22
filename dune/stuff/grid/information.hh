@@ -30,8 +30,6 @@ namespace Dune {
 namespace Stuff {
 namespace Grid {
 
-using namespace Dune::Stuff::Common;
-
 struct Statistics {
   size_t numberOfEntities;
   size_t numberOfIntersections;
@@ -43,8 +41,8 @@ struct Statistics {
     : numberOfEntities(gridView.size(0)), numberOfIntersections(0), numberOfInnerIntersections(0)
     , numberOfBoundaryIntersections(0), maxGridWidth(0)
   {
-    for (const auto& entity : entityRange(gridView)) {
-      for (const auto& intIt : intersectionRange(gridView, entity)) {
+    for (const auto& entity : DSC::entityRange(gridView)) {
+      for (const auto& intIt : DSC::intersectionRange(gridView, entity)) {
         ++numberOfIntersections;
         maxGridWidth = std::max(intIt.geometry().volume(), maxGridWidth);
         // if we are inside the grid
@@ -75,9 +73,9 @@ template< class GridViewType >
 size_t maxNumberOfNeighbors(const GridViewType& gridView)
 {
   size_t maxNeighbours = 0;
-  for (const auto& entity : entityRange(gridView)) {
+  for (const auto& entity : DSC::entityRange(gridView)) {
     size_t neighbours = 0;
-    for (const auto& DUNE_UNUSED(i) : intersectionRange(gridView, entity)) {
+    for (const auto& DUNE_UNUSED(i) : DSC::intersectionRange(gridView, entity)) {
       ++neighbours;
     }
     maxNeighbours = std::max(maxNeighbours, neighbours);

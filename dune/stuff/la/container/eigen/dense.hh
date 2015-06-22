@@ -161,7 +161,9 @@ public:
       backend_->operator[](ii++) = element;
   }
 
-  explicit EigenDenseVector(const BackendType& other)
+  explicit EigenDenseVector(const BackendType& other,
+                            const bool /*prune*/ = false,
+                            const ScalarType /*eps*/ = Common::FloatCmp::DefaultEpsilon< ScalarType >::value())
   {
     backend_ = std::make_shared< BackendType >(other);
   }
@@ -193,6 +195,16 @@ public:
   using VectorInterfaceType::add;
   using VectorInterfaceType::sub;
   using BaseType::backend;
+
+  /// \name Required by ProvidesDataAccess.
+  /// \{
+
+  ScalarType* data()
+  {
+    return backend().data();
+  }
+
+  /// \}
 
 private:
   using BaseType::backend_;
@@ -294,7 +306,9 @@ public:
   /**
    * \brief This constructor does a deep copy.
    */
-  explicit EigenMappedDenseVector(const BackendType& other)
+  explicit EigenMappedDenseVector(const BackendType& other,
+                                  const bool /*prune*/ = false,
+                                  const ScalarType /*eps*/ = Common::FloatCmp::DefaultEpsilon< ScalarType >::value())
   {
     backend_ = std::make_shared< BackendType >(new ScalarType[other.size()],
                                                internal::boost_numeric_cast< EIGEN_size_t >(other.size()));
@@ -336,8 +350,7 @@ private:
   inline void ensure_uniqueness() const
   {
     if (!backend_.unique()) {
-      auto new_backend = std::make_shared< BackendType >(new ScalarType[backend_->size()],
-                                                         backend_->size());
+      auto new_backend = std::make_shared< BackendType >(new ScalarType[backend_->size()], backend_->size());
       new_backend->operator=(*(backend_));
       backend_ = new_backend;
     }
@@ -406,9 +419,18 @@ public:
 
   EigenDenseMatrix(const ThisType& other) = default;
 
-  explicit EigenDenseMatrix(const BackendType& other)
-    : backend_(new BackendType(other))
-  {}
+  /**
+   * \note If prune == true, this implementation is not optimal!
+   */
+  explicit EigenDenseMatrix(const BackendType& other,
+                            const bool prune = false,
+                            const ScalarType eps = Common::FloatCmp::DefaultEpsilon< ScalarType >::value())
+  {
+    if (prune)
+      backend_ = ThisType(other).pruned(eps).backend_;
+    else
+      backend_ = std::make_shared< BackendType >(other);
+  }
 
   template< class M >
   EigenDenseMatrix(const MatrixInterface< M, ScalarType >& other)
