@@ -235,6 +235,7 @@ namespace Dune {
 namespace Stuff {
 namespace Common {
 
+
 namespace internal {
   template< class Tt >
   struct is_complex_helper
@@ -247,13 +248,11 @@ namespace internal {
 
 
 template< class T, bool candidate = internal::is_complex_helper< T >::is_candidate >
-/// TODO this should move to type_utils
 struct is_complex
   : public std::is_base_of< std::complex< typename T::value_type >, T >
 {};
 
 template< class T >
-/// TODO this should move to type_utils
 struct is_complex< T, false >
   : public std::false_type
 {};
