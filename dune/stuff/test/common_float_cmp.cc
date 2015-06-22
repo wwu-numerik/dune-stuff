@@ -440,7 +440,7 @@ struct FloatCmpVector
 
 
 
-typedef testing::Types< double
+typedef testing::Types< double, std::complex<double>
 //                      , long double // <- this requires a patch in dune/common/float_cmp.cc (bc. of std::max and 1e-6)
                       > ScalarTypes;
 
@@ -483,6 +483,18 @@ typedef testing::Types< std::vector< double >
                       , Dune::Stuff::LA::EigenDenseVector< double >
                       , Dune::Stuff::LA::EigenMappedDenseVector< double >
 #endif
+                      , std::vector< std::complex<double> >
+                      , Dune::FieldVector< std::complex<double>, vec_size >
+                      , Dune::Stuff::Common::FieldVector< std::complex<double>, vec_size >
+                      , Dune::DynamicVector< std::complex<double> >
+                      , Dune::Stuff::LA::CommonDenseVector< std::complex<double> >
+                      #if HAVE_DUNE_ISTL
+                      , Dune::Stuff::LA::IstlDenseVector< std::complex<double> >
+                      #endif
+                      #if HAVE_EIGEN
+                      , Dune::Stuff::LA::EigenDenseVector< std::complex<double> >
+                      , Dune::Stuff::LA::EigenMappedDenseVector< std::complex<double> >
+                      #endif
                       > VectorTypes;
 
 TYPED_TEST_CASE(FloatCmpVector, VectorTypes);
