@@ -37,9 +37,9 @@ appropriate commit message, e.g., if editing `dune/stuff/common/vector.hh`:
 
 ## whitespace and indentation
 
-* use whitespace instead of tabs
-* indentation width is 2 white spaces
-* do not indent wihtin namespaces
+* use spaces instead of tabs
+* indentation width is 2 spaces
+* do not indent within namespaces
 * leave 2 blank lines between namespaces and enclosed stuff
 * leave 1 blank line between namespaces and external stuff
 ```c++
@@ -58,12 +58,12 @@ struct IamNotIndented {};
 
 ## cmake
 
-Lowercase calls, one whitespace before `()`, none within, uppercase within `()`, e.g.
+Lowercase calls, one whitespace before `()`, none within, e.g.
 ```
 if (NOT "foo")
 ```
 instead of
 ```
-IF( not "foo" )
+IF( NOT "foo" )
 ```
 
