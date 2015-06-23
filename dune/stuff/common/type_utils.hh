@@ -6,19 +6,22 @@
 #ifndef DUNE_STUFF_TYPENAMES_HH
 #define DUNE_STUFF_TYPENAMES_HH
 
-#include "color.hh"
 
 #include <complex>
 #include <memory>
 #include <type_traits>
 
 #include <dune/common/version.hh>
+
 // static_assert/AlwaysFalse redirect to avoid warnings
 #if DUNE_VERSION_NEWER(DUNE_COMMON,2,4) //post 2.3 release
 # include <dune/common/typetraits.hh>
 #else
 # include <dune/common/static_assert.hh>
 #endif
+
+#include <dune/stuff/common/color.hh>
+
 
 /** use this to define Typename specializations in the GLOBAL namespace ONLY **/
 #define STUFF_TYPENAME(NAME) \
@@ -34,6 +37,7 @@
 namespace Dune {
 namespace Stuff {
 namespace Common {
+
 
 inline std::string demangleTypename(const std::string& mangled_name)
 {
@@ -145,6 +149,7 @@ struct underlying_type {
     : std::true_type {};
 #endif
 
+
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
@@ -232,6 +237,7 @@ STUFF_TYPENAME(unsigned int)
 STUFF_TYPENAME(unsigned long)
 STUFF_TYPENAME(char)
 
+
 namespace Dune {
 namespace Stuff {
 namespace Common {
@@ -260,9 +266,11 @@ struct is_complex< T, false >
   : public std::false_type
 {};
 
+
 // forward, include is below
 template< class VecType >
 struct VectorAbstraction;
+
 
 template< class VectorType >
 struct is_vector
