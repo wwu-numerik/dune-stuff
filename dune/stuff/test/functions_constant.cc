@@ -74,6 +74,7 @@ typedef testing::Types< Dune::Stuff::Functions::Constant< DuneSGrid1dEntityType,
                       , Dune::Stuff::Functions::Constant< DuneSGrid3dEntityType, double, 3, double, 3, 1 >
                       , Dune::Stuff::Functions::Constant< DuneSGrid3dEntityType, double, 3, double, 3, 2 >
                       , Dune::Stuff::Functions::Constant< DuneSGrid3dEntityType, double, 3, double, 3, 3 >
+                      , Dune::Stuff::Functions::Constant< DuneSGrid3dEntityType, double, 3, std::complex<double>, 3, 3 >
                         > ConstantFunctionSGridEntityTypes;
 
 TEST_STRUCT_GENERATOR(ConstantFunction, SGridEntity)
