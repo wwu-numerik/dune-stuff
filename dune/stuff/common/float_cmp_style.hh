@@ -15,10 +15,7 @@
 namespace Dune {
 namespace Stuff {
 namespace Common {
-
-
 namespace FloatCmp {
-
 
 enum class Style {
   numpy,
@@ -29,6 +26,7 @@ enum class Style {
 };
 
 namespace internal {
+
 template< Style style >
 struct ConvertStyle;
 
@@ -49,13 +47,12 @@ struct ConvertStyle< Style::absolute >
 {
   static const Dune::FloatCmp::CmpStyle value = Dune::FloatCmp::CmpStyle::absolute;
 };
+
 } //namespace internal
 
 } // namespace FloatCmp
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
-
-#include <dune/stuff/common/vector.hh>
 
 #endif // DUNE_STUFF_COMMON_FLOAT_CMP_STYLE_HH
