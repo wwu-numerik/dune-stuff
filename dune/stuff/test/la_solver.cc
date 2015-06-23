@@ -28,11 +28,8 @@ typedef testing::Types< std::tuple< CommonDenseMatrix< double >, CommonDenseVect
                       , std::tuple< EigenDenseMatrix< double >, EigenDenseVector< double >, EigenDenseVector< double > >
                       , std::tuple< EigenDenseMatrix< std::complex<double> >, EigenDenseVector< std::complex<double> >, EigenDenseVector< std::complex<double> > >
                       , std::tuple< EigenDenseMatrix< double >, EigenDenseVector< double >, EigenMappedDenseVector< double > >
-                      , std::tuple< EigenDenseMatrix< std::complex<double> >, EigenDenseVector< std::complex<double> >, EigenMappedDenseVector< std::complex<double> > >
                       , std::tuple< EigenDenseMatrix< double >, EigenMappedDenseVector< double >, EigenDenseVector< double > >
-                      , std::tuple< EigenDenseMatrix< std::complex<double> >, EigenMappedDenseVector< std::complex<double> >, EigenDenseVector< std::complex<double> > >
                       , std::tuple< EigenDenseMatrix< double >, EigenMappedDenseVector< double >, EigenMappedDenseVector< double > >
-                      , std::tuple< EigenDenseMatrix< std::complex<double> >, EigenMappedDenseVector< std::complex<double> >, EigenMappedDenseVector< std::complex<double> > >
                       , std::tuple< EigenRowMajorSparseMatrix< double >, EigenDenseVector< double >, EigenDenseVector< double > >
                       , std::tuple< EigenRowMajorSparseMatrix< std::complex<double> >, EigenDenseVector< std::complex<double> >, EigenDenseVector< std::complex<double> > >
 #endif // HAVE_EIGEN
