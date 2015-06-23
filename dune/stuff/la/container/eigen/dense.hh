@@ -424,7 +424,8 @@ public:
    */
   explicit EigenDenseMatrix(const BackendType& other,
                             const bool prune = false,
-                            const ScalarType eps = Common::FloatCmp::DefaultEpsilon< ScalarType >::value())
+                            const typename Common::FloatCmp::DefaultEpsilon< ScalarType >::Type eps
+                              = Common::FloatCmp::DefaultEpsilon< ScalarType >::value())
   {
     if (prune)
       backend_ = ThisType(other).pruned(eps).backend_;

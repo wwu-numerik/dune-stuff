@@ -427,7 +427,8 @@ public:
 
   explicit IstlRowMajorSparseMatrix(const BackendType& mat,
                                     const bool prune = false,
-                                    const ScalarType eps = Common::FloatCmp::DefaultEpsilon< ScalarType >::value())
+                                    const typename Common::FloatCmp::DefaultEpsilon< ScalarType >::Type eps
+                                      = Common::FloatCmp::DefaultEpsilon< ScalarType >::value())
   {
     if (prune) {
       auto pruned_pattern = pruned_pattern_from_backend(mat, eps);
@@ -637,7 +638,8 @@ public:
   }
 
   virtual SparsityPatternDefault pattern(const bool prune = false,
-                                         const ScalarType eps = Common::FloatCmp::DefaultEpsilon< ScalarType >::value()) const override final
+                                         const typename Common::FloatCmp::DefaultEpsilon< ScalarType >::Type eps
+                                            = Common::FloatCmp::DefaultEpsilon< ScalarType >::value()) const override final
   {
     SparsityPatternDefault ret(rows());
     if (prune) {
@@ -656,7 +658,8 @@ public:
     return ret;
   } // ... pattern(...)
 
-  virtual ThisType pruned(const ScalarType eps = Common::FloatCmp::DefaultEpsilon< ScalarType >::value()) const override final
+  virtual ThisType pruned(const typename Common::FloatCmp::DefaultEpsilon< ScalarType >::Type eps
+                            = Common::FloatCmp::DefaultEpsilon< ScalarType >::value()) const override final
   {
     return ThisType(*backend_, true, eps);
   }
@@ -678,7 +681,8 @@ private:
   } // ... build_sparse_matrix(...)
 
   SparsityPatternDefault pruned_pattern_from_backend(const BackendType& mat,
-                                                     const ScalarType eps = Common::FloatCmp::DefaultEpsilon< ScalarType >::value()) const
+                                                     const typename Common::FloatCmp::DefaultEpsilon< ScalarType >::Type eps
+                                                      = Common::FloatCmp::DefaultEpsilon< ScalarType >::value()) const
   {
     SparsityPatternDefault ret(mat.N());
     for (size_t ii = 0; ii < mat.N(); ++ii) {

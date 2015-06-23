@@ -163,7 +163,8 @@ public:
    * \param prune If true, treats all entries smaller than eps as zero and does not include these indices in the returned pattern
    */
   virtual SparsityPatternDefault pattern(const bool prune = false,
-                                         const ScalarType eps = Common::FloatCmp::DefaultEpsilon< ScalarType >::value()) const
+                                         const typename Common::FloatCmp::DefaultEpsilon< ScalarType >::Type eps
+                                            = Common::FloatCmp::DefaultEpsilon< ScalarType >::value()) const
   {
     SparsityPatternDefault ret(rows());
     if (prune) {
@@ -189,7 +190,8 @@ public:
    * \sa    pattern
    * \param eps Is forwarded to pattern(true, eps)
    */
-  virtual derived_type pruned(const ScalarType eps = Common::FloatCmp::DefaultEpsilon< ScalarType >::value()) const
+  virtual derived_type pruned(const typename Common::FloatCmp::DefaultEpsilon< ScalarType >::Type eps
+                                = Common::FloatCmp::DefaultEpsilon< ScalarType >::value()) const
   {
     auto pruned_pattern = pattern(true, eps);
     derived_type ret(rows(), cols(), pruned_pattern);
