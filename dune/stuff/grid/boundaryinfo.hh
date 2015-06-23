@@ -134,6 +134,7 @@ public:
   }
 }; // class AllNeumann
 
+#if DUNE_GRID_EXPERIMENTAL_GRID_EXTENSIONS
 
 class IdBased
 {
@@ -158,6 +159,7 @@ public:
   } // ... default_config(...)
 }; // class IdBased
 
+#endif // #if DUNE_GRID_EXPERIMENTAL_GRID_EXTENSIONS
 
 class NormalBased
 {
@@ -292,7 +294,7 @@ public:
   }
 }; // class AllNeumann
 
-
+#if DUNE_GRID_EXPERIMENTAL_GRID_EXTENSIONS
 template< class IntersectionImp >
 class IdBased
   : public Stuff::Grid::BoundaryInfoInterface< IntersectionImp >
@@ -395,6 +397,7 @@ private:
   bool hasNeumann_;
 }; // class IdBased
 
+#endif // #if DUNE_GRID_EXPERIMENTAL_GRID_EXTENSIONS
 
 template< class IntersectionImp >
 class NormalBased
@@ -552,7 +555,9 @@ public:
     return {
         BoundaryInfos::AllDirichlet< I >::static_id()
       , BoundaryInfos::AllNeumann< I >::static_id()
+#if DUNE_GRID_EXPERIMENTAL_GRID_EXTENSIONS
       , BoundaryInfos::IdBased< I >::static_id()
+#endif
       , BoundaryInfos::NormalBased< I >::static_id()
     };
   } // ... available(...)
@@ -564,8 +569,10 @@ public:
       return BoundaryInfos::AllDirichlet< I >::default_config(subname);
     else if (type == BoundaryInfos::AllNeumann< I >::static_id())
       return BoundaryInfos::AllNeumann< I >::default_config(subname);
+#if DUNE_GRID_EXPERIMENTAL_GRID_EXTENSIONS
     else if (type == BoundaryInfos::IdBased< I >::static_id())
       return BoundaryInfos::IdBased< I >::default_config(subname);
+#endif
     else if (type == BoundaryInfos::NormalBased< I >::static_id())
       return BoundaryInfos::NormalBased< I >::default_config(subname);
     else
@@ -586,8 +593,10 @@ public:
       return BoundaryInfos::AllDirichlet< I >::create(config);
     else if (type == BoundaryInfos::AllNeumann< I >::static_id())
       return BoundaryInfos::AllNeumann< I >::create(config);
+#if DUNE_GRID_EXPERIMENTAL_GRID_EXTENSIONS
     else if (type == BoundaryInfos::IdBased< I >::static_id())
       return BoundaryInfos::IdBased< I >::create(config);
+#endif
     else if (type == BoundaryInfos::NormalBased< I >::static_id())
       return BoundaryInfos::NormalBased< I >::create(config);
     else
