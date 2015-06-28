@@ -3,8 +3,8 @@
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
-#ifndef DUNE_STUFF_TOOLS_COMMON_VECTOR_HH
-#define DUNE_STUFF_TOOLS_COMMON_VECTOR_HH
+#ifndef DUNE_STUFF_COMMON_VECTOR_HH
+#define DUNE_STUFF_COMMON_VECTOR_HH
 
 #include <vector>
 #include <ostream>
@@ -304,4 +304,4 @@ operator<<(std::ostream& out, const V& vec)
 } // ... operator<<(...)
 
 
-#endif // DUNE_STUFF_TOOLS_COMMON_VECTOR_HH
+#endif // DUNE_STUFF_COMMON_VECTOR_HH
