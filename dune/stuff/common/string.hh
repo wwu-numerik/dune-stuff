@@ -308,6 +308,14 @@ static inline
   return std::to_string(ss);
 }
 
+template <typename T>
+static inline std::string to_string(const std::complex<T>& val)
+{
+  std::stringstream os;
+  os << std::real(val) << " + i" << std::imag(val);
+  return os.str();
+}
+
 template <int size>
 static inline std::string to_string(const Dune::bigunsignedint<size>& ss)
 {

@@ -141,7 +141,8 @@ class ContainerInterface
   typedef CRTPInterface< ContainerInterface< Traits, ScalarImp >, Traits > CRTP;
   static_assert(std::is_same< ScalarImp, typename Traits::ScalarType >::value, "");
 public:
-  typedef ScalarImp ScalarType;
+  typedef ScalarImp                 ScalarType;
+  typedef typename Traits::RealType RealType;
 
   using typename CRTP::derived_type;
 
