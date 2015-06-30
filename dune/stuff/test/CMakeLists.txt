@@ -4,6 +4,7 @@
 # License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
 enable_testing()
+add_subdirectory(new)
 
 DEPENDENCYCHECK( ${stuff} )
 
