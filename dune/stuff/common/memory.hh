@@ -15,19 +15,21 @@ namespace Common {
 
 
 //! make_unique implementation via herb sutter: http://herbsutter.com/gotw/_102/
-template<typename T, typename ...Args>
-std::unique_ptr<T> make_unique( Args&& ...args )
+template< typename T, typename ...Args >
+std::unique_ptr<T> make_unique(Args&& ...args)
 {
-    return std::unique_ptr<T>( new T( std::forward<Args>(args)... ) );
+  return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
 }
 
 //! just like boost::noncopyable, but for move assign/ctor
-struct nonmoveable {
+struct nonmoveable
+{
   constexpr nonmoveable() = default;
   ~nonmoveable() = default;
   nonmoveable& operator=(nonmoveable&& source) = delete;
   nonmoveable(nonmoveable&& source) = delete;
 };
+
 
 namespace internal {
 
@@ -38,23 +40,28 @@ class ConstAccessInterface
 public:
   virtual ~ConstAccessInterface() {}
 
+  ConstAccessInterface< T >& operator=(const ConstAccessInterface< T >& other) = delete;
+  ConstAccessInterface< T >& operator=(ConstAccessInterface< T >&& source)     = delete;
+
   virtual const T& access() const = 0;
 }; // class ConstAccessInterface
 
 
-//! \note could do noncopy/move in base, but this is more explicit imo
 template< class T >
 class ConstAccessByReference
-  : public ConstAccessInterface< T >, public boost::noncopyable, public nonmoveable
+  : public ConstAccessInterface< T >
 {
 public:
   explicit ConstAccessByReference(const T& tt)
     : tt_(tt)
   {}
 
+  explicit ConstAccessByReference(const ConstAccessByReference< T >& other) = default;
+  explicit ConstAccessByReference(ConstAccessByReference< T >&& source)     = default;
+
   virtual ~ConstAccessByReference() {}
 
-  virtual const T& access() const
+  virtual const T& access() const override final
   {
     return tt_;
   }
@@ -66,7 +73,7 @@ private:
 
 template< class T >
 class ConstAccessByPointer
-  : public ConstAccessInterface< T >, public boost::noncopyable, public nonmoveable
+  : public ConstAccessInterface< T >
 {
 public:
   explicit ConstAccessByPointer(const T* tt)
@@ -81,15 +88,18 @@ public:
     : tt_(tt)
   {}
 
+  explicit ConstAccessByPointer(const ConstAccessByPointer< T >& other) = default;
+  explicit ConstAccessByPointer(ConstAccessByPointer< T >&& other)      = default;
+
   virtual ~ConstAccessByPointer() {}
 
-  virtual const T& access() const
+  virtual const T& access() const override final
   {
     return *tt_;
   }
 
 private:
-  const std::shared_ptr< const T > tt_;
+  std::shared_ptr< const T > tt_;
 }; // class ConstAccessByPointer
 
 
@@ -99,29 +109,34 @@ class AccessInterface
 public:
   virtual ~AccessInterface() {}
 
-  virtual T& access() = 0;
+  AccessInterface< T >& operator=(const AccessInterface< T >& other) = delete;
+  AccessInterface< T >& operator=(AccessInterface< T >&& source)     = delete;
 
+  virtual       T& access() = 0;
   virtual const T& access() const = 0;
 }; // class AccessInterface
 
 
 template< class T >
 class AccessByReference
-  : public AccessInterface< T >, public boost::noncopyable, public nonmoveable
+  : public AccessInterface< T >
 {
 public:
   explicit AccessByReference(T& tt)
     : tt_(tt)
   {}
 
+  explicit AccessByReference(AccessByReference< T >& other)   = default;
+  explicit AccessByReference(AccessByReference< T >&& source) = default;
+
   virtual ~AccessByReference() {}
 
-  virtual T& access()
+  virtual T& access() override final
   {
     return tt_;
   }
 
-  virtual const T& access() const
+  virtual const T& access() const override final
   {
     return tt_;
   }
@@ -133,7 +148,7 @@ private:
 
 template< class T >
 class AccessByPointer
-  : public AccessInterface< T >, public boost::noncopyable, public nonmoveable
+  : public AccessInterface< T >
 {
 public:
   explicit AccessByPointer(T* tt)
@@ -148,14 +163,17 @@ public:
     : tt_(tt)
   {}
 
+  explicit AccessByPointer(AccessByPointer< T >& other)   = default;
+  explicit AccessByPointer(AccessByPointer< T >&& source) = default;
+
   virtual ~AccessByPointer() {}
 
-  virtual T& access()
+  virtual T& access() override final
   {
     return *tt_;
   }
 
-  virtual const T& access() const
+  virtual const T& access() const override final
   {
     return *tt_;
   }
@@ -170,26 +188,29 @@ private:
 
 template< class T >
 class ConstStorageProvider
-  : public boost::noncopyable
 {
 public:
   explicit ConstStorageProvider(const T& tt)
-    : provide_(make_unique< internal::ConstAccessByReference< T > >(tt))
+    : storage_(make_unique< internal::ConstAccessByReference< T > >(tt))
   {}
 
   explicit ConstStorageProvider(const T* tt)
-    : provide_(make_unique< internal::ConstAccessByPointer< T > >(tt))
+    : storage_(make_unique< internal::ConstAccessByPointer< T > >(tt))
   {}
 
   explicit ConstStorageProvider(std::unique_ptr< const T >&& tt)
-    : provide_(make_unique< internal::ConstAccessByPointer< T > >(tt))
+    : storage_(make_unique< internal::ConstAccessByPointer< T > >(tt))
   {}
 
   explicit ConstStorageProvider(std::shared_ptr< const T > tt)
-    : provide_(make_unique< internal::ConstAccessByPointer< T > >(tt))
+    : storage_(make_unique< internal::ConstAccessByPointer< T > >(tt))
   {}
 
-  explicit ConstStorageProvider(ConstStorageProvider< T >&& source) = default;
+  explicit ConstStorageProvider(const ConstStorageProvider< T >& other) = default;
+  explicit ConstStorageProvider(ConstStorageProvider< T >&& source)     = default;
+
+  ConstStorageProvider< T >& operator=(const ConstStorageProvider< T >& other) = delete;
+  ConstStorageProvider< T >& operator=(ConstStorageProvider< T >&& source)     = delete;
 
   const T& storage_access() const
   {
@@ -198,33 +219,39 @@ public:
 
   const T& access() const
   {
-    return provide_->access();
+    return storage_->access();
   }
 
 private:
-  std::unique_ptr< internal::ConstAccessInterface< T > > provide_;
+  std::shared_ptr< internal::ConstAccessInterface< T > > storage_;
 }; // class ConstStorageProvider
 
 
 template< class T >
-class StorageProvider: public boost::noncopyable, public nonmoveable
+class StorageProvider
 {
 public:
   explicit StorageProvider(T& tt)
-    : provide_(make_unique< internal::AccessByReference< T > >(tt))
+    : storage_(make_unique< internal::AccessByReference< T > >(tt))
   {}
 
   explicit StorageProvider(T* tt)
-    : provide_(make_unique< internal::AccessByPointer< T > >(tt))
+    : storage_(make_unique< internal::AccessByPointer< T > >(tt))
   {}
 
   explicit StorageProvider(std::unique_ptr< T >&& tt)
-    : provide_(make_unique< internal::AccessByPointer< T > >(tt))
+    : storage_(make_unique< internal::AccessByPointer< T > >(tt))
   {}
 
   explicit StorageProvider(std::shared_ptr< T > tt)
-    : provide_(make_unique< internal::AccessByPointer< T > >(tt))
+    : storage_(make_unique< internal::AccessByPointer< T > >(tt))
   {}
+
+  explicit StorageProvider(const StorageProvider< T >& other) = default;
+  explicit StorageProvider(StorageProvider< T >&& source)     = default;
+
+  StorageProvider< T >& operator=(const StorageProvider< T >& other) = delete;
+  StorageProvider< T >& operator=(StorageProvider< T >&& source)     = delete;
 
   T& storage_access()
   {
@@ -238,16 +265,16 @@ public:
 
   T& access()
   {
-    return provide_->access();
+    return storage_->access();
   }
 
   const T& access() const
   {
-    return provide_->access();
+    return storage_->access();
   }
 
 private:
-  std::unique_ptr< internal::AccessInterface< T > > provide_;
+  std::shared_ptr< internal::AccessInterface< T > > storage_;
 }; // class StorageProvider
 
 
