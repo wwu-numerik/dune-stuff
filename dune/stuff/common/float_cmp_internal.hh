@@ -118,10 +118,8 @@ cmp_gt(const T& xx, const T& yy)
 template< class T >
 bool cmp_gt(const std::complex<T>& xx, const std::complex<T>& yy)
 {
-  T x = std::abs(xx);
-  T y = std::abs(yy);
-  static_assert(std::is_arithmetic<T>::value, "");
-  return std::greater<double>()(x, y);
+  using namespace std;
+  return cmp_gt({real(xx), real(yy)}, {imag(xx), imag(yy)});
 }
 
 template< class XType, class YType >
@@ -152,7 +150,8 @@ cmp_lt(const T& xx, const T& yy)
 template< class T >
 bool cmp_lt(const std::complex<T>& xx, const std::complex<T>& yy)
 {
-  return std::less<T>()(std::abs(xx), std::abs(yy));
+  using namespace std;
+  return cmp_lt({real(xx), real(yy)}, {imag(xx), imag(yy)});
 }
 
 template< class XType, class YType >
