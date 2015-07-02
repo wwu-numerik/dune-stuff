@@ -106,7 +106,7 @@ public:
     typedef SeqSSOR< IstlMatrixType, IstlVectorType, IstlVectorType, 1 > SequentialSmootherType_SSOR;
     typedef BlockPreconditioner< IstlVectorType, IstlVectorType,
         CommunicatorType,
-        SequentialSmootherType_ILU > SmootherType_SSOR;
+        SequentialSmootherType_SSOR > SmootherType_SSOR;
     typename Amg::SmootherTraits< SmootherType_SSOR >::Arguments smoother_parameters_SSOR;
     smoother_parameters_SSOR.iterations = opts.get("smoother.iterations",
                                                    default_opts.get< size_t >("smoother.iterations"));
