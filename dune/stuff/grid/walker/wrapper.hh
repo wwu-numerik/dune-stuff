@@ -32,6 +32,21 @@ public:
 };
 
 
+template< class GridViewType, class ReturnType >
+class Codim0ReturnObject
+  : public Codim0ReturnFunctor< GridViewType, ReturnType >
+{
+  typedef Codim0ReturnFunctor< GridViewType, ReturnType > BaseType;
+public:
+  using typename BaseType::GridViewType;
+  using typename BaseType::EntityType;
+
+  virtual ~Codim0ReturnObject() {}
+
+  virtual bool apply_on(const GridViewType& grid_view, const EntityType& entity) const = 0;
+};
+
+
 template<class GridViewType, class Codim0FunctorType>
 class Codim0FunctorWrapper
   : public Codim0Object< GridViewType >
