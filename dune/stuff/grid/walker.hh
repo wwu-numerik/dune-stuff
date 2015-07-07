@@ -303,9 +303,10 @@ protected:
   } // ... walk_range(...)
 
   const GridViewType grid_view_;
-  std::vector< std::unique_ptr< internal::Codim0Object<GridViewType> > > codim0_functors_;
-  std::vector< std::unique_ptr< internal::Codim1Object<GridViewType> > > codim1_functors_;
+  std::vector< std::unique_ptr< internal::Codim0Object< GridViewType > > > codim0_functors_;
+  std::vector< std::unique_ptr< internal::Codim1Object< GridViewType > > > codim1_functors_;
 }; // class Walker
+
 
 } // namespace Grid
 } // namespace Stuff
