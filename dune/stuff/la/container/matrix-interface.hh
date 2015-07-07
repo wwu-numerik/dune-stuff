@@ -51,6 +51,7 @@ public:
   typedef typename Traits::derived_type                       derived_type;
   typedef typename Dune::FieldTraits< ScalarImp >::field_type ScalarType;
   typedef typename Dune::FieldTraits< ScalarImp >::real_type  RealType;
+  static const constexpr ChooseBackend                        vector_type = Traits::vector_type;
 
   virtual ~MatrixInterface() {}
 
