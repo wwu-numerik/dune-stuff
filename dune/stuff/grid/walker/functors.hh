@@ -9,6 +9,8 @@
 //nothing here will compile w/o grid present
 #if HAVE_DUNE_GRID
 
+#include <dune/common/deprecated.hh>
+
 #include <dune/stuff/grid/entity.hh>
 #include <dune/stuff/grid/intersection.hh>
 #include <dune/stuff/grid/boundaryinfo.hh>
@@ -16,24 +18,37 @@
 namespace Dune {
 namespace Stuff {
 namespace Grid {
-namespace Functor {
 
 
 template< class GridViewImp >
-class Codim0
+class Codim0Functor
 {
 public:
   typedef GridViewImp GridViewType;
   typedef typename Stuff::Grid::Entity< GridViewType >::Type EntityType;
 
-  virtual ~Codim0() {}
+  virtual ~Codim0Functor() {}
 
   virtual void prepare() {}
 
   virtual void apply_local(const EntityType& entity) = 0;
 
   virtual void finalize() {}
-}; // class Codim0
+}; // class Codim0Functor
+
+
+namespace Functor {
+
+
+template< class GridViewImp >
+class
+  DUNE_DEPRECATED_MSG("Use Codim0Functor instead (03.07.2015)!")
+      Codim0
+  : public Codim0Functor< GridViewImp >
+{
+public:
+  virtual ~Codim0() {}
+};
 
 
 template< class GridViewImp >
