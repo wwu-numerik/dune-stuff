@@ -127,6 +127,8 @@ public:
 #endif
   {}
 
+  TBBPerThreadValue(ThisType&& source) = default;
+
   ThisType& operator = (ValueType&& value) {
     values_ = Common::make_unique<ContainerType>([=](){return Common::make_unique<ValueType>(value);});
     return *this;
