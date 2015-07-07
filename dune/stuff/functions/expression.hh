@@ -180,8 +180,7 @@ public:
              const ExpressionStringVectorType expressions,
              const size_t ord = 0,
              const std::string nm = static_id(),
-             const GradientStringVectorType gradient_expressions
-                = GradientStringVectorType())
+             const GradientStringVectorType gradient_expressions = GradientStringVectorType())
     : order_(ord)
     , name_(nm)
   {
