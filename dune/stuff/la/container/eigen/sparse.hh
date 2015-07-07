@@ -61,6 +61,7 @@ public:
   typedef typename Dune::FieldTraits< ScalarImp >::real_type              RealType;
   typedef EigenRowMajorSparseMatrix< ScalarType >                         derived_type;
   typedef typename ::Eigen::SparseMatrix< ScalarType, ::Eigen::RowMajor > BackendType;
+  static const constexpr ChooseBackend                                    vector_type  = ChooseBackend::eigen_dense;
 }; // class RowMajorSparseMatrixTraits
 
 
