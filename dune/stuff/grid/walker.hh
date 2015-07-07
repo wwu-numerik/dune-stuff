@@ -75,11 +75,11 @@ public:
     codim1_functors_.emplace_back(new internal::Codim1LambdaWrapper< GridViewType >(lambda, where));
   }
 
-  void add(Functor::Codim0< GridViewType >& functor,
+  void add(Codim0Functor< GridViewType >& functor,
            const ApplyOn::WhichEntity< GridViewType >* where = new ApplyOn::AllEntities< GridViewType >())
   {
     codim0_functors_.emplace_back(
-          new internal::Codim0FunctorWrapper<GridViewType, Functor::Codim0< GridViewType > >(functor, where));
+          new internal::Codim0FunctorWrapper< GridViewType, Codim0Functor< GridViewType > >(functor, where));
   }
 
   void add(Functor::Codim1< GridViewType >& functor,
