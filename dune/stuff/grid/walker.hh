@@ -56,6 +56,8 @@ public:
     : grid_view_(grd_vw)
   {}
 
+  Walker(ThisType&& source) = default;
+
   const GridViewType& grid_view() const
   {
     return grid_view_;
