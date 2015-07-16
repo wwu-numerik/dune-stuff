@@ -17,6 +17,23 @@
 #include "float_cmp_internal.hh"
 
 namespace Dune {
+namespace FloatCmp {
+template<class T>
+struct DefaultEpsilon<std::complex<T>, relativeWeak> {
+  static typename EpsilonType<std::complex<T>>::Type value()
+  { return std::numeric_limits<typename EpsilonType<std::complex<T>>::Type>::epsilon()*8.; }
+};
+template<class T>
+struct DefaultEpsilon<std::complex<T>, relativeStrong> {
+  static typename EpsilonType<std::complex<T>>::Type value()
+  { return std::numeric_limits<typename EpsilonType<std::complex<T>>::Type>::epsilon()*8.; }
+};
+template<class T>
+struct DefaultEpsilon<std::complex<T>, absolute> {
+  static typename EpsilonType<std::complex<T>>::Type value()
+  { return std::max(std::numeric_limits<typename EpsilonType<std::complex<T>>::Type>::epsilon(), 1e-6); }
+};
+}
 namespace Stuff {
 namespace Common {
 
@@ -33,14 +50,15 @@ struct DefaultEpsilon
   }
 };
 
-//! we use the scalar field's type from std::complex for its epsilon
+//! since we treat complex like a vector its epsilon is (eps,eps) of its scalar type
 template< class T, Style style>
 struct DefaultEpsilon<std::complex<T>, style>
 {
-  typedef typename Dune::FloatCmp::EpsilonType< T >::Type Type;
+  typedef typename Dune::FloatCmp::EpsilonType< std::complex<T> >::Type Type;
   static Type value()
   {
-    return Dune::FloatCmp::DefaultEpsilon< T, internal::ConvertStyle< style >::value >::value();
+    const auto val = Dune::FloatCmp::DefaultEpsilon< T, internal::ConvertStyle< style >::value >::value();
+    return std::complex<T>(val, val);
   }
 };
 
@@ -50,17 +68,19 @@ struct DefaultEpsilon< T, Style::numpy >
   typedef typename Dune::FloatCmp::EpsilonType< T >::Type Type;
   static Type value()
   {
-    return Dune::FloatCmp::DefaultEpsilon< T, Dune::FloatCmp::relativeStrong >::value();
+    return Dune::FloatCmp::DefaultEpsilon< T, Dune::FloatCmp::relativeStrong >::value();   
   }
 };
 
+//! necessary to avoid ambig. partial specialization
 template< class T >
 struct DefaultEpsilon< std::complex<T>, Style::numpy >
 {
-  typedef typename Dune::FloatCmp::EpsilonType< T >::Type Type;
+  typedef typename Dune::FloatCmp::EpsilonType< std::complex<T> >::Type Type;
   static Type value()
   {
-    return Dune::FloatCmp::DefaultEpsilon< T, Dune::FloatCmp::relativeStrong >::value();
+    const auto val = Dune::FloatCmp::DefaultEpsilon< T, Dune::FloatCmp::relativeStrong >::value();
+    return std::complex<T>(val, val);
   }
 };
 
