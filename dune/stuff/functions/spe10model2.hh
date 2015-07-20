@@ -78,9 +78,10 @@ public:
     }
   }
 
-  virtual size_t order() const {
+  virtual size_t order() const override {
     return 0u;
   }
+
 private:
   void readPermeability() {
     std::ifstream file(filename_);
