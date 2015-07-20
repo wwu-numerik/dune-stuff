@@ -193,7 +193,7 @@ protected:
 
 #if DUNE_STUFF_DO_PROFILE
 # define DUNE_STUFF_PROFILE_SCOPE(section_name) \
-    Dune::Stuff::Common::ScopedTiming DUNE_UNUSED(timer)(section_name)
+    Dune::Stuff::Common::ScopedTiming DSC_UNUSED(timer)(section_name)
 #else
 # define DUNE_STUFF_PROFILE_SCOPE(section_name)
 #endif

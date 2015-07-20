@@ -113,7 +113,7 @@ std::string whitespaceify(const T& t, const char whitespace = ' ')
 {
   const std::string s = toString(t);
   std::string ret = "";
-  for (auto DUNE_UNUSED(ii) : valueRange(s.size())) {
+  for (auto DSC_UNUSED(ii) : valueRange(s.size())) {
     ret += whitespace;
   }
   return ret;
