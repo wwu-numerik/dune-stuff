@@ -35,7 +35,8 @@ class Expression
   typedef Expression< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols > ThisType;
   typedef MathExpressionBase
       < DomainFieldImp, domainDim, RangeFieldImp, rangeDim*rangeDimCols > MathExpressionFunctionType;
-  typedef MathExpressionBase < DomainFieldImp, domainDim, RangeFieldImp, domainDim > MathExpressionGradientType;
+  typedef MathExpressionBase
+      < DomainFieldImp, domainDim, RangeFieldImp, domainDim > MathExpressionGradientType;
 
 public:
   using typename BaseType::EntityType;
