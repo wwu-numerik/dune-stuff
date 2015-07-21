@@ -425,7 +425,7 @@ typedef testing::Types<  std::vector< double >
                       , Dune::Stuff::LA::EigenDenseVector< double >
                       , Dune::Stuff::LA::EigenMappedDenseVector< double >
 #endif
-                      std::complex<double>
+                      , std::complex<double>
                       , std::vector< std::complex<double> >
                       , Dune::FieldVector< std::complex<double>, vec_size >
                       , Dune::Stuff::Common::FieldVector< std::complex<double>, vec_size >
