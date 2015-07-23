@@ -217,12 +217,13 @@ namespace TupleProduct
 
   struct end_of_recursion_tag
   {
-      static void Run()
+      template <class... Args>
+      static void Run(Args&&... /*args*/)
       {
-          std::cout << "end of "
-               << total_recursions
-               << " recursions\n"
-              ;
+        std::cout << "end of "
+             << total_recursions
+             << " recursions\n"
+            ;
       }
   };
 
@@ -280,6 +281,21 @@ namespace TupleProduct
 
               // go to the next round of recursion
               next_type::Run();
+          }
+
+          template <class... Args>
+          static void Run(Args&&... args)
+          {
+              // increment recursion counter
+              ++total_recursions;
+
+              // test on the generated types of this round of recursion
+              TestFunc::template run< typename deref<UIterator>::type,
+                                      typename deref<VIterator>::type
+                >(std::forward<Args>(args)...);
+
+              // go to the next round of recursion
+              next_type::Run(std::forward<Args>(args)...);
           }
       };
   };
