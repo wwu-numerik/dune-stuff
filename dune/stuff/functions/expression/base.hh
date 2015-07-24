@@ -87,12 +87,14 @@ public:
   void evaluate(const Dune::FieldVector< DomainFieldType, dimDomain >& arg,
                 Dune::FieldVector< RangeFieldType, dimRange >& ret) const
   {
+    mutex_.lock();
     // copy arg
     for (typename Dune::FieldVector< DomainFieldType, dimDomain >::size_type ii = 0; ii < dimDomain; ++ii)
       *(arg_[ii]) = arg[ii];
     // copy ret
     for (typename Dune::FieldVector< RangeFieldType, dimRange >::size_type ii = 0; ii < dimRange; ++ii)
       ret[ii] = op_[ii]->Val();
+    mutex_.unlock();
   }
 
   /**
@@ -101,6 +103,7 @@ public:
   void evaluate(const Dune::DynamicVector< DomainFieldType >& arg,
                 Dune::DynamicVector< RangeFieldType >& ret) const
   {
+    mutex_.lock();
     // check for sizes
     assert(arg.size() > 0);
     if (ret.size() != dimRange)
@@ -111,11 +114,13 @@ public:
     // copy ret
     for (typename Dune::DynamicVector< RangeFieldType >::size_type ii = 0; ii < dimRange; ++ii)
       ret[ii] = op_[ii]->Val();
+    mutex_.unlock();
   }
 
   void evaluate(const Dune::FieldVector< DomainFieldType, dimDomain >& arg,
                 Dune::DynamicVector< RangeFieldType >& ret) const
   {
+    mutex_.lock();
     // check for sizes
     if (ret.size() != dimRange)
       ret = Dune::DynamicVector< RangeFieldType >(dimRange);
@@ -125,6 +130,7 @@ public:
     // copy ret
     for (typename Dune::DynamicVector< RangeFieldType >::size_type ii = 0; ii < dimRange; ++ii)
       ret[ii] = op_[ii]->Val();
+    mutex_.unlock();
   }
 
   /**
@@ -133,6 +139,7 @@ public:
   void evaluate(const Dune::DynamicVector< DomainFieldType >& arg,
                 Dune::FieldVector< RangeFieldType, dimRange >& ret) const
   {
+    mutex_.lock();
     assert(arg.size() > 0);
     // copy arg
     for (size_t ii = 0; ii < std::min(dimDomain, arg.size()); ++ii)
@@ -140,6 +147,7 @@ public:
     // copy ret
     for (size_t ii = 0; ii < dimRange; ++ii)
       ret[ii] = op_[ii]->Val();
+    mutex_.unlock();
   }
 
   void report(const std::string _name = "dune.stuff.function.mathexpressionbase",
@@ -210,6 +218,7 @@ private:
   RVar* var_arg_[dimDomain];
   RVar* vararray_[dimDomain];
   ROperation* op_[dimRange];
+  mutable std::mutex mutex_;
 }; // class MathExpressionBase
 
 
