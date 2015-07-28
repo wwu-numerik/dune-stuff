@@ -102,7 +102,7 @@ namespace BoundaryInfoConfigs {
 class AllDirichlet
 {
 public:
-  static const std::string static_id()
+  static std::string static_id()
   {
     return internal::boundary_info_static_id() + ".alldirichlet";
   }
@@ -120,7 +120,7 @@ public:
 class AllNeumann
 {
 public:
-  static const std::string static_id()
+  static std::string static_id()
   {
     return internal::boundary_info_static_id() + ".allneumann";
   }
