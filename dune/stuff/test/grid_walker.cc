@@ -49,7 +49,9 @@ struct GridWalkerTest : public ::testing::Test
     list<function<void()>> tests({ test1, test2, test3 });
 # if DUNE_VERSION_NEWER(DUNE_COMMON,3,9) // EXADUNE
     auto test0 = [&]{
-                    IndexSetPartitioner<GridViewType> partitioner(gv.grid().leafIndexSet());
+                    const auto& set = gv.grid().leafIndexSet();
+                    IndexSetPartitioner<GridViewType> partitioner(set);
+                    EXPECT_EQ(set.size(0), partitioner.partitions());
                     Dune::SeedListPartitioning<GridType, 0> partitioning(gv, partitioner);
                     walker.add(counter);
                     walker.walk(partitioning);
