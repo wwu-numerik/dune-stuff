@@ -1,0 +1,23 @@
+# general style
+style=kr
+# brackets
+attach-namespaces
+# indentation
+indent=spaces=2
+indent-col1-comments
+min-conditional-indent=0
+max-instatement-indent=120
+# padding
+pad-oper
+pad-header
+unpad-paren
+# alignment
+align-pointer=type
+align-reference=type
+# misc
+keep-one-line-statements
+max-code-length=120
+preserve-date
+quiet
+lineend=linux
+
