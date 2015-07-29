@@ -6,6 +6,7 @@
 #include "config.h"
 
 #include <algorithm>
+#include <boost/io/ios_state.hpp>
 
 #include <dune/stuff/common/exceptions.hh>
 #include <dune/stuff/common/string.hh>
@@ -36,6 +37,7 @@ std::map< std::string, std::vector< double > > ConvergenceStudy::run(const bool 
                                                                      std::ostream& out,
                                                                      const bool print_timings)
 {
+  boost::io::ios_all_saver guard(out);
   if (provided_norms().size() == 0)
     DUNE_THROW(Dune::InvalidStateException, "You have to provide at least one norm!");
   const auto actually_used_norms = used_norms();
