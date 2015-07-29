@@ -44,7 +44,7 @@ public:
   {
     namespace Providers = Stuff::Grid::Providers;
     return {
-        Providers::Cube< GridType >::static_id()
+      Providers::Cube< GridType >::static_id()
     };
   } // ... available()
 

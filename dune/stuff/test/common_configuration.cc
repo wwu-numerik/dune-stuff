@@ -34,7 +34,9 @@ using namespace Dune::Stuff::Common;
 using Dune::Stuff::Exceptions::results_are_not_as_expected;
 using namespace Dune::Stuff::Common::FloatCmp;
 
-struct CreateByOperator { static Configuration create() {
+struct CreateByOperator {
+  static Configuration create()
+  {
     Configuration config;
     config["string"] = "string";
     config["sub1.int"] = "1";
@@ -42,9 +44,12 @@ struct CreateByOperator { static Configuration create() {
     config["sub2.subsub1.vector"] = "[0 1]";
     config["sub2.subsub1.matrix"] = "[0 1; 1 2]";
     return config;
-} };
+  }
+};
 
-struct CreateByOperatorAndAssign { static Configuration create() {
+struct CreateByOperatorAndAssign {
+  static Configuration create()
+  {
     Configuration config;
     config["string"] = "string";
     config["sub1.int"] = "1";
@@ -52,20 +57,26 @@ struct CreateByOperatorAndAssign { static Configuration create() {
     config["sub2.subsub1.vector"] = "[0 1]";
     config["sub2.subsub1.matrix"] = "[0 1; 1 2]";
     Configuration config2;
-    config2=config;
+    config2 = config;
     return config2;
-} };
+  }
+};
 
-struct CreateByKeyAndValueAndAddConfiguration { static Configuration create() {
+struct CreateByKeyAndValueAndAddConfiguration {
+  static Configuration create()
+  {
     Configuration config("string", "string");
     config.set("sub1.int", "1");
     config.set("sub2.size_t", 1);
     config.add(Configuration("vector", "[0 1]"), "sub2.subsub1");
     config.add(Configuration("matrix", "[0 1; 1 2]"), "sub2.subsub1");
     return config;
-} };
+  }
+};
 
-struct CreateByKeyAndValueAndAddParameterTree { static Configuration create() {
+struct CreateByKeyAndValueAndAddParameterTree {
+  static Configuration create()
+  {
     Configuration config("string", "string");
     config.set("sub1.int", "1");
     config.set("sub2.size_t", 1);
@@ -74,14 +85,20 @@ struct CreateByKeyAndValueAndAddParameterTree { static Configuration create() {
     paramtree["matrix"] = "[0 1; 1 2]";
     config.add(paramtree, "sub2.subsub1");
     return config;
-} };
+  }
+};
 
-struct CreateByKeysAndValues { static Configuration create() {
+struct CreateByKeysAndValues {
+  static Configuration create()
+  {
     return Configuration({"string", "sub1.int", "sub2.size_t", "sub2.subsub1.vector", "sub2.subsub1.matrix"},
-                         {"string", "1",        "1",           "[0 1]",               "[0 1; 1 2]"});
-} };
+    {"string", "1",        "1",           "[0 1]",               "[0 1; 1 2]"});
+  }
+};
 
-struct CreateByParameterTree { static Configuration create() {
+struct CreateByParameterTree {
+  static Configuration create()
+  {
     Dune::ParameterTree paramtree;
     paramtree["string"] = "string";
     paramtree["sub1.int"] = "1";
@@ -89,38 +106,43 @@ struct CreateByParameterTree { static Configuration create() {
     paramtree["sub2.subsub1.vector"] = "[0 1]";
     paramtree["sub2.subsub1.matrix"] = "[0 1; 1 2]";
     return Configuration(paramtree);
-} };
+  }
+};
 
 
 
 typedef testing::Types<double, float, std::string, std::complex<double>,
-   int, unsigned int, unsigned long, long long, char> TestTypes;
+        int, unsigned int, unsigned long, long long, char> TestTypes;
 
 typedef testing::Types< CreateByOperator
-                      , CreateByKeyAndValueAndAddConfiguration
-                      , CreateByKeyAndValueAndAddParameterTree
-                      , CreateByKeysAndValues
-                      , CreateByParameterTree
-                      , CreateByOperatorAndAssign
-                      > ConfigurationCreators;
+, CreateByKeyAndValueAndAddConfiguration
+, CreateByKeyAndValueAndAddParameterTree
+, CreateByKeysAndValues
+, CreateByParameterTree
+, CreateByOperatorAndAssign
+> ConfigurationCreators;
 
 template < class T >
-static DefaultRNG<T> rng_setup()  {
+static DefaultRNG<T> rng_setup()
+{
   return DefaultRNG<T>();
 }
 
 template < >
-DefaultRNG<std::complex<double>> rng_setup()  {
+DefaultRNG<std::complex<double>> rng_setup()
+{
   return DefaultRNG<std::complex<double>>(-2, 2);
 }
 
 template < class T >
-static void  val_compare_eq(const T& aa, const T& bb) {
+static void  val_compare_eq(const T& aa, const T& bb)
+{
   DSC_EXPECT_FLOAT_EQ(aa, bb);
 }
 
-static void val_compare_eq(const std::string& aa, const std::string& bb) {
-  EXPECT_EQ(aa,bb);
+static void val_compare_eq(const std::string& aa, const std::string& bb)
+{
+  EXPECT_EQ(aa, bb);
 }
 
 template < class T >
@@ -134,38 +156,41 @@ struct ConfigTest : public testing::Test {
   ConfigTest()
     : rng(rng_setup<T>())
     , key_gen(8)
-    , values(boost::assign::list_of<T>().repeat_fun(values.size()-1,rng))
-    , keys(boost::assign::list_of<std::string>().repeat_fun(values.size()-1,key_gen))
+    , values(boost::assign::list_of<T>().repeat_fun(values.size() - 1, rng))
+    , keys(boost::assign::list_of<std::string>().repeat_fun(values.size() - 1, key_gen))
   {}
 
-  virtual ~ConfigTest(){}
+  virtual ~ConfigTest() {}
 
-  void get() {
+  void get()
+  {
     std::set<std::string> uniq_keys;
-    for(T val : values) {
+    for (T val : values) {
       auto key = key_gen();
-      val_compare_eq(val,DSC_CONFIG_GET(key, val));
+      val_compare_eq(val, DSC_CONFIG_GET(key, val));
       uniq_keys.insert(key);
     }
     const auto mismatches = DSC_CONFIG.get_mismatched_defaults_map();
     EXPECT_TRUE(mismatches.empty());
-    if(!mismatches.empty()) {
+    if (!mismatches.empty()) {
       DSC_CONFIG.print_mismatched_defaults(std::cerr);
     }
     EXPECT_EQ(values.size(), uniq_keys.size());
   }
 
-  void set() {
-    for(T val : values) {
+  void set()
+  {
+    for (T val : values) {
       auto key = key_gen();
       DSC_CONFIG.set(key, val);
       //get with default diff from expected
-      auto re = DSC_CONFIG.get(key, T(val+Dune::Stuff::Common::Epsilon<T>::value));
+      auto re = DSC_CONFIG.get(key, T(val + Dune::Stuff::Common::Epsilon<T>::value));
       val_compare_eq(re, val);
     }
   }
 
-  void other() {
+  void other()
+  {
     DSC_CONFIG.print_requests(dev_null);
     DSC_CONFIG.print_mismatched_defaults(dev_null);
     auto key = this->key_gen();
@@ -173,18 +198,18 @@ struct ConfigTest : public testing::Test {
     EXPECT_THROW(DSC_CONFIG.get(key, T(), ValidateNone<T>()), Dune::Stuff::Exceptions::configuration_error);
   }
 
-  void issue_42() {
+  void issue_42()
+  {
     using namespace DSC;
     using namespace std;
     Configuration empty;
-    Configuration to_add(vector<string>{"subsection.key"}, {0l});
+    Configuration to_add(vector<string> {"subsection.key"}, {0l});
     empty.add(to_add, "", true);
     EXPECT_TRUE(empty.has_sub("subsection"));
   }
 }; // struct ConfigTest
 
-struct StaticCheck
-{
+struct StaticCheck {
   typedef boost::mpl::vector<Int<1>, Int<2>> Ints;
 
   template< class MatrixType >
@@ -194,10 +219,10 @@ struct StaticCheck
     const auto r = MT::rows(MatrixType());
     const auto c = MT::cols(MatrixType());
 
-    const auto check = [&r, &c](const MatrixType& mat) {
+    const auto check = [&r, &c](const MatrixType & mat) {
       for (size_t cc = 0; cc < c; ++cc) {
         for (size_t rr = 0; rr < r; ++rr) {
-          val_compare_eq(MT::get_entry(mat, rr, cc ), double(rr + cc));
+          val_compare_eq(MT::get_entry(mat, rr, cc), double(rr + cc));
         }
       }
     };
@@ -220,8 +245,7 @@ struct StaticCheck
 
 template< class ConfigurationCreator >
 struct ConfigurationTest
-  : public ::testing::Test
-{
+  : public ::testing::Test {
   template< class VectorType >
   static void check_vector(const Configuration& config)
   {
@@ -230,18 +254,24 @@ struct ConfigurationTest
     EXPECT_FLOAT_EQ(0.0, vec[0]);
     vec = config.get("vector", VectorType(), 2);
     EXPECT_EQ(2, vec.size());
-    for (auto ii : {0.0, 1.0})
+    for (auto ii : {
+           0.0, 1.0
+         })
       EXPECT_FLOAT_EQ(ii, vec[ii]);
     vec = config.get< VectorType >("vector", 1);
     EXPECT_EQ(1, vec.size());
     EXPECT_FLOAT_EQ(0.0, vec[0]);
     vec = config.get< VectorType >("vector", 2);
     EXPECT_EQ(2, vec.size());
-    for (auto ii : {0.0, 1.0})
+    for (auto ii : {
+           0.0, 1.0
+         })
       EXPECT_FLOAT_EQ(ii, vec[ii]);
     vec = config.get< VectorType >("vector");
     EXPECT_EQ(2, vec.size());
-    for (auto ii : {0.0, 1.0})
+    for (auto ii : {
+           0.0, 1.0
+         })
       EXPECT_FLOAT_EQ(ii, vec[ii]);
   } // ... check_vector< ... >(...)
 
@@ -368,26 +398,30 @@ struct ConfigurationTest
     check_matrix< Dune::Stuff::LA::CommonDenseMatrix< double > >(subsub1);
 
     DSC::TupleProduct::Combine< StaticCheck::Ints, StaticCheck::Ints, StaticCheck
-                    >::Generate<>::Run(subsub1);
+    >::Generate<>::Run(subsub1);
 
   } // ... behaves_correctly(...)
 }; // struct ConfigurationTest
 
 
 TYPED_TEST_CASE(ConfigTest, TestTypes);
-TYPED_TEST(ConfigTest, Get) {
+TYPED_TEST(ConfigTest, Get)
+{
   this->get();
 }
-TYPED_TEST(ConfigTest, Set) {
+TYPED_TEST(ConfigTest, Set)
+{
   this->set();
 }
-TYPED_TEST(ConfigTest, Other) {
+TYPED_TEST(ConfigTest, Other)
+{
   this->other();
   this->issue_42();
 }
 
 TYPED_TEST_CASE(ConfigurationTest, ConfigurationCreators);
-TYPED_TEST(ConfigurationTest, behaves_correctly) {
+TYPED_TEST(ConfigurationTest, behaves_correctly)
+{
   this->behaves_correctly();
 }
 

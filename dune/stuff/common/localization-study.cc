@@ -83,7 +83,7 @@ void LocalizationStudy::run(std::ostream& out)
     if (id_str.size() > first_column_size)
       id_str = id_str.substr(0, first_column_size);
     else if (id_str.size() < first_column_size) {
-      const double missing = (double(first_column_size) - id_str.size())/2.0;
+      const double missing = (double(first_column_size) - id_str.size()) / 2.0;
       for (size_t ii = 0; ii < missing; ++ii)
         id_str = " " + id_str + " ";
       if (id_str.size() == (first_column_size - 1))

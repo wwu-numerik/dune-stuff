@@ -22,8 +22,7 @@ std::unique_ptr<T> make_unique(Args&& ...args)
 }
 
 //! just like boost::noncopyable, but for move assign/ctor
-struct nonmoveable
-{
+struct nonmoveable {
   constexpr nonmoveable() = default;
   ~nonmoveable() = default;
   nonmoveable& operator=(nonmoveable&& source) = delete;

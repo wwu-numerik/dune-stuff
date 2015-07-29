@@ -26,23 +26,28 @@ template <class T, class Derived>
 class ValidatorInterface
 {
 public:
-  bool operator() (const T& value) const {
-    return asImp()( value );
+  bool operator()(const T& value) const
+  {
+    return asImp()(value);
   }
 
-  std::string msg() const {
+  std::string msg() const
+  {
     return asImp().msg();
   }
-  void print(std::ostream& out) const {
+  void print(std::ostream& out) const
+  {
     out << asImp().msg();
   }
 protected:
-  inline const Derived& asImp () const {
-    return static_cast< const Derived& >( *this );
+  inline const Derived& asImp() const
+  {
+    return static_cast< const Derived& >(*this);
   }
 
-  inline Derived& asImp () {
-    return static_cast< Derived& >( *this );
+  inline Derived& asImp()
+  {
+    return static_cast< Derived& >(*this);
   }
 };
 
@@ -58,12 +63,14 @@ public:
   inline ValidateAny() {}
   inline ValidateAny(const ThisType&) {}
 
-  inline bool operator()(const T&) const {
+  inline bool operator()(const T&) const
+  {
     return true;
   }
 
-  std::string msg() const {
-      return "ValidateAny: all values should be valid... \n\n";
+  std::string msg() const
+  {
+    return "ValidateAny: all values should be valid... \n\n";
   }
 };
 
@@ -83,11 +90,13 @@ public:
     : valid_list_(valid_list)
   {}
 
-  inline bool operator()(const T& val) const {
+  inline bool operator()(const T& val) const
+  {
     return std::find(valid_list_.begin(), valid_list_.end(), val) != valid_list_.end();
   }
 
-  std::string msg() const {
+  std::string msg() const
+  {
     return "ValidateInList: checked Parameter was not in valid list\n\n";
   }
 };
@@ -97,18 +106,20 @@ template < class T >
 class ValidateLess : public ValidatorInterface< T, ValidateLess< T > >
 {
 public:
-    ValidateLess(const T& baseval)
-        : baseval_(baseval)
-    {}
-    inline bool operator()(const T& val) const {
-      return baseval_ < val;
-    }
+  ValidateLess(const T& baseval)
+    : baseval_(baseval)
+  {}
+  inline bool operator()(const T& val) const
+  {
+    return baseval_ < val;
+  }
 
-    std::string msg() const {
-        return (boost::format("given value was invalid: not less than %s") % toString(baseval_)).str();
-    }
+  std::string msg() const
+  {
+    return (boost::format("given value was invalid: not less than %s") % toString(baseval_)).str();
+  }
 private:
-    const T baseval_;
+  const T baseval_;
 };
 
 //! validate arg iff greater than value, obviously
@@ -116,18 +127,20 @@ template < class T >
 class ValidateGreater : public ValidatorInterface< T, ValidateGreater< T > >
 {
 public:
-    ValidateGreater(const T& baseval)
-        : baseval_(baseval)
-    {}
-    inline bool operator()(const T& val) const {
-      return baseval_ > val;
-    }
+  ValidateGreater(const T& baseval)
+    : baseval_(baseval)
+  {}
+  inline bool operator()(const T& val) const
+  {
+    return baseval_ > val;
+  }
 
-    std::string msg() const {
-        return (boost::format("given value was invalid: not greater than %s") % toString(baseval_)).str();
-    }
+  std::string msg() const
+  {
+    return (boost::format("given value was invalid: not greater than %s") % toString(baseval_)).str();
+  }
 private:
-    const T baseval_;
+  const T baseval_;
 };
 
 //! validate iff not Validator(arg)
@@ -135,21 +148,23 @@ template < class T, class Validator >
 class ValidateInverse : public ValidatorInterface< T, ValidateInverse< T, Validator > >
 {
 public:
-    ValidateInverse(const Validator validator = Validator())
-        : validator_(validator)
-    {}
-    ValidateInverse(const T arg)
-        : validator_(Validator(arg))
-    {}
-    inline bool operator()(const T& val) const {
-        return !validator_(val);
-      }
+  ValidateInverse(const Validator validator = Validator())
+    : validator_(validator)
+  {}
+  ValidateInverse(const T arg)
+    : validator_(Validator(arg))
+  {}
+  inline bool operator()(const T& val) const
+  {
+    return !validator_(val);
+  }
 
-    std::string msg() const {
-        return "Inverse condition failed: " + validator_.msg();
-    }
+  std::string msg() const
+  {
+    return "Inverse condition failed: " + validator_.msg();
+  }
 private:
-    const Validator validator_;
+  const Validator validator_;
 };
 
 #define INVERSE_VALIDATE(V_NEW_NAME,V_BASE_NAME) \
@@ -161,38 +176,41 @@ private:
         {} \
     }
 
-INVERSE_VALIDATE(ValidateNone,ValidateAny);
-INVERSE_VALIDATE(ValidateGreaterOrEqual,ValidateLess);
-INVERSE_VALIDATE(ValidateNotLess,ValidateLess);
+INVERSE_VALIDATE(ValidateNone, ValidateAny);
+INVERSE_VALIDATE(ValidateGreaterOrEqual, ValidateLess);
+INVERSE_VALIDATE(ValidateNotLess, ValidateLess);
 
 //! validate arg iff arg \in [min,max]
 template < class T >
 class ValidateInterval : public ValidatorInterface< T, ValidateInterval< T > >
 {
 public:
-    ValidateInterval(const T& min, const T& max)
-        : min_(min)
-        , max_(max)
-    {}
+  ValidateInterval(const T& min, const T& max)
+    : min_(min)
+    , max_(max)
+  {}
 
-    inline bool operator()(const T& val) const {
-        const bool lowerOk = ValidateGreaterOrEqual<T> (val)(min_);
-        const bool upperOk = ValidateGreaterOrEqual<T> (max_)(val);
-        return lowerOk && upperOk;
-    }
+  inline bool operator()(const T& val) const
+  {
+    const bool lowerOk = ValidateGreaterOrEqual<T> (val)(min_);
+    const bool upperOk = ValidateGreaterOrEqual<T> (max_)(val);
+    return lowerOk && upperOk;
+  }
 
-    std::string msg() const {
-        return "given value was invalid: value not in given interval";
-    }
+  std::string msg() const
+  {
+    return "given value was invalid: value not in given interval";
+  }
 private:
-    const T min_;
-    const T max_;
+  const T min_;
+  const T max_;
 };
 
 //! example partial specialisation
 template <typename T>
 struct Typename<ValidateAny<T> > {
-  static std::string value() {
+  static std::string value()
+  {
     return "Dune::Stuff::Common::Parameter::ValidateAny<T>";
   }
 };
@@ -202,10 +220,10 @@ struct Typename<ValidateAny<T> > {
 } //end namespace Dune
 
 template < class T, class Validator >
-std::ostream operator << ( std::ostream& out,
-                           const Dune::Stuff::Common::ValidatorInterface< T, Validator >& validator )
+std::ostream operator << (std::ostream& out,
+                          const Dune::Stuff::Common::ValidatorInterface< T, Validator >& validator)
 {
-    return out << validator.msg();
+  return out << validator.msg();
 }
 
 #endif // DUNE_STUFF_VALIDATION_HH

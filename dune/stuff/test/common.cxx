@@ -21,12 +21,12 @@
 void busywait(const size_t ms)
 {
   // "round" up to next full 10 ms to align with native timer res
-  const size_t milliseconds = (ms/10)*10 + 10;
+  const size_t milliseconds = (ms / 10) * 10 + 10;
   timeval start, end;
   gettimeofday(&start, NULL);
   do {
-   gettimeofday(&end, NULL);
-  } while (((end.tv_sec - start.tv_sec)*1e6) + ((end.tv_usec - start.tv_usec)) < milliseconds*1000);
+    gettimeofday(&end, NULL);
+  } while (((end.tv_sec - start.tv_sec) * 1e6) + ((end.tv_usec - start.tv_usec)) < milliseconds * 1000);
 } // ... busywait(...)
 
 
@@ -132,7 +132,8 @@ void print_collected_eoc_study_results(const std::map< std::string, std::vector<
 unsigned int grid_elements()
 {
   return DSC_CONFIG.has_key("test.gridelements")                                                          // <- doing this so complicated to
-         ? DSC_CONFIG.get< unsigned int >("test.gridelements", 3u, DSC::ValidateLess< unsigned int >(2u)) //    silence the WARNING: ...
+         ? DSC_CONFIG.get< unsigned int >("test.gridelements", 3u,
+                                          DSC::ValidateLess< unsigned int >(2u)) //    silence the WARNING: ...
          : 3u;
 } // ... grid_elements(...)
 

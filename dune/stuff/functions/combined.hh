@@ -22,7 +22,7 @@ namespace internal {
 
 
 enum class Combination {
-    difference
+  difference
   , sum
   , product
 }; // enum class Combination
@@ -255,18 +255,18 @@ public:
 template< class LeftType, class RightType, Combination type >
 class CombinedLocalFunction
   : public LocalfunctionInterface< typename SelectCombined< LeftType, RightType, type >::E,
-                                   typename SelectCombined< LeftType, RightType, type >::D,
-                                   SelectCombined< LeftType, RightType, type >::d,
-                                   typename SelectCombined< LeftType, RightType, type >::R,
-                                   SelectCombined< LeftType, RightType, type >::r,
-                                   SelectCombined< LeftType, RightType, type >::rC >
+    typename SelectCombined< LeftType, RightType, type >::D,
+    SelectCombined< LeftType, RightType, type >::d,
+    typename SelectCombined< LeftType, RightType, type >::R,
+    SelectCombined< LeftType, RightType, type >::r,
+    SelectCombined< LeftType, RightType, type >::rC >
 {
   typedef LocalfunctionInterface< typename SelectCombined< LeftType, RightType, type >::E,
-                                  typename SelectCombined< LeftType, RightType, type >::D,
-                                  SelectCombined< LeftType, RightType, type >::d,
-                                  typename SelectCombined< LeftType, RightType, type >::R,
-                                  SelectCombined< LeftType, RightType, type >::r,
-                                  SelectCombined< LeftType, RightType, type >::rC > BaseType;
+          typename SelectCombined< LeftType, RightType, type >::D,
+          SelectCombined< LeftType, RightType, type >::d,
+          typename SelectCombined< LeftType, RightType, type >::R,
+          SelectCombined< LeftType, RightType, type >::r,
+          SelectCombined< LeftType, RightType, type >::rC > BaseType;
 
   typedef SelectCombined< LeftType, RightType, type > Select;
 public:
@@ -353,19 +353,19 @@ Difference< ConstantType, ConstantType > stupid_difference()
 template< class LeftType, class RightType, Combination comb >
 class Combined
   : public LocalizableFunctionInterface< typename SelectCombined< LeftType, RightType, comb >::E,
-                                         typename SelectCombined< LeftType, RightType, comb >::D,
-                                         SelectCombined< LeftType, RightType, comb >::d,
-                                         typename SelectCombined< LeftType, RightType, comb >::R,
-                                         SelectCombined< LeftType, RightType, comb >::r,
-                                         SelectCombined< LeftType, RightType, comb >::rC >
+    typename SelectCombined< LeftType, RightType, comb >::D,
+    SelectCombined< LeftType, RightType, comb >::d,
+    typename SelectCombined< LeftType, RightType, comb >::R,
+    SelectCombined< LeftType, RightType, comb >::r,
+    SelectCombined< LeftType, RightType, comb >::rC >
 {
   typedef LocalizableFunctionInterface
-      < typename SelectCombined< LeftType, RightType, comb >::E,
-        typename SelectCombined< LeftType, RightType, comb >::D,
-        SelectCombined< LeftType, RightType, comb >::d,
-        typename SelectCombined< LeftType, RightType, comb >::R,
-        SelectCombined< LeftType, RightType, comb >::r,
-        SelectCombined< LeftType, RightType, comb >::rC > BaseType;
+  < typename SelectCombined< LeftType, RightType, comb >::E,
+  typename SelectCombined< LeftType, RightType, comb >::D,
+  SelectCombined< LeftType, RightType, comb >::d,
+  typename SelectCombined< LeftType, RightType, comb >::R,
+  SelectCombined< LeftType, RightType, comb >::r,
+  SelectCombined< LeftType, RightType, comb >::rC > BaseType;
   typedef Common::ConstStorageProvider< LeftType >                  LeftStorageType;
   typedef Common::ConstStorageProvider< RightType >                 RightStorageType;
   typedef Combined< LeftType, RightType, comb >                     ThisType;
@@ -379,7 +379,7 @@ public:
     , right_(Common::make_unique< RightStorageType >(right))
     , name_(nm.empty()
             ? SelectCombined< LeftType, RightType, comb >::type() + " of '" + left.name() + "' and '" + right.name()
-                + "'"
+            + "'"
             : nm)
   {}
 
@@ -390,7 +390,7 @@ public:
     , right_(Common::make_unique< RightStorageType >(right))
     , name_(nm.empty()
             ? SelectCombined< LeftType, RightType, comb >::type() + " of '" + left_->storage_access().name() + "' and '"
-                + right_->storage_access().name() + "'"
+            + right_->storage_access().name() + "'"
             : nm)
   {}
 
@@ -418,7 +418,7 @@ public:
   virtual std::string type() const override final
   {
     return SelectCombined< LeftType, RightType, comb >::type() + " of '" + left_->storage_access().type()
-        + "' and '" + right_->storage_access().type() + "'";
+           + "' and '" + right_->storage_access().type() + "'";
   } // ... type(...)
 
   virtual std::string name() const override final

@@ -53,38 +53,39 @@ typedef Dune::SGrid< 2, 2 >::Codim< 0 >::Entity DuneSGrid2dEntityType;
 typedef Dune::SGrid< 3, 3 >::Codim< 0 >::Entity DuneSGrid3dEntityType;
 
 typedef testing::Types< Dune::Stuff::GlobalLambdaFunction< DuneSGrid1dEntityType, double, 1, double, 1, 1 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneSGrid1dEntityType, double, 1, double, 1, 2 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneSGrid1dEntityType, double, 1, double, 1, 3 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneSGrid1dEntityType, double, 1, double, 2, 1 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneSGrid1dEntityType, double, 1, double, 2, 2 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneSGrid1dEntityType, double, 1, double, 2, 3 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneSGrid1dEntityType, double, 1, double, 3, 1 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneSGrid1dEntityType, double, 1, double, 3, 2 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneSGrid1dEntityType, double, 1, double, 3, 3 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneSGrid2dEntityType, double, 2, double, 1, 1 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneSGrid2dEntityType, double, 2, double, 1, 2 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneSGrid2dEntityType, double, 2, double, 1, 3 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneSGrid2dEntityType, double, 2, double, 2, 1 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneSGrid2dEntityType, double, 2, double, 2, 2 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneSGrid2dEntityType, double, 2, double, 2, 3 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneSGrid2dEntityType, double, 2, double, 3, 1 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneSGrid2dEntityType, double, 2, double, 3, 2 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneSGrid2dEntityType, double, 2, double, 3, 3 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneSGrid3dEntityType, double, 3, double, 1, 1 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneSGrid3dEntityType, double, 3, double, 1, 2 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneSGrid3dEntityType, double, 3, double, 1, 3 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneSGrid3dEntityType, double, 3, double, 2, 1 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneSGrid3dEntityType, double, 3, double, 2, 2 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneSGrid3dEntityType, double, 3, double, 2, 3 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneSGrid3dEntityType, double, 3, double, 3, 1 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneSGrid3dEntityType, double, 3, double, 3, 2 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneSGrid3dEntityType, double, 3, double, 3, 3 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneSGrid3dEntityType, double, 3, std::complex<double>, 3, 3 >
-                        > GlobalLambdaFunctionSGridEntityTypes;
+, Dune::Stuff::GlobalLambdaFunction< DuneSGrid1dEntityType, double, 1, double, 1, 2 >
+, Dune::Stuff::GlobalLambdaFunction< DuneSGrid1dEntityType, double, 1, double, 1, 3 >
+, Dune::Stuff::GlobalLambdaFunction< DuneSGrid1dEntityType, double, 1, double, 2, 1 >
+, Dune::Stuff::GlobalLambdaFunction< DuneSGrid1dEntityType, double, 1, double, 2, 2 >
+, Dune::Stuff::GlobalLambdaFunction< DuneSGrid1dEntityType, double, 1, double, 2, 3 >
+, Dune::Stuff::GlobalLambdaFunction< DuneSGrid1dEntityType, double, 1, double, 3, 1 >
+, Dune::Stuff::GlobalLambdaFunction< DuneSGrid1dEntityType, double, 1, double, 3, 2 >
+, Dune::Stuff::GlobalLambdaFunction< DuneSGrid1dEntityType, double, 1, double, 3, 3 >
+, Dune::Stuff::GlobalLambdaFunction< DuneSGrid2dEntityType, double, 2, double, 1, 1 >
+, Dune::Stuff::GlobalLambdaFunction< DuneSGrid2dEntityType, double, 2, double, 1, 2 >
+, Dune::Stuff::GlobalLambdaFunction< DuneSGrid2dEntityType, double, 2, double, 1, 3 >
+, Dune::Stuff::GlobalLambdaFunction< DuneSGrid2dEntityType, double, 2, double, 2, 1 >
+, Dune::Stuff::GlobalLambdaFunction< DuneSGrid2dEntityType, double, 2, double, 2, 2 >
+, Dune::Stuff::GlobalLambdaFunction< DuneSGrid2dEntityType, double, 2, double, 2, 3 >
+, Dune::Stuff::GlobalLambdaFunction< DuneSGrid2dEntityType, double, 2, double, 3, 1 >
+, Dune::Stuff::GlobalLambdaFunction< DuneSGrid2dEntityType, double, 2, double, 3, 2 >
+, Dune::Stuff::GlobalLambdaFunction< DuneSGrid2dEntityType, double, 2, double, 3, 3 >
+, Dune::Stuff::GlobalLambdaFunction< DuneSGrid3dEntityType, double, 3, double, 1, 1 >
+, Dune::Stuff::GlobalLambdaFunction< DuneSGrid3dEntityType, double, 3, double, 1, 2 >
+, Dune::Stuff::GlobalLambdaFunction< DuneSGrid3dEntityType, double, 3, double, 1, 3 >
+, Dune::Stuff::GlobalLambdaFunction< DuneSGrid3dEntityType, double, 3, double, 2, 1 >
+, Dune::Stuff::GlobalLambdaFunction< DuneSGrid3dEntityType, double, 3, double, 2, 2 >
+, Dune::Stuff::GlobalLambdaFunction< DuneSGrid3dEntityType, double, 3, double, 2, 3 >
+, Dune::Stuff::GlobalLambdaFunction< DuneSGrid3dEntityType, double, 3, double, 3, 1 >
+, Dune::Stuff::GlobalLambdaFunction< DuneSGrid3dEntityType, double, 3, double, 3, 2 >
+, Dune::Stuff::GlobalLambdaFunction< DuneSGrid3dEntityType, double, 3, double, 3, 3 >
+, Dune::Stuff::GlobalLambdaFunction< DuneSGrid3dEntityType, double, 3, std::complex<double>, 3, 3 >
+> GlobalLambdaFunctionSGridEntityTypes;
 
 TEST_STRUCT_GENERATOR(GlobalLambdaFunctionTest, SGridEntity)
 TYPED_TEST_CASE(GlobalLambdaFunctionTestSGridEntityTest, GlobalLambdaFunctionSGridEntityTypes);
-TYPED_TEST(GlobalLambdaFunctionTestSGridEntityTest, provides_required_methods) {
+TYPED_TEST(GlobalLambdaFunctionTestSGridEntityTest, provides_required_methods)
+{
   this->check();
 }
 
@@ -95,37 +96,38 @@ typedef Dune::YaspGrid< 2 >::Codim< 0 >::Entity DuneYaspGrid2dEntityType;
 typedef Dune::YaspGrid< 3 >::Codim< 0 >::Entity DuneYaspGrid3dEntityType;
 
 typedef testing::Types< Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid1dEntityType, double, 1, double, 1, 1 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid1dEntityType, double, 1, double, 1, 2 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid1dEntityType, double, 1, double, 1, 3 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid1dEntityType, double, 1, double, 2, 1 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid1dEntityType, double, 1, double, 2, 2 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid1dEntityType, double, 1, double, 2, 3 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid1dEntityType, double, 1, double, 3, 1 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid1dEntityType, double, 1, double, 3, 2 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid1dEntityType, double, 1, double, 3, 3 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid2dEntityType, double, 2, double, 1, 1 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid2dEntityType, double, 2, double, 1, 2 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid2dEntityType, double, 2, double, 1, 3 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid2dEntityType, double, 2, double, 2, 1 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid2dEntityType, double, 2, double, 2, 2 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid2dEntityType, double, 2, double, 2, 3 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid2dEntityType, double, 2, double, 3, 1 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid2dEntityType, double, 2, double, 3, 2 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid2dEntityType, double, 2, double, 3, 3 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid3dEntityType, double, 3, double, 1, 1 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid3dEntityType, double, 3, double, 1, 2 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid3dEntityType, double, 3, double, 1, 3 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid3dEntityType, double, 3, double, 2, 1 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid3dEntityType, double, 3, double, 2, 2 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid3dEntityType, double, 3, double, 2, 3 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid3dEntityType, double, 3, double, 3, 1 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid3dEntityType, double, 3, double, 3, 2 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid3dEntityType, double, 3, double, 3, 3 >
-                        > GlobalLambdaFunctionYaspGridEntityTypes;
+, Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid1dEntityType, double, 1, double, 1, 2 >
+, Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid1dEntityType, double, 1, double, 1, 3 >
+, Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid1dEntityType, double, 1, double, 2, 1 >
+, Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid1dEntityType, double, 1, double, 2, 2 >
+, Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid1dEntityType, double, 1, double, 2, 3 >
+, Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid1dEntityType, double, 1, double, 3, 1 >
+, Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid1dEntityType, double, 1, double, 3, 2 >
+, Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid1dEntityType, double, 1, double, 3, 3 >
+, Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid2dEntityType, double, 2, double, 1, 1 >
+, Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid2dEntityType, double, 2, double, 1, 2 >
+, Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid2dEntityType, double, 2, double, 1, 3 >
+, Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid2dEntityType, double, 2, double, 2, 1 >
+, Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid2dEntityType, double, 2, double, 2, 2 >
+, Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid2dEntityType, double, 2, double, 2, 3 >
+, Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid2dEntityType, double, 2, double, 3, 1 >
+, Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid2dEntityType, double, 2, double, 3, 2 >
+, Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid2dEntityType, double, 2, double, 3, 3 >
+, Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid3dEntityType, double, 3, double, 1, 1 >
+, Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid3dEntityType, double, 3, double, 1, 2 >
+, Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid3dEntityType, double, 3, double, 1, 3 >
+, Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid3dEntityType, double, 3, double, 2, 1 >
+, Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid3dEntityType, double, 3, double, 2, 2 >
+, Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid3dEntityType, double, 3, double, 2, 3 >
+, Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid3dEntityType, double, 3, double, 3, 1 >
+, Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid3dEntityType, double, 3, double, 3, 2 >
+, Dune::Stuff::GlobalLambdaFunction< DuneYaspGrid3dEntityType, double, 3, double, 3, 3 >
+> GlobalLambdaFunctionYaspGridEntityTypes;
 
 TEST_STRUCT_GENERATOR(GlobalLambdaFunctionTest, YaspGridEntity)
 TYPED_TEST_CASE(GlobalLambdaFunctionTestYaspGridEntityTest, GlobalLambdaFunctionYaspGridEntityTypes);
-TYPED_TEST(GlobalLambdaFunctionTestYaspGridEntityTest, provides_required_methods) {
+TYPED_TEST(GlobalLambdaFunctionTestYaspGridEntityTest, provides_required_methods)
+{
   this->check();
 }
 
@@ -139,39 +141,40 @@ typedef Dune::ALUGrid< 3, 3, Dune::simplex, Dune::nonconforming >::Codim< 0 >::E
 typedef Dune::ALUGrid< 3, 3, Dune::cube, Dune::nonconforming >::Codim< 0 >::Entity     DuneAluCubeGrid3dEntityType;
 
 typedef testing::Types< Dune::Stuff::GlobalLambdaFunction< DuneAluSimplexGrid2dEntityType, double, 2, double, 1, 1 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneAluSimplexGrid2dEntityType, double, 2, double, 1, 2 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneAluSimplexGrid2dEntityType, double, 2, double, 1, 3 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneAluSimplexGrid2dEntityType, double, 2, double, 2, 1 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneAluSimplexGrid2dEntityType, double, 2, double, 2, 2 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneAluSimplexGrid2dEntityType, double, 2, double, 2, 3 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneAluSimplexGrid2dEntityType, double, 2, double, 3, 1 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneAluSimplexGrid2dEntityType, double, 2, double, 3, 2 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneAluSimplexGrid2dEntityType, double, 2, double, 3, 3 >
+, Dune::Stuff::GlobalLambdaFunction< DuneAluSimplexGrid2dEntityType, double, 2, double, 1, 2 >
+, Dune::Stuff::GlobalLambdaFunction< DuneAluSimplexGrid2dEntityType, double, 2, double, 1, 3 >
+, Dune::Stuff::GlobalLambdaFunction< DuneAluSimplexGrid2dEntityType, double, 2, double, 2, 1 >
+, Dune::Stuff::GlobalLambdaFunction< DuneAluSimplexGrid2dEntityType, double, 2, double, 2, 2 >
+, Dune::Stuff::GlobalLambdaFunction< DuneAluSimplexGrid2dEntityType, double, 2, double, 2, 3 >
+, Dune::Stuff::GlobalLambdaFunction< DuneAluSimplexGrid2dEntityType, double, 2, double, 3, 1 >
+, Dune::Stuff::GlobalLambdaFunction< DuneAluSimplexGrid2dEntityType, double, 2, double, 3, 2 >
+, Dune::Stuff::GlobalLambdaFunction< DuneAluSimplexGrid2dEntityType, double, 2, double, 3, 3 >
 
-                      , Dune::Stuff::GlobalLambdaFunction< DuneAluSimplexGrid3dEntityType, double, 3, double, 1, 1 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneAluSimplexGrid3dEntityType, double, 3, double, 1, 2 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneAluSimplexGrid3dEntityType, double, 3, double, 1, 3 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneAluSimplexGrid3dEntityType, double, 3, double, 2, 1 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneAluSimplexGrid3dEntityType, double, 3, double, 2, 2 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneAluSimplexGrid3dEntityType, double, 3, double, 2, 3 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneAluSimplexGrid3dEntityType, double, 3, double, 3, 1 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneAluSimplexGrid3dEntityType, double, 3, double, 3, 2 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneAluSimplexGrid3dEntityType, double, 3, double, 3, 3 >
+, Dune::Stuff::GlobalLambdaFunction< DuneAluSimplexGrid3dEntityType, double, 3, double, 1, 1 >
+, Dune::Stuff::GlobalLambdaFunction< DuneAluSimplexGrid3dEntityType, double, 3, double, 1, 2 >
+, Dune::Stuff::GlobalLambdaFunction< DuneAluSimplexGrid3dEntityType, double, 3, double, 1, 3 >
+, Dune::Stuff::GlobalLambdaFunction< DuneAluSimplexGrid3dEntityType, double, 3, double, 2, 1 >
+, Dune::Stuff::GlobalLambdaFunction< DuneAluSimplexGrid3dEntityType, double, 3, double, 2, 2 >
+, Dune::Stuff::GlobalLambdaFunction< DuneAluSimplexGrid3dEntityType, double, 3, double, 2, 3 >
+, Dune::Stuff::GlobalLambdaFunction< DuneAluSimplexGrid3dEntityType, double, 3, double, 3, 1 >
+, Dune::Stuff::GlobalLambdaFunction< DuneAluSimplexGrid3dEntityType, double, 3, double, 3, 2 >
+, Dune::Stuff::GlobalLambdaFunction< DuneAluSimplexGrid3dEntityType, double, 3, double, 3, 3 >
 
-                      , Dune::Stuff::GlobalLambdaFunction< DuneAluCubeGrid3dEntityType, double, 3, double, 1, 1 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneAluCubeGrid3dEntityType, double, 3, double, 1, 2 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneAluCubeGrid3dEntityType, double, 3, double, 1, 3 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneAluCubeGrid3dEntityType, double, 3, double, 2, 1 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneAluCubeGrid3dEntityType, double, 3, double, 2, 2 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneAluCubeGrid3dEntityType, double, 3, double, 2, 3 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneAluCubeGrid3dEntityType, double, 3, double, 3, 1 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneAluCubeGrid3dEntityType, double, 3, double, 3, 2 >
-                      , Dune::Stuff::GlobalLambdaFunction< DuneAluCubeGrid3dEntityType, double, 3, double, 3, 3 >
-                        > GlobalLambdaFunctionAluGridEntityTypes;
+, Dune::Stuff::GlobalLambdaFunction< DuneAluCubeGrid3dEntityType, double, 3, double, 1, 1 >
+, Dune::Stuff::GlobalLambdaFunction< DuneAluCubeGrid3dEntityType, double, 3, double, 1, 2 >
+, Dune::Stuff::GlobalLambdaFunction< DuneAluCubeGrid3dEntityType, double, 3, double, 1, 3 >
+, Dune::Stuff::GlobalLambdaFunction< DuneAluCubeGrid3dEntityType, double, 3, double, 2, 1 >
+, Dune::Stuff::GlobalLambdaFunction< DuneAluCubeGrid3dEntityType, double, 3, double, 2, 2 >
+, Dune::Stuff::GlobalLambdaFunction< DuneAluCubeGrid3dEntityType, double, 3, double, 2, 3 >
+, Dune::Stuff::GlobalLambdaFunction< DuneAluCubeGrid3dEntityType, double, 3, double, 3, 1 >
+, Dune::Stuff::GlobalLambdaFunction< DuneAluCubeGrid3dEntityType, double, 3, double, 3, 2 >
+, Dune::Stuff::GlobalLambdaFunction< DuneAluCubeGrid3dEntityType, double, 3, double, 3, 3 >
+> GlobalLambdaFunctionAluGridEntityTypes;
 
 TEST_STRUCT_GENERATOR(GlobalLambdaFunctionTest, AluGridEntity)
 TYPED_TEST_CASE(GlobalLambdaFunctionTestAluGridEntityTest, GlobalLambdaFunctionAluGridEntityTypes);
-TYPED_TEST(GlobalLambdaFunctionTestAluGridEntityTest, provides_required_methods) {
+TYPED_TEST(GlobalLambdaFunctionTestAluGridEntityTest, provides_required_methods)
+{
   this->check();
 }
 

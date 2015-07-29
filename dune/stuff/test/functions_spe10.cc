@@ -87,11 +87,12 @@
 typedef Dune::YaspGrid< 3 >::Codim< 0 >::Entity DuneYaspGrid3dEntityType;
 
 typedef testing::Types< Dune::Stuff::Functions::Spe10::Model2< DuneYaspGrid3dEntityType, double, 3, double, 3, 3 >
-                        > Spe10Model2FunctionYaspGridEntityTypes;
+> Spe10Model2FunctionYaspGridEntityTypes;
 
 TEST_STRUCT_GENERATOR(Spe10Model2FunctionTest, YaspGridEntity)
 TYPED_TEST_CASE(Spe10Model2FunctionTestYaspGridEntityTest, Spe10Model2FunctionYaspGridEntityTypes);
-TYPED_TEST(Spe10Model2FunctionTestYaspGridEntityTest, provides_required_methods) {
+TYPED_TEST(Spe10Model2FunctionTestYaspGridEntityTest, provides_required_methods)
+{
   this->check();
 }
 

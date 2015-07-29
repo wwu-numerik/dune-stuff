@@ -23,8 +23,7 @@ namespace Stuff {
 namespace Common {
 
 
-enum LogFlags
-{
+enum LogFlags {
   LOG_NONE = 1,
   LOG_ERROR = 2,
   LOG_INFO = 4,
@@ -50,7 +49,7 @@ public:
      * the suspend_priority_ mechanism provides a way to silence streams from 'higher' modules
      * no-op if already suspended
      ***/
-  void suspend(PriorityType priority );
+  void suspend(PriorityType priority);
 
   /** \brief start accepting input into the buffer again
      * no-op if not suspended
@@ -60,11 +59,12 @@ public:
   int pubsync();
 
 protected:
-  virtual std::streamsize xsputn( const char_type* s, std::streamsize count );
-  virtual int_type overflow( int_type ch = traits_type::eof() );
+  virtual std::streamsize xsputn(const char_type* s, std::streamsize count);
+  virtual int_type overflow(int_type ch = traits_type::eof());
 
 private:
-  inline bool enabled() const {
+  inline bool enabled() const
+  {
     return (!is_suspended_) && (logflags_ & loglevel_);
   }
 
@@ -241,8 +241,8 @@ public:
 
 
 namespace {
-  int dev_null_logflag;
-  EmptyLogStream dev_null(dev_null_logflag);
+int dev_null_logflag;
+EmptyLogStream dev_null(dev_null_logflag);
 }
 
 

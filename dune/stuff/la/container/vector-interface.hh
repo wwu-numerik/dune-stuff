@@ -199,8 +199,8 @@ public:
   {
     if (other.size() != size())
       DUNE_THROW(Exceptions::shapes_do_not_match,
-                            "The size of other (" << other.size() << ") does not match the size of this (" << size()
-                            << ")!");
+                 "The size of other (" << other.size() << ") does not match the size of this (" << size()
+                 << ")!");
     return Stuff::Common::FloatCmp::eq(this->as_imp(), other, epsilon);
   } // ... almost_equal(...)
 
@@ -218,8 +218,8 @@ public:
   {
     if (other.size() != size())
       DUNE_THROW(Exceptions::shapes_do_not_match,
-                            "The size of other (" << other.size() << ") does not match the size of this (" << size()
-                            << ")!");
+                 "The size of other (" << other.size() << ") does not match the size of this (" << size()
+                 << ")!");
     return Stuff::Common::FloatCmp::eq(this->as_imp(), other.as_imp(), epsilon);
   } // ... almost_equal(...)
 
@@ -233,8 +233,8 @@ public:
   {
     if (other.size() != size())
       DUNE_THROW(Exceptions::shapes_do_not_match,
-                            "The size of other (" << other.size() << ") does not match the size of this (" << size()
-                            << ")!");
+                 "The size of other (" << other.size() << ") does not match the size of this (" << size()
+                 << ")!");
     ScalarType result = 0;
     for (size_t ii = 0; ii < size(); ++ii)
       result += std::conj(get_entry_ref(ii)) * other.get_entry_ref(ii);
@@ -262,7 +262,7 @@ public:
   virtual RealType l2_norm() const
   {
     return std::sqrt(std::abs(dot(this->as_imp(*this)))); //std::abs is only needed for the right return type:
-                                                         //v.dot(v) should always be a ScalarType with zero imaginary part
+    //v.dot(v) should always be a ScalarType with zero imaginary part
   }
 
   /**
@@ -296,12 +296,12 @@ public:
   {
     if (other.size() != size())
       DUNE_THROW(Exceptions::shapes_do_not_match,
-                            "The size of other (" << other.size() << ") does not match the size of this (" << size()
-                            << ")!");
+                 "The size of other (" << other.size() << ") does not match the size of this (" << size()
+                 << ")!");
     if (result.size() != size())
       DUNE_THROW(Exceptions::shapes_do_not_match,
-                            "The size of result (" << result.size() << ") does not match the size of this (" << size()
-                            << ")!");
+                 "The size of result (" << result.size() << ") does not match the size of this (" << size()
+                 << ")!");
     for (size_t ii = 0; ii < size(); ++ii)
       result.set_entry(ii, get_entry_ref(ii) + other.get_entry_ref(ii));
   } // ... add(...)
@@ -329,8 +329,8 @@ public:
   {
     if (other.size() != size())
       DUNE_THROW(Exceptions::shapes_do_not_match,
-                            "The size of other (" << other.size() << ") does not match the size of this (" << size()
-                            << ")!");
+                 "The size of other (" << other.size() << ") does not match the size of this (" << size()
+                 << ")!");
     for (size_t ii = 0; ii < size(); ++ii)
       set_entry(ii, get_entry_ref(ii) + other.get_entry_ref(ii));
   } // ... iadd(...)
@@ -345,12 +345,12 @@ public:
   {
     if (other.size() != size())
       DUNE_THROW(Exceptions::shapes_do_not_match,
-                            "The size of other (" << other.size() << ") does not match the size of this (" << size()
-                            << ")!");
+                 "The size of other (" << other.size() << ") does not match the size of this (" << size()
+                 << ")!");
     if (result.size() != size())
       DUNE_THROW(Exceptions::shapes_do_not_match,
-                            "The size of result (" << result.size() << ") does not match the size of this (" << size()
-                            << ")!");
+                 "The size of result (" << result.size() << ") does not match the size of this (" << size()
+                 << ")!");
     for (size_t ii = 0; ii < size(); ++ii)
       result.set_entry(ii, get_entry_ref(ii) - other.get_entry_ref(ii));
   } // ... sub(...)
@@ -377,8 +377,8 @@ public:
   {
     if (other.size() != size())
       DUNE_THROW(Exceptions::shapes_do_not_match,
-                            "The size of other (" << other.size() << ") does not match the size of this (" << size()
-                            << ")!");
+                 "The size of other (" << other.size() << ") does not match the size of this (" << size()
+                 << ")!");
     for (size_t ii = 0; ii < size(); ++ii)
       set_entry(ii, get_entry_ref(ii) - other.get_entry_ref(ii));
   } // ... isub(...)
@@ -574,15 +574,15 @@ public:
   {
     if (component_indices.size() > dim())
       DUNE_THROW(Exceptions::index_out_of_range,
-                            "size of component_indices (" << component_indices.size()
-                            << ") is larger than the dim of this (" << dim() << ")!");
+                 "size of component_indices (" << component_indices.size()
+                 << ") is larger than the dim of this (" << dim() << ")!");
     std::vector< ScalarType > values(component_indices.size(), ScalarType(0));
     try {
       for (size_t ii = 0; ii < component_indices.size(); ++ii) {
         const size_t component = boost::numeric_cast< size_t >(component_indices[ii]);
         if (component >= dim())
           DUNE_THROW(Exceptions::index_out_of_range,
-                                "component_indices[" << ii << "] is too large for this (" << dim() << ")!");
+                     "component_indices[" << ii << "] is too large for this (" << dim() << ")!");
         values[ii] = get_entry(component);
       }
     } catch (boost::bad_numeric_cast& ee) {
@@ -632,8 +632,7 @@ namespace internal {
 
 
 template< class V >
-struct is_vector_helper
-{
+struct is_vector_helper {
   DSC_has_typedef_initialize_once(Traits)
   DSC_has_typedef_initialize_once(ScalarType)
 
@@ -647,22 +646,21 @@ struct is_vector_helper
 
 template< class V, bool candidate = internal::is_vector_helper< V >::is_candidate >
 struct is_vector
-  : public std::is_base_of< VectorInterface< typename V::Traits, typename V::ScalarType >, V >
-{};
+  : public std::is_base_of< VectorInterface< typename V::Traits, typename V::ScalarType >, V > {
+};
 
 
 template< class V >
 struct is_vector< V, false >
-  : public std::false_type
-{};
+  : public std::false_type {
+};
 
 
 namespace internal {
 
 
 template< class VectorImp >
-struct VectorAbstractionBase
-{
+struct VectorAbstractionBase {
   static const bool is_vector = LA::is_vector< VectorImp >::value;
 
   static const bool has_static_size = false;
@@ -676,15 +674,15 @@ struct VectorAbstractionBase
   typedef RealType   R;
 
   static inline
-    typename std::enable_if< is_vector, VectorType >::type
-                create(const size_t sz)
+  typename std::enable_if< is_vector, VectorType >::type
+  create(const size_t sz)
   {
     return VectorType(sz);
   }
 
   static inline
-    typename std::enable_if< is_vector, VectorType >::type
-                create(const size_t sz, const ScalarType& val)
+  typename std::enable_if< is_vector, VectorType >::type
+  create(const size_t sz, const ScalarType& val)
   {
     return VectorType(sz, val);
   }

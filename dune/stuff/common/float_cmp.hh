@@ -22,8 +22,7 @@ namespace Common {
 namespace FloatCmp {
 
 template< class T, Style style = Style::defaultStyle >
-struct DefaultEpsilon
-{
+struct DefaultEpsilon {
   typedef typename Dune::FloatCmp::EpsilonType< T >::Type Type;
   static Type value()
   {
@@ -33,8 +32,7 @@ struct DefaultEpsilon
 
 //! since we treat complex like a vector its epsilon is (eps,eps) of its scalar type
 template< class T, Style style>
-struct DefaultEpsilon<std::complex<T>, style>
-{
+struct DefaultEpsilon<std::complex<T>, style> {
   typedef typename Dune::FloatCmp::EpsilonType< std::complex<T> >::Type Type;
   static Type value()
   {
@@ -44,19 +42,17 @@ struct DefaultEpsilon<std::complex<T>, style>
 };
 
 template< class T >
-struct DefaultEpsilon< T, Style::numpy >
-{
+struct DefaultEpsilon< T, Style::numpy > {
   typedef typename Dune::FloatCmp::EpsilonType< T >::Type Type;
   static Type value()
   {
-    return Dune::FloatCmp::DefaultEpsilon< T, Dune::FloatCmp::relativeStrong >::value();   
+    return Dune::FloatCmp::DefaultEpsilon< T, Dune::FloatCmp::relativeStrong >::value();
   }
 };
 
 //! necessary to avoid ambig. partial specialization
 template< class T >
-struct DefaultEpsilon< std::complex<T>, Style::numpy >
-{
+struct DefaultEpsilon< std::complex<T>, Style::numpy > {
   typedef typename Dune::FloatCmp::EpsilonType< std::complex<T> >::Type Type;
   static Type value()
   {

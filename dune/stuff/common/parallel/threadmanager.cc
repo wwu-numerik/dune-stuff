@@ -44,7 +44,7 @@ size_t Dune::Stuff::ThreadManager::thread()
   const auto tbb_id = tbb::this_tbb_thread::get_id();
   static std::map<decltype(tbb_id), size_t> thread_ids;
   const auto it = thread_ids.find(tbb_id);
-  if (it==thread_ids.end())
+  if (it == thread_ids.end())
     thread_ids.emplace(tbb_id, thread_ids.size());
   return thread_ids.at(tbb_id);
 }
@@ -78,17 +78,17 @@ Dune::Stuff::ThreadManager::ThreadManager()
 
 size_t Dune::Stuff::ThreadManager::max_threads()
 {
-    return 1;
+  return 1;
 }
 
 size_t Dune::Stuff::ThreadManager::current_threads()
 {
-    return 1;
+  return 1;
 }
 
 size_t Dune::Stuff::ThreadManager::thread()
 {
-    return 1;
+  return 1;
 }
 
 void Dune::Stuff::ThreadManager::set_max_threads(const size_t count)
@@ -98,7 +98,7 @@ void Dune::Stuff::ThreadManager::set_max_threads(const size_t count)
 }
 
 Dune::Stuff::ThreadManager::ThreadManager()
- : max_threads_(1)
+  : max_threads_(1)
 {}
 
 #endif // HAVE_DUNE_FEM

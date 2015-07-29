@@ -17,12 +17,12 @@ template<class InputIt, class OutputIt, class UnaryPredicate>
 OutputIt move_if(InputIt first, InputIt last,
                  OutputIt d_first, UnaryPredicate pred)
 {
-    while (first != last) {
-        if (pred(*first))
-            *d_first++ = std::move(*first);
-        first++;
-    }
-    return d_first;
+  while (first != last) {
+    if (pred(*first))
+      *d_first++ = std::move(*first);
+    first++;
+  }
+  return d_first;
 }
 
 } // namespace Common

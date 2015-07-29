@@ -24,9 +24,9 @@ class FemAdapter
     typename DiscreteFunctionType::RangeFieldType, DiscreteFunctionType::DiscreteFunctionSpaceType::dimRange, 1>
 {
   typedef LocalizableFunctionInterface< typename DiscreteFunctionType::EntityType,
-  typename DiscreteFunctionType::DomainFieldType, DiscreteFunctionType::DiscreteFunctionSpaceType::dimDomain,
-  typename DiscreteFunctionType::RangeFieldType, DiscreteFunctionType::DiscreteFunctionSpaceType::dimRange, 1>
-    BaseType;
+          typename DiscreteFunctionType::DomainFieldType, DiscreteFunctionType::DiscreteFunctionSpaceType::dimDomain,
+          typename DiscreteFunctionType::RangeFieldType, DiscreteFunctionType::DiscreteFunctionSpaceType::dimRange, 1>
+          BaseType;
   typedef FemAdapter<DiscreteFunctionType> ThisType;
 
   class Localfunction
@@ -35,8 +35,8 @@ class FemAdapter
       typename DiscreteFunctionType::RangeFieldType, DiscreteFunctionType::DiscreteFunctionSpaceType::dimRange, 1>
   {
     typedef LocalfunctionInterface< typename DiscreteFunctionType::EntityType,
-    typename DiscreteFunctionType::DomainFieldType, DiscreteFunctionType::DiscreteFunctionSpaceType::dimDomain,
-    typename DiscreteFunctionType::RangeFieldType, DiscreteFunctionType::DiscreteFunctionSpaceType::dimRange, 1> BaseType;
+            typename DiscreteFunctionType::DomainFieldType, DiscreteFunctionType::DiscreteFunctionSpaceType::dimDomain,
+            typename DiscreteFunctionType::RangeFieldType, DiscreteFunctionType::DiscreteFunctionSpaceType::dimRange, 1> BaseType;
   public:
     typedef typename BaseType::EntityType EntityType;
 

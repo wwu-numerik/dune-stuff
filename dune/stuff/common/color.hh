@@ -14,7 +14,7 @@
 #include <string>
 
 #ifdef __GNUC__
- #include <cxxabi.h>
+#include <cxxabi.h>
 #endif
 #include <string>
 
@@ -33,61 +33,59 @@ namespace Common {
  * * \todo this could go size_to libdune-stuff
  * @warning Some color codes might be unsupported by your terminal.
  */
-struct Colors
-{
-// foreground colors
-static DS_CONST_CHAR black;
-static DS_CONST_CHAR red;
-static DS_CONST_CHAR green;
-static DS_CONST_CHAR brown;
-static DS_CONST_CHAR blue;
-static DS_CONST_CHAR purple;
-static DS_CONST_CHAR cyan;
-static DS_CONST_CHAR lightgray;
-// light foreground colors
-static DS_CONST_CHAR darkgray;
-static DS_CONST_CHAR lightred;
-static DS_CONST_CHAR lightgreen;
-static DS_CONST_CHAR yellow;
-static DS_CONST_CHAR lightblue;
-static DS_CONST_CHAR lightpurple;
-static DS_CONST_CHAR lightcyan;
-static DS_CONST_CHAR white;
+struct Colors {
+  // foreground colors
+  static DS_CONST_CHAR black;
+  static DS_CONST_CHAR red;
+  static DS_CONST_CHAR green;
+  static DS_CONST_CHAR brown;
+  static DS_CONST_CHAR blue;
+  static DS_CONST_CHAR purple;
+  static DS_CONST_CHAR cyan;
+  static DS_CONST_CHAR lightgray;
+  // light foreground colors
+  static DS_CONST_CHAR darkgray;
+  static DS_CONST_CHAR lightred;
+  static DS_CONST_CHAR lightgreen;
+  static DS_CONST_CHAR yellow;
+  static DS_CONST_CHAR lightblue;
+  static DS_CONST_CHAR lightpurple;
+  static DS_CONST_CHAR lightcyan;
+  static DS_CONST_CHAR white;
 
-// background colors
-static DS_CONST_CHAR bblack;
-static DS_CONST_CHAR bred;
-static DS_CONST_CHAR bgreen;
-static DS_CONST_CHAR bbrown;
-static DS_CONST_CHAR bblue;
-static DS_CONST_CHAR bpurple;
-static DS_CONST_CHAR bcyan;
-static DS_CONST_CHAR blightgray;
-// light background colors
-static DS_CONST_CHAR bdarkgray;
-static DS_CONST_CHAR blightred;
-static DS_CONST_CHAR blightgreen;
-static DS_CONST_CHAR byellow;
-static DS_CONST_CHAR blightblue;
-static DS_CONST_CHAR blightpurple;
-static DS_CONST_CHAR blightcyan;
-static DS_CONST_CHAR bwhite;
+  // background colors
+  static DS_CONST_CHAR bblack;
+  static DS_CONST_CHAR bred;
+  static DS_CONST_CHAR bgreen;
+  static DS_CONST_CHAR bbrown;
+  static DS_CONST_CHAR bblue;
+  static DS_CONST_CHAR bpurple;
+  static DS_CONST_CHAR bcyan;
+  static DS_CONST_CHAR blightgray;
+  // light background colors
+  static DS_CONST_CHAR bdarkgray;
+  static DS_CONST_CHAR blightred;
+  static DS_CONST_CHAR blightgreen;
+  static DS_CONST_CHAR byellow;
+  static DS_CONST_CHAR blightblue;
+  static DS_CONST_CHAR blightpurple;
+  static DS_CONST_CHAR blightcyan;
+  static DS_CONST_CHAR bwhite;
 }; // struct Colors
 
 
 // modifiers
-struct StreamModifiers
-{
-static DS_CONST_CHAR normal;
-static DS_CONST_CHAR bold;
-static DS_CONST_CHAR italic;
-static DS_CONST_CHAR underline;
-static DS_CONST_CHAR blink;
-static DS_CONST_CHAR reverse;
-static DS_CONST_CHAR enditalic;
-static DS_CONST_CHAR endunderline;
-static DS_CONST_CHAR endblink;
-static DS_CONST_CHAR endreverse;
+struct StreamModifiers {
+  static DS_CONST_CHAR normal;
+  static DS_CONST_CHAR bold;
+  static DS_CONST_CHAR italic;
+  static DS_CONST_CHAR underline;
+  static DS_CONST_CHAR blink;
+  static DS_CONST_CHAR reverse;
+  static DS_CONST_CHAR enditalic;
+  static DS_CONST_CHAR endunderline;
+  static DS_CONST_CHAR endblink;
+  static DS_CONST_CHAR endreverse;
 }; // struct StreamModifiers
 
 

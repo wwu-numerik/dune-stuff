@@ -24,7 +24,7 @@ namespace LA {
 
 
 enum class ChooseBackend {
-    common_dense
+  common_dense
   , istl_sparse
   , eigen_dense
   , eigen_sparse
@@ -33,30 +33,30 @@ enum class ChooseBackend {
 
 static constexpr ChooseBackend default_backend =
 #if HAVE_EIGEN
-                                                 ChooseBackend::eigen_sparse;
+  ChooseBackend::eigen_sparse;
 #elif HAVE_DUNE_ISTL
-                                                 ChooseBackend::istl_sparse;
+  ChooseBackend::istl_sparse;
 #else
-                                                 ChooseBackend::common_dense;
+  ChooseBackend::common_dense;
 #endif
 
 
 static constexpr ChooseBackend default_sparse_backend =
 #if HAVE_EIGEN
-                                                        ChooseBackend::eigen_sparse;
+  ChooseBackend::eigen_sparse;
 #elif HAVE_DUNE_ISTL
-                                                        ChooseBackend::istl_sparse;
+  ChooseBackend::istl_sparse;
 #else
-                                                        ChooseBackend::common_dense;
+  ChooseBackend::common_dense;
 # error "There is no sparse LA backend available!"
 #endif
 
 
 static constexpr ChooseBackend default_dense_backend =
 #if HAVE_EIGEN
-                                                       ChooseBackend::eigen_dense;
+  ChooseBackend::eigen_dense;
 #else
-                                                       ChooseBackend::common_dense;
+  ChooseBackend::common_dense;
 #endif
 
 
@@ -214,8 +214,7 @@ namespace internal {
 
 
 template< class C >
-struct is_container_helper
-{
+struct is_container_helper {
   DSC_has_typedef_initialize_once(Traits)
   DSC_has_typedef_initialize_once(ScalarType)
 
@@ -229,14 +228,14 @@ struct is_container_helper
 
 template< class C, bool candidate = internal::is_container_helper< C >::is_candidate >
 struct is_container
-  : public std::is_base_of< ContainerInterface< typename C::Traits, typename C::ScalarType >, C >
-{};
+  : public std::is_base_of< ContainerInterface< typename C::Traits, typename C::ScalarType >, C > {
+};
 
 
 template< class C >
 struct is_container< C, false >
-  : public std::false_type
-{};
+  : public std::false_type {
+};
 
 
 template< class Traits >

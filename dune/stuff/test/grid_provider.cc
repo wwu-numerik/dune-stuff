@@ -66,7 +66,7 @@ private:
 protected:
   static std::unique_ptr< GridProviderType > create()
   {
-     return GridProviderType::create();
+    return GridProviderType::create();
   }
 
 public:
@@ -106,15 +106,15 @@ public:
   {
     const auto grid_provider = create();
 #if defined(__INTEL_COMPILER)
-/**
- * ICC is actually correct and standard compliant in rejecting the #else branch here:
- * 7.3.3 The using declaration [namespace.udecl]
- * 14/ If a function declaration in namespace scope or block scope has the same name and
- * the same parameter types as a function introduced by a using-declaration, and the
- * declarations do not declare the same function, the program is ill-formed.
- *
- * This is just a temporary workaround to have tests build on all compilers again
- **/
+    /**
+     * ICC is actually correct and standard compliant in rejecting the #else branch here:
+     * 7.3.3 The using declaration [namespace.udecl]
+     * 14/ If a function declaration in namespace scope or block scope has the same name and
+     * the same parameter types as a function introduced by a using-declaration, and the
+     * declarations do not declare the same function, the program is ill-formed.
+     *
+     * This is just a temporary workaround to have tests build on all compilers again
+     **/
     check_const_interface< ConstInterfaceType >(*grid_provider);
 #else
     check_const_interface< GridProviderType >(*grid_provider);
@@ -182,16 +182,16 @@ public:
 
 template< class GridType >
 struct CubeGridProvider
-  : public GridProviderBase< Stuff::Grid::Providers::Cube< GridType > >
-{};
+  : public GridProviderBase< Stuff::Grid::Providers::Cube< GridType > > {
+};
 
 
-typedef testing::Types< SGRIDS
-                      , YASPGRIDS
+typedef testing::Types < SGRIDS
+, YASPGRIDS
 # if HAVE_ALUGRID
-                      , ALUGRIDS
+, ALUGRIDS
 # endif
-                      > GridTypes;
+> GridTypes;
 
 TYPED_TEST_CASE(CubeGridProvider, GridTypes);
 TYPED_TEST(CubeGridProvider, is_default_creatable)

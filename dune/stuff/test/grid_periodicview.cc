@@ -41,8 +41,7 @@ using namespace Stuff;
 
 template< class GridImp >
 struct PeriodicViewTestYaspCube
-    : public testing::Test
-{
+  : public testing::Test {
   typedef GridImp                                                                       GridType;
   typedef typename GridType::ctype                                                      ctype;
   typedef typename GridType::template Codim< 0 >::Geometry                              GeometryType;
@@ -80,13 +79,13 @@ struct PeriodicViewTestYaspCube
     if (dimDomain == 1)
       EXPECT_EQ(codim0_size, int(8));
     if (dimDomain == 2 && is_cube)
-      EXPECT_EQ(codim0_size, int(8*8));
+      EXPECT_EQ(codim0_size, int(8 * 8));
     if (dimDomain == 2 && is_simplex)
-      EXPECT_EQ(codim0_size, int(2*8*8));
+      EXPECT_EQ(codim0_size, int(2 * 8 * 8));
     if (dimDomain == 3 && is_cube)
-      EXPECT_EQ(codim0_size, int(8*8*8));
+      EXPECT_EQ(codim0_size, int(8 * 8 * 8));
     if (dimDomain == 3 && is_simplex)
-      EXPECT_EQ(codim0_size, int(6*8*8*8));
+      EXPECT_EQ(codim0_size, int(6 * 8 * 8 * 8));
     EXPECT_EQ(periodic_grid_view.size(Dune::GeometryType::cube), grid_view.size(Dune::GeometryType::cube));
     EXPECT_EQ(periodic_grid_view.size(Dune::GeometryType::simplex), grid_view.size(Dune::GeometryType::simplex));
     EXPECT_EQ(periodic_grid_view.overlapSize(0), grid_view.overlapSize(0));
@@ -114,7 +113,7 @@ struct PeriodicViewTestYaspCube
           const auto index_in_outside = intersection.indexInOutside();
           PeriodicIntersectionIteratorType i_it_outside = periodic_grid_view.ibegin(*outside);
           const PeriodicIntersectionIteratorType i_it_outside_end = periodic_grid_view.iend(*outside);
-          for ( ; i_it_outside != i_it_outside_end; ++i_it_outside) {
+          for (; i_it_outside != i_it_outside_end; ++i_it_outside) {
             const PeriodicIntersectionType* outside_intersection = i_it_outside.operator->();
             if (outside_intersection->indexInInside() == index_in_outside) {
               break;
@@ -161,87 +160,87 @@ struct PeriodicViewTestYaspCube
 
     if (dimDomain == 1) {
       if (variant == 0 || variant == 3 || variant == 6) {
-        EXPECT_EQ(size_t(2*7),neighbor_count);
+        EXPECT_EQ(size_t(2 * 7), neighbor_count);
         EXPECT_EQ(size_t(2), boundary_count);
         EXPECT_EQ(size_t(0), periodic_count);
       }
       if (variant == 1 || variant == 4 || variant == 7) {
-        EXPECT_EQ(size_t(2*7+2),neighbor_count);
+        EXPECT_EQ(size_t(2 * 7 + 2), neighbor_count);
         EXPECT_EQ(size_t(0), boundary_count);
         EXPECT_EQ(size_t(2), periodic_count);
       }
       if (variant == 2 || variant == 5 || variant == 8) {
-        EXPECT_EQ(size_t(2*7+2),neighbor_count);
+        EXPECT_EQ(size_t(2 * 7 + 2), neighbor_count);
         EXPECT_EQ(size_t(0), boundary_count);
         EXPECT_EQ(size_t(2), periodic_count);
       }
     }
     if (dimDomain == 2 && is_cube) {
       if (variant == 0 || variant == 3 || variant == 6) {
-        EXPECT_EQ(size_t(2*2*8*7),neighbor_count);
-        EXPECT_EQ(size_t(2*8*2), boundary_count);
+        EXPECT_EQ(size_t(2 * 2 * 8 * 7), neighbor_count);
+        EXPECT_EQ(size_t(2 * 8 * 2), boundary_count);
         EXPECT_EQ(size_t(0), periodic_count);
       }
       if (variant == 1 || variant == 4 || variant == 7) {
-        EXPECT_EQ(size_t(2*2*8*7 + 2*8),neighbor_count);
-        EXPECT_EQ(size_t(2*8*2 - 2*8), boundary_count);
-        EXPECT_EQ(size_t(2*8), periodic_count);
+        EXPECT_EQ(size_t(2 * 2 * 8 * 7 + 2 * 8), neighbor_count);
+        EXPECT_EQ(size_t(2 * 8 * 2 - 2 * 8), boundary_count);
+        EXPECT_EQ(size_t(2 * 8), periodic_count);
       }
       if (variant == 2 || variant == 5 || variant == 8) {
-        EXPECT_EQ(size_t(2*2*8*7 + 2*8*2),neighbor_count);
+        EXPECT_EQ(size_t(2 * 2 * 8 * 7 + 2 * 8 * 2), neighbor_count);
         EXPECT_EQ(size_t(0), boundary_count);
-        EXPECT_EQ(size_t(2*8*2), periodic_count);
+        EXPECT_EQ(size_t(2 * 8 * 2), periodic_count);
       }
     }
     if (dimDomain == 2 && is_simplex) {
       if (variant == 0 || variant == 3 || variant == 6) {
-        EXPECT_EQ(size_t(2*2*8*7 + 2*64),neighbor_count);
-        EXPECT_EQ(size_t(2*8*2), boundary_count);
+        EXPECT_EQ(size_t(2 * 2 * 8 * 7 + 2 * 64), neighbor_count);
+        EXPECT_EQ(size_t(2 * 8 * 2), boundary_count);
         EXPECT_EQ(size_t(0), periodic_count);
       }
       if (variant == 1 || variant == 4 || variant == 7) {
-        EXPECT_EQ(size_t(2*2*8*7 + 2*8 + 2*64),neighbor_count);
-        EXPECT_EQ(size_t(2*8*2 - 2*8), boundary_count);
-        EXPECT_EQ(size_t(2*8), periodic_count);
+        EXPECT_EQ(size_t(2 * 2 * 8 * 7 + 2 * 8 + 2 * 64), neighbor_count);
+        EXPECT_EQ(size_t(2 * 8 * 2 - 2 * 8), boundary_count);
+        EXPECT_EQ(size_t(2 * 8), periodic_count);
       }
       if (variant == 2 || variant == 5 || variant == 8) {
-        EXPECT_EQ(size_t(2*2*8*7 + 2*8*2 + 2*64),neighbor_count);
+        EXPECT_EQ(size_t(2 * 2 * 8 * 7 + 2 * 8 * 2 + 2 * 64), neighbor_count);
         EXPECT_EQ(size_t(0), boundary_count);
-        EXPECT_EQ(size_t(2*8*2), periodic_count);
+        EXPECT_EQ(size_t(2 * 8 * 2), periodic_count);
       }
     }
     if (dimDomain == 3 && is_cube) {
       if (variant == 0 || variant == 3 || variant == 6) {
-        EXPECT_EQ(size_t(2*3*7*64),neighbor_count);
-        EXPECT_EQ(size_t(6*64), boundary_count);
+        EXPECT_EQ(size_t(2 * 3 * 7 * 64), neighbor_count);
+        EXPECT_EQ(size_t(6 * 64), boundary_count);
         EXPECT_EQ(size_t(0), periodic_count);
       }
       if (variant == 1 || variant == 4 || variant == 7) {
-        EXPECT_EQ(size_t(2*3*7*64 + 2*64),neighbor_count);
-        EXPECT_EQ(size_t(6*64 - 2*64), boundary_count);
-        EXPECT_EQ(size_t(2*64), periodic_count);
+        EXPECT_EQ(size_t(2 * 3 * 7 * 64 + 2 * 64), neighbor_count);
+        EXPECT_EQ(size_t(6 * 64 - 2 * 64), boundary_count);
+        EXPECT_EQ(size_t(2 * 64), periodic_count);
       }
       if (variant == 2 || variant == 5 || variant == 8) {
-        EXPECT_EQ(size_t(2*3*7*64 + 6*64),neighbor_count);
+        EXPECT_EQ(size_t(2 * 3 * 7 * 64 + 6 * 64), neighbor_count);
         EXPECT_EQ(size_t(0), boundary_count);
-        EXPECT_EQ(size_t(6*64), periodic_count);
+        EXPECT_EQ(size_t(6 * 64), periodic_count);
       }
     }
     if (dimDomain == 3 && is_simplex) {
       if (variant == 0 || variant == 3 || variant == 6) {
-        EXPECT_EQ(size_t(2*2*3*7*64 + 2*6*8*8*8),neighbor_count);
-        EXPECT_EQ(size_t(2*6*64), boundary_count);
+        EXPECT_EQ(size_t(2 * 2 * 3 * 7 * 64 + 2 * 6 * 8 * 8 * 8), neighbor_count);
+        EXPECT_EQ(size_t(2 * 6 * 64), boundary_count);
         EXPECT_EQ(size_t(0), periodic_count);
       }
       if (variant == 1 || variant == 4 || variant == 7) {
-        EXPECT_EQ(size_t(2*2*3*7*64 + 2*2*64 + 2*6*8*8*8),neighbor_count);
-        EXPECT_EQ(size_t(2*6*64 - 2*2*64), boundary_count);
-        EXPECT_EQ(size_t(2*2*64), periodic_count);
+        EXPECT_EQ(size_t(2 * 2 * 3 * 7 * 64 + 2 * 2 * 64 + 2 * 6 * 8 * 8 * 8), neighbor_count);
+        EXPECT_EQ(size_t(2 * 6 * 64 - 2 * 2 * 64), boundary_count);
+        EXPECT_EQ(size_t(2 * 2 * 64), periodic_count);
       }
       if (variant == 2 || variant == 5 || variant == 8) {
-        EXPECT_EQ(size_t(2*2*3*7*64 + 2*6*64 + 2*6*8*8*8),neighbor_count);
+        EXPECT_EQ(size_t(2 * 2 * 3 * 7 * 64 + 2 * 6 * 64 + 2 * 6 * 8 * 8 * 8), neighbor_count);
         EXPECT_EQ(size_t(0), boundary_count);
-        EXPECT_EQ(size_t(2*6*64), periodic_count);
+        EXPECT_EQ(size_t(2 * 6 * 64), periodic_count);
       }
     }
   } // void check(...)
@@ -286,8 +285,7 @@ struct PeriodicViewTestYaspCube
 
 template< class GridImp >
 struct PeriodicViewTestALUCube
-  : public PeriodicViewTestYaspCube< GridImp >
-{
+  : public PeriodicViewTestYaspCube< GridImp > {
   typedef PeriodicViewTestYaspCube< GridImp > BaseType;
   typedef typename BaseType::GridProviderType GridProviderType;
   typedef typename BaseType::GridType GridType;
@@ -323,12 +321,12 @@ struct PeriodicViewTestALUCube
 
 template< class GridImp >
 struct PeriodicViewTestALUSimplex
-  : public PeriodicViewTestALUCube< GridImp >
-{};
+  : public PeriodicViewTestALUCube< GridImp > {
+};
 
-typedef testing::Types<
-                        YASPGRIDS
-                      > YaspCubeGridTypes;
+typedef testing::Types <
+YASPGRIDS
+> YaspCubeGridTypes;
 
 TYPED_TEST_CASE(PeriodicViewTestYaspCube, YaspCubeGridTypes);
 TYPED_TEST(PeriodicViewTestYaspCube, check_yaspcube)
@@ -338,13 +336,13 @@ TYPED_TEST(PeriodicViewTestYaspCube, check_yaspcube)
 
 # if HAVE_ALUGRID
 
-typedef testing::Types<
-                        ALUCUBEGRIDS
-                      > ALUCubeGridTypes;
+typedef testing::Types <
+ALUCUBEGRIDS
+> ALUCubeGridTypes;
 
-typedef testing::Types<
-                        ALUSIMPLEXGRIDS
-                      > ALUSimplexGridTypes;
+typedef testing::Types <
+ALUSIMPLEXGRIDS
+> ALUSimplexGridTypes;
 
 TYPED_TEST_CASE(PeriodicViewTestALUCube, ALUCubeGridTypes);
 TYPED_TEST(PeriodicViewTestALUCube, check_alucube)

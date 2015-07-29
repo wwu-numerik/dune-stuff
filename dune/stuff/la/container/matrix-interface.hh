@@ -165,7 +165,7 @@ public:
    */
   virtual SparsityPatternDefault pattern(const bool prune = false,
                                          const typename Common::FloatCmp::DefaultEpsilon< ScalarType >::Type eps
-                                            = Common::FloatCmp::DefaultEpsilon< ScalarType >::value()) const
+                                         = Common::FloatCmp::DefaultEpsilon< ScalarType >::value()) const
   {
     SparsityPatternDefault ret(rows());
     const ScalarType zero(0);
@@ -193,7 +193,7 @@ public:
    * \param eps Is forwarded to pattern(true, eps)
    */
   virtual derived_type pruned(const typename Common::FloatCmp::DefaultEpsilon< ScalarType >::Type eps
-                                = Common::FloatCmp::DefaultEpsilon< ScalarType >::value()) const
+                              = Common::FloatCmp::DefaultEpsilon< ScalarType >::value()) const
   {
     const auto pruned_pattern = pattern(true, eps);
     derived_type ret(rows(), cols(), pruned_pattern);
@@ -311,8 +311,7 @@ namespace internal {
 
 
 template< class M >
-struct is_matrix_helper
-{
+struct is_matrix_helper {
   DSC_has_typedef_initialize_once(Traits)
   DSC_has_typedef_initialize_once(ScalarType)
 
@@ -326,22 +325,21 @@ struct is_matrix_helper
 
 template< class M, bool candidate = internal::is_matrix_helper< M >::is_candidate >
 struct is_matrix
-  : public std::is_base_of< MatrixInterface< typename M::Traits, typename M::ScalarType >, M >
-{};
+  : public std::is_base_of< MatrixInterface< typename M::Traits, typename M::ScalarType >, M > {
+};
 
 
 template< class M >
 struct is_matrix< M, false >
-  : public std::false_type
-{};
+  : public std::false_type {
+};
 
 
 namespace internal {
 
 
 template< class MatrixImp >
-struct MatrixAbstractionBase
-{
+struct MatrixAbstractionBase {
   static const bool is_matrix = LA::is_matrix< MatrixImp >::value;
 
   static const bool has_static_size = false;
@@ -355,29 +353,29 @@ struct MatrixAbstractionBase
   typedef ScalarType S;
 
   static inline
-    typename std::enable_if< is_matrix, MatrixType >::type
-                create(const size_t rows, const size_t cols)
+  typename std::enable_if< is_matrix, MatrixType >::type
+  create(const size_t rows, const size_t cols)
   {
     return MatrixType(rows, cols);
   }
 
   static inline
-    typename std::enable_if< is_matrix, MatrixType >::type
-                create(const size_t rows, const size_t cols, const ScalarType& val)
+  typename std::enable_if< is_matrix, MatrixType >::type
+  create(const size_t rows, const size_t cols, const ScalarType& val)
   {
     return MatrixType(rows, cols, val);
   }
 
   static inline
-    typename std::enable_if< is_matrix, size_t >::type
-                rows(const MatrixType& mat)
+  typename std::enable_if< is_matrix, size_t >::type
+  rows(const MatrixType& mat)
   {
     return mat.rows();
   }
 
   static inline
-    typename std::enable_if< is_matrix, size_t >::type
-                cols(const MatrixType& mat)
+  typename std::enable_if< is_matrix, size_t >::type
+  cols(const MatrixType& mat)
   {
     return mat.cols();
   }
@@ -388,8 +386,8 @@ struct MatrixAbstractionBase
   }
 
   static inline
-    typename std::enable_if< is_matrix, ScalarType >::type
-                get_entry(const MatrixType& mat, const size_t row, const size_t col)
+  typename std::enable_if< is_matrix, ScalarType >::type
+  get_entry(const MatrixType& mat, const size_t row, const size_t col)
   {
     return mat.get_entry(row, col);
   }

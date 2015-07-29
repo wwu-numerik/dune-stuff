@@ -31,20 +31,17 @@ template< Style style >
 struct ConvertStyle;
 
 template<>
-struct ConvertStyle< Style::relativeWeak >
-{
+struct ConvertStyle< Style::relativeWeak > {
   static const Dune::FloatCmp::CmpStyle value = Dune::FloatCmp::CmpStyle::relativeWeak;
 };
 
 template<>
-struct ConvertStyle< Style::relativeStrong >
-{
+struct ConvertStyle< Style::relativeStrong > {
   static const Dune::FloatCmp::CmpStyle value = Dune::FloatCmp::CmpStyle::relativeStrong;
 };
 
 template<>
-struct ConvertStyle< Style::absolute >
-{
+struct ConvertStyle< Style::absolute > {
   static const Dune::FloatCmp::CmpStyle value = Dune::FloatCmp::CmpStyle::absolute;
 };
 

@@ -26,7 +26,7 @@ class GlobalLambdaFunction
   : public GlobalFunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols >
 {
   typedef GlobalFunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols >
-      BaseType;
+  BaseType;
 public:
   typedef typename BaseType::DomainType DomainType;
   typedef typename BaseType::RangeType  RangeType;

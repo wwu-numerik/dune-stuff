@@ -53,7 +53,7 @@ public:
     : StorageProviderBaseType(grid_ptr)
   {}
 
-  virtual ~Default(){}
+  virtual ~Default() {}
 
   virtual GridType& grid() override
   {

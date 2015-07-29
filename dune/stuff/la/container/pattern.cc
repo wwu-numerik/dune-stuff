@@ -41,12 +41,12 @@ const typename SparsityPatternDefault::InnerType& SparsityPatternDefault::inner(
 
 typename SparsityPatternDefault::ConstOuterIteratorType SparsityPatternDefault::begin() const
 {
-    return vector_of_vectors_.begin();
+  return vector_of_vectors_.begin();
 }
 
 typename SparsityPatternDefault::ConstOuterIteratorType SparsityPatternDefault::end() const
 {
-    return vector_of_vectors_.end();
+  return vector_of_vectors_.end();
 }
 
 bool SparsityPatternDefault::operator==(const SparsityPatternDefault& other) const

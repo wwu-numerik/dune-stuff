@@ -47,7 +47,7 @@ namespace internal {
  */
 template< class RealGridViewImp >
 class PeriodicIntersection
-    : public RealGridViewImp::Intersection
+  : public RealGridViewImp::Intersection
 {
   typedef RealGridViewImp                          RealGridViewType;
   typedef PeriodicIntersection< RealGridViewType > ThisType;
@@ -114,7 +114,7 @@ private:
     RealIntersectionIteratorType outside_i_it = real_grid_view_->access().ibegin(*outside());
     const RealIntersectionIteratorType outside_i_it_end = real_grid_view_->access().iend(*outside());
     // walk over outside intersections and find an intersection on the boundary that differs only in one coordinate
-    for ( ; outside_i_it != outside_i_it_end; ++outside_i_it) {
+    for (; outside_i_it != outside_i_it_end; ++outside_i_it) {
       const BaseType& curr_outside_intersection = *outside_i_it;
       if (curr_outside_intersection.boundary()) {
         const auto curr_outside_intersection_coords = curr_outside_intersection.geometry().center();
@@ -149,7 +149,7 @@ protected:
  */
 template< class RealGridViewImp >
 class PeriodicIntersectionIterator
-    : public RealGridViewImp::IntersectionIterator
+  : public RealGridViewImp::IntersectionIterator
 {
   typedef RealGridViewImp                                         RealGridViewType;
   typedef typename RealGridViewType::IntersectionIterator         BaseType;
@@ -246,8 +246,7 @@ public:
     typedef typename RealGridViewTraits::template Codim< cd >::LocalGeometry  LocalGeometry;
 
     template< PartitionIteratorType pit >
-    struct Partition
-    {
+    struct Partition {
       typedef typename RealGridViewTraits::template Codim< cd >::template Partition< pit >::Iterator Iterator;
     };
   }; // ... struct Codim ...
@@ -269,7 +268,7 @@ public:
 */
 template< class RealGridViewImp >
 class PeriodicGridViewImp
-    : public RealGridViewImp
+  : public RealGridViewImp
 {
   typedef RealGridViewImp                     BaseType;
   typedef PeriodicGridViewTraits< BaseType >  Traits;
@@ -331,11 +330,11 @@ public:
               if (periodic_directions_[ii]) {
                 if (Dune::Stuff::Common::FloatCmp::eq(periodic_neighbor_coords[ii], lower_left[ii])) {
                   is_periodic = true;
-                  periodic_neighbor_coords[ii] = upper_right[ii] - 1.0/100.0*(entity.geometry().center()[ii] - lower_left[ii]);
+                  periodic_neighbor_coords[ii] = upper_right[ii] - 1.0 / 100.0 * (entity.geometry().center()[ii] - lower_left[ii]);
                   ++num_boundary_coords;
                 } else if (Dune::Stuff::Common::FloatCmp::eq(periodic_neighbor_coords[ii], upper_right[ii])) {
                   is_periodic = true;
-                  periodic_neighbor_coords[ii] = lower_left[ii] + 1.0/100.0*(upper_right[ii] - entity.geometry().center()[ii]);
+                  periodic_neighbor_coords[ii] = lower_left[ii] + 1.0 / 100.0 * (upper_right[ii] - entity.geometry().center()[ii]);
                   ++num_boundary_coords;
                 }
               }
@@ -422,13 +421,13 @@ private:
  */
 template< class RealGridViewImp >
 class PeriodicGridView
-    : Dune::Stuff::Common::ConstStorageProvider< internal::PeriodicGridViewImp< RealGridViewImp > >
-    , public Dune::GridView< internal::PeriodicGridViewTraits< RealGridViewImp > >
+  : Dune::Stuff::Common::ConstStorageProvider< internal::PeriodicGridViewImp< RealGridViewImp > >
+  , public Dune::GridView< internal::PeriodicGridViewTraits< RealGridViewImp > >
 {
   typedef RealGridViewImp                                                                  RealGridViewType;
   typedef typename Dune::GridView < internal::PeriodicGridViewTraits< RealGridViewType > > BaseType;
   typedef typename Dune::Stuff::Common::ConstStorageProvider< internal::PeriodicGridViewImp< RealGridViewImp > >
-                                                                                           ConstStorProv;
+  ConstStorProv;
   typedef typename RealGridViewType::template Codim< 0 >::Geometry::GlobalCoordinate       DomainType;
 
 public:

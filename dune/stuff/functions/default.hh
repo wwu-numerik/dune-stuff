@@ -35,7 +35,7 @@ public:
   typedef FieldVector< DomainFieldType, dimDomain > DomainType;
 
   typedef LocalizableFunctionInterface< EntityType, DomainFieldType, dimDomain, double, dimRange, dimRangeCols >
-      FunctionType;
+  FunctionType;
 
   VisualizationAdapter(const FunctionType& function, const std::string nm = "")
     : function_(function)

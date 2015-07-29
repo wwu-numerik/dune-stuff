@@ -55,11 +55,11 @@ public:
 
 private:
   inline typename EntityPointerVectorType::value_type check_add(const typename BaseType::EntityType& entity,
-                        const typename BaseType::GlobalCoordinateType& point) const {
+                                                                const typename BaseType::GlobalCoordinateType& point) const
+  {
     const auto& geometry = entity.geometry();
     const auto& refElement = DSG::reference_element(geometry);
-    if(refElement.checkInside(geometry.local(point)))
-    {
+    if (refElement.checkInside(geometry.local(point))) {
       return DSC::make_unique<typename BaseType::EntityType::EntityPointer>(entity);
     }
     return nullptr;
@@ -72,20 +72,18 @@ public:
   {}
 
   template < class PointContainerType >
-  EntityPointerVectorType operator() (const PointContainerType& points)
+  EntityPointerVectorType operator()(const PointContainerType& points)
   {
     const IteratorType begin = gridview_.template begin< 0 >();
     const IteratorType end = gridview_.template end< 0 >();
     EntityPointerVectorType ret(points.size());
     typename EntityPointerVectorType::size_type idx(0);
-    for(const auto& point : points)
-    {
+    for (const auto& point : points) {
       IteratorType it_current = it_last_;
       bool it_reset = true;
       typename EntityPointerVectorType::value_type tmp_ptr(nullptr);
-      for(; it_current != end; ++it_current)
-      {
-        if((tmp_ptr = check_add(*it_current, point))) {
+      for (; it_current != end; ++it_current) {
+        if ((tmp_ptr = check_add(*it_current, point))) {
           ret[idx++] = std::move(tmp_ptr);
           tmp_ptr = nullptr;
           it_reset = false;
@@ -93,13 +91,12 @@ public:
           break;
         }
       }
-      if(!it_reset)
+      if (!it_reset)
         continue;
-      for(it_current = begin;
-          it_current != it_last_;
-          ++it_current)
-      {
-        if((tmp_ptr = check_add(*it_current, point))) {
+      for (it_current = begin;
+           it_current != it_last_;
+           ++it_current) {
+        if ((tmp_ptr = check_add(*it_current, point))) {
           ret[idx++] = std::move(tmp_ptr);
           tmp_ptr = nullptr;
           it_reset = false;
@@ -135,7 +132,7 @@ public:
   typedef typename BaseType::EntityPointerVectorType EntityPointerVectorType;
 
   template< class PointContainerType >
-  EntityPointerVectorType operator() (const PointContainerType& points) const
+  EntityPointerVectorType operator()(const PointContainerType& points) const
   {
     auto level = std::min(gridview_.grid().maxLevel(), start_level_);
     auto range = DSC::entityRange(gridview_.grid().levelView(level));
@@ -149,21 +146,18 @@ private:
   {
     EntityPointerVectorType ret;
 
-    for(const auto& my_ent : range) {
+    for (const auto& my_ent : range) {
       const auto my_level = my_ent.level();
       const auto& geometry = my_ent.geometry();
       const auto& refElement = DSG::reference_element(geometry);
-      for(const auto& point : quad_points)
-      {
-        if(refElement.checkInside(geometry.local(point)))
-        {
+      for (const auto& point : quad_points) {
+        if (refElement.checkInside(geometry.local(point))) {
           //if I cannot descend further add this entity even if it's not my view
-          if(gridview_.grid().maxLevel() <= my_level || gridview_.contains(my_ent)) {
+          if (gridview_.grid().maxLevel() <= my_level || gridview_.contains(my_ent)) {
             ret.emplace_back(my_ent);
-          }
-          else {
-            const auto h_end = my_ent.hend(my_level+1);
-            const auto h_begin = my_ent.hbegin(my_level+1);
+          } else {
+            const auto h_end = my_ent.hend(my_level + 1);
+            const auto h_begin = my_ent.hbegin(my_level + 1);
             const auto h_range = boost::make_iterator_range(h_begin, h_end);
             const auto kids = process(QuadpointContainerType(1, point), h_range);
             ret.insert(ret.end(), kids.begin(), kids.end());

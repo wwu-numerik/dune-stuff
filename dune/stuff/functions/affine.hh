@@ -25,7 +25,10 @@ namespace Functions {
 template< class EntityImp, class DomainFieldImp, size_t domainDim, class RangeFieldImp, size_t rangeDim, size_t rangeDimCols = 1 >
 class Affine
 {
-  Affine() { static_assert(AlwaysFalse< EntityImp >::value, "Not available for rangeDimCols > 1!"); }
+  Affine()
+  {
+    static_assert(AlwaysFalse< EntityImp >::value, "Not available for rangeDimCols > 1!");
+  }
 };
 
 
@@ -73,12 +76,13 @@ public:
     const Common::Configuration cfg = config.has_sub(sub_name) ? config.sub(sub_name) : config;
     const Common::Configuration default_cfg = default_config();
     return Common::make_unique< ThisType >(
-          cfg.get("A", default_cfg.get< MatrixType >("A")),
-          cfg.get("b", default_cfg.get< RangeType >("b")),
-          cfg.get("name",  default_cfg.get< std::string >("name")));
+             cfg.get("A", default_cfg.get< MatrixType >("A")),
+             cfg.get("b", default_cfg.get< RangeType >("b")),
+             cfg.get("name",  default_cfg.get< std::string >("name")));
   } // ... create(...)
 
-  explicit Affine(const MatrixType& matrix, const RangeType& vector = RangeType(0), const std::string name_in = static_id())
+  explicit Affine(const MatrixType& matrix, const RangeType& vector = RangeType(0),
+                  const std::string name_in = static_id())
     : A_(matrix)
     , b_(vector)
     , name_(name_in)

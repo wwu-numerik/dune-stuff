@@ -49,13 +49,14 @@ typedef Dune::SGrid< 2, 2 >::Codim< 0 >::Entity DuneSGrid2dEntityType;
 typedef Dune::SGrid< 3, 3 >::Codim< 0 >::Entity DuneSGrid3dEntityType;
 
 typedef testing::Types< Dune::Stuff::Functions::Indicator< DuneSGrid1dEntityType, double, 1, double, 1, 1 >
-                      , Dune::Stuff::Functions::Indicator< DuneSGrid2dEntityType, double, 2, double, 1, 1 >
-                      , Dune::Stuff::Functions::Indicator< DuneSGrid3dEntityType, double, 3, double, 1, 1 >
-                        > IndicatorFunctionSGridEntityTypes;
+, Dune::Stuff::Functions::Indicator< DuneSGrid2dEntityType, double, 2, double, 1, 1 >
+, Dune::Stuff::Functions::Indicator< DuneSGrid3dEntityType, double, 3, double, 1, 1 >
+> IndicatorFunctionSGridEntityTypes;
 
 TEST_STRUCT_GENERATOR(IndicatorFunction, SGridEntity)
 TYPED_TEST_CASE(IndicatorFunctionSGridEntityTest, IndicatorFunctionSGridEntityTypes);
-TYPED_TEST(IndicatorFunctionSGridEntityTest, provides_required_methods) {
+TYPED_TEST(IndicatorFunctionSGridEntityTest, provides_required_methods)
+{
   this->check();
 }
 
@@ -66,13 +67,14 @@ typedef Dune::YaspGrid< 2 >::Codim< 0 >::Entity DuneYaspGrid2dEntityType;
 typedef Dune::YaspGrid< 3 >::Codim< 0 >::Entity DuneYaspGrid3dEntityType;
 
 typedef testing::Types< Dune::Stuff::Functions::Indicator< DuneYaspGrid1dEntityType, double, 1, double, 1, 1 >
-                      , Dune::Stuff::Functions::Indicator< DuneYaspGrid2dEntityType, double, 2, double, 1, 1 >
-                      , Dune::Stuff::Functions::Indicator< DuneYaspGrid3dEntityType, double, 3, double, 1, 1 >
-                        > IndicatorFunctionYaspGridEntityTypes;
+, Dune::Stuff::Functions::Indicator< DuneYaspGrid2dEntityType, double, 2, double, 1, 1 >
+, Dune::Stuff::Functions::Indicator< DuneYaspGrid3dEntityType, double, 3, double, 1, 1 >
+> IndicatorFunctionYaspGridEntityTypes;
 
 TEST_STRUCT_GENERATOR(IndicatorFunction, YaspGridEntity)
 TYPED_TEST_CASE(IndicatorFunctionYaspGridEntityTest, IndicatorFunctionYaspGridEntityTypes);
-TYPED_TEST(IndicatorFunctionYaspGridEntityTest, provides_required_methods) {
+TYPED_TEST(IndicatorFunctionYaspGridEntityTest, provides_required_methods)
+{
   this->check();
 }
 
@@ -84,13 +86,14 @@ typedef Dune::ALUGrid< 3, 3, Dune::simplex, Dune::nonconforming >::Codim< 0 >::E
 typedef Dune::ALUGrid< 3, 3, Dune::cube, Dune::nonconforming >::Codim< 0 >::Entity     DuneAluCubeGrid3dEntityType;
 
 typedef testing::Types< Dune::Stuff::Functions::Indicator< DuneAluSimplexGrid2dEntityType, double, 2, double, 1, 1 >
-                      , Dune::Stuff::Functions::Indicator< DuneAluSimplexGrid3dEntityType, double, 3, double, 1, 1 >
-                      , Dune::Stuff::Functions::Indicator< DuneAluCubeGrid3dEntityType, double, 3, double, 1, 1 >
-                        > IndicatorFunctionAluGridEntityTypes;
+, Dune::Stuff::Functions::Indicator< DuneAluSimplexGrid3dEntityType, double, 3, double, 1, 1 >
+, Dune::Stuff::Functions::Indicator< DuneAluCubeGrid3dEntityType, double, 3, double, 1, 1 >
+> IndicatorFunctionAluGridEntityTypes;
 
 TEST_STRUCT_GENERATOR(IndicatorFunction, AluGridEntity)
 TYPED_TEST_CASE(IndicatorFunctionAluGridEntityTest, IndicatorFunctionAluGridEntityTypes);
-TYPED_TEST(IndicatorFunctionAluGridEntityTest, provides_required_methods) {
+TYPED_TEST(IndicatorFunctionAluGridEntityTest, provides_required_methods)
+{
   this->check();
 }
 

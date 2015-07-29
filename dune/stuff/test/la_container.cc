@@ -32,78 +32,77 @@ static const size_t dim = 4;
   EXPECT_DOUBLE_EQ(0, std::imag(actual)); \
 }
 
-typedef testing::Types<
-                        Dune::Stuff::LA::CommonDenseVector< double >
-                      , Dune::Stuff::LA::CommonDenseVector< std::complex< double > >
+typedef testing::Types <
+Dune::Stuff::LA::CommonDenseVector< double >
+, Dune::Stuff::LA::CommonDenseVector< std::complex< double > >
 #if HAVE_EIGEN
-                      , Dune::Stuff::LA::EigenDenseVector< double >
-                      , Dune::Stuff::LA::EigenMappedDenseVector< double >
-                      , Dune::Stuff::LA::EigenDenseVector< std::complex< double > >
+, Dune::Stuff::LA::EigenDenseVector< double >
+, Dune::Stuff::LA::EigenMappedDenseVector< double >
+, Dune::Stuff::LA::EigenDenseVector< std::complex< double > >
 //                      , Dune::Stuff::LA::EigenMappedDenseVector< std::complex< double > >
 #endif
 #if HAVE_DUNE_ISTL
-                      , Dune::Stuff::LA::IstlDenseVector< double >
-                      , Dune::Stuff::LA::IstlDenseVector< std::complex< double > >
+, Dune::Stuff::LA::IstlDenseVector< double >
+, Dune::Stuff::LA::IstlDenseVector< std::complex< double > >
 #endif
-                      > VectorTypes;
+> VectorTypes;
 
-typedef testing::Types<
-                        std::pair< Dune::Stuff::LA::CommonDenseMatrix< double >
-                                 , Dune::Stuff::LA::CommonDenseVector< double > >
-                      , std::pair< Dune::Stuff::LA::CommonDenseMatrix< std::complex< double > >
-                                 , Dune::Stuff::LA::CommonDenseVector< std::complex< double > > >
+typedef testing::Types <
+std::pair< Dune::Stuff::LA::CommonDenseMatrix< double >
+, Dune::Stuff::LA::CommonDenseVector< double > >
+, std::pair< Dune::Stuff::LA::CommonDenseMatrix< std::complex< double > >
+, Dune::Stuff::LA::CommonDenseVector< std::complex< double > > >
 #if HAVE_EIGEN
-                      , std::pair< Dune::Stuff::LA::EigenRowMajorSparseMatrix< double >
-                                 , Dune::Stuff::LA::EigenDenseVector< double > >
-                      , std::pair< Dune::Stuff::LA::EigenRowMajorSparseMatrix< double >
-                                 , Dune::Stuff::LA::EigenMappedDenseVector< double > >
-                      , std::pair< Dune::Stuff::LA::EigenDenseMatrix< double >
-                                 , Dune::Stuff::LA::EigenDenseVector< double > >
-                      , std::pair< Dune::Stuff::LA::EigenDenseMatrix< double >
-                                 , Dune::Stuff::LA::EigenMappedDenseVector< double > >
-                      , std::pair< Dune::Stuff::LA::EigenRowMajorSparseMatrix< std::complex< double > >
-                                 , Dune::Stuff::LA::EigenDenseVector< std::complex< double > > >
+, std::pair< Dune::Stuff::LA::EigenRowMajorSparseMatrix< double >
+, Dune::Stuff::LA::EigenDenseVector< double > >
+, std::pair< Dune::Stuff::LA::EigenRowMajorSparseMatrix< double >
+, Dune::Stuff::LA::EigenMappedDenseVector< double > >
+, std::pair< Dune::Stuff::LA::EigenDenseMatrix< double >
+, Dune::Stuff::LA::EigenDenseVector< double > >
+, std::pair< Dune::Stuff::LA::EigenDenseMatrix< double >
+, Dune::Stuff::LA::EigenMappedDenseVector< double > >
+, std::pair< Dune::Stuff::LA::EigenRowMajorSparseMatrix< std::complex< double > >
+, Dune::Stuff::LA::EigenDenseVector< std::complex< double > > >
 //                      , std::pair< Dune::Stuff::LA::EigenRowMajorSparseMatrix< std::complex< double > >
 //                                 , Dune::Stuff::LA::EigenMappedDenseVector< std::complex< double > > >
-                      , std::pair< Dune::Stuff::LA::EigenDenseMatrix< std::complex< double > >
-                                 , Dune::Stuff::LA::EigenDenseVector< std::complex< double > > >
+, std::pair< Dune::Stuff::LA::EigenDenseMatrix< std::complex< double > >
+, Dune::Stuff::LA::EigenDenseVector< std::complex< double > > >
 //                      , std::pair< Dune::Stuff::LA::EigenDenseMatrix< std::complex< double > >
 //                                 , Dune::Stuff::LA::EigenMappedDenseVector< std::complex< double > > >
 #endif
 #if HAVE_DUNE_ISTL
-                      , std::pair< Dune::Stuff::LA::IstlRowMajorSparseMatrix< double >
-                                 , Dune::Stuff::LA::IstlDenseVector< double > >
-                      , std::pair< Dune::Stuff::LA::IstlRowMajorSparseMatrix< std::complex< double > >
-                                 , Dune::Stuff::LA::IstlDenseVector< std::complex< double > > >
+, std::pair< Dune::Stuff::LA::IstlRowMajorSparseMatrix< double >
+, Dune::Stuff::LA::IstlDenseVector< double > >
+, std::pair< Dune::Stuff::LA::IstlRowMajorSparseMatrix< std::complex< double > >
+, Dune::Stuff::LA::IstlDenseVector< std::complex< double > > >
 #endif
-                      > MatrixVectorCombinations;
+> MatrixVectorCombinations;
 
-typedef testing::Types<
-                        Dune::Stuff::LA::CommonDenseVector< double >
-                      , Dune::Stuff::LA::CommonDenseMatrix< double >
-                      , Dune::Stuff::LA::CommonDenseVector< std::complex< double > >
-                      , Dune::Stuff::LA::CommonDenseMatrix< std::complex< double > >
+typedef testing::Types <
+Dune::Stuff::LA::CommonDenseVector< double >
+, Dune::Stuff::LA::CommonDenseMatrix< double >
+, Dune::Stuff::LA::CommonDenseVector< std::complex< double > >
+, Dune::Stuff::LA::CommonDenseMatrix< std::complex< double > >
 #if HAVE_EIGEN
-                      , Dune::Stuff::LA::EigenDenseVector< double >
-                      , Dune::Stuff::LA::EigenMappedDenseVector< double >
-                      , Dune::Stuff::LA::EigenRowMajorSparseMatrix< double >
-                      , Dune::Stuff::LA::EigenDenseVector< std::complex< double > >
+, Dune::Stuff::LA::EigenDenseVector< double >
+, Dune::Stuff::LA::EigenMappedDenseVector< double >
+, Dune::Stuff::LA::EigenRowMajorSparseMatrix< double >
+, Dune::Stuff::LA::EigenDenseVector< std::complex< double > >
 //                      , Dune::Stuff::LA::EigenMappedDenseVector< std::complex< double > >
-                      , Dune::Stuff::LA::EigenRowMajorSparseMatrix< std::complex< double > >
+, Dune::Stuff::LA::EigenRowMajorSparseMatrix< std::complex< double > >
 #endif
 #if HAVE_DUNE_ISTL
-                      , Dune::Stuff::LA::IstlDenseVector< double >
-                      , Dune::Stuff::LA::IstlRowMajorSparseMatrix< double >
-                      , Dune::Stuff::LA::IstlDenseVector< std::complex< double > >
-                      , Dune::Stuff::LA::IstlRowMajorSparseMatrix< std::complex< double > >
+, Dune::Stuff::LA::IstlDenseVector< double >
+, Dune::Stuff::LA::IstlRowMajorSparseMatrix< double >
+, Dune::Stuff::LA::IstlDenseVector< std::complex< double > >
+, Dune::Stuff::LA::IstlRowMajorSparseMatrix< std::complex< double > >
 #endif
-                      > ContainerTypes;
+> ContainerTypes;
 
 
 template< class ContainerImp >
 struct ContainerTest
-  : public ::testing::Test
-{
+  : public ::testing::Test {
   void fulfills_interface() const
   {
     // static tests
@@ -151,15 +150,15 @@ struct ContainerTest
 
 
 TYPED_TEST_CASE(ContainerTest, ContainerTypes);
-TYPED_TEST(ContainerTest, fulfills_interface) {
+TYPED_TEST(ContainerTest, fulfills_interface)
+{
   this->fulfills_interface();
 }
 
 
 template< class VectorImp >
 struct VectorTest
-  : public ::testing::Test
-{
+  : public ::testing::Test {
   void fulfills_interface() const
   {
     // static tests
@@ -196,7 +195,7 @@ struct VectorTest
       d_by_size_and_value.set_entry(ii, D_ScalarType(0.5) + D_ScalarType(ii));
       d_by_size_and_value.add_to_entry(ii, D_ScalarType(0.5) + D_ScalarType(ii));
       EXPECT_FALSE(DSC::FloatCmp::ne(d_by_size_and_value.get_entry(ii),
-                                      D_ScalarType(2)*D_ScalarType(ii) + D_ScalarType(1)))
+                                     D_ScalarType(2)*D_ScalarType(ii) + D_ScalarType(1)))
           << d_by_size_and_value.get_entry(ii);
       EXPECT_FALSE(DSC::FloatCmp::ne(d_by_size_and_value.get_entry(ii), d_by_size_and_value[ii]))
           << d_by_size_and_value[ii];
@@ -384,34 +383,34 @@ struct VectorTest
 
     //test dot(), operator*
     ScalarType dot = ones.dot(zeros);
-    ScalarType dot_operator = ones*zeros;
+    ScalarType dot_operator = ones * zeros;
     ScalarType dot2 = zeros.dot(ones);
-    ScalarType dot_operator_2 = zeros*ones;
+    ScalarType dot_operator_2 = zeros * ones;
     EXPECT_TRUE(DSC::FloatCmp::eq(dot, ScalarType(0)) && DSC::FloatCmp::eq(dot, dot2)
                 && DSC::FloatCmp::eq(dot_operator, dot_operator_2) && DSC::FloatCmp::eq(dot, dot_operator))
         << "These should all equal 0: " << dot << ", " << dot2 << ", " << dot_operator << ", " << dot_operator_2;
     dot = ones.dot(ones);
-    dot_operator = ones*ones;
+    dot_operator = ones * ones;
     EXPECT_TRUE(DSC::FloatCmp::eq(dot, ScalarType(4)) && DSC::FloatCmp::eq(dot_operator, ScalarType(4)))
         << "These should equal 4: " << dot << ", " << dot_operator;
     dot = ones.dot(testvector_3);
-    dot_operator = ones*testvector_3;
+    dot_operator = ones * testvector_3;
     dot2 = testvector_3.dot(ones);
-    dot_operator_2 = testvector_3*ones;
+    dot_operator_2 = testvector_3 * ones;
     EXPECT_TRUE(DSC::FloatCmp::eq(dot, ScalarType(0)) && DSC::FloatCmp::eq(dot, dot2)
                 && DSC::FloatCmp::eq(dot_operator, dot_operator_2) && DSC::FloatCmp::eq(dot, dot_operator))
         << "These should all equal 0: " << dot << ", " << dot2 << ", " << dot_operator << ", " << dot_operator_2;
     dot = countingup.dot(testvector_5);
-    dot_operator = countingup*testvector_5;
+    dot_operator = countingup * testvector_5;
     dot2 = testvector_5.dot(countingup);
-    dot_operator_2 = testvector_5*countingup;
+    dot_operator_2 = testvector_5 * countingup;
     EXPECT_TRUE(DSC::FloatCmp::eq(dot, ScalarType(-5.5)) && DSC::FloatCmp::eq(dot, dot2)
                 && DSC::FloatCmp::eq(dot_operator, dot_operator_2) && DSC::FloatCmp::eq(dot, dot_operator))
         << "These should all equal -5.5: " << dot << ", " << dot2 << ", " << dot_operator << ", " << dot_operator_2;
     dot = testvector_3.dot(testvector_5);
-    dot_operator = testvector_3*testvector_5;
+    dot_operator = testvector_3 * testvector_5;
     dot2 = testvector_5.dot(testvector_3);
-    dot_operator_2 = testvector_5*testvector_3;
+    dot_operator_2 = testvector_5 * testvector_3;
     EXPECT_TRUE(DSC::FloatCmp::eq(dot, ScalarType(-7.25)) && DSC::FloatCmp::eq(dot, dot2)
                 && DSC::FloatCmp::eq(dot_operator, dot_operator_2) && DSC::FloatCmp::eq(dot, dot_operator))
         << "These should all equal -7.25: " << dot << ", " << dot2 << ", " << dot_operator << ", " << dot_operator_2;
@@ -507,7 +506,7 @@ struct VectorTest
     EXPECT_FALSE(sum_operator_iplus != sum_operator_plus || sum_add_1 != sum_add_2 || sum_iadd != sum_add_1
                  || sum_add_1 != sum_operator_plus || sum_add_1 != sum_correct)
         << "These should all be equal:\n" << sum_add_1 << ",\n" << sum_add_2 << ",\n" << sum_operator_iplus << ",\n"
-                 << sum_operator_plus << ",\n" << sum_iadd << ",\n" << sum_correct;
+        << sum_operator_plus << ",\n" << sum_iadd << ",\n" << sum_correct;
 
     sum_operator_plus = countingup + testvector_1;
     sum_operator_iplus = countingup;
@@ -523,7 +522,7 @@ struct VectorTest
     EXPECT_FALSE(sum_operator_iplus != sum_operator_plus || sum_add_1 != sum_add_2 || sum_iadd != sum_add_1
                  || sum_add_1 != sum_operator_plus || sum_add_1 != sum_correct)
         << "These should all be equal:\n" << sum_add_1 << ",\n" << sum_add_2 << ",\n" << sum_operator_iplus << ",\n"
-                 << sum_operator_plus << ",\n" << sum_iadd << ",\n" << sum_correct;
+        << sum_operator_plus << ",\n" << sum_iadd << ",\n" << sum_correct;
 
     sum_operator_plus = testvector_3 + testvector_5;
     sum_operator_iplus = testvector_3;
@@ -539,7 +538,7 @@ struct VectorTest
     EXPECT_FALSE(sum_operator_iplus != sum_operator_plus || sum_add_1 != sum_add_2 || sum_iadd != sum_add_1
                  || sum_add_1 != sum_operator_plus || sum_add_1 != sum_correct)
         << "These should all be equal:\n" << sum_add_1 << ",\n" << sum_add_2 << ",\n" << sum_operator_iplus << ",\n"
-                 << sum_operator_plus << ",\n" << sum_iadd << ",\n" << sum_correct;
+        << sum_operator_plus << ",\n" << sum_iadd << ",\n" << sum_correct;
 
     a = ones;
     a += testvector_3;
@@ -665,18 +664,19 @@ struct VectorTest
 
 
 TYPED_TEST_CASE(VectorTest, VectorTypes);
-TYPED_TEST(VectorTest, fulfills_interface) {
+TYPED_TEST(VectorTest, fulfills_interface)
+{
   this->fulfills_interface();
 }
 TYPED_TEST_CASE(VectorTest, VectorTypes);
-TYPED_TEST(VectorTest, produces_correct_results) {
+TYPED_TEST(VectorTest, produces_correct_results)
+{
   this->produces_correct_results();
 }
 
 template< class MatrixVectorCombination >
 struct MatrixTest
-  : public ::testing::Test
-{
+  : public ::testing::Test {
   typedef typename MatrixVectorCombination::first_type MatrixImp;
   typedef typename MatrixVectorCombination::second_type VectorImp;
   typedef typename Dune::Stuff::LA::SparsityPatternDefault PatternType;
@@ -727,7 +727,7 @@ struct MatrixTest
     VectorImp zeros(dim);
     VectorImp ones(dim, D_ScalarType(1));
     VectorImp result(dim);
-    d_by_size_and_pattern.mv(ones,result);
+    d_by_size_and_pattern.mv(ones, result);
     EXPECT_EQ(zeros, result);
     for (size_t ii = 0; ii < d_rows; ++ii) {
       d_by_size_and_pattern.unit_row(ii);
@@ -735,7 +735,7 @@ struct MatrixTest
       for (size_t jj = 0; jj < ii; ++jj) {
         EXPECT_DOUBLE_OR_COMPLEX_EQ(D_RealType(0), d_by_size_and_pattern.get_entry(ii, jj));
       }
-      for (size_t jj = ii + 1;jj < d_cols; ++jj) {
+      for (size_t jj = ii + 1; jj < d_cols; ++jj) {
         EXPECT_DOUBLE_OR_COMPLEX_EQ(D_RealType(0), d_by_size_and_pattern.get_entry(ii, jj));
       }
     }
@@ -748,7 +748,7 @@ struct MatrixTest
     for (size_t jj = 0; jj < d_cols; ++jj) {
       d_by_size_and_pattern.unit_col(jj);
       EXPECT_DOUBLE_OR_COMPLEX_EQ(D_RealType(1), d_by_size_and_pattern.get_entry(jj, jj));
-      for (size_t ii = 0; ii< jj; ++ii) {
+      for (size_t ii = 0; ii < jj; ++ii) {
         EXPECT_DOUBLE_OR_COMPLEX_EQ(D_RealType(0), d_by_size_and_pattern.get_entry(ii, jj));
       }
       for (size_t ii = jj + 1; ii < d_rows; ++ii) {
@@ -765,7 +765,7 @@ struct MatrixTest
       for (size_t jj = 0; jj < d_cols; ++jj) {
         d_by_size_and_pattern.set_entry(ii, jj, D_ScalarType(0.5 + ii + jj));
         d_by_size_and_pattern.add_to_entry(ii, jj, D_ScalarType(0.5 + ii + jj));
-        EXPECT_DOUBLE_OR_COMPLEX_EQ(D_RealType(2*ii + 2*jj + 1), d_by_size_and_pattern.get_entry(ii, jj));
+        EXPECT_DOUBLE_OR_COMPLEX_EQ(D_RealType(2 * ii + 2 * jj + 1), d_by_size_and_pattern.get_entry(ii, jj));
       }
     }
   } //void fulfills_interface() const
@@ -808,10 +808,14 @@ struct MatrixTest
       for (size_t jj = 0; jj < dim; ++jj)                                   // |2, 3, 4, 5|
         testmatrix_1.set_entry(ii, jj, ScalarType(ii) + ScalarType(jj));    // |3, 4, 5, 6|
     }
-    MatrixImp testmatrix_2(dim, dim, dense_pattern);                                                      // | 0.0, 1.5, 3.0, 4.5|
-    for (size_t ii = 0; ii < dim; ++ii) {                                                                 // |-0.5, 1.0, 2.5, 4.0|
-      for (size_t jj = 0; jj < dim; ++jj)                                                                 // |-1.0, 0.5, 2.0, 3.5|
-        testmatrix_2.set_entry(ii, jj, ScalarType(-0.5)*ScalarType(ii) + ScalarType(1.5)*ScalarType(jj)); // |-1.5, 0.0, 1.5, 3.0|
+    MatrixImp testmatrix_2(dim, dim,
+                           dense_pattern);                                                      // | 0.0, 1.5, 3.0, 4.5|
+    for (size_t ii = 0; ii < dim;
+         ++ii) {                                                                 // |-0.5, 1.0, 2.5, 4.0|
+      for (size_t jj = 0; jj < dim;
+           ++jj)                                                                 // |-1.0, 0.5, 2.0, 3.5|
+        testmatrix_2.set_entry(ii, jj, ScalarType(-0.5)*ScalarType(ii) + ScalarType(1.5)*ScalarType(
+                                 jj)); // |-1.5, 0.0, 1.5, 3.0|
     }
     MatrixImp testmatrix_sparse(dim, dim, sparse_pattern);    //|-,   -, 0.5,    -|
     testmatrix_sparse.set_entry(0, 2, ScalarType(0.5));       //|1, 1.5,   -,    -|
@@ -913,7 +917,8 @@ struct MatrixTest
     for (size_t ii = 0; ii < rows ; ++ii) {
       for (size_t jj = 0; jj < cols; ++jj) {
         EXPECT_TRUE(DSC::FloatCmp::eq(testmatrix_sparse.get_entry(ii, jj)*ScalarType(-1.25), scaled.get_entry(ii, jj)));
-        EXPECT_TRUE(DSC::FloatCmp::eq(testmatrix_sparse.get_entry(ii, jj)*ScalarType(-1.25), scaled_by_operator.get_entry(ii, jj)));
+        EXPECT_TRUE(DSC::FloatCmp::eq(testmatrix_sparse.get_entry(ii, jj)*ScalarType(-1.25), scaled_by_operator.get_entry(ii,
+                                                                                                                          jj)));
       }
     }
     scaled = testmatrix_1;
@@ -961,7 +966,7 @@ struct MatrixTest
     for (size_t ii = 0; ii < rows ; ++ii) {
       for (size_t jj = 0; jj < cols; ++jj) {
         EXPECT_TRUE(DSC::FloatCmp::eq(ScalarType(2)*testmatrix_2.get_entry(ii, jj) + testmatrix_1.get_entry(ii, jj),
-                         result_axpy.get_entry(ii, jj)));
+                                      result_axpy.get_entry(ii, jj)));
       }
     }
     b = matrix_zeros_dense;
@@ -975,11 +980,13 @@ struct MatrixTest
 }; //struct MatrixTest
 
 TYPED_TEST_CASE(MatrixTest, MatrixVectorCombinations);
-TYPED_TEST(MatrixTest, fulfills_interface) {
+TYPED_TEST(MatrixTest, fulfills_interface)
+{
   this->fulfills_interface();
 }
 TYPED_TEST_CASE(MatrixTest, MatrixVectorCombinations);
-TYPED_TEST(MatrixTest, produces_correct_results) {
+TYPED_TEST(MatrixTest, produces_correct_results)
+{
   this->produces_correct_results();
 }
 

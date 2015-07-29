@@ -33,7 +33,10 @@ template< class E, class D, size_t d, class R, size_t r, size_t rC = 1 >
 class Testcase1Force
   : public LocalizableFunctionInterface< E, D, d, R, r, rC >
 {
-  Testcase1Force() { static_assert(AlwaysFalse< E >::value, "Not available for these dimensions!"); }
+  Testcase1Force()
+  {
+    static_assert(AlwaysFalse< E >::value, "Not available for these dimensions!");
+  }
 };
 
 
@@ -79,8 +82,8 @@ public:
     const Common::Configuration default_cfg = default_config();
     //create
     return Common::make_unique< ThisType >(
-          cfg.get("integration_order", default_cfg.get< size_t >("integration_order")),
-          cfg.get("name",              default_cfg.get< std::string >("name")));
+             cfg.get("integration_order", default_cfg.get< size_t >("integration_order")),
+             cfg.get("name",              default_cfg.get< std::string >("name")));
   } // ... create(...)
 
   Testcase1Force(const size_t ord = default_config().get< size_t >("integration_order"),
@@ -139,7 +142,10 @@ template< class E, class D, size_t d, class R, size_t r, size_t rC = 1 >
 class Testcase1ExactSolution
   : public LocalizableFunctionInterface< E, D, d, R, r, rC >
 {
-  Testcase1ExactSolution() { static_assert(AlwaysFalse< E >::value, "Not available for these dimensions!"); }
+  Testcase1ExactSolution()
+  {
+    static_assert(AlwaysFalse< E >::value, "Not available for these dimensions!");
+  }
 };
 
 
@@ -185,8 +191,8 @@ public:
     const Common::Configuration default_cfg = default_config();
     //create
     return Common::make_unique< ThisType >(
-          cfg.get("integration_order", default_cfg.get< size_t >("integration_order")),
-          cfg.get("name",              default_cfg.get< std::string >("name")));
+             cfg.get("integration_order", default_cfg.get< size_t >("integration_order")),
+             cfg.get("name",              default_cfg.get< std::string >("name")));
   } // ... create(...)
 
   Testcase1ExactSolution(const size_t ord = default_config().get< size_t >("integration_order"),
@@ -248,8 +254,8 @@ class Cutoff;
 template< class DiffusionType >
 class Cutoff< DiffusionType, void >
   : public LocalizableFunctionInterface< typename DiffusionType::EntityType
-                                       , typename DiffusionType::DomainFieldType, DiffusionType::dimDomain
-                                       , typename DiffusionType::RangeFieldType, 1, 1 >
+  , typename DiffusionType::DomainFieldType, DiffusionType::dimDomain
+  , typename DiffusionType::RangeFieldType, 1, 1 >
 {
   static_assert(std::is_base_of< Tags::LocalizableFunction, DiffusionType >::value,
                 "DiffusionType has to be tagged as a LocalizableFunction!");
@@ -280,14 +286,12 @@ class Cutoff< DiffusionType, void >
 
   private:
     template< class D, int r, int rR >
-    struct Compute
-    {
+    struct Compute {
       static_assert(AlwaysFalse< D >::value, "Not implemented for these dimensions!");
     };
 
     template< class D >
-    struct Compute< D, 1, 1 >
-    {
+    struct Compute< D, 1, 1 > {
       static RangeFieldType min_eigenvalue_of(const D& diffusion, const EntityType& ent)
       {
         const auto local_diffusion = diffusion.local_function(ent);
@@ -303,8 +307,8 @@ class Cutoff< DiffusionType, void >
       , value_(0)
     {
       const RangeFieldType min_eigen_value
-          = Compute< DiffusionType, DiffusionType::dimRange, DiffusionType::dimRangeCols >::min_eigenvalue_of(diffusion,
-                                                                                                           ent);
+        = Compute< DiffusionType, DiffusionType::dimRange, DiffusionType::dimRangeCols >::min_eigenvalue_of(diffusion,
+                                                                                                            ent);
       assert(min_eigen_value > 0.0);
       const DomainFieldType hh = compute_diameter_of_(ent);
       value_ = (poincare_constant * hh * hh) / min_eigen_value;
@@ -360,7 +364,7 @@ public:
   }
 
   Cutoff(const DiffusionType& diffusion,
-         const RangeFieldType poincare_constant = 1.0 / (M_PIl * M_PIl),
+         const RangeFieldType poincare_constant = 1.0 / (M_PIl* M_PIl),
          const std::string nm = static_id())
     : diffusion_(diffusion)
     , poincare_constant_(poincare_constant)
@@ -391,8 +395,8 @@ private:
 template< class DiffusionFactorType, class DiffusionTensorType >
 class Cutoff
   : public LocalizableFunctionInterface< typename DiffusionFactorType::EntityType
-                                       , typename DiffusionFactorType::DomainFieldType, DiffusionFactorType::dimDomain
-                                       , typename DiffusionFactorType::RangeFieldType, 1, 1 >
+  , typename DiffusionFactorType::DomainFieldType, DiffusionFactorType::dimDomain
+  , typename DiffusionFactorType::RangeFieldType, 1, 1 >
 {
   static_assert(std::is_base_of< Tags::LocalizableFunction, DiffusionFactorType >::value,
                 "DiffusionFactorType has to be tagged as a LocalizableFunction!");
@@ -436,14 +440,12 @@ class Cutoff
 
   private:
     template< class DF, size_t r, size_t rR >
-    struct ComputeDiffusionFactor
-    {
+    struct ComputeDiffusionFactor {
       static_assert(AlwaysFalse< DF >::value, "Not implemented for these dimensions!");
     };
 
     template< class DF >
-    struct ComputeDiffusionFactor< DF, 1, 1 >
-    {
+    struct ComputeDiffusionFactor< DF, 1, 1 > {
       /**
        * We try to find the minimum of a polynomial of given order by evaluating it at the points of a quadrature that
        * would integrate this polynomial exactly.
@@ -467,14 +469,12 @@ class Cutoff
     }; // class ComputeDiffusionFactor< ..., 1, 1 >
 
     template< class DT, size_t r, size_t rR >
-    struct ComputeDiffusionTensor
-    {
+    struct ComputeDiffusionTensor {
       static_assert(AlwaysFalse< DT >::value, "Not implemented for these dimensions!");
     };
 
     template< class DT, size_t d >
-    struct ComputeDiffusionTensor< DT, d, d >
-    {
+    struct ComputeDiffusionTensor< DT, d, d > {
       static RangeFieldType min_eigenvalue_of(const DT& diffusion_tensor, const EntityType& ent)
       {
 #if !HAVE_EIGEN
@@ -484,9 +484,9 @@ class Cutoff
         assert(local_diffusion_tensor->order() == 0);
         const auto& reference_element = ReferenceElements< DomainFieldType, dimDomain >::general(ent.type());
         const Stuff::LA::EigenDenseMatrix< RangeFieldType >
-            tensor = local_diffusion_tensor->evaluate(reference_element.position(0, 0));
+        tensor = local_diffusion_tensor->evaluate(reference_element.position(0, 0));
         ::Eigen::EigenSolver< typename Stuff::LA::EigenDenseMatrix< RangeFieldType >::BackendType >
-            eigen_solver(tensor.backend());
+        eigen_solver(tensor.backend());
         assert(eigen_solver.info() == ::Eigen::Success);
         const auto eigenvalues = eigen_solver.eigenvalues(); // <- this should be an Eigen vector of std::complex
         RangeFieldType min_ev = std::numeric_limits< RangeFieldType >::max();
@@ -512,13 +512,13 @@ class Cutoff
       , value_(0)
     {
       const RangeFieldType min_diffusion_factor
-          = ComputeDiffusionFactor< DiffusionFactorType,
-                                    DiffusionFactorType::dimRange,
-                                    DiffusionFactorType::dimRangeCols >::min_of(diffusion_factor, ent);
+      = ComputeDiffusionFactor< DiffusionFactorType,
+      DiffusionFactorType::dimRange,
+      DiffusionFactorType::dimRangeCols >::min_of(diffusion_factor, ent);
       const RangeFieldType min_eigen_value_diffusion_tensor
-          = ComputeDiffusionTensor< DiffusionTensorType,
-                                    DiffusionTensorType::dimRange,
-                                    DiffusionTensorType::dimRangeCols >::min_eigenvalue_of(diffusion_tensor, ent);
+      = ComputeDiffusionTensor< DiffusionTensorType,
+      DiffusionTensorType::dimRange,
+      DiffusionTensorType::dimRangeCols >::min_eigenvalue_of(diffusion_tensor, ent);
       assert(min_diffusion_factor > RangeFieldType(0));
       assert(min_eigen_value_diffusion_tensor > RangeFieldType(0));
       const DomainFieldType hh = compute_diameter_of_(ent);
@@ -584,7 +584,7 @@ public:
 
   Cutoff(const DiffusionFactorType& diffusion_factor,
          const DiffusionTensorType& diffusion_tensor,
-         const RangeFieldType poincare_constant = 1.0 / (M_PIl * M_PIl),
+         const RangeFieldType poincare_constant = 1.0 / (M_PIl* M_PIl),
          const std::string nm = static_id())
     : diffusion_factor_(diffusion_factor)
     , diffusion_tensor_(diffusion_tensor)

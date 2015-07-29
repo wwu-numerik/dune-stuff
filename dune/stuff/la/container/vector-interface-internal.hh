@@ -39,8 +39,7 @@ public:
   typedef typename VectorType::ScalarType          ScalarType;
 
 private:
-  struct ConstHolder
-  {
+  struct ConstHolder {
     explicit ConstHolder(const VectorType& vec)
       : element(vec)
     {}
@@ -103,8 +102,7 @@ public:
 private:
   static_assert(std::is_same< ScalarImp, ScalarType >::value, "");
 
-  struct Holder
-  {
+  struct Holder {
     explicit Holder(VectorType& vec)
       : element(vec)
     {}

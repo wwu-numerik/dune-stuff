@@ -28,7 +28,7 @@ class Checkerboard
   : public LocalizableFunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols >
 {
   typedef LocalizableFunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols >
-    BaseType;
+  BaseType;
   typedef Checkerboard< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols > ThisType;
 
   class Localfunction
@@ -73,7 +73,7 @@ class Checkerboard
     template< size_t rC >
     void jacobian_helper(JacobianRangeType& ret, internal::ChooseVariant< rC >) const
     {
-      for (auto& col_jacobian: ret) {
+      for (auto& col_jacobian : ret) {
         col_jacobian *= RangeFieldType(0);
       }
     }
@@ -137,13 +137,13 @@ public:
       values[ii] = RangeType(values_rf[ii]);
     // create
     return Common::make_unique< ThisType >(
-            cfg.get("lower_left",
-                    default_cfg.get< Common::FieldVector< DomainFieldType, dimDomain > >("lower_left"), dimDomain),
-            cfg.get("upper_right",
-                    default_cfg.get< Common::FieldVector< DomainFieldType, dimDomain > >("upper_right"), dimDomain),
-            std::move(num_elements),
-            std::move(values),
-            cfg.get("name", default_cfg.get< std::string > ("name")));
+             cfg.get("lower_left",
+                     default_cfg.get< Common::FieldVector< DomainFieldType, dimDomain > >("lower_left"), dimDomain),
+             cfg.get("upper_right",
+                     default_cfg.get< Common::FieldVector< DomainFieldType, dimDomain > >("upper_right"), dimDomain),
+             std::move(num_elements),
+             std::move(values),
+             cfg.get("name", default_cfg.get< std::string > ("name")));
   } // ... create(...)
 
   Checkerboard(const Common::FieldVector< DomainFieldType, dimDomain >& lowerLeft,
@@ -199,16 +199,16 @@ public:
     for (size_t dd = 0; dd < dimDomain; ++dd) {
       // for points that are on upperRight_[d], this selects one partition too much
       // so we need to cap this
-      whichPartition[dd] = std::min(size_t(std::floor(ne[dd]*((center[dd] - ll[dd])/(ur[dd] - ll[dd])))),
+      whichPartition[dd] = std::min(size_t(std::floor(ne[dd] * ((center[dd] - ll[dd]) / (ur[dd] - ll[dd])))),
                                     ne[dd] - 1);
     }
     size_t subdomain = 0;
     if (dimDomain == 1)
       subdomain = whichPartition[0];
     else if (dimDomain == 2)
-      subdomain = whichPartition[0] + whichPartition[1]*ne[0];
+      subdomain = whichPartition[0] + whichPartition[1] * ne[0];
     else
-      subdomain = whichPartition[0] + whichPartition[1]*ne[0] + whichPartition[2]*ne[1]*ne[0];
+      subdomain = whichPartition[0] + whichPartition[1] * ne[0] + whichPartition[2] * ne[1] * ne[0];
     // return the component that belongs to the subdomain
     return std::unique_ptr< Localfunction >(new Localfunction(entity, (*values_)[subdomain]));
   } // ... local_function(...)

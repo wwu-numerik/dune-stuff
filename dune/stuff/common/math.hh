@@ -45,7 +45,7 @@ struct Epsilon {
 };
 
 template< class T >
-struct Epsilon< T,true > {
+struct Epsilon< T, true > {
   static const T value ;
 };
 
@@ -71,13 +71,15 @@ const T Epsilon< T, false >::value = std::numeric_limits< T >::epsilon();
  **/
 template<class T, bool isUnsigned = std::is_unsigned<T>::value>
 struct absoluteValue {
-  static T result(const T& val) {
+  static T result(const T& val)
+  {
     return std::abs(val);
   }
 };
 template<class T>
 struct absoluteValue<T, true> {
-  static T result(const T& val) {
+  static T result(const T& val)
+  {
     return val;
   }
 };
@@ -93,7 +95,8 @@ struct absretval<T, true> {
 };
 
 template<class T>
-typename absretval<T>::type abs(const T& val) {
+typename absretval<T>::type abs(const T& val)
+{
   typedef typename absretval<T>::type R;
   return absoluteValue<R>::result(static_cast<R>(val));
 }
@@ -105,50 +108,67 @@ class MinMaxAvg
   static_assert(!is_complex<ElementType>::value, "complex accumulation not supported");
 protected:
   typedef MinMaxAvg< ElementType >
-    ThisType;
+  ThisType;
 
 public:
   MinMaxAvg()
   {}
 
-  template< class stl_container_type > MinMaxAvg(const stl_container_type& elements) {
-    static_assert( (boost::is_same< ElementType, typename stl_container_type::value_type >::value),
-                        "cannot assign mismatching types" );
+  template< class stl_container_type > MinMaxAvg(const stl_container_type& elements)
+  {
+    static_assert((boost::is_same< ElementType, typename stl_container_type::value_type >::value),
+                  "cannot assign mismatching types");
     acc_ = std::for_each(elements.begin(), elements.end(), acc_);
   }
 
-  std::size_t count() const { return boost::accumulators::count(acc_); }
-  ElementType sum() const { return boost::accumulators::sum(acc_); }
-  ElementType min() const { return boost::accumulators::min(acc_); }
-  ElementType max() const { return boost::accumulators::max(acc_); }
-  ElementType average() const {
+  std::size_t count() const
+  {
+    return boost::accumulators::count(acc_);
+  }
+  ElementType sum() const
+  {
+    return boost::accumulators::sum(acc_);
+  }
+  ElementType min() const
+  {
+    return boost::accumulators::min(acc_);
+  }
+  ElementType max() const
+  {
+    return boost::accumulators::max(acc_);
+  }
+  ElementType average() const
+  {
     // for integer ElementType this just truncates from floating-point
     return ElementType(boost::accumulators::mean(acc_));
   }
 
-  void operator()(const ElementType& el) {
+  void operator()(const ElementType& el)
+  {
     acc_(el);
   }
 
-  void output(std::ostream& stream) {
+  void output(std::ostream& stream)
+  {
     stream << boost::format("min: %e\tmax: %e\tavg: %e\n") % min() % max() % average();
   }
 
 protected:
-  typedef boost::accumulators::stats<
-    boost::accumulators::tag::max,
-    boost::accumulators::tag::min,
-    boost::accumulators::tag::mean,
-    boost::accumulators::tag::count,
-    boost::accumulators::tag::sum>
-  StatsType;
+  typedef boost::accumulators::stats <
+  boost::accumulators::tag::max,
+        boost::accumulators::tag::min,
+        boost::accumulators::tag::mean,
+        boost::accumulators::tag::count,
+        boost::accumulators::tag::sum >
+        StatsType;
   boost::accumulators::accumulator_set< ElementType, StatsType > acc_;
 
 };
 
 //! \return var bounded in [min, max]
 template< typename T >
-T clamp(const T var, const T min, const T max) {
+T clamp(const T var, const T min, const T max)
+{
   return (var < min) ? min : (var > max) ? max : var;
 }
 
@@ -157,8 +177,9 @@ T clamp(const T var, const T min, const T max) {
  *            0 iff val == 0
  *            1 iff val > 0
  */
-template <typename T> int signum(T val) {
-    return (T(0) < val) - (val < T(0));
+template <typename T> int signum(T val)
+{
+  return (T(0) < val) - (val < T(0));
 }
 
 /** enable us to use DSC::numeric_limits for all types, even when no specialization is avaliable.
@@ -166,33 +187,37 @@ template <typename T> int signum(T val) {
  **/
 template <class T, typename = void>
 class numeric_limits
-    : public std::numeric_limits<double> {};
+  : public std::numeric_limits<double> {};
 
 template <class T>
 class numeric_limits<T, typename std::enable_if<std::numeric_limits<T>::is_specialized >::type>
-    : public std::numeric_limits<T> {};
+  : public std::numeric_limits<T> {};
 
 //! forward to std::isnan for general types, overload for complex below
 template <class T>
-bool isnan(T val) {
+bool isnan(T val)
+{
   return std::isnan(val);
 }
 
 //! override isnan for complex here so it doesn't bleed into the std namespace
 template <class T>
-bool isnan(std::complex<T> val) {
+bool isnan(std::complex<T> val)
+{
   return isnan(std::real(val)) || isnan(std::imag(val));
 }
 
 //! forward to std::isinf for general types, overload for complex below
 template <class T>
-bool isinf(T val) {
+bool isinf(T val)
+{
   return std::isinf(val);
 }
 
 //! override isinf for complex here so it doesn't bleed into the std namespace
 template <class T>
-bool isinf(std::complex<T> val) {
+bool isinf(std::complex<T> val)
+{
   return isinf(std::real(val)) || isinf(std::imag(val));
 }
 

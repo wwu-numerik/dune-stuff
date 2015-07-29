@@ -281,7 +281,7 @@ public:
   explicit EigenMappedDenseVector(const std::vector< ScalarType >& other)
   {
     backend_ = std::make_shared< BackendType >(new ScalarType[other.size()],
-        internal::boost_numeric_cast< EIGEN_size_t >(other.size()));
+                                               internal::boost_numeric_cast< EIGEN_size_t >(other.size()));
     for (size_t ii = 0; ii < other.size(); ++ii)
       backend_->operator[](ii) = other[ii];
   }
@@ -425,7 +425,7 @@ public:
   explicit EigenDenseMatrix(const BackendType& other,
                             const bool prune = false,
                             const typename Common::FloatCmp::DefaultEpsilon< ScalarType >::Type eps
-                              = Common::FloatCmp::DefaultEpsilon< ScalarType >::value())
+                            = Common::FloatCmp::DefaultEpsilon< ScalarType >::value())
   {
     if (prune)
       backend_ = ThisType(other).pruned(eps).backend_;
@@ -521,7 +521,7 @@ public:
       DUNE_THROW(Exceptions::shapes_do_not_match,
                  "The shape of xx (" << xx.rows() << "x" << xx.cols()
                  << ") does not match the shape of this (" << rows() << "x" << cols() << ")!");
-    const auto& xx_ref= *(xx.backend_);
+    const auto& xx_ref = *(xx.backend_);
     backend() += alpha * xx_ref;
   } // ... axpy(...)
 
@@ -650,13 +650,22 @@ private:
 
 
 template< class ScalarImp >
-class EigenDenseVector{ static_assert(Dune::AlwaysFalse< ScalarImp >::value, "You are missing Eigen!"); };
+class EigenDenseVector
+{
+  static_assert(Dune::AlwaysFalse< ScalarImp >::value, "You are missing Eigen!");
+};
 
 template< class ScalarImp >
-class EigenMappedDenseVector{ static_assert(Dune::AlwaysFalse< ScalarImp >::value, "You are missing Eigen!"); };
+class EigenMappedDenseVector
+{
+  static_assert(Dune::AlwaysFalse< ScalarImp >::value, "You are missing Eigen!");
+};
 
 template< class ScalarImp >
-class EigenDenseMatrix{ static_assert(Dune::AlwaysFalse< ScalarImp >::value, "You are missing Eigen!"); };
+class EigenDenseMatrix
+{
+  static_assert(Dune::AlwaysFalse< ScalarImp >::value, "You are missing Eigen!");
+};
 
 
 #endif // HAVE_EIGEN
@@ -669,19 +678,19 @@ namespace Common {
 
 template< class T >
 struct VectorAbstraction< LA::EigenDenseVector< T > >
-  : public LA::internal::VectorAbstractionBase< LA::EigenDenseVector< T > >
-{};
+  : public LA::internal::VectorAbstractionBase< LA::EigenDenseVector< T > > {
+};
 
 template< class T >
 struct VectorAbstraction< LA::EigenMappedDenseVector< T > >
-  : public LA::internal::VectorAbstractionBase< LA::EigenMappedDenseVector< T > >
-{};
+  : public LA::internal::VectorAbstractionBase< LA::EigenMappedDenseVector< T > > {
+};
 
 
 template< class T >
 struct MatrixAbstraction< LA::EigenDenseMatrix< T > >
-  : public LA::internal::MatrixAbstractionBase< LA::EigenDenseMatrix< T > >
-{};
+  : public LA::internal::MatrixAbstractionBase< LA::EigenDenseMatrix< T > > {
+};
 
 
 #endif // HAVE_EIGEN

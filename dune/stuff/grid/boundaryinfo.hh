@@ -52,8 +52,8 @@ class BoundaryInfoInterface
 {
 #if HAVE_DUNE_PDELAB
   typedef PDELab::IntersectionGeometry< IntersectionImp > IntersectionGeometryType;
-  typedef FieldVector< typename IntersectionGeometryType::ctype, IntersectionGeometryType::dimension - 1 >
-      Codim1DomainType;
+  typedef FieldVector < typename IntersectionGeometryType::ctype, IntersectionGeometryType::dimension - 1 >
+  Codim1DomainType;
 #endif // HAVE_DUNE_PDELAB
 public:
   typedef IntersectionImp IntersectionType;
@@ -319,11 +319,13 @@ public:
   {
     const Common::Configuration cfg = config.has_sub(sub_name) ? config.sub(sub_name) : config;
     std::map< std::string, std::set< int > > id_to_type_map;
-    for (const std::string& type : {"dirichlet", "neumann"})
-      if (cfg.has_key(type)) {
-        const auto ids = cfg.get< std::vector< int > >(type);
-        id_to_type_map.insert(std::make_pair(type, std::set< int >(ids.begin(), ids.end())));
-      }
+    for (const std::string& type : {
+    "dirichlet", "neumann"
+  })
+    if (cfg.has_key(type)) {
+      const auto ids = cfg.get< std::vector< int > >(type);
+      id_to_type_map.insert(std::make_pair(type, std::set< int >(ids.begin(), ids.end())));
+    }
     return Common::make_unique< ThisType >(id_to_type_map, cfg.get("default_to_dirichlet",
                                                                    default_config().template get< bool >("default_to_dirichlet")));
   }
@@ -553,7 +555,7 @@ public:
   {
     using namespace Stuff::Grid::BoundaryInfos;
     return {
-        BoundaryInfos::AllDirichlet< I >::static_id()
+      BoundaryInfos::AllDirichlet< I >::static_id()
       , BoundaryInfos::AllNeumann< I >::static_id()
 #if DUNE_GRID_EXPERIMENTAL_GRID_EXTENSIONS
       , BoundaryInfos::IdBased< I >::static_id()

@@ -21,8 +21,7 @@ ThreadManager& threadManager();
 /** abstractions of threading functionality
  *  currently controls tbb and forwards to dune-fem if possible, falls back to single-thread dummy imp
  **/
-struct ThreadManager
-{
+struct ThreadManager {
   //! return maximal number of threads possbile in the current run
   size_t max_threads();
 
@@ -33,7 +32,7 @@ struct ThreadManager
   size_t thread();
 
   //! set maximal number of threads available during run
-  void set_max_threads( const size_t count );
+  void set_max_threads(const size_t count);
 
   ~ThreadManager() = default;
 private:
@@ -47,7 +46,8 @@ private:
 #endif
 };
 
-inline ThreadManager& threadManager() {
+inline ThreadManager& threadManager()
+{
   static ThreadManager tm;
   return tm;
 }

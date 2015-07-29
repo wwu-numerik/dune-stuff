@@ -83,23 +83,27 @@ protected:
 }; // class FlatTopFunctionTest
 
 
-typedef testing::Types<
-                        Int< 1 >
-                      , Int< 2 >
-                      , Int< 3 >
-                      > DimDomains;
+typedef testing::Types <
+Int< 1 >
+, Int< 2 >
+, Int< 3 >
+> DimDomains;
 
 TYPED_TEST_CASE(FlatTopFunctionTest, DimDomains);
-TYPED_TEST(FlatTopFunctionTest, static_interface_check) {
+TYPED_TEST(FlatTopFunctionTest, static_interface_check)
+{
   this->static_interface_check();
 }
-TYPED_TEST(FlatTopFunctionTest, static_create_check) {
+TYPED_TEST(FlatTopFunctionTest, static_create_check)
+{
   this->static_create_check();
 }
-TYPED_TEST(FlatTopFunctionTest, dynamic_interface_check) {
+TYPED_TEST(FlatTopFunctionTest, dynamic_interface_check)
+{
   this->dynamic_interface_check(*(TestFixture::FunctionType::create()), *(this->create_grid()));
 }
-TYPED_TEST(FlatTopFunctionTest, evaluate_check) {
+TYPED_TEST(FlatTopFunctionTest, evaluate_check)
+{
   auto grid_ptr = this->create_grid();
   typedef DSC::FieldVector< double, TypeParam::value > DomainType;
   const DomainType left(1);
@@ -111,8 +115,8 @@ TYPED_TEST(FlatTopFunctionTest, evaluate_check) {
   for (const auto& entity : Stuff::Common::entityRange(grid_ptr->leafGridView())) {
     const auto local_func = func.local_function(entity);
     const auto& quadrature
-        = QuadratureRules< double, TypeParam::value >::rule(entity.type(),
-                                                            boost::numeric_cast< int >(local_func->order() + 2));
+      = QuadratureRules< double, TypeParam::value >::rule(entity.type(),
+                                                          boost::numeric_cast< int >(local_func->order() + 2));
     for (const auto& element : quadrature) {
       const auto& local_point = element.position();
       const auto point = entity.geometry().global(local_point);

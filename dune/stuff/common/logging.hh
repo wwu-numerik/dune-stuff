@@ -69,10 +69,22 @@ public:
      */
 
   LogStream& getStream(int streamId);
-  LogStream& error() { return getStream(LOG_ERROR); }
-  LogStream& info() { return getStream(LOG_INFO); }
-  LogStream& debug() { return getStream(LOG_DEBUG); }
-  LogStream& devnull() { return emptyLogStream_; }
+  LogStream& error()
+  {
+    return getStream(LOG_ERROR);
+  }
+  LogStream& info()
+  {
+    return getStream(LOG_INFO);
+  }
+  LogStream& debug()
+  {
+    return getStream(LOG_DEBUG);
+  }
+  LogStream& devnull()
+  {
+    return emptyLogStream_;
+  }
 
   //! flush all active streams
   void flush();
@@ -84,28 +96,30 @@ public:
   //! (temporarily) disable all logging below given priority level
   void suspend(LogStream::PriorityType prio = LogStream::default_suspend_priority);
 
-  struct SuspendLocal
-  {
+  struct SuspendLocal {
     LogStream::PriorityType prio_;
     SuspendLocal(LogStream::PriorityType prio = LogStream::default_suspend_priority)
-      : prio_(prio) {
+      : prio_(prio)
+    {
       Logger().suspend(prio_);
     }
 
-    ~SuspendLocal() {
+    ~SuspendLocal()
+    {
       Logger().resume(prio_);
     }
   };
 
-  struct ResumeLocal
-  {
+  struct ResumeLocal {
     LogStream::PriorityType prio_;
     ResumeLocal(LogStream::PriorityType prio = LogStream::default_suspend_priority)
-      : prio_(prio) {
+      : prio_(prio)
+    {
       Logger().resume(prio_);
     }
 
-    ~ResumeLocal() {
+    ~ResumeLocal()
+    {
       Logger().suspend(prio_);
     }
   };

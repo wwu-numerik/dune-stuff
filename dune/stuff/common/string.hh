@@ -64,7 +64,7 @@ template< class T = std::string >
 inline std::vector< T > tokenize(const std::string& msg,
                                  const std::string& separators,
                                  const boost::algorithm::token_compress_mode_type mode
-                                    = boost::algorithm::token_compress_off);
+                                 = boost::algorithm::token_compress_off);
 
 } // namespace Common
 } // namespace Stuff
@@ -132,7 +132,9 @@ inline std::vector< T > tokenize(const std::string& msg,
   // special case for empty strings to avoid non-default init
   std::generate(std::begin(ret),
                 std::end(ret),
-                [&] (){ return strings[i++].empty() ? T() : fromString< T >(strings[i - 1]); });
+  [&]() {
+    return strings[i++].empty() ? T() : fromString< T >(strings[i - 1]);
+  });
   return ret;
 } // ... tokenize(...)
 
@@ -141,9 +143,9 @@ inline std::vector< std::string > tokenize(const std::string& msg,
                                            const std::string& separators,
                                            const boost::algorithm::token_compress_mode_type mode)
 {
-    std::vector< std::string > strings;
-    boost::algorithm::split(strings, msg, boost::algorithm::is_any_of(separators), mode);
-    return strings;
+  std::vector< std::string > strings;
+  boost::algorithm::split(strings, msg, boost::algorithm::is_any_of(separators), mode);
+  return strings;
 }
 
 
@@ -157,8 +159,7 @@ inline std::string stringFromTime(time_t cur_time = time(NULL))
 //! helper struct for lexical cast
 // see http://stackoverflow.com/a/2079728
 template< typename ElemT >
-struct HexToString
-{
+struct HexToString {
   ElemT value;
   operator ElemT() const
   {

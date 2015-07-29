@@ -47,12 +47,13 @@
 typedef Dune::SGrid< 2, 2 >::Codim< 0 >::Entity DuneSGrid2dEntityType;
 
 typedef testing::Types< Dune::Stuff::Functions::ESV2007::Testcase1Force< DuneSGrid2dEntityType, double, 2, double, 1, 1 >
-                      , Dune::Stuff::Functions::ESV2007::Testcase1ExactSolution< DuneSGrid2dEntityType, double, 2, double, 1, 1 >
-                        > ESV2007FunctionSGridEntityTypes;
+, Dune::Stuff::Functions::ESV2007::Testcase1ExactSolution< DuneSGrid2dEntityType, double, 2, double, 1, 1 >
+> ESV2007FunctionSGridEntityTypes;
 
 TEST_STRUCT_GENERATOR(CheckerboardFunction, SGridEntity)
 TYPED_TEST_CASE(CheckerboardFunctionSGridEntityTest, ESV2007FunctionSGridEntityTypes);
-TYPED_TEST(CheckerboardFunctionSGridEntityTest, provides_required_methods) {
+TYPED_TEST(CheckerboardFunctionSGridEntityTest, provides_required_methods)
+{
   this->check();
 }
 
@@ -61,12 +62,13 @@ TYPED_TEST(CheckerboardFunctionSGridEntityTest, provides_required_methods) {
 typedef Dune::YaspGrid< 2 >::Codim< 0 >::Entity DuneYaspGrid2dEntityType;
 
 typedef testing::Types< Dune::Stuff::Functions::ESV2007::Testcase1Force< DuneYaspGrid2dEntityType, double, 2, double, 1, 1 >
-                      , Dune::Stuff::Functions::ESV2007::Testcase1ExactSolution< DuneYaspGrid2dEntityType, double, 2, double, 1, 1 >
-                        > ESV2007FunctionYaspGridEntityTypes;
+, Dune::Stuff::Functions::ESV2007::Testcase1ExactSolution< DuneYaspGrid2dEntityType, double, 2, double, 1, 1 >
+> ESV2007FunctionYaspGridEntityTypes;
 
 TEST_STRUCT_GENERATOR(CheckerboardFunction, YaspGridEntity)
 TYPED_TEST_CASE(CheckerboardFunctionYaspGridEntityTest, ESV2007FunctionYaspGridEntityTypes);
-TYPED_TEST(CheckerboardFunctionYaspGridEntityTest, provides_required_methods) {
+TYPED_TEST(CheckerboardFunctionYaspGridEntityTest, provides_required_methods)
+{
   this->check();
 }
 
@@ -76,12 +78,13 @@ TYPED_TEST(CheckerboardFunctionYaspGridEntityTest, provides_required_methods) {
 typedef Dune::ALUGrid< 2, 2, Dune::simplex, Dune::nonconforming >::Codim< 0 >::Entity  DuneAluSimplexGrid2dEntityType;
 
 typedef testing::Types< Dune::Stuff::Functions::ESV2007::Testcase1Force< DuneAluSimplexGrid2dEntityType, double, 2, double, 1, 1 >
-                      , Dune::Stuff::Functions::ESV2007::Testcase1ExactSolution< DuneAluSimplexGrid2dEntityType, double, 2, double, 1, 1 >
-                        > ESV2007FunctionAluGridEntityTypes;
+, Dune::Stuff::Functions::ESV2007::Testcase1ExactSolution< DuneAluSimplexGrid2dEntityType, double, 2, double, 1, 1 >
+> ESV2007FunctionAluGridEntityTypes;
 
 TEST_STRUCT_GENERATOR(CheckerboardFunction, AluGridEntity)
 TYPED_TEST_CASE(CheckerboardFunctionAluGridEntityTest, ESV2007FunctionAluGridEntityTypes);
-TYPED_TEST(CheckerboardFunctionAluGridEntityTest, provides_required_methods) {
+TYPED_TEST(CheckerboardFunctionAluGridEntityTest, provides_required_methods)
+{
   this->check();
 }
 

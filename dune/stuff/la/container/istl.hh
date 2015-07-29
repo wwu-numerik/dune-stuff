@@ -351,7 +351,7 @@ public:
     if (other.size() != size())
       DUNE_THROW(Exceptions::shapes_do_not_match,
                  "The size of other (" << other.size() << ") does not match the size of this (" << size() << ")!");
-    backend()-=(*(other.backend_));
+    backend() -= (*(other.backend_));
   } // ... isub(...)
 
   /// \}
@@ -391,7 +391,10 @@ public:
   typedef typename Traits::ScalarType                           ScalarType;
   typedef typename Traits::RealType                             RealType;
 
-  static std::string static_id() { return "stuff.la.container.istl.istlrowmajorsparsematrix"; }
+  static std::string static_id()
+  {
+    return "stuff.la.container.istl.istlrowmajorsparsematrix";
+  }
 
   /**
    * \brief This is the constructor of interest which creates a sparse matrix.
@@ -429,7 +432,7 @@ public:
   explicit IstlRowMajorSparseMatrix(const BackendType& mat,
                                     const bool prune = false,
                                     const typename Common::FloatCmp::DefaultEpsilon< ScalarType >::Type eps
-                                      = Common::FloatCmp::DefaultEpsilon< ScalarType >::value())
+                                    = Common::FloatCmp::DefaultEpsilon< ScalarType >::value())
   {
     if (prune) {
       const auto pruned_pattern = pruned_pattern_from_backend(mat, eps);
@@ -552,7 +555,7 @@ public:
   {
     assert(ii < rows());
     assert(jj < cols());
-    if(these_are_valid_indices(ii, jj))
+    if (these_are_valid_indices(ii, jj))
       return backend_->operator[](ii)[jj][0][0];
     else return ScalarType(0);
   } // ... get_entry(...)
@@ -640,7 +643,7 @@ public:
 
   virtual SparsityPatternDefault pattern(const bool prune = false,
                                          const typename Common::FloatCmp::DefaultEpsilon< ScalarType >::Type eps
-                                            = Common::FloatCmp::DefaultEpsilon< ScalarType >::value()) const override final
+                                         = Common::FloatCmp::DefaultEpsilon< ScalarType >::value()) const override final
   {
     SparsityPatternDefault ret(rows());
     if (prune) {
@@ -660,9 +663,9 @@ public:
   } // ... pattern(...)
 
   virtual ThisType pruned(const typename Common::FloatCmp::DefaultEpsilon< ScalarType >::Type eps
-                            = Common::FloatCmp::DefaultEpsilon< ScalarType >::value()) const override final
+                          = Common::FloatCmp::DefaultEpsilon< ScalarType >::value()) const override final
   {
-      return ThisType(*backend_, true, eps);
+    return ThisType(*backend_, true, eps);
   }
 
   /// \}
@@ -683,7 +686,7 @@ private:
 
   SparsityPatternDefault pruned_pattern_from_backend(const BackendType& mat,
                                                      const typename Common::FloatCmp::DefaultEpsilon< ScalarType >::Type eps
-                                                      = Common::FloatCmp::DefaultEpsilon< ScalarType >::value()) const
+                                                     = Common::FloatCmp::DefaultEpsilon< ScalarType >::value()) const
   {
     SparsityPatternDefault ret(mat.N());
     for (size_t ii = 0; ii < mat.N(); ++ii) {
@@ -782,14 +785,14 @@ namespace Common {
 
 template< class T >
 struct VectorAbstraction< LA::IstlDenseVector< T > >
-  : public LA::internal::VectorAbstractionBase< LA::IstlDenseVector< T > >
-{};
+  : public LA::internal::VectorAbstractionBase< LA::IstlDenseVector< T > > {
+};
 
 
 template< class T >
 struct MatrixAbstraction< LA::IstlRowMajorSparseMatrix< T > >
-  : public LA::internal::MatrixAbstractionBase< LA::IstlRowMajorSparseMatrix< T > >
-{};
+  : public LA::internal::MatrixAbstractionBase< LA::IstlRowMajorSparseMatrix< T > > {
+};
 
 
 #endif // HAVE_DUNE_ISTL

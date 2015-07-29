@@ -21,8 +21,7 @@ namespace internal {
 
 
 template< class K, int dim >
-struct UnitMatrix
-{
+struct UnitMatrix {
   typedef FieldMatrix< K, dim, dim > type;
 
   static type value()
@@ -36,8 +35,7 @@ struct UnitMatrix
 
 
 template< class K >
-struct UnitMatrix< K, 1 >
-{
+struct UnitMatrix< K, 1 > {
   typedef FieldVector< K, 1 > type;
 
   static type value()
@@ -55,49 +53,57 @@ typename UnitMatrix< K, dim >::type unit_matrix()
 
 
 template< class R, size_t r, size_t rC >
-struct Get{ static std::string value_str()
-{
-  std::string str = "[";
-  for (size_t rr = 0; rr < r; ++rr) {
-    if (rr > 0)
-      str += "; ";
+struct Get {
+  static std::string value_str()
+  {
+    std::string str = "[";
+    for (size_t rr = 0; rr < r; ++rr) {
+      if (rr > 0)
+        str += "; ";
+      for (size_t cc = 0; cc < rC; ++cc) {
+        if (cc > 0)
+          str += " ";
+        if (cc == rr)
+          str += "1";
+        else
+          str += "0";
+      }
+    }
+    str += "]";
+    return str;
+  }
+};
+
+template< class R, size_t rC >
+struct Get< R, 1, rC > {
+  static std::string value_str()
+  {
+    std::string str = "[";
     for (size_t cc = 0; cc < rC; ++cc) {
       if (cc > 0)
         str += " ";
-      if (cc == rr)
-        str += "1";
-      else
-        str += "0";
+      str += "1";
     }
+    str += "]";
+    return str;
   }
-  str += "]";
-  return str;
-} };
-
-template< class R, size_t rC >
-struct Get< R, 1, rC >{ static std::string value_str()
-{
-  std::string str = "[";
-  for (size_t cc = 0; cc < rC; ++cc) {
-    if (cc > 0)
-      str += " ";
-    str += "1";
-  }
-  str += "]";
-  return str;
-} };
+};
 
 template< class R, size_t r >
-struct Get< R, r, 1 >{ static std::string value_str()
-{
+struct Get< R, r, 1 > {
+  static std::string value_str()
+  {
     return Get< R, 1, r >::value_str();
-} };
+  }
+};
 
 template< class R >
-struct Get< R, 1, 1 >{ static std::string value_str()
-{
-  return "1";
-} };
+struct Get< R, 1, 1 > {
+  static std::string value_str()
+  {
+    return "1";
+  }
+};
 
 
 } // namespace internal
@@ -108,7 +114,7 @@ class Constant
   : public GlobalFunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols>
 {
   typedef GlobalFunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols >
-      BaseType;
+  BaseType;
   typedef Constant < EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols >  ThisType;
 
 public:
@@ -146,8 +152,8 @@ public:
     const Common::Configuration cfg = config.has_sub(sub_name) ? config.sub(sub_name) : config;
     const Common::Configuration default_cfg = default_config();
     return Common::make_unique< ThisType >(
-          cfg.get("value", default_cfg.get< RangeType >("value")),
-          cfg.get("name",  default_cfg.get< std::string >("name")));
+             cfg.get("value", default_cfg.get< RangeType >("value")),
+             cfg.get("name",  default_cfg.get< std::string >("name")));
   } // ... create(...)
 
   explicit Constant(const RangeType& constant, const std::string name_in = static_id())
@@ -191,7 +197,7 @@ private:
   template< size_t rC >
   void jacobian_helper(JacobianRangeType& ret, internal::ChooseVariant< rC >) const
   {
-    for (auto& col_jacobian: ret) {
+    for (auto& col_jacobian : ret) {
       col_jacobian *= 0;
     }
   }

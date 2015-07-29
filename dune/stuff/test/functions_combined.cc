@@ -59,7 +59,7 @@ protected:
   static std::unique_ptr< FunctionType > create(const double ll, const double rr)
   {
     typedef typename DifferenceFunctionType< SGrid< DimDomain::value, DimDomain::value > >::ConstantFunctionType
-        ConstantFunctionType;
+    ConstantFunctionType;
     auto left  = std::make_shared< ConstantFunctionType >(ll);
     auto right = std::make_shared< ConstantFunctionType >(rr);
     return std::unique_ptr< FunctionType >(new FunctionType(left, right));
@@ -67,28 +67,31 @@ protected:
 }; // class DifferenceFunctionTest
 
 
-typedef testing::Types<
-                        Int< 1 >
-                      , Int< 2 >
-                      , Int< 3 >
-                      > DimDomains;
+typedef testing::Types <
+Int< 1 >
+, Int< 2 >
+, Int< 3 >
+> DimDomains;
 
 TYPED_TEST_CASE(DifferenceFunctionTest, DimDomains);
-TYPED_TEST(DifferenceFunctionTest, static_interface_check) {
+TYPED_TEST(DifferenceFunctionTest, static_interface_check)
+{
   this->static_interface_check();
 }
-TYPED_TEST(DifferenceFunctionTest, dynamic_interface_check) {
+TYPED_TEST(DifferenceFunctionTest, dynamic_interface_check)
+{
   this->dynamic_interface_check(*(this->create(1.0, 1.0)), *(this->create_grid()));
 }
-TYPED_TEST(DifferenceFunctionTest, evaluate_check) {
+TYPED_TEST(DifferenceFunctionTest, evaluate_check)
+{
   auto grid_ptr = this->create_grid();
   auto func = this->create(1.0, 2.0);
-//  func->visualize(grid_ptr->leafGridView(), "foo");
+  //  func->visualize(grid_ptr->leafGridView(), "foo");
   for (const auto& entity : Stuff::Common::entityRange(grid_ptr->leafGridView())) {
     const auto local_func = func->local_function(entity);
     const auto& quadrature
-        = QuadratureRules< double, TypeParam::value >::rule(entity.type(),
-                                                            boost::numeric_cast< int >(local_func->order() + 2));
+      = QuadratureRules< double, TypeParam::value >::rule(entity.type(),
+                                                          boost::numeric_cast< int >(local_func->order() + 2));
     for (const auto& element : quadrature) {
       const auto& local_point = element.position();
       const auto val = local_func->evaluate(local_point);

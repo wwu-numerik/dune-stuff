@@ -10,7 +10,7 @@
 #if HAVE_EIGEN
 
 extern "C" {
-  #include "fasp_functs.h"
+#include "fasp_functs.h"
 }
 
 #include <dune/stuff/la/container/eigen.hh>
@@ -24,13 +24,13 @@ namespace LA {
 
 template< class ElementImp >
 class AmgSolver< Dune::Stuff::LA::EigenRowMajorSparseMatrix< ElementImp >,
-                     Dune::Stuff::LA::EigenDenseVector< ElementImp > >
-  : public SolverInterface< Dune::Stuff::LA::EigenRowMajorSparseMatrix< ElementImp >,
-                            Dune::Stuff::LA::EigenDenseVector< ElementImp > >
+        Dune::Stuff::LA::EigenDenseVector< ElementImp > >
+        : public SolverInterface< Dune::Stuff::LA::EigenRowMajorSparseMatrix< ElementImp >,
+          Dune::Stuff::LA::EigenDenseVector< ElementImp > >
 {
 public:
   typedef SolverInterface< Dune::Stuff::LA::EigenRowMajorSparseMatrix< ElementImp >,
-                           Dune::Stuff::LA::EigenDenseVector< ElementImp > > BaseType;
+          Dune::Stuff::LA::EigenDenseVector< ElementImp > > BaseType;
 
   typedef typename BaseType::MatrixType   MatrixType;
   typedef typename BaseType::VectorType   VectorType;
@@ -216,8 +216,7 @@ public:
       if (inparam.print_level > PRINT_NONE)
         fasp_param_amg_print(&amgparam);
       fasp_solver_famg(&A, &f, &x, &amgparam);
-    }
-    else {
+    } else {
       DUNE_THROW(Dune::RangeError, "### ERROR: Wrong solver type: " << inparam.solver_type << "!");
       status = ERROR_SOLVER_TYPE;
     }
@@ -228,12 +227,13 @@ public:
   } // ... apply(...)
 
 private:
-  input_param initInputParams(const size_t& maxIter, const ScalarType& precision, const Dune::ParameterTree& description) const
+  input_param initInputParams(const size_t& maxIter, const ScalarType& precision,
+                              const Dune::ParameterTree& description) const
   {
     input_param inputParam;
     inputParam.print_level = description.get< int >("input_param.print_level", 0);
     inputParam.output_type = description.get< int >("input_param.output_type", 0);
-//    inputParam.workdir = description.get< char >("input_param.workdir", '.');
+    //    inputParam.workdir = description.get< char >("input_param.workdir", '.');
     inputParam.problem_num = 14;
     inputParam.solver_type = description.get< int >("input_param.solver_type", 1);
     inputParam.precond_type = description.get< int >("input_param.precond_type", 2);
@@ -277,7 +277,8 @@ private:
     return inputParam;
   } // ... initInputParams(...)
 
-  itsolver_param initItsolverParams(const size_t& maxIter, const ScalarType& precision, const Dune::ParameterTree& description) const
+  itsolver_param initItsolverParams(const size_t& maxIter, const ScalarType& precision,
+                                    const Dune::ParameterTree& description) const
   {
     itsolver_param itsolverParams;
     itsolverParams.itsolver_type = description.get< int >("itsolver_param.itsolver_type", 1);
@@ -290,7 +291,8 @@ private:
     return itsolverParams;
   } // ... initItsolverParams(...)
 
-  AMG_param initAMGParams(const size_t& maxIter, const ScalarType& precision, const Dune::ParameterTree& description) const
+  AMG_param initAMGParams(const size_t& maxIter, const ScalarType& precision,
+                          const Dune::ParameterTree& description) const
   {
     AMG_param amgParams;
     amgParams.AMG_type = description.get< int >("AMG_param.AMG_type", 1);
@@ -310,7 +312,7 @@ private:
     amgParams.amli_degree = description.get< int >("AMG_param.amli_degree", 2);
     double tmp = description.get< double >("AMG_param.amli_coef", 1.1);
     amgParams.amli_coef = &tmp;
-    amgParams.nl_amli_krylov_type = description.get< int >("AMG_param.nl_amli_krylov_type",6 );
+    amgParams.nl_amli_krylov_type = description.get< int >("AMG_param.nl_amli_krylov_type", 6);
     amgParams.coarsening_type = description.get< int >("AMG_param.coarsening_type", 1);
     amgParams.interpolation_type = description.get< int >("AMG_param.interpolation_type", 1);
     amgParams.strong_threshold = description.get< double >("AMG_param.strong_threshold", 3.e-1);

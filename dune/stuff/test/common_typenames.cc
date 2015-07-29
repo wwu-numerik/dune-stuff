@@ -15,7 +15,8 @@ STUFF_TYPENAME(Dune::MPIHelper)
 using namespace Dune::Stuff::Common;
 using namespace std;
 
-TEST(Typename, Knowns) {
+TEST(Typename, Knowns)
+{
   EXPECT_EQ(Typename<unsigned long>::value(), "unsigned long");
   EXPECT_EQ(Typename<unsigned long>::value(), "unsigned long");
   EXPECT_EQ(Typename<int>::value(), "int");
@@ -28,11 +29,13 @@ TEST(Typename, Knowns) {
   EXPECT_EQ(Typename<char>::value(), "char");
 }
 
-TEST(Typename, Unknowns) {
+TEST(Typename, Unknowns)
+{
   EXPECT_NE(Typename<Dune::Exception>::value(),  string());
 }
 
-TEST(Typename, Extended) {
+TEST(Typename, Extended)
+{
   EXPECT_EQ(Typename<Dune::MPIHelper>::value(),  string("Dune::MPIHelper"));
   {
     using namespace Dune;

@@ -24,7 +24,7 @@
 using namespace Dune::Stuff::Common;
 
 typedef testing::Types<double, float, //Dune::bigunsignedint,
-  int, unsigned int, unsigned long, long long, char> MathTestTypes;
+        int, unsigned int, unsigned long, long long, char> MathTestTypes;
 
 template <class T>
 struct ValidationTest : public testing::Test {
@@ -34,22 +34,23 @@ struct ValidationTest : public testing::Test {
    * if I don't implement "void TestBody();"
    * \see common_math.cc testcases for why I think it's weird
    **/
-  void TestBody()  {
+  void TestBody()
+  {
     using namespace boost::assign;
     const int samples = 100000;
     std::cout << "\tTesting Validators for type " << Typename<T>::value()
               << "\n\t\t" << samples << " random numbers ..." << std::endl;
     {
-      const T lower = std::numeric_limits<T>::min()+eps;
-      const T upper = std::numeric_limits<T>::max()-eps;
+      const T lower = std::numeric_limits<T>::min() + eps;
+      const T upper = std::numeric_limits<T>::max() - eps;
       RNGType rng(lower, upper);
-      for (int i = samples; i>0;--i) {
+      for (int i = samples; i > 0; --i) {
         const T arg = rng();
         test(lower, upper, arg);
       }
-      boost::array<T,10> ar = list_of<T>().repeat_fun(9,rng);
-      ValidateInList<T,boost::array<T,10> > validator(ar) ;
-      for( T t : ar ) {
+      boost::array<T, 10> ar = list_of<T>().repeat_fun(9, rng);
+      ValidateInList<T, boost::array<T, 10> > validator(ar) ;
+      for (T t : ar) {
         EXPECT_TRUE(validator(t));
       }
       std::vector<T> a;
@@ -63,19 +64,20 @@ struct ValidationTest : public testing::Test {
       test(lower, upper, arg);
       EXPECT_FALSE(ValidateLess<T>(upper)(lower));
       EXPECT_FALSE(ValidateGreater<T>(lower)(upper));
-      EXPECT_FALSE(ValidateGreaterOrEqual<T>(lower)(upper+Epsilon<T>::value));
+      EXPECT_FALSE(ValidateGreaterOrEqual<T>(lower)(upper + Epsilon<T>::value));
     }
     std::cout << "\t\tdone." << std::endl;
   }
 
-  void test(const T lower, const T upper, const T arg) const {
+  void test(const T lower, const T upper, const T arg) const
+  {
 
     const T clamped_arg = clamp(arg, T(lower + eps), T(upper - eps));
     EXPECT_TRUE(ValidateAny<T>()(arg));
     EXPECT_TRUE(ValidateLess<T>(clamped_arg)(upper));
     EXPECT_TRUE(ValidateGreaterOrEqual<T>(arg)(lower));
     EXPECT_TRUE(ValidateGreater<T>(clamped_arg)(lower));
-    EXPECT_TRUE(ValidateInterval<T>(lower,upper)(arg));
+    EXPECT_TRUE(ValidateInterval<T>(lower, upper)(arg));
     EXPECT_FALSE(ValidateNone<T>()(arg));
   }
 };
@@ -84,7 +86,8 @@ template <typename T>
 const T ValidationTest<T>::eps = Epsilon<T>::value;
 
 TYPED_TEST_CASE(ValidationTest, MathTestTypes);
-TYPED_TEST(ValidationTest, All){
+TYPED_TEST(ValidationTest, All)
+{
   ValidationTest<TypeParam> k;
   k.TestBody();
 }

@@ -400,7 +400,7 @@ public:
   explicit CommonDenseMatrix(const BackendType& other,
                              const bool prune = false,
                              const typename Common::FloatCmp::DefaultEpsilon< ScalarType >::Type eps
-                              = Common::FloatCmp::DefaultEpsilon< ScalarType >::value())
+                             = Common::FloatCmp::DefaultEpsilon< ScalarType >::value())
   {
     if (prune)
       backend_ = ThisType(other).pruned(eps).backend_;
@@ -613,14 +613,14 @@ namespace Common {
 
 template< class T >
 struct VectorAbstraction< LA::CommonDenseVector< T > >
-  : public LA::internal::VectorAbstractionBase< LA::CommonDenseVector< T > >
-{};
+  : public LA::internal::VectorAbstractionBase< LA::CommonDenseVector< T > > {
+};
 
 
 template< class T >
 struct MatrixAbstraction< LA::CommonDenseMatrix< T > >
-  : public LA::internal::MatrixAbstractionBase< LA::CommonDenseMatrix< T > >
-{};
+  : public LA::internal::MatrixAbstractionBase< LA::CommonDenseMatrix< T > > {
+};
 
 
 } // namespace Common

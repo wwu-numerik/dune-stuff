@@ -62,7 +62,7 @@ public:
   static std::string static_id()
   {
     return LocalizableFunctionInterface
-        < EntityImp, DomainFieldImp, 2, RangeFieldImp, 1, 1 >::static_id() + ".spe10.model1";
+           < EntityImp, DomainFieldImp, 2, RangeFieldImp, 1, 1 >::static_id() + ".spe10.model1";
   } // ... static_id(...)
 
 private:
@@ -76,17 +76,17 @@ private:
       DUNE_THROW(Dune::RangeError,
                  "max (is " << max << ") has to be larger than min (is " << min << ")!");
     const RangeFieldType scale = (max - min) / (internal::model1_max_value - internal::model1_min_value);
-    const RangeFieldType shift = min - scale*internal::model1_min_value;
+    const RangeFieldType shift = min - scale * internal::model1_min_value;
     // read all the data from the file
     std::ifstream datafile(filename);
     if (datafile.is_open()) {
-      static const size_t entriesPerDim = model1_x_elements*model1_y_elements*model1_z_elements;
+      static const size_t entriesPerDim = model1_x_elements * model1_y_elements * model1_z_elements;
       // create storage (there should be exactly 6000 values in the file, but we onyl read the first 2000)
       std::vector< RangeType > data(entriesPerDim, unit_range);
       double tmp = 0;
       size_t counter = 0;
       while (datafile >> tmp && counter < entriesPerDim)
-        data[counter++] *= (tmp*scale) + shift;
+        data[counter++] *= (tmp * scale) + shift;
       datafile.close();
       if (counter != entriesPerDim)
         DUNE_THROW(Dune::IOError,
@@ -125,12 +125,12 @@ public:
     const Common::Configuration default_cfg = default_config();
     // create
     return Common::make_unique< DerivedType >(
-          cfg.get("filename",     default_cfg.get< std::string >("filename")),
-          cfg.get("lower_left",   default_cfg.get< DomainType >("lower_left")),
-          cfg.get("upper_right",  default_cfg.get< DomainType >("upper_right")),
-          cfg.get("min_value",    default_cfg.get< RangeFieldType >("min_value")),
-          cfg.get("max_value",    default_cfg.get< RangeFieldType >("max_value")),
-          cfg.get("name",         default_cfg.get< std::string >("name")));
+             cfg.get("filename",     default_cfg.get< std::string >("filename")),
+             cfg.get("lower_left",   default_cfg.get< DomainType >("lower_left")),
+             cfg.get("upper_right",  default_cfg.get< DomainType >("upper_right")),
+             cfg.get("min_value",    default_cfg.get< RangeFieldType >("min_value")),
+             cfg.get("max_value",    default_cfg.get< RangeFieldType >("max_value")),
+             cfg.get("name",         default_cfg.get< std::string >("name")));
   } // ... create(...)
 
   Model1Base(const std::string& filename,
@@ -142,9 +142,11 @@ public:
              const RangeType& unit_range)
     : BaseType(lowerLeft,
                upperRight,
-               {model1_x_elements, model1_z_elements},
-               read_values_from_file(filename, min, max, unit_range),
-               nm)
+  {
+    model1_x_elements, model1_z_elements
+  },
+  read_values_from_file(filename, min, max, unit_range),
+  nm)
   {}
 
   virtual std::string type() const override
@@ -163,7 +165,10 @@ template< class E, class D, size_t d, class R, size_t r, size_t rC = 1 >
 class Model1
   : public LocalizableFunctionInterface< E, D, d, R, r, rC >
 {
-  Model1() { static_assert(AlwaysFalse< E >::value, "Not available for these dimensions!"); }
+  Model1()
+  {
+    static_assert(AlwaysFalse< E >::value, "Not available for these dimensions!");
+  }
 };
 
 
@@ -199,8 +204,7 @@ public:
 
 private:
   template< size_t d, bool anything = true >
-  struct Call
-  {
+  struct Call {
     static RangeType unit_matrix()
     {
       RangeType ret(0.0);
@@ -211,8 +215,7 @@ private:
   };
 
   template< bool anything >
-  struct Call< 1, anything >
-  {
+  struct Call< 1, anything > {
     static RangeType unit_matrix()
     {
       return RangeType(1);

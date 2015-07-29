@@ -64,14 +64,14 @@ public:
   static std::vector< std::string > types()
   {
     return {
-             "lu.partialpiv"
-           , "qr.householder"
-           , "llt"
-           , "ldlt"
-           , "qr.colpivhouseholder"
-           , "qr.fullpivhouseholder"
-           , "lu.fullpiv"
-           };
+      "lu.partialpiv"
+      , "qr.householder"
+      , "llt"
+      , "ldlt"
+      , "qr.colpivhouseholder"
+      , "qr.fullpivhouseholder"
+      , "lu.fullpiv"
+    };
   } // ... types()
 
   static Common::Configuration options(const std::string type = "")
@@ -79,7 +79,7 @@ public:
     const std::string tp = !type.empty() ? type : types()[0];
     SolverUtils::check_given(tp, types());
     Common::Configuration default_options({"type", "post_check_solves_system", "check_for_inf_nan"},
-                                          {tp,     "1e-5",                     "1"});
+    {tp,     "1e-5",                     "1"});
     // * for symmetric matrices
     if (tp == "ldlt" || tp == "llt") {
       default_options.set("pre_check_symmetry", "1e-8");
@@ -267,25 +267,25 @@ public:
   static std::vector< std::string > types()
   {
     return { "bicgstab.ilut"
-           , "lu.sparse"
-           , "llt.simplicial"          // <- does only work with symmetric matrices
-           , "ldlt.simplicial"         // <- does only work with symmetric matrices
-           , "bicgstab.diagonal"       // <- slow for complicated matrices
-           , "bicgstab.identity"       // <- slow for complicated matrices
-           , "qr.sparse"               // <- produces correct results, but is painfully slow
-           , "cg.diagonal.lower"       // <- does only work with symmetric matrices, may produce correct results
-           , "cg.diagonal.upper"       // <- does only work with symmetric matrices, may produce correct results
-           , "cg.identity.lower"       // <- does only work with symmetric matrices, may produce correct results
-           , "cg.identity.upper"       // <- does only work with symmetric matrices, may produce correct results
-//           , "spqr"                  // <- does not compile
-//           , "llt.cholmodsupernodal" // <- does not compile
-//#if HAVE_UMFPACK
-//           , "lu.umfpack"            // <- untested
-//#endif
-//#if HAVE_SUPERLU
-//           , "superlu"               // <- untested
-//#endif
-    };
+             , "lu.sparse"
+             , "llt.simplicial"          // <- does only work with symmetric matrices
+             , "ldlt.simplicial"         // <- does only work with symmetric matrices
+             , "bicgstab.diagonal"       // <- slow for complicated matrices
+             , "bicgstab.identity"       // <- slow for complicated matrices
+             , "qr.sparse"               // <- produces correct results, but is painfully slow
+             , "cg.diagonal.lower"       // <- does only work with symmetric matrices, may produce correct results
+             , "cg.diagonal.upper"       // <- does only work with symmetric matrices, may produce correct results
+             , "cg.identity.lower"       // <- does only work with symmetric matrices, may produce correct results
+             , "cg.identity.upper"       // <- does only work with symmetric matrices, may produce correct results
+             //           , "spqr"                  // <- does not compile
+             //           , "llt.cholmodsupernodal" // <- does not compile
+             //#if HAVE_UMFPACK
+             //           , "lu.umfpack"            // <- untested
+             //#endif
+             //#if HAVE_SUPERLU
+             //           , "superlu"               // <- untested
+             //#endif
+           };
   } // ... types()
 
   static Common::Configuration options(const std::string type = "")
@@ -295,9 +295,9 @@ public:
     SolverUtils::check_given(tp, types());
     // default config
     Common::Configuration default_options({"type", "post_check_solves_system", "check_for_inf_nan"},
-                                          {tp,     "1e-5",                     "1"});
+    {tp,     "1e-5",                     "1"});
     Common::Configuration iterative_options({"max_iter", "precision"},
-                                            {"10000",    "1e-10"});
+    {"10000",    "1e-10"});
     iterative_options += default_options;
     // direct solvers
     if (tp == "lu.sparse" || tp == "qr.sparse" || tp == "lu.umfpack" || tp == "spqr"
@@ -389,8 +389,8 @@ public:
     ::Eigen::ComputationInfo info;
     if (type == "cg.diagonal.lower") {
       typedef ::Eigen::ConjugateGradient< typename MatrixType::BackendType,
-                                          ::Eigen::Lower,
-                                          ::Eigen::DiagonalPreconditioner< S > > SolverType;
+              ::Eigen::Lower,
+              ::Eigen::DiagonalPreconditioner< S > > SolverType;
       SolverType solver(matrix_.backend());
       solver.setMaxIterations(opts.get("max_iter", default_opts.get< int >("max_iter")));
       solver.setTolerance(opts.get("precision", default_opts.get< R >("precision")));
@@ -398,8 +398,8 @@ public:
       info = solver.info();
     } else if (type == "cg.diagonal.upper") {
       typedef ::Eigen::ConjugateGradient< typename MatrixType::BackendType,
-                                          ::Eigen::Upper,
-                                          ::Eigen::DiagonalPreconditioner< S > > SolverType;
+              ::Eigen::Upper,
+              ::Eigen::DiagonalPreconditioner< S > > SolverType;
       SolverType solver(matrix_.backend());
       solver.setMaxIterations(opts.get("max_iter", default_opts.get< int >("max_iter")));
       solver.setTolerance(opts.get("precision", default_opts.get< R >("precision")));
@@ -407,8 +407,8 @@ public:
       info = solver.info();
     } else if (type == "cg.identity.lower") {
       typedef ::Eigen::ConjugateGradient< typename MatrixType::BackendType,
-                                          ::Eigen::Lower,
-                                          ::Eigen::IdentityPreconditioner > SolverType;
+              ::Eigen::Lower,
+              ::Eigen::IdentityPreconditioner > SolverType;
       SolverType solver(matrix_.backend());
       solver.setMaxIterations(opts.get("max_iter", default_opts.get< int >("max_iter")));
       solver.setTolerance(opts.get("precision", default_opts.get< R >("precision")));
@@ -416,8 +416,8 @@ public:
       info = solver.info();
     } else if (type == "cg.identity.upper") {
       typedef ::Eigen::ConjugateGradient< typename MatrixType::BackendType,
-                                          ::Eigen::Lower,
-                                          ::Eigen::IdentityPreconditioner > SolverType;
+              ::Eigen::Lower,
+              ::Eigen::IdentityPreconditioner > SolverType;
       SolverType solver(matrix_.backend());
       solver.setMaxIterations(opts.get("max_iter", default_opts.get< int >("max_iter")));
       solver.setTolerance(opts.get("precision", default_opts.get< R >("precision")));
@@ -484,42 +484,42 @@ public:
       solver.factorize(colmajor_copy);
       solution.backend() = solver.solve(rhs.backend());
       info = solver.info();
-//#if HAVE_UMFPACK
-//    } else if (type == "lu.umfpack") {
-//      typedef ::Eigen::UmfPackLU< typename MatrixType::BackendType > SolverType;
-//      SolverType solver;
-//      solver.analyzePattern(matrix_.backend());
-//      solver.factorize(matrix_.backend());
-//      solution.backend() = solver.solve(rhs.backend());
-//      info = solver.info();
-//#endif // HAVE_UMFPACK
-//    } else if (type == "spqr") {
-//      ColMajorBackendType colmajor_copy(matrix_.backend());
-//      colmajor_copy.makeCompressed();
-//      typedef ::Eigen::SPQR< ColMajorBackendType > SolverType;
-//      SolverType solver;
-//      solver.analyzePattern(colmajor_copy);
-//      solver.factorize(colmajor_copy);
-//      solution.backend() = solver.solve(rhs.backend());
-//      if (solver.info() != ::Eigen::Success)
-//        return solver.info();
-//    } else if (type == "cholmodsupernodalllt") {
-//      typedef ::Eigen::CholmodSupernodalLLT< typename MatrixType::BackendType > SolverType;
-//      SolverType solver;
-//      solver.analyzePattern(matrix_.backend());
-//      solver.factorize(matrix_.backend());
-//      solution.backend() = solver.solve(rhs.backend());
-//      if (solver.info() != ::Eigen::Success)
-//        return solver.info();
-//#if HAVE_SUPERLU
-//    } else if (type == "superlu") {
-//      typedef ::Eigen::SuperLU< typename MatrixType::BackendType > SolverType;
-//      SolverType solver;
-//      solver.analyzePattern(matrix_.backend());
-//      solver.factorize(matrix_.backend());
-//      solution.backend() = solver.solve(rhs.backend());
-//      info = solver.info();
-//#endif // HAVE_SUPERLU
+      //#if HAVE_UMFPACK
+      //    } else if (type == "lu.umfpack") {
+      //      typedef ::Eigen::UmfPackLU< typename MatrixType::BackendType > SolverType;
+      //      SolverType solver;
+      //      solver.analyzePattern(matrix_.backend());
+      //      solver.factorize(matrix_.backend());
+      //      solution.backend() = solver.solve(rhs.backend());
+      //      info = solver.info();
+      //#endif // HAVE_UMFPACK
+      //    } else if (type == "spqr") {
+      //      ColMajorBackendType colmajor_copy(matrix_.backend());
+      //      colmajor_copy.makeCompressed();
+      //      typedef ::Eigen::SPQR< ColMajorBackendType > SolverType;
+      //      SolverType solver;
+      //      solver.analyzePattern(colmajor_copy);
+      //      solver.factorize(colmajor_copy);
+      //      solution.backend() = solver.solve(rhs.backend());
+      //      if (solver.info() != ::Eigen::Success)
+      //        return solver.info();
+      //    } else if (type == "cholmodsupernodalllt") {
+      //      typedef ::Eigen::CholmodSupernodalLLT< typename MatrixType::BackendType > SolverType;
+      //      SolverType solver;
+      //      solver.analyzePattern(matrix_.backend());
+      //      solver.factorize(matrix_.backend());
+      //      solution.backend() = solver.solve(rhs.backend());
+      //      if (solver.info() != ::Eigen::Success)
+      //        return solver.info();
+      //#if HAVE_SUPERLU
+      //    } else if (type == "superlu") {
+      //      typedef ::Eigen::SuperLU< typename MatrixType::BackendType > SolverType;
+      //      SolverType solver;
+      //      solver.analyzePattern(matrix_.backend());
+      //      solver.factorize(matrix_.backend());
+      //      solution.backend() = solver.solve(rhs.backend());
+      //      info = solver.info();
+      //#endif // HAVE_SUPERLU
     } else
       DUNE_THROW(Exceptions::internal_error,
                  "Given type '" << type << "' is not supported, although it was reported by types()!");
@@ -587,11 +587,17 @@ private:
 
 
 template< class S >
-class Solver< EigenDenseMatrix< S > >{ static_assert(Dune::AlwaysFalse< S >::value, "You are missing Eigen!"); };
+class Solver< EigenDenseMatrix< S > >
+{
+  static_assert(Dune::AlwaysFalse< S >::value, "You are missing Eigen!");
+};
 
 template< class S >
-class Solver< EigenRowMajorSparseMatrix< S > >{ static_assert(Dune::AlwaysFalse< S >::value,
-                                                              "You are missing Eigen!"); };
+class Solver< EigenRowMajorSparseMatrix< S > >
+{
+  static_assert(Dune::AlwaysFalse< S >::value,
+                "You are missing Eigen!");
+};
 
 
 #endif // HAVE_EIGEN

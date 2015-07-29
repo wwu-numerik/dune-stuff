@@ -22,14 +22,14 @@ struct UniformDistributionSelector {
 };
 
 template < typename T >
-struct UniformDistributionSelector<T,true> {
-    typedef std::uniform_int_distribution <T>
-        type;
+struct UniformDistributionSelector<T, true> {
+  typedef std::uniform_int_distribution <T>
+  type;
 };
 template < typename T >
-struct UniformDistributionSelector<T,false> {
-    typedef std::uniform_real_distribution<T>
-        type;
+struct UniformDistributionSelector<T, false> {
+  typedef std::uniform_real_distribution<T>
+  type;
 };
 
 /** RandomNumberGenerator adapter
@@ -45,12 +45,13 @@ struct RNG {
   EngineType generator;
   DistributionType distribution;
   RNG(EngineType g, DistributionType d)
-      : generator(g)
-      , distribution(d)
+    : generator(g)
+    , distribution(d)
   {}
 
-  inline T operator()() {
-      return distribution(generator);
+  inline T operator()()
+  {
+    return distribution(generator);
   }
 };
 
@@ -61,85 +62,89 @@ struct RNG<std::complex<T>, DistributionImp, EngineImp> {
   EngineType generator;
   DistributionType distribution;
   RNG(EngineType g, DistributionType d)
-      : generator(g)
-      , distribution(d)
+    : generator(g)
+    , distribution(d)
   {}
 
-  inline std::complex<T> operator()() {
-      return std::complex<T>(distribution(generator),distribution(generator));
+  inline std::complex<T> operator()()
+  {
+    return std::complex<T>(distribution(generator), distribution(generator));
   }
 };
 
 namespace {
 const std::string alphanums(
-        "abcdefghijklmnopqrstuvwxyz"
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        "1234567890");
+  "abcdefghijklmnopqrstuvwxyz"
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+  "1234567890");
 const std::string other_printables(
-        "!@#$%^&*()"
-        "`~-_=+[{]{\\|;:'\",<.>/? ");
+  "!@#$%^&*()"
+  "`~-_=+[{]{\\|;:'\",<.>/? ");
 }
 
 //! RNG that represents strings of given length
 class RandomStrings : public RNG<std::string,
-                                std::uniform_int_distribution<int>,
-                                std::mt19937 >
+  std::uniform_int_distribution<int>,
+  std::mt19937 >
 {
-    typedef RNG<std::string, std::uniform_int_distribution<int>, std::mt19937 >
-        BaseType;
-    const size_t length;
+  typedef RNG<std::string, std::uniform_int_distribution<int>, std::mt19937 >
+  BaseType;
+  const size_t length;
 public:
-    RandomStrings(size_t l)
-        : BaseType(std::mt19937(std::random_device()()),
-                   std::uniform_int_distribution<int>(0, boost::numeric_cast< int >(alphanums.size() - 1)))
-        , length(l)
-    {}
+  RandomStrings(size_t l)
+    : BaseType(std::mt19937(std::random_device()()),
+               std::uniform_int_distribution<int>(0, boost::numeric_cast< int >(alphanums.size() - 1)))
+    , length(l)
+  {}
 
-    inline std::string operator ()() {
-        std::string ret(length,'\0');
-        std::generate(std::begin(ret), std::end(ret), [=] () { return alphanums[distribution(generator)]; });
-        return ret;
-    }
+  inline std::string operator()()
+  {
+    std::string ret(length, '\0');
+    std::generate(std::begin(ret), std::end(ret), [ = ]() {
+      return alphanums[distribution(generator)];
+    });
+    return ret;
+  }
 };
 
 //! defaultrng with choice of uniform distribution and stl's default random engine based on T and its numeric_limits
 template < class T >
 class DefaultRNG : public RNG<T,
-                                typename UniformDistributionSelector<T>::type,
-                                std::default_random_engine >
+  typename UniformDistributionSelector<T>::type,
+  std::default_random_engine >
 {
-    typedef RNG<T, typename UniformDistributionSelector<T>::type, std::default_random_engine >
-        BaseType;
+  typedef RNG<T, typename UniformDistributionSelector<T>::type, std::default_random_engine >
+  BaseType;
 public:
-    DefaultRNG(T min = std::numeric_limits<T>::min(), T max = std::numeric_limits<T>::max(),
-               T seed = std::random_device()())
-        : BaseType(std::default_random_engine(seed),
-                   typename UniformDistributionSelector<T>::type(min, max))
-    {}
+  DefaultRNG(T min = std::numeric_limits<T>::min(), T max = std::numeric_limits<T>::max(),
+             T seed = std::random_device()())
+    : BaseType(std::default_random_engine(seed),
+               typename UniformDistributionSelector<T>::type(min, max))
+  {}
 };
 
 template < class T >
 class DefaultRNG<std::complex<T>> : public RNG<std::complex<T>,
-                                typename UniformDistributionSelector<T>::type,
-                                std::default_random_engine >
+                                 typename UniformDistributionSelector<T>::type,
+                                 std::default_random_engine >
 {
-    typedef RNG<std::complex<T>, typename UniformDistributionSelector<T>::type, std::default_random_engine >
-        BaseType;
+  typedef RNG<std::complex<T>, typename UniformDistributionSelector<T>::type, std::default_random_engine >
+  BaseType;
 public:
-    DefaultRNG(T min = std::numeric_limits<T>::min(), T max = std::numeric_limits<T>::max(),
-               T seed = std::random_device()())
-        : BaseType(std::default_random_engine(seed),
-                   typename UniformDistributionSelector<T>::type(min, max))
-    {}
+  DefaultRNG(T min = std::numeric_limits<T>::min(), T max = std::numeric_limits<T>::max(),
+             T seed = std::random_device()())
+    : BaseType(std::default_random_engine(seed),
+               typename UniformDistributionSelector<T>::type(min, max))
+  {}
 };
 
 template < >
 class DefaultRNG<std::string> : public RandomStrings
 {
 public:
-    DefaultRNG(size_t ilength = 12)
-        : RandomStrings(ilength)
-    {}
+  DefaultRNG(size_t ilength = 12)
+    : RandomStrings(ilength)
+  {}
 };
 
 

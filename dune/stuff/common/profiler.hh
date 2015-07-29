@@ -36,8 +36,7 @@ class Profiler;
 Profiler& profiler();
 
 //! wraps name, start- and end time for one timing section
-struct TimingData
-{
+struct TimingData {
 private:
   std::shared_ptr<boost::timer::cpu_timer> timer_;
 public:
@@ -73,13 +72,13 @@ private:
   ~Profiler();
 
   typedef std::map< std::string, std::pair< bool, PerThreadValue<TimingData> > >
-    KnownTimersMap;
+  KnownTimersMap;
   //! section name -> seconds
   typedef std::map< std::string, TimingData::DeltaType >
-    Datamap;
+  Datamap;
   //! "Run idx" -> Datamap = section name -> seconds
   typedef std::vector< Datamap >
-    DatamapVector;
+  DatamapVector;
 
   //! appends int to section name
   long stopTiming(const std::string section_name, const size_t i, const bool use_walltime);
@@ -91,7 +90,7 @@ private:
   void resetTiming(const std::string section_name, const size_t i);
 
   //! appends int to section name
-  long getTiming(const std::string section_name, const size_t i, const bool use_walltime ) const;
+  long getTiming(const std::string section_name, const size_t i, const bool use_walltime) const;
   //! get runtime of section in run run_number in milliseconds
   long getTimingIdx(const std::string section_name, const size_t run_number, const bool use_walltime) const;
 
@@ -147,7 +146,8 @@ private:
   const std::string csv_sep_;
   std::mutex mutex_;
 
-  static Profiler& instance() {
+  static Profiler& instance()
+  {
     static Profiler pf;
     return pf;
   }
@@ -155,7 +155,8 @@ private:
 };
 
 //! global profiler object
-inline Profiler& profiler() {
+inline Profiler& profiler()
+{
   return Profiler::instance();
 }
 
@@ -166,11 +167,13 @@ protected:
 
 public:
   inline ScopedTiming(const std::string& section_name)
-    : section_name_(section_name) {
+    : section_name_(section_name)
+  {
     profiler().startTiming(section_name_);
   }
 
-  inline ~ScopedTiming() {
+  inline ~ScopedTiming()
+  {
     profiler().stopTiming(section_name_);
   }
 };

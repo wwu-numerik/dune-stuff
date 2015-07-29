@@ -18,10 +18,8 @@
 #include <dune/stuff/common/compiler.hh>
 
 template< template< class > class Test >
-struct TestRunner
-{
-  struct Visitor
-  {
+struct TestRunner {
+  struct Visitor {
     template< class T >
     void visit(const T&)
     {
@@ -41,21 +39,20 @@ struct TestRunner
 
 
 template< int i >
-struct Int
-{
+struct Int {
   static const int value = i;
 };
 
 
 typedef Dune::tuple< double
-                   , float
+, float
 //                   , Dune::bigunsignedint
-                   ,int
-                   , unsigned int
-                   , unsigned long
-                   , long long
-                   , char
-                     > BasicTypes;
+, int
+, unsigned int
+, unsigned long
+, long long
+, char
+> BasicTypes;
 
 
 //! where sleep only counts toward wall time, this wastes actual cpu time

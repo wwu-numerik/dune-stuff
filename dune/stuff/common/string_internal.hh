@@ -51,7 +51,7 @@ template< class T = std::string >
 inline std::vector< T > tokenize(const std::string& msg,
                                  const std::string& separators,
                                  const boost::algorithm::token_compress_mode_type mode
-                                    = boost::algorithm::token_compress_off);
+                                 = boost::algorithm::token_compress_off);
 #endif
 
 namespace internal {
@@ -90,8 +90,7 @@ static inline T convert_safely(std::string ss)
 
 // unspecialized variant
 template< class T, bool anything = true >
-struct Helper
-{
+struct Helper {
   static inline T from_string(std::string ss)
   {
     return convert_safely< T >(ss);
@@ -101,8 +100,7 @@ struct Helper
 
 // variant for bool, to correctly parse true and false
 template< bool anything>
-struct Helper< bool, anything >
-{
+struct Helper< bool, anything > {
   static inline bool from_string(std::string ss)
   {
     std::string ss_lower_case = ss;
@@ -142,10 +140,10 @@ DUNE_STUFF_COMMON_STRING_GENERATE_HELPER(long double, ld)
 // variant for everything that is not a matrix or a vector or complex value
 template< class T >
 static inline
-  typename std::enable_if< !is_vector< T >::value && !is_matrix< T > ::value && !is_complex<T>::value, T >::type
-              from_string(std::string ss,
-                          const size_t UNUSED_UNLESS_DEBUG(rows) = 0,
-                          const size_t UNUSED_UNLESS_DEBUG(cols) = 0)
+typename std::enable_if < !is_vector< T >::value&& !is_matrix< T > ::value&& !is_complex<T>::value, T >::type
+from_string(std::string ss,
+            const size_t UNUSED_UNLESS_DEBUG(rows) = 0,
+            const size_t UNUSED_UNLESS_DEBUG(cols) = 0)
 {
   assert(rows == 0);
   assert(cols == 0);
@@ -154,7 +152,7 @@ static inline
 
 template< class V >
 static inline
- typename std::enable_if< is_complex<V>::value, V >::type
+typename std::enable_if< is_complex<V>::value, V >::type
 from_string(std::string ss, const size_t /*size*/ = 0, const size_t /*cols*/ = 0)
 {
   boost::algorithm::trim(ss);
@@ -177,8 +175,8 @@ from_string(std::string ss, const size_t /*size*/ = 0, const size_t /*cols*/ = 0
 
 template< class VectorType >
 static inline
-  typename std::enable_if< is_vector< VectorType >::value, VectorType >::type
-              from_string(std::string ss, const size_t size, const size_t UNUSED_UNLESS_DEBUG(cols) = 0)
+typename std::enable_if< is_vector< VectorType >::value, VectorType >::type
+from_string(std::string ss, const size_t size, const size_t UNUSED_UNLESS_DEBUG(cols) = 0)
 {
   auto vector_str = ss;
   typedef typename VectorAbstraction< VectorType >::S S;
@@ -226,8 +224,8 @@ static inline
 
 template< class MatrixType >
 static inline
-  typename std::enable_if< is_matrix< MatrixType >::value, MatrixType >::type
-              from_string(std::string matrix_str, const size_t rows, const size_t cols)
+typename std::enable_if< is_matrix< MatrixType >::value, MatrixType >::type
+from_string(std::string matrix_str, const size_t rows, const size_t cols)
 {
   typedef typename MatrixAbstraction< MatrixType >::S S;
   // check if this is a matrix
@@ -311,8 +309,8 @@ static inline
 // variant for everything that is not a matrix, a vector or any of the types specified below
 template< class T >
 static inline
-  typename std::enable_if< !is_vector< T >::value && !is_matrix< T > ::value, std::string >::type
-              to_string(const T& ss)
+typename std::enable_if < !is_vector< T >::value&& !is_matrix< T > ::value, std::string >::type
+to_string(const T& ss)
 {
   return std::to_string(ss);
 }
@@ -353,8 +351,8 @@ inline std::string to_string(const std::string ss)
 
 template< class V >
 static inline
-  typename std::enable_if< is_vector< V >::value, std::string >::type
-              to_string(const V& vec)
+typename std::enable_if< is_vector< V >::value, std::string >::type
+to_string(const V& vec)
 {
   std::string ret = "[";
   for (auto ii : valueRange(vec.size())) {
@@ -368,8 +366,8 @@ static inline
 
 template< class M >
 static inline
-  typename std::enable_if< is_matrix< M >::value, std::string >::type
-              to_string(const M& mat)
+typename std::enable_if< is_matrix< M >::value, std::string >::type
+to_string(const M& mat)
 {
   std::string ret = "[";
   for (auto rr : valueRange(MatrixAbstraction< M >::rows(mat))) {

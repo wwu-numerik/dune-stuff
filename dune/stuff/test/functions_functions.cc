@@ -52,38 +52,39 @@ typedef Dune::SGrid< 2, 2 >::Codim< 0 >::Entity DuneSGrid2dEntityType;
 typedef Dune::SGrid< 3, 3 >::Codim< 0 >::Entity DuneSGrid3dEntityType;
 
 typedef testing::Types< Dune::Stuff::Functions::Constant< DuneSGrid1dEntityType, double, 1, double, 1, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid1dEntityType, double, 1, double, 1, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid1dEntityType, double, 1, double, 1, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid1dEntityType, double, 1, double, 2, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid1dEntityType, double, 1, double, 2, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid1dEntityType, double, 1, double, 2, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid1dEntityType, double, 1, double, 3, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid1dEntityType, double, 1, double, 3, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid1dEntityType, double, 1, double, 3, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid2dEntityType, double, 2, double, 1, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid2dEntityType, double, 2, double, 1, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid2dEntityType, double, 2, double, 1, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid2dEntityType, double, 2, double, 2, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid2dEntityType, double, 2, double, 2, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid2dEntityType, double, 2, double, 2, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid2dEntityType, double, 2, double, 3, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid2dEntityType, double, 2, double, 3, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid2dEntityType, double, 2, double, 3, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid3dEntityType, double, 3, double, 1, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid3dEntityType, double, 3, double, 1, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid3dEntityType, double, 3, double, 1, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid3dEntityType, double, 3, double, 2, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid3dEntityType, double, 3, double, 2, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid3dEntityType, double, 3, double, 2, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid3dEntityType, double, 3, double, 3, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid3dEntityType, double, 3, double, 3, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid3dEntityType, double, 3, double, 3, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid3dEntityType, double, 3, std::complex<double>, 3, 3 >
-                        > FunctionsSGridEntityTypes;
+, Dune::Stuff::Functions::Constant< DuneSGrid1dEntityType, double, 1, double, 1, 2 >
+, Dune::Stuff::Functions::Constant< DuneSGrid1dEntityType, double, 1, double, 1, 3 >
+, Dune::Stuff::Functions::Constant< DuneSGrid1dEntityType, double, 1, double, 2, 1 >
+, Dune::Stuff::Functions::Constant< DuneSGrid1dEntityType, double, 1, double, 2, 2 >
+, Dune::Stuff::Functions::Constant< DuneSGrid1dEntityType, double, 1, double, 2, 3 >
+, Dune::Stuff::Functions::Constant< DuneSGrid1dEntityType, double, 1, double, 3, 1 >
+, Dune::Stuff::Functions::Constant< DuneSGrid1dEntityType, double, 1, double, 3, 2 >
+, Dune::Stuff::Functions::Constant< DuneSGrid1dEntityType, double, 1, double, 3, 3 >
+, Dune::Stuff::Functions::Constant< DuneSGrid2dEntityType, double, 2, double, 1, 1 >
+, Dune::Stuff::Functions::Constant< DuneSGrid2dEntityType, double, 2, double, 1, 2 >
+, Dune::Stuff::Functions::Constant< DuneSGrid2dEntityType, double, 2, double, 1, 3 >
+, Dune::Stuff::Functions::Constant< DuneSGrid2dEntityType, double, 2, double, 2, 1 >
+, Dune::Stuff::Functions::Constant< DuneSGrid2dEntityType, double, 2, double, 2, 2 >
+, Dune::Stuff::Functions::Constant< DuneSGrid2dEntityType, double, 2, double, 2, 3 >
+, Dune::Stuff::Functions::Constant< DuneSGrid2dEntityType, double, 2, double, 3, 1 >
+, Dune::Stuff::Functions::Constant< DuneSGrid2dEntityType, double, 2, double, 3, 2 >
+, Dune::Stuff::Functions::Constant< DuneSGrid2dEntityType, double, 2, double, 3, 3 >
+, Dune::Stuff::Functions::Constant< DuneSGrid3dEntityType, double, 3, double, 1, 1 >
+, Dune::Stuff::Functions::Constant< DuneSGrid3dEntityType, double, 3, double, 1, 2 >
+, Dune::Stuff::Functions::Constant< DuneSGrid3dEntityType, double, 3, double, 1, 3 >
+, Dune::Stuff::Functions::Constant< DuneSGrid3dEntityType, double, 3, double, 2, 1 >
+, Dune::Stuff::Functions::Constant< DuneSGrid3dEntityType, double, 3, double, 2, 2 >
+, Dune::Stuff::Functions::Constant< DuneSGrid3dEntityType, double, 3, double, 2, 3 >
+, Dune::Stuff::Functions::Constant< DuneSGrid3dEntityType, double, 3, double, 3, 1 >
+, Dune::Stuff::Functions::Constant< DuneSGrid3dEntityType, double, 3, double, 3, 2 >
+, Dune::Stuff::Functions::Constant< DuneSGrid3dEntityType, double, 3, double, 3, 3 >
+, Dune::Stuff::Functions::Constant< DuneSGrid3dEntityType, double, 3, std::complex<double>, 3, 3 >
+> FunctionsSGridEntityTypes;
 
 TEST_STRUCT_GENERATOR(Functions, SGridEntity)
 TYPED_TEST_CASE(FunctionsSGridEntityTest, FunctionsSGridEntityTypes);
-TYPED_TEST(FunctionsSGridEntityTest, provides_required_methods) {
+TYPED_TEST(FunctionsSGridEntityTest, provides_required_methods)
+{
   this->check();
 }
 
@@ -94,37 +95,38 @@ typedef Dune::YaspGrid< 2 >::Codim< 0 >::Entity DuneYaspGrid2dEntityType;
 typedef Dune::YaspGrid< 3 >::Codim< 0 >::Entity DuneYaspGrid3dEntityType;
 
 typedef testing::Types< Dune::Stuff::Functions::Constant< DuneYaspGrid1dEntityType, double, 1, double, 1, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid1dEntityType, double, 1, double, 1, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid1dEntityType, double, 1, double, 1, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid1dEntityType, double, 1, double, 2, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid1dEntityType, double, 1, double, 2, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid1dEntityType, double, 1, double, 2, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid1dEntityType, double, 1, double, 3, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid1dEntityType, double, 1, double, 3, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid1dEntityType, double, 1, double, 3, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid2dEntityType, double, 2, double, 1, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid2dEntityType, double, 2, double, 1, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid2dEntityType, double, 2, double, 1, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid2dEntityType, double, 2, double, 2, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid2dEntityType, double, 2, double, 2, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid2dEntityType, double, 2, double, 2, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid2dEntityType, double, 2, double, 3, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid2dEntityType, double, 2, double, 3, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid2dEntityType, double, 2, double, 3, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid3dEntityType, double, 3, double, 1, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid3dEntityType, double, 3, double, 1, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid3dEntityType, double, 3, double, 1, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid3dEntityType, double, 3, double, 2, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid3dEntityType, double, 3, double, 2, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid3dEntityType, double, 3, double, 2, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid3dEntityType, double, 3, double, 3, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid3dEntityType, double, 3, double, 3, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid3dEntityType, double, 3, double, 3, 3 >
-                        > FunctionsYaspGridEntityTypes;
+, Dune::Stuff::Functions::Constant< DuneYaspGrid1dEntityType, double, 1, double, 1, 2 >
+, Dune::Stuff::Functions::Constant< DuneYaspGrid1dEntityType, double, 1, double, 1, 3 >
+, Dune::Stuff::Functions::Constant< DuneYaspGrid1dEntityType, double, 1, double, 2, 1 >
+, Dune::Stuff::Functions::Constant< DuneYaspGrid1dEntityType, double, 1, double, 2, 2 >
+, Dune::Stuff::Functions::Constant< DuneYaspGrid1dEntityType, double, 1, double, 2, 3 >
+, Dune::Stuff::Functions::Constant< DuneYaspGrid1dEntityType, double, 1, double, 3, 1 >
+, Dune::Stuff::Functions::Constant< DuneYaspGrid1dEntityType, double, 1, double, 3, 2 >
+, Dune::Stuff::Functions::Constant< DuneYaspGrid1dEntityType, double, 1, double, 3, 3 >
+, Dune::Stuff::Functions::Constant< DuneYaspGrid2dEntityType, double, 2, double, 1, 1 >
+, Dune::Stuff::Functions::Constant< DuneYaspGrid2dEntityType, double, 2, double, 1, 2 >
+, Dune::Stuff::Functions::Constant< DuneYaspGrid2dEntityType, double, 2, double, 1, 3 >
+, Dune::Stuff::Functions::Constant< DuneYaspGrid2dEntityType, double, 2, double, 2, 1 >
+, Dune::Stuff::Functions::Constant< DuneYaspGrid2dEntityType, double, 2, double, 2, 2 >
+, Dune::Stuff::Functions::Constant< DuneYaspGrid2dEntityType, double, 2, double, 2, 3 >
+, Dune::Stuff::Functions::Constant< DuneYaspGrid2dEntityType, double, 2, double, 3, 1 >
+, Dune::Stuff::Functions::Constant< DuneYaspGrid2dEntityType, double, 2, double, 3, 2 >
+, Dune::Stuff::Functions::Constant< DuneYaspGrid2dEntityType, double, 2, double, 3, 3 >
+, Dune::Stuff::Functions::Constant< DuneYaspGrid3dEntityType, double, 3, double, 1, 1 >
+, Dune::Stuff::Functions::Constant< DuneYaspGrid3dEntityType, double, 3, double, 1, 2 >
+, Dune::Stuff::Functions::Constant< DuneYaspGrid3dEntityType, double, 3, double, 1, 3 >
+, Dune::Stuff::Functions::Constant< DuneYaspGrid3dEntityType, double, 3, double, 2, 1 >
+, Dune::Stuff::Functions::Constant< DuneYaspGrid3dEntityType, double, 3, double, 2, 2 >
+, Dune::Stuff::Functions::Constant< DuneYaspGrid3dEntityType, double, 3, double, 2, 3 >
+, Dune::Stuff::Functions::Constant< DuneYaspGrid3dEntityType, double, 3, double, 3, 1 >
+, Dune::Stuff::Functions::Constant< DuneYaspGrid3dEntityType, double, 3, double, 3, 2 >
+, Dune::Stuff::Functions::Constant< DuneYaspGrid3dEntityType, double, 3, double, 3, 3 >
+> FunctionsYaspGridEntityTypes;
 
 TEST_STRUCT_GENERATOR(Functions, YaspGridEntity)
 TYPED_TEST_CASE(FunctionsYaspGridEntityTest, FunctionsYaspGridEntityTypes);
-TYPED_TEST(FunctionsYaspGridEntityTest, provides_required_methods) {
+TYPED_TEST(FunctionsYaspGridEntityTest, provides_required_methods)
+{
   this->check();
 }
 
@@ -136,39 +138,40 @@ typedef Dune::ALUGrid< 3, 3, Dune::simplex, Dune::nonconforming>::Codim< 0 >::En
 typedef Dune::ALUGrid< 3, 3, Dune::cube, Dune::nonconforming>::Codim< 0 >::Entity     DuneAluCubeGrid3dEntityType;
 
 typedef testing::Types< Dune::Stuff::Functions::Constant< DuneAluSimplexGrid2dEntityType, double, 2, double, 1, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneAluSimplexGrid2dEntityType, double, 2, double, 1, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneAluSimplexGrid2dEntityType, double, 2, double, 1, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneAluSimplexGrid2dEntityType, double, 2, double, 2, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneAluSimplexGrid2dEntityType, double, 2, double, 2, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneAluSimplexGrid2dEntityType, double, 2, double, 2, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneAluSimplexGrid2dEntityType, double, 2, double, 3, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneAluSimplexGrid2dEntityType, double, 2, double, 3, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneAluSimplexGrid2dEntityType, double, 2, double, 3, 3 >
+, Dune::Stuff::Functions::Constant< DuneAluSimplexGrid2dEntityType, double, 2, double, 1, 2 >
+, Dune::Stuff::Functions::Constant< DuneAluSimplexGrid2dEntityType, double, 2, double, 1, 3 >
+, Dune::Stuff::Functions::Constant< DuneAluSimplexGrid2dEntityType, double, 2, double, 2, 1 >
+, Dune::Stuff::Functions::Constant< DuneAluSimplexGrid2dEntityType, double, 2, double, 2, 2 >
+, Dune::Stuff::Functions::Constant< DuneAluSimplexGrid2dEntityType, double, 2, double, 2, 3 >
+, Dune::Stuff::Functions::Constant< DuneAluSimplexGrid2dEntityType, double, 2, double, 3, 1 >
+, Dune::Stuff::Functions::Constant< DuneAluSimplexGrid2dEntityType, double, 2, double, 3, 2 >
+, Dune::Stuff::Functions::Constant< DuneAluSimplexGrid2dEntityType, double, 2, double, 3, 3 >
 
-                      , Dune::Stuff::Functions::Constant< DuneAluSimplexGrid3dEntityType, double, 3, double, 1, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneAluSimplexGrid3dEntityType, double, 3, double, 1, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneAluSimplexGrid3dEntityType, double, 3, double, 1, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneAluSimplexGrid3dEntityType, double, 3, double, 2, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneAluSimplexGrid3dEntityType, double, 3, double, 2, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneAluSimplexGrid3dEntityType, double, 3, double, 2, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneAluSimplexGrid3dEntityType, double, 3, double, 3, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneAluSimplexGrid3dEntityType, double, 3, double, 3, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneAluSimplexGrid3dEntityType, double, 3, double, 3, 3 >
+, Dune::Stuff::Functions::Constant< DuneAluSimplexGrid3dEntityType, double, 3, double, 1, 1 >
+, Dune::Stuff::Functions::Constant< DuneAluSimplexGrid3dEntityType, double, 3, double, 1, 2 >
+, Dune::Stuff::Functions::Constant< DuneAluSimplexGrid3dEntityType, double, 3, double, 1, 3 >
+, Dune::Stuff::Functions::Constant< DuneAluSimplexGrid3dEntityType, double, 3, double, 2, 1 >
+, Dune::Stuff::Functions::Constant< DuneAluSimplexGrid3dEntityType, double, 3, double, 2, 2 >
+, Dune::Stuff::Functions::Constant< DuneAluSimplexGrid3dEntityType, double, 3, double, 2, 3 >
+, Dune::Stuff::Functions::Constant< DuneAluSimplexGrid3dEntityType, double, 3, double, 3, 1 >
+, Dune::Stuff::Functions::Constant< DuneAluSimplexGrid3dEntityType, double, 3, double, 3, 2 >
+, Dune::Stuff::Functions::Constant< DuneAluSimplexGrid3dEntityType, double, 3, double, 3, 3 >
 
-                      , Dune::Stuff::Functions::Constant< DuneAluCubeGrid3dEntityType, double, 3, double, 1, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneAluCubeGrid3dEntityType, double, 3, double, 1, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneAluCubeGrid3dEntityType, double, 3, double, 1, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneAluCubeGrid3dEntityType, double, 3, double, 2, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneAluCubeGrid3dEntityType, double, 3, double, 2, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneAluCubeGrid3dEntityType, double, 3, double, 2, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneAluCubeGrid3dEntityType, double, 3, double, 3, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneAluCubeGrid3dEntityType, double, 3, double, 3, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneAluCubeGrid3dEntityType, double, 3, double, 3, 3 >
-                        > FunctionsAluGridEntityTypes;
+, Dune::Stuff::Functions::Constant< DuneAluCubeGrid3dEntityType, double, 3, double, 1, 1 >
+, Dune::Stuff::Functions::Constant< DuneAluCubeGrid3dEntityType, double, 3, double, 1, 2 >
+, Dune::Stuff::Functions::Constant< DuneAluCubeGrid3dEntityType, double, 3, double, 1, 3 >
+, Dune::Stuff::Functions::Constant< DuneAluCubeGrid3dEntityType, double, 3, double, 2, 1 >
+, Dune::Stuff::Functions::Constant< DuneAluCubeGrid3dEntityType, double, 3, double, 2, 2 >
+, Dune::Stuff::Functions::Constant< DuneAluCubeGrid3dEntityType, double, 3, double, 2, 3 >
+, Dune::Stuff::Functions::Constant< DuneAluCubeGrid3dEntityType, double, 3, double, 3, 1 >
+, Dune::Stuff::Functions::Constant< DuneAluCubeGrid3dEntityType, double, 3, double, 3, 2 >
+, Dune::Stuff::Functions::Constant< DuneAluCubeGrid3dEntityType, double, 3, double, 3, 3 >
+> FunctionsAluGridEntityTypes;
 
 TEST_STRUCT_GENERATOR(Functions, AluGridEntity)
 TYPED_TEST_CASE(FunctionsAluGridEntityTest, FunctionsAluGridEntityTypes);
-TYPED_TEST(FunctionsAluGridEntityTest, provides_required_methods) {
+TYPED_TEST(FunctionsAluGridEntityTest, provides_required_methods)
+{
   this->check();
 }
 

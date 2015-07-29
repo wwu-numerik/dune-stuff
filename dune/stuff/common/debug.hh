@@ -13,13 +13,15 @@
 
 #define SEGFAULT { int* J = 0; * J = 9; }
 
-inline char* charcopy(const char* s) { size_t l = strlen(s) + 1;
-                            char* t = new char[l];
-                            for (size_t i = 0; i < l; i++)
-                            {
-                              t[i] = s[i];
-                            }
-                            return t; } // copy
+inline char* charcopy(const char* s)
+{
+  size_t l = strlen(s) + 1;
+  char* t = new char[l];
+  for (size_t i = 0; i < l; i++) {
+    t[i] = s[i];
+  }
+  return t;
+} // copy
 
 #define __CLASS__ strtok(charcopy(__PRETTY_FUNCTION__), "<(")
 

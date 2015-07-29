@@ -37,11 +37,14 @@ public:
   TmpMatricesStorage(const std::vector< size_t >& num_tmp_objects,
                      const size_t max_rows,
                      const size_t max_cols)
-    : matrices_(LocalMatrixContainerType({std::vector< LocalMatrixType >(num_tmp_objects.at(0),
-                                                                         LocalMatrixType(max_rows, max_cols, FieldType(0))),
-                                          std::vector< LocalMatrixType >(num_tmp_objects.at(1),
-                                                                         LocalMatrixType(max_rows, max_cols, FieldType(0)))}))
-    , indices_(4, Dune::DynamicVector< size_t >(std::max(max_rows, max_cols)))
+    : matrices_(LocalMatrixContainerType(
+  {
+    std::vector< LocalMatrixType >(num_tmp_objects.at(0),
+                                   LocalMatrixType(max_rows, max_cols, FieldType(0))),
+                                                   std::vector< LocalMatrixType >(num_tmp_objects.at(1),
+                                                                                  LocalMatrixType(max_rows, max_cols, FieldType(0)))
+  }))
+  , indices_(4, Dune::DynamicVector< size_t >(std::max(max_rows, max_cols)))
   {}
 
   virtual ~TmpMatricesStorage() {}
@@ -71,12 +74,15 @@ protected:
   typedef std::vector< std::vector< LocalVectorType > > LocalVectorContainerType;
 public:
   TmpVectorsStorage(const std::vector< size_t >& num_tmp_objects,
-          const size_t max_size)
-    : vectors_(LocalVectorContainerType({std::vector< LocalVectorType >(num_tmp_objects.at(0),
-                                                                        LocalVectorType(max_size, FieldType(0))),
-                                         std::vector< LocalVectorType >(num_tmp_objects.at(1),
-                                                                        LocalVectorType(max_size, FieldType(0)))}))
-    , indices_(max_size)
+                    const size_t max_size)
+    : vectors_(LocalVectorContainerType(
+  {
+    std::vector< LocalVectorType >(num_tmp_objects.at(0),
+                                   LocalVectorType(max_size, FieldType(0))),
+                                                   std::vector< LocalVectorType >(num_tmp_objects.at(1),
+                                                                                  LocalVectorType(max_size, FieldType(0)))
+  }))
+  , indices_(max_size)
   {}
 
   virtual ~TmpVectorsStorage() {}

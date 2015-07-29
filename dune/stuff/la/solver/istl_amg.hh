@@ -44,11 +44,11 @@ public:
   // define the category
   enum {
     //! \brief The category the preconditioner is part of.
-    category=c
+    category = c
   };
 
 
-  void pre(domain_type&,range_type&)
+  void pre(domain_type&, range_type&)
   {}
 
   void apply(domain_type& v, const range_type& d)
@@ -86,7 +86,7 @@ public:
     // define the matrix operator
 
     typedef OverlappingSchwarzOperator< IstlMatrixType, IstlVectorType, IstlVectorType, CommunicatorType >
-        MatrixOperatorType;
+    MatrixOperatorType;
     MatrixOperatorType matrix_operator(matrix_.backend(), communicator_);
 
     // define the scalar product
@@ -95,8 +95,8 @@ public:
     // ILU0 as the smoother for the AMG
     typedef SeqILU0< IstlMatrixType, IstlVectorType, IstlVectorType, 1 > SequentialSmootherType_ILU;
     typedef BlockPreconditioner< IstlVectorType, IstlVectorType,
-        CommunicatorType,
-        SequentialSmootherType_ILU > SmootherType_ILU;
+            CommunicatorType,
+            SequentialSmootherType_ILU > SmootherType_ILU;
     typename Amg::SmootherTraits< SmootherType_ILU >::Arguments smoother_parameters_ILU;
     smoother_parameters_ILU.iterations = opts.get("smoother.iterations",
                                                   default_opts.get< size_t >("smoother.iterations"));
@@ -105,8 +105,8 @@ public:
     // SSOR as the smoother for the amg
     typedef SeqSSOR< IstlMatrixType, IstlVectorType, IstlVectorType, 1 > SequentialSmootherType_SSOR;
     typedef BlockPreconditioner< IstlVectorType, IstlVectorType,
-        CommunicatorType,
-        SequentialSmootherType_SSOR > SmootherType_SSOR;
+            CommunicatorType,
+            SequentialSmootherType_SSOR > SmootherType_SSOR;
     typename Amg::SmootherTraits< SmootherType_SSOR >::Arguments smoother_parameters_SSOR;
     smoother_parameters_SSOR.iterations = opts.get("smoother.iterations",
                                                    default_opts.get< size_t >("smoother.iterations"));
@@ -129,7 +129,7 @@ public:
     amg_parameters.setDebugLevel(opts.get("preconditioner.verbose",
                                           default_opts.get< int >("preconditioner.verbose")));
     Amg::CoarsenCriterion< Amg::UnSymmetricCriterion< IstlMatrixType, Amg::FirstDiagonal > >
-        amg_criterion(amg_parameters);
+    amg_criterion(amg_parameters);
     if (smoother_type == "ilu0") {
       typedef Amg::AMG< MatrixOperatorType, IstlVectorType, SmootherType_ILU, CommunicatorType > PreconditionerType_ILU;
       PreconditionerType_ILU preconditioner(matrix_operator, amg_criterion, smoother_parameters_ILU, communicator_);
@@ -147,7 +147,7 @@ public:
 #else // HAVE_MPI
                                               opts.get("verbose", default_opts.get< int >("verbose"))
 #endif
-                                              );
+                                             );
 
       InverseOperatorResult stats;
       solver.apply(solution.backend(), rhs.backend(), stats);
@@ -169,7 +169,7 @@ public:
 #else // HAVE_MPI
                                               opts.get("verbose", default_opts.get< int >("verbose"))
 #endif
-                                              );
+                                             );
 
       InverseOperatorResult stats;
       solver.apply(solution.backend(), rhs.backend(), stats);
@@ -226,7 +226,7 @@ public:
     amg_parameters.setDebugLevel(opts.get("preconditioner.verbose",
                                           default_opts.get< int >("preconditioner.verbose")));
     Amg::CoarsenCriterion< Amg::UnSymmetricCriterion< IstlMatrixType, Amg::FirstDiagonal > >
-        amg_criterion(amg_parameters);
+    amg_criterion(amg_parameters);
 
     InverseOperatorResult stats;
     if (smoother_type == "ilu0") {

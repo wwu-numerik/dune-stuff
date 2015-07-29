@@ -29,7 +29,10 @@ template< class E, class D, size_t d, class R, size_t r, size_t rC = 1 >
 class FlatTop
   : public LocalizableFunctionInterface< E, D, d, R, r, rC >
 {
-  FlatTop() { static_assert(AlwaysFalse< E >::value, "Not available for these dimensions!"); }
+  FlatTop()
+  {
+    static_assert(AlwaysFalse< E >::value, "Not available for these dimensions!");
+  }
 };
 
 
@@ -83,11 +86,11 @@ public:
     const Common::Configuration cfg = config.has_sub(sub_name) ? config.sub(sub_name) : config;
     const Common::Configuration default_cfg = default_config();
     return Common::make_unique< ThisType >(
-          cfg.get("lower_left",     default_cfg.get< DomainType >( "lower_left")),
-          cfg.get("upper_right",    default_cfg.get< DomainType >( "upper_right")),
-          cfg.get("boundary_layer", default_cfg.get< DomainType >( "boundary_layer")),
-          cfg.get("value",          default_cfg.get< RangeType >(  "value")),
-          cfg.get("name",           default_cfg.get< std::string >("name")));
+             cfg.get("lower_left",     default_cfg.get< DomainType >("lower_left")),
+             cfg.get("upper_right",    default_cfg.get< DomainType >("upper_right")),
+             cfg.get("boundary_layer", default_cfg.get< DomainType >("boundary_layer")),
+             cfg.get("value",          default_cfg.get< RangeType >("value")),
+             cfg.get("name",           default_cfg.get< std::string >("name")));
   } // ... create(...)
 
   FlatTop(const StuffDomainType& lower_left,
@@ -122,7 +125,7 @@ public:
 
   virtual size_t order() const override
   {
-    return 3*dimDomain;
+    return 3 * dimDomain;
   }
 
   virtual void evaluate(const DomainType& xx, RangeType& ret) const override
@@ -139,13 +142,13 @@ public:
         break;
       } else if (point < left + delta) {
         // left boundary layer
-        ret[0] *= phi_left((point - (left + delta)) / (2.0*delta));
+        ret[0] *= phi_left((point - (left + delta)) / (2.0 * delta));
       } else if (point < right - delta) {
         // inside
         // do nothing (keep value)
       } else if (point < right + delta) {
         // right boundary layer
-        ret[0] *= phi_right((point - (right - delta)) / (2.0*delta));
+        ret[0] *= phi_right((point - (right - delta)) / (2.0 * delta));
       } else {
         // outside
         ret[0] = 0.0;
@@ -166,10 +169,10 @@ private:
       DUNE_THROW(Exceptions::wrong_input_given,
                  "boundary_layer has to be strictly positive!\n"
                  << "boundary_layer = [" << boundary_layer_ << "]");
-    if (Common::FloatCmp::gt(boundary_layer_*2.0, upper_right_ - lower_left_))
+    if (Common::FloatCmp::gt(boundary_layer_ * 2.0, upper_right_ - lower_left_))
       DUNE_THROW(Exceptions::wrong_input_given,
                  "boundary_layer has to be thin enough!\n"
-                 "2*boundary_layer = [" << boundary_layer_*2.0 << "]\n"
+                 "2*boundary_layer = [" << boundary_layer_ * 2.0 << "]\n"
                  << "upper_right - lower_left = [" << upper_right_ - lower_left_ << "]");
   } // .. check_input(...)
 
@@ -180,7 +183,7 @@ private:
     else if (point > 0.0)
       return 1.0;
     else
-      return std::pow(1.0 + point, 2)*(1.0 - 2.0*point);
+      return std::pow(1.0 + point, 2) * (1.0 - 2.0 * point);
   } // ... phi_left(...)
 
   RangeFieldType phi_right(const RangeFieldType& point) const
@@ -190,7 +193,7 @@ private:
     else if (point > 1.0)
       return 0.0;
     else
-      return std::pow(1.0 - point, 2)*(1.0 + 2.0*point);
+      return std::pow(1.0 - point, 2) * (1.0 + 2.0 * point);
   } // ... phi_right(...)
 
   const StuffDomainType lower_left_;

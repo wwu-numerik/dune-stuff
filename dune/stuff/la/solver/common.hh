@@ -50,7 +50,7 @@ public:
     const std::string tp = !type.empty() ? type : types()[0];
     SolverUtils::check_given(tp, types());
     return Common::Configuration({"type", "post_check_solves_system"},
-                                 {tp,     "1e-5"});
+    {tp,     "1e-5"});
   } // ... options(...)
 
   void apply(const CommonDenseVector< S >& rhs, CommonDenseVector< S >& solution) const

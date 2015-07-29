@@ -52,8 +52,7 @@ public:
 
 private:
   template< class FunctionType, bool available = false >
-  struct Call
-  {
+  struct Call {
     static std::vector< std::string > append(std::vector< std::string > in)
     {
       return in;
@@ -78,8 +77,7 @@ private:
   }; // struct Call
 
   template< class FunctionType >
-  struct Call< FunctionType, true >
-  {
+  struct Call< FunctionType, true > {
     static std::vector< std::string > append(std::vector< std::string > in)
     {
       in.push_back(FunctionType::static_id());

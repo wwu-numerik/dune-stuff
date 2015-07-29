@@ -10,7 +10,7 @@ namespace Dune {
 namespace Stuff {
 
 namespace Common {
-  namespace FloatCmp {}
+namespace FloatCmp {}
 }
 namespace Grid {}
 namespace Fem {}

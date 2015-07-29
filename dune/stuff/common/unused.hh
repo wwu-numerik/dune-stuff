@@ -13,9 +13,9 @@
 #endif
 
 #ifndef NDEBUG
- #define DSC_DEBUG_ONLY(param) param
+#define DSC_DEBUG_ONLY(param) param
 #else
- #define DSC_DEBUG_ONLY(param) DSC_UNUSED(param)
+#define DSC_DEBUG_ONLY(param) DSC_UNUSED(param)
 #endif
 
 /*** LEGACY MACROS ****/
@@ -23,9 +23,9 @@
 
 /*  some arguments are only used in debug mode, but unused in release one */
 #ifndef NDEBUG
- #define UNUSED_UNLESS_DEBUG(param) param
+#define UNUSED_UNLESS_DEBUG(param) param
 #else
- #define UNUSED_UNLESS_DEBUG(param) UNUSED(param)
+#define UNUSED_UNLESS_DEBUG(param) UNUSED(param)
 #endif // ifndef NDEBUG
 /*** LEGACY MACROS ****/
 

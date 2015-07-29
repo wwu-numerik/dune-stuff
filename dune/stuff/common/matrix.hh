@@ -30,8 +30,7 @@ namespace Common {
  *        static methods and members (see the specializations below).
  */
 template< class MatType >
-struct MatrixAbstraction
-{
+struct MatrixAbstraction {
   typedef MatType MatrixType;
   typedef MatType ScalarType;
   typedef MatType S;
@@ -76,8 +75,7 @@ struct MatrixAbstraction
 };
 
 template< class K >
-struct MatrixAbstraction< Dune::DynamicMatrix< K > >
-{
+struct MatrixAbstraction< Dune::DynamicMatrix< K > > {
   typedef Dune::DynamicMatrix< K > MatrixType;
   typedef K                        ScalarType;
   typedef ScalarType               S;
@@ -122,8 +120,7 @@ struct MatrixAbstraction< Dune::DynamicMatrix< K > >
 };
 
 template< class K, int N, int M >
-struct MatrixAbstraction< Dune::FieldMatrix< K, N, M > >
-{
+struct MatrixAbstraction< Dune::FieldMatrix< K, N, M > > {
   typedef Dune::FieldMatrix< K, N, M > MatrixType;
   typedef K                            ScalarType;
   typedef ScalarType                   S;
@@ -180,8 +177,7 @@ struct MatrixAbstraction< Dune::FieldMatrix< K, N, M > >
 };
 
 template< class K, int N, int M >
-struct MatrixAbstraction< Dune::Stuff::Common::FieldMatrix< K, N, M > >
-{
+struct MatrixAbstraction< Dune::Stuff::Common::FieldMatrix< K, N, M > > {
   typedef Dune::Stuff::Common::FieldMatrix< K, N, M > MatrixType;
   typedef K                                           ScalarType;
   typedef ScalarType                                  S;
@@ -192,7 +188,7 @@ struct MatrixAbstraction< Dune::Stuff::Common::FieldMatrix< K, N, M > >
 
   static const size_t static_rows = N;
 
-  static const size_t static_cols =M;
+  static const size_t static_cols = M;
 
   static inline MatrixType create(const size_t rows, const size_t cols)
   {
@@ -227,14 +223,13 @@ struct MatrixAbstraction< Dune::Stuff::Common::FieldMatrix< K, N, M > >
 
 
 template< class MatrixType >
-struct is_matrix
-{
+struct is_matrix {
   static const bool value = MatrixAbstraction< MatrixType >::is_matrix;
 };
 
 
 template< class MatrixType >
-    typename std::enable_if< is_matrix< MatrixType >::value, MatrixType >::type
+typename std::enable_if< is_matrix< MatrixType >::value, MatrixType >::type
 create(const size_t sz, const typename MatrixAbstraction< MatrixType >::S& val)
 {
   return MatrixAbstraction< MatrixType >::create(sz, val);

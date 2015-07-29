@@ -62,66 +62,66 @@ public:
   }
 
   ThisType& add(std::function< void(const EntityType&) > lambda,
-           const ApplyOn::WhichEntity< GridViewType >* where = new ApplyOn::AllEntities< GridViewType >())
+                const ApplyOn::WhichEntity< GridViewType >* where = new ApplyOn::AllEntities< GridViewType >())
   {
     codim0_functors_.emplace_back(new internal::Codim0LambdaWrapper< GridViewType >(lambda, where));
     return *this;
   }
 
   ThisType& add(std::function< void(const IntersectionType&, const EntityType&, const EntityType&) > lambda,
-           const ApplyOn::WhichIntersection< GridViewType >* where = new ApplyOn::AllIntersections< GridViewType >())
+                const ApplyOn::WhichIntersection< GridViewType >* where = new ApplyOn::AllIntersections< GridViewType >())
   {
     codim1_functors_.emplace_back(new internal::Codim1LambdaWrapper< GridViewType >(lambda, where));
     return *this;
   }
 
   ThisType& add(Functor::Codim0< GridViewType >& functor,
-           const ApplyOn::WhichEntity< GridViewType >* where = new ApplyOn::AllEntities< GridViewType >())
+                const ApplyOn::WhichEntity< GridViewType >* where = new ApplyOn::AllEntities< GridViewType >())
   {
     codim0_functors_.emplace_back(
-          new internal::Codim0FunctorWrapper<GridViewType, Functor::Codim0< GridViewType > >(functor, where));
+      new internal::Codim0FunctorWrapper<GridViewType, Functor::Codim0< GridViewType > >(functor, where));
     return *this;
   }
 
   ThisType& add(Functor::Codim1< GridViewType >& functor,
-           const ApplyOn::WhichIntersection< GridViewType >* where = new ApplyOn::AllIntersections< GridViewType >())
+                const ApplyOn::WhichIntersection< GridViewType >* where = new ApplyOn::AllIntersections< GridViewType >())
   {
     codim1_functors_.emplace_back(
-          new internal::Codim1FunctorWrapper<GridViewType, Functor::Codim1< GridViewType > >(functor, where));
+      new internal::Codim1FunctorWrapper<GridViewType, Functor::Codim1< GridViewType > >(functor, where));
     return *this;
   }
 
   ThisType& add(Functor::Codim0And1< GridViewType >& functor,
-           const ApplyOn::WhichEntity< GridViewType >* which_entities = new ApplyOn::AllEntities< GridViewType >(),
-           const ApplyOn::WhichIntersection< GridViewType >* which_intersections
-              = new ApplyOn::AllIntersections< GridViewType >())
+                const ApplyOn::WhichEntity< GridViewType >* which_entities = new ApplyOn::AllEntities< GridViewType >(),
+                const ApplyOn::WhichIntersection< GridViewType >* which_intersections
+                = new ApplyOn::AllIntersections< GridViewType >())
   {
     codim0_functors_.emplace_back(
-          new internal::Codim0FunctorWrapper<GridViewType, Functor::Codim0And1< GridViewType > >(functor,
-                                                                                                 which_entities));
+      new internal::Codim0FunctorWrapper<GridViewType, Functor::Codim0And1< GridViewType > >(functor,
+                                                                                             which_entities));
     codim1_functors_.emplace_back(
-          new internal::Codim1FunctorWrapper<GridViewType, Functor::Codim0And1< GridViewType > >(functor,
-                                                                                                 which_intersections));
+      new internal::Codim1FunctorWrapper<GridViewType, Functor::Codim0And1< GridViewType > >(functor,
+                                                                                             which_intersections));
     return *this;
   }
 
   ThisType& add(Functor::Codim0And1< GridViewType >& functor,
-           const ApplyOn::WhichIntersection< GridViewType >* which_intersections,
-           const ApplyOn::WhichEntity< GridViewType >* which_entities = new ApplyOn::AllEntities< GridViewType >())
+                const ApplyOn::WhichIntersection< GridViewType >* which_intersections,
+                const ApplyOn::WhichEntity< GridViewType >* which_entities = new ApplyOn::AllEntities< GridViewType >())
   {
     codim0_functors_.emplace_back(
-          new internal::Codim0FunctorWrapper<GridViewType, Functor::Codim0And1< GridViewType > >(functor,
-                                                                                                 which_entities));
+      new internal::Codim0FunctorWrapper<GridViewType, Functor::Codim0And1< GridViewType > >(functor,
+                                                                                             which_entities));
     codim1_functors_.emplace_back(
-          new internal::Codim1FunctorWrapper<GridViewType, Functor::Codim0And1< GridViewType > >(functor,
-                                                                                                 which_intersections));
+      new internal::Codim1FunctorWrapper<GridViewType, Functor::Codim0And1< GridViewType > >(functor,
+                                                                                             which_intersections));
     return *this;
   }
 
   ThisType& add(ThisType& other,
-           const ApplyOn::WhichEntity< GridViewType >* which_entities = new ApplyOn::AllEntities< GridViewType >(),
-           const ApplyOn::WhichIntersection< GridViewType >* which_intersections
-              = new ApplyOn::AllIntersections< GridViewType >())
+                const ApplyOn::WhichEntity< GridViewType >* which_entities = new ApplyOn::AllEntities< GridViewType >(),
+                const ApplyOn::WhichIntersection< GridViewType >* which_intersections
+                = new ApplyOn::AllIntersections< GridViewType >())
   {
     if (&other == this)
       DUNE_THROW(Stuff::Exceptions::you_are_using_this_wrong, "Do not add a Walker to itself!");
@@ -131,8 +131,8 @@ public:
   } // ... add(...)
 
   ThisType& add(ThisType& other,
-           const ApplyOn::WhichIntersection< GridViewType >* which_intersections,
-           const ApplyOn::WhichEntity< GridViewType >* which_entities = new ApplyOn::AllEntities< GridViewType >())
+                const ApplyOn::WhichIntersection< GridViewType >* which_intersections,
+                const ApplyOn::WhichEntity< GridViewType >* which_entities = new ApplyOn::AllEntities< GridViewType >())
   {
     if (&other == this)
       DUNE_THROW(Stuff::Exceptions::you_are_using_this_wrong, "Do not add a Walker to itself!");
@@ -225,8 +225,7 @@ public:
 
 protected:
   template< class PartioningType, class WalkerType >
-  struct Body
-  {
+  struct Body {
     Body(WalkerType& walker, PartioningType& partitioning)
       : walker_(walker)
       , partitioning_(partitioning)
@@ -237,10 +236,10 @@ protected:
       , partitioning_(other.partitioning_)
     {}
 
-    void operator()(const tbb::blocked_range< std::size_t > &range) const
+    void operator()(const tbb::blocked_range< std::size_t >& range) const
     {
       // for all partitions in tbb-range
-      for(std::size_t p = range.begin(); p != range.end(); ++p) {
+      for (std::size_t p = range.begin(); p != range.end(); ++p) {
         auto partition = partitioning_.partition(p);
         walker_.walk_range(partition);
       }

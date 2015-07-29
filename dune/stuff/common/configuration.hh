@@ -33,7 +33,8 @@ namespace Common {
 
 
 //! use this to record defaults, placements and so forth
-class Request {
+class Request
+{
   int line;
   std::string file;
   std::string key;
@@ -164,27 +165,27 @@ public:
   }
 
   Configuration(const std::string key,
-                         const char* value,
-                         const bool record_defaults = internal::configuration_record_defaults,
-                         const bool warn_on_default_access = internal::configuration_warn_on_default_access,
-                         const bool log_on_exit = internal::configuration_log_on_exit,
-                         const std::string logfile = internal::configuration_logfile);
+                const char* value,
+                const bool record_defaults = internal::configuration_record_defaults,
+                const bool warn_on_default_access = internal::configuration_warn_on_default_access,
+                const bool log_on_exit = internal::configuration_log_on_exit,
+                const std::string logfile = internal::configuration_logfile);
 
   Configuration(const char* key,
-                         const char* value,
-                         const bool record_defaults = internal::configuration_record_defaults,
-                         const bool warn_on_default_access = internal::configuration_warn_on_default_access,
-                         const bool log_on_exit = internal::configuration_log_on_exit,
-                         const std::string logfile = internal::configuration_logfile);
+                const char* value,
+                const bool record_defaults = internal::configuration_record_defaults,
+                const bool warn_on_default_access = internal::configuration_warn_on_default_access,
+                const bool log_on_exit = internal::configuration_log_on_exit,
+                const std::string logfile = internal::configuration_logfile);
 
   //! operator[](keys[ii]) = values[ii] for 0 <= ii <= keys.size()
   template< class T >
   Configuration(const std::vector< std::string > keys,
-                         const std::vector< T > values_in,
-                         const bool record_defaults = internal::configuration_record_defaults,
-                         const bool warn_on_default_access = internal::configuration_warn_on_default_access,
-                         const bool log_on_exit = internal::configuration_log_on_exit,
-                         const std::string logfile = internal::configuration_logfile)
+                const std::vector< T > values_in,
+                const bool record_defaults = internal::configuration_record_defaults,
+                const bool warn_on_default_access = internal::configuration_warn_on_default_access,
+                const bool log_on_exit = internal::configuration_log_on_exit,
+                const std::string logfile = internal::configuration_logfile)
     : BaseType()
     , requests_map_()
     , record_defaults_(record_defaults)
@@ -194,8 +195,8 @@ public:
   {
     if (keys.size() != values_in.size())
       DUNE_THROW(Exceptions::shapes_do_not_match,
-                            "The size of 'keys' (" << keys.size() << ") does not match the size of 'values' ("
-                            << values_in.size() << ")!");
+                 "The size of 'keys' (" << keys.size() << ") does not match the size of 'values' ("
+                 << values_in.size() << ")!");
     for (size_t ii = 0; ii < keys.size(); ++ii)
       set(keys[ii], values_in[ii]);
     setup_();
@@ -205,26 +206,26 @@ public:
    * Configuration(const std::vector< std::string > keys, const std::vector< T > values_in) */
   template< class T >
   Configuration(const std::vector< std::string > keys,
-                         const std::initializer_list< T > value_list,
-                         const bool record_defaults = internal::configuration_record_defaults,
-                         const bool warn_on_default_access = internal::configuration_warn_on_default_access,
-                         const bool log_on_exit = internal::configuration_log_on_exit,
-                         const std::string logfile = internal::configuration_logfile)
+                const std::initializer_list< T > value_list,
+                const bool record_defaults = internal::configuration_record_defaults,
+                const bool warn_on_default_access = internal::configuration_warn_on_default_access,
+                const bool log_on_exit = internal::configuration_log_on_exit,
+                const std::string logfile = internal::configuration_logfile)
     : Configuration(keys,
-                      std::vector< T >(value_list),
-                      record_defaults,
-                      warn_on_default_access,
-                      log_on_exit,
-                      logfile)
+                    std::vector< T >(value_list),
+                    record_defaults,
+                    warn_on_default_access,
+                    log_on_exit,
+                    logfile)
   {}
 
   // specialization of the constructor above for std::string
   Configuration(const std::vector< std::string > keys,
-                         const std::initializer_list< std::string > value_list,
-                         const bool record_defaults = internal::configuration_record_defaults,
-                         const bool warn_on_default_access = internal::configuration_warn_on_default_access,
-                         const bool log_on_exit = internal::configuration_log_on_exit,
-                         const std::string logfile = internal::configuration_logfile);
+                const std::initializer_list< std::string > value_list,
+                const bool record_defaults = internal::configuration_record_defaults,
+                const bool warn_on_default_access = internal::configuration_warn_on_default_access,
+                const bool log_on_exit = internal::configuration_log_on_exit,
+                const std::string logfile = internal::configuration_logfile);
 
   ~Configuration();
 
@@ -300,7 +301,8 @@ public:
         const size_t cols = 0) const
   {
     if (!has_key(key))
-      DUNE_THROW(Exceptions::configuration_error, "Configuration does not have this key and there was no default value provided");
+      DUNE_THROW(Exceptions::configuration_error,
+                 "Configuration does not have this key and there was no default value provided");
     return get_valid_value(key, T(), validator, size, cols);
   } // ... get(...)
 
@@ -367,7 +369,7 @@ public:
                                         const size_t size = 0,
                                         const size_t cols = 0,
                                         const ValidatorInterface< typename internal::Typer< T >::type, Validator >& validator
-                                            = ValidateAny< typename internal::Typer<T>::type >())
+                                        = ValidateAny< typename internal::Typer<T>::type >())
   {
     const auto def_t = static_cast<typename internal::Typer<T>::type>(def);
     Request req(-1, std::string(), key,
@@ -401,7 +403,7 @@ public:
                                                            const T& def = T(),
                                                            const std::string separators = ";",
                                                            const ValidatorInterface< typename internal::Typer<T>::type, Validator >& validator
-                                                              = ValidateAny< typename internal::Typer<T>::type >()) const
+                                                           = ValidateAny< typename internal::Typer<T>::type >()) const
   {
     typedef typename internal::Typer<T>::type Tt;
     const auto def_t = static_cast<Tt>(def);
@@ -410,14 +412,12 @@ public:
                 Dune::Stuff::Common::getTypename(validator));
     const auto value = get(key, toString(def_t), ValidateAny< std::string >(), req);
     const auto tokens = tokenize< Tt >(value, separators);
-    for (auto token : tokens)
-    {
-        if(!validator(token))
-        {
-            std::stringstream ss;
-            validator.print(ss);
-            DUNE_THROW(Exceptions::configuration_error, ss.str());
-        }
+    for (auto token : tokens) {
+      if (!validator(token)) {
+        std::stringstream ss;
+        validator.print(ss);
+        DUNE_THROW(Exceptions::configuration_error, ss.str());
+      }
     }
     return tokens;
   } // ... getList(...)
@@ -666,8 +666,7 @@ namespace std {
 
 
 template<>
-struct less< Dune::ParameterTree >
-{
+struct less< Dune::ParameterTree > {
   typedef bool result_type;
   typedef Dune::ParameterTree first_argument_type;
   typedef Dune::ParameterTree second_argument_type;
@@ -677,8 +676,7 @@ struct less< Dune::ParameterTree >
 
 
 template<>
-struct less< Dune::Stuff::Common::Configuration >
-{
+struct less< Dune::Stuff::Common::Configuration > {
   typedef bool result_type;
   typedef Dune::Stuff::Common::Configuration first_argument_type;
   typedef Dune::Stuff::Common::Configuration second_argument_type;

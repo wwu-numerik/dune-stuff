@@ -42,32 +42,27 @@ public:
   typedef typename GridType::template Codim< 0 >::Entity EntityType;
 
   template< ChooseLayer layer, ChoosePartView type >
-  struct Layer
-  {
+  struct Layer {
     typedef typename Grid::Layer< GridType, layer, type >::Type Type;
   };
 
   template< ChoosePartView type >
-  struct Level
-  {
+  struct Level {
     typedef typename LevelPartView< GridType, type >::Type Type;
   };
 
   template< ChoosePartView type >
-  struct Leaf
-  {
+  struct Leaf {
     typedef typename LeafPartView< GridType, type >::Type Type;
   };
 
   template< ChooseLayer type >
-  struct View
-  {
+  struct View {
     typedef typename LayerView< GridType, type >::Type Type;
   };
 
   template< ChooseLayer type >
-  struct Part
-  {
+  struct Part {
     typedef typename LayerView< GridType, type >::Type Type;
   };
 
@@ -86,7 +81,7 @@ public:
     return "stuff.grid.provider";
   }
 
-  virtual ~ConstProviderInterface(){}
+  virtual ~ConstProviderInterface() {}
 
   virtual const GridType& grid() const = 0;
 
@@ -194,8 +189,7 @@ private:
     // walk the grid
     for (typename LeafGridViewType::template Codim< 0 >::Iterator it = gridView.template begin< 0 >();
          it != gridView.template end< 0 >();
-         ++it)
-    {
+         ++it) {
       const auto& entity = *it;
       const auto& index = gridView.indexSet().index(entity);
       data[index] = 0.0;
@@ -204,7 +198,7 @@ private:
       for (auto intersectionIt = gridView.ibegin(entity);
            intersectionIt != gridView.iend(entity);
            ++intersectionIt) {
-        if (!intersectionIt->neighbor() && intersectionIt->boundary()){
+        if (!intersectionIt->neighbor() && intersectionIt->boundary()) {
           isOnBoundary = true;
           numberOfBoundarySegments += 1;
           data[index] += double(intersectionIt->boundaryId());
@@ -226,8 +220,7 @@ private:
   {
     std::vector< double > data(gridView.indexSet().size(0));
     // walk the grid
-    for (const auto& entity : DSC::entityRange(gridView))
-    {
+    for (const auto& entity : DSC::entityRange(gridView)) {
       const auto& index = gridView.indexSet().index(entity);
       data[index] = 0.0;
       for (auto intersectionIt = gridView.ibegin(entity);
@@ -249,8 +242,7 @@ private:
   std::vector< double > generateEntityVisualization(const LeafGridViewType& gridView) const
   {
     std::vector< double > data(gridView.indexSet().size(0));
-    for (const auto& entity : DSC::entityRange(gridView))
-    {
+    for (const auto& entity : DSC::entityRange(gridView)) {
       const auto& index = gridView.indexSet().index(entity);
       data[index] = double(index);
     } // walk the grid
@@ -279,7 +271,7 @@ public:
     return BaseType::static_id();
   }
 
-  virtual ~ProviderInterface(){}
+  virtual ~ProviderInterface() {}
 
   using BaseType::grid;
 

@@ -28,7 +28,10 @@ template< class E, class D, size_t d, class R, size_t r, size_t rC = 1 >
 class Indicator
   : public LocalizableFunctionInterface< E, D, d, R, r, rC >
 {
-  Indicator() { static_assert(AlwaysFalse< E >::value, "Not available for these dimensions!"); }
+  Indicator()
+  {
+    static_assert(AlwaysFalse< E >::value, "Not available for these dimensions!");
+  }
 };
 
 
@@ -144,7 +147,8 @@ public:
     , name_(name_in)
   {}
 
-  Indicator(const std::vector< std::pair< std::pair< Common::FieldVector< D, d >, Common::FieldVector< D, d > >, R > >& values,
+  Indicator(const std::vector< std::pair< std::pair< Common::FieldVector< D, d >, Common::FieldVector< D, d > >, R > >&
+            values,
             const std::string name_in = "indicator")
     : values_(convert(values))
     , name_(name_in)
@@ -167,7 +171,8 @@ public:
   } // ... local_function(...)
 
 private:
-  static std::vector< std::tuple< DomainType, DomainType, R > > convert(const std::vector< std::pair< std::pair< Common::FieldVector< D, d >, Common::FieldVector< D, d > >, R > >& values)
+  static std::vector< std::tuple< DomainType, DomainType, R > > convert(const
+                                                                        std::vector< std::pair< std::pair< Common::FieldVector< D, d >, Common::FieldVector< D, d > >, R > >& values)
   {
     std::vector< std::tuple< DomainType, DomainType, R > > ret;
     for (const auto& element : values)

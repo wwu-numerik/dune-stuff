@@ -96,7 +96,7 @@ protected:
 
 #ifndef NDEBUG
 template <class I, class T>
-std::recursive_mutex CRTPInterface<I,T>::crtp_mutex_;
+std::recursive_mutex CRTPInterface<I, T>::crtp_mutex_;
 #endif
 } // namespace Stuff
 } // namespace Dune

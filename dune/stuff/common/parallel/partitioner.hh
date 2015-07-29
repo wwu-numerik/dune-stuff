@@ -19,7 +19,7 @@ struct IndexSetPartitioner {
     : index_set_(index_set)
   {}
 
-  std::size_t partition(const EntityType &e) const
+  std::size_t partition(const EntityType& e) const
   {
     return index_set_.index(e);
   }

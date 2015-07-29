@@ -38,20 +38,23 @@ Request::Request(const int _line, const std::string _file, const std::string _ke
   , validator(_validator)
 {}
 
-bool Request::operator < (const Request& other) const {
+bool Request::operator < (const Request& other) const
+{
   DSC_ORDER_REL(key)
-      DSC_ORDER_REL(def)
-      DSC_ORDER_REL(file)
-      DSC_ORDER_REL(line)
-      return validator < other.validator;
+  DSC_ORDER_REL(def)
+  DSC_ORDER_REL(file)
+  DSC_ORDER_REL(line)
+  return validator < other.validator;
 }
 
-bool strictRequestCompare(const Request& a, const Request& b) {
-  DSC_ORDER_REL_GENERIC(key,a,b);
+bool strictRequestCompare(const Request& a, const Request& b)
+{
+  DSC_ORDER_REL_GENERIC(key, a, b);
   return a.def < b.def;
 }
 
-std::ostream& operator <<(std::ostream& out, const Request& r) {
+std::ostream& operator <<(std::ostream& out, const Request& r)
+{
   boost::format out_f("Request for %s with default %s in %s:%d (validation: %s)");
   out_f % r.key % r.def % r.file % r.line % r.validator;
   out << out_f.str();
@@ -191,11 +194,11 @@ Configuration::Configuration(const std::vector< std::string > keys,
                              const bool log_on_exit,
                              const std::string logfile)
   : Configuration(keys,
-                    std::vector< std::string >(value_list),
-                    record_defaults,
-                    warn_on_default_access,
-                    log_on_exit,
-                    logfile)
+                  std::vector< std::string >(value_list),
+                  record_defaults,
+                  warn_on_default_access,
+                  log_on_exit,
+                  logfile)
 {}
 
 Configuration::~Configuration()
@@ -203,7 +206,7 @@ Configuration::~Configuration()
   if (log_on_exit_ && !empty()) {
     testCreateDirectory(directoryOnly(logfile_));
     report(*DSC::make_ofstream(logfile_));
-    print_mismatched_defaults(*DSC::make_ofstream(logfile_+".requests"));
+    print_mismatched_defaults(*DSC::make_ofstream(logfile_ + ".requests"));
   }
 }
 
@@ -234,8 +237,8 @@ void Configuration::set_logfile(const std::string logfile)
 
 std::set<Request> Configuration::get_mismatched_defaults(Configuration::RequestMapType::value_type pair) const
 {
-  typedef bool (*func)(const Request&,const Request&);
-  std::set<Request,func> mismatched(&strictRequestCompare);
+  typedef bool (*func)(const Request&, const Request&);
+  std::set<Request, func> mismatched(&strictRequestCompare);
   mismatched.insert(pair.second.begin(), pair.second.end());
   if (mismatched.size() <= std::size_t(1))
     return std::set<Request>();
@@ -251,7 +254,7 @@ std::set<Request> Configuration::get_mismatched_defaults(Configuration::RequestM
 void loadIntoFemParameter(const Dune::ParameterTree& tree, const std::string pref = "")
 {
 #if HAVE_DUNE_FEM_PARAMETER_REPLACE
-  for(auto key : tree.getValueKeys()) {
+  for (auto key : tree.getValueKeys()) {
     const auto val = tree.get(key, std::string());
     key = pref + "." + key;
     Dune::Fem::Parameter::replaceKey(key, val);
@@ -374,9 +377,9 @@ std::string Configuration::report_string(const std::string& prefix) const
   return stream.str();
 } // ... report_string(...)
 
-void Configuration::read_command_line(int argc, char* argv[]) {
-  if (argc < 2)
-  {
+void Configuration::read_command_line(int argc, char* argv[])
+{
+  if (argc < 2) {
     boost::format usage("usage: %s parameter.file *[-section.key override-value]");
     DUNE_THROW(Dune::Exception, (usage % argv[0]).str());
   }
@@ -394,21 +397,22 @@ void Configuration::read_options(int argc, char* argv[])
 }
 
 #ifdef DSC_CONFIGURATION_DEBUG
-  void Configuration::requests_map_insert(Request request, std::string name) {
-    std::lock_guard<std::mutex> guard(requests_mutex_);
-    requests_map_[name].insert(request);
-  }
+void Configuration::requests_map_insert(Request request, std::string name)
+{
+  std::lock_guard<std::mutex> guard(requests_mutex_);
+  requests_map_[name].insert(request);
+}
 #else
-  void Configuration::requests_map_insert(Request /*request*/, std::string /*name*/) {}
+void Configuration::requests_map_insert(Request /*request*/, std::string /*name*/) {}
 #endif
 
 void Configuration::print_requests(std::ostream& out) const
 {
   if (!requests_map_.empty()) {
     out << "Config requests:";
-    for( const auto& pair : requests_map_ ) {
+    for (const auto& pair : requests_map_) {
       out << "Key: " << pair.first;
-      for( const auto& req : pair.second ) {
+      for (const auto& req : pair.second) {
         out << "\n\t" << req;
       }
       out << std::endl;
@@ -419,9 +423,9 @@ void Configuration::print_requests(std::ostream& out) const
 Configuration::RequestMapType Configuration::get_mismatched_defaults_map() const
 {
   RequestMapType ret;
-  for( const auto& pair : requests_map_ ) {
+  for (const auto& pair : requests_map_) {
     auto mismatches = get_mismatched_defaults(pair);
-    if(mismatches.size() > 1)
+    if (mismatches.size() > 1)
       ret[pair.first] = mismatches;
   }
   return ret;
@@ -429,11 +433,11 @@ Configuration::RequestMapType Configuration::get_mismatched_defaults_map() const
 
 void Configuration::print_mismatched_defaults(std::ostream& out) const
 {
-  for( const auto& pair : requests_map_ ) {
+  for (const auto& pair : requests_map_) {
     auto mismatched = get_mismatched_defaults(pair);
     if (mismatched.size() > 1) {
       out << "Mismatched uses for key " << pair.first << ": ";
-      for( const auto& req : mismatched ) {
+      for (const auto& req : mismatched) {
         out << "\n\t" << req;
       }
       out << "\n";
@@ -488,7 +492,7 @@ ParameterTree Configuration::initialize(int argc, char** argv)
   ParameterTree param_tree;
   if (argc == 2) {
     Dune::ParameterTreeParser::readINITree(argv[1], param_tree);
-  } else if (argc > 2){
+  } else if (argc > 2) {
     Dune::ParameterTreeParser::readOptions(argc, argv, param_tree);
   }
   if (param_tree.hasKey("paramfile")) {
@@ -553,7 +557,7 @@ void Configuration::report_flatly(const BaseType& subtree, const std::string& pr
     if (prefix.empty())
       report_flatly(subtree.sub(subkey), subkey + ".", out);
     else
-      report_flatly(subtree.sub(subkey), prefix + subkey+ "." , out);
+      report_flatly(subtree.sub(subkey), prefix + subkey + "." , out);
   }
 } // ... report_flatly(...)
 

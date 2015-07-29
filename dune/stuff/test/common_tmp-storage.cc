@@ -23,16 +23,17 @@ struct TmpTest : public testing::Test {
   typedef TmpVectorsStorage<T> Vector;
   typedef TmpMatricesStorage<T> Matrix;
 
-  void check_sizes() const {
+  void check_sizes() const
+  {
     const auto dims = {0u, 3u, 6u};
     const auto sizes = {0u, 3u, 6u};
-    for(auto size : sizes) {
-      for(auto row : dims) {
-        Vector vec({size,size}, row);
+    for (auto size : sizes) {
+      for (auto row : dims) {
+        Vector vec({size, size}, row);
         EXPECT_EQ(vec.indices().size(), row);
         EXPECT_EQ(vec.vectors().size(), 2);
-        for(auto col : dims) {
-          Matrix mat({size,size}, row, col);
+        for (auto col : dims) {
+          Matrix mat({size, size}, row, col);
           EXPECT_EQ(mat.indices().size(), 4);
           EXPECT_EQ(mat.matrices().size(), 2);
         }
@@ -40,7 +41,8 @@ struct TmpTest : public testing::Test {
     }
   }
 
-  void check_empty() const {
+  void check_empty() const
+  {
     vector<size_t> null;
     EXPECT_THROW(Vector(null, 0), out_of_range);
     EXPECT_THROW(Matrix(null, 0, 0), out_of_range);
@@ -48,7 +50,8 @@ struct TmpTest : public testing::Test {
 };
 
 TYPED_TEST_CASE(TmpTest, TestTypes);
-TYPED_TEST(TmpTest, All) {
+TYPED_TEST(TmpTest, All)
+{
   this->check_sizes();
   this->check_empty();
 }

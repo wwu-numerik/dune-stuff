@@ -34,19 +34,17 @@ template< class GridPartOrViewType >
 class Intersection
 {
   template< class GridViewType, bool is_view >
-  struct Choose
-  {
+  struct Choose {
     typedef typename GridViewType::Intersection Type;
   };
 
   template< class GridPartType >
-  struct Choose< GridPartType, false >
-  {
+  struct Choose< GridPartType, false > {
     typedef typename GridPartType::IntersectionType Type;
   };
 
   static const bool this_is_a_grid_view =
-      std::is_base_of< GridView< typename GridPartOrViewType::Traits >, GridPartOrViewType >::value;
+    std::is_base_of< GridView< typename GridPartOrViewType::Traits >, GridPartOrViewType >::value;
 
 public:
   typedef typename Choose< GridPartOrViewType, this_is_a_grid_view >::Type Type;
@@ -84,7 +82,7 @@ void printIntersection(const IntersectionType& intersection,
 * @return Returns true if the point lies on the intersection, false otherwise.
 */
 template< class IntersectionType, class FieldType, size_t dim >
-bool intersectionContains( const IntersectionType& intersection, const Dune::FieldVector< FieldType, dim >& globalPoint )
+bool intersectionContains(const IntersectionType& intersection, const Dune::FieldVector< FieldType, dim >& globalPoint)
 {
   // map global coordinates to local coordinates of the intersection
   const auto& intersectionGeometry = intersection.geometry();
@@ -92,9 +90,9 @@ bool intersectionContains( const IntersectionType& intersection, const Dune::Fie
 
   // get codim 1 reference element
 #if DUNE_VERSION_NEWER(DUNE_GEOMETRY, 2, 3)
-  const auto& refElement = ReferenceElements< FieldType, dim-1 >::general(intersectionGeometry.type());
+  const auto& refElement = ReferenceElements < FieldType, dim - 1 >::general(intersectionGeometry.type());
 #else
-  const auto& refElement = GenericReferenceElements< FieldType, dim-1 >::general(intersectionGeometry.type());
+  const auto& refElement = GenericReferenceElements < FieldType, dim - 1 >::general(intersectionGeometry.type());
 #endif
   // check whether reference element contains the local coordinates
   return refElement.checkInside(localPoint);

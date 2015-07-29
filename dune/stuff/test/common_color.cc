@@ -10,7 +10,8 @@
 
 using namespace Dune::Stuff::Common;
 
-TEST(Color, All) {
+TEST(Color, All)
+{
   std::cout << "Testing some color codes for this terminal." << std::endl;
   std::cout << "WARNING: This test will succeed although some of the color codes" << std::endl;
   std::cout << "are not supported by your terminal!" << std::endl;
@@ -29,13 +30,16 @@ TEST(Color, All) {
             << StreamModifiers::underline << "hello world" << StreamModifiers::endunderline << std::endl;
   std::cout << StreamModifiers::underline << "a reverse 'hello world': " << StreamModifiers::endunderline
             << StreamModifiers::reverse << "hello world" << StreamModifiers::endreverse << std::endl;
-  std::cout << StreamModifiers::underline << "a 'hello world' with highlighted substrings ('o'): " << StreamModifiers::endunderline
+  std::cout << StreamModifiers::underline << "a 'hello world' with highlighted substrings ('o'): " <<
+            StreamModifiers::endunderline
             << highlightSearchString("hello world", "o", 3) << std::endl;
   std::cout << StreamModifiers::underline << "a highlighted 'hello world'-template: " << StreamModifiers::endunderline
             << highlightTemplate("Hello< World, Hello< World, Hello< World< Hello, World > > > >") << std::endl;
-  std::cout << StreamModifiers::underline << "a highlighted 'hello world'-template only showing two levels: " << StreamModifiers::endunderline
+  std::cout << StreamModifiers::underline << "a highlighted 'hello world'-template only showing two levels: " <<
+            StreamModifiers::endunderline
             << highlightTemplate("Hello< World, Hello< World, Hello< World< Hello, World > > > >", 2) << std::endl;
-  std::cout << StreamModifiers::underline << "colored 'hello world' for all available colors( 0 - 255): " << StreamModifiers::endunderline << std::endl;
+  std::cout << StreamModifiers::underline << "colored 'hello world' for all available colors( 0 - 255): " <<
+            StreamModifiers::endunderline << std::endl;
   for (size_t i = 0; i < 256; ++i)
     std::cout << highlightString("hello world - ", i);
   std::cout << std::endl;

@@ -28,8 +28,7 @@ struct VectorAbstraction;
 
 //! logically and structurally this belongs in type_utils.hh, but the dependent implementation prohibits that
 template< class VectorType >
-struct is_vector
-{
+struct is_vector {
   static const bool value = VectorAbstraction< VectorType >::is_vector;
 };
 
@@ -42,8 +41,7 @@ struct is_vector
  *        static methods and members (see the specializations below).
  */
 template< class VecType >
-struct VectorAbstraction
-{
+struct VectorAbstraction {
   typedef VecType VectorType;
   typedef VecType ScalarType;
   typedef VecType RealType;
@@ -68,8 +66,7 @@ struct VectorAbstraction
 };
 
 template< class T >
-struct VectorAbstraction< std::vector< T > >
-{
+struct VectorAbstraction< std::vector< T > > {
   typedef std::vector< T >                            VectorType;
   typedef typename Dune::FieldTraits< T >::field_type ScalarType;
   typedef typename Dune::FieldTraits< T >::real_type  RealType;
@@ -94,8 +91,7 @@ struct VectorAbstraction< std::vector< T > >
 };
 
 template< class K >
-struct VectorAbstraction< Dune::DynamicVector< K > >
-{
+struct VectorAbstraction< Dune::DynamicVector< K > > {
   typedef Dune::DynamicVector< K >                    VectorType;
   typedef typename Dune::FieldTraits< K >::field_type ScalarType;
   typedef typename Dune::FieldTraits< K >::real_type  RealType;
@@ -120,8 +116,7 @@ struct VectorAbstraction< Dune::DynamicVector< K > >
 };
 
 template< class K, int SIZE >
-struct VectorAbstraction< Dune::FieldVector< K, SIZE > >
-{
+struct VectorAbstraction< Dune::FieldVector< K, SIZE > > {
   typedef Dune::FieldVector< K, SIZE >                VectorType;
   typedef typename Dune::FieldTraits< K >::field_type ScalarType;
   typedef typename Dune::FieldTraits< K >::real_type  RealType;
@@ -152,8 +147,7 @@ struct VectorAbstraction< Dune::FieldVector< K, SIZE > >
 };
 
 template< class T >
-struct VectorAbstraction< std::complex< T > >
-{
+struct VectorAbstraction< std::complex< T > > {
   typedef std::complex< T > VectorType;
   typedef std::complex< T > ScalarType;
   typedef T RealType;
@@ -182,7 +176,7 @@ struct VectorAbstraction< std::complex< T > >
 };
 
 template< class VectorType >
-    typename std::enable_if< is_vector< VectorType >::value, VectorType >::type
+typename std::enable_if< is_vector< VectorType >::value, VectorType >::type
 create(const size_t sz,
        const typename VectorAbstraction< VectorType >::S& val = typename VectorAbstraction< VectorType >::S(0))
 {
@@ -190,7 +184,7 @@ create(const size_t sz,
 }
 
 template< class T, class SR >
-  typename std::enable_if< is_complex<T>::value, T >::type
+typename std::enable_if< is_complex<T>::value, T >::type
 create(const size_t /*sz*/,
        const SR& val = typename VectorAbstraction< T >::R(0))
 {
@@ -198,7 +192,7 @@ create(const size_t /*sz*/,
 }
 
 template< class VectorType >
-    typename std::enable_if< std::is_arithmetic< VectorType >::value, VectorType >::type
+typename std::enable_if< std::is_arithmetic< VectorType >::value, VectorType >::type
 create(const size_t /*sz*/,
        const typename VectorAbstraction< VectorType >::S& val = typename VectorAbstraction< VectorType >::S(0))
 {
@@ -211,7 +205,7 @@ create(const size_t /*sz*/,
 
 
 template< class S, class V >
-    typename std::enable_if< std::is_arithmetic< S >::value && Dune::Stuff::Common::is_vector< V >::value , V >::type
+typename std::enable_if < std::is_arithmetic< S >::value&& Dune::Stuff::Common::is_vector< V >::value , V >::type
 operator*(const S& scalar, const V& vec)
 {
   V result(vec);
@@ -222,11 +216,11 @@ operator*(const S& scalar, const V& vec)
 
 
 template< class L, class R >
-    typename std::enable_if<    Dune::Stuff::Common::is_vector< L >::value
-                             && Dune::Stuff::Common::is_vector< R >::value
-                             && std::is_same< typename Dune::Stuff::Common::VectorAbstraction< L >::S
-                                            , typename Dune::Stuff::Common::VectorAbstraction< R >::S >::value
-                           , L >::type
+typename std::enable_if <    Dune::Stuff::Common::is_vector< L >::value
+&& Dune::Stuff::Common::is_vector< R >::value
+&& std::is_same< typename Dune::Stuff::Common::VectorAbstraction< L >::S
+, typename Dune::Stuff::Common::VectorAbstraction< R >::S >::value
+, L >::type
 operator+(const L& left, const R& right)
 {
   const auto sz = left.size();
@@ -241,7 +235,7 @@ operator+(const L& left, const R& right)
 
 
 template< class V, class CharType, class CharTraits >
-    typename std::enable_if< Dune::Stuff::Common::is_vector< V >::value, std::basic_ostream<CharType, CharTraits>& >::type
+typename std::enable_if< Dune::Stuff::Common::is_vector< V >::value, std::basic_ostream<CharType, CharTraits>& >::type
 operator<<(std::basic_ostream<CharType, CharTraits>& out, const V& vec)
 {
   if (vec.size() == 0)

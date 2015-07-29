@@ -52,7 +52,7 @@ std::map< std::string, std::vector< double > > ConvergenceStudy::run(const bool 
 
   // print table header
   out << identifier() << std::endl;
-  if (identifier().size() > 22*(actually_used_norms.size() + 1))
+  if (identifier().size() > 22 * (actually_used_norms.size() + 1))
     out << Stuff::Common::whitespaceify(identifier(), '=') << std::endl;
   else {
     out << "=====================";
@@ -88,7 +88,7 @@ std::map< std::string, std::vector< double > > ConvergenceStudy::run(const bool 
       else
         relative_norm_str = norm.substr(0, 19);
     }
-    const double missing = (19.0 - relative_norm_str.size())/2.0;
+    const double missing = (19.0 - relative_norm_str.size()) / 2.0;
     for (size_t ii = 0; ii < missing; ++ii)
       relative_norm_str += " ";
     assert(relative_norm_str.size() <= 19);
@@ -155,13 +155,13 @@ std::map< std::string, std::vector< double > > ConvergenceStudy::run(const bool 
         out << std::setw(8) << "----" << std::flush;
       else {
         const double eoc_value = std::log(relative_error / last_relative_error[norm])
-            / std::log(current_grid_width() / last_grid_width);
+                                 / std::log(current_grid_width() / last_grid_width);
         std::stringstream eoc_string;
         eoc_string << std::setw(8) << std::setprecision(2) << std::fixed << eoc_value;
         if (eoc_value > (0.9 * expected_rate(norm)))
           out << Stuff::Common::colorString(eoc_string.str(), Stuff::Common::Colors::green) << std::flush;
         else if (eoc_value > 0.0)
-            out << Stuff::Common::colorString(eoc_string.str(), Stuff::Common::Colors::brown) << std::flush;
+          out << Stuff::Common::colorString(eoc_string.str(), Stuff::Common::Colors::brown) << std::flush;
         else
           out << Stuff::Common::colorString(eoc_string.str(), Stuff::Common::Colors::red) << std::flush;
       }
@@ -171,7 +171,7 @@ std::map< std::string, std::vector< double > > ConvergenceStudy::run(const bool 
     // print time
     if (print_timings) {
       if (elapsed < 1.0)
-        out << "  (solve took " << ssize_t(1000*elapsed) << "ms)";
+        out << "  (solve took " << ssize_t(1000 * elapsed) << "ms)";
       else
         out << "  (solve took " << std::setprecision(2) << std::fixed << elapsed << "s)";
     }

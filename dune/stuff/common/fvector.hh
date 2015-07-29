@@ -117,8 +117,7 @@ public:
 
 //! Specialization of VectorAbstraction for Dune::Stuff::Common::FieldVector
 template< class K, int SIZE >
-struct VectorAbstraction< Dune::Stuff::Common::FieldVector< K, SIZE > >
-{
+struct VectorAbstraction< Dune::Stuff::Common::FieldVector< K, SIZE > > {
   typedef Dune::Stuff::Common::FieldVector< K, SIZE >  VectorType;
   typedef typename Dune::FieldTraits< K >::field_type  ScalarType;
   typedef typename Dune::FieldTraits< K >::real_type RealType;

@@ -17,18 +17,19 @@ using namespace Dune::Stuff::Grid;
 
 /** output files are compiled in test-compile-pgfoutput.sh target
  **/
-TEST(PgfOutput, Sgrid){
+TEST(PgfOutput, Sgrid)
+{
   const size_t dim = 2;
-  typedef Dune::SGrid<dim,dim> GridType;
+  typedef Dune::SGrid<dim, dim> GridType;
   int n[dim];
   double h[dim];
 
-  for (size_t i=0; i<dim; ++i) {
+  for (size_t i = 0; i < dim; ++i) {
     n[i] = 2;
     h[i] = 1.0;
   }
-  GridType grid(n,h);
-  PgfOutput<GridType> output( grid );
+  GridType grid(n, h);
+  PgfOutput<GridType> output(grid);
   const int max_refines = 2;
   const bool includable = false;
   std::ofstream fileB("pgfoutput_refineseries.tex");

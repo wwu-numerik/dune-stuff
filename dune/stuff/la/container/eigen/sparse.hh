@@ -76,7 +76,7 @@ class EigenRowMajorSparseMatrix
   , public ProvidesBackend< internal::EigenRowMajorSparseMatrixTraits< ScalarImp > >
 {
   typedef EigenRowMajorSparseMatrix< ScalarImp >                                              ThisType;
-  typedef MatrixInterface< internal::EigenRowMajorSparseMatrixTraits< ScalarImp >,ScalarImp > MatrixInterfaceType;
+  typedef MatrixInterface< internal::EigenRowMajorSparseMatrixTraits< ScalarImp >, ScalarImp > MatrixInterfaceType;
   static_assert(!std::is_same< DUNE_STUFF_SSIZE_T, int >::value,
                 "You have to manually disable the constructor below which uses DUNE_STUFF_SSIZE_T!");
 public:
@@ -145,7 +145,8 @@ public:
 
   explicit EigenRowMajorSparseMatrix(const BackendType& mat,
                                      const bool prune = false,
-                                     const typename Common::FloatCmp::DefaultEpsilon< ScalarType >::Type eps = Common::FloatCmp::DefaultEpsilon< ScalarType >::value())
+                                     const typename Common::FloatCmp::DefaultEpsilon< ScalarType >::Type eps =
+                                       Common::FloatCmp::DefaultEpsilon< ScalarType >::value())
   {
     if (prune) {
       // we do this here instead of using pattern(true), since we can build the triplets along the way which is more
@@ -164,8 +165,7 @@ public:
       }
       backend_ = std::make_shared< BackendType >(mat.rows(), mat.cols());
       backend_->setFromTriplets(triplets.begin(), triplets.end());
-    }
-    else
+    } else
       backend_ = std::make_shared< BackendType >(mat);
   } // EigenRowMajorSparseMatrix(...)
 
@@ -230,7 +230,7 @@ public:
       DUNE_THROW(Exceptions::shapes_do_not_match,
                  "The shape of xx (" << xx.rows() << "x" << xx.cols()
                  << ") does not match the shape of this (" << rows() << "x" << cols() << ")!");
-    const auto& xx_ref= *(xx.backend_);
+    const auto& xx_ref = *(xx.backend_);
     backend() += alpha * xx_ref;
   } // ... axpy(...)
 
@@ -371,7 +371,7 @@ public:
 
   virtual SparsityPatternDefault pattern(const bool prune = false,
                                          const ScalarType eps
-                                            = Common::FloatCmp::DefaultEpsilon< ScalarType >::value()) const override
+                                         = Common::FloatCmp::DefaultEpsilon< ScalarType >::value()) const override
   {
     SparsityPatternDefault ret(rows());
     const auto zero = typename Common::FloatCmp::DefaultEpsilon< ScalarType >::Type(0);
@@ -388,8 +388,8 @@ public:
     } else {
       for (EIGEN_size_t row = 0; row < backend_->outerSize(); ++row) {
         for (typename BackendType::InnerIterator row_it(*backend_, row); row_it; ++row_it)
-            ret.insert(boost::numeric_cast< size_t >(row),
-                       boost::numeric_cast< size_t >(row_it.col()));
+          ret.insert(boost::numeric_cast< size_t >(row),
+                     boost::numeric_cast< size_t >(row_it.col()));
       }
     }
     ret.sort();
@@ -397,7 +397,7 @@ public:
   } // ... pattern(...)
 
   virtual ThisType pruned(const ScalarType eps
-                            = Common::FloatCmp::DefaultEpsilon< ScalarType >::value()) const override final
+                          = Common::FloatCmp::DefaultEpsilon< ScalarType >::value()) const override final
   {
     return ThisType(*backend_, true, eps);
   }
@@ -454,8 +454,8 @@ namespace Common {
 
 template< class T >
 struct MatrixAbstraction< LA::EigenRowMajorSparseMatrix< T > >
-  : public LA::internal::MatrixAbstractionBase< LA::EigenRowMajorSparseMatrix< T > >
-{};
+  : public LA::internal::MatrixAbstractionBase< LA::EigenRowMajorSparseMatrix< T > > {
+};
 
 
 #endif // HAVE_EIGEN

@@ -31,12 +31,12 @@ class Expression
   : public GlobalFunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols >
 {
   typedef LocalizableFunctionInterface
-      < EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols >               BaseType;
+  < EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols >               BaseType;
   typedef Expression< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols > ThisType;
   typedef MathExpressionBase
-      < DomainFieldImp, domainDim, RangeFieldImp, rangeDim*rangeDimCols > MathExpressionFunctionType;
+  < DomainFieldImp, domainDim, RangeFieldImp, rangeDim* rangeDimCols > MathExpressionFunctionType;
   typedef MathExpressionBase
-      < DomainFieldImp, domainDim, RangeFieldImp, domainDim > MathExpressionGradientType;
+  < DomainFieldImp, domainDim, RangeFieldImp, domainDim > MathExpressionGradientType;
 
 public:
   using typename BaseType::EntityType;
@@ -102,11 +102,11 @@ public:
     }
     // create
     return Common::make_unique< ThisType >(
-          cfg.get("variable",   default_cfg.get< std::string >("variable")),
-          expression_as_vectors,
-          cfg.get("order",      default_cfg.get< size_t >("order")),
-          cfg.get("name",       default_cfg.get< std::string >("name")),
-          gradient_as_vectors);
+             cfg.get("variable",   default_cfg.get< std::string >("variable")),
+             expression_as_vectors,
+             cfg.get("order",      default_cfg.get< size_t >("order")),
+             cfg.get("name",       default_cfg.get< std::string >("name")),
+             gradient_as_vectors);
   } // ... create(...)
 
   /**
@@ -151,7 +151,7 @@ public:
              const size_t ord = default_config().get< size_t >("order"),
              const std::string nm = static_id(),
              const std::vector< std::vector< std::string > > gradient_expressions
-                = std::vector< std::vector< std::string > >())
+             = std::vector< std::vector< std::string > >())
     : function_(new MathExpressionFunctionType(variable, expressions))
     , order_(ord)
     , name_(nm)
@@ -182,7 +182,7 @@ public:
              const size_t ord = 0,
              const std::string nm = static_id(),
              const GradientStringVectorType gradient_expressions
-                = GradientStringVectorType())
+             = GradientStringVectorType())
     : order_(ord)
     , name_(nm)
   {
@@ -303,7 +303,7 @@ private:
     for (size_t rr = 0; rr < dimRange; ++rr) {
       auto& retRow = ret[rr];
       for (size_t cc = 0; cc < dimRangeCols; ++cc)
-        retRow[cc] = tmp_vector_[rr*dimRangeCols + cc];
+        retRow[cc] = tmp_vector_[rr * dimRangeCols + cc];
     }
   } // ... evaluate_helper(...)
 
@@ -325,10 +325,10 @@ private:
 
   void jacobian_helper(const DomainType& xx, JacobianRangeType& ret, internal::ChooseVariant< 1 >) const
   {
-      assert(gradients_[0].size() == dimRange);
-      for (size_t rr = 0; rr < dimRange; ++rr) {
-        gradients_[0][rr]->evaluate(xx, ret[rr]);
-      }
+    assert(gradients_[0].size() == dimRange);
+    for (size_t rr = 0; rr < dimRange; ++rr) {
+      gradients_[0][rr]->evaluate(xx, ret[rr]);
+    }
   } // ... jacobian_helper(..., ...< 1 >)
 
   template< size_t rC >
@@ -369,7 +369,7 @@ private:
     for (size_t cc = 1; cc < dimRangeCols; ++cc)
       gradient_keys.emplace_back("gradient." + DSC::toString(cc));
     // get gradient as FieldMatrix for every key
-    for (std::string key: gradient_keys) {
+    for (std::string key : gradient_keys) {
       ExpressionStringVectorType gradient_as_vectors_component;
       typedef typename Dune::FieldMatrix< std::string, dimRange, dimDomain > JacobianMatrixType;
       const JacobianMatrixType gradient_as_matrix = cfg.get< JacobianMatrixType >(key);
@@ -387,7 +387,7 @@ private:
   std::shared_ptr< const MathExpressionFunctionType > function_;
   size_t order_;
   std::string name_;
-  mutable FieldVector< RangeFieldType, dimRange*dimRangeCols > tmp_vector_;
+  mutable FieldVector< RangeFieldType, dimRange* dimRangeCols > tmp_vector_;
   mutable FieldVector< RangeFieldType, dimRangeCols > tmp_row_;
   mutable FieldVector< RangeFieldType, dimDomain > tmp_gradient_row_;
   std::vector< std::vector< std::shared_ptr< const MathExpressionGradientType > > > gradients_;
