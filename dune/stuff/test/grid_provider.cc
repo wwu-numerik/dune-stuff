@@ -21,10 +21,10 @@ using namespace Stuff;
 
 
 # define YASPGRIDS \
-    YaspGrid< 1 > \
-  , YaspGrid< 2 > \
-  , YaspGrid< 3 > \
-  , YaspGrid< 4 >
+    YaspGrid< 1, EquidistantOffsetCoordinates<double,1> > \
+  , YaspGrid< 2, EquidistantOffsetCoordinates<double,2> > \
+  , YaspGrid< 3, EquidistantOffsetCoordinates<double,3> > \
+  , YaspGrid< 4, EquidistantOffsetCoordinates<double,4> >
 
 # if HAVE_ALUGRID
 #   define ALUGRIDS \
