@@ -29,6 +29,7 @@
 
 #include <dune/stuff/grid/entity.hh>
 #include <dune/stuff/grid/intersection.hh>
+#include <dune/stuff/grid/layers.hh>
 #include <dune/stuff/common/ranges.hh>
 #include <dune/stuff/common/parallel/threadmanager.hh>
 #include <dune/stuff/common/ranges.hh>
@@ -40,11 +41,54 @@
 namespace Dune {
 namespace Stuff {
 namespace Grid {
+namespace internal {
+
+
+template< class GPV, bool is_grd_vw = DSG::is_grid_view< GPV >::value >
+struct GridPartViewHolder
+{
+  typedef GPV type;
+
+  GridPartViewHolder(GPV grid_view)
+    : grid_view_(grid_view)
+  {}
+
+  const type& real_grid_view() const
+  {
+    return grid_view_;
+  }
+
+  const GPV grid_view_;
+};
+
+
+template< class GPV >
+struct GridPartViewHolder< GPV, false >
+{
+  typedef typename GPV::GridViewType type;
+
+  GridPartViewHolder(GPV grid_part)
+    : grid_view_(grid_part)
+    , grid_part_(grid_view_.gridView())
+  {}
+
+  const type& real_grid_view() const
+  {
+    return grid_part_;
+  }
+
+  const GPV grid_view_;
+  const type grid_part_;
+};
+
+
+} // namespace internal
 
 
 template< class GridViewImp >
 class Walker
-  : public Functor::Codim0And1< GridViewImp >
+  : internal::GridPartViewHolder< GridViewImp >
+  , public Functor::Codim0And1< GridViewImp >
 {
   typedef Walker< GridViewImp > ThisType;
 public:
@@ -53,12 +97,12 @@ public:
   typedef typename Stuff::Grid::Intersection< GridViewType >::Type IntersectionType;
 
   explicit Walker(GridViewType grd_vw)
-    : grid_view_(grd_vw)
+    : internal::GridPartViewHolder< GridViewImp >(grd_vw)
   {}
 
   const GridViewType& grid_view() const
   {
-    return grid_view_;
+    return this->grid_view_;
   }
 
   void add(std::function< void(const EntityType&) > lambda,
@@ -150,7 +194,7 @@ public:
   bool apply_on(const EntityType& entity) const
   {
     for (const auto& functor : codim0_functors_)
-      if (functor->apply_on(grid_view_, entity))
+      if (functor->apply_on(this->grid_view_, entity))
         return true;
     return false;
   } // ... apply_on(...)
@@ -158,7 +202,7 @@ public:
   bool apply_on(const IntersectionType& intersection) const
   {
     for (const auto& functor : codim1_functors_)
-      if (functor->apply_on(grid_view_, intersection))
+      if (functor->apply_on(this->grid_view_, intersection))
         return true;
     return false;
   } // ... apply_on(...)
@@ -166,7 +210,7 @@ public:
   virtual void apply_local(const EntityType& entity)
   {
     for (auto& functor : codim0_functors_)
-      if (functor->apply_on(grid_view_, entity))
+      if (functor->apply_on(this->grid_view_, entity))
         functor->apply_local(entity);
   } // ... apply_local(...)
 
@@ -175,7 +219,7 @@ public:
                            const EntityType& outside_entity)
   {
     for (auto& functor : codim1_functors_)
-      if (functor->apply_on(grid_view_, intersection))
+      if (functor->apply_on(this->grid_view_, intersection))
         functor->apply_local(intersection, inside_entity, outside_entity);
   } // ... apply_local(...)
 
@@ -193,7 +237,8 @@ public:
     if (use_tbb) {
       const auto num_partitions = DSC_CONFIG_GET("threading.partition_factor", 1u)
                                   * threadManager().current_threads();
-      RangedPartitioning< GridViewType, 0 > partitioning(grid_view_, num_partitions);
+      RangedPartitioning< typename internal::GridPartViewHolder< GridViewType >::type, 0 >
+          partitioning(this->real_grid_view(), num_partitions);
       this->walk(partitioning);
       return;
     }
@@ -205,7 +250,7 @@ public:
 
     // only do something, if we have to
     if ((codim0_functors_.size() + codim1_functors_.size()) > 0) {
-      walk_range(DSC::entityRange(grid_view_));
+      walk_range(DSC::entityRange(this->grid_view_));
     } // only do something, if we have to
 
     // finalize functors
@@ -283,8 +328,8 @@ protected:
       // only walk the intersections, if there are codim1 functors present
       if (codim1_functors_.size() > 0) {
         // walk the intersections
-        const auto intersection_it_end = grid_view_.iend(entity);
-        for (auto intersection_it = grid_view_.ibegin(entity);
+        const auto intersection_it_end = this->grid_view_.iend(entity);
+        for (auto intersection_it = this->grid_view_.ibegin(entity);
              intersection_it != intersection_it_end;
              ++intersection_it) {
           const auto& intersection = *intersection_it;
@@ -302,7 +347,6 @@ protected:
     }
   } // ... walk_range(...)
 
-  const GridViewType grid_view_;
   std::vector< std::unique_ptr< internal::Codim0Object<GridViewType> > > codim0_functors_;
   std::vector< std::unique_ptr< internal::Codim1Object<GridViewType> > > codim1_functors_;
 }; // class Walker
