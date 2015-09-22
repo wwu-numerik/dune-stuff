@@ -9,133 +9,119 @@
 #define DUNE_STUFF_GRID_PROVIDER_GMSH_HH
 
 #if HAVE_DUNE_GRID
-#if HAVE_ALUGRID || HAVE_ALBERTA || HAVE_UG
-#if defined ALUGRID_CONFORM || defined ALUGRID_CUBE || defined ALUGRID_SIMPLEX || defined ALBERTAGRID || defined UGGRID
 
 #include <memory>
-#include <sstream>
 #include <type_traits>
 
-#include <boost/assign/list_of.hpp>
-
-#include <dune/common/parametertree.hh>
-#include <dune/common/shared_ptr.hh>
-#include <dune/common/exceptions.hh>
-#include <dune/common/fvector.hh>
-
 #include <dune/grid/utility/structuredgridfactory.hh>
+#include <dune/grid/alugrid.hh>
 #include <dune/grid/sgrid.hh>
+#include <dune/grid/yaspgrid.hh>
 #include <dune/grid/io/file/gmshreader.hh>
 
 #include <dune/stuff/common/configuration.hh>
-
-#include "interface.hh"
+#include <dune/stuff/common/exceptions.hh>
+#include <dune/stuff/grid/provider/interface.hh>
 
 namespace Dune {
 namespace Stuff {
+namespace Grid {
+namespace Providers {
 
 
 /**
  * \brief   Gmsh grid provider
  */
-template< class GridImp = Dune::SGrid< 2, 2 > >
-class GridProviderGmsh
-  : public GridProviderInterface< GridImp >
+template< class GridImp >
+class Gmsh
+  : public Grid::ProviderInterface< GridImp >
 {
+  static_assert(!(std::is_same< GridImp, Dune::YaspGrid< GridImp::dimension > >::value),
+                "GmshReader does not work with YaspGrid!");
+  static_assert(!(std::is_same< GridImp, Dune::SGrid< GridImp::dimension, GridImp::dimension > >::value),
+                "GmshReader does not work with SGrid!");
+  typedef Grid::ProviderInterface< GridImp > BaseType;
+  typedef Gmsh< GridImp >                    ThisType;
 public:
-  //! Type of the provided grid.
-  typedef GridImp GridType;
+  using typename BaseType::GridType;
 
-  typedef GridProviderInterface< GridType > BaseType;
-
-  typedef GridProviderGmsh< GridType > ThisType;
-
-  //! Dimension of the provided grid.
-  static const size_t dim = BaseType::dim;
-
-  //! Type of the grids coordinates.
-  typedef typename BaseType::CoordinateType CoordinateType;
-
-  //! Unique identifier: \c stuff.grid.provider.gmsh
-  static const std::string id()
+  static const std::string static_id()
   {
-    return BaseType::id() + ".gmsh";
+    return BaseType::static_id() + ".gmsh";
   }
 
-  GridProviderGmsh(const std::string filename)
+  static Common::Configuration default_config(const std::string sub_name = "")
   {
-    static_assert(!(Dune::is_same< GridType, Dune::YaspGrid< dim > >::value), "GmshReader does not work with YaspGrid!");
-    static_assert(!(Dune::is_same< GridType, Dune::SGrid< 2, 2 > >::value), "GmshReader does not work with SGrid!");
+    std::string filename = "g.msh";
+    if (   std::is_same< ALUGrid< 2, 2, simplex, conforming >, GridType >::value
+        || std::is_same< ALUGrid< 2, 2, simplex, nonconforming >, GridType >::value)
+      filename = "gmsh_2d_simplices.msh";
+    return Common::Configuration("filename", filename);
+  }
+
+  static std::unique_ptr< ThisType > create(const Common::Configuration config = default_config(),
+                                            const std::string sub_name = static_id())
+  {
+    const Common::Configuration cfg = config.has_sub(sub_name) ? config.sub(sub_name) : config;
+    const Common::Configuration default_cfg = default_config();
+    return Common::make_unique< ThisType >(cfg.get("filename", default_cfg.get< std::string >("filename")));
+  }
+
+  Gmsh(const std::string filename)
+  {
     grid_ = std::shared_ptr< GridType >(GmshReader< GridType >::read(filename));
   }
 
-  GridProviderGmsh(ThisType& other)
-    : grid_(other.grid_)
-  {}
+  Gmsh(ThisType&& source) = default;
+  Gmsh(const ThisType& other) = default;
 
-  GridProviderGmsh(const ThisType& other)
-    : grid_(other.grid_)
-  {}
+  virtual ~Gmsh() = default;
 
-  static Dune::ParameterTree defaultSettings(const std::string subName = "")
+  ThisType& operator=(const ThisType& other) = default;
+  ThisType& operator=(ThisType&& source) = default;
+
+  virtual const GridType& grid() const override final
   {
-    Dune::ParameterTree description;
-    description["filename"] = "path_to_g.msh";
-    if (subName.empty())
-      return description;
-    else {
-      Dune::Stuff::Common::Configuration extendedDescription;
-      extendedDescription.add(description, subName);
-      return extendedDescription;
-    }
-  } // ... createDefaultSettings(...)
-
-  static ThisType* create(const Dune::ParameterTree& _settings, const std::string subName = id())
-  {
-    // get correct _settings
-    Dune::Stuff::Common::Configuration settings;
-    if (_settings.hasSub(subName))
-      settings = _settings.sub(subName);
-    else
-      settings = _settings;
-    // create and return
-    if (!settings.hasKey("filename"))
-      DUNE_THROW(Dune::RangeError,
-                 "\nMissing key 'filename' in the following Dune::ParameterTree:\n" << settings.reportString("  "));
-    const std::string filename = settings.get("filename", "meaningless_default_value");
-    return new ThisType(filename);
+    return *grid_;
   }
 
-  ThisType& operator=(ThisType& other)
+  virtual GridType& grid() override final
   {
-    if (this != &other) {
-      grid_ = other.grid();
-    }
-    return this;
+    return *grid_;
   }
 
-  //! access to shared ptr
-  virtual std::shared_ptr<GridType> grid()
+  const std::shared_ptr< const GridType > grid_ptr() const
   {
     return grid_;
   }
 
-  //! const access to shared ptr
-  virtual const std::shared_ptr< const GridType > grid() const
+  std::shared_ptr< GridType > grid_ptr()
   {
     return grid_;
+  }
+
+  virtual std::unique_ptr< Grid::ConstProviderInterface< GridType > > copy() const override final
+  {
+    DUNE_THROW(NotImplemented, "");
+    return nullptr;
+  }
+
+  virtual std::unique_ptr< Grid::ProviderInterface< GridType > > copy() override final
+  {
+    DUNE_THROW(NotImplemented, "");
+    return nullptr;
   }
 
 private:
   std::shared_ptr< GridType > grid_;
-}; // class GridProviderGmsh
+}; // class Gmsh
 
 
+} // namespace Providers
+} // namespace Grid
 } // namespace Stuff
 } // namespace Dune
 
 #endif // HAVE_DUNE_GRID
-#endif // defined ALUGRID_CONFORM || defined ALUGRID_CUBE || defined ALUGRID_SIMPLEX || defined ALBERTAGRID || defined UGGRID
-#endif // HAVE_ALUGRID || HAVE_ALBERTA || HAVE_UG
 
 #endif // DUNE_STUFF_GRID_PROVIDER_GMSH_HH
