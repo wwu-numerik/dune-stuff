@@ -31,3 +31,9 @@ add_test(NAME test_tex_compile COMMAND ${CMAKE_MAKE_PROGRAM} tex_compile)
 list(APPEND testnames tex_compile )
 
 END_TESTCASES()
+
+# link grid files
+foreach (filename
+         "gmsh_2d_simplices.msh")
+ execute_process(COMMAND ln -s "${CMAKE_CURRENT_SOURCE_DIR}/${filename}" "${CMAKE_CURRENT_BINARY_DIR}/${filename}")
+endforeach (filename)
