@@ -221,6 +221,14 @@ public:
                  "Requested type '" << type << "' is not one of those avaible for dimensions " << size_t(d) << " -> "
                  << size_t(r) << " x " << size_t(rC) << ":\n" << available_as_str());
   } // ... create(...)
+
+  static std::unique_ptr< InterfaceType > create(const Common::Configuration& cfg)
+  {
+    if (!cfg.has_key("type"))
+      DUNE_THROW(Exceptions::wrong_input_given,
+                 "Missing 'type' in given cfg (see below)!\n\n" << cfg);
+    return create(cfg.get< std::string >("type"), cfg);
+  }
 }; // class FunctionsProvider
 
 
