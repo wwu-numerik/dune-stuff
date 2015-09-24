@@ -56,14 +56,19 @@ class BoundaryInfoInterface
       Codim1DomainType;
 #endif // HAVE_DUNE_PDELAB
 public:
-  typedef IntersectionImp IntersectionType;
+  typedef IntersectionImp                                   IntersectionType;
+  typedef typename IntersectionType::ctype                  DomainFieldType;
+  static const size_t                                       dimDomain = IntersectionType::dimension;
+  static const size_t                                       dimWorld = IntersectionType::dimensionworld;
+  typedef Common::FieldVector< DomainFieldType, dimDomain > DomainType;
+  typedef Common::FieldVector< DomainFieldType, dimWorld >  WorldType;
 
   static const std::string static_id()
   {
     return internal::boundary_info_static_id();
   }
 
-  virtual ~BoundaryInfoInterface() {}
+  virtual ~BoundaryInfoInterface() = default;
 
   virtual bool has_dirichlet() const
   {
@@ -294,7 +299,9 @@ public:
   }
 }; // class AllNeumann
 
+
 #if DUNE_GRID_EXPERIMENTAL_GRID_EXTENSIONS
+
 template< class IntersectionImp >
 class IdBased
   : public Stuff::Grid::BoundaryInfoInterface< IntersectionImp >
@@ -399,6 +406,7 @@ private:
 
 #endif // #if DUNE_GRID_EXPERIMENTAL_GRID_EXTENSIONS
 
+
 template< class IntersectionImp >
 class NormalBased
   : public Stuff::Grid::BoundaryInfoInterface< IntersectionImp >
@@ -406,13 +414,12 @@ class NormalBased
   typedef Stuff::Grid::BoundaryInfoInterface< IntersectionImp > BaseType;
   typedef NormalBased< IntersectionImp > ThisType;
 public:
-  typedef typename BaseType::IntersectionType IntersectionType;
-
-  typedef typename IntersectionType::ctype                DomainFieldType;
-  static const size_t                                     dimDomain = IntersectionType::dimension;
-  static const size_t                                     dimWorld = IntersectionType::dimensionworld;
-  typedef Dune::FieldVector< DomainFieldType, dimDomain > DomainType;
-  typedef Dune::FieldVector< DomainFieldType, dimWorld >  WorldType;
+  using typename BaseType::IntersectionType;
+  using typename BaseType::DomainFieldType;
+  using typename BaseType::DomainType;
+  using typename BaseType::WorldType;
+  using BaseType::dimDomain;
+  using BaseType::dimWorld;
 
   static const std::string static_id()
   {
