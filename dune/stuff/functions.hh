@@ -41,7 +41,7 @@ class FooBar
 \code
 static const bool available = true;
 \endcode
- *       This is all you have to do when implementing the function. In addition you have to add the appropriate include
+ *       In addition you have to add the appropriate include
  *       in this file (of course) and the appropriate type below (just like the rest, should be obvious).
  */
 template< class E, class D, size_t d, class R, size_t r, size_t rC = 1 >
@@ -234,6 +234,5 @@ public:
 
 } // namespace Stuff
 } // namespace Dune
-
 
 #endif // DUNE_STUFF_FUNCTIONS_HH
