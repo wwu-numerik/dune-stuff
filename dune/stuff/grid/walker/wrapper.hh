@@ -20,9 +20,9 @@ namespace internal {
 
 template< class GridViewType >
 class Codim0Object
-  : public Functor::Codim0< GridViewType >
+  : public Codim0Functor< GridViewType >
 {
-  typedef Functor::Codim0< GridViewType > BaseType;
+  typedef Codim0Functor< GridViewType > BaseType;
 public:
   typedef typename BaseType::EntityType EntityType;
 
@@ -32,11 +32,11 @@ public:
 };
 
 
-template< class GridViewType, class ReturnType >
+template< class GridViewImp, class ReturnType >
 class Codim0ReturnObject
-  : public Codim0ReturnFunctor< GridViewType, ReturnType >
+  : public Codim0ReturnFunctor< GridViewImp, ReturnType >
 {
-  typedef Codim0ReturnFunctor< GridViewType, ReturnType > BaseType;
+  typedef Codim0ReturnFunctor< GridViewImp, ReturnType > BaseType;
 public:
   using typename BaseType::GridViewType;
   using typename BaseType::EntityType;
@@ -90,9 +90,9 @@ private:
 
 template< class GridViewType >
 class Codim1Object
-  : public Functor::Codim1< GridViewType >
+  : public Codim1Functor< GridViewType >
 {
-  typedef Functor::Codim1< GridViewType > BaseType;
+  typedef Codim1Functor< GridViewType > BaseType;
 public:
   typedef typename BaseType::IntersectionType IntersectionType;
 
