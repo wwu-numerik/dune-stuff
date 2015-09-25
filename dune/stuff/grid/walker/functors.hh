@@ -54,6 +54,26 @@ public:
 }; // class Codim0ReturnFunctor
 
 
+template< class GridViewImp >
+class Codim1Functor
+{
+public:
+  typedef GridViewImp GridViewType;
+  typedef typename Stuff::Grid::Entity< GridViewType >::Type       EntityType;
+  typedef typename Stuff::Grid::Intersection< GridViewType >::Type IntersectionType;
+
+  virtual ~Codim1Functor() = default;
+
+  virtual void prepare() {}
+
+  virtual void apply_local(const IntersectionType& intersection,
+                           const EntityType& inside_entity,
+                           const EntityType& outside_entity) = 0;
+
+  virtual void finalize() {}
+}; // class Codim1Functor
+
+
 namespace Functor {
 
 
@@ -69,23 +89,14 @@ public:
 
 
 template< class GridViewImp >
-class Codim1
+class
+  DUNE_DEPRECATED_MSG("Use Codim1Functor instead (25.09.2015)!")
+      Codim1
+  : public Codim1Functor< GridViewImp >
 {
 public:
   virtual ~Codim1() = default;
-  typedef GridViewImp GridViewType;
-  typedef typename Stuff::Grid::Entity< GridViewType >::Type       EntityType;
-  typedef typename Stuff::Grid::Intersection< GridViewType >::Type IntersectionType;
-
-
-  virtual void prepare() {}
-
-  virtual void apply_local(const IntersectionType& /*intersection*/,
-                           const EntityType& /*inside_entity*/,
-                           const EntityType& /*outside_entity*/) = 0;
-
-  virtual void finalize() {}
-}; // class Codim1
+};
 
 
 template< class GridViewImp >
