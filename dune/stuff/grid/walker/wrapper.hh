@@ -152,8 +152,8 @@ class WalkerWrapper
   , public Codim1Object< GridViewType >
 {
 public:
-  typedef typename Codim1Object< GridViewType >::EntityType       EntityType;
-  typedef typename Codim1Object< GridViewType >::IntersectionType IntersectionType;
+  using typename Codim1Object< GridViewType >::EntityType;
+  using typename Codim1Object< GridViewType >::IntersectionType;
 
   WalkerWrapper(WalkerType& grid_walker, const ApplyOn::WhichEntity< GridViewType >* which_entities)
     : grid_walker_(grid_walker)
@@ -214,7 +214,7 @@ class Codim0LambdaWrapper
 {
   typedef Codim0Object< GridViewType > BaseType;
 public:
-  typedef typename BaseType::EntityType            EntityType;
+  using typename BaseType::EntityType;
   typedef std::function< void(const EntityType&) > LambdaType;
 
   Codim0LambdaWrapper(LambdaType lambda, const ApplyOn::WhichEntity< GridViewType >* where)
@@ -239,14 +239,15 @@ private:
   std::unique_ptr< const ApplyOn::WhichEntity< GridViewType > > where_;
 }; // class Codim0LambdaWrapper
 
+
 template<class GridViewType>
 class Codim1LambdaWrapper
   : public Codim1Object< GridViewType >
 {
   typedef Codim1Object< GridViewType > BaseType;
 public:
-  typedef typename BaseType::EntityType       EntityType;
-  typedef typename BaseType::IntersectionType IntersectionType;
+  using typename BaseType::EntityType;
+  using typename BaseType::IntersectionType;
   typedef std::function< void(const IntersectionType&, const EntityType&, const EntityType&) > LambdaType;
 
   Codim1LambdaWrapper(LambdaType lambda, const ApplyOn::WhichIntersection< GridViewType >* where)
