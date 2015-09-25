@@ -27,7 +27,7 @@ public:
   typedef GridViewImp GridViewType;
   typedef typename Stuff::Grid::Entity< GridViewType >::Type EntityType;
 
-  virtual ~Codim0Functor() {}
+  virtual ~Codim0Functor() = default;
 
   virtual void prepare() {}
 
@@ -64,7 +64,7 @@ class
   : public Codim0Functor< GridViewImp >
 {
 public:
-  virtual ~Codim0() {}
+  virtual ~Codim0() = default;
 };
 
 
@@ -72,11 +72,11 @@ template< class GridViewImp >
 class Codim1
 {
 public:
+  virtual ~Codim1() = default;
   typedef GridViewImp GridViewType;
   typedef typename Stuff::Grid::Entity< GridViewType >::Type       EntityType;
   typedef typename Stuff::Grid::Intersection< GridViewType >::Type IntersectionType;
 
-  virtual ~Codim1() {}
 
   virtual void prepare() {}
 

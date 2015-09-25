@@ -26,7 +26,7 @@ class Codim0Object
 public:
   typedef typename BaseType::EntityType EntityType;
 
-  virtual ~Codim0Object() {}
+  virtual ~Codim0Object() = default;
 
   virtual bool apply_on(const GridViewType& grid_view, const EntityType& entity) const = 0;
 };
@@ -41,7 +41,7 @@ public:
   using typename BaseType::GridViewType;
   using typename BaseType::EntityType;
 
-  virtual ~Codim0ReturnObject() {}
+  virtual ~Codim0ReturnObject() = default;
 
   virtual bool apply_on(const GridViewType& grid_view, const EntityType& entity) const = 0;
 };
@@ -60,7 +60,7 @@ public:
     , where_(where)
   {}
 
-  virtual ~Codim0FunctorWrapper() {}
+  virtual ~Codim0FunctorWrapper() = default;
 
   virtual void prepare() override final
   {
@@ -96,7 +96,7 @@ class Codim1Object
 public:
   typedef typename BaseType::IntersectionType IntersectionType;
 
-  virtual ~Codim1Object() {}
+  virtual ~Codim1Object() = default;
 
   virtual bool apply_on(const GridViewType& grid_view, const IntersectionType& intersection) const = 0;
 };
@@ -115,6 +115,8 @@ public:
     : wrapped_functor_(wrapped_functor)
     , where_(where)
   {}
+
+  virtual ~Codim1FunctorWrapper() = default;
 
   virtual void prepare() override final
   {
@@ -165,7 +167,7 @@ public:
     , which_intersections_(which_intersections)
   {}
 
-  virtual ~WalkerWrapper() {}
+  virtual ~WalkerWrapper() = default;
 
   virtual void prepare() override final
   {
@@ -220,7 +222,7 @@ public:
     , where_(where)
   {}
 
-  virtual ~Codim0LambdaWrapper() {}
+  virtual ~Codim0LambdaWrapper() = default;
 
   virtual bool apply_on(const GridViewType& grid_view, const EntityType& entity) const override final
   {
@@ -251,6 +253,8 @@ public:
     : lambda_(lambda)
     , where_(where)
   {}
+
+  virtual ~Codim1LambdaWrapper() = default;
 
   virtual bool apply_on(const GridViewType& grid_view, const IntersectionType& intersection) const override final
   {
