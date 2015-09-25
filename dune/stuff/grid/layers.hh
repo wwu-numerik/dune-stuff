@@ -13,6 +13,7 @@
 #endif
 
 #if HAVE_DUNE_FEM
+# include <dune/fem/gridpart/common/gridpart.hh>
 # include <dune/fem/gridpart/leafgridpart.hh>
 # include <dune/fem/gridpart/levelgridpart.hh>
 #endif
@@ -60,6 +61,19 @@ struct is_grid_view_helper
 }; // class is_grid_view_helper
 
 
+# if HAVE_DUNE_FEM
+
+template< class G >
+struct is_grid_part_helper
+{
+  DSC_has_typedef_initialize_once(Traits)
+
+  static const bool is_candidate = DSC_has_typedef(Traits)< G >::value;
+}; // class is_grid_part_helper
+
+# endif // HAVE_DUNE_FEM
+
+
 } // namespace internal
 
 
@@ -74,10 +88,29 @@ struct is_grid_view< G, false >
 {};
 
 
+#if HAVE_DUNE_FEM
+
+template< class G, bool candidate = internal::is_grid_part_helper< G >::is_candidate >
+struct is_grid_part
+  : public std::is_base_of< Dune::Fem::GridPartInterface< typename G::Traits >, G >
+{};
+
+# endif // HAVE_DUNE_FEM
+
+template< class G >
+struct is_grid_part< G
+# if HAVE_DUNE_FEM
+                      , false
+# endif
+                              >
+  : public std::false_type
+{};
 
 
-
-
+template< class G >
+struct is_grid_layer
+  : public integral_constant< bool, is_grid_view< G >::value || is_grid_part< G >::value >
+{};
 
 
 // forwards
