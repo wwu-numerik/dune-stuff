@@ -19,6 +19,8 @@
 #include <dune/stuff/common/string.hh>
 #include <dune/stuff/common/type_utils.hh>
 
+#include "layers.hh"
+
 namespace Dune {
 namespace Stuff {
 namespace Grid {
@@ -29,6 +31,8 @@ namespace Grid {
 template< class GridPartOrViewType >
 class Entity
 {
+  static_assert(is_grid_layer< GridPartOrViewType >::value, "");
+
   template< class GridViewType, bool is_view >
   struct Choose
   {
@@ -41,11 +45,9 @@ class Entity
     typedef typename GridPartType::template Codim< 0 >::EntityType Type;
   };
 
-  static const bool this_is_a_grid_view =
-      std::is_base_of< GridView< typename GridPartOrViewType::Traits >, GridPartOrViewType >::value;
-
 public:
-  typedef typename Choose< GridPartOrViewType, this_is_a_grid_view >::Type Type;
+  typedef typename Choose< GridPartOrViewType, is_grid_view< GridPartOrViewType >::value >::Type Type;
+  typedef typename Choose< GridPartOrViewType, is_grid_view< GridPartOrViewType >::value >::Type type;
 }; // class Entity
 
 
