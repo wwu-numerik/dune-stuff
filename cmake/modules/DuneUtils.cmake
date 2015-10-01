@@ -112,20 +112,20 @@ ENDMACRO( SET_CONFIGHEADER_VARS )
 set( DUNE_TEST_TIMEOUT 180 CACHE STRING "per-test timeout in seconds")
 
 macro(BEGIN_TESTCASES)
-	include_directories(SYSTEM ${DUNE_STUFF_TEST_DIR}/gtest )
-	add_library(gtest_dune_stuff STATIC ${DUNE_STUFF_TEST_DIR}/gtest/gtest-all.cc)
-  target_link_libraries(gtest_dune_stuff pthread)
+    include_directories(SYSTEM ${DUNE_STUFF_TEST_DIR}/gtest )
+    add_library(gtest_dune_stuff STATIC ${DUNE_STUFF_TEST_DIR}/gtest/gtest-all.cc)
+    target_link_libraries(gtest_dune_stuff pthread)
 
-	file( GLOB test_sources "${CMAKE_CURRENT_SOURCE_DIR}/*.cc" )
-	foreach( source ${test_sources} )
-		get_filename_component(testname ${source} NAME_WE)
-    add_executable( test_${testname} ${source} ${COMMON_HEADER} )
     target_link_libraries( test_${testname} ${ARGN} ${COMMON_LIBS} ${GRID_LIBS} gtest_dune_stuff )
-    add_test( test_${testname} ${CMAKE_CURRENT_BINARY_DIR}/test_${testname} )
-    # currently property seems to have no effect
-    set_tests_properties(test_${testname} PROPERTIES TIMEOUT ${DUNE_TEST_TIMEOUT})
-		list(APPEND testnames test_${testname} )
-	endforeach( source )
+    file( GLOB test_sources "${CMAKE_CURRENT_SOURCE_DIR}/*.cc" )
+    foreach( source ${test_sources} )
+        get_filename_component(testname ${source} NAME_WE)
+        add_executable( test_${testname} ${source} ${COMMON_HEADER} )
+        add_test( test_${testname} ${CMAKE_CURRENT_BINARY_DIR}/test_${testname} )
+        # currently property seems to have no effect
+        set_tests_properties(test_${testname} PROPERTIES TIMEOUT ${DUNE_TEST_TIMEOUT})
+        list(APPEND testnames test_${testname} )
+    endforeach( source )
 endmacro(BEGIN_TESTCASES)
 
 macro(END_TESTCASES)
@@ -140,10 +140,10 @@ macro(END_TESTCASES)
       if(COMMAND add_dune_tbb_flags AND TBB_FOUND)
         add_dune_tbb_flags(${test})
       endif()
-     endforeach( test ${testnames} )
-	add_custom_target(test_binaries DEPENDS ${testnames})
-	add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} --timeout ${DUNE_TEST_TIMEOUT}
-                  DEPENDS test_binaries)
+    endforeach( test ${testnames} )
+    add_custom_target(test_binaries DEPENDS ${testnames})
+    add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} --timeout ${DUNE_TEST_TIMEOUT}
+                DEPENDS test_binaries)
 endmacro(END_TESTCASES)
 
 add_custom_target( config_refresh
