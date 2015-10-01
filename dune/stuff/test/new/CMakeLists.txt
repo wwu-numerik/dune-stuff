@@ -1,5 +1,7 @@
 add_static_variants(SOURCE grid_walker.cc
                     INIFILE grid_walker.ini
-                    DEBUG
                     BASENAME statictest
-                    CREATED_TARGETS targetlist ${DEBUG_MACRO_TESTS})
+                    CREATED_TARGETS testtools_targets
+                    ${DEBUG_MACRO_TESTS})
+# append generated targets to stuff internal list for link magic etc
+set(testnames ${testnames} ${testtools_targets})

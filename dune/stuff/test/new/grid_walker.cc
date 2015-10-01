@@ -81,7 +81,7 @@ struct GridWalkerTest : public ::testing::Test
   }
 };
 
-TEST(GridWalkerTest, Misc) {
+TEST_F(GridWalkerTest, Misc) {
   this->check_count();
   this->check_apply_on();
 }
