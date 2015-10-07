@@ -22,82 +22,76 @@ namespace Dune {
 namespace Stuff {
 namespace LA {
 
-
-enum class ChooseBackend {
-    common_dense
-  , istl_sparse
-  , eigen_dense
-  , eigen_sparse
+enum class ChooseBackend
+{
+  common_dense,
+  istl_sparse,
+  eigen_dense,
+  eigen_sparse
 }; // enum class ChooseBackend
-
 
 static constexpr ChooseBackend default_backend =
 #if HAVE_EIGEN
-                                                 ChooseBackend::eigen_sparse;
+    ChooseBackend::eigen_sparse;
 #elif HAVE_DUNE_ISTL
-                                                 ChooseBackend::istl_sparse;
+    ChooseBackend::istl_sparse;
 #else
-                                                 ChooseBackend::common_dense;
+    ChooseBackend::common_dense;
 #endif
-
 
 static constexpr ChooseBackend default_sparse_backend =
 #if HAVE_EIGEN
-                                                        ChooseBackend::eigen_sparse;
+    ChooseBackend::eigen_sparse;
 #elif HAVE_DUNE_ISTL
-                                                        ChooseBackend::istl_sparse;
+    ChooseBackend::istl_sparse;
 #else
-                                                        ChooseBackend::common_dense;
-# error "There is no sparse LA backend available!"
+    ChooseBackend::common_dense;
+#error "There is no sparse LA backend available!"
 #endif
-
 
 static constexpr ChooseBackend default_dense_backend =
 #if HAVE_EIGEN
-                                                       ChooseBackend::eigen_dense;
+    ChooseBackend::eigen_dense;
 #else
-                                                       ChooseBackend::common_dense;
+    ChooseBackend::common_dense;
 #endif
-
 
 /**
  *  \brief  Contains tags mostly needed for python bindings.
  */
 namespace Tags {
 
-
-class ContainerInterface {};
-class ProvidesDataAccess {};
-
+class ContainerInterface
+{
+};
+class ProvidesDataAccess
+{
+};
 
 } // namespace Tags
 namespace internal {
-
 
 /**
  * \brief Tries a boost::numeric_cast and throws an Exceptions::wrong_input_given on failure.
  *
  *        This can be used in the ctor initializer list.
  */
-template< class Out, class In >
+template <class Out, class In>
 static Out boost_numeric_cast(const In& in)
 {
   try {
-    return boost::numeric_cast< Out >(in);
+    return boost::numeric_cast<Out>(in);
   } catch (boost::bad_numeric_cast& ee) {
-    DUNE_THROW(Exceptions::wrong_input_given,
-               "There was an error in boost converting '" << in << "' to '"
-               << Common::Typename< Out >::value() << "': " << ee.what());
+    DUNE_THROW(Exceptions::wrong_input_given, "There was an error in boost converting '"
+                                                  << in << "' to '" << Common::Typename<Out>::value()
+                                                  << "': " << ee.what());
   }
 } // ... boost_numeric_cast(...)
 
-
 } // namespace internal
 
-
-template< class Traits >
-class ProvidesBackend
-  : public CRTPInterface< ProvidesBackend< Traits >, Traits >
+template <class Traits>
+class ProvidesBackend : public CRTPInterface<ProvidesBackend<Traits>, Traits>
 {
 public:
   typedef typename Traits::BackendType BackendType;
@@ -115,8 +109,6 @@ public:
   }
 }; // class ProvidesBackend
 
-
-
 /**
  * \brief Interface for all containers (vectors and matrices).
  *
@@ -133,15 +125,15 @@ public:
   }
 \endcode
  */
-template< class Traits, class ScalarImp = typename Traits::ScalarType >
-class ContainerInterface
-  : public Tags::ContainerInterface
-  , public CRTPInterface< ContainerInterface< Traits, ScalarImp >, Traits >
+template <class Traits, class ScalarImp = typename Traits::ScalarType>
+class ContainerInterface : public Tags::ContainerInterface,
+                           public CRTPInterface<ContainerInterface<Traits, ScalarImp>, Traits>
 {
-  typedef CRTPInterface< ContainerInterface< Traits, ScalarImp >, Traits > CRTP;
-  static_assert(std::is_same< ScalarImp, typename Traits::ScalarType >::value, "");
+  typedef CRTPInterface<ContainerInterface<Traits, ScalarImp>, Traits> CRTP;
+  static_assert(std::is_same<ScalarImp, typename Traits::ScalarType>::value, "");
+
 public:
-  typedef ScalarImp                 ScalarType;
+  typedef ScalarImp ScalarType;
   typedef typename Traits::RealType RealType;
 
   using typename CRTP::derived_type;
@@ -165,10 +157,7 @@ public:
    * \brief BLAS SCAL operation (in-place sclar multiplication).
    * \param alpha The scalar coefficient with which each element of the container is multiplied.
    */
-  inline void scal(const ScalarType& alpha)
-  {
-    CHECK_AND_CALL_CRTP(this->as_imp().scal(alpha));
-  }
+  inline void scal(const ScalarType& alpha) { CHECK_AND_CALL_CRTP(this->as_imp().scal(alpha)); }
 
   /**
    * \brief BLAS AXPY operation.
@@ -195,11 +184,7 @@ public:
   /// \note Those marked as virtual may be implemented more efficiently in a derived class!
   /// \{
 
-
-  static std::string type_this()
-  {
-    return Common::Typename< derived_type >::value();
-  }
+  static std::string type_this() { return Common::Typename<derived_type>::value(); }
 
   virtual derived_type& operator*=(const ScalarType& alpha)
   {
@@ -209,73 +194,60 @@ public:
   /// \}
 }; // class ContainerInterface
 
-
 namespace internal {
 
-
-template< class C >
+template <class C>
 struct is_container_helper
 {
-  DSC_has_typedef_initialize_once(Traits)
-  DSC_has_typedef_initialize_once(ScalarType)
+  DSC_has_typedef_initialize_once(Traits) DSC_has_typedef_initialize_once(ScalarType)
 
-  static const bool is_candidate = DSC_has_typedef(Traits)< C >::value
-                                   && DSC_has_typedef(ScalarType)< C >::value;
+      static const bool is_candidate = DSC_has_typedef(Traits)<C>::value && DSC_has_typedef(ScalarType)<C>::value;
 }; // class is_container_helper
-
 
 } // namespace internal
 
+template <class C, bool candidate = internal::is_container_helper<C>::is_candidate>
+struct is_container : public std::is_base_of<ContainerInterface<typename C::Traits, typename C::ScalarType>, C>
+{
+};
 
-template< class C, bool candidate = internal::is_container_helper< C >::is_candidate >
-struct is_container
-  : public std::is_base_of< ContainerInterface< typename C::Traits, typename C::ScalarType >, C >
-{};
+template <class C>
+struct is_container<C, false> : public std::false_type
+{
+};
 
-
-template< class C >
-struct is_container< C, false >
-  : public std::false_type
-{};
-
-
-template< class Traits >
-class ProvidesConstContainer
-  : public CRTPInterface< ProvidesConstContainer< Traits >, Traits >
+template <class Traits>
+class ProvidesConstContainer : public CRTPInterface<ProvidesConstContainer<Traits>, Traits>
 {
 public:
   typedef typename Traits::ContainerType ContainerType;
 
-  inline std::shared_ptr< const ContainerType > container() const
+  inline std::shared_ptr<const ContainerType> container() const
   {
     CHECK_CRTP(this->as_imp().container());
     return this->as_imp().container();
   }
 }; // class ProvidesConstContainer
 
-
-template< class Traits >
-class ProvidesContainer
-  : public ProvidesConstContainer< Traits >
+template <class Traits>
+class ProvidesContainer : public ProvidesConstContainer<Traits>
 {
-  typedef ProvidesConstContainer< Traits > BaseType;
+  typedef ProvidesConstContainer<Traits> BaseType;
+
 public:
   typedef typename Traits::ContainerType ContainerType;
 
   using BaseType::container;
 
-  inline std::shared_ptr< ContainerType > container()
+  inline std::shared_ptr<ContainerType> container()
   {
     CHECK_CRTP(this->as_imp().container());
     return this->as_imp().container();
   }
 }; // class ProvidesContainer
 
-
-template< class Traits >
-class ProvidesDataAccess
-  : public CRTPInterface< ProvidesDataAccess< Traits >, Traits >
-  , public Tags::ProvidesDataAccess
+template <class Traits>
+class ProvidesDataAccess : public CRTPInterface<ProvidesDataAccess<Traits>, Traits>, public Tags::ProvidesDataAccess
 {
 public:
   typedef typename Traits::ScalarType ScalarType;
@@ -286,7 +258,6 @@ public:
     return this->as_imp().data();
   }
 }; // class ProvidesDataAccess
-
 
 } // namespace LA
 } // namespace Stuff

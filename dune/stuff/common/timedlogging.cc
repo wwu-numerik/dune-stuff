@@ -14,70 +14,47 @@
 #include "exceptions.hh"
 #include "filesystem.hh"
 
-
 namespace Dune {
 namespace Stuff {
 namespace Common {
 
-TimedLogManager::TimedLogManager(const Timer& timer,
-                                 const std::string info_prefix,
-                                 const std::string debug_prefix,
-                                 const std::string warning_prefix,
-                                 const ssize_t max_info_level,
-                                 const ssize_t max_debug_level,
-                                 const bool enable_warnings,
-                                 std::atomic< ssize_t >& current_level,
-                                 std::ostream& disabled_out,
-                                 std::ostream& enabled_out,
-                                 std::ostream& warn_out)
+TimedLogManager::TimedLogManager(const Timer& timer, const std::string info_prefix, const std::string debug_prefix,
+                                 const std::string warning_prefix, const ssize_t max_info_level,
+                                 const ssize_t max_debug_level, const bool enable_warnings,
+                                 std::atomic<ssize_t>& current_level, std::ostream& disabled_out,
+                                 std::ostream& enabled_out, std::ostream& warn_out)
   : timer_(timer)
   , current_level_(current_level)
-  , info_(std::make_shared< TimedPrefixedLogStream >(timer_,
-                                                     info_prefix,
-                                                     current_level_ <= max_info_level ? enabled_out : disabled_out))
-  , debug_(std::make_shared< TimedPrefixedLogStream >(timer_,
-                                                      debug_prefix,
+  , info_(std::make_shared<TimedPrefixedLogStream>(timer_, info_prefix,
+                                                   current_level_ <= max_info_level ? enabled_out : disabled_out))
+  , debug_(std::make_shared<TimedPrefixedLogStream>(timer_, debug_prefix,
 #ifdef NDEBUG
-                                                      current_level_ <= max_debug_level ? enabled_out : dev_null))
+                                                    current_level_ <= max_debug_level ? enabled_out : dev_null))
 #else
-                                                      current_level_ <= max_debug_level ? enabled_out : disabled_out))
+                                                    current_level_ <= max_debug_level ? enabled_out : disabled_out))
 #endif
-  , warn_(std::make_shared< TimedPrefixedLogStream >(timer_,
-                                                     warning_prefix,
-                                                     enable_warnings ? warn_out : disabled_out))
-{}
-
-TimedLogManager::~TimedLogManager()
+  , warn_(std::make_shared<TimedPrefixedLogStream>(timer_, warning_prefix, enable_warnings ? warn_out : disabled_out))
 {
-  --current_level_;
 }
 
-std::ostream& TimedLogManager::info()
-{
-  return *info_;
-}
+TimedLogManager::~TimedLogManager() { --current_level_; }
 
-std::ostream& TimedLogManager::debug()
-{
-  return *debug_;
-}
+std::ostream& TimedLogManager::info() { return *info_; }
 
-std::ostream& TimedLogManager::warn()
-{
-  return *warn_;
-}
+std::ostream& TimedLogManager::debug() { return *debug_; }
 
+std::ostream& TimedLogManager::warn() { return *warn_; }
 
 TimedLogging::TimedLogging()
   : max_info_level_(default_max_info_level)
   , max_debug_level_(default_max_debug_level)
   , enable_warnings_(default_enable_warnings)
   , enable_colors_(default_enable_colors && terminal_supports_color())
-  , info_prefix_(   enable_colors_ ? default_info_color()    : "")
-  , debug_prefix_(  enable_colors_ ? default_debug_color()   : "")
+  , info_prefix_(enable_colors_ ? default_info_color() : "")
+  , debug_prefix_(enable_colors_ ? default_debug_color() : "")
   , warning_prefix_(enable_colors_ ? default_warning_color() : "")
-  , info_suffix_(   enable_colors_ ? StreamModifiers::normal : "")
-  , debug_suffix_(  enable_colors_ ? StreamModifiers::normal : "")
+  , info_suffix_(enable_colors_ ? StreamModifiers::normal : "")
+  , debug_suffix_(enable_colors_ ? StreamModifiers::normal : "")
   , warning_suffix_(enable_colors_ ? StreamModifiers::normal : "")
   , created_(false)
   , current_level_(-1)
@@ -85,48 +62,40 @@ TimedLogging::TimedLogging()
   update_colors();
 }
 
-void TimedLogging::create(const ssize_t max_info_level,
-                          const ssize_t max_debug_level,
-                          const bool enable_warnings,
-                          const bool enable_colors,
-                          const std::string info_color,
-                          const std::string debug_color,
+void TimedLogging::create(const ssize_t max_info_level, const ssize_t max_debug_level, const bool enable_warnings,
+                          const bool enable_colors, const std::string info_color, const std::string debug_color,
                           const std::string warning_color)
 {
-  std::lock_guard< std::mutex > DUNE_UNUSED(guard)(mutex_);
+  std::lock_guard<std::mutex> DUNE_UNUSED(guard)(mutex_);
   if (created_)
     DUNE_THROW(Exceptions::you_are_using_this_wrong, "Do not call create() more than once!");
   max_info_level_  = max_info_level;
   max_debug_level_ = max_debug_level;
   enable_warnings_ = enable_warnings;
   enable_colors_   = enable_colors && terminal_supports_color();
-  info_prefix_    = enable_colors_ ? info_color : "";
-  debug_prefix_   = enable_colors_ ? debug_color : "";
-  warning_prefix_ = enable_colors_ ? warning_color : "";
-  created_ = true;
+  info_prefix_     = enable_colors_ ? info_color : "";
+  debug_prefix_    = enable_colors_ ? debug_color : "";
+  warning_prefix_  = enable_colors_ ? warning_color : "";
+  created_         = true;
   current_level_ = -1;
   update_colors();
 } // ... create(...)
 
 TimedLogManager TimedLogging::get(const std::string id)
 {
-  std::lock_guard< std::mutex > DUNE_UNUSED(guard)(mutex_);
+  std::lock_guard<std::mutex> DUNE_UNUSED(guard)(mutex_);
   ++current_level_;
-  return TimedLogManager(timer_,
-                         info_prefix_    + (id.empty() ? "info"  : id) + ": " + info_suffix_,
-                         debug_prefix_   + (id.empty() ? "debug" : id) + ": " + debug_suffix_,
-                         warning_prefix_ + (id.empty() ? "warn"  : id) + ": " + warning_suffix_,
-                         max_info_level_,
-                         max_debug_level_,
-                         enable_warnings_,
-                         current_level_);
+  return TimedLogManager(timer_, info_prefix_ + (id.empty() ? "info" : id) + ": " + info_suffix_,
+                         debug_prefix_ + (id.empty() ? "debug" : id) + ": " + debug_suffix_,
+                         warning_prefix_ + (id.empty() ? "warn" : id) + ": " + warning_suffix_, max_info_level_,
+                         max_debug_level_, enable_warnings_, current_level_);
 }
 
 void TimedLogging::update_colors()
 {
   if (enable_colors_) {
-    info_prefix_ = color(info_prefix_);
-    debug_prefix_ = color(debug_prefix_);
+    info_prefix_    = color(info_prefix_);
+    debug_prefix_   = color(debug_prefix_);
     warning_prefix_ = color(warning_prefix_);
     if (info_prefix_.empty())
       info_suffix_ = "";
@@ -149,14 +118,11 @@ void TimedLogging::update_colors()
   }
 } // ... update_colors(...)
 
-
 TimedLogging& TimedLogger()
 {
   static TimedLogging timed_logger;
   return timed_logger;
 }
-
-
 
 } // namespace Common
 } // namespace Stuff

@@ -8,11 +8,9 @@
 
 #include <dune/common/unused.hh>
 
-
 namespace Dune {
 namespace Stuff {
 namespace Common {
-
 
 SuspendableStrBuffer::SuspendableStrBuffer(int loglevel, int& logflags)
   : logflags_(logflags)
@@ -20,64 +18,65 @@ SuspendableStrBuffer::SuspendableStrBuffer(int loglevel, int& logflags)
   , suspended_logflags_(logflags)
   , is_suspended_(false)
   , suspend_priority_(default_suspend_priority)
-{}
+{
+}
 
-void SuspendableStrBuffer::suspend(PriorityType priority ) {
+void SuspendableStrBuffer::suspend(PriorityType priority)
+{
   suspend_priority_ = std::max(priority, suspend_priority_);
   {
     // don't accidentally invalidate flags if already suspended
-    if (!is_suspended_)
-    {
+    if (!is_suspended_) {
       suspended_logflags_ = logflags_;
-      logflags_ = LOG_NONE;
+      logflags_           = LOG_NONE;
     }
     is_suspended_ = true;
   }
-}   // Suspend
+} // Suspend
 
-void SuspendableStrBuffer::resume(PriorityType priority) {
-  if (priority >= suspend_priority_)
-  {
+void SuspendableStrBuffer::resume(PriorityType priority)
+{
+  if (priority >= suspend_priority_) {
     if (is_suspended_)
-      logflags_ = suspended_logflags_;
-    is_suspended_ = false;
+      logflags_       = suspended_logflags_;
+    is_suspended_     = false;
     suspend_priority_ = default_suspend_priority;
   }
-}   // Resume
+} // Resume
 
-std::streamsize SuspendableStrBuffer::xsputn(const char_type* s, std::streamsize count) {
+std::streamsize SuspendableStrBuffer::xsputn(const char_type* s, std::streamsize count)
+{
   if (enabled()) {
     std::lock_guard<std::mutex> guard(mutex_);
     return BaseType::xsputn(s, count);
-   }
-  //pretend everything was written
+  }
+  // pretend everything was written
   return std::streamsize(count);
 }
 
-SuspendableStrBuffer::int_type SuspendableStrBuffer::overflow(SuspendableStrBuffer::int_type ch) {
+SuspendableStrBuffer::int_type SuspendableStrBuffer::overflow(SuspendableStrBuffer::int_type ch)
+{
   if (enabled())
     return BaseType::overflow(ch);
-  //anything not equal to traits::eof is considered a success
+  // anything not equal to traits::eof is considered a success
   return traits_type::eof() + 1;
 }
 
-int SuspendableStrBuffer::pubsync() {
+int SuspendableStrBuffer::pubsync()
+{
   if (enabled())
     return BaseType::pubsync();
   return 0;
 }
 
-
 TimedPrefixedStreamBuffer::TimedPrefixedStreamBuffer(const Timer& timer, const std::string prefix, std::ostream& out)
-  : timer_(timer)
-  , prefix_(prefix)
-  , out_(out)
-  , prefix_needed_(true)
-{}
+  : timer_(timer), prefix_(prefix), out_(out), prefix_needed_(true)
+{
+}
 
 int TimedPrefixedStreamBuffer::sync()
 {
-  std::lock_guard< std::mutex > DUNE_UNUSED(guard)(mutex_);
+  std::lock_guard<std::mutex> DUNE_UNUSED(guard)(mutex_);
   const std::string tmp_str = str();
   if (prefix_needed_ && !tmp_str.empty()) {
     out_ << elapsed_time_str() << prefix_;
@@ -107,21 +106,20 @@ std::string TimedPrefixedStreamBuffer::elapsed_time_str() const
   const double secs_per_day  = 86400;
   const double secs_per_hour = 3600;
   const double elapsed = timer_.elapsed();
-  const size_t weeks(   elapsed/secs_per_week);
-  const size_t days(   (elapsed - weeks*secs_per_week)/secs_per_day);
-  const size_t hours(  (elapsed - weeks*secs_per_week - days*secs_per_day)/3600.0);
-  const size_t minutes((elapsed - weeks*secs_per_week - days*secs_per_day - hours*secs_per_hour)/60.0);
-  const size_t seconds( elapsed - weeks*secs_per_week - days*secs_per_day - hours*secs_per_hour - minutes*60);
-  if (elapsed > secs_per_week)      // more than a week
+  const size_t weeks(elapsed / secs_per_week);
+  const size_t days((elapsed - weeks * secs_per_week) / secs_per_day);
+  const size_t hours((elapsed - weeks * secs_per_week - days * secs_per_day) / 3600.0);
+  const size_t minutes((elapsed - weeks * secs_per_week - days * secs_per_day - hours * secs_per_hour) / 60.0);
+  const size_t seconds(elapsed - weeks * secs_per_week - days * secs_per_day - hours * secs_per_hour - minutes * 60);
+  if (elapsed > secs_per_week) // more than a week
     return (boost::format("%02dw %02dd %02d:%02d:%02d|") % weeks % days % hours % minutes % seconds).str();
-  else if (elapsed > secs_per_day)  // less than a week, more than a day
+  else if (elapsed > secs_per_day) // less than a week, more than a day
     return (boost::format("%02dd %02d:%02d:%02d|") % days % hours % minutes % seconds).str();
   else if (elapsed > secs_per_hour) // less than a day, more than one hour
     return (boost::format("%02d:%02d:%02d|") % hours % minutes % seconds).str();
-  else                              // less than one hour
+  else // less than one hour
     return (boost::format("%02d:%02d|") % minutes % seconds).str();
 } // ... elapsed_time(...)
-
 
 LogStream& LogStream::flush()
 {
@@ -130,19 +128,15 @@ LogStream& LogStream::flush()
   return *this;
 }
 
-
 TimedPrefixedLogStream::TimedPrefixedLogStream(const Timer& timer, const std::string prefix, std::ostream& outstream)
-  : StorageBaseType(new TimedPrefixedStreamBuffer(timer, prefix, outstream))
-  , OstreamBaseType(&this->storage_access())
-{}
-
-TimedPrefixedLogStream::~TimedPrefixedLogStream()
+  : StorageBaseType(new TimedPrefixedStreamBuffer(timer, prefix, outstream)), OstreamBaseType(&this->storage_access())
 {
-  flush();
 }
 
+TimedPrefixedLogStream::~TimedPrefixedLogStream() { flush(); }
 
-int FileBuffer::sync() {
+int FileBuffer::sync()
+{
   // flush buffer into stream
   std::lock_guard<std::mutex> guard(sync_mutex_);
   std::cout << str();
@@ -153,9 +147,8 @@ int FileBuffer::sync() {
   return 0;
 }
 
-
-
-int EmptyBuffer::sync() {
+int EmptyBuffer::sync()
+{
   str("");
   return 0;
 }
@@ -163,4 +156,3 @@ int EmptyBuffer::sync() {
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
-
