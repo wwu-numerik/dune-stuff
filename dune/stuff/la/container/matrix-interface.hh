@@ -195,9 +195,11 @@ public:
     try {
       return boost::numeric_cast<DUNE_STUFF_SSIZE_T>(rows());
     } catch (boost::bad_numeric_cast& ee) {
-      DUNE_THROW(Exceptions::external_error, "There was an error in boost converting '"
-                                                 << rows() << "' to '" << Common::Typename<ScalarType>::value()
-                                                 << "': " << ee.what());
+      DUNE_THROW(Exceptions::external_error,
+                 "There was an error in boost converting '" << rows() << "' to '"
+                                                            << Common::Typename<ScalarType>::value()
+                                                            << "': "
+                                                            << ee.what());
     }
   } // ... pb_rows(...)
 
@@ -206,9 +208,11 @@ public:
     try {
       return boost::numeric_cast<DUNE_STUFF_SSIZE_T>(cols());
     } catch (boost::bad_numeric_cast& ee) {
-      DUNE_THROW(Exceptions::external_error, "There was an error in boost converting '"
-                                                 << cols() << "' to '" << Common::Typename<ScalarType>::value()
-                                                 << "': " << ee.what());
+      DUNE_THROW(Exceptions::external_error,
+                 "There was an error in boost converting '" << cols() << "' to '"
+                                                            << Common::Typename<ScalarType>::value()
+                                                            << "': "
+                                                            << ee.what());
     }
   } // ... pb_cols(...)
 
@@ -240,9 +244,11 @@ public:
     try {
       return boost::numeric_cast<DUNE_STUFF_SSIZE_T>(non_zeros());
     } catch (boost::bad_numeric_cast& ee) {
-      DUNE_THROW(Exceptions::external_error, "There was an error in boost converting '"
-                                                 << non_zeros() << "' to '" << Common::Typename<ScalarType>::value()
-                                                 << "': " << ee.what());
+      DUNE_THROW(Exceptions::external_error,
+                 "There was an error in boost converting '" << non_zeros() << "' to '"
+                                                            << Common::Typename<ScalarType>::value()
+                                                            << "': "
+                                                            << ee.what());
     }
   } // ... pb_non_zeros(...)
 

@@ -114,7 +114,10 @@ public:
 
       // define the BiCGStab as the actual solver
       BiCGSTABSolver<IstlVectorType> solver(
-          matrix_operator, scalar_product, preconditioner, opts.get("precision", default_opts.get<S>("precision")),
+          matrix_operator,
+          scalar_product,
+          preconditioner,
+          opts.get("precision", default_opts.get<S>("precision")),
           opts.get("max_iter", default_opts.get<size_t>("max_iter")),
 #if HAVE_MPI
           (communicator_.communicator().rank() == 0) ? opts.get("verbose", default_opts.get<int>("verbose")) : 0
@@ -132,7 +135,10 @@ public:
 
       // define the BiCGStab as the actual solver
       BiCGSTABSolver<IstlVectorType> solver(
-          matrix_operator, scalar_product, preconditioner, opts.get("precision", default_opts.get<S>("precision")),
+          matrix_operator,
+          scalar_product,
+          preconditioner,
+          opts.get("precision", default_opts.get<S>("precision")),
           opts.get("max_iter", default_opts.get<size_t>("max_iter")),
 #if HAVE_MPI
           (communicator_.communicator().rank() == 0) ? opts.get("verbose", default_opts.get<int>("verbose")) : 0
@@ -197,7 +203,9 @@ public:
       typedef Amg::AMG<MatrixOperatorType, IstlVectorType, SmootherType> PreconditionerType;
       PreconditionerType preconditioner(matrix_operator, amg_criterion, smoother_parameters);
       // define the BiCGStab as the actual solver
-      BiCGSTABSolver<IstlVectorType> solver(matrix_operator, scalar_product, preconditioner,
+      BiCGSTABSolver<IstlVectorType> solver(matrix_operator,
+                                            scalar_product,
+                                            preconditioner,
                                             opts.get("precision", default_opts.get<S>("precision")),
                                             opts.get("max_iter", default_opts.get<int>("max_iter")),
                                             opts.get("verbose", default_opts.get<int>("verbose")));
@@ -211,7 +219,9 @@ public:
           opts.get("smoother.relaxation_factor", default_opts.get<S>("smoother.relaxation_factor"));
       typedef Amg::AMG<MatrixOperatorType, IstlVectorType, SmootherType> PreconditionerType;
       PreconditionerType preconditioner(matrix_operator, amg_criterion, smoother_parameters);
-      BiCGSTABSolver<IstlVectorType> solver(matrix_operator, scalar_product, preconditioner,
+      BiCGSTABSolver<IstlVectorType> solver(matrix_operator,
+                                            scalar_product,
+                                            preconditioner,
                                             opts.get("precision", default_opts.get<S>("precision")),
                                             opts.get("max_iter", default_opts.get<int>("max_iter")),
                                             opts.get("verbose", default_opts.get<int>("verbose")));

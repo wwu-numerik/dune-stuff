@@ -128,15 +128,17 @@ bool Configuration::has_key(const std::string& key) const { return BaseType::has
 Configuration Configuration::sub(const std::string sub_id) const
 {
   if (empty())
-    DUNE_THROW(Exceptions::configuration_error, "You can not get anything from an empty Configuration, use has_sub(\""
-                                                    << sub_id << "\") to check first!");
+    DUNE_THROW(Exceptions::configuration_error,
+               "You can not get anything from an empty Configuration, use has_sub(\"" << sub_id
+                                                                                      << "\") to check first!");
   if (sub_id.empty())
     DUNE_THROW(Exceptions::configuration_error, "Given sub_id must not be empty!");
   if (!has_sub(sub_id))
     DUNE_THROW(Exceptions::configuration_error,
                "Subtree '" << sub_id << "' does not exist in this Configuration (see below), use has_sub(\"" << sub_id
                            << "\") to check first!"
-                           << "\n======================\n" << report_string());
+                           << "\n======================\n"
+                           << report_string());
   return Configuration(BaseType::sub(sub_id));
 } // ... sub(...)
 
@@ -248,9 +250,11 @@ void Configuration::add_tree_(const Configuration& other, const std::string sub_
     try {
       set(key, element.second, overwrite);
     } catch (Exceptions::configuration_error& ee) {
-      DUNE_THROW(Exceptions::configuration_error, "There was an error adding other (see below) to this:\n\n"
-                                                      << ee.what() << "\n\n"
-                                                      << "======================\n" << other.report_string() << "\n");
+      DUNE_THROW(Exceptions::configuration_error,
+                 "There was an error adding other (see below) to this:\n\n" << ee.what() << "\n\n"
+                                                                            << "======================\n"
+                                                                            << other.report_string()
+                                                                            << "\n");
     }
   }
 } // ... add_tree_(...)
@@ -371,9 +375,9 @@ Configuration::Configuration(const std::vector<std::string> keys, const std::vec
   : BaseType(), warn_on_default_access_(warn_on_default_access), log_on_exit_(log_on_exit), logfile_(logfile)
 {
   if (keys.size() != values_in.size())
-    DUNE_THROW(Exceptions::shapes_do_not_match, "The size of 'keys' (" << keys.size()
-                                                                       << ") does not match the size of 'values' ("
-                                                                       << values_in.size() << ")!");
+    DUNE_THROW(Exceptions::shapes_do_not_match,
+               "The size of 'keys' (" << keys.size() << ") does not match the size of 'values' (" << values_in.size()
+                                      << ")!");
   size_t ii = 0;
   for (auto value : values_in)
     set(keys[ii++], value);

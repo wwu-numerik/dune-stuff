@@ -97,7 +97,8 @@ public:
       if (size_t(pattern_in.size()) != rr)
         DUNE_THROW(Exceptions::shapes_do_not_match,
                    "The size of the pattern (" << pattern_in.size() << ") does not match the number of rows of this ("
-                                               << rr << ")!");
+                                               << rr
+                                               << ")!");
       for (size_t row = 0; row < size_t(pattern_in.size()); ++row) {
         backend_->startVec(internal::boost_numeric_cast<EIGEN_size_t>(row));
         const auto& columns = pattern_in.inner(row);
@@ -106,7 +107,8 @@ public:
           if (column >= cc)
             DUNE_THROW(Exceptions::shapes_do_not_match,
                        "The size of row " << row << " of the pattern does not match the number of columns of this ("
-                                          << cc << ")!");
+                                          << cc
+                                          << ")!");
 #endif // NDEBUG
           backend_->insertBackByOuterInner(internal::boost_numeric_cast<EIGEN_size_t>(row),
                                            internal::boost_numeric_cast<EIGEN_size_t>(column));
@@ -213,9 +215,12 @@ public:
   void axpy(const ScalarType& alpha, const ThisType& xx)
   {
     if (!has_equal_shape(xx))
-      DUNE_THROW(Exceptions::shapes_do_not_match, "The shape of xx (" << xx.rows() << "x" << xx.cols()
-                                                                      << ") does not match the shape of this ("
-                                                                      << rows() << "x" << cols() << ")!");
+      DUNE_THROW(Exceptions::shapes_do_not_match,
+                 "The shape of xx (" << xx.rows() << "x" << xx.cols() << ") does not match the shape of this ("
+                                     << rows()
+                                     << "x"
+                                     << cols()
+                                     << ")!");
     const auto& xx_ref = *(xx.backend_);
     backend() += alpha * xx_ref;
   } // ... axpy(...)
@@ -261,20 +266,21 @@ public:
   void clear_row(const size_t ii)
   {
     if (ii >= rows())
-      DUNE_THROW(Exceptions::index_out_of_range, "Given ii (" << ii << ") is larger than the rows of this (" << rows()
-                                                              << ")!");
+      DUNE_THROW(Exceptions::index_out_of_range,
+                 "Given ii (" << ii << ") is larger than the rows of this (" << rows() << ")!");
     backend().row(internal::boost_numeric_cast<EIGEN_size_t>(ii)) *= ScalarType(0);
   }
 
   void clear_col(const size_t jj)
   {
     if (jj >= cols())
-      DUNE_THROW(Exceptions::index_out_of_range, "Given jj (" << jj << ") is larger than the cols of this (" << cols()
-                                                              << ")!");
+      DUNE_THROW(Exceptions::index_out_of_range,
+                 "Given jj (" << jj << ") is larger than the cols of this (" << cols() << ")!");
     ensure_uniqueness();
     for (size_t row = 0; internal::boost_numeric_cast<EIGEN_size_t>(row) < backend_->outerSize(); ++row) {
       for (typename BackendType::InnerIterator row_it(*backend_, internal::boost_numeric_cast<EIGEN_size_t>(row));
-           row_it; ++row_it) {
+           row_it;
+           ++row_it) {
         const size_t col = row_it.col();
         if (col == jj) {
           backend_->coeffRef(internal::boost_numeric_cast<EIGEN_size_t>(row),
@@ -289,14 +295,14 @@ public:
   void unit_row(const size_t ii)
   {
     if (ii >= cols())
-      DUNE_THROW(Exceptions::index_out_of_range, "Given ii (" << ii << ") is larger than the cols of this (" << cols()
-                                                              << ")!");
+      DUNE_THROW(Exceptions::index_out_of_range,
+                 "Given ii (" << ii << ") is larger than the cols of this (" << cols() << ")!");
     if (ii >= rows())
-      DUNE_THROW(Exceptions::index_out_of_range, "Given ii (" << ii << ") is larger than the rows of this (" << rows()
-                                                              << ")!");
+      DUNE_THROW(Exceptions::index_out_of_range,
+                 "Given ii (" << ii << ") is larger than the rows of this (" << rows() << ")!");
     if (!these_are_valid_indices(ii, ii))
-      DUNE_THROW(Exceptions::index_out_of_range, "Diagonal entry (" << ii << ", " << ii
-                                                                    << ") is not contained in the sparsity pattern!");
+      DUNE_THROW(Exceptions::index_out_of_range,
+                 "Diagonal entry (" << ii << ", " << ii << ") is not contained in the sparsity pattern!");
     backend().row(internal::boost_numeric_cast<EIGEN_size_t>(ii)) *= ScalarType(0);
     set_entry(ii, ii, ScalarType(1));
   } // ... unit_row(...)
@@ -304,15 +310,16 @@ public:
   void unit_col(const size_t jj)
   {
     if (jj >= cols())
-      DUNE_THROW(Exceptions::index_out_of_range, "Given jj (" << jj << ") is larger than the cols of this (" << cols()
-                                                              << ")!");
+      DUNE_THROW(Exceptions::index_out_of_range,
+                 "Given jj (" << jj << ") is larger than the cols of this (" << cols() << ")!");
     if (jj >= rows())
-      DUNE_THROW(Exceptions::index_out_of_range, "Given jj (" << jj << ") is larger than the rows of this (" << rows()
-                                                              << ")!");
+      DUNE_THROW(Exceptions::index_out_of_range,
+                 "Given jj (" << jj << ") is larger than the rows of this (" << rows() << ")!");
     ensure_uniqueness();
     for (size_t row = 0; internal::boost_numeric_cast<EIGEN_size_t>(row) < backend_->outerSize(); ++row) {
       for (typename BackendType::InnerIterator row_it(*backend_, internal::boost_numeric_cast<EIGEN_size_t>(row));
-           row_it; ++row_it) {
+           row_it;
+           ++row_it) {
         const size_t col = row_it.col();
         if (col == jj) {
           if (col == row)
@@ -385,7 +392,8 @@ private:
       return false;
     for (size_t row = ii; internal::boost_numeric_cast<EIGEN_size_t>(row) < backend_->outerSize(); ++row) {
       for (typename BackendType::InnerIterator row_it(*backend_, internal::boost_numeric_cast<EIGEN_size_t>(row));
-           row_it; ++row_it) {
+           row_it;
+           ++row_it) {
         const size_t col = row_it.col();
         if ((ii == row) && (jj == col))
           return true;

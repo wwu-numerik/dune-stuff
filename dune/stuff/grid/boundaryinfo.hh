@@ -490,8 +490,8 @@ public:
     else if (type == BoundaryInfos::NormalBased<I>::static_id())
       return BoundaryInfos::NormalBased<I>::default_config(subname);
     else
-      DUNE_THROW(Exceptions::wrong_input_given, "'" << type << "' is not a valid " << InterfaceType::static_id()
-                                                    << "!");
+      DUNE_THROW(Exceptions::wrong_input_given,
+                 "'" << type << "' is not a valid " << InterfaceType::static_id() << "!");
   } // ... default_config(...)
 
   static std::unique_ptr<InterfaceType> create(const Common::Configuration& config)
@@ -514,8 +514,8 @@ public:
     else if (type == BoundaryInfos::NormalBased<I>::static_id())
       return BoundaryInfos::NormalBased<I>::create(config);
     else
-      DUNE_THROW(Exceptions::wrong_input_given, "'" << type << "' is not a valid " << InterfaceType::static_id()
-                                                    << "!");
+      DUNE_THROW(Exceptions::wrong_input_given,
+                 "'" << type << "' is not a valid " << InterfaceType::static_id() << "!");
   } // ... create(...)
 };  // class BoundaryInfoProvider
 

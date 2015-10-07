@@ -50,7 +50,8 @@ public:
         ss << opt << " ";
       DUNE_THROW(Exceptions::configuration_error,
                  "Given type '" << type << "' not supported (see below for a list of supported ones). "
-                                << "Call options() first!\n" << ss.str());
+                                << "Call options() first!\n"
+                                << ss.str());
     }
   }
 };
@@ -66,23 +67,29 @@ public:
 
   Solver(const MatrixType& /*matrix*/)
   {
-    DUNE_THROW(NotImplemented, "This is the unspecialized version of LA::Solver< ... >. "
-                               "Please include the correct header for your matrix implementation '"
-                                   << Common::Typename<MatrixType>::value() << "'!");
+    DUNE_THROW(NotImplemented,
+               "This is the unspecialized version of LA::Solver< ... >. "
+               "Please include the correct header for your matrix implementation '"
+                   << Common::Typename<MatrixType>::value()
+                   << "'!");
   }
 
   static std::vector<std::string> types()
   {
-    DUNE_THROW(NotImplemented, "This is the unspecialized version of LA::Solver< ... >. "
-                               "Please include the correct header for your matrix implementation '"
-                                   << Common::Typename<MatrixType>::value() << "'!");
+    DUNE_THROW(NotImplemented,
+               "This is the unspecialized version of LA::Solver< ... >. "
+               "Please include the correct header for your matrix implementation '"
+                   << Common::Typename<MatrixType>::value()
+                   << "'!");
   }
 
   static Common::Configuration options(const std::string /*type*/ = "")
   {
-    DUNE_THROW(NotImplemented, "This is the unspecialized version of LA::Solver< ... >. "
-                               "Please include the correct header for your matrix implementation '"
-                                   << Common::Typename<MatrixType>::value() << "'!");
+    DUNE_THROW(NotImplemented,
+               "This is the unspecialized version of LA::Solver< ... >. "
+               "Please include the correct header for your matrix implementation '"
+                   << Common::Typename<MatrixType>::value()
+                   << "'!");
   }
 
   /**
@@ -92,25 +99,31 @@ public:
   template <class RhsType, class SolutionType>
   void apply(const RhsType& /*rhs*/, SolutionType& /*solution*/) const
   {
-    DUNE_THROW(NotImplemented, "This is the unspecialized version of LA::Solver< ... >. "
-                               "Please include the correct header for your matrix implementation '"
-                                   << Common::Typename<MatrixType>::value() << "'!");
+    DUNE_THROW(NotImplemented,
+               "This is the unspecialized version of LA::Solver< ... >. "
+               "Please include the correct header for your matrix implementation '"
+                   << Common::Typename<MatrixType>::value()
+                   << "'!");
   }
 
   template <class RhsType, class SolutionType>
   void apply(const RhsType& /*rhs*/, SolutionType& /*solution*/, const std::string& /*type*/) const
   {
-    DUNE_THROW(NotImplemented, "This is the unspecialized version of LA::Solver< ... >. "
-                               "Please include the correct header for your matrix implementation '"
-                                   << Common::Typename<MatrixType>::value() << "'!");
+    DUNE_THROW(NotImplemented,
+               "This is the unspecialized version of LA::Solver< ... >. "
+               "Please include the correct header for your matrix implementation '"
+                   << Common::Typename<MatrixType>::value()
+                   << "'!");
   }
 
   template <class RhsType, class SolutionType>
   void apply(const RhsType& /*rhs*/, SolutionType& /*solution*/, const Common::Configuration& /*options*/) const
   {
-    DUNE_THROW(NotImplemented, "This is the unspecialized version of LA::Solver< ... >. "
-                               "Please include the correct header for your matrix implementation '"
-                                   << Common::Typename<MatrixType>::value() << "'!");
+    DUNE_THROW(NotImplemented,
+               "This is the unspecialized version of LA::Solver< ... >. "
+               "Please include the correct header for your matrix implementation '"
+                   << Common::Typename<MatrixType>::value()
+                   << "'!");
   }
 }; // class Solver
 

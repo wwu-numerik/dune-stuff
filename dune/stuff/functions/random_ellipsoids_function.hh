@@ -170,8 +170,8 @@ public:
 
     const auto parent_range = DSC::valueRange(0ul, level_0_count);
     for (auto ii : parent_range) {
-      std::generate(ellipsoids_[ii].center.begin(), ellipsoids_[ii].center.end(),
-                    [&center_rng]() { return center_rng(); });
+      std::generate(
+          ellipsoids_[ii].center.begin(), ellipsoids_[ii].center.end(), [&center_rng]() { return center_rng(); });
       std::generate(ellipsoids_[ii].radii.begin(), ellipsoids_[ii].radii.end(), [&radii_rng]() { return radii_rng(); });
     }
 

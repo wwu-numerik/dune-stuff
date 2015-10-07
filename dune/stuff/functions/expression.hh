@@ -98,8 +98,10 @@ public:
     }
     // create
     return Common::make_unique<ThisType>(cfg.get("variable", default_cfg.get<std::string>("variable")),
-                                         expression_as_vectors, cfg.get("order", default_cfg.get<size_t>("order")),
-                                         cfg.get("name", default_cfg.get<std::string>("name")), gradient_as_vectors);
+                                         expression_as_vectors,
+                                         cfg.get("order", default_cfg.get<size_t>("order")),
+                                         cfg.get("name", default_cfg.get<std::string>("name")),
+                                         gradient_as_vectors);
   } // ... create(...)
 
   /**
@@ -212,11 +214,20 @@ public:
         if (failure)
           DUNE_THROW(Stuff::Exceptions::internal_error,
                      "evaluating this function yielded "
-                         << error_type << "!\n"
-                         << "The variable of this function is:     " << function_->variable() << "\n"
-                         << "The expression of this functional is: " << function_->expression().at(0) << "\n"
-                         << "You tried to evaluate it with:   xx = " << xx << "\n"
-                         << "The result was:                       " << ret << "\n\n"
+                         << error_type
+                         << "!\n"
+                         << "The variable of this function is:     "
+                         << function_->variable()
+                         << "\n"
+                         << "The expression of this functional is: "
+                         << function_->expression().at(0)
+                         << "\n"
+                         << "You tried to evaluate it with:   xx = "
+                         << xx
+                         << "\n"
+                         << "The result was:                       "
+                         << ret
+                         << "\n\n"
                          << "You can disable this check by defining DUNE_STUFF_FUNCTIONS_EXPRESSION_DISABLE_CHECKS\n");
       }
     }

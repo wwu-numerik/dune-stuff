@@ -187,7 +187,8 @@ public:
 private:
   std::unique_ptr<Intersection> create_current_intersection() const
   {
-    return DSC::make_unique<Intersection>(BaseType::operator*(), real_grid_view_,
+    return DSC::make_unique<Intersection>(BaseType::operator*(),
+                                          real_grid_view_,
                                           has_boundary_intersections_
                                               ? intersection_map_.at((BaseType::operator*()).indexInInside())
                                               : (const PeriodicPairType&)nonperiodic_pair_);
@@ -197,7 +198,8 @@ private:
   {
     const bool is_iend                            = (*this == real_grid_view_.iend(entity_));
     const RealIntersectionType& real_intersection = is_iend ? *real_grid_view_.ibegin(entity_) : BaseType::operator*();
-    return DSC::make_unique<Intersection>(real_intersection, real_grid_view_,
+    return DSC::make_unique<Intersection>(real_intersection,
+                                          real_grid_view_,
                                           has_boundary_intersections_
                                               ? intersection_map_.at(real_intersection.indexInInside())
                                               : (const PeriodicPairType&)nonperiodic_pair_);
@@ -368,7 +370,9 @@ public:
 
   IntersectionIterator ibegin(const typename Codim<0>::Entity& entity) const
   {
-    return IntersectionIterator(BaseType::ibegin(entity), *this, entity,
+    return IntersectionIterator(BaseType::ibegin(entity),
+                                *this,
+                                entity,
                                 entity.hasBoundaryIntersections()
                                     ? entity_to_intersection_map_map_.at(this->indexSet().index(entity))
                                     : (const IntersectionMapType&)empty_intersection_map_);
@@ -377,7 +381,9 @@ public:
 
   IntersectionIterator iend(const typename Codim<0>::Entity& entity) const
   {
-    return IntersectionIterator(BaseType::iend(entity), *this, entity,
+    return IntersectionIterator(BaseType::iend(entity),
+                                *this,
+                                entity,
                                 entity.hasBoundaryIntersections()
                                     ? entity_to_intersection_map_map_.at(this->indexSet().index(entity))
                                     : (const IntersectionMapType&)empty_intersection_map_);

@@ -359,9 +359,9 @@ public:
   IstlRowMajorSparseMatrix(const size_t rr, const size_t cc, const SparsityPatternDefault& patt)
   {
     if (patt.size() != rr)
-      DUNE_THROW(Exceptions::shapes_do_not_match, "The size of the pattern ("
-                                                      << patt.size() << ") does not match the number of rows of this ("
-                                                      << rows() << ")!");
+      DUNE_THROW(Exceptions::shapes_do_not_match,
+                 "The size of the pattern (" << patt.size() << ") does not match the number of rows of this (" << rows()
+                                             << ")!");
     build_sparse_matrix(rr, cc, patt);
     backend_->operator*=(ScalarType(0));
   } // ... IstlRowMajorSparseMatrix(...)
@@ -455,9 +455,12 @@ public:
   void axpy(const ScalarType& alpha, const ThisType& xx)
   {
     if (!has_equal_shape(xx))
-      DUNE_THROW(Exceptions::shapes_do_not_match, "The shape of xx (" << xx.rows() << "x" << xx.cols()
-                                                                      << ") does not match the shape of this ("
-                                                                      << rows() << "x" << cols() << ")!");
+      DUNE_THROW(Exceptions::shapes_do_not_match,
+                 "The shape of xx (" << xx.rows() << "x" << xx.cols() << ") does not match the shape of this ("
+                                     << rows()
+                                     << "x"
+                                     << cols()
+                                     << ")!");
     backend().axpy(alpha, *(xx.backend_));
   } // ... axpy(...)
 
@@ -502,16 +505,16 @@ public:
   void clear_row(const size_t ii)
   {
     if (ii >= rows())
-      DUNE_THROW(Exceptions::index_out_of_range, "Given ii (" << ii << ") is larger than the rows of this (" << rows()
-                                                              << ")!");
+      DUNE_THROW(Exceptions::index_out_of_range,
+                 "Given ii (" << ii << ") is larger than the rows of this (" << rows() << ")!");
     backend()[ii] *= ScalarType(0);
   } // ... clear_row(...)
 
   void clear_col(const size_t jj)
   {
     if (jj >= cols())
-      DUNE_THROW(Exceptions::index_out_of_range, "Given jj (" << jj << ") is larger than the cols of this (" << cols()
-                                                              << ")!");
+      DUNE_THROW(Exceptions::index_out_of_range,
+                 "Given jj (" << jj << ") is larger than the cols of this (" << cols() << ")!");
     ensure_uniqueness();
     for (size_t ii = 0; ii < rows(); ++ii) {
       auto& row                = backend_->operator[](ii);
@@ -524,14 +527,14 @@ public:
   void unit_row(const size_t ii)
   {
     if (ii >= cols())
-      DUNE_THROW(Exceptions::index_out_of_range, "Given ii (" << ii << ") is larger than the cols of this (" << cols()
-                                                              << ")!");
+      DUNE_THROW(Exceptions::index_out_of_range,
+                 "Given ii (" << ii << ") is larger than the cols of this (" << cols() << ")!");
     if (ii >= rows())
-      DUNE_THROW(Exceptions::index_out_of_range, "Given ii (" << ii << ") is larger than the rows of this (" << rows()
-                                                              << ")!");
+      DUNE_THROW(Exceptions::index_out_of_range,
+                 "Given ii (" << ii << ") is larger than the rows of this (" << rows() << ")!");
     if (!backend_->exists(ii, ii))
-      DUNE_THROW(Exceptions::index_out_of_range, "Diagonal entry (" << ii << ", " << ii
-                                                                    << ") is not contained in the sparsity pattern!");
+      DUNE_THROW(Exceptions::index_out_of_range,
+                 "Diagonal entry (" << ii << ", " << ii << ") is not contained in the sparsity pattern!");
     ensure_uniqueness();
     backend_->operator[](ii) *= ScalarType(0);
     backend_->operator[](ii)[ii] = ScalarType(1);
@@ -540,14 +543,14 @@ public:
   void unit_col(const size_t jj)
   {
     if (jj >= cols())
-      DUNE_THROW(Exceptions::index_out_of_range, "Given jj (" << jj << ") is larger than the cols of this (" << cols()
-                                                              << ")!");
+      DUNE_THROW(Exceptions::index_out_of_range,
+                 "Given jj (" << jj << ") is larger than the cols of this (" << cols() << ")!");
     if (jj >= rows())
-      DUNE_THROW(Exceptions::index_out_of_range, "Given jj (" << jj << ") is larger than the rows of this (" << rows()
-                                                              << ")!");
+      DUNE_THROW(Exceptions::index_out_of_range,
+                 "Given jj (" << jj << ") is larger than the rows of this (" << rows() << ")!");
     if (!backend_->exists(jj, jj))
-      DUNE_THROW(Exceptions::index_out_of_range, "Diagonal entry (" << jj << ", " << jj
-                                                                    << ") is not contained in the sparsity pattern!");
+      DUNE_THROW(Exceptions::index_out_of_range,
+                 "Diagonal entry (" << jj << ", " << jj << ") is not contained in the sparsity pattern!");
     ensure_uniqueness();
     for (size_t ii = 0; (ii < rows()) && (ii != jj); ++ii) {
       auto& row                = backend_->operator[](ii);

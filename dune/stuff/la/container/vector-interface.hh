@@ -465,9 +465,11 @@ public:
     try {
       return boost::numeric_cast<DUNE_STUFF_SSIZE_T>(dim());
     } catch (boost::bad_numeric_cast& ee) {
-      DUNE_THROW(Exceptions::external_error, "There was an error in boost converting '"
-                                                 << dim() << "' to '" << Common::Typename<ScalarType>::value()
-                                                 << "': " << ee.what());
+      DUNE_THROW(Exceptions::external_error,
+                 "There was an error in boost converting '" << dim() << "' to '"
+                                                            << Common::Typename<ScalarType>::value()
+                                                            << "': "
+                                                            << ee.what());
     }
   } // ... pb_dim(...)
 
@@ -480,9 +482,10 @@ public:
     try {
       add_to_entry(boost::numeric_cast<size_t>(ii), value);
     } catch (boost::bad_numeric_cast& ee) {
-      DUNE_THROW(Exceptions::external_error, "There was an error in boost converting '"
-                                                 << ii << "' to '" << Common::Typename<size_t>::value()
-                                                 << "': " << ee.what());
+      DUNE_THROW(Exceptions::external_error,
+                 "There was an error in boost converting '" << ii << "' to '" << Common::Typename<size_t>::value()
+                                                            << "': "
+                                                            << ee.what());
     }
   } // ... pb_add_to_entry(...)
 
@@ -495,9 +498,10 @@ public:
     try {
       set_entry(boost::numeric_cast<size_t>(ii), value);
     } catch (boost::bad_numeric_cast& ee) {
-      DUNE_THROW(Exceptions::external_error, "There was an error in boost converting '"
-                                                 << ii << "' to '" << Common::Typename<size_t>::value()
-                                                 << "': " << ee.what());
+      DUNE_THROW(Exceptions::external_error,
+                 "There was an error in boost converting '" << ii << "' to '" << Common::Typename<size_t>::value()
+                                                            << "': "
+                                                            << ee.what());
     }
   } // ... pb_set_entry(...)
 
@@ -510,9 +514,10 @@ public:
     try {
       return get_entry(boost::numeric_cast<size_t>(ii));
     } catch (boost::bad_numeric_cast& ee) {
-      DUNE_THROW(Exceptions::external_error, "There was an error in boost converting '"
-                                                 << ii << "' to '" << Common::Typename<size_t>::value()
-                                                 << "': " << ee.what());
+      DUNE_THROW(Exceptions::external_error,
+                 "There was an error in boost converting '" << ii << "' to '" << Common::Typename<size_t>::value()
+                                                            << "': "
+                                                            << ee.what());
     }
   } // ... pb_get_entry(...)
 
@@ -526,25 +531,28 @@ public:
     try {
       return {boost::numeric_cast<RealType>(max.first), max.second};
     } catch (boost::bad_numeric_cast& ee) {
-      DUNE_THROW(Exceptions::external_error, "There was an error in boost converting '"
-                                                 << max.first << "' to '" << Common::Typename<RealType>::value()
-                                                 << "': " << ee.what());
+      DUNE_THROW(Exceptions::external_error,
+                 "There was an error in boost converting '" << max.first << "' to '"
+                                                            << Common::Typename<RealType>::value()
+                                                            << "': "
+                                                            << ee.what());
     }
   } // ... pb_amax(...)
 
   std::vector<ScalarType> components(const std::vector<DUNE_STUFF_SSIZE_T>& component_indices) const
   {
     if (component_indices.size() > dim())
-      DUNE_THROW(Exceptions::index_out_of_range, "size of component_indices (" << component_indices.size()
-                                                                               << ") is larger than the dim of this ("
-                                                                               << dim() << ")!");
+      DUNE_THROW(Exceptions::index_out_of_range,
+                 "size of component_indices (" << component_indices.size() << ") is larger than the dim of this ("
+                                               << dim()
+                                               << ")!");
     std::vector<ScalarType> values(component_indices.size(), ScalarType(0));
     try {
       for (size_t ii = 0; ii < component_indices.size(); ++ii) {
         const size_t component = boost::numeric_cast<size_t>(component_indices[ii]);
         if (component >= dim())
-          DUNE_THROW(Exceptions::index_out_of_range, "component_indices[" << ii << "] is too large for this (" << dim()
-                                                                          << ")!");
+          DUNE_THROW(Exceptions::index_out_of_range,
+                     "component_indices[" << ii << "] is too large for this (" << dim() << ")!");
         values[ii] = get_entry(component);
       }
     } catch (boost::bad_numeric_cast& ee) {

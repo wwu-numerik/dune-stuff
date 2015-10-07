@@ -208,9 +208,12 @@ public:
             opts.get("preconditioner.iterations", default_opts.get<int>("preconditioner.iterations")),
             opts.get("preconditioner.relaxation_factor", default_opts.get<S>("preconditioner.relaxation_factor")));
         auto preconditioner = Traits::make_preconditioner(seq_preconditioner, communicator_.storage_access());
-        BiCgSolverType solver(matrix_operator, scalar_product, preconditioner,
+        BiCgSolverType solver(matrix_operator,
+                              scalar_product,
+                              preconditioner,
                               opts.get("precision", default_opts.get<R>("precision")),
-                              opts.get("max_iter", default_opts.get<int>("max_iter")), verbosity(opts, default_opts));
+                              opts.get("max_iter", default_opts.get<int>("max_iter")),
+                              verbosity(opts, default_opts));
         solver.apply(solution.backend(), writable_rhs.backend(), solver_result);
       } else if (type == "bicgstab.ssor") {
         auto matrix_operator = Traits::make_operator(matrix_.backend(), communicator_.storage_access());
@@ -220,9 +223,12 @@ public:
             opts.get("preconditioner.iterations", default_opts.get<int>("preconditioner.iterations")),
             opts.get("preconditioner.relaxation_factor", default_opts.get<S>("preconditioner.relaxation_factor")));
         auto preconditioner = Traits::make_preconditioner(seq_preconditioner, communicator_.storage_access());
-        BiCgSolverType solver(matrix_operator, scalar_product, preconditioner,
+        BiCgSolverType solver(matrix_operator,
+                              scalar_product,
+                              preconditioner,
                               opts.get("precision", default_opts.get<S>("precision")),
-                              opts.get("max_iter", default_opts.get<int>("max_iter")), verbosity(opts, default_opts));
+                              opts.get("max_iter", default_opts.get<int>("max_iter")),
+                              verbosity(opts, default_opts));
         solver.apply(solution.backend(), writable_rhs.backend(), solver_result);
       } else if (type == "bicgstab") {
         auto matrix_operator = Traits::make_operator(matrix_.backend(), communicator_.storage_access());
@@ -231,9 +237,12 @@ public:
         SequentialPreconditioner seq_preconditioner;
         auto preconditioner = Traits::make_preconditioner(seq_preconditioner, communicator_.storage_access());
         // define the BiCGStab as the actual solver
-        BiCgSolverType solver(
-            matrix_operator, scalar_product, preconditioner, opts.get("precision", default_opts.get<S>("precision")),
-            opts.get("max_iter", default_opts.get<size_t>("max_iter")), verbosity(opts, default_opts));
+        BiCgSolverType solver(matrix_operator,
+                              scalar_product,
+                              preconditioner,
+                              opts.get("precision", default_opts.get<S>("precision")),
+                              opts.get("max_iter", default_opts.get<size_t>("max_iter")),
+                              verbosity(opts, default_opts));
         solver.apply(solution.backend(), writable_rhs.backend(), solver_result);
 #if HAVE_UMFPACK
       } else if (type == "umfpack") {
@@ -254,7 +263,8 @@ public:
       if (!solver_result.converged)
         DUNE_THROW(Exceptions::linear_solver_failed_bc_it_did_not_converge,
                    "The dune-istl backend reported 'InverseOperatorResult.converged == false'!\n"
-                       << "Those were the given options:\n\n" << opts);
+                       << "Those were the given options:\n\n"
+                       << opts);
 
       // check (use writable_rhs as tmp)
       const R post_check_solves_system_threshold =
@@ -270,8 +280,11 @@ public:
                          << "reported no error) and you requested checking (see options below)!\n"
                          << "If you want to disable this check, set 'post_check_solves_system = 0' in the options."
                          << "\n\n"
-                         << "  (A * x - b).sup_norm() = " << sup_norm << "\n\n"
-                         << "Those were the given options:\n\n" << opts);
+                         << "  (A * x - b).sup_norm() = "
+                         << sup_norm
+                         << "\n\n"
+                         << "Those were the given options:\n\n"
+                         << opts);
       }
     } catch (ISTLError& e) {
       DUNE_THROW(Exceptions::linear_solver_failed, "The dune-istl backend reported: " << e.what());

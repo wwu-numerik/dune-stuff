@@ -112,8 +112,14 @@ public:
     PgfCoordWrapper a(intersection.geometry().corner(0));
     PgfCoordWrapper b(intersection.geometry().corner(1));
     char buffer[250] = {'\0'};
-    std::snprintf(buffer, 250, "\\draw[draw=%s,line width=\\gridlinewidth pt,line cap=round] (%f,%f)--(%f,%f);\n",
-                  color_.c_str(), a[0], a[1], b[0], b[1]);
+    std::snprintf(buffer,
+                  250,
+                  "\\draw[draw=%s,line width=\\gridlinewidth pt,line cap=round] (%f,%f)--(%f,%f);\n",
+                  color_.c_str(),
+                  a[0],
+                  a[1],
+                  b[0],
+                  b[1]);
     file_ << buffer;
     file_.flush();
   }
@@ -172,8 +178,14 @@ public:
     a += a_c;
     b += b_c;
     char buffer[150] = {'\0'};
-    std::snprintf(buffer, 150, "\\draw[draw=%s,line width=\\gridlinewidth pt,line cap=round] (%f,%f)--(%f,%f);\n",
-                  this->color_.c_str(), a[0], a[1], b[0], b[1]);
+    std::snprintf(buffer,
+                  150,
+                  "\\draw[draw=%s,line width=\\gridlinewidth pt,line cap=round] (%f,%f)--(%f,%f);\n",
+                  this->color_.c_str(),
+                  a[0],
+                  a[1],
+                  b[0],
+                  b[1]);
     this->file_ << buffer;
     this->file_.flush();
   }
@@ -239,8 +251,8 @@ public:
       typedef typename GridType::LevelGridView ViewType;
       const ViewType& view = grid_.levelGridView(i);
       Walker<ViewType> gridWalk(view);
-      PgfEntityFunctorIntersectionsWithShift<ViewType> pgf(view, file, texcolors_[std::min(i, int(texcolors_.size()))],
-                                                           i, true);
+      PgfEntityFunctorIntersectionsWithShift<ViewType> pgf(
+          view, file, texcolors_[std::min(i, int(texcolors_.size()))], i, true);
       gridWalk.add(pgf);
       gridWalk.walk();
       file << "%%%%%%%%%%%%%%%" << view.size(0) << "%%%%%%%%%%%%%%%%\n";
@@ -307,11 +319,21 @@ public:
           const double offset = 0.2;
           const char* format  = "\\node[scale=\\gridcoordscale] at (%f,%f) {(%d,%d)};\n";
           char buffer[100] = {'\0'};
-          std::snprintf(buffer, 100, format, minMaxCoord.minima_[0] - offset, minMaxCoord.minima_[1] - offset,
-                        minMaxCoord.minima_[0], minMaxCoord.minima_[1]);
+          std::snprintf(buffer,
+                        100,
+                        format,
+                        minMaxCoord.minima_[0] - offset,
+                        minMaxCoord.minima_[1] - offset,
+                        minMaxCoord.minima_[0],
+                        minMaxCoord.minima_[1]);
           file << buffer;
-          std::snprintf(buffer, 100, format, minMaxCoord.maxima_[0] - offset, minMaxCoord.maxima_[1] - offset,
-                        minMaxCoord.maxima_[0], minMaxCoord.maxima_[1]);
+          std::snprintf(buffer,
+                        100,
+                        format,
+                        minMaxCoord.maxima_[0] - offset,
+                        minMaxCoord.maxima_[1] - offset,
+                        minMaxCoord.maxima_[0],
+                        minMaxCoord.maxima_[1]);
           file << buffer;
           break;
         }

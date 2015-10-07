@@ -85,10 +85,14 @@ TimedLogManager TimedLogging::get(const std::string id)
 {
   std::lock_guard<std::mutex> DUNE_UNUSED(guard)(mutex_);
   ++current_level_;
-  return TimedLogManager(timer_, info_prefix_ + (id.empty() ? "info" : id) + ": " + info_suffix_,
+  return TimedLogManager(timer_,
+                         info_prefix_ + (id.empty() ? "info" : id) + ": " + info_suffix_,
                          debug_prefix_ + (id.empty() ? "debug" : id) + ": " + debug_suffix_,
-                         warning_prefix_ + (id.empty() ? "warn" : id) + ": " + warning_suffix_, max_info_level_,
-                         max_debug_level_, enable_warnings_, current_level_);
+                         warning_prefix_ + (id.empty() ? "warn" : id) + ": " + warning_suffix_,
+                         max_info_level_,
+                         max_debug_level_,
+                         enable_warnings_,
+                         current_level_);
 }
 
 void TimedLogging::update_colors()

@@ -127,11 +127,13 @@ public:
       values[ii] = RangeType(values_rf[ii]);
     // create
     return Common::make_unique<ThisType>(
-        cfg.get("lower_left", default_cfg.get<Common::FieldVector<DomainFieldType, dimDomain>>("lower_left"),
-                dimDomain),
-        cfg.get("upper_right", default_cfg.get<Common::FieldVector<DomainFieldType, dimDomain>>("upper_right"),
-                dimDomain),
-        std::move(num_elements), std::move(values), cfg.get("name", default_cfg.get<std::string>("name")));
+        cfg.get(
+            "lower_left", default_cfg.get<Common::FieldVector<DomainFieldType, dimDomain>>("lower_left"), dimDomain),
+        cfg.get(
+            "upper_right", default_cfg.get<Common::FieldVector<DomainFieldType, dimDomain>>("upper_right"), dimDomain),
+        std::move(num_elements),
+        std::move(values),
+        cfg.get("name", default_cfg.get<std::string>("name")));
   } // ... create(...)
 
   Checkerboard(const Common::FieldVector<DomainFieldType, dimDomain>& lowerLeft,
@@ -155,8 +157,8 @@ public:
       totalSubdomains *= ne;
     }
     if (values_->size() < totalSubdomains)
-      DUNE_THROW(Dune::RangeError, "values too small (is " << values_->size() << ", should be " << totalSubdomains
-                                                           << ")");
+      DUNE_THROW(Dune::RangeError,
+                 "values too small (is " << values_->size() << ", should be " << totalSubdomains << ")");
   } // Checkerboard(...)
 
   Checkerboard(const ThisType& other) = default;

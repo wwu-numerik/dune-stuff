@@ -57,8 +57,13 @@ public:
 
   static std::vector<std::string> types()
   {
-    return {"lu.partialpiv",        "qr.householder",        "llt",       "ldlt",
-            "qr.colpivhouseholder", "qr.fullpivhouseholder", "lu.fullpiv"};
+    return {"lu.partialpiv",
+            "qr.householder",
+            "llt",
+            "ldlt",
+            "qr.colpivhouseholder",
+            "qr.fullpivhouseholder",
+            "lu.fullpiv"};
   } // ... types()
 
   static Common::Configuration options(const std::string type = "")
@@ -160,8 +165,8 @@ public:
     else if (type == "lu.partialpiv")
       solution.backend() = matrix_.backend().partialPivLu().solve(rhs.backend());
     else
-      DUNE_THROW(Exceptions::internal_error, "Given type '"
-                                                 << type << "' is not supported, although it was reported by types()!");
+      DUNE_THROW(Exceptions::internal_error,
+                 "Given type '" << type << "' is not supported, although it was reported by types()!");
     // check
     if (check_for_inf_nan)
       for (size_t ii = 0; ii < solution.size(); ++ii) {
@@ -230,7 +235,9 @@ public:
   static std::vector<std::string> types()
   {
     return {
-        "bicgstab.ilut", "lu.sparse", "llt.simplicial" // <- does only work with symmetric matrices
+        "bicgstab.ilut",
+        "lu.sparse",
+        "llt.simplicial" // <- does only work with symmetric matrices
         ,
         "ldlt.simplicial" // <- does only work with symmetric matrices
         ,
@@ -319,7 +326,8 @@ public:
             DUNE_THROW(Exceptions::linear_solver_failed_bc_data_did_not_fulfill_requirements,
                        "Given matrix contains inf or nan and you requested checking (see options below)!\n"
                            << "If you want to disable this check, set 'check_for_inf_nan = 0' in the options.\n\n"
-                           << "Those were the given options:\n\n" << opts);
+                           << "Those were the given options:\n\n"
+                           << opts);
         }
       }
       for (size_t ii = 0; ii < rhs.size(); ++ii) {
@@ -328,7 +336,8 @@ public:
           DUNE_THROW(Exceptions::linear_solver_failed_bc_data_did_not_fulfill_requirements,
                      "Given rhs contains inf or nan and you requested checking (see options below)!\n"
                          << "If you want to disable this check, set 'check_for_inf_nan = 0' in the options.\n\n"
-                         << "Those were the given options:\n\n" << opts);
+                         << "Those were the given options:\n\n"
+                         << opts);
       }
     }
     // check for symmetry (if solver needs it)
@@ -346,14 +355,16 @@ public:
               DUNE_THROW(Exceptions::linear_solver_failed_bc_data_did_not_fulfill_requirements,
                          "Given matrix is not symmetric/hermitian and you requested checking (see options below)!\n"
                              << "If you want to disable this check, set 'pre_check_symmetry = 0' in the options.\n\n"
-                             << "Those were the given options:\n\n" << opts);
+                             << "Those were the given options:\n\n"
+                             << opts);
           }
         }
       }
     }
     ::Eigen::ComputationInfo info;
     if (type == "cg.diagonal.lower") {
-      typedef ::Eigen::ConjugateGradient<typename MatrixType::BackendType, ::Eigen::Lower,
+      typedef ::Eigen::ConjugateGradient<typename MatrixType::BackendType,
+                                         ::Eigen::Lower,
                                          ::Eigen::DiagonalPreconditioner<S>> SolverType;
       SolverType solver(matrix_.backend());
       solver.setMaxIterations(opts.get("max_iter", default_opts.get<int>("max_iter")));
@@ -361,7 +372,8 @@ public:
       solution.backend() = solver.solve(rhs.backend());
       info = solver.info();
     } else if (type == "cg.diagonal.upper") {
-      typedef ::Eigen::ConjugateGradient<typename MatrixType::BackendType, ::Eigen::Upper,
+      typedef ::Eigen::ConjugateGradient<typename MatrixType::BackendType,
+                                         ::Eigen::Upper,
                                          ::Eigen::DiagonalPreconditioner<S>> SolverType;
       SolverType solver(matrix_.backend());
       solver.setMaxIterations(opts.get("max_iter", default_opts.get<int>("max_iter")));
@@ -369,7 +381,8 @@ public:
       solution.backend() = solver.solve(rhs.backend());
       info = solver.info();
     } else if (type == "cg.identity.lower") {
-      typedef ::Eigen::ConjugateGradient<typename MatrixType::BackendType, ::Eigen::Lower,
+      typedef ::Eigen::ConjugateGradient<typename MatrixType::BackendType,
+                                         ::Eigen::Lower,
                                          ::Eigen::IdentityPreconditioner> SolverType;
       SolverType solver(matrix_.backend());
       solver.setMaxIterations(opts.get("max_iter", default_opts.get<int>("max_iter")));
@@ -377,7 +390,8 @@ public:
       solution.backend() = solver.solve(rhs.backend());
       info = solver.info();
     } else if (type == "cg.identity.upper") {
-      typedef ::Eigen::ConjugateGradient<typename MatrixType::BackendType, ::Eigen::Lower,
+      typedef ::Eigen::ConjugateGradient<typename MatrixType::BackendType,
+                                         ::Eigen::Lower,
                                          ::Eigen::IdentityPreconditioner> SolverType;
       SolverType solver(matrix_.backend());
       solver.setMaxIterations(opts.get("max_iter", default_opts.get<int>("max_iter")));
@@ -482,8 +496,8 @@ public:
       //      info = solver.info();
       //#endif // HAVE_SUPERLU
     } else
-      DUNE_THROW(Exceptions::internal_error, "Given type '"
-                                                 << type << "' is not supported, although it was reported by types()!");
+      DUNE_THROW(Exceptions::internal_error,
+                 "Given type '" << type << "' is not supported, although it was reported by types()!");
     // handle eigens info
     if (info != ::Eigen::Success) {
       if (info == ::Eigen::NumericalIssue)
@@ -491,22 +505,26 @@ public:
                    "The eigen backend reported 'NumericalIssue'!\n"
                        << "=> see http://eigen.tuxfamily.org/dox/group__enums.html#ga51bc1ac16f26ebe51eae1abb77bd037b "
                           "for eigens explanation\n"
-                       << "Those were the given options:\n\n" << opts);
+                       << "Those were the given options:\n\n"
+                       << opts);
       else if (info == ::Eigen::NoConvergence)
         DUNE_THROW(Exceptions::linear_solver_failed_bc_it_did_not_converge,
                    "The eigen backend reported 'NoConvergence'!\n"
                        << "=> see http://eigen.tuxfamily.org/dox/group__enums.html#ga51bc1ac16f26ebe51eae1abb77bd037b "
                           "for eigens explanation\n"
-                       << "Those were the given options:\n\n" << opts);
+                       << "Those were the given options:\n\n"
+                       << opts);
       else if (info == ::Eigen::InvalidInput)
         DUNE_THROW(Exceptions::linear_solver_failed_bc_it_was_not_set_up_correctly,
                    "The eigen backend reported 'InvalidInput'!\n"
                        << "=> see http://eigen.tuxfamily.org/dox/group__enums.html#ga51bc1ac16f26ebe51eae1abb77bd037b "
                           "for eigens explanation\n"
-                       << "Those were the given options:\n\n" << opts);
+                       << "Those were the given options:\n\n"
+                       << opts);
       else
-        DUNE_THROW(Exceptions::internal_error, "The eigen backend reported an unknown status!\n"
-                                                   << "Please report this to the dune-stuff developers!");
+        DUNE_THROW(Exceptions::internal_error,
+                   "The eigen backend reported an unknown status!\n"
+                       << "Please report this to the dune-stuff developers!");
     }
     // check
     if (check_for_inf_nan)
@@ -517,7 +535,8 @@ public:
                      "The computed solution contains inf or nan and you requested checking (see options "
                          << "below)!\n"
                          << "If you want to disable this check, set 'check_for_inf_nan = 0' in the options.\n\n"
-                         << "Those were the given options:\n\n" << opts);
+                         << "Those were the given options:\n\n"
+                         << opts);
       }
     const R post_check_solves_system_threshold =
         opts.get("post_check_solves_system", default_opts.get<R>("post_check_solves_system"));
@@ -531,8 +550,11 @@ public:
                        << "'Success') and you requested checking (see options below)!\n"
                        << "If you want to disable this check, set 'post_check_solves_system = 0' in the options."
                        << "\n\n"
-                       << "  (A * x - b).sup_norm() = " << tmp.sup_norm() << "\n\n"
-                       << "Those were the given options:\n\n" << opts);
+                       << "  (A * x - b).sup_norm() = "
+                       << tmp.sup_norm()
+                       << "\n\n"
+                       << "Those were the given options:\n\n"
+                       << opts);
     }
   } // ... apply(...)
 

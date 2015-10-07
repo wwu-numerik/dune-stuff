@@ -218,7 +218,8 @@ LagrangePointSetRange<typename DiscreteFunctionspaceType::GridPartType, Discrete
     lagrangePointSetRange(const DiscreteFunctionspaceType& space, const EntityType& entity, const size_t subEntity)
 {
   return LagrangePointSetRange<typename DiscreteFunctionspaceType::GridPartType,
-                               DiscreteFunctionspaceType::polynomialOrder, codim>(space, entity, subEntity);
+                               DiscreteFunctionspaceType::polynomialOrder,
+                               codim>(space, entity, subEntity);
 }
 
 template <class LgPointSetType, size_t codim = 1>

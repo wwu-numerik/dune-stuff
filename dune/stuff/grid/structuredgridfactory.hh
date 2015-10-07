@@ -94,8 +94,9 @@ public:
                                                 const FieldVector<ctype, dimworld>& /*upperRight*/,
                                                 const array<unsigned int, dim>& /*elements*/)
   {
-    DUNE_THROW(GridError, className<StructuredGridFactory>() << "::createSimplexGrid(): Simplices are not supported "
-                                                                "by SPGrid.");
+    DUNE_THROW(GridError,
+               className<StructuredGridFactory>() << "::createSimplexGrid(): Simplices are not supported "
+                                                     "by SPGrid.");
   }
 };
 
@@ -145,8 +146,8 @@ public:
                      Dune::array<unsigned int, dim> overlap        = default_overlap<GridType>(),
                      Dune::MPIHelper::MPICommunicator communicator = Dune::MPIHelper::getCommunicator())
   {
-    return Dune::StructuredGridFactory<GridType>::createCubeGrid(lowerLeft, upperRight, elements, overlap,
-                                                                 communicator);
+    return Dune::StructuredGridFactory<GridType>::createCubeGrid(
+        lowerLeft, upperRight, elements, overlap, communicator);
   }
 };
 

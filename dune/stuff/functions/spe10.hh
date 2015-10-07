@@ -83,8 +83,9 @@ private:
         data[counter++] *= (tmp * scale) + shift;
       datafile.close();
       if (counter != entriesPerDim)
-        DUNE_THROW(Dune::IOError, "wrong number of entries in '" << filename << "' (are " << counter << ", should be "
-                                                                 << entriesPerDim << ")!");
+        DUNE_THROW(Dune::IOError,
+                   "wrong number of entries in '" << filename << "' (are " << counter << ", should be " << entriesPerDim
+                                                  << ")!");
       return data;
     } else
       DUNE_THROW(Exceptions::spe10_data_file_missing, "could not open '" << filename << "'!");

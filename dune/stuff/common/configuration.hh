@@ -234,7 +234,8 @@ public:
     if (has_key(key) && !overwrite)
       DUNE_THROW(Exceptions::configuration_error,
                  "While setting '" << key << "' in this configuration (see below), it already exists and you requested "
-                                   << "no overwrite!\n======================\n" << report_string());
+                                   << "no overwrite!\n======================\n"
+                                   << report_string());
     BaseType::operator[](key) = toString(value);
   } // ... set(..., T, ...)
 
@@ -301,9 +302,13 @@ public:
     try {
       sz = boost::numeric_cast<size_t>(size);
     } catch (boost::bad_numeric_cast& ee) {
-      DUNE_THROW(Exceptions::external_error, "There was an error in boost converting '"
-                                                 << size << "' from '" << Typename<DUNE_STUFF_SSIZE_T>::value()
-                                                 << "' to '" << Typename<size_t>::value() << ":\n" << ee.what());
+      DUNE_THROW(Exceptions::external_error,
+                 "There was an error in boost converting '" << size << "' from '"
+                                                            << Typename<DUNE_STUFF_SSIZE_T>::value()
+                                                            << "' to '"
+                                                            << Typename<size_t>::value()
+                                                            << ":\n"
+                                                            << ee.what());
     }
     return get<T>(key, sz);
   } // ... get(...)
@@ -327,15 +332,23 @@ private:
       else
         DUNE_THROW(Exceptions::configuration_error, validator.msg());
     } catch (boost::bad_lexical_cast& e) {
-      DUNE_THROW(Exceptions::external_error, "Error in boost while converting the string '"
-                                                 << valstring << "' to type '" << Typename<T>::value() << "':\n"
-                                                 << e.what() << "\non accessing key " << key << " with default "
-                                                 << toString(def));
+      DUNE_THROW(Exceptions::external_error,
+                 "Error in boost while converting the string '" << valstring << "' to type '" << Typename<T>::value()
+                                                                << "':\n"
+                                                                << e.what()
+                                                                << "\non accessing key "
+                                                                << key
+                                                                << " with default "
+                                                                << toString(def));
     } catch (std::exception& e) {
-      DUNE_THROW(Exceptions::external_error, "Error in the stl while converting the string '"
-                                                 << valstring << "' to type '" << Typename<T>::value() << "':\n"
-                                                 << e.what() << "\non accessing key " << key << " with default "
-                                                 << toString(def));
+      DUNE_THROW(Exceptions::external_error,
+                 "Error in the stl while converting the string '" << valstring << "' to type '" << Typename<T>::value()
+                                                                  << "':\n"
+                                                                  << e.what()
+                                                                  << "\non accessing key "
+                                                                  << key
+                                                                  << " with default "
+                                                                  << toString(def));
     }
   } // ... get_valid_value(...)
 

@@ -123,7 +123,8 @@ void print_collected_eoc_study_results(const std::map<std::string, std::vector<d
 unsigned int grid_elements()
 {
   return DSC_CONFIG.has_key("test.gridelements") // <- doing this so complicated to
-             ? DSC_CONFIG.get<unsigned int>("test.gridelements", 3u,
+             ? DSC_CONFIG.get<unsigned int>("test.gridelements",
+                                            3u,
                                             DSC::ValidateLess<unsigned int>(2u)) //    silence the WARNING: ...
              : 3u;
 } // ... grid_elements(...)

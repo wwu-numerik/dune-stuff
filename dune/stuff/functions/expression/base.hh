@@ -150,9 +150,12 @@ private:
     static_assert((dimRange > 0), "Really?");
     // set expressions
     if (_expression.size() < dimRange)
-      DUNE_THROW(Dune::InvalidStateException, "\n" << Dune::Stuff::Common::colorStringRed("ERROR:")
-                                                   << " '_expression' too short (is " << _expression.size()
-                                                   << ", should be " << dimRange << ")!");
+      DUNE_THROW(Dune::InvalidStateException,
+                 "\n" << Dune::Stuff::Common::colorStringRed("ERROR:") << " '_expression' too short (is "
+                      << _expression.size()
+                      << ", should be "
+                      << dimRange
+                      << ")!");
     for (size_t ii = 0; ii < dimRange; ++ii)
       expressions_.push_back(_expression[ii]);
     // set variable (i.e. "x")

@@ -67,7 +67,8 @@ public:
     } catch (FMatrixError&) {
       DUNE_THROW(Exceptions::linear_solver_failed_bc_data_did_not_fulfill_requirements,
                  "The dune-common backend reported 'FMatrixError'!\n"
-                     << "Those were the given options:\n\n" << opts);
+                     << "Those were the given options:\n\n"
+                     << opts);
     }
     // check
     const R post_check_solves_system_threshold =
@@ -83,8 +84,11 @@ public:
                        << "reported no error) and you requested checking (see options below)! "
                        << "If you want to disable this check, set 'post_check_solves_system = 0' in the options."
                        << "\n\n"
-                       << "  (A * x - b).sup_norm() = " << tmp.sup_norm() << "\n\n"
-                       << "Those were the given options:\n\n" << opts);
+                       << "  (A * x - b).sup_norm() = "
+                       << tmp.sup_norm()
+                       << "\n\n"
+                       << "Those were the given options:\n\n"
+                       << opts);
     }
   } // ... apply(...)
 

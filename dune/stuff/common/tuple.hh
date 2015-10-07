@@ -83,8 +83,15 @@ struct RightTrimTuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, 1>
 };
 
 #define TUPLE_TYPEDEFS_2_TUPLE(t_, s_)                                                                                 \
-  typename RightTrimTuple<TELE(t_, s_, 0), TELE(t_, s_, 1), TELE(t_, s_, 2), TELE(t_, s_, 3), TELE(t_, s_, 4),         \
-                          TELE(t_, s_, 5), TELE(t_, s_, 6), TELE(t_, s_, 7), TELE(t_, s_, 8),                          \
+  typename RightTrimTuple<TELE(t_, s_, 0),                                                                             \
+                          TELE(t_, s_, 1),                                                                             \
+                          TELE(t_, s_, 2),                                                                             \
+                          TELE(t_, s_, 3),                                                                             \
+                          TELE(t_, s_, 4),                                                                             \
+                          TELE(t_, s_, 5),                                                                             \
+                          TELE(t_, s_, 6),                                                                             \
+                          TELE(t_, s_, 7),                                                                             \
+                          TELE(t_, s_, 8),                                                                             \
                           Dune::tuple_size<t_>::value>::type
 
 /**
@@ -158,9 +165,14 @@ struct TupleSerializer
   static TupleType& getTuple(T1& t1, T2& t2, T3& t3, T4& t4)
   {
     // yay for dangling pointers, but using a local static here fubared sequential runs with diff grid
-    TupleType* t = new TupleType(&(t1.discreteVelocity()), &(t1.discretePressure()), &(t2.discreteVelocity()),
-                                 &(t2.discretePressure()), &(t3.discreteVelocity()), &(t3.discretePressure()),
-                                 &(t4.discreteVelocity()), &(t4.discretePressure()));
+    TupleType* t = new TupleType(&(t1.discreteVelocity()),
+                                 &(t1.discretePressure()),
+                                 &(t2.discreteVelocity()),
+                                 &(t2.discretePressure()),
+                                 &(t3.discreteVelocity()),
+                                 &(t3.discretePressure()),
+                                 &(t4.discreteVelocity()),
+                                 &(t4.discretePressure()));
 
     return *t;
   } // getTuple
@@ -168,9 +180,14 @@ struct TupleSerializer
   static TupleType& getTuple(T1& t1, T2& t2, T3& t3)
   {
     // yay for dangling pointers, but using a local static here fubared sequential runs with diff grid
-    TupleType* t =
-        new TupleType(&(t1.discreteVelocity()), &(t1.discretePressure()), &(t2.discreteVelocity()),
-                      &(t2.discretePressure()), &(t3.discreteVelocity()), &(t3.discretePressure()), nullptr, nullptr);
+    TupleType* t = new TupleType(&(t1.discreteVelocity()),
+                                 &(t1.discretePressure()),
+                                 &(t2.discreteVelocity()),
+                                 &(t2.discretePressure()),
+                                 &(t3.discreteVelocity()),
+                                 &(t3.discretePressure()),
+                                 nullptr,
+                                 nullptr);
 
     return *t;
   } // getTuple
@@ -178,8 +195,14 @@ struct TupleSerializer
   static TupleType& getTuple(T1& t1, T2& t2)
   {
     // yay for dangling pointers, but using a local static here fubared sequential runs with diff grid
-    TupleType* t = new TupleType(&(t1.discreteVelocity()), &(t1.discretePressure()), &(t2.discreteVelocity()),
-                                 &(t2.discretePressure()), nullptr, nullptr, nullptr, nullptr);
+    TupleType* t = new TupleType(&(t1.discreteVelocity()),
+                                 &(t1.discretePressure()),
+                                 &(t2.discreteVelocity()),
+                                 &(t2.discretePressure()),
+                                 nullptr,
+                                 nullptr,
+                                 nullptr,
+                                 nullptr);
 
     return *t;
   } // getTuple
@@ -187,8 +210,8 @@ struct TupleSerializer
   static TupleType& getTuple(T1& t1)
   {
     // yay for dangling pointers, but using a local static here fubared sequential runs with diff grid
-    TupleType* t = new TupleType(&(t1.discreteVelocity()), &(t1.discretePressure()), nullptr, nullptr, nullptr, nullptr,
-                                 nullptr, nullptr);
+    TupleType* t = new TupleType(
+        &(t1.discreteVelocity()), &(t1.discretePressure()), nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
 
     return *t;
   } // getTuple

@@ -174,13 +174,20 @@ public:
     else if (call_compare<Spe10Model1Type>(type))
       return call_default_config<Spe10Model1Type>(sub_name);
     else if (available().empty())
-      DUNE_THROW(Exceptions::wrong_input_given, "There is no " << InterfaceType::static_id()
-                                                               << " available for dimensions " << size_t(d) << " -> "
-                                                               << size_t(r) << " x " << size_t(rC) << "!");
+      DUNE_THROW(Exceptions::wrong_input_given,
+                 "There is no " << InterfaceType::static_id() << " available for dimensions " << size_t(d) << " -> "
+                                << size_t(r)
+                                << " x "
+                                << size_t(rC)
+                                << "!");
     else
       DUNE_THROW(Exceptions::wrong_input_given,
                  "Requested type '" << type << "' is not one of those avaible for dimensions " << size_t(d) << " -> "
-                                    << size_t(r) << " x " << size_t(rC) << ":\n" << available_as_str());
+                                    << size_t(r)
+                                    << " x "
+                                    << size_t(rC)
+                                    << ":\n"
+                                    << available_as_str());
   } // ... default_config(...)
 
   static std::unique_ptr<InterfaceType> create(const std::string type = available()[0],
@@ -203,13 +210,20 @@ public:
     else if (call_compare<Spe10Model1Type>(type))
       return call_create<Spe10Model1Type>(cfg);
     else if (available().empty())
-      DUNE_THROW(Exceptions::wrong_input_given, "There is no " << InterfaceType::static_id()
-                                                               << " available for dimensions " << size_t(d) << " -> "
-                                                               << size_t(r) << " x " << size_t(rC) << "!");
+      DUNE_THROW(Exceptions::wrong_input_given,
+                 "There is no " << InterfaceType::static_id() << " available for dimensions " << size_t(d) << " -> "
+                                << size_t(r)
+                                << " x "
+                                << size_t(rC)
+                                << "!");
     else
       DUNE_THROW(Exceptions::wrong_input_given,
                  "Requested type '" << type << "' is not one of those avaible for dimensions " << size_t(d) << " -> "
-                                    << size_t(r) << " x " << size_t(rC) << ":\n" << available_as_str());
+                                    << size_t(r)
+                                    << " x "
+                                    << size_t(rC)
+                                    << ":\n"
+                                    << available_as_str());
   } // ... create(...)
 };  // class FunctionsProvider
 

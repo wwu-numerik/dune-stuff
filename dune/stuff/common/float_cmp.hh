@@ -70,7 +70,8 @@ struct MT
   template <Style style, class FirstType, class SecondType>                                                            \
   typename std::enable_if<internal::cmp_type_check<FirstType, SecondType, typename MT<FirstType>::T>::value,           \
                           bool>::type                                                                                  \
-      id(const FirstType& first, const SecondType& second,                                                             \
+      id(const FirstType& first,                                                                                       \
+         const SecondType& second,                                                                                     \
          const typename MT<FirstType>::Eps& rtol = DefaultEpsilon<typename MT<FirstType>::T, style>::value(),          \
          const typename MT<FirstType>::Eps& atol = DefaultEpsilon<typename MT<FirstType>::T, style>::value())          \
   {                                                                                                                    \
@@ -80,7 +81,8 @@ struct MT
   template <class FirstType, class SecondType>                                                                         \
   typename std::enable_if<internal::cmp_type_check<FirstType, SecondType, typename MT<FirstType>::T>::value,           \
                           bool>::type                                                                                  \
-      id(const FirstType& first, const SecondType& second,                                                             \
+      id(const FirstType& first,                                                                                       \
+         const SecondType& second,                                                                                     \
          const typename MT<FirstType>::Eps& rtol =                                                                     \
              DefaultEpsilon<typename MT<FirstType>::T, Style::defaultStyle>::value(),                                  \
          const typename MT<FirstType>::Eps& atol =                                                                     \

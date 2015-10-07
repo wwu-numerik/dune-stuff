@@ -125,8 +125,8 @@ inline std::vector<T> tokenize(const std::string& msg, const std::string& separa
   std::vector<T> ret(strings.size());
   size_t i = 0;
   // special case for empty strings to avoid non-default init
-  std::generate(std::begin(ret), std::end(ret),
-                [&]() { return strings[i++].empty() ? T() : fromString<T>(strings[i - 1]); });
+  std::generate(
+      std::begin(ret), std::end(ret), [&]() { return strings[i++].empty() ? T() : fromString<T>(strings[i - 1]); });
   return ret;
 } // ... tokenize(...)
 

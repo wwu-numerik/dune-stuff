@@ -82,9 +82,9 @@ static Out boost_numeric_cast(const In& in)
   try {
     return boost::numeric_cast<Out>(in);
   } catch (boost::bad_numeric_cast& ee) {
-    DUNE_THROW(Exceptions::wrong_input_given, "There was an error in boost converting '"
-                                                  << in << "' to '" << Common::Typename<Out>::value()
-                                                  << "': " << ee.what());
+    DUNE_THROW(Exceptions::wrong_input_given,
+               "There was an error in boost converting '" << in << "' to '" << Common::Typename<Out>::value() << "': "
+                                                          << ee.what());
   }
 } // ... boost_numeric_cast(...)
 

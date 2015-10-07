@@ -201,8 +201,8 @@ typename std::enable_if<Dune::Stuff::Common::is_vector<L>::value && Dune::Stuff:
 {
   const auto sz = left.size();
   if (right.size() != sz)
-    DUNE_THROW(Dune::Stuff::Exceptions::shapes_do_not_match, "left.size() = " << sz
-                                                                              << "\nright.size() = " << right.size());
+    DUNE_THROW(Dune::Stuff::Exceptions::shapes_do_not_match,
+               "left.size() = " << sz << "\nright.size() = " << right.size());
   L result(left);
   for (size_t ii = 0; ii < sz; ++ii)
     result[ii] += right[ii];

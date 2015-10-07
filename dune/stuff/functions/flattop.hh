@@ -135,18 +135,29 @@ private:
   void check_input() const
   {
     if (!(Common::FloatCmp::gt(upper_right_, lower_left_)))
-      DUNE_THROW(Exceptions::wrong_input_given, "upper_right has to be greater than lower_left!\n"
-                                                    << "lower_left = [" << lower_left_ << "]\n"
-                                                    << "upper_right = [" << upper_right_ << "]");
+      DUNE_THROW(Exceptions::wrong_input_given,
+                 "upper_right has to be greater than lower_left!\n"
+                     << "lower_left = ["
+                     << lower_left_
+                     << "]\n"
+                     << "upper_right = ["
+                     << upper_right_
+                     << "]");
     if (!(Common::FloatCmp::gt(boundary_layer_, StuffDomainType(0))))
-      DUNE_THROW(Exceptions::wrong_input_given, "boundary_layer has to be strictly positive!\n"
-                                                    << "boundary_layer = [" << boundary_layer_ << "]");
+      DUNE_THROW(Exceptions::wrong_input_given,
+                 "boundary_layer has to be strictly positive!\n"
+                     << "boundary_layer = ["
+                     << boundary_layer_
+                     << "]");
     if (Common::FloatCmp::gt(boundary_layer_ * 2.0, upper_right_ - lower_left_))
-      DUNE_THROW(Exceptions::wrong_input_given, "boundary_layer has to be thin enough!\n"
-                                                "2*boundary_layer = ["
-                                                    << boundary_layer_ * 2.0 << "]\n"
-                                                    << "upper_right - lower_left = [" << upper_right_ - lower_left_
-                                                    << "]");
+      DUNE_THROW(Exceptions::wrong_input_given,
+                 "boundary_layer has to be thin enough!\n"
+                 "2*boundary_layer = ["
+                     << boundary_layer_ * 2.0
+                     << "]\n"
+                     << "upper_right - lower_left = ["
+                     << upper_right_ - lower_left_
+                     << "]");
   } // .. check_input(...)
 
   RangeFieldType phi_left(const RangeFieldType& point) const

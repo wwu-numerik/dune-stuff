@@ -162,7 +162,8 @@ public:
         cfg.get("lower_left", default_config().get<DomainType>("lower_left")),
         cfg.get("upper_right", default_config().get<DomainType>("upper_right")),
         cfg.get("num_elements", default_config().get<std::vector<unsigned int>>("num_elements"), dimDomain),
-        cfg.get("num_refinements", default_config().get<size_t>("num_refinements")), overlap_array);
+        cfg.get("num_refinements", default_config().get<size_t>("num_refinements")),
+        overlap_array);
   } // ... create(...)
 
   /**
@@ -224,8 +225,8 @@ private:
   static std::array<unsigned int, dimDomain> parse_array(const std::vector<unsigned int>& in)
   {
     if (in.size() < dimDomain)
-      DUNE_THROW(Exceptions::wrong_input_given, "Given vector is too short: should be " << dimDomain << ", is "
-                                                                                        << in.size() << "!");
+      DUNE_THROW(Exceptions::wrong_input_given,
+                 "Given vector is too short: should be " << dimDomain << ", is " << in.size() << "!");
     std::array<unsigned int, dimDomain> ret;
     for (size_t ii = 0; ii < dimDomain; ++ii)
       ret[ii] = in[ii];
@@ -242,8 +243,9 @@ private:
     static_assert(variant == 1 || variant == 2, "variant has to be 1 or 2!");
     for (size_t dd = 0; dd < dimDomain; ++dd) {
       if (!(lower_left[dd] < upper_right[dd]))
-        DUNE_THROW(Exceptions::wrong_input_given, "lower_left has to be elementwise smaller than upper_right!\n\n"
-                                                      << lower_left[dd] << " vs. " << upper_right[dd]);
+        DUNE_THROW(Exceptions::wrong_input_given,
+                   "lower_left has to be elementwise smaller than upper_right!\n\n" << lower_left[dd] << " vs. "
+                                                                                    << upper_right[dd]);
     }
     std::shared_ptr<GridType> grd_ptr(nullptr);
     switch (variant) {

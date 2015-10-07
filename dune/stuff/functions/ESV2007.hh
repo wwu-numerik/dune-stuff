@@ -461,10 +461,12 @@ class Cutoff
       : BaseType(ent), value_(0)
     {
       const RangeFieldType min_diffusion_factor =
-          ComputeDiffusionFactor<DiffusionFactorType, DiffusionFactorType::dimRange,
+          ComputeDiffusionFactor<DiffusionFactorType,
+                                 DiffusionFactorType::dimRange,
                                  DiffusionFactorType::dimRangeCols>::min_of(diffusion_factor, ent);
       const RangeFieldType min_eigen_value_diffusion_tensor =
-          ComputeDiffusionTensor<DiffusionTensorType, DiffusionTensorType::dimRange,
+          ComputeDiffusionTensor<DiffusionTensorType,
+                                 DiffusionTensorType::dimRange,
                                  DiffusionTensorType::dimRangeCols>::min_eigenvalue_of(diffusion_tensor, ent);
       assert(min_diffusion_factor > RangeFieldType(0));
       assert(min_eigen_value_diffusion_tensor > RangeFieldType(0));
