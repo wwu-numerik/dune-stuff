@@ -77,7 +77,7 @@ size_t Dune::Stuff::ThreadManager::max_threads() { return 1; }
 
 size_t Dune::Stuff::ThreadManager::current_threads() { return 1; }
 
-size_t Dune::Stuff::ThreadManager::thread() { return 1; }
+size_t Dune::Stuff::ThreadManager::thread() { return 0; }
 
 void Dune::Stuff::ThreadManager::set_max_threads(const size_t count)
 {
