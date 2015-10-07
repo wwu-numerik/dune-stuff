@@ -29,14 +29,20 @@ typedef Dune::tuple< A, B, B >
 
 struct print_value
 {
-    template< class U, class V >
-    static void run()
-    {
-      std::cout << "("
-            << U::value << ","
-            << V::value << ")"
-            << std::endl;
-    }
+  template< class U, class V >
+  static void run(std::ostream& out)
+  {
+    out << "("
+          << U::value << ","
+          << V::value << ")"
+          << std::endl;
+  }
+
+  template< class U, class V >
+  static void run()
+  {
+    run<U,V>(std::cout);
+  }
 };
 
 TEST(TypeTransform, All) {
@@ -51,5 +57,6 @@ TEST(Product, All) {
   typedef Combine< u_types, v_types, print_value
                   >::Generate<> base_generator_type;
   base_generator_type::Run();
+  base_generator_type::Run(std::cerr);
 }
 

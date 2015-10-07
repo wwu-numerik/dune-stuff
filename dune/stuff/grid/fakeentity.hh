@@ -6,8 +6,6 @@
 #ifndef DUNE_STUFF_GRID_FAKEENTITY_HH
 #define DUNE_STUFF_GRID_FAKEENTITY_HH
 
-#include <dune/common/deprecated.hh>
-
 #include <dune/geometry/type.hh>
 
 namespace Dune {

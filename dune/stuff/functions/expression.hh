@@ -35,7 +35,8 @@ class Expression
   typedef Expression< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols > ThisType;
   typedef MathExpressionBase
       < DomainFieldImp, domainDim, RangeFieldImp, rangeDim*rangeDimCols > MathExpressionFunctionType;
-  typedef MathExpressionBase < DomainFieldImp, domainDim, RangeFieldImp, domainDim > MathExpressionGradientType;
+  typedef MathExpressionBase
+      < DomainFieldImp, domainDim, RangeFieldImp, domainDim > MathExpressionGradientType;
 
 public:
   using typename BaseType::EntityType;
@@ -223,23 +224,23 @@ public:
 #ifndef NDEBUG
 # ifndef DUNE_STUFF_FUNCTIONS_EXPRESSION_DISABLE_CHECKS
     bool failure = false;
-    std::string type;
+    std::string error_type;
     for (size_t rr = 0; rr < dimRange; ++rr) {
       tmp_row_ = ret[rr];
       for (size_t cc = 0; cc < dimRangeCols; ++cc) {
         if (DSC::isnan(tmp_row_[cc])) {
           failure = true;
-          type = "NaN";
+          error_type = "NaN";
         } else if (DSC::isinf(tmp_row_[cc])) {
           failure = true;
-          type = "inf";
+          error_type = "inf";
         } else if (std::abs(tmp_row_[cc]) > (0.9 * std::numeric_limits< double >::max())) {
           failure = true;
-          type = "an unlikely value";
+          error_type = "an unlikely value";
         }
         if (failure)
           DUNE_THROW(Stuff::Exceptions::internal_error,
-                     "evaluating this function yielded " << type << "!\n"
+                     "evaluating this function yielded " << error_type << "!\n"
                      << "The variable of this function is:     " << function_->variable() << "\n"
                      << "The expression of this functional is: " << function_->expression().at(0) << "\n"
                      << "You tried to evaluate it with:   xx = " << xx << "\n"

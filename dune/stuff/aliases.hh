@@ -9,7 +9,9 @@
 namespace Dune {
 namespace Stuff {
 
-namespace Common {}
+namespace Common {
+  namespace FloatCmp {}
+}
 namespace Grid {}
 namespace Fem {}
 namespace Functions {}
@@ -23,6 +25,7 @@ namespace DSC = Dune::Stuff::Common;
 namespace DSG = Dune::Stuff::Grid;
 namespace DSFe = Dune::Stuff::Fem;
 namespace DSFu = Dune::Stuff::Functions;
+namespace DSCFl = Dune::Stuff::Common::FloatCmp;
 namespace DSL = Dune::Stuff::LA;
 
 #endif // DUNE_STUFF_ALIASES_HH

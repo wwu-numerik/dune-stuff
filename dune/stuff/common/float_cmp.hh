@@ -68,6 +68,7 @@ struct DefaultEpsilon< std::complex<T>, Style::numpy >
 template < class V>
 struct MT {
   typedef typename VectorAbstraction< V >::S T;
+  typedef typename Dune::FloatCmp::EpsilonType< typename MT<V>::T >::Type Eps;
 };
 
 #define DUNE_STUFF_COMMON_FLOAT_CMP_GENERATOR(id) \
@@ -75,14 +76,14 @@ struct MT {
       typename std::enable_if< internal::cmp_type_check<FirstType, SecondType, typename MT<FirstType>::T>::value, bool >::type \
   id (const FirstType& first, \
       const SecondType& second, \
-      const typename Dune::FloatCmp::EpsilonType< typename MT<FirstType>::T >::Type& rtol \
+      const typename MT<FirstType>::Eps& rtol \
         = DefaultEpsilon< typename MT<FirstType>::T, style >::value(), \
-      const typename Dune::FloatCmp::EpsilonType< typename MT<FirstType>::T >::Type& atol \
+      const typename MT<FirstType>::Eps& atol \
         = DefaultEpsilon< typename MT<FirstType>::T, style >::value()) \
   { \
     return internal::Call< FirstType, \
                            SecondType, \
-                           typename Dune::FloatCmp::EpsilonType< typename MT<FirstType>::T >::Type, \
+                           typename MT<FirstType>::Eps, \
                            style >:: id (first, second, rtol, atol); \
   } \
   \
@@ -90,9 +91,9 @@ struct MT {
       typename std::enable_if< internal::cmp_type_check<FirstType, SecondType, typename MT<FirstType>::T>::value, bool >::type \
   id (const FirstType& first, \
       const SecondType& second, \
-      const typename Dune::FloatCmp::EpsilonType< typename MT<FirstType>::T >::Type& rtol \
+      const typename MT<FirstType>::Eps& rtol \
         = DefaultEpsilon< typename MT<FirstType>::T, Style::defaultStyle >::value(), \
-      const typename Dune::FloatCmp::EpsilonType< typename MT<FirstType>::T >::Type& atol \
+      const typename MT<FirstType>::Eps& atol \
         = DefaultEpsilon< typename MT<FirstType>::T, Style::defaultStyle >::value()) \
   { \
     return id < Style::defaultStyle >(first, second, rtol, atol); \

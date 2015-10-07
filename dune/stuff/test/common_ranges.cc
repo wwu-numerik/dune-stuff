@@ -8,7 +8,7 @@
 
 #if HAVE_DUNE_GRID
 
-#include <dune/grid/sgrid.hh>
+#include <dune/grid/yaspgrid.hh>
 
 #include <dune/stuff/grid/provider/cube.hh>
 #include <dune/stuff/common/ranges.hh>
@@ -20,10 +20,7 @@ using namespace Dune::Stuff::Grid;
 using namespace std;
 
 //! \TODO enable embedded grids
-typedef testing::Types< SGrid<1,1>, SGrid<2,2>, SGrid<3,3>, SGrid<4,4>
-//  , SGrid<1,2>, SGrid<2,3>, SGrid<3,4>, SGrid<4,5>, SGrid<1,3>, SGrid<2,4>, SGrid<3,5>, SGrid<4,6>
-, YaspGrid<2>
-> Grids;
+typedef testing::Types< YaspGrid<1, EquidistantOffsetCoordinates<double,1>>, YaspGrid<2, EquidistantOffsetCoordinates<double,2>>, YaspGrid<3, EquidistantOffsetCoordinates<double,3>>, YaspGrid<4, EquidistantOffsetCoordinates<double,4>>> Grids;
 
 template < class T >
 struct CornerRangeTest : public ::testing::Test

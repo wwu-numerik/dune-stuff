@@ -9,7 +9,7 @@
 # if HAVE_ALUGRID
 #   include <dune/grid/alugrid.hh>
 # endif
-# include <dune/grid/sgrid.hh>
+# include <dune/grid/yaspgrid.hh>
 # include <dune/grid/yaspgrid.hh>
 
 # include <dune/stuff/common/type_utils.hh>
@@ -20,21 +20,11 @@ using namespace Dune;
 using namespace Stuff;
 
 
-# define SGRIDS \
-    SGrid< 1, 1 > \
-  , SGrid< 2, 2 > \
-  , SGrid< 3, 3 > \
-  , SGrid< 4, 4 > \
-  , SGrid< 1, 2 > \
-  , SGrid< 2, 3 > \
-  , SGrid< 3, 4 > \
-  , SGrid< 4, 5 >
-
 # define YASPGRIDS \
-    YaspGrid< 1 > \
-  , YaspGrid< 2 > \
-  , YaspGrid< 3 > \
-  , YaspGrid< 4 >
+    YaspGrid< 1, EquidistantOffsetCoordinates<double,1> > \
+  , YaspGrid< 2, EquidistantOffsetCoordinates<double,2> > \
+  , YaspGrid< 3, EquidistantOffsetCoordinates<double,3> > \
+  , YaspGrid< 4, EquidistantOffsetCoordinates<double,4> >
 
 # if HAVE_ALUGRID
 #   define ALUGRIDS \
@@ -186,8 +176,7 @@ struct CubeGridProvider
 {};
 
 
-typedef testing::Types< SGRIDS
-                      , YASPGRIDS
+typedef testing::Types< YASPGRIDS
 # if HAVE_ALUGRID
                       , ALUGRIDS
 # endif

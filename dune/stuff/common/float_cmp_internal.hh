@@ -61,7 +61,7 @@ float_cmp_eq(const T& xx, const T& yy, const T& rtol, const T& atol )
 
 
 template< class XType, class YType, class TolType >
-    typename std::enable_if< !is_complex<XType>::value && is_vector< XType >::value
+    typename std::enable_if< is_vector< XType >::value
                              && is_vector< YType >::value
                              && std::is_same< typename VectorAbstraction< XType >::S, TolType >::value
                              && std::is_same< typename VectorAbstraction< YType >::S, TolType >::value
@@ -94,7 +94,7 @@ dune_float_cmp_eq(const T& xx, const T& yy, const T& eps)
 }
 
 template< Dune::FloatCmp::CmpStyle style, class XType, class YType, class EpsType >
-typename std::enable_if< !is_complex<XType>::value && is_vector< XType >::value
+typename std::enable_if< is_vector< XType >::value
                          && is_vector< YType >::value
                          && std::is_same< typename VectorAbstraction< XType >::S, EpsType >::value
                          && std::is_same< typename VectorAbstraction< YType >::S, EpsType >::value
