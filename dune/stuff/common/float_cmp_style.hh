@@ -17,7 +17,8 @@ namespace Stuff {
 namespace Common {
 namespace FloatCmp {
 
-enum class Style {
+enum class Style
+{
   numpy,
   relativeWeak,
   relativeStrong,
@@ -27,28 +28,28 @@ enum class Style {
 
 namespace internal {
 
-template< Style style >
+template <Style style>
 struct ConvertStyle;
 
-template<>
-struct ConvertStyle< Style::relativeWeak >
+template <>
+struct ConvertStyle<Style::relativeWeak>
 {
   static const Dune::FloatCmp::CmpStyle value = Dune::FloatCmp::CmpStyle::relativeWeak;
 };
 
-template<>
-struct ConvertStyle< Style::relativeStrong >
+template <>
+struct ConvertStyle<Style::relativeStrong>
 {
   static const Dune::FloatCmp::CmpStyle value = Dune::FloatCmp::CmpStyle::relativeStrong;
 };
 
-template<>
-struct ConvertStyle< Style::absolute >
+template <>
+struct ConvertStyle<Style::absolute>
 {
   static const Dune::FloatCmp::CmpStyle value = Dune::FloatCmp::CmpStyle::absolute;
 };
 
-} //namespace internal
+} // namespace internal
 
 } // namespace FloatCmp
 } // namespace Common
