@@ -4,5 +4,5 @@
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
 #ifdef __GNUC__
-# pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
 #endif

@@ -15,7 +15,8 @@ STUFF_TYPENAME(Dune::MPIHelper)
 using namespace Dune::Stuff::Common;
 using namespace std;
 
-TEST(Typename, Knowns) {
+TEST(Typename, Knowns)
+{
   EXPECT_EQ(Typename<unsigned long>::value(), "unsigned long");
   EXPECT_EQ(Typename<unsigned long>::value(), "unsigned long");
   EXPECT_EQ(Typename<int>::value(), "int");
@@ -28,18 +29,16 @@ TEST(Typename, Knowns) {
   EXPECT_EQ(Typename<char>::value(), "char");
 }
 
-TEST(Typename, Unknowns) {
-  EXPECT_NE(Typename<Dune::Exception>::value(),  string());
-}
+TEST(Typename, Unknowns) { EXPECT_NE(Typename<Dune::Exception>::value(), string()); }
 
-TEST(Typename, Extended) {
-  EXPECT_EQ(Typename<Dune::MPIHelper>::value(),  string("Dune::MPIHelper"));
+TEST(Typename, Extended)
+{
+  EXPECT_EQ(Typename<Dune::MPIHelper>::value(), string("Dune::MPIHelper"));
   {
     using namespace Dune;
-    EXPECT_EQ(Typename<MPIHelper>::value(),  string("Dune::MPIHelper"));
+    EXPECT_EQ(Typename<MPIHelper>::value(), string("Dune::MPIHelper"));
   }
   typedef Dune::Stuff::Common::ValidateAny<int> Valid;
   Valid v;
-  EXPECT_EQ(getTypename(v),  string("Dune::Stuff::Common::Parameter::ValidateAny<T>"));
+  EXPECT_EQ(getTypename(v), string("Dune::Stuff::Common::Parameter::ValidateAny<T>"));
 }
-
