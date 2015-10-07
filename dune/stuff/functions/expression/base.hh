@@ -74,6 +74,7 @@ public:
   void evaluate(const Dune::FieldVector<DomainFieldType, dimDomain>& arg,
                 Dune::FieldVector<RangeFieldType, dimRange>& ret) const
   {
+    std::lock_guard<std::mutex> guard(mutex_);
     // copy arg
     for (typename Dune::FieldVector<DomainFieldType, dimDomain>::size_type ii = 0; ii < dimDomain; ++ii)
       *(arg_[ii]) = arg[ii];
@@ -87,6 +88,7 @@ public:
    */
   void evaluate(const Dune::DynamicVector<DomainFieldType>& arg, Dune::DynamicVector<RangeFieldType>& ret) const
   {
+    std::lock_guard<std::mutex> guard(mutex_);
     // check for sizes
     assert(arg.size() > 0);
     if (ret.size() != dimRange)
@@ -102,6 +104,7 @@ public:
   void evaluate(const Dune::FieldVector<DomainFieldType, dimDomain>& arg,
                 Dune::DynamicVector<RangeFieldType>& ret) const
   {
+    std::lock_guard<std::mutex> guard(mutex_);
     // check for sizes
     if (ret.size() != dimRange)
       ret = Dune::DynamicVector<RangeFieldType>(dimRange);
@@ -118,6 +121,7 @@ public:
    */
   void evaluate(const Dune::DynamicVector<DomainFieldType>& arg, Dune::FieldVector<RangeFieldType, dimRange>& ret) const
   {
+    std::lock_guard<std::mutex> guard(mutex_);
     assert(arg.size() > 0);
     // copy arg
     for (size_t ii = 0; ii < std::min(dimDomain, arg.size()); ++ii)
@@ -196,6 +200,7 @@ private:
   RVar* var_arg_[dimDomain];
   RVar* vararray_[dimDomain];
   ROperation* op_[dimRange];
+  mutable std::mutex mutex_;
 }; // class MathExpressionBase
 
 } // namespace Functions
