@@ -21,7 +21,7 @@ void resetSignal(int signal);
 void handleInterrupt(int signal);
 
 //! type of handler functions
-typedef void handler_type (int);
+typedef void handler_type(int);
 
 //! calling this from your main() will install handler as callback when signal is received
 void installSignalHandler(int signal = SIGINT, handler_type handler = handleInterrupt);

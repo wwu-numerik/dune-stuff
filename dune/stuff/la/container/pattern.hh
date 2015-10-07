@@ -14,14 +14,13 @@ namespace Dune {
 namespace Stuff {
 namespace LA {
 
-
 class SparsityPatternDefault
 {
 private:
-  typedef std::vector< std::vector< size_t > > BaseType;
+  typedef std::vector<std::vector<size_t>> BaseType;
 
 public:
-  typedef BaseType::value_type              InnerType;
+  typedef BaseType::value_type InnerType;
   typedef typename BaseType::const_iterator ConstOuterIteratorType;
 
   explicit SparsityPatternDefault(const size_t _size = 0);
@@ -49,7 +48,6 @@ public:
 private:
   BaseType vector_of_vectors_;
 }; // class SparsityPatternDefault
-
 
 } // namespace LA
 } // namespace Stuff
