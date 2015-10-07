@@ -8,7 +8,7 @@
 
 #include <thread>
 #if HAVE_TBB
-# include <tbb/task_scheduler_init.h>
+#include <tbb/task_scheduler_init.h>
 #endif
 
 namespace Dune {
@@ -33,9 +33,10 @@ struct ThreadManager
   size_t thread();
 
   //! set maximal number of threads available during run
-  void set_max_threads( const size_t count );
+  void set_max_threads(const size_t count);
 
   ~ThreadManager() = default;
+
 private:
   friend ThreadManager& threadManager();
   //! init tbb with given thread count, prepare Eigen for smp if possible
@@ -47,11 +48,11 @@ private:
 #endif
 };
 
-inline ThreadManager& threadManager() {
+inline ThreadManager& threadManager()
+{
   static ThreadManager tm;
   return tm;
 }
-
 }
 }
 

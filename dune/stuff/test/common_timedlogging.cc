@@ -4,7 +4,7 @@
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
 #ifndef DUNE_STUFF_TEST_MAIN_CATCH_EXCEPTIONS
-# define DUNE_STUFF_TEST_MAIN_CATCH_EXCEPTIONS 0
+#define DUNE_STUFF_TEST_MAIN_CATCH_EXCEPTIONS 0
 #endif
 
 #include "config.h"
@@ -18,7 +18,6 @@ using namespace Dune;
 using namespace Dune::Stuff;
 using namespace Dune::Stuff::Common;
 
-
 void before_create()
 {
   TimedLogger().get("before_create").info() << "this info should not be visible" << std::endl;
@@ -26,14 +25,12 @@ void before_create()
   TimedLogger().get("before_create").warn() << "this warning should be visible in red" << std::endl;
 }
 
-
 void after_create_inner()
 {
   TimedLogger().get("after_create_inner").info() << "this info should be visible in blue" << std::endl;
   TimedLogger().get("after_create_inner").debug() << "this debug should not be visible" << std::endl;
   TimedLogger().get("after_create_inner").warn() << "this warning should not be visible" << std::endl;
 }
-
 
 void after_create()
 {
@@ -44,14 +41,12 @@ void after_create()
   after_create_inner();
 }
 
-
 void fool_level_tracking_inner()
 {
   TimedLogger().get("fool_level_tracking_inner").info() << "this info should be visible in blue" << std::endl;
   TimedLogger().get("fool_level_tracking_inner").debug() << "this debug should be visible in yellow" << std::endl;
   TimedLogger().get("fool_level_tracking_inner").warn() << "this warning should not be visible" << std::endl;
 }
-
 
 void fool_level_tracking()
 {
@@ -61,7 +56,6 @@ void fool_level_tracking()
   fool_level_tracking_inner();
 }
 
-
 TEST(TimedPrefixedLogStream, all)
 {
   Timer timer;
@@ -70,7 +64,6 @@ TEST(TimedPrefixedLogStream, all)
   busywait(2000);
   out << "\n" << 3 << "\n\nend" << std::endl;
 } // TEST(TimedPrefixedLogStream, all)
-
 
 TEST(TimedLogger, before_create)
 {
@@ -101,7 +94,6 @@ TEST(TimedLogger, fool_level_tracking)
   fool_level_tracking();
 }
 
-
 int main(int argc, char** argv)
 {
 #if DUNE_STUFF_TEST_MAIN_CATCH_EXCEPTIONS
@@ -119,6 +111,6 @@ int main(int argc, char** argv)
   } catch (...) {
     std::cerr << "Unknown exception thrown!" << std::endl;
     std::abort();
-  } // try
+  }    // try
 #endif // DUNE_STUFF_TEST_MAIN_CATCH_EXCEPTIONS
 } // ... main(...)

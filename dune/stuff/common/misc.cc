@@ -10,20 +10,20 @@
 #include <dune/stuff/common/string.hh>
 #include <dune/stuff/common/print.hh>
 
-extern char **environ;
+extern char** environ;
 
 namespace Dune {
 namespace Stuff {
 namespace Common {
 
-void dump_environment(boost::filesystem::ofstream &file, std::string csv_sep)
+void dump_environment(boost::filesystem::ofstream& file, std::string csv_sep)
 {
   using namespace std;
   vector<string> header, values;
-  for(char **current = environ; *current; current++) {
+  for (char** current = environ; *current; current++) {
     string line(*current);
     const auto tokens = DSC::tokenize(line, "=");
-    if(tokens.size() == 2) {
+    if (tokens.size() == 2) {
       header.push_back(tokens[0]);
       values.push_back(tokens[1]);
     }
