@@ -8,11 +8,12 @@
 #include "helper.hh"
 #include <dune/common/parallel/mpihelper.hh>
 
-int Dune::Stuff::abort_all_mpi_processes() {
+int Dune::Stuff::abort_all_mpi_processes()
+{
 #if HAVE_MPI
   if (MPIHelper::getCollectiveCommunication().size() > 1)
     return MPI_Abort(MPIHelper::getCommunicator(), 1);
   else
 #endif
-  return 1;
+    return 1;
 }
