@@ -225,7 +225,14 @@ public:
                                     << ":\n"
                                     << available_as_str());
   } // ... create(...)
-};  // class FunctionsProvider
+
+  static std::unique_ptr<InterfaceType> create(const Common::Configuration& cfg)
+  {
+    if (!cfg.has_key("type"))
+      DUNE_THROW(Exceptions::wrong_input_given, "Missing 'type' in given cfg (see below)!\n\n" << cfg);
+    return create(cfg.get<std::string>("type"), cfg);
+  }
+}; // class FunctionsProvider
 
 } // namespace Stuff
 } // namespace Dune
