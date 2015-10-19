@@ -24,17 +24,13 @@
 #define ALUGRIDS                                                                                                       \
   Dune::ALUGrid<2, 2, Dune::cube, Dune::nonconforming> /*, Dune::ALUGrid< 2, 3, Dune::cube, Dune::nonconforming >      \
                                                           <- provider does not work */                                 \
-      ,                                                                                                                \
-      Dune::ALUGrid<3, 3, Dune::cube, Dune::nonconforming>,                                                            \
+      , Dune::ALUGrid<3, 3, Dune::cube, Dune::nonconforming>,                                                          \
       Dune::ALUGrid<2, 2, Dune::simplex, Dune::nonconforming> /*, Dune::ALUGrid< 2, 3, Dune::simplex,                  \
                                                                  Dune::nonconforming > <- same here */                 \
-      ,                                                                                                                \
-      Dune::ALUGrid<3, 3, Dune::simplex, Dune::nonconforming>,                                                         \
-      Dune::                                                                                                           \
-          ALUGrid<2, 2, Dune::simplex, Dune::conforming> /*, Dune::ALUGrid< 2, 3, Dune::simplex, Dune::conforming >    \
-                                                            <- same here */                                            \
-      ,                                                                                                                \
-      Dune::ALUGrid<3, 3, Dune::simplex, Dune::conforming>
+      , Dune::ALUGrid<3, 3, Dune::simplex, Dune::nonconforming>,                                                       \
+      Dune::ALUGrid<2, 2, Dune::simplex, Dune::conforming> /*, Dune::ALUGrid< 2, 3, Dune::simplex, Dune::conforming >  \
+                                                              <- same here */                                          \
+      , Dune::ALUGrid<3, 3, Dune::simplex, Dune::conforming>
 #endif // HAVE_ALUGRID
 
 template <class GridProviderType>
