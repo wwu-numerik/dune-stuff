@@ -97,10 +97,6 @@ public:
   typedef IstlRowMajorSparseMatrix<S> MatrixType;
   typedef typename MatrixType::RealType R;
 
-#if !DUNE_VERSION_NEWER(DUNE_ISTL, 2, 4)
-  static_assert(!std::is_same<S, std::complex<R>>::value, "the dune-istl solver does not work with complex yet!");
-#endif
-
   Solver(const MatrixType& matrix) : matrix_(matrix), communicator_(new CommunicatorType()) {}
 
   Solver(const MatrixType& matrix, const CommunicatorType& communicator) : matrix_(matrix), communicator_(communicator)
@@ -241,7 +237,7 @@ public:
                               scalar_product,
                               preconditioner,
                               opts.get("precision", default_opts.get<S>("precision")),
-                              opts.get("max_iter", default_opts.get<size_t>("max_iter")),
+                              opts.get("max_iter", default_opts.get<int>("max_iter")),
                               verbosity(opts, default_opts));
         solver.apply(solution.backend(), writable_rhs.backend(), solver_result);
 #if HAVE_UMFPACK

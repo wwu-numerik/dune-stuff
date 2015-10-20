@@ -17,7 +17,7 @@ endif(CMAKE_WITH_AUTOTOOLS)
 # this assumes that we run dunecontrol with the --use-cmake option
 
 # cmake specific
-cmake_minimum_required( VERSION 2.8 )
+cmake_minimum_required( VERSION 2.8.12 )
 
 set( CMAKE_COLOR_MAKEFILE ON)
 
@@ -62,6 +62,7 @@ link_directories( "/usr/lib" ${CCGNU_LIBRARY_DIRS} )
 # header
 file( GLOB_RECURSE stuff "${CMAKE_CURRENT_SOURCE_DIR}/dune/*.hh" )
 set( COMMON_HEADER ${stuff} ${DUNE_HEADERS} )
+
 # add header of dependent modules for header listing
 foreach(_mod ${ALL_DEPENDENCIES})
 file(GLOB_RECURSE HEADER_LIST "${CMAKE_CURRENT_SOURCE_DIR}/../${_mod}/*.hh")
