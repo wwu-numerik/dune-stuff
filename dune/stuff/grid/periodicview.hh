@@ -275,7 +275,7 @@ class PeriodicGridViewImp : public RealGridViewImp
 public:
   typedef typename BaseType::Grid Grid;
   typedef typename BaseType::IndexSet IndexSet;
-  typedef typename BaseType::template Codim< 0 >::Entity EntityType;
+  typedef typename BaseType::template Codim<0>::Entity EntityType;
   typedef PeriodicIntersectionIterator<BaseType> IntersectionIterator;
   typedef typename IntersectionIterator::RealIntersectionType RealIntersectionType;
   typedef typename BaseType::IndexSet::IndexType EntityIndexType;
@@ -447,7 +447,8 @@ public:
   PeriodicGridView(const PeriodicGridView& other)
     : ConstStorProv(new internal::PeriodicGridViewImp<RealGridViewType>(other.access()))
     , BaseType(ConstStorProv::access())
-  {}
+  {
+  }
 }; // class PeriodicGridView
 
 #else // HAVE_DUNE_GRID
