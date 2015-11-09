@@ -71,8 +71,8 @@ void printIntersection(const IntersectionType& intersection, std::ostream& out =
   out << prefix << Common::Typename<IntersectionType>::value() << std::endl;
   const auto& geometry = intersection.geometry();
   for (auto ii : DSC::valueRange(geometry.corners()))
-    out << prefix
-        << "  corner " + Common::toString(ii) << " = " << geometry.corner(ii) << " (local: " << geometry.local(geometry.corner(ii)) << ")\n";
+    out << prefix << "  corner " + Common::toString(ii) << " = " << geometry.corner(ii)
+        << " (local: " << geometry.local(geometry.corner(ii)) << ")\n";
 } // ... printIntersection(...)
 
 #if HAVE_DUNE_GRID
@@ -82,10 +82,9 @@ void printIntersection(const IntersectionType& intersection, std::ostream& out =
  *        Returns true, if global_point lies on the line between the corners of intersection.
  */
 template <class G, class I, class D>
-  typename std::enable_if< Dune::Intersection< G, I>::dimension == 2, bool >::type
-contains(const Dune::Intersection< G, I>& intersection,
-         const Dune::FieldVector<D, 2>& global_point,
-         const D& tolerance = DSC::FloatCmp::DefaultEpsilon<D>::value())
+typename std::enable_if<Dune::Intersection<G, I>::dimension == 2, bool>::type
+    contains(const Dune::Intersection<G, I>& intersection, const Dune::FieldVector<D, 2>& global_point,
+             const D& tolerance = DSC::FloatCmp::DefaultEpsilon<D>::value())
 {
   const auto& geometry = intersection.geometry();
   // get the global coordinates of the intersections corners
@@ -98,13 +97,13 @@ contains(const Dune::Intersection< G, I>& intersection,
   // cannot lie on the line between the two corners.
   const auto normal = intersection.centerUnitOuterNormal();
   for (auto vector : {corner_0 - global_point, corner_1 - global_point})
-    if (vector*normal > tolerance)
+    if (vector * normal > tolerance)
       return false;
   // Now that we know the point is on the line, check if it is outside the bounding box of the two corners.
-  if (   DSC::FloatCmp::lt(global_point[0], std::min(corner_0[0], corner_1[0]), tolerance)
+  if (DSC::FloatCmp::lt(global_point[0], std::min(corner_0[0], corner_1[0]), tolerance)
       || DSC::FloatCmp::gt(global_point[0], std::max(corner_0[0], corner_1[0]), tolerance))
     return false;
-  if (   DSC::FloatCmp::lt(global_point[1], std::min(corner_0[1], corner_1[1]), tolerance)
+  if (DSC::FloatCmp::lt(global_point[1], std::min(corner_0[1], corner_1[1]), tolerance)
       || DSC::FloatCmp::gt(global_point[1], std::max(corner_0[1], corner_1[1]), tolerance))
     return false;
   // At this point we cannot reject the assumption that the point lies on the line between the two corners.
@@ -119,9 +118,8 @@ contains(const Dune::Intersection< G, I>& intersection,
 * @return Returns true if the point lies on the intersection, false otherwise.
 */
 template <class IntersectionType, class FieldType, int dim>
-bool
-  DUNE_DEPRECATED_MSG("This method does not produce correct results, use contains() instead!")
-     intersectionContains(const IntersectionType& intersection, const Dune::FieldVector<FieldType, dim>& globalPoint)
+bool DUNE_DEPRECATED_MSG("This method does not produce correct results, use contains() instead!")
+    intersectionContains(const IntersectionType& intersection, const Dune::FieldVector<FieldType, dim>& globalPoint)
 {
   // map global coordinates to local coordinates of the intersection
   const auto& intersectionGeometry = intersection.geometry();
@@ -142,7 +140,6 @@ bool intersectionContains(const IntersectionType& intersection, const Dune::Fiel
 {
   return contains(intersection, globalPoint);
 }
-
 
 } // end namespace Grid
 } // end of namespace Stuff
