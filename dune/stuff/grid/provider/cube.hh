@@ -14,25 +14,27 @@
 
 #include <boost/numeric/conversion/cast.hpp>
 
-#if HAVE_DUNE_GRID
-#define DUNE_AVOID_SGRID_DEPRE_WARNING_BECAUSE_I_KNOW_WHAT_IM_DOING 1
-#include <dune/grid/sgrid.hh>
-#undef DUNE_AVOID_SGRID_DEPRE_WARNING_BECAUSE_I_KNOW_WHAT_IM_DOING
-#include <dune/grid/yaspgrid.hh>
-#if HAVE_ALBERTA
-#include <dune/grid/albertagrid.hh>
-#endif
-#if HAVE_DUNE_ALUGRID
-#include <dune/alugrid/grid.hh>
-#endif
-#if HAVE_ALUGRID
-#include <dune/grid/alugrid.hh>
-#endif
-#if HAVE_DUNE_SPGRID
-#include <dune/grid/spgrid.hh>
-#endif
-#include <dune/stuff/grid/structuredgridfactory.hh>
-#endif // HAVE_DUNE_GRID
+#if HAVE_DUNE_GRID // clang-format off
+# define DUNE_AVOID_SGRID_DEPRE_WARNING_BECAUSE_I_KNOW_WHAT_IM_DOING 1
+# include <dune/grid/sgrid.hh>
+# undef DUNE_AVOID_SGRID_DEPRE_WARNING_BECAUSE_I_KNOW_WHAT_IM_DOING
+# include <dune/grid/yaspgrid.hh>
+# if HAVE_ALBERTA
+#   include <dune/stuff/common/disable_warnings.hh>
+#     include <dune/grid/albertagrid.hh>
+#   include <dune/stuff/common/reenable_warnings.hh>
+# endif
+# if HAVE_DUNE_ALUGRID
+#   include <dune/alugrid/grid.hh>
+# endif
+# if HAVE_ALUGRID
+#   include <dune/grid/alugrid.hh>
+# endif
+# if HAVE_DUNE_SPGRID
+#   include <dune/grid/spgrid.hh>
+# endif
+# include <dune/stuff/grid/structuredgridfactory.hh>
+#endif // HAVE_DUNE_GRID // clang-format on
 
 #include <dune/stuff/common/fvector.hh>
 #include <dune/stuff/common/exceptions.hh>
