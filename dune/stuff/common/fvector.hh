@@ -14,62 +14,58 @@
 #include <dune/stuff/common/exceptions.hh>
 #include <dune/stuff/common/debug.hh>
 
-
 namespace Dune {
 namespace Stuff {
 namespace Common {
 
-
-template< class K, int SIZE >
-class FieldVector
-  : public Dune::FieldVector< K, SIZE >
+template <class K, int SIZE>
+class FieldVector : public Dune::FieldVector<K, SIZE>
 {
   static_assert(SIZE >= 0, "Really?");
 
-  typedef Dune::FieldVector< K, SIZE > BaseType;
-  typedef FieldVector< K, SIZE >       ThisType;
+  typedef Dune::FieldVector<K, SIZE> BaseType;
+  typedef FieldVector<K, SIZE> ThisType;
 
 public:
-  FieldVector(const K kk = K(0))
-    : BaseType(kk)
-  {}
+  FieldVector(const K kk = K(0)) : BaseType(kk) {}
 
-  FieldVector(const size_t UNUSED_UNLESS_DEBUG(sz), const K kk)
-    : BaseType(kk)
+  FieldVector(const size_t UNUSED_UNLESS_DEBUG(sz), const K kk) : BaseType(kk)
   {
 #ifndef NDEBUG
     if (sz != SIZE)
       DUNE_THROW(Exceptions::wrong_input_given,
-                 "You are trying to construct a FieldVector< ..., " << SIZE << " > (of " << "static size) with " << sz
-                 << " elements!");
+                 "You are trying to construct a FieldVector< ..., " << SIZE << " > (of "
+                                                                    << "static size) with "
+                                                                    << sz
+                                                                    << " elements!");
 #endif // NDEBUG
-  } // ... FieldVector(...)
+  }    // ... FieldVector(...)
 
-  FieldVector(const BaseType& other)
-    : BaseType(other)
-  {}
+  FieldVector(const BaseType& other) : BaseType(other) {}
 
-  FieldVector(const std::vector< K >& vec)
-    : BaseType(K(0))
+  FieldVector(const std::vector<K>& vec) : BaseType(K(0))
   {
 #ifndef NDEBUG
     if (vec.size() != SIZE)
       DUNE_THROW(Exceptions::wrong_input_given,
                  "You are trying to construct a FieldVector< ..., " << SIZE << " > (of "
-                 << "static size) from a vector of size " << vec.size() << "!");
+                                                                    << "static size) from a vector of size "
+                                                                    << vec.size()
+                                                                    << "!");
 #endif // NDEBUG
     for (size_t ii = 0; ii < SIZE; ++ii)
       this->operator[](ii) = vec[ii];
   } // FieldVector(...)
 
-  FieldVector(std::initializer_list< K > list)
-    : BaseType(K(0))
+  FieldVector(std::initializer_list<K> list) : BaseType(K(0))
   {
 #ifndef NDEBUG
     if (list.size() != SIZE)
       DUNE_THROW(Exceptions::wrong_input_given,
                  "You are trying to construct a FieldVector< ..., " << SIZE << " > (of "
-                 << "static size) from a list of size " << list.size() << "!");
+                                                                    << "static size) from a list of size "
+                                                                    << list.size()
+                                                                    << "!");
 #endif // NDEBUG
     size_t ii = 0;
     for (auto element : list)
@@ -82,9 +78,9 @@ public:
     return *this;
   }
 
-  operator std::vector< K >() const
+  operator std::vector<K>() const
   {
-    std::vector< K > ret(SIZE);
+    std::vector<K> ret(SIZE);
     for (size_t ii = 0; ii < SIZE; ++ii)
       ret[ii] = this->operator[](ii);
     return ret;
@@ -99,7 +95,6 @@ public:
     return ret;
   }
 }; // class FieldVector
-
 
 } // namespace Common
 } // namespace Stuff

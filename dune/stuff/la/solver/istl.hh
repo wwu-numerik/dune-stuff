@@ -10,11 +10,11 @@
 #include <cmath>
 
 #if HAVE_DUNE_ISTL
-# include <dune/istl/operators.hh>
-# include <dune/istl/preconditioners.hh>
-# include <dune/istl/solvers.hh>
-# include <dune/istl/umfpack.hh>
-# include <dune/istl/superlu.hh>
+#include <dune/istl/operators.hh>
+#include <dune/istl/preconditioners.hh>
+#include <dune/istl/solvers.hh>
+#include <dune/istl/umfpack.hh>
+#include <dune/istl/superlu.hh>
 #endif // HAVE_DUNE_ISTL
 
 #include <dune/stuff/common/exceptions.hh>
@@ -31,49 +31,39 @@ namespace LA {
 
 #if HAVE_DUNE_ISTL
 
-
-template< class S, class CommunicatorType >
-class Solver< IstlRowMajorSparseMatrix< S >, CommunicatorType >
-  : protected SolverUtils
+template <class S, class CommunicatorType>
+class Solver<IstlRowMajorSparseMatrix<S>, CommunicatorType> : protected SolverUtils
 {
 public:
-  typedef IstlRowMajorSparseMatrix< S > MatrixType;
+  typedef IstlRowMajorSparseMatrix<S> MatrixType;
 
-  Solver(const MatrixType& matrix)
-    : matrix_(matrix)
-    , communicator_(new CommunicatorType())
-  {}
+  Solver(const MatrixType& matrix) : matrix_(matrix), communicator_(new CommunicatorType()) {}
 
-  Solver(const MatrixType& matrix,
-         const CommunicatorType& communicator)
-    : matrix_(matrix)
-    , communicator_(communicator)
-  {}
-
-  static std::vector< std::string > types()
+  Solver(const MatrixType& matrix, const CommunicatorType& communicator) : matrix_(matrix), communicator_(communicator)
   {
-    return {
+  }
+
+  static std::vector<std::string> types()
+  {
+    return
+    {
 #if !HAVE_MPI && HAVE_SUPERLU
-             "superlu"
-           ,
+      "superlu",
 #endif
-             "bicgstab.amg.ssor"
-           , "bicgstab.amg.ilu0"
-           , "bicgstab.ilut"
+          "bicgstab.amg.ssor", "bicgstab.amg.ilu0", "bicgstab.ilut"
 #if HAVE_UMFPACK
-           , "umfpack"
+          ,
+          "umfpack"
 #endif
-           };
+    };
   } // ... types()
 
   static Common::Configuration options(const std::string type = "")
   {
     const std::string tp = !type.empty() ? type : types()[0];
     SolverUtils::check_given(tp, types());
-    Common::Configuration general_opts({"type", "post_check_solves_system", "verbose"},
-                                       {tp,     "1e-5",                     "0"});
-    Common::Configuration iterative_options({"max_iter", "precision"},
-                                            {"10000",    "1e-10"});
+    Common::Configuration general_opts({"type", "post_check_solves_system", "verbose"}, {tp, "1e-5", "0"});
+    Common::Configuration iterative_options({"max_iter", "precision"}, {"10000", "1e-10"});
     iterative_options += general_opts;
     if (tp.substr(0, 13) == "bicgstab.amg.") {
       iterative_options.set("smoother.iterations", "1");
@@ -105,12 +95,9 @@ public:
     return Common::Configuration();
   } // ... options(...)
 
-  void apply(const IstlDenseVector< S >& rhs, IstlDenseVector< S >& solution) const
-  {
-    apply(rhs, solution, types()[0]);
-  }
+  void apply(const IstlDenseVector<S>& rhs, IstlDenseVector<S>& solution) const { apply(rhs, solution, types()[0]); }
 
-  void apply(const IstlDenseVector< S >& rhs, IstlDenseVector< S >& solution, const std::string& type) const
+  void apply(const IstlDenseVector<S>& rhs, IstlDenseVector<S>& solution, const std::string& type) const
   {
     apply(rhs, solution, options(type));
   }
@@ -118,47 +105,43 @@ public:
   /**
    *  \note does a copy of the rhs
    */
-  void apply(const IstlDenseVector< S >& rhs, IstlDenseVector< S >& solution, const Common::Configuration& opts) const
+  void apply(const IstlDenseVector<S>& rhs, IstlDenseVector<S>& solution, const Common::Configuration& opts) const
   {
     try {
       if (!opts.has_key("type"))
         DUNE_THROW(Exceptions::configuration_error,
                    "Given options (see below) need to have at least the key 'type' set!\n\n" << opts);
-      const auto type = opts.get< std::string >("type");
+      const auto type = opts.get<std::string>("type");
       SolverUtils::check_given(type, types());
       const Common::Configuration default_opts = options(type);
-      IstlDenseVector< S > writable_rhs = rhs.copy();
+      IstlDenseVector<S> writable_rhs          = rhs.copy();
       // solve
       if (type.substr(0, 13) == "bicgstab.amg.") {
-        auto result = AmgApplicator< S, CommunicatorType >(matrix_, communicator_.storage_access()).call(writable_rhs,
-                                                                                                         solution,
-                                                                                                         opts,
-                                                                                                         default_opts,
-                                                                                                         type.substr(13));
+        auto result = AmgApplicator<S, CommunicatorType>(matrix_, communicator_.storage_access())
+                          .call(writable_rhs, solution, opts, default_opts, type.substr(13));
         if (!result.converged)
           DUNE_THROW(Exceptions::linear_solver_failed_bc_it_did_not_converge,
                      "The dune-istl backend reported 'InverseOperatorResult.converged == false'!\n"
-                     << "Those were the given options:\n\n"
-                     << opts);
+                         << "Those were the given options:\n\n"
+                         << opts);
       } else if (type == "bicgstab.ilut") {
-        typedef MatrixAdapter< typename MatrixType::BackendType,
-                               typename IstlDenseVector< S >::BackendType,
-                               typename IstlDenseVector< S >::BackendType > MatrixOperatorType;
+        typedef MatrixAdapter<typename MatrixType::BackendType,
+                              typename IstlDenseVector<S>::BackendType,
+                              typename IstlDenseVector<S>::BackendType> MatrixOperatorType;
         MatrixOperatorType matrix_operator(matrix_.backend());
-        typedef SeqILUn< typename MatrixType::BackendType,
-                         typename IstlDenseVector< S >::BackendType,
-                         typename IstlDenseVector< S >::BackendType > PreconditionerType;
-        PreconditionerType preconditioner(matrix_.backend(),
-                                          opts.get("preconditioner.iterations",
-                                                   default_opts.get< int >("preconditioner.iterations")),
-                                          opts.get("preconditioner.relaxation_factor",
-                                                   default_opts.get< S >("preconditioner.relaxation_factor")));
-        typedef BiCGSTABSolver< typename IstlDenseVector< S >::BackendType > SolverType;
+        typedef SeqILUn<typename MatrixType::BackendType,
+                        typename IstlDenseVector<S>::BackendType,
+                        typename IstlDenseVector<S>::BackendType> PreconditionerType;
+        PreconditionerType preconditioner(
+            matrix_.backend(),
+            opts.get("preconditioner.iterations", default_opts.get<int>("preconditioner.iterations")),
+            opts.get("preconditioner.relaxation_factor", default_opts.get<S>("preconditioner.relaxation_factor")));
+        typedef BiCGSTABSolver<typename IstlDenseVector<S>::BackendType> SolverType;
         SolverType solver(matrix_operator,
                           preconditioner,
-                          opts.get("precision", default_opts.get< S >("precision")),
-                          opts.get("max_iter", default_opts.get< int >("max_iter")),
-                          opts.get("verbose", default_opts.get< int >("verbose")));
+                          opts.get("precision", default_opts.get<S>("precision")),
+                          opts.get("max_iter", default_opts.get<int>("max_iter")),
+                          opts.get("verbose", default_opts.get<int>("verbose")));
         InverseOperatorResult stat;
 #if HAVE_MPI
         DSC_LOG_DEBUG << "using serial bicgstab.ilut\n";
@@ -167,31 +150,33 @@ public:
         if (!stat.converged)
           DUNE_THROW(Exceptions::linear_solver_failed_bc_it_did_not_converge,
                      "The dune-istl backend reported 'InverseOperatorResult.converged == false'!\n"
-                     << "Those were the given options:\n\n" << opts);
+                         << "Those were the given options:\n\n"
+                         << opts);
 #if HAVE_UMFPACK
       } else if (type == "umfpack") {
         UMFPack<typename MatrixType::BackendType> solver(matrix_.backend(),
-                                                         opts.get("verbose", default_opts.get< int >("verbose")));
+                                                         opts.get("verbose", default_opts.get<int>("verbose")));
         InverseOperatorResult stat;
         solver.apply(solution.backend(), writable_rhs.backend(), stat);
 #endif // HAVE_UMFPACK
 #if !HAVE_MPI && HAVE_SUPERLU
       } else if (type == "superlu") {
-        SuperLU< typename MatrixType::BackendType > solver(matrix_.backend(),
-                                                           opts.get("verbose", default_opts.get< int >("verbose")));
+        SuperLU<typename MatrixType::BackendType> solver(matrix_.backend(),
+                                                         opts.get("verbose", default_opts.get<int>("verbose")));
         InverseOperatorResult stat;
         solver.apply(solution.backend(), writable_rhs.backend(), stat);
         if (!stat.converged)
           DUNE_THROW(Exceptions::linear_solver_failed_bc_it_did_not_converge,
                      "The dune-istl backend reported 'InverseOperatorResult.converged == false'!\n"
-                     << "Those were the given options:\n\n" << opts);
+                         << "Those were the given options:\n\n"
+                         << opts);
 #endif // !HAVE_MPI && HAVE_SUPERLU
       } else
         DUNE_THROW(Exceptions::internal_error,
                    "Given type '" << type << "' is not supported, although it was reported by types()!");
       // check (use writable_rhs as tmp)
-      const S post_check_solves_system_threshold = opts.get("post_check_solves_system",
-                                                            default_opts.get< S >("post_check_solves_system"));
+      const S post_check_solves_system_threshold =
+          opts.get("post_check_solves_system", default_opts.get<S>("post_check_solves_system"));
       if (post_check_solves_system_threshold > 0) {
         matrix_.mv(solution, writable_rhs);
         writable_rhs -= rhs;
@@ -199,35 +184,34 @@ public:
         if (sup_norm > post_check_solves_system_threshold || std::isnan(sup_norm) || std::isinf(sup_norm))
           DUNE_THROW(Exceptions::linear_solver_failed_bc_the_solution_does_not_solve_the_system,
                      "The computed solution does not solve the system (although the dune-istl backend "
-                     << "reported no error) and you requested checking (see options below)!\n"
-                     << "If you want to disable this check, set 'post_check_solves_system = 0' in the options."
-                     << "\n\n"
-                     << "  (A * x - b).sup_norm() = " << sup_norm << "\n\n"
-                     << "Those were the given options:\n\n" << opts);
+                         << "reported no error) and you requested checking (see options below)!\n"
+                         << "If you want to disable this check, set 'post_check_solves_system = 0' in the options."
+                         << "\n\n"
+                         << "  (A * x - b).sup_norm() = "
+                         << sup_norm
+                         << "\n\n"
+                         << "Those were the given options:\n\n"
+                         << opts);
       }
-    } catch(ISTLError& e) {
+    } catch (ISTLError& e) {
       DUNE_THROW(Exceptions::linear_solver_failed, "The dune-istl backend reported: " << e.what());
     }
   } // ... apply(...)
 
 private:
   const MatrixType& matrix_;
-  const Common::ConstStorageProvider< CommunicatorType > communicator_;
+  const Common::ConstStorageProvider<CommunicatorType> communicator_;
 }; // class Solver
-
 
 #else // HAVE_DUNE_ISTL
 
-
-template< class S, class CommunicatorType >
-class Solver< IstlRowMajorSparseMatrix< S >, CommunicatorType >
+template <class S, class CommunicatorType>
+class Solver<IstlRowMajorSparseMatrix<S>, CommunicatorType>
 {
-  static_assert(Dune::AlwaysFalse< S >::value, "You are missing dune-istl!");
+  static_assert(Dune::AlwaysFalse<S>::value, "You are missing dune-istl!");
 };
 
-
 #endif // HAVE_DUNE_ISTL
-
 
 } // namespace LA
 } // namespace Stuff

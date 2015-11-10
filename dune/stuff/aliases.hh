@@ -9,20 +9,24 @@
 namespace Dune {
 namespace Stuff {
 
-namespace Common {}
-namespace Grid {}
-namespace Fem {}
-namespace Functions {}
-namespace LA {}
-
+namespace Common {
+}
+namespace Grid {
+}
+namespace Fem {
+}
+namespace Functions {
+}
+namespace LA {
 }
 }
+}
 
-namespace DS = Dune::Stuff;
-namespace DSC = Dune::Stuff::Common;
-namespace DSG = Dune::Stuff::Grid;
+namespace DS   = Dune::Stuff;
+namespace DSC  = Dune::Stuff::Common;
+namespace DSG  = Dune::Stuff::Grid;
 namespace DSFe = Dune::Stuff::Fem;
 namespace DSFu = Dune::Stuff::Functions;
-namespace DSL = Dune::Stuff::LA;
+namespace DSL  = Dune::Stuff::LA;
 
 #endif // DUNE_STUFF_ALIASES_HH

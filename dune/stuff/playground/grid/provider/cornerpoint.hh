@@ -26,14 +26,14 @@
 
 namespace Dune {
 
-//namespace Capabilities
+// namespace Capabilities
 //{
 
-//template< class Grid >
-//struct hasHierarchicIndexSet;
+// template< class Grid >
+// struct hasHierarchicIndexSet;
 
-//template<>
-//struct hasHierarchicIndexSet< Dune::CpGrid >
+// template<>
+// struct hasHierarchicIndexSet< Dune::CpGrid >
 //{
 //  static const bool v = false;
 //};
@@ -47,8 +47,10 @@ namespace Provider {
 /**
   \brief  Creates a cornerpoint grid from a grdecl file.
 
-          A corresponding file can be obtained i.e. from https://www.sintef.no/Projectweb/MatMorA/Downloads/Johansen/. If
-          \code $BASEDIR\endcode denotes the directory containing dune-rb, the following commands will download and unzip a sample grid file:
+          A corresponding file can be obtained i.e. from https://www.sintef.no/Projectweb/MatMorA/Downloads/Johansen/.
+ If
+          \code $BASEDIR\endcode denotes the directory containing dune-rb, the following commands will download and
+ unzip a sample grid file:
           \code mkdir -p $BASEDIR/dune-rb/dune/rb/grid/examples/data && \
  cd $BASEDIR/dune-rb/dune/rb/grid/examples/data && \
  wget https://www.sintef.no/project/MatMoRA/Johansen/FULLFIELD_Eclipse.zip && \
@@ -66,7 +68,7 @@ public:
   static const size_t dim = 3;
 
   //! Type of the grids coordinates.
-  typedef Dune::FieldVector< GridType::ctype, dim > CoordinateType;
+  typedef Dune::FieldVector<GridType::ctype, dim> CoordinateType;
 
   //! Unique identifier: \c rb.grid.provider.cornerpoint
   static const std::string id;
@@ -80,7 +82,7 @@ public:
                 The actual keys are:
                 <ul><li> \c filename: an \a absolute path pointing to a .grdecl file.</ul>
     **/
-  Cornerpoint(ParameterTree &paramTree);
+  Cornerpoint(ParameterTree& paramTree);
 
   /**
     \brief      Creates a cornerpoint grid from a grdecl file.
@@ -99,7 +101,7 @@ public:
   const GridType& grid() const;
 
 private:
-  template< size_t dim >
+  template <size_t dim>
   struct P0Layout
   {
     bool contains(Dune::GeometryType& geometry)

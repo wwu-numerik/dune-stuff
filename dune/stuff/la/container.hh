@@ -15,42 +15,36 @@ namespace Dune {
 namespace Stuff {
 namespace LA {
 
-
-template< class ScalarType, ChooseBackend backend = default_backend >
+template <class ScalarType, ChooseBackend backend = default_backend>
 struct Container;
 
-
-template< class ScalarType >
-struct Container< ScalarType, ChooseBackend::common_dense >
+template <class ScalarType>
+struct Container<ScalarType, ChooseBackend::common_dense>
 {
-  typedef CommonDenseVector< ScalarType > VectorType;
-  typedef CommonDenseMatrix< ScalarType > MatrixType;
+  typedef CommonDenseVector<ScalarType> VectorType;
+  typedef CommonDenseMatrix<ScalarType> MatrixType;
 }; // struct Container< ..., common_dense >
 
-
-template< class ScalarType >
-struct Container< ScalarType, ChooseBackend::eigen_dense >
+template <class ScalarType>
+struct Container<ScalarType, ChooseBackend::eigen_dense>
 {
-  typedef EigenDenseVector< ScalarType > VectorType;
-  typedef EigenDenseMatrix< ScalarType > MatrixType;
+  typedef EigenDenseVector<ScalarType> VectorType;
+  typedef EigenDenseMatrix<ScalarType> MatrixType;
 }; // struct Container< ..., eigen_dense >
 
-
-template< class ScalarType >
-struct Container< ScalarType, ChooseBackend::eigen_sparse >
+template <class ScalarType>
+struct Container<ScalarType, ChooseBackend::eigen_sparse>
 {
-  typedef EigenDenseVector< ScalarType >          VectorType;
-  typedef EigenRowMajorSparseMatrix< ScalarType > MatrixType;
+  typedef EigenDenseVector<ScalarType> VectorType;
+  typedef EigenRowMajorSparseMatrix<ScalarType> MatrixType;
 }; // struct Container< ..., eigen_sparse >
 
-
-template< class ScalarType >
-struct Container< ScalarType, ChooseBackend::istl_sparse >
+template <class ScalarType>
+struct Container<ScalarType, ChooseBackend::istl_sparse>
 {
-  typedef IstlDenseVector< ScalarType >           VectorType;
-  typedef IstlRowMajorSparseMatrix< ScalarType >  MatrixType;
+  typedef IstlDenseVector<ScalarType> VectorType;
+  typedef IstlRowMajorSparseMatrix<ScalarType> MatrixType;
 }; // struct Container< ..., istl_sparse >
-
 
 } // namespace LA
 } // namespace Stuff

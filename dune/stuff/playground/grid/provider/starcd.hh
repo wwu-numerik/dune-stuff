@@ -37,27 +37,23 @@
 namespace Dune {
 namespace Stuff {
 
-
 /**
  * \brief   StarCD grid provider
  *
  *          Implemented for dimensions 1, 2, and 3.
  *
  */
-template< class GridImp >
-class GridProviderStarCD
-  : public Grid::ProviderInterface< GridImp >
+template <class GridImp>
+class GridProviderStarCD : public Grid::ProviderInterface<GridImp>
 {
-  typedef Grid::ProviderInterface< GridImp > BaseType;
-  typedef GridProviderStarCD< GridImp > ThisType;
+  typedef Grid::ProviderInterface<GridImp> BaseType;
+  typedef GridProviderStarCD<GridImp> ThisType;
+
 public:
   using typename BaseType::GridType;
   using BaseType::dimDomain;
 
-  static const std::string static_id()
-  {
-    return BaseType::static_id() + ".starcd";
-  }
+  static const std::string static_id() { return BaseType::static_id() + ".starcd"; }
 
   static Common::Configuration default_config(const std::string sub_name = "")
   {
@@ -71,12 +67,12 @@ public:
     }
   }
 
-  static std::unique_ptr< ThisType > create(const Common::Configuration config = default_config(),
-                                            const std::string sub_name = static_id())
+  static std::unique_ptr<ThisType> create(const Common::Configuration config = default_config(),
+                                          const std::string sub_name = static_id())
   {
-    const Common::Configuration cfg = config.has_sub(sub_name) ? config.sub(sub_name) : config;
+    const Common::Configuration cfg         = config.has_sub(sub_name) ? config.sub(sub_name) : config;
     const Common::Configuration default_cfg = default_config();
-    return Common::make_unique< ThisType >(cfg.get("filename", default_cfg.get< std::string >("filename")));
+    return Common::make_unique<ThisType>(cfg.get("filename", default_cfg.get<std::string>("filename")));
   }
 
   GridProviderStarCD(const std::string& filename)
@@ -84,30 +80,29 @@ public:
     std::ostream& out = Dune::Stuff::Common::Logger().devnull();
 
     // set up the grid factory
-    GridFactory< GridType > factory;
+    GridFactory<GridType> factory;
 
     // read the vertices
     const std::string vertexFileName = filename + ".vrt";
     std::ifstream vertexFile(vertexFileName);
     if (!vertexFile)
-        DUNE_THROW(Dune::IOError, "Could not open " << vertexFileName);
+      DUNE_THROW(Dune::IOError, "Could not open " << vertexFileName);
     std::string line;
-    if (!std::getline(vertexFile,line))
+    if (!std::getline(vertexFile, line))
       DUNE_THROW(Dune::IOError, "File " << vertexFileName << " is too short!");
-    if (! (line == "PROSTAR_VERTEX"))
+    if (!(line == "PROSTAR_VERTEX"))
       DUNE_THROW(Dune::IOError,
                  "First line of File " << vertexFileName << " (" << line << "is not equal to 'PROSTAR_VERTEX' !");
-    if (!std::getline(vertexFile,line))
+    if (!std::getline(vertexFile, line))
       DUNE_THROW(Dune::IOError, "File " << vertexFileName << " is too short!");
     size_t numberOfVertices = 0;
-    Dune::FieldVector< double, dimDomain > position;
+    Dune::FieldVector<double, dimDomain> position;
     out << "Reading " << vertexFileName << " ...   " << std::flush;
-    while (std::getline(vertexFile,line)) {
+    while (std::getline(vertexFile, line)) {
       numberOfVertices++;
       const std::vector<double> items = Dune::Stuff::Common::tokenize<double>(line, " ");
       if (items.size() != dimDomain + 1)
-        DUNE_THROW(Dune::IOError,
-                   "Error: " << items.size() << " = items.size() != dim + 1 = " << dimDomain + 1 << "!");
+        DUNE_THROW(Dune::IOError, "Error: " << items.size() << " = items.size() != dim + 1 = " << dimDomain + 1 << "!");
       for (size_t ii = 0; ii < dimDomain; ++ii)
         position[ii] = items[ii + 1];
       factory.insertVertex(position);
@@ -118,54 +113,54 @@ public:
     std::string elementFileName = filename + ".cel";
     std::ifstream elementFile(elementFileName);
     if (!elementFile)
-        DUNE_THROW(Dune::IOError, "Could not open " << elementFileName);
-    if (!std::getline(elementFile,line))
+      DUNE_THROW(Dune::IOError, "Could not open " << elementFileName);
+    if (!std::getline(elementFile, line))
       DUNE_THROW(Dune::IOError, "File " << elementFileName << " is too short!");
     if (!(line == "PROSTAR_CELL"))
       DUNE_THROW(Dune::IOError,
                  "First line of File " << elementFileName << " (" << line << "is not equal to 'PROSTAR_CELL' !");
-    if (!std::getline(elementFile,line))
+    if (!std::getline(elementFile, line))
       DUNE_THROW(Dune::IOError, "File " << elementFileName << " is too short!");
-    size_t numberOfElements = 0;
-    size_t numberOfPrisms = 0;
-    size_t numberOfCubes = 0;
-    size_t numberOfVerticesCube = pow(2, dimDomain);
+    size_t numberOfElements      = 0;
+    size_t numberOfPrisms        = 0;
+    size_t numberOfCubes         = 0;
+    size_t numberOfVerticesCube  = pow(2, dimDomain);
     size_t numberOfVerticesPrism = 6;
-    std::vector< unsigned int > cubeVertices(numberOfVerticesCube); // unsigned int required by the grid factory
-    std::vector< unsigned int > prismVertices(numberOfVerticesPrism);
+    std::vector<unsigned int> cubeVertices(numberOfVerticesCube); // unsigned int required by the grid factory
+    std::vector<unsigned int> prismVertices(numberOfVerticesPrism);
     std::string firstLine;
     std::string secondLine;
     out << "Reading " << elementFileName << " ...   " << std::flush;
     while (std::getline(elementFile, firstLine)) {
       if (!std::getline(elementFile, secondLine))
         DUNE_THROW(Dune::IOError,
-                   "No vertex data available in file " << elementFileName << " for element " << numberOfElements+1
-                   << "!");
+                   "No vertex data available in file " << elementFileName << " for element " << numberOfElements + 1
+                                                       << "!");
       numberOfElements++;
 
-      const auto items1 = Dune::Stuff::Common::tokenize< int >(firstLine, " ");
-      auto items2 = Dune::Stuff::Common::tokenize< int >(secondLine, " ");
+      const auto items1 = Dune::Stuff::Common::tokenize<int>(firstLine, " ");
+      auto items2       = Dune::Stuff::Common::tokenize<int>(secondLine, " ");
 
       // Erase zeros at the beginning of the line
       items2.erase(std::remove(items2.begin(), items2.end(), 0), items2.end());
 
-      if (!(items1[0]==items2[0]) || !(numberOfElements==items2[0]))
+      if (!(items1[0] == items2[0]) || !(numberOfElements == items2[0]))
         DUNE_THROW(Dune::IOError, "Elementindices do not correspond!");
 
-      if (items2.size() == numberOfVerticesCube + 1) { //cube
+      if (items2.size() == numberOfVerticesCube + 1) { // cube
         numberOfCubes++;
         for (size_t k = 0; k < numberOfVerticesCube; k++)
-          cubeVertices[k] = items2[k+1] - 1;
-        if (dimDomain>1)
+          cubeVertices[k] = items2[k + 1] - 1;
+        if (dimDomain > 1)
           std::swap(cubeVertices[2], cubeVertices[3]);
-        if (dimDomain==3)
+        if (dimDomain == 3)
           std::swap(cubeVertices[6], cubeVertices[7]);
-        factory.insertElement(Dune::GeometryType(Dune::GeometryType::cube,dimDomain), cubeVertices);
-      } else if ((items2.size() == numberOfVerticesPrism + 1) && (dimDomain==3)) { //prism
+        factory.insertElement(Dune::GeometryType(Dune::GeometryType::cube, dimDomain), cubeVertices);
+      } else if ((items2.size() == numberOfVerticesPrism + 1) && (dimDomain == 3)) { // prism
         numberOfPrisms++;
         for (size_t k = 0; k < numberOfVerticesPrism; k++)
-          prismVertices[k] = items2[k+1] - 1;
-        factory.insertElement(Dune::GeometryType(Dune::GeometryType::prism,dimDomain), prismVertices);
+          prismVertices[k] = items2[k + 1] - 1;
+        factory.insertElement(Dune::GeometryType(Dune::GeometryType::prism, dimDomain), prismVertices);
       } else // neither cube or prism
         DUNE_THROW(Dune::IOError, "Type of element " << numberOfElements << " is not cube or prism!");
     } // while loop
@@ -173,15 +168,17 @@ public:
     if (!(numberOfElements == (numberOfCubes + numberOfPrisms)))
       DUNE_THROW(Dune::IOError,
                  "Number of Elements (" << numberOfElements << ") is not equal to number of cubes (" << numberOfCubes
-                 << ") and number of prisms (" << numberOfPrisms << ").");
+                                        << ") and number of prisms ("
+                                        << numberOfPrisms
+                                        << ").");
 
-    out << "done: " << numberOfElements << " elements read ("
-        << numberOfPrisms << " prisms and " << numberOfCubes << " cubes)." << std::endl;
+    out << "done: " << numberOfElements << " elements read (" << numberOfPrisms << " prisms and " << numberOfCubes
+        << " cubes)." << std::endl;
 
     // finish the construction of the grid object
     out << "Starting createGrid() ... " << std::endl;
 
-    grid_ = std::shared_ptr< GridType >(factory.createGrid());
+    grid_ = std::shared_ptr<GridType>(factory.createGrid());
   } // GridProviderStarCD(...)
 
   GridProviderStarCD(ThisType&& source) = default;
@@ -192,40 +189,28 @@ public:
   ThisType& operator=(ThisType&& source) = default;
   ThisType& operator=(const ThisType& other) = default;
 
-  virtual const GridType& grid() const override final
-  {
-    return *grid_;
-  }
+  virtual const GridType& grid() const override final { return *grid_; }
 
-  virtual GridType& grid() override final
-  {
-    return *grid_;
-  }
+  virtual GridType& grid() override final { return *grid_; }
 
-  const std::shared_ptr< const GridType > grid_ptr() const
-  {
-    return grid_;
-  }
+  const std::shared_ptr<const GridType> grid_ptr() const { return grid_; }
 
-  std::shared_ptr< GridType > grid_ptr()
-  {
-    return grid_;
-  }
+  std::shared_ptr<GridType> grid_ptr() { return grid_; }
 
-  virtual std::unique_ptr< Grid::ConstProviderInterface< GridType > > copy() const override final
+  virtual std::unique_ptr<Grid::ConstProviderInterface<GridType>> copy() const override final
   {
     DUNE_THROW(NotImplemented, "");
     return nullptr;
   }
 
-  virtual std::unique_ptr< Grid::ProviderInterface< GridType > > copy() override final
+  virtual std::unique_ptr<Grid::ProviderInterface<GridType>> copy() override final
   {
     DUNE_THROW(NotImplemented, "");
     return nullptr;
   }
 
 private:
-  std::shared_ptr< GridType > grid_;
+  std::shared_ptr<GridType> grid_;
 }; // class GridProviderStarCD
 
 } // namespace Stuff

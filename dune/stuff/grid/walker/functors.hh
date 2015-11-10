@@ -6,7 +6,7 @@
 #ifndef DUNE_STUFF_GRID_WALKER_FUNCTORS_HH
 #define DUNE_STUFF_GRID_WALKER_FUNCTORS_HH
 
-//nothing here will compile w/o grid present
+// nothing here will compile w/o grid present
 #if HAVE_DUNE_GRID
 
 #include <dune/stuff/grid/entity.hh>
@@ -18,13 +18,12 @@ namespace Stuff {
 namespace Grid {
 namespace Functor {
 
-
-template< class GridViewImp >
+template <class GridViewImp>
 class Codim0
 {
 public:
   typedef GridViewImp GridViewType;
-  typedef typename Stuff::Grid::Entity< GridViewType >::Type EntityType;
+  typedef typename Stuff::Grid::Entity<GridViewType>::Type EntityType;
 
   virtual ~Codim0() {}
 
@@ -35,34 +34,31 @@ public:
   virtual void finalize() {}
 }; // class Codim0
 
-
-template< class GridViewImp >
+template <class GridViewImp>
 class Codim1
 {
 public:
   typedef GridViewImp GridViewType;
-  typedef typename Stuff::Grid::Entity< GridViewType >::Type       EntityType;
-  typedef typename Stuff::Grid::Intersection< GridViewType >::Type IntersectionType;
+  typedef typename Stuff::Grid::Entity<GridViewType>::Type EntityType;
+  typedef typename Stuff::Grid::Intersection<GridViewType>::Type IntersectionType;
 
   virtual ~Codim1() {}
 
   virtual void prepare() {}
 
-  virtual void apply_local(const IntersectionType& /*intersection*/,
-                           const EntityType& /*inside_entity*/,
+  virtual void apply_local(const IntersectionType& /*intersection*/, const EntityType& /*inside_entity*/,
                            const EntityType& /*outside_entity*/) = 0;
 
   virtual void finalize() {}
 }; // class Codim1
 
-
-template< class GridViewImp >
+template <class GridViewImp>
 class Codim0And1
 {
 public:
   typedef GridViewImp GridViewType;
-  typedef typename Stuff::Grid::Entity< GridViewType >::Type       EntityType;
-  typedef typename Stuff::Grid::Intersection< GridViewType >::Type IntersectionType;
+  typedef typename Stuff::Grid::Entity<GridViewType>::Type EntityType;
+  typedef typename Stuff::Grid::Intersection<GridViewType>::Type IntersectionType;
 
   virtual ~Codim0And1() {}
 
@@ -70,49 +66,42 @@ public:
 
   virtual void apply_local(const EntityType& entity) = 0;
 
-  virtual void apply_local(const IntersectionType& /*intersection*/,
-                           const EntityType& /*inside_entity*/,
+  virtual void apply_local(const IntersectionType& /*intersection*/, const EntityType& /*inside_entity*/,
                            const EntityType& /*outside_entity*/) = 0;
 
   virtual void finalize() {}
 }; // class Codim0And1
 
-
-template< class GridViewImp >
-class DirichletDetector
-  : public Codim1< GridViewImp >
+template <class GridViewImp>
+class DirichletDetector : public Codim1<GridViewImp>
 {
-  typedef Codim1< GridViewImp > BaseType;
+  typedef Codim1<GridViewImp> BaseType;
+
 public:
-  typedef typename BaseType::GridViewType     GridViewType;
-  typedef typename BaseType::EntityType       EntityType;
+  typedef typename BaseType::GridViewType GridViewType;
+  typedef typename BaseType::EntityType EntityType;
   typedef typename BaseType::IntersectionType IntersectionType;
 
-  explicit DirichletDetector(const BoundaryInfoInterface< IntersectionType >& boundary_info)
-    : boundary_info_(boundary_info)
-    , found_(0)
-  {}
+  explicit DirichletDetector(const BoundaryInfoInterface<IntersectionType>& boundary_info)
+    : boundary_info_(boundary_info), found_(0)
+  {
+  }
 
   virtual ~DirichletDetector() {}
 
-  virtual void apply_local(const IntersectionType& intersection,
-                           const EntityType& /*inside_entity*/,
+  virtual void apply_local(const IntersectionType& intersection, const EntityType& /*inside_entity*/,
                            const EntityType& /*outside_entity*/) override
   {
     if (boundary_info_.dirichlet(intersection))
       ++found_;
   }
 
-  bool found() const
-  {
-    return found_ > 0;
-  }
+  bool found() const { return found_ > 0; }
 
 private:
-  const BoundaryInfoInterface< IntersectionType >& boundary_info_;
+  const BoundaryInfoInterface<IntersectionType>& boundary_info_;
   size_t found_;
 }; // class DirichletDetector
-
 
 } // namespace Functor
 } // namespace Grid

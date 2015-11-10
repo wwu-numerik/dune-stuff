@@ -13,19 +13,19 @@ namespace Dune {
 namespace Stuff {
 namespace Common {
 
-
-LocalizationStudy::LocalizationStudy(const std::vector< std::string > only_these_indicators)
+LocalizationStudy::LocalizationStudy(const std::vector<std::string> only_these_indicators)
   : only_these_indicators_(only_these_indicators)
-{}
+{
+}
 
 LocalizationStudy::~LocalizationStudy() {}
 
-std::vector< std::string > LocalizationStudy::used_indicators() const
+std::vector<std::string> LocalizationStudy::used_indicators() const
 {
   if (only_these_indicators_.empty())
     return provided_indicators();
   else {
-    std::vector< std::string > ret;
+    std::vector<std::string> ret;
     for (auto indicator : provided_indicators())
       if (std::find(only_these_indicators_.begin(), only_these_indicators_.end(), indicator)
           != only_these_indicators_.end())
@@ -46,12 +46,12 @@ void LocalizationStudy::run(std::ostream& out)
   // build table header
   out << identifier() << std::endl;
   const size_t total_width = 80;
-  std::string header_line = std::string(" ||") + "   L^2 difference   " + "|" + "   L^oo difference  " + "|" +
-                            " standard deviation ";
+  std::string header_line =
+      std::string(" ||") + "   L^2 difference   " + "|" + "   L^oo difference  " + "|" + " standard deviation ";
   size_t first_column_size = 0;
   for (auto id : actually_used_indicators)
-    first_column_size = std::max(first_column_size, id.size());
-  first_column_size = std::max(first_column_size, total_width - header_line.size() - 1);
+    first_column_size          = std::max(first_column_size, id.size());
+  first_column_size            = std::max(first_column_size, total_width - header_line.size() - 1);
   std::string first_column_str = "";
   for (size_t ii = 0; ii < first_column_size; ++ii)
     first_column_str += " ";
@@ -62,14 +62,14 @@ void LocalizationStudy::run(std::ostream& out)
   else
     out << Stuff::Common::whitespaceify(header_line, '=') << "\n";
   out << header_line << "\n";
-  const std::string thin_delimiter = Stuff::Common::whitespaceify(" " + first_column_str + " ", '-')
-                                     + "++" + Stuff::Common::whitespaceify("   L^2 difference   ", '-')
-                                     + "+" + Stuff::Common::whitespaceify("   L^oo difference  ", '-')
-                                     + "+" + Stuff::Common::whitespaceify(" standard deviation ", '-');
-  const std::string thick_delimiter = Stuff::Common::whitespaceify(" " + first_column_str + " ", '=')
-                                      + "++" + Stuff::Common::whitespaceify("   L^2 difference   ", '=')
-                                      + "+" + Stuff::Common::whitespaceify("   L^oo difference  ", '=')
-                                      + "+" + Stuff::Common::whitespaceify(" standard deviation ", '=');
+  const std::string thin_delimiter = Stuff::Common::whitespaceify(" " + first_column_str + " ", '-') + "++"
+                                     + Stuff::Common::whitespaceify("   L^2 difference   ", '-') + "+"
+                                     + Stuff::Common::whitespaceify("   L^oo difference  ", '-') + "+"
+                                     + Stuff::Common::whitespaceify(" standard deviation ", '-');
+  const std::string thick_delimiter = Stuff::Common::whitespaceify(" " + first_column_str + " ", '=') + "++"
+                                      + Stuff::Common::whitespaceify("   L^2 difference   ", '=') + "+"
+                                      + Stuff::Common::whitespaceify("   L^oo difference  ", '=') + "+"
+                                      + Stuff::Common::whitespaceify(" standard deviation ", '=');
   out << thick_delimiter << std::endl;
   // comput reference indicators
   const auto reference_indicators = compute_reference_indicators();
@@ -83,7 +83,7 @@ void LocalizationStudy::run(std::ostream& out)
     if (id_str.size() > first_column_size)
       id_str = id_str.substr(0, first_column_size);
     else if (id_str.size() < first_column_size) {
-      const double missing = (double(first_column_size) - id_str.size())/2.0;
+      const double missing = (double(first_column_size) - id_str.size()) / 2.0;
       for (size_t ii = 0; ii < missing; ++ii)
         id_str = " " + id_str + " ";
       if (id_str.size() == (first_column_size - 1))
@@ -97,7 +97,9 @@ void LocalizationStudy::run(std::ostream& out)
     if (indicators.size() != reference_indicators.size())
       DUNE_THROW(Exceptions::requirements_not_met,
                  "Given indicators of type '" << indicator_id << "' are of wrong length (is " << indicators.size()
-                 << ", should be " << reference_indicators.size() << ")!");
+                                              << ", should be "
+                                              << reference_indicators.size()
+                                              << ")!");
     const auto difference = reference_indicators - indicators;
     // compute L^2 difference
     out << std::setw(18) << std::setprecision(2) << std::scientific << difference.l2_norm() << std::flush;
@@ -111,7 +113,6 @@ void LocalizationStudy::run(std::ostream& out)
     out << std::endl;
   } // loop over all indicators
 } // ... run(...)
-
 
 } // namespace Common
 } // namespace Stuff
