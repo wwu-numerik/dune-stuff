@@ -47,6 +47,57 @@ typename UnitMatrix<K, dim>::type unit_matrix()
   return UnitMatrix<K, dim>::value();
 }
 
+template <class R, size_t r, size_t rC>
+struct Get
+{
+  static std::string value_str()
+  {
+    std::string str = "[";
+    for (size_t rr = 0; rr < r; ++rr) {
+      if (rr > 0)
+        str += "; ";
+      for (size_t cc = 0; cc < rC; ++cc) {
+        if (cc > 0)
+          str += " ";
+        if (cc == rr)
+          str += "1";
+        else
+          str += "0";
+      }
+    }
+    str += "]";
+    return str;
+  }
+};
+
+template <class R, size_t rC>
+struct Get<R, 1, rC>
+{
+  static std::string value_str()
+  {
+    std::string str = "[";
+    for (size_t cc = 0; cc < rC; ++cc) {
+      if (cc > 0)
+        str += " ";
+      str += "1";
+    }
+    str += "]";
+    return str;
+  }
+};
+
+template <class R, size_t r>
+struct Get<R, r, 1>
+{
+  static std::string value_str() { return Get<R, 1, r>::value_str(); }
+};
+
+template <class R>
+struct Get<R, 1, 1>
+{
+  static std::string value_str() { return "1"; }
+};
+
 } // namespace internal
 
 template <class EntityImp, class DomainFieldImp, size_t domainDim, class RangeFieldImp, size_t rangeDim,
@@ -57,63 +108,16 @@ class Constant
   typedef GlobalFunctionInterface<EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols> BaseType;
   typedef Constant<EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols> ThisType;
 
-  template <class R, size_t r, size_t rC>
-  struct Get
-  {
-    static std::string value_str()
-    {
-      std::string str = "[";
-      for (size_t rr = 0; rr < r; ++rr) {
-        if (rr > 0)
-          str += "; ";
-        for (size_t cc = 0; cc < rC; ++cc) {
-          if (cc > 0)
-            str += " ";
-          if (cc == rr)
-            str += "1";
-          else
-            str += "0";
-        }
-      }
-      str += "]";
-      return str;
-    }
-  };
-
-  template <class R, size_t rC>
-  struct Get<R, 1, rC>
-  {
-    static std::string value_str()
-    {
-      std::string str = "[";
-      for (size_t cc = 0; cc < rC; ++cc) {
-        if (cc > 0)
-          str += " ";
-        str += "1";
-      }
-      str += "]";
-      return str;
-    }
-  };
-
-  template <class R, size_t r>
-  struct Get<R, r, 1>
-  {
-    static std::string value_str() { return Get<R, 1, r>::value_str(); }
-  };
-
-  template <class R>
-  struct Get<R, 1, 1>
-  {
-    static std::string value_str() { return "1"; }
-  };
-
 public:
   typedef typename BaseType::DomainType DomainType;
   typedef typename BaseType::RangeType RangeType;
   typedef typename BaseType::JacobianRangeType JacobianRangeType;
 
   using typename BaseType::LocalfunctionType;
+
+  static_assert(std::is_same<typename LocalfunctionType::RangeType, RangeType>::value, "RangeType mismatch");
+  static_assert(std::is_same<typename LocalfunctionType::DomainType, DomainType>::value, "DomainType mismatch");
+  static_assert(std::is_same<Dune::FieldVector<DomainFieldImp, domainDim>, DomainType>::value, "RangeType mismatch");
 
   static const bool available = true;
 
@@ -122,7 +126,7 @@ public:
   static Common::Configuration default_config(const std::string sub_name = "")
   {
     Common::Configuration config;
-    config["value"] = Get<RangeFieldImp, rangeDim, rangeDimCols>::value_str();
+    config["value"] = internal::Get<RangeFieldImp, rangeDim, rangeDimCols>::value_str();
     config["name"] = static_id();
     if (sub_name.empty())
       return config;
@@ -161,11 +165,23 @@ public:
 
   virtual void evaluate(const DomainType& /*x*/, RangeType& ret) const override final { ret = constant_; }
 
-  virtual void jacobian(const DomainType& /*x*/, JacobianRangeType& ret) const override final { ret *= 0.0; }
+  virtual void jacobian(const DomainType& /*x*/, JacobianRangeType& ret) const override final
+  {
+    jacobian_helper(ret, internal::ChooseVariant<rangeDimCols>());
+  }
 
   virtual std::string name() const override final { return name_; }
 
 private:
+  template <size_t rC>
+  void jacobian_helper(JacobianRangeType& ret, internal::ChooseVariant<rC>) const
+  {
+    for (auto& col_jacobian : ret) {
+      col_jacobian *= 0;
+    }
+  }
+
+  void jacobian_helper(JacobianRangeType& ret, internal::ChooseVariant<1>) const { ret *= 0; }
   const RangeType constant_;
   const std::string name_;
 };

@@ -10,12 +10,14 @@
 
 #include <vector>
 #include <initializer_list>
+#include <complex>
 
 #include <boost/numeric/conversion/cast.hpp>
 
 #include <dune/common/fmatrix.hh>
 #include <dune/common/fvector.hh>
 #include <dune/common/typetraits.hh>
+#include <dune/common/ftraits.hh>
 
 #if HAVE_DUNE_ISTL
 #include <dune/istl/bvector.hh>
@@ -24,6 +26,7 @@
 
 #include <dune/stuff/common/float_cmp.hh>
 #include <dune/stuff/common/profiler.hh>
+#include <dune/stuff/common/math.hh>
 
 #include "interfaces.hh"
 #include "pattern.hh"
@@ -50,7 +53,8 @@ template <class ScalarImp>
 class IstlDenseVectorTraits
 {
 public:
-  typedef ScalarImp ScalarType;
+  typedef typename Dune::FieldTraits<ScalarImp>::field_type ScalarType;
+  typedef typename Dune::FieldTraits<ScalarImp>::real_type RealType;
   typedef IstlDenseVector<ScalarImp> derived_type;
   typedef BlockVector<FieldVector<ScalarType, 1>> BackendType;
 }; // class IstlDenseVectorTraits
@@ -62,7 +66,8 @@ template <class ScalarImp>
 class IstlRowMajorSparseMatrixTraits
 {
 public:
-  typedef ScalarImp ScalarType;
+  typedef typename Dune::FieldTraits<ScalarImp>::field_type ScalarType;
+  typedef typename Dune::FieldTraits<ScalarImp>::real_type RealType;
   typedef IstlRowMajorSparseMatrix<ScalarType> derived_type;
   typedef BCRSMatrix<FieldMatrix<ScalarType, 1, 1>> BackendType;
 }; // class RowMajorSparseMatrixTraits
@@ -85,6 +90,7 @@ class IstlDenseVector : public VectorInterface<internal::IstlDenseVectorTraits<S
 public:
   typedef internal::IstlDenseVectorTraits<ScalarImp> Traits;
   typedef typename Traits::ScalarType ScalarType;
+  typedef typename Traits::RealType RealType;
   typedef typename Traits::BackendType BackendType;
 
   explicit IstlDenseVector(const size_t ss = 0, const ScalarType value = ScalarType(0)) : backend_(new BackendType(ss))
@@ -244,11 +250,11 @@ public:
     return backend_->dot(*(other.backend_));
   } // ... dot(...)
 
-  virtual ScalarType l1_norm() const override final { return backend_->one_norm(); }
+  virtual RealType l1_norm() const override final { return backend_->one_norm(); }
 
-  virtual ScalarType l2_norm() const override final { return backend_->two_norm(); }
+  virtual RealType l2_norm() const override final { return backend_->two_norm(); }
 
-  virtual ScalarType sup_norm() const override final { return backend_->infinity_norm(); }
+  virtual RealType sup_norm() const override final { return backend_->infinity_norm(); }
 
   virtual void add(const ThisType& other, ThisType& result) const override final
   {
@@ -343,6 +349,7 @@ public:
   typedef internal::IstlRowMajorSparseMatrixTraits<ScalarImp> Traits;
   typedef typename Traits::BackendType BackendType;
   typedef typename Traits::ScalarType ScalarType;
+  typedef typename Traits::RealType RealType;
 
   static std::string static_id() { return "stuff.la.container.istl.istlrowmajorsparsematrix"; }
 
@@ -381,10 +388,11 @@ public:
   IstlRowMajorSparseMatrix(const ThisType& other) = default;
 
   explicit IstlRowMajorSparseMatrix(const BackendType& mat, const bool prune = false,
-                                    const ScalarType eps = Common::FloatCmp::DefaultEpsilon<ScalarType>::value())
+                                    const typename Common::FloatCmp::DefaultEpsilon<ScalarType>::Type eps =
+                                        Common::FloatCmp::DefaultEpsilon<ScalarType>::value())
   {
     if (prune) {
-      auto pruned_pattern = pruned_pattern_from_backend(mat, eps);
+      const auto pruned_pattern = pruned_pattern_from_backend(mat, eps);
       build_sparse_matrix(mat.N(), mat.M(), pruned_pattern);
       for (size_t ii = 0; ii < pruned_pattern.size(); ++ii) {
         const auto& row_indices = pruned_pattern.inner(ii);
@@ -560,7 +568,7 @@ public:
       for (size_t jj = 0; jj < cols(); ++jj)
         if (backend_->exists(ii, jj)) {
           const auto& entry = row_vec[jj][0];
-          if (std::isnan(entry) || std::isinf(entry))
+          if (Common::isnan(entry[0]) || Common::isinf(entry[0]))
             return false;
         }
     }
@@ -575,7 +583,8 @@ public:
 
   virtual SparsityPatternDefault
       pattern(const bool prune = false,
-              const ScalarType eps = Common::FloatCmp::DefaultEpsilon<ScalarType>::value()) const override final
+              const typename Common::FloatCmp::DefaultEpsilon<ScalarType>::Type
+                  eps = Common::FloatCmp::DefaultEpsilon<ScalarType>::value()) const override final
   {
     SparsityPatternDefault ret(rows());
     if (prune) {
@@ -594,8 +603,8 @@ public:
     return ret;
   } // ... pattern(...)
 
-  virtual ThisType
-      pruned(const ScalarType eps = Common::FloatCmp::DefaultEpsilon<ScalarType>::value()) const override final
+  virtual ThisType pruned(const typename Common::FloatCmp::DefaultEpsilon<ScalarType>::Type
+                              eps = Common::FloatCmp::DefaultEpsilon<ScalarType>::value()) const override final
   {
     return ThisType(*backend_, true, eps);
   }
@@ -618,16 +627,19 @@ private:
 
   SparsityPatternDefault
       pruned_pattern_from_backend(const BackendType& mat,
-                                  const ScalarType eps = Common::FloatCmp::DefaultEpsilon<ScalarType>::value()) const
+                                  const typename Common::FloatCmp::DefaultEpsilon<ScalarType>::Type eps =
+                                      Common::FloatCmp::DefaultEpsilon<ScalarType>::value()) const
   {
     SparsityPatternDefault ret(mat.N());
     for (size_t ii = 0; ii < mat.N(); ++ii) {
       if (mat.getrowsize(ii) > 0) {
         const auto& row   = mat[ii];
         const auto it_end = row.end();
-        for (auto it = row.begin(); it != it_end; ++it)
-          if (Common::FloatCmp::ne<Common::FloatCmp::Style::absolute>(it->operator[](0)[0], ScalarType(0), eps))
+        for (auto it = row.begin(); it != it_end; ++it) {
+          const auto val = it->operator[](0)[0];
+          if (Common::FloatCmp::ne<Common::FloatCmp::Style::absolute>(val, decltype(val)(0), eps))
             ret.insert(ii, it.index());
+        }
       }
     }
     ret.sort();

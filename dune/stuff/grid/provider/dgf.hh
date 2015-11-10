@@ -17,6 +17,9 @@
 #if HAVE_ALUGRID
 #include <dune/grid/io/file/dgfparser/dgfalu.hh>
 #endif
+#if HAVE_DUNE_ALUGRID
+#include <dune/alugrid/dgf.hh>
+#endif
 #endif // HAVE_DUNE_GRID
 
 #include <dune/stuff/common/configuration.hh>
@@ -43,8 +46,8 @@ public:
   static const std::string static_id() { return BaseType::static_id() + ".dgf"; }
 
   static Common::Configuration default_config(const std::string sub_name = "")
-  {
-    Common::Configuration config("filename", "dgf_" + Common::toString(dimDomain) + "d_interval.dgf");
+  { // size_t(...) required, else linker error with clang
+    Common::Configuration config("filename", "dgf_" + Common::toString(size_t(dimDomain)) + "d_interval.dgf");
     if (sub_name.empty())
       return config;
     else {
@@ -52,7 +55,7 @@ public:
       tmp.add(config, sub_name);
       return tmp;
     }
-  }
+  } // ... default_config(...)
 
   static std::unique_ptr<ThisType> create(const Common::Configuration config = default_config(),
                                           const std::string sub_name = static_id())
@@ -79,16 +82,6 @@ public:
   const std::shared_ptr<const GridType> grid_ptr() const { return grid_; }
 
   std::shared_ptr<GridType> grid_ptr() { return grid_; }
-
-  virtual std::unique_ptr<Grid::ConstProviderInterface<GridType>> copy() const override final
-  {
-    return DSC::make_unique<ThisType>(*this);
-  }
-
-  virtual std::unique_ptr<Grid::ProviderInterface<GridType>> copy() override final
-  {
-    return DSC::make_unique<ThisType>(*this);
-  }
 
 private:
   std::shared_ptr<GridType> grid_;

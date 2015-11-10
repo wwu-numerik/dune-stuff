@@ -17,7 +17,7 @@
 #include <dune/stuff/common/memory.hh>
 #include <dune/stuff/common/configuration.hh>
 
-#include "../../functions/interfaces.hh"
+#include "interfaces.hh"
 
 namespace Dune {
 namespace Stuff {

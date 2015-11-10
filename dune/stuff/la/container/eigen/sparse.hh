@@ -9,6 +9,7 @@
 #include <memory>
 #include <type_traits>
 #include <vector>
+#include <complex>
 
 #include <boost/numeric/conversion/cast.hpp>
 
@@ -19,6 +20,7 @@
 #include <dune/stuff/common/reenable_warnings.hh>
 
 #include <dune/common/typetraits.hh>
+#include <dune/common/ftraits.hh>
 
 #include <dune/stuff/aliases.hh>
 #include <dune/stuff/common/exceptions.hh>
@@ -53,7 +55,8 @@ template <class ScalarImp = double>
 class EigenRowMajorSparseMatrixTraits
 {
 public:
-  typedef ScalarImp ScalarType;
+  typedef typename Dune::FieldTraits<ScalarImp>::field_type ScalarType;
+  typedef typename Dune::FieldTraits<ScalarImp>::real_type RealType;
   typedef EigenRowMajorSparseMatrix<ScalarType> derived_type;
   typedef typename ::Eigen::SparseMatrix<ScalarType, ::Eigen::RowMajor> BackendType;
 }; // class RowMajorSparseMatrixTraits
@@ -77,6 +80,7 @@ public:
   typedef internal::EigenRowMajorSparseMatrixTraits<ScalarImp> Traits;
   typedef typename Traits::BackendType BackendType;
   typedef typename Traits::ScalarType ScalarType;
+  typedef typename Traits::RealType RealType;
 
 private:
   typedef typename BackendType::Index EIGEN_size_t;
@@ -85,19 +89,19 @@ public:
   /**
    * \brief This is the constructor of interest which creates a sparse matrix.
    */
-  EigenRowMajorSparseMatrix(const size_t rr, const size_t cc, const SparsityPatternDefault& pattern)
+  EigenRowMajorSparseMatrix(const size_t rr, const size_t cc, const SparsityPatternDefault& pattern_in)
   {
     backend_ = std::make_shared<BackendType>(internal::boost_numeric_cast<EIGEN_size_t>(rr),
                                              internal::boost_numeric_cast<EIGEN_size_t>(cc));
     if (rr > 0 && cc > 0) {
-      if (size_t(pattern.size()) != rr)
+      if (size_t(pattern_in.size()) != rr)
         DUNE_THROW(Exceptions::shapes_do_not_match,
-                   "The size of the pattern (" << pattern.size() << ") does not match the number of rows of this ("
+                   "The size of the pattern (" << pattern_in.size() << ") does not match the number of rows of this ("
                                                << rr
                                                << ")!");
-      for (size_t row = 0; row < size_t(pattern.size()); ++row) {
+      for (size_t row = 0; row < size_t(pattern_in.size()); ++row) {
         backend_->startVec(internal::boost_numeric_cast<EIGEN_size_t>(row));
-        const auto& columns = pattern.inner(row);
+        const auto& columns = pattern_in.inner(row);
         for (auto& column : columns) {
 #ifndef NDEBUG
           if (column >= cc)
@@ -139,19 +143,21 @@ public:
   EigenRowMajorSparseMatrix(const ThisType& other) : backend_(other.backend_) {}
 
   explicit EigenRowMajorSparseMatrix(const BackendType& mat, const bool prune = false,
-                                     const ScalarType eps = Common::FloatCmp::DefaultEpsilon<ScalarType>::value())
+                                     const typename Common::FloatCmp::DefaultEpsilon<ScalarType>::Type eps =
+                                         Common::FloatCmp::DefaultEpsilon<ScalarType>::value())
   {
     if (prune) {
       // we do this here instead of using pattern(true), since we can build the triplets along the way which is more
       // efficient
       typedef ::Eigen::Triplet<ScalarType> TripletType;
+      const ScalarType zero(0);
       std::vector<TripletType> triplets;
       triplets.reserve(mat.nonZeros());
       for (EIGEN_size_t row = 0; row < mat.outerSize(); ++row) {
         for (typename BackendType::InnerIterator row_it(mat, row); row_it; ++row_it) {
-          const size_t col = row_it.col();
+          const EIGEN_size_t col = row_it.col();
           const auto val = mat.coeff(row, col);
-          if (Stuff::Common::FloatCmp::ne<Stuff::Common::FloatCmp::Style::absolute>(val, ScalarType(0), eps))
+          if (Stuff::Common::FloatCmp::ne<Stuff::Common::FloatCmp::Style::absolute>(val, zero, eps))
             triplets.emplace_back(row, col, val);
         }
       }
@@ -331,24 +337,31 @@ public:
 
   bool valid() const
   {
-    // serialize matrix (no copy done here)
-    auto& non_const_ref = const_cast<BackendType&>(*backend_);
-    return EigenMappedDenseVector<ScalarType>(non_const_ref.valuePtr(), non_const_ref.nonZeros()).valid();
+    // iterate over non-zero entries
+    typedef typename BackendType::InnerIterator InnerIterator;
+    for (EIGEN_size_t ii = 0; ii < backend_->outerSize(); ++ii) {
+      for (InnerIterator it(*backend_, ii); it; ++it) {
+        if (DSC::isnan(std::real(it.value())) || DSC::isnan(std::imag(it.value())) || DSC::isinf(std::abs(it.value())))
+          return false;
+      }
+    }
+    return true;
   }
 
   virtual size_t non_zeros() const override final { return backend_->nonZeros(); }
 
   virtual SparsityPatternDefault
       pattern(const bool prune = false,
-              const ScalarType eps = Common::FloatCmp::DefaultEpsilon<ScalarType>::value()) const override final
+              const ScalarType eps = Common::FloatCmp::DefaultEpsilon<ScalarType>::value()) const override
   {
     SparsityPatternDefault ret(rows());
+    const auto zero = typename Common::FloatCmp::DefaultEpsilon<ScalarType>::Type(0);
     if (prune) {
       for (EIGEN_size_t row = 0; row < backend_->outerSize(); ++row) {
         for (typename BackendType::InnerIterator row_it(*backend_, row); row_it; ++row_it) {
-          const size_t col = row_it.col();
+          const EIGEN_size_t col = row_it.col();
           const auto val = backend_->coeff(row, col);
-          if (Common::FloatCmp::ne(val, ScalarType(0), eps))
+          if (Common::FloatCmp::ne(val, zero, eps))
             ret.insert(boost::numeric_cast<size_t>(row), boost::numeric_cast<size_t>(col));
         }
       }

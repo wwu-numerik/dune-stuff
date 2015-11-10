@@ -17,8 +17,7 @@ struct CubeGridProvider
 {};
 
 
-typedef testing::Types< SGRIDS
-                      , YASPGRIDS
+typedef testing::Types< YASPGRIDS
 # if HAVE_ALUGRID
                       , ALUGRIDS
 # endif

@@ -13,6 +13,8 @@
 #include <iostream>
 #include <type_traits>
 
+#include <dune/common/ftraits.hh>
+
 #include <dune/stuff/common/crtp.hh>
 #include <dune/stuff/common/exceptions.hh>
 #include <dune/stuff/common/float_cmp.hh>
@@ -43,7 +45,9 @@ class MatrixInterface : public ContainerInterface<Traits, ScalarImp>, public Tag
 {
 public:
   typedef typename Traits::derived_type derived_type;
-  typedef ScalarImp ScalarType;
+  typedef typename Dune::FieldTraits<ScalarImp>::field_type ScalarType;
+  typedef typename Dune::FieldTraits<ScalarImp>::real_type RealType;
+  static_assert(std::is_same<ScalarType, typename Traits::ScalarType>::value, "");
 
   virtual ~MatrixInterface() {}
 
@@ -115,9 +119,9 @@ public:
     return yy;
   }
 
-  virtual ScalarType sup_norm() const
+  virtual RealType sup_norm() const
   {
-    ScalarType ret = 0;
+    RealType ret = 0;
     for (size_t ii = 0; ii < rows(); ++ii)
       for (size_t jj = 0; jj < cols(); ++jj)
         ret = std::max(ret, std::abs(get_entry(ii, jj)));
@@ -142,15 +146,16 @@ public:
    * \param prune If true, treats all entries smaller than eps as zero and does not include these indices in the
    * returned pattern
    */
-  virtual SparsityPatternDefault
-      pattern(const bool prune = false,
-              const ScalarType eps = Common::FloatCmp::DefaultEpsilon<ScalarType>::value()) const
+  virtual SparsityPatternDefault pattern(const bool prune = false,
+                                         const typename Common::FloatCmp::DefaultEpsilon<ScalarType>::Type
+                                             eps = Common::FloatCmp::DefaultEpsilon<ScalarType>::value()) const
   {
     SparsityPatternDefault ret(rows());
+    const ScalarType zero(0);
     if (prune) {
       for (size_t ii = 0; ii < rows(); ++ii)
         for (size_t jj = 0; jj < cols(); ++jj)
-          if (Common::FloatCmp::ne<Common::FloatCmp::Style::absolute>(get_entry(ii, jj), ScalarType(0), eps))
+          if (Common::FloatCmp::ne<Common::FloatCmp::Style::absolute>(get_entry(ii, jj), zero, eps))
             ret.insert(ii, jj);
     } else {
       for (size_t ii = 0; ii < rows(); ++ii)
@@ -170,9 +175,10 @@ public:
    * \sa    pattern
    * \param eps Is forwarded to pattern(true, eps)
    */
-  virtual derived_type pruned(const ScalarType eps = Common::FloatCmp::DefaultEpsilon<ScalarType>::value()) const
+  virtual derived_type pruned(const typename Common::FloatCmp::DefaultEpsilon<ScalarType>::Type
+                                  eps = Common::FloatCmp::DefaultEpsilon<ScalarType>::value()) const
   {
-    auto pruned_pattern = pattern(true, eps);
+    const auto pruned_pattern = pattern(true, eps);
     derived_type ret(rows(), cols(), pruned_pattern);
     for (size_t ii = 0; ii < pruned_pattern.size(); ++ii)
       for (const size_t& jj : pruned_pattern.inner(ii))

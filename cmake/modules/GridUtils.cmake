@@ -4,7 +4,7 @@
 # License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
 SET(GRIDTYPE
-    "SGRID"
+    "YASPGRID"
     CACHE STRING "GRIDTYPE")
 
 SET(GRIDDIM
@@ -18,3 +18,9 @@ add_definitions("-D${GRIDTYPE}")
 if(ALUGRID_FOUND)
   add_definitions("-DENABLE_ALUGRID=1")
 endif(ALUGRID_FOUND)
+if(ALBERTA_FOUND)
+  add_definitions("-DENABLE_ALBERTA=1")
+endif(ALBERTA_FOUND)
+if(UG_FOUND)
+  add_definitions("-DENABLE_UG=1")
+endif(UG_FOUND)

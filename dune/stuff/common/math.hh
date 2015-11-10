@@ -14,6 +14,7 @@
 #include <cstring>
 #include <iostream>
 #include <type_traits>
+#include <complex>
 
 #include <dune/stuff/common/disable_warnings.hh>
 #include <boost/static_assert.hpp>
@@ -28,6 +29,7 @@
 #include <dune/stuff/common/reenable_warnings.hh>
 
 #include <dune/stuff/common/type_utils.hh>
+#include <dune/common/deprecated.hh>
 
 namespace Dune {
 namespace Stuff {
@@ -104,6 +106,8 @@ typename absretval<T>::type abs(const T& val)
 template <class ElementType>
 class MinMaxAvg
 {
+  static_assert(!is_complex<ElementType>::value, "complex accumulation not supported");
+
 protected:
   typedef MinMaxAvg<ElementType> ThisType;
 
@@ -149,8 +153,16 @@ T clamp(const T var, const T min, const T max)
   return (var < min) ? min : (var > max) ? max : var;
 }
 
-//! no-branch sign function
-inline long sign(long x) { return long(x != 0) | (long(x >= 0) - 1); }
+/**
+ * \returns: -1 iff val < 0
+ *            0 iff val == 0
+ *            1 iff val > 0
+ */
+template <typename T>
+int signum(T val)
+{
+  return (T(0) < val) - (val < T(0));
+}
 
 /** enable us to use DSC::numeric_limits for all types, even when no specialization is avaliable.
  * If there is one, it's used. Otherwise we default to numerical_limtis of double
@@ -166,8 +178,38 @@ class numeric_limits<T, typename std::enable_if<std::numeric_limits<T>::is_speci
 {
 };
 
+//! forward to std::isnan for general types, overload for complex below
+template <class T>
+bool isnan(T val)
+{
+  return std::isnan(val);
+}
+
+//! override isnan for complex here so it doesn't bleed into the std namespace
+template <class T>
+bool isnan(std::complex<T> val)
+{
+  return isnan(std::real(val)) || isnan(std::imag(val));
+}
+
+//! forward to std::isinf for general types, overload for complex below
+template <class T>
+bool isinf(T val)
+{
+  return std::isinf(val);
+}
+
+//! override isinf for complex here so it doesn't bleed into the std namespace
+template <class T>
+bool isinf(std::complex<T> val)
+{
+  return isinf(std::real(val)) || isinf(std::imag(val));
+}
+
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
 
+namespace std {
+}
 #endif // DUNE_STUFF_COMMON_MATH_HH

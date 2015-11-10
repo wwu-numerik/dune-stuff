@@ -82,7 +82,8 @@ public:
     }
   }
 
-  virtual size_t order() const { return 0u; }
+  virtual size_t order() const override { return 0u; }
+
 private:
   void readPermeability()
   {

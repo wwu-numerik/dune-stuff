@@ -27,7 +27,8 @@ enum class ChooseBackend
   common_dense,
   istl_sparse,
   eigen_dense,
-  eigen_sparse
+  eigen_sparse,
+  none
 }; // enum class ChooseBackend
 
 static constexpr ChooseBackend default_backend =
@@ -45,8 +46,7 @@ static constexpr ChooseBackend default_sparse_backend =
 #elif HAVE_DUNE_ISTL
     ChooseBackend::istl_sparse;
 #else
-    ChooseBackend::common_dense;
-#error "There is no sparse LA backend available!"
+    ChooseBackend::none;
 #endif
 
 static constexpr ChooseBackend default_dense_backend =
@@ -134,6 +134,7 @@ class ContainerInterface : public Tags::ContainerInterface,
 
 public:
   typedef ScalarImp ScalarType;
+  typedef typename Traits::RealType RealType;
 
   using typename CRTP::derived_type;
 
@@ -188,7 +189,7 @@ public:
   virtual derived_type& operator*=(const ScalarType& alpha)
   {
     scal(alpha);
-    return this->as_imp(*this);
+    return this->as_imp();
   }
   /// \}
 }; // class ContainerInterface

@@ -65,6 +65,16 @@ template <class F, bool candidate = internal::is_localizable_function_helper<F>:
 struct is_localizable_function;
 
 namespace Functions {
+namespace internal {
+
+// additional argument for member functions to differentiate between dimRangeCols = 1 and dimRangeCols > 1 by
+// overloading
+template <size_t rangeDimCols>
+struct ChooseVariant
+{
+};
+
+} // namespace internal
 
 #if HAVE_DUNE_GRID
 
@@ -118,7 +128,7 @@ class LocalfunctionSetInterface
   template <size_t dimDomain, class RangeFieldType, size_t dimRange, size_t dimRangeCols>
   struct JacobianRangeTypeSelector
   {
-    typedef double type;
+    typedef Dune::FieldVector<Dune::FieldMatrix<RangeFieldType, dimRange, dimDomain>, dimRangeCols> type;
   };
 
   template <size_t dimDomain, class RangeFieldType, size_t dimRange>
@@ -235,15 +245,15 @@ public:
    * \defgroup providedbase ´´These methods are provided by the interface to please LocalfunctionSetInterface.''
    * @{
    **/
-  virtual size_t size() const final { return 1; }
+  virtual size_t size() const override final { return 1; }
 
-  virtual void evaluate(const DomainType& xx, std::vector<RangeType>& ret) const final
+  virtual void evaluate(const DomainType& xx, std::vector<RangeType>& ret) const override final
   {
     assert(ret.size() >= 1);
     evaluate(xx, ret[0]);
   }
 
-  virtual void jacobian(const DomainType& xx, std::vector<JacobianRangeType>& ret) const final
+  virtual void jacobian(const DomainType& xx, std::vector<JacobianRangeType>& ret) const override final
   {
     assert(ret.size() >= 1);
     jacobian(xx, ret[0]);
@@ -540,6 +550,10 @@ public:
 #else
   typedef typename BaseType::JacobianRangeType JacobianRangeType;
 #endif
+
+  static_assert(std::is_same<typename LocalfunctionType::RangeType, RangeType>::value, "RangeType mismatch");
+  static_assert(std::is_same<typename LocalfunctionType::DomainType, DomainType>::value, "DomainType mismatch");
+  static_assert(std::is_same<Dune::FieldVector<DomainFieldImp, domainDim>, DomainType>::value, "DomainType mismatch");
 
   virtual ~GlobalFunctionInterface() {}
 

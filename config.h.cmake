@@ -17,16 +17,24 @@
 #define DUNE_STUFF_VERSION_REVISION ${DUNE_STUFF_VERSION_REVISION}
 
 /* Define to 1 if eigen was found, else 0 */
+#ifndef HAVE_EIGEN
 #define HAVE_EIGEN ${HAVE_EIGEN}
+#endif
 
 /* Define to 1 if threading building blocks were found, else 0 */
+#ifndef HAVE_TBB
 #define HAVE_TBB ${HAVE_TBB}
+#endif
+
+#cmakedefine HAS_WORKING_UNUSED_ATTRIBUTE  1
 
 #define HAVE_LIKWID ${HAVE_LIKWID}
 #define ENABLE_PERFMON ${ENABLE_PERFMON}
 #if ENABLE_PERFMON && HAVE_LIKWID
 # define LIKWID_PERFMON 1
 #endif
+
+#cmakedefine HAVE_MAP_EMPLACE 1
 
 #define DS_OVERRIDE ; static_assert(false, "Use override instead (21.10.2014)!");
 #define DS_FINAL    ; static_assert(false, "Use final instead (21.10.2014)!");
@@ -132,6 +140,14 @@
 
 #ifndef ENABLE_ALUGRID
 # define ENABLE_ALUGRID 0
+#endif
+
+#ifndef DUNE_GRID_EXPERIMENTAL_GRID_EXTENSIONS
+# define DUNE_GRID_EXPERIMENTAL_GRID_EXTENSIONS 0
+#endif
+
+#ifndef HAVE_MAP_EMPLACE
+#define HAVE_MAP_EMPLACE 0
 #endif
 
 /*** End: Silence implicitly False evaluation of undefined macro warnings ****/

@@ -4,10 +4,9 @@
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
 #include "config.h"
+#include "threadmanager.hh"
 
 #include <boost/numeric/conversion/cast.hpp>
-
-#include "threadmanager.hh"
 
 #include <dune/stuff/common/configuration.hh>
 #include <dune/common/exceptions.hh>
@@ -21,6 +20,13 @@
 #include <Eigen/Core>
 #endif
 
+// some assertions only make sense if dune-fem's threading manager is non-trivial
+#if defined(USE_PTHREADS) || defined(_OPENMP)
+#define WITH_DUNE_FEM_AND_THREADING(expr) WITH_DUNE_FEM(expr)
+#else
+#define WITH_DUNE_FEM_AND_THREADING(expr)
+#endif
+
 #if HAVE_TBB
 
 #include <thread>
@@ -28,14 +34,14 @@
 size_t Dune::Stuff::ThreadManager::max_threads()
 {
   const auto threads = DSC_CONFIG_GET("threading.max_count", 1);
-  WITH_DUNE_FEM(assert(Dune::Fem::ThreadManager::maxThreads() == threads);)
+  WITH_DUNE_FEM_AND_THREADING(assert(Dune::Fem::ThreadManager::maxThreads() == threads);)
   return threads;
 }
 
 size_t Dune::Stuff::ThreadManager::current_threads()
 {
   const auto threads = max_threads();
-  WITH_DUNE_FEM(assert(long(Dune::Fem::ThreadManager::currentThreads()) == long(threads));)
+  WITH_DUNE_FEM_AND_THREADING(assert(long(Dune::Fem::ThreadManager::currentThreads()) == long(threads));)
   return threads;
 }
 
@@ -45,12 +51,13 @@ size_t Dune::Stuff::ThreadManager::thread()
   static std::map<decltype(tbb_id), size_t> thread_ids;
   const auto it = thread_ids.find(tbb_id);
   if (it == thread_ids.end())
-    thread_ids.emplace(tbb_id, thread_ids.size());
+    DSC::map_emplace(thread_ids, tbb_id, thread_ids.size());
   return thread_ids.at(tbb_id);
 }
 
 void Dune::Stuff::ThreadManager::set_max_threads(const size_t count)
 {
+  DSC_CONFIG.set("threading.max_count", count, true);
   max_threads_ = count;
   WITH_DUNE_FEM(Dune::Fem::ThreadManager::setMaxNumberThreads(boost::numeric_cast<int>(count));)
 #if HAVE_EIGEN
@@ -77,7 +84,7 @@ size_t Dune::Stuff::ThreadManager::max_threads() { return 1; }
 
 size_t Dune::Stuff::ThreadManager::current_threads() { return 1; }
 
-size_t Dune::Stuff::ThreadManager::thread() { return 1; }
+size_t Dune::Stuff::ThreadManager::thread() { return 0; }
 
 void Dune::Stuff::ThreadManager::set_max_threads(const size_t count)
 {

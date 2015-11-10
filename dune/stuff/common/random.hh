@@ -8,6 +8,7 @@
 
 #include <random>
 #include <limits>
+#include <complex>
 
 #include <boost/assign/list_of.hpp>
 #include <boost/numeric/conversion/cast.hpp>
@@ -51,6 +52,18 @@ struct RNG
   inline T operator()() { return distribution(generator); }
 };
 
+template <class T, class DistributionImp, class EngineImp>
+struct RNG<std::complex<T>, DistributionImp, EngineImp>
+{
+  typedef DistributionImp DistributionType;
+  typedef EngineImp EngineType;
+  EngineType generator;
+  DistributionType distribution;
+  RNG(EngineType g, DistributionType d) : generator(g), distribution(d) {}
+
+  inline std::complex<T> operator()() { return std::complex<T>(distribution(generator), distribution(generator)); }
+};
+
 namespace {
 const std::string alphanums("abcdefghijklmnopqrstuvwxyz"
                             "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -88,9 +101,23 @@ class DefaultRNG : public RNG<T, typename UniformDistributionSelector<T>::type, 
   typedef RNG<T, typename UniformDistributionSelector<T>::type, std::default_random_engine> BaseType;
 
 public:
-  DefaultRNG(T min = std::numeric_limits<T>::min(), T max = std::numeric_limits<T>::max())
-    : BaseType(std::default_random_engine(std::random_device()()),
-               typename UniformDistributionSelector<T>::type(min, max))
+  DefaultRNG(T min = std::numeric_limits<T>::min(), T max = std::numeric_limits<T>::max(),
+             T seed = std::random_device()())
+    : BaseType(std::default_random_engine(seed), typename UniformDistributionSelector<T>::type(min, max))
+  {
+  }
+};
+
+template <class T>
+class DefaultRNG<std::complex<T>>
+    : public RNG<std::complex<T>, typename UniformDistributionSelector<T>::type, std::default_random_engine>
+{
+  typedef RNG<std::complex<T>, typename UniformDistributionSelector<T>::type, std::default_random_engine> BaseType;
+
+public:
+  DefaultRNG(T min = std::numeric_limits<T>::min(), T max = std::numeric_limits<T>::max(),
+             T seed = std::random_device()())
+    : BaseType(std::default_random_engine(seed), typename UniformDistributionSelector<T>::type(min, max))
   {
   }
 };

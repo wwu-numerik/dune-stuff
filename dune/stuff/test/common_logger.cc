@@ -11,7 +11,8 @@
 
 namespace DSC = Dune::Stuff::Common;
 
-void balh(std::ostream& out) {
+void balh(std::ostream& out)
+{
   static int c = 0;
   out << "balh " << c << "\n";
   c++;
@@ -20,20 +21,21 @@ void balh(std::ostream& out) {
 void do_something_that_takes_long(std::ostream& out)
 {
   out << "  there should appear five dots, but not too fast:" << std::flush;
-  for (size_t i = 0; i < 5; ++i){
+  for (size_t i = 0; i < 5; ++i) {
     busywait(666);
     out << "." << std::flush;
   }
   out << std::endl;
 } // void do_something_that_takes_long()
 
-TEST(LoggerTest, all) {
+TEST(LoggerTest, all)
+{
   DSC::Logger().create(DSC::LOG_CONSOLE | DSC::LOG_ERROR);
   DSC::Logger().error() << "This should be in output\n";
   DSC::Logger().info() << "This should NOT be in output\n";
   DSC::Logger().debug() << "dito\n";
   DSC::Logger().flush();
-  for (int i: {DSC::LOG_INFO, DSC::LOG_DEBUG, DSC::LOG_ERROR}) {
+  for (int i : {DSC::LOG_INFO, DSC::LOG_DEBUG, DSC::LOG_ERROR}) {
     const int id = DSC::Logger().addStream(DSC::LOG_CONSOLE | i);
     DSC::Logger().getStream(id) << "Create a new stream with id: " << id << std::endl;
   }
@@ -44,7 +46,7 @@ TEST(LoggerTest, all) {
   DSC_LOG_ERROR << "in output\n";
   balh(DSC_LOG_ERROR);
 
-  //this should do nothing whatsoever
+  // this should do nothing whatsoever
   balh(DSC::dev_null);
   DSC::Logger().flush();
 
@@ -58,7 +60,8 @@ TEST(LoggerTest, all) {
   std::cout << "end   Logger().error() test" << std::endl;
 }
 
-TEST(LoggerTest, file) {
+TEST(LoggerTest, file)
+{
   DSC::Logger().create(DSC::LOG_INFO | DSC::LOG_CONSOLE | DSC::LOG_FILE, "test_common_logger", "", "");
   DSC::Logger().info() << "This output should be in 'test_common_logger.log'" << std::endl;
 }

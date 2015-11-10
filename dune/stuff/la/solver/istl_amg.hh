@@ -27,11 +27,38 @@ namespace LA {
 
 #if HAVE_DUNE_ISTL
 
+template <class O, int c>
+class IdentityPreconditioner : public Dune::Preconditioner<typename O::domain_type, typename O::range_type>
+{
+public:
+  //! \brief The domain type of the preconditioner.
+  typedef typename O::domain_type domain_type;
+  //! \brief The range type of the preconditioner.
+  typedef typename O::range_type range_type;
+  //! \brief The field type of the preconditioner.
+  typedef typename range_type::field_type field_type;
+  typedef O InverseOperator;
+
+  // define the category
+  enum
+  {
+    //! \brief The category the preconditioner is part of.
+    category = c
+  };
+
+  void pre(domain_type&, range_type&) {}
+
+  void apply(domain_type& v, const range_type& d) { v = d; }
+
+  void post(domain_type&) {}
+};
+
 //! the general, parallel case
 template <class S, class CommunicatorType>
 class AmgApplicator
 {
   typedef IstlRowMajorSparseMatrix<S> MatrixType;
+  typedef typename MatrixType::RealType R;
   typedef typename MatrixType::BackendType IstlMatrixType;
   typedef typename IstlDenseVector<S>::BackendType IstlVectorType;
 
@@ -61,7 +88,7 @@ public:
         opts.get("smoother.relaxation_factor", default_opts.get<S>("smoother.relaxation_factor"));
     // SSOR as the smoother for the amg
     typedef SeqSSOR<IstlMatrixType, IstlVectorType, IstlVectorType, 1> SequentialSmootherType_SSOR;
-    typedef BlockPreconditioner<IstlVectorType, IstlVectorType, CommunicatorType, SequentialSmootherType_ILU>
+    typedef BlockPreconditioner<IstlVectorType, IstlVectorType, CommunicatorType, SequentialSmootherType_SSOR>
         SmootherType_SSOR;
     typename Amg::SmootherTraits<SmootherType_SSOR>::Arguments smoother_parameters_SSOR;
     smoother_parameters_SSOR.iterations =
@@ -73,8 +100,8 @@ public:
     Amg::Parameters amg_parameters(
         opts.get("preconditioner.max_level", default_opts.get<size_t>("preconditioner.max_level")),
         opts.get("preconditioner.coarse_target", default_opts.get<size_t>("preconditioner.coarse_target")),
-        opts.get("preconditioner.min_coarse_rate", default_opts.get<S>("preconditioner.min_coarse_rate")),
-        opts.get("preconditioner.prolong_damp", default_opts.get<S>("preconditioner.prolong_damp")));
+        opts.get("preconditioner.min_coarse_rate", default_opts.get<R>("preconditioner.min_coarse_rate")),
+        opts.get("preconditioner.prolong_damp", default_opts.get<R>("preconditioner.prolong_damp")));
     amg_parameters.setDefaultValuesIsotropic(
         opts.get("preconditioner.isotropy_dim", default_opts.get<size_t>("preconditioner.isotropy_dim")));
     amg_parameters.setDefaultValuesAnisotropic(
@@ -136,6 +163,7 @@ template <class S>
 class AmgApplicator<S, SequentialCommunication>
 {
   typedef IstlRowMajorSparseMatrix<S> MatrixType;
+  typedef typename MatrixType::RealType R;
   typedef typename MatrixType::BackendType IstlMatrixType;
   typedef typename IstlDenseVector<S>::BackendType IstlVectorType;
 
@@ -155,8 +183,8 @@ public:
     Amg::Parameters amg_parameters(
         opts.get("preconditioner.max_level", default_opts.get<int>("preconditioner.max_level")),
         opts.get("preconditioner.coarse_target", default_opts.get<int>("preconditioner.coarse_target")),
-        opts.get("preconditioner.min_coarse_rate", default_opts.get<S>("preconditioner.min_coarse_rate")),
-        opts.get("preconditioner.prolong_damp", default_opts.get<S>("preconditioner.prolong_damp")));
+        opts.get("preconditioner.min_coarse_rate", default_opts.get<R>("preconditioner.min_coarse_rate")),
+        opts.get("preconditioner.prolong_damp", default_opts.get<R>("preconditioner.prolong_damp")));
     amg_parameters.setDefaultValuesIsotropic(
         opts.get("preconditioner.isotropy_dim", default_opts.get<size_t>("preconditioner.isotropy_dim")));
     amg_parameters.setDefaultValuesAnisotropic(
