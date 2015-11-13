@@ -255,7 +255,7 @@ public:
 
   AllNeumann() {}
 
-  virtual ~AllNeumann() = default;
+  virtual ~AllNeumann() throw() {};
 
   virtual bool has_dirichlet() const override final { return false; }
 
@@ -568,7 +568,7 @@ public:
   {
   }
 
-  virtual ~FunctionBased() = default;
+  virtual ~FunctionBased() throw() {}
 
   virtual bool dirichlet(const IntersectionType& intersection) const override final
   {
