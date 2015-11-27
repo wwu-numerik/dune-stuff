@@ -134,7 +134,7 @@ private:
     std::string ret = "";
     const auto vals = available();
     if (vals.size() > 0) {
-      ret += vals[0];
+      ret += "   " + vals[0];
       for (size_t ii = 1; ii < vals.size(); ++ii)
         ret += "\n   " + vals[ii];
     }
