@@ -25,19 +25,19 @@ namespace Functions {
 
 
 template< class E, class D, size_t d, class R, size_t r, size_t rC = 1 >
-class Indicator
+class DomainIndicator
   : public LocalizableFunctionInterface< E, D, d, R, r, rC >
 {
-  Indicator() { static_assert(AlwaysFalse< E >::value, "Not available for these dimensions!"); }
+  DomainIndicator() { static_assert(AlwaysFalse< E >::value, "Not available for these dimensions!"); }
 };
 
 
 template< class E, class D, size_t d, class R >
-class Indicator< E, D, d, R, 1 >
+class DomainIndicator< E, D, d, R, 1 >
   : public LocalizableFunctionInterface< E, D, d, R, 1 >
 {
   typedef LocalizableFunctionInterface< E, D, d, R, 1 > BaseType;
-  typedef Indicator< E, D, d, R, 1 >                    ThisType;
+  typedef DomainIndicator< E, D, d, R, 1 >                    ThisType;
 
   class Localfunction
     : public LocalfunctionInterface< E, D, d, R, 1 >
@@ -87,7 +87,7 @@ public:
 
   static std::string static_id()
   {
-    return BaseType::static_id() + ".indicator";
+    return BaseType::static_id() + ".domainindicator";
   }
 
   static Common::Configuration default_config(const std::string sub_name = "")
@@ -138,19 +138,19 @@ public:
     return Common::make_unique< ThisType >(values, cfg.get("name", def_cfg.get< std::string >("name")));
   } // ... create(...)
 
-  Indicator(const std::vector< std::tuple< DomainType, DomainType, R > >& values,
-            const std::string name_in = "indicator")
+  DomainIndicator(const std::vector< std::tuple< DomainType, DomainType, R > >& values,
+                  const std::string name_in = default_config().get< std::string >("name"))
     : values_(values)
     , name_(name_in)
   {}
 
-  Indicator(const std::vector< std::pair< std::pair< Common::FieldVector< D, d >, Common::FieldVector< D, d > >, R > >& values,
-            const std::string name_in = "indicator")
+  DomainIndicator(const std::vector< std::pair< std::pair< Common::FieldVector< D, d >, Common::FieldVector< D, d > >, R > >& values,
+                  const std::string name_in = default_config().get< std::string >("name"))
     : values_(convert(values))
     , name_(name_in)
   {}
 
-  virtual ~Indicator() {}
+  virtual ~DomainIndicator() {}
 
   virtual std::string name() const override final
   {
@@ -177,7 +177,7 @@ private:
 
   const std::vector< std::tuple< DomainType, DomainType, R > > values_;
   const std::string name_;
-}; // class Indicator
+}; // class DomainIndicator
 
 
 } // namespace Functions
