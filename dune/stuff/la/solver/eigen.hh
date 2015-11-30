@@ -44,18 +44,24 @@ namespace LA {
 
 #if HAVE_EIGEN
 
-template <class S, class CommunicatorType>
-class Solver<EigenDenseMatrix<S>, CommunicatorType> : protected SolverUtils
+template < class S, class CommunicatorType >
+class Solver< EigenDenseMatrix< S >, CommunicatorType > : protected SolverUtils
 {
 public:
-  typedef EigenDenseMatrix<S> MatrixType;
+  typedef EigenDenseMatrix< S > MatrixType;
   typedef typename MatrixType::RealType R;
 
-  Solver(const MatrixType& matrix) : matrix_(matrix) {}
+  Solver(const MatrixType& matrix)
+    : matrix_(matrix)
+  {
+  }
 
-  Solver(const MatrixType& matrix, const CommunicatorType& /*communicator*/) : matrix_(matrix) {}
+  Solver(const MatrixType& matrix, const CommunicatorType& /*communicator*/)
+    : matrix_(matrix)
+  {
+  }
 
-  static std::vector<std::string> types()
+  static std::vector< std::string > types()
   {
     return {"lu.partialpiv",
             "qr.householder",
@@ -78,30 +84,30 @@ public:
     return default_options;
   } // ... options(...)
 
-  template <class T1, class T2>
-  void apply(const EigenBaseVector<T1, S>& rhs, EigenBaseVector<T2, S>& solution) const
+  template < class T1, class T2 >
+  void apply(const EigenBaseVector< T1, S >& rhs, EigenBaseVector< T2, S >& solution) const
   {
     apply(rhs, solution, types()[0]);
   }
 
-  template <class T1, class T2>
-  void apply(const EigenBaseVector<T1, S>& rhs, EigenBaseVector<T2, S>& solution, const std::string& type) const
+  template < class T1, class T2 >
+  void apply(const EigenBaseVector< T1, S >& rhs, EigenBaseVector< T2, S >& solution, const std::string& type) const
   {
     apply(rhs, solution, options(type));
   }
 
-  template <class T1, class T2>
-  void apply(const EigenBaseVector<T1, S>& rhs, EigenBaseVector<T2, S>& solution,
+  template < class T1, class T2 >
+  void apply(const EigenBaseVector< T1, S >& rhs, EigenBaseVector< T2, S >& solution,
              const Common::Configuration& opts) const
   {
     if (!opts.has_key("type"))
       DUNE_THROW(Exceptions::configuration_error,
                  "Given options (see below) need to have at least the key 'type' set!\n\n" << opts);
-    const auto type = opts.get<std::string>("type");
+    const auto type = opts.get< std::string >("type");
     SolverUtils::check_given(type, types());
     const Common::Configuration default_opts = options(type);
     // check for inf or nan
-    const bool check_for_inf_nan = opts.get("check_for_inf_nan", default_opts.get<bool>("check_for_inf_nan"));
+    const bool check_for_inf_nan = opts.get("check_for_inf_nan", default_opts.get< bool >("check_for_inf_nan"));
     if (check_for_inf_nan) {
       for (size_t ii = 0; ii < matrix_.rows(); ++ii) {
         for (size_t jj = 0; jj < matrix_.cols(); ++jj) {
@@ -132,7 +138,8 @@ public:
     }
     // check for symmetry (if solver needs it)
     if (type == "ldlt" || type == "llt") {
-      const R pre_check_symmetry_threshhold = opts.get("pre_check_symmetry", default_opts.get<R>("pre_check_symmetry"));
+      const R pre_check_symmetry_threshhold =
+          opts.get("pre_check_symmetry", default_opts.get< R >("pre_check_symmetry"));
       if (pre_check_symmetry_threshhold > 0) {
         const MatrixType tmp(matrix_.backend() - matrix_.backend().adjoint());
         // serialize difference to compute L^\infty error (no copy done here)
@@ -184,7 +191,7 @@ public:
         }
       }
     const R post_check_solves_system_threshold =
-        opts.get("post_check_solves_system", default_opts.get<R>("post_check_solves_system"));
+        opts.get("post_check_solves_system", default_opts.get< R >("post_check_solves_system"));
     if (post_check_solves_system_threshold > 0) {
       auto tmp = rhs.copy();
       tmp.backend() = matrix_.backend() * solution.backend() - rhs.backend();
@@ -215,24 +222,30 @@ private:
  *  \note ldlt.simplicial will copy the matrix to column major
  *  \note llt.simplicial will copy the matrix to column major
  */
-template <class S, class CommunicatorType>
-class Solver<EigenRowMajorSparseMatrix<S>, CommunicatorType> : protected SolverUtils
+template < class S, class CommunicatorType >
+class Solver< EigenRowMajorSparseMatrix< S >, CommunicatorType > : protected SolverUtils
 {
-  typedef ::Eigen::SparseMatrix<S, ::Eigen::ColMajor> ColMajorBackendType;
+  typedef ::Eigen::SparseMatrix< S, ::Eigen::ColMajor > ColMajorBackendType;
 
 public:
-  typedef EigenRowMajorSparseMatrix<S> MatrixType;
+  typedef EigenRowMajorSparseMatrix< S > MatrixType;
   typedef typename MatrixType::RealType R;
 
 private:
   typedef typename MatrixType::BackendType::Index EIGEN_size_t;
 
 public:
-  Solver(const MatrixType& matrix) : matrix_(matrix) {}
+  Solver(const MatrixType& matrix)
+    : matrix_(matrix)
+  {
+  }
 
-  Solver(const MatrixType& matrix, const CommunicatorType& /*communicator*/) : matrix_(matrix) {}
+  Solver(const MatrixType& matrix, const CommunicatorType& /*communicator*/)
+    : matrix_(matrix)
+  {
+  }
 
-  static std::vector<std::string> types()
+  static std::vector< std::string > types()
   {
     return {
         "bicgstab.ilut",
@@ -254,14 +267,14 @@ public:
         "cg.identity.lower" // <- does only work with symmetric matrices, may produce correct results
         ,
         "cg.identity.upper" // <- does only work with symmetric matrices, may produce correct results
-                            //           , "spqr"                  // <- does not compile
-                            //           , "llt.cholmodsupernodal" // <- does not compile
-                            //#if HAVE_UMFPACK
-                            //           , "lu.umfpack"            // <- untested
-                            //#endif
-                            //#if HAVE_SUPERLU
-                            //           , "superlu"               // <- untested
-                            //#endif
+        //           , "spqr"                  // <- does not compile
+        //           , "llt.cholmodsupernodal" // <- does not compile
+        //#if HAVE_UMFPACK
+        //           , "lu.umfpack"            // <- untested
+        //#endif
+        //#if HAVE_SUPERLU
+        //           , "superlu"               // <- untested
+        //#endif
     };
   } // ... types()
 
@@ -292,30 +305,30 @@ public:
     return iterative_options;
   } // ... options(...)
 
-  template <class T1, class T2>
-  void apply(const EigenBaseVector<T1, S>& rhs, EigenBaseVector<T2, S>& solution) const
+  template < class T1, class T2 >
+  void apply(const EigenBaseVector< T1, S >& rhs, EigenBaseVector< T2, S >& solution) const
   {
     apply(rhs, solution, types()[0]);
   }
 
-  template <class T1, class T2>
-  void apply(const EigenBaseVector<T1, S>& rhs, EigenBaseVector<T2, S>& solution, const std::string& type) const
+  template < class T1, class T2 >
+  void apply(const EigenBaseVector< T1, S >& rhs, EigenBaseVector< T2, S >& solution, const std::string& type) const
   {
     apply(rhs, solution, options(type));
   }
 
-  template <class T1, class T2>
-  void apply(const EigenBaseVector<T1, S>& rhs, EigenBaseVector<T2, S>& solution,
+  template < class T1, class T2 >
+  void apply(const EigenBaseVector< T1, S >& rhs, EigenBaseVector< T2, S >& solution,
              const Common::Configuration& opts) const
   {
     if (!opts.has_key("type"))
       DUNE_THROW(Exceptions::configuration_error,
                  "Given options (see below) need to have at least the key 'type' set!\n\n" << opts);
-    const auto type = opts.get<std::string>("type");
+    const auto type = opts.get< std::string >("type");
     SolverUtils::check_given(type, types());
     const Common::Configuration default_opts = options(type);
     // check for inf or nan
-    const bool check_for_inf_nan = opts.get("check_for_inf_nan", default_opts.get<bool>("check_for_inf_nan"));
+    const bool check_for_inf_nan = opts.get("check_for_inf_nan", default_opts.get< bool >("check_for_inf_nan"));
     if (check_for_inf_nan) {
       // iterates over the non-zero entries of matrix_.backend() and checks them
       typedef typename MatrixType::BackendType::InnerIterator InnerIterator;
@@ -342,7 +355,8 @@ public:
     }
     // check for symmetry (if solver needs it)
     if (type.substr(0, 3) == "cg." || type == "ldlt.simplicial" || type == "llt.simplicial") {
-      const R pre_check_symmetry_threshhold = opts.get("pre_check_symmetry", default_opts.get<R>("pre_check_symmetry"));
+      const R pre_check_symmetry_threshhold =
+          opts.get("pre_check_symmetry", default_opts.get< R >("pre_check_symmetry"));
       if (pre_check_symmetry_threshhold > 0) {
         ColMajorBackendType colmajor_copy(matrix_.backend());
         colmajor_copy -= matrix_.backend().adjoint();
@@ -363,70 +377,70 @@ public:
     }
     ::Eigen::ComputationInfo info;
     if (type == "cg.diagonal.lower") {
-      typedef ::Eigen::ConjugateGradient<typename MatrixType::BackendType,
-                                         ::Eigen::Lower,
-                                         ::Eigen::DiagonalPreconditioner<S>> SolverType;
+      typedef ::Eigen::ConjugateGradient< typename MatrixType::BackendType,
+                                          ::Eigen::Lower,
+                                          ::Eigen::DiagonalPreconditioner< S > > SolverType;
       SolverType solver(matrix_.backend());
-      solver.setMaxIterations(opts.get("max_iter", default_opts.get<int>("max_iter")));
-      solver.setTolerance(opts.get("precision", default_opts.get<R>("precision")));
+      solver.setMaxIterations(opts.get("max_iter", default_opts.get< int >("max_iter")));
+      solver.setTolerance(opts.get("precision", default_opts.get< R >("precision")));
       solution.backend() = solver.solve(rhs.backend());
       info = solver.info();
     } else if (type == "cg.diagonal.upper") {
-      typedef ::Eigen::ConjugateGradient<typename MatrixType::BackendType,
-                                         ::Eigen::Upper,
-                                         ::Eigen::DiagonalPreconditioner<S>> SolverType;
+      typedef ::Eigen::ConjugateGradient< typename MatrixType::BackendType,
+                                          ::Eigen::Upper,
+                                          ::Eigen::DiagonalPreconditioner< S > > SolverType;
       SolverType solver(matrix_.backend());
-      solver.setMaxIterations(opts.get("max_iter", default_opts.get<int>("max_iter")));
-      solver.setTolerance(opts.get("precision", default_opts.get<R>("precision")));
+      solver.setMaxIterations(opts.get("max_iter", default_opts.get< int >("max_iter")));
+      solver.setTolerance(opts.get("precision", default_opts.get< R >("precision")));
       solution.backend() = solver.solve(rhs.backend());
       info = solver.info();
     } else if (type == "cg.identity.lower") {
-      typedef ::Eigen::ConjugateGradient<typename MatrixType::BackendType,
-                                         ::Eigen::Lower,
-                                         ::Eigen::IdentityPreconditioner> SolverType;
+      typedef ::Eigen::ConjugateGradient< typename MatrixType::BackendType,
+                                          ::Eigen::Lower,
+                                          ::Eigen::IdentityPreconditioner > SolverType;
       SolverType solver(matrix_.backend());
-      solver.setMaxIterations(opts.get("max_iter", default_opts.get<int>("max_iter")));
-      solver.setTolerance(opts.get("precision", default_opts.get<R>("precision")));
+      solver.setMaxIterations(opts.get("max_iter", default_opts.get< int >("max_iter")));
+      solver.setTolerance(opts.get("precision", default_opts.get< R >("precision")));
       solution.backend() = solver.solve(rhs.backend());
       info = solver.info();
     } else if (type == "cg.identity.upper") {
-      typedef ::Eigen::ConjugateGradient<typename MatrixType::BackendType,
-                                         ::Eigen::Lower,
-                                         ::Eigen::IdentityPreconditioner> SolverType;
+      typedef ::Eigen::ConjugateGradient< typename MatrixType::BackendType,
+                                          ::Eigen::Lower,
+                                          ::Eigen::IdentityPreconditioner > SolverType;
       SolverType solver(matrix_.backend());
-      solver.setMaxIterations(opts.get("max_iter", default_opts.get<int>("max_iter")));
-      solver.setTolerance(opts.get("precision", default_opts.get<R>("precision")));
+      solver.setMaxIterations(opts.get("max_iter", default_opts.get< int >("max_iter")));
+      solver.setTolerance(opts.get("precision", default_opts.get< R >("precision")));
       solution.backend() = solver.solve(rhs.backend());
       info = solver.info();
     } else if (type == "bicgstab.ilut") {
-      typedef ::Eigen::BiCGSTAB<typename MatrixType::BackendType, ::Eigen::IncompleteLUT<S>> SolverType;
+      typedef ::Eigen::BiCGSTAB< typename MatrixType::BackendType, ::Eigen::IncompleteLUT< S > > SolverType;
       SolverType solver(matrix_.backend());
-      solver.setMaxIterations(opts.get("max_iter", default_opts.get<int>("max_iter")));
-      solver.setTolerance(opts.get("precision", default_opts.get<R>("precision")));
+      solver.setMaxIterations(opts.get("max_iter", default_opts.get< int >("max_iter")));
+      solver.setTolerance(opts.get("precision", default_opts.get< R >("precision")));
       solver.preconditioner().setDroptol(
-          opts.get("preconditioner.drop_tol", default_opts.get<R>("preconditioner.drop_tol")));
+          opts.get("preconditioner.drop_tol", default_opts.get< R >("preconditioner.drop_tol")));
       solver.preconditioner().setFillfactor(
-          opts.get("preconditioner.fill_factor", default_opts.get<int>("preconditioner.fill_factor")));
+          opts.get("preconditioner.fill_factor", default_opts.get< int >("preconditioner.fill_factor")));
       solution.backend() = solver.solve(rhs.backend());
       info = solver.info();
     } else if (type == "bicgstab.diagonal") {
-      typedef ::Eigen::BiCGSTAB<typename MatrixType::BackendType, ::Eigen::DiagonalPreconditioner<S>> SolverType;
+      typedef ::Eigen::BiCGSTAB< typename MatrixType::BackendType, ::Eigen::DiagonalPreconditioner< S > > SolverType;
       SolverType solver(matrix_.backend());
-      solver.setMaxIterations(opts.get("max_iter", default_opts.get<int>("max_iter")));
-      solver.setTolerance(opts.get("precision", default_opts.get<R>("precision")));
+      solver.setMaxIterations(opts.get("max_iter", default_opts.get< int >("max_iter")));
+      solver.setTolerance(opts.get("precision", default_opts.get< R >("precision")));
       solution.backend() = solver.solve(rhs.backend());
       info = solver.info();
     } else if (type == "bicgstab.identity") {
-      typedef ::Eigen::BiCGSTAB<typename MatrixType::BackendType, ::Eigen::IdentityPreconditioner> SolverType;
+      typedef ::Eigen::BiCGSTAB< typename MatrixType::BackendType, ::Eigen::IdentityPreconditioner > SolverType;
       SolverType solver(matrix_.backend());
-      solver.setMaxIterations(opts.get("max_iter", default_opts.get<int>("max_iter")));
-      solver.setTolerance(opts.get("precision", default_opts.get<R>("precision")));
+      solver.setMaxIterations(opts.get("max_iter", default_opts.get< int >("max_iter")));
+      solver.setTolerance(opts.get("precision", default_opts.get< R >("precision")));
       solution.backend() = solver.solve(rhs.backend());
       info = solver.info();
     } else if (type == "lu.sparse") {
       ColMajorBackendType colmajor_copy(matrix_.backend());
       colmajor_copy.makeCompressed();
-      typedef ::Eigen::SparseLU<ColMajorBackendType> SolverType;
+      typedef ::Eigen::SparseLU< ColMajorBackendType > SolverType;
       SolverType solver;
       solver.analyzePattern(colmajor_copy);
       solver.factorize(colmajor_copy);
@@ -435,7 +449,7 @@ public:
     } else if (type == "qr.sparse") {
       ColMajorBackendType colmajor_copy(matrix_.backend());
       colmajor_copy.makeCompressed();
-      typedef ::Eigen::SparseQR<ColMajorBackendType, ::Eigen::COLAMDOrdering<int>> SolverType;
+      typedef ::Eigen::SparseQR< ColMajorBackendType, ::Eigen::COLAMDOrdering< int > > SolverType;
       SolverType solver;
       solver.analyzePattern(colmajor_copy);
       solver.factorize(colmajor_copy);
@@ -444,7 +458,7 @@ public:
     } else if (type == "ldlt.simplicial") {
       ColMajorBackendType colmajor_copy(matrix_.backend());
       colmajor_copy.makeCompressed();
-      typedef ::Eigen::SimplicialLDLT<ColMajorBackendType> SolverType;
+      typedef ::Eigen::SimplicialLDLT< ColMajorBackendType > SolverType;
       SolverType solver;
       solver.analyzePattern(colmajor_copy);
       solver.factorize(colmajor_copy);
@@ -453,7 +467,7 @@ public:
     } else if (type == "llt.simplicial") {
       ColMajorBackendType colmajor_copy(matrix_.backend());
       colmajor_copy.makeCompressed();
-      typedef ::Eigen::SimplicialLLT<ColMajorBackendType> SolverType;
+      typedef ::Eigen::SimplicialLLT< ColMajorBackendType > SolverType;
       SolverType solver;
       solver.analyzePattern(colmajor_copy);
       solver.factorize(colmajor_copy);
@@ -539,7 +553,7 @@ public:
                          << opts);
       }
     const R post_check_solves_system_threshold =
-        opts.get("post_check_solves_system", default_opts.get<R>("post_check_solves_system"));
+        opts.get("post_check_solves_system", default_opts.get< R >("post_check_solves_system"));
     if (post_check_solves_system_threshold > 0) {
       auto tmp = rhs.copy();
       tmp.backend() = matrix_.backend() * solution.backend() - rhs.backend();
@@ -564,16 +578,16 @@ private:
 
 #else // HAVE_EIGEN
 
-template <class S>
-class Solver<EigenDenseMatrix<S>>
+template < class S >
+class Solver< EigenDenseMatrix< S > >
 {
-  static_assert(Dune::AlwaysFalse<S>::value, "You are missing Eigen!");
+  static_assert(Dune::AlwaysFalse< S >::value, "You are missing Eigen!");
 };
 
-template <class S>
-class Solver<EigenRowMajorSparseMatrix<S>>
+template < class S >
+class Solver< EigenRowMajorSparseMatrix< S > >
 {
-  static_assert(Dune::AlwaysFalse<S>::value, "You are missing Eigen!");
+  static_assert(Dune::AlwaysFalse< S >::value, "You are missing Eigen!");
 };
 
 #endif // HAVE_EIGEN

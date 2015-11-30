@@ -27,9 +27,12 @@
   namespace Stuff {                                                                                                    \
   namespace Common {                                                                                                   \
   template <>                                                                                                          \
-  struct Typename<NAME>                                                                                                \
+  struct Typename< NAME >                                                                                              \
   {                                                                                                                    \
-    static const char* value() { return #NAME; }                                                                       \
+    static const char* value()                                                                                         \
+    {                                                                                                                  \
+      return #NAME;                                                                                                    \
+    }                                                                                                                  \
   };                                                                                                                   \
   }                                                                                                                    \
   }                                                                                                                    \
@@ -43,20 +46,20 @@ inline std::string demangleTypename(const std::string& mangled_name)
 {
 #ifdef __GNUC__
   return abi::__cxa_demangle(mangled_name.c_str(), nullptr, nullptr, nullptr);
-#else  // ifdef __GNUC__
+#else // ifdef __GNUC__
   return mangled_name;
 #endif // ifdef __GNUC__
 }
 
 //! demangles typeid
-template <class T>
+template < class T >
 std::string demangledTypeId(T& obj)
 {
   return demangleTypename(typeid(obj).name());
 } // demangledTypeId
 
 //! create output for demangled typeid
-template <class T>
+template < class T >
 void realTypeId(T& obj, std::string name = "", size_t maxlevel = 10000)
 {
   std::cout << name << (name == "" ? "" : "'s type is ") << highlightTemplate(demangledTypeId(obj), maxlevel)
@@ -64,7 +67,7 @@ void realTypeId(T& obj, std::string name = "", size_t maxlevel = 10000)
 }
 
 //! an extensible mechanism to assign "cleartext" names to types
-template <typename T>
+template < typename T >
 struct Typename
 {
   static std::string value()
@@ -77,80 +80,90 @@ struct Typename
   }
 };
 
-template <class T>
+template < class T >
 std::string getTypename(const T&)
 {
-  return Typename<T>::value();
+  return Typename< T >::value();
 }
 
-template <class T, class Ptr = void>
+template < class T, class Ptr = void >
 struct is_smart_ptr
 {
   static const bool value = false;
   typedef T type;
 };
 
-template <class T>
-struct is_smart_ptr<T, typename std::enable_if<std::is_same<std::unique_ptr<typename T::element_type>, T>::value>::type>
+template < class T >
+struct is_smart_ptr< T, typename std::enable_if< std::is_same< std::unique_ptr< typename T::element_type >,
+                                                               T >::value >::type >
 {
   static const bool value = true;
   typedef T type;
 };
 
-template <class T>
-struct is_smart_ptr<T, typename std::enable_if<std::is_same<std::shared_ptr<typename T::element_type>, T>::value>::type>
+template < class T >
+struct is_smart_ptr< T, typename std::enable_if< std::is_same< std::shared_ptr< typename T::element_type >,
+                                                               T >::value >::type >
 {
   static const bool value = true;
   typedef T type;
 };
 
-template <class T>
-struct is_smart_ptr<T, typename std::enable_if<std::is_same<std::weak_ptr<typename T::element_type>, T>::value>::type>
+template < class T >
+struct is_smart_ptr< T, typename std::enable_if< std::is_same< std::weak_ptr< typename T::element_type >,
+                                                               T >::value >::type >
 {
   static const bool value = true;
   typedef T type;
 };
 
-template <class T, class = void>
+template < class T, class = void >
 struct PtrCaller
 {
-  static T& call(T& ptr) { return ptr; }
+  static T& call(T& ptr)
+  {
+    return ptr;
+  }
 };
 
-template <class T>
-struct PtrCaller<T, typename std::enable_if<is_smart_ptr<T>::value || std::is_pointer<T>::value>::type>
+template < class T >
+struct PtrCaller< T, typename std::enable_if< is_smart_ptr< T >::value || std::is_pointer< T >::value >::type >
 {
-  static typename T::element_type& call(T& ptr) { return *ptr; }
+  static typename T::element_type& call(T& ptr)
+  {
+    return *ptr;
+  }
 };
 
 //! workaround for gcc 4.7 missing underlying type, via
 //! https://stackoverflow.com/questions/9343329/how-to-know-underlying-type-of-class-enum/10956467#10956467
-template <class T>
+template < class T >
 struct underlying_type
 {
 #if __GNUC__ == 4 && (__GNUC_MINOR__ < 7)
-  typedef typename std::conditional<T(-1) < T(0), typename std::make_signed<T>::type,
-                                    typename std::make_unsigned<T>::type>::type type;
+  typedef typename std::conditional< T(-1) < T(0), typename std::make_signed< T >::type,
+                                     typename std::make_unsigned< T >::type >::type type;
 #else
-  typedef typename std::underlying_type<T>::type type;
+  typedef typename std::underlying_type< T >::type type;
 #endif
 };
 
 //! gcc < 4.8 fires a static-assert if std::hash< T > () isn't implemented
 #if __GNUC__ == 4 && (__GNUC_MINOR__ < 8)
-template <typename>
+template < typename >
 struct is_hashable : std::false_type
 {
 };
 #else
 //! implementation from https://gcc.gnu.org/ml/libstdc++/2013-03/msg00027.html
-template <typename, typename = void>
+template < typename, typename = void >
 struct is_hashable : std::false_type
 {
 };
 
-template <typename T>
-struct is_hashable<T, typename std::enable_if<!!sizeof(std::declval<std::hash<T>>()(std::declval<T>()))>::type>
+template < typename T >
+struct is_hashable< T,
+                    typename std::enable_if< !!sizeof(std::declval< std::hash< T > >()(std::declval< T >())) >::type >
     : std::true_type
 {
 };
@@ -167,28 +180,28 @@ struct is_hashable<T, typename std::enable_if<!!sizeof(std::declval<std::hash<T>
   *        http://stackoverflow.com/questions/7834226/detecting-typedef-at-compile-time-template-metaprogramming
   */
 #define DSC_has_typedef_initialize_once(tpdef)                                                                         \
-  template <typename T_local>                                                                                          \
+  template < typename T_local >                                                                                        \
   struct DSC_has_typedef_helper_##tpdef                                                                                \
   {                                                                                                                    \
-    template <typename TT_local>                                                                                       \
+    template < typename TT_local >                                                                                     \
     struct void_                                                                                                       \
     {                                                                                                                  \
       typedef void type;                                                                                               \
     };                                                                                                                 \
                                                                                                                        \
-    template <typename TT_local, typename = void>                                                                      \
+    template < typename TT_local, typename = void >                                                                    \
     struct helper                                                                                                      \
     {                                                                                                                  \
       static const bool value = false;                                                                                 \
     };                                                                                                                 \
                                                                                                                        \
-    template <typename TT_local>                                                                                       \
-    struct helper<TT_local, typename void_<typename TT_local::tpdef>::type>                                            \
+    template < typename TT_local >                                                                                     \
+    struct helper< TT_local, typename void_< typename TT_local::tpdef >::type >                                        \
     {                                                                                                                  \
       static const bool value = true;                                                                                  \
     };                                                                                                                 \
                                                                                                                        \
-    static const bool value = helper<T_local>::value;                                                                  \
+    static const bool value = helper< T_local >::value;                                                                \
   };
 
 /**
@@ -212,17 +225,17 @@ DSC_has_typedef(Bar)< Foo >::value
   *        Taken from http://stackoverflow.com/questions/11927032/sfinae-check-for-static-member-using-decltype
   */
 #define DSC_has_static_member_initialize_once(mmbr)                                                                    \
-  template <class T_local>                                                                                             \
+  template < class T_local >                                                                                           \
   struct DSC_has_static_member_helper_##mmbr                                                                           \
   {                                                                                                                    \
-    template <class TT_local,                                                                                          \
-              class = typename std::enable_if<!std::is_member_pointer<decltype(&TT_local::mmbr)>::value>::type>        \
+    template < class TT_local,                                                                                         \
+               class = typename std::enable_if< !std::is_member_pointer< decltype(&TT_local::mmbr) >::value >::type >  \
     static std::true_type helper(int);                                                                                 \
                                                                                                                        \
-    template <class>                                                                                                   \
+    template < class >                                                                                                 \
     static std::false_type helper(...);                                                                                \
                                                                                                                        \
-    static const bool value = decltype(helper<T_local>(0))::value;                                                     \
+    static const bool value = decltype(helper< T_local >(0))::value;                                                   \
   };
 
 /**
@@ -253,23 +266,23 @@ namespace Stuff {
 namespace Common {
 namespace internal {
 
-template <class Tt>
+template < class Tt >
 struct is_complex_helper
 {
   DSC_has_typedef_initialize_once(value_type)
 
-      static const bool is_candidate = DSC_has_typedef(value_type)<Tt>::value;
+      static const bool is_candidate = DSC_has_typedef(value_type)< Tt >::value;
 }; // class is_complex_helper
 
 } // namespace internal
 
-template <class T, bool candidate = internal::is_complex_helper<T>::is_candidate>
-struct is_complex : public std::is_base_of<std::complex<typename T::value_type>, T>
+template < class T, bool candidate = internal::is_complex_helper< T >::is_candidate >
+struct is_complex : public std::is_base_of< std::complex< typename T::value_type >, T >
 {
 };
 
-template <class T>
-struct is_complex<T, false> : public std::false_type
+template < class T >
+struct is_complex< T, false > : public std::false_type
 {
 };
 

@@ -31,7 +31,7 @@ namespace Grid {
 struct ElementVisualization
 {
   //! Parameter for mapper class
-  template <int dim>
+  template < int dim >
   struct P0Layout
   {
     bool contains(const Dune::GeometryType& gt)
@@ -43,21 +43,21 @@ struct ElementVisualization
   };
 
   // demonstrate attaching data to elements
-  template <class Grid, class F>
+  template < class Grid, class F >
   static void elementdata(const Grid& grid, const F& f)
   {
     // get grid view on leaf part
     const auto gridView = grid.leafGridView();
 
     // make a mapper for codim 0 entities in the leaf grid
-    Dune::LeafMultipleCodimMultipleGeomTypeMapper<Grid, P0Layout> mapper(grid);
+    Dune::LeafMultipleCodimMultipleGeomTypeMapper< Grid, P0Layout > mapper(grid);
 
-    std::vector<double> values(mapper.size());
+    std::vector< double > values(mapper.size());
     for (const auto& entity : DSC::entityRange(gridView)) {
       values[mapper.map(entity)] = f(entity);
     }
 
-    Dune::VTKWriter<typename Grid::LeafGridView> vtkwriter(gridView);
+    Dune::VTKWriter< typename Grid::LeafGridView > vtkwriter(gridView);
     vtkwriter.addCellData(values, "data");
     const std::string piecefilesFolderName = "piecefiles";
     const std::string piecefilesPath = f.dir() + "/" + piecefilesFolderName + "/";
@@ -68,9 +68,20 @@ struct ElementVisualization
   class FunctorBase
   {
   public:
-    FunctorBase(const std::string fname, const std::string dname) : filename_(fname), dir_(dname) {}
-    const std::string filename() const { return filename_; }
-    const std::string dir() const { return dir_; }
+    FunctorBase(const std::string fname, const std::string dname)
+      : filename_(fname)
+      , dir_(dname)
+    {
+    }
+    const std::string filename() const
+    {
+      return filename_;
+    }
+    const std::string dir() const
+    {
+      return dir_;
+    }
+
   protected:
     const std::string filename_;
     const std::string dir_;
@@ -79,9 +90,12 @@ struct ElementVisualization
   class VolumeFunctor : public FunctorBase
   {
   public:
-    VolumeFunctor(const std::string fname, const std::string dname) : FunctorBase(fname, dname) {}
+    VolumeFunctor(const std::string fname, const std::string dname)
+      : FunctorBase(fname, dname)
+    {
+    }
 
-    template <class Entity>
+    template < class Entity >
     double operator()(const Entity& ent) const
     {
       return ent.geometry().volume();
@@ -91,27 +105,31 @@ struct ElementVisualization
   class ProcessIdFunctor : public FunctorBase
   {
   public:
-    ProcessIdFunctor(const std::string fname, const std::string dname) : FunctorBase(fname, dname) {}
+    ProcessIdFunctor(const std::string fname, const std::string dname)
+      : FunctorBase(fname, dname)
+    {
+    }
 
-    template <class Entity>
+    template < class Entity >
     double operator()(const Entity& /*ent*/) const
     {
       return Dune::MPIHelper::getCollectiveCommunication().rank();
     }
   };
 
-  template <class GridType>
+  template < class GridType >
   class BoundaryFunctor : public FunctorBase
   {
     const GridType& grid_;
 
   public:
     BoundaryFunctor(const GridType& grid, const std::string fname, const std::string dname)
-      : FunctorBase(fname, dname), grid_(grid)
+      : FunctorBase(fname, dname)
+      , grid_(grid)
     {
     }
 
-    template <class Entity>
+    template < class Entity >
     double operator()(const Entity& entity) const
     {
       double ret(0.0);
@@ -136,14 +154,17 @@ struct ElementVisualization
   {
 
   public:
-    AreaMarker(const std::string fname, const std::string dname) : FunctorBase(fname, dname) {}
+    AreaMarker(const std::string fname, const std::string dname)
+      : FunctorBase(fname, dname)
+    {
+    }
 
-    template <class Entity>
+    template < class Entity >
     double operator()(const Entity& entity) const
     {
       typedef typename Entity::Geometry EntityGeometryType;
 
-      typedef Dune::FieldVector<typename EntityGeometryType::ctype, EntityGeometryType::coorddimension> DomainType;
+      typedef Dune::FieldVector< typename EntityGeometryType::ctype, EntityGeometryType::coorddimension > DomainType;
 
       const EntityGeometryType& geometry = entity.geometry();
 
@@ -168,9 +189,12 @@ struct ElementVisualization
   class GeometryFunctor : public FunctorBase
   {
   public:
-    GeometryFunctor(const std::string fname, const std::string dname) : FunctorBase(fname, dname) {}
+    GeometryFunctor(const std::string fname, const std::string dname)
+      : FunctorBase(fname, dname)
+    {
+    }
 
-    template <class Entity>
+    template < class Entity >
     double operator()(const Entity& ent) const
     {
       const typename Entity::Geometry& geo = ent.geometry();
@@ -189,11 +213,11 @@ struct ElementVisualization
   };
 
   //! supply functor
-  template <class Grid>
+  template < class Grid >
   static void all(const Grid& grid, const std::string outputDir = "visualisation")
   {
     // make function objects
-    BoundaryFunctor<Grid> boundaryFunctor(grid, "boundaryFunctor", outputDir);
+    BoundaryFunctor< Grid > boundaryFunctor(grid, "boundaryFunctor", outputDir);
     AreaMarker areaMarker("areaMarker", outputDir);
     GeometryFunctor geometryFunctor("geometryFunctor", outputDir);
     ProcessIdFunctor processIdFunctor("ProcessIdFunctor", outputDir);

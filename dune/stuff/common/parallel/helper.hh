@@ -25,11 +25,11 @@ struct SequentialCommunication
 {
 };
 
-template <class GridCommImp>
+template < class GridCommImp >
 struct UseParallelCommunication
 {
 #if HAVE_MPI && HAVE_DUNE_ISTL
-  static constexpr bool value = std::is_same<GridCommImp, CollectiveCommunication<MPI_Comm>>::value;
+  static constexpr bool value = std::is_same< GridCommImp, CollectiveCommunication< MPI_Comm > >::value;
 #else
   static constexpr bool value = false;
 #endif

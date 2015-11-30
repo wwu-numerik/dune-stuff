@@ -12,14 +12,17 @@ using namespace Dune::Stuff::Common;
 
 struct Moveable
 {
-  Moveable(int i) : v(i) {}
+  Moveable(int i)
+    : v(i)
+  {
+  }
   int v;
 };
 
 TEST(MoveIfTest, All)
 {
   using namespace std;
-  typedef vector<unique_ptr<Moveable>> Vec;
+  typedef vector< unique_ptr< Moveable > > Vec;
   typedef Vec::value_type Ptr;
   const auto size = 6;
   Vec values;

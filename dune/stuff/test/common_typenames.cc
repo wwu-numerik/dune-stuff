@@ -17,28 +17,31 @@ using namespace std;
 
 TEST(Typename, Knowns)
 {
-  EXPECT_EQ(Typename<unsigned long>::value(), "unsigned long");
-  EXPECT_EQ(Typename<unsigned long>::value(), "unsigned long");
-  EXPECT_EQ(Typename<int>::value(), "int");
-  EXPECT_EQ(Typename<double>::value(), "double");
-  EXPECT_EQ(Typename<float>::value(), "float");
+  EXPECT_EQ(Typename< unsigned long >::value(), "unsigned long");
+  EXPECT_EQ(Typename< unsigned long >::value(), "unsigned long");
+  EXPECT_EQ(Typename< int >::value(), "int");
+  EXPECT_EQ(Typename< double >::value(), "double");
+  EXPECT_EQ(Typename< float >::value(), "float");
   EXPECT_EQ(getTypename(1.f), "float");
-  EXPECT_EQ(Typename<long>::value(), "long");
-  EXPECT_EQ(Typename<unsigned int>::value(), "unsigned int");
-  EXPECT_EQ(Typename<unsigned long>::value(), "unsigned long");
-  EXPECT_EQ(Typename<char>::value(), "char");
+  EXPECT_EQ(Typename< long >::value(), "long");
+  EXPECT_EQ(Typename< unsigned int >::value(), "unsigned int");
+  EXPECT_EQ(Typename< unsigned long >::value(), "unsigned long");
+  EXPECT_EQ(Typename< char >::value(), "char");
 }
 
-TEST(Typename, Unknowns) { EXPECT_NE(Typename<Dune::Exception>::value(), string()); }
+TEST(Typename, Unknowns)
+{
+  EXPECT_NE(Typename< Dune::Exception >::value(), string());
+}
 
 TEST(Typename, Extended)
 {
-  EXPECT_EQ(Typename<Dune::MPIHelper>::value(), string("Dune::MPIHelper"));
+  EXPECT_EQ(Typename< Dune::MPIHelper >::value(), string("Dune::MPIHelper"));
   {
     using namespace Dune;
-    EXPECT_EQ(Typename<MPIHelper>::value(), string("Dune::MPIHelper"));
+    EXPECT_EQ(Typename< MPIHelper >::value(), string("Dune::MPIHelper"));
   }
-  typedef Dune::Stuff::Common::ValidateAny<int> Valid;
+  typedef Dune::Stuff::Common::ValidateAny< int > Valid;
   Valid v;
   EXPECT_EQ(getTypename(v), string("Dune::Stuff::Common::Parameter::ValidateAny<T>"));
 }

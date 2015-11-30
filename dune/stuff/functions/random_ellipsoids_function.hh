@@ -24,10 +24,10 @@ namespace Dune {
 namespace Stuff {
 namespace Functions {
 
-template <size_t dim, class CoordType = double>
+template < size_t dim, class CoordType = double >
 struct Ellipsoid
 {
-  typedef DSC::FieldVector<CoordType, dim> DomainType;
+  typedef DSC::FieldVector< CoordType, dim > DomainType;
   DomainType center;
   DomainType radii;
 
@@ -41,18 +41,21 @@ struct Ellipsoid
     }
     return DSC::FloatCmp::le(sum, 1.);
   }
-  bool intersects_cube(DomainType /*ll*/, DomainType /*ur*/) const { DUNE_THROW(NotImplemented, ""); }
+  bool intersects_cube(DomainType /*ll*/, DomainType /*ur*/) const
+  {
+    DUNE_THROW(NotImplemented, "");
+  }
 };
 
-template <class EntityImp, class DomainFieldImp, size_t domainDim, class RangeFieldImp, size_t rangeDim,
-          size_t rangeDimCols = 1>
+template < class EntityImp, class DomainFieldImp, size_t domainDim, class RangeFieldImp, size_t rangeDim,
+           size_t rangeDimCols = 1 >
 class RandomEllipsoidsFunction
-    : public LocalizableFunctionInterface<EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols>
+    : public LocalizableFunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols >
 {
 protected:
-  typedef LocalizableFunctionInterface<EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols>
+  typedef LocalizableFunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols >
       BaseType;
-  typedef RandomEllipsoidsFunction<EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols>
+  typedef RandomEllipsoidsFunction< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols >
       ThisType;
 
 public:
@@ -64,11 +67,11 @@ public:
 
   typedef typename BaseType::RangeFieldType RangeFieldType;
   typedef typename BaseType::RangeType RangeType;
-  typedef Ellipsoid<dimDomain, DomainFieldType> EllipsoidType;
+  typedef Ellipsoid< dimDomain, DomainFieldType > EllipsoidType;
   class Localfunction
-      : public LocalfunctionInterface<EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols>
+      : public LocalfunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols >
   {
-    typedef LocalfunctionInterface<EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols>
+    typedef LocalfunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols >
         BaseType;
 
   public:
@@ -79,8 +82,11 @@ public:
     typedef typename BaseType::RangeType RangeType;
     typedef typename BaseType::JacobianRangeType JacobianRangeType;
 
-    Localfunction(const EntityType& ent, const RangeType value, std::vector<EllipsoidType>&& local_ellipsoids)
-      : BaseType(ent), geometry_(ent.geometry()), value_(value), local_ellipsoids_(local_ellipsoids)
+    Localfunction(const EntityType& ent, const RangeType value, std::vector< EllipsoidType >&& local_ellipsoids)
+      : BaseType(ent)
+      , geometry_(ent.geometry())
+      , value_(value)
+      , local_ellipsoids_(local_ellipsoids)
     {
       //      DSC_LOG_DEBUG_0 << "create local LF Ellips with " << local_ellipsoids_.size() << " instances\n";
     }
@@ -89,7 +95,10 @@ public:
 
     Localfunction& operator=(const Localfunction& /*other*/) = delete;
 
-    virtual size_t order() const override { return 8; }
+    virtual size_t order() const override
+    {
+      return 8;
+    }
 
     virtual void evaluate(const DomainType& xx_local, RangeType& ret) const override
     {
@@ -114,13 +123,16 @@ public:
   private:
     const typename EntityImp::Geometry geometry_;
     const RangeType value_;
-    const std::vector<EllipsoidType> local_ellipsoids_;
+    const std::vector< EllipsoidType > local_ellipsoids_;
   }; // class Localfunction
 
 public:
   static const bool available = true;
 
-  static std::string static_id() { return BaseType::static_id() + ".RandomEllipsoidsFunction"; }
+  static std::string static_id()
+  {
+    return BaseType::static_id() + ".RandomEllipsoidsFunction";
+  }
 
   static Common::Configuration default_config(const std::string sub_name = "")
   {
@@ -137,8 +149,8 @@ public:
     }
   } // ... default_config(...)
 
-  static std::unique_ptr<ThisType> create(const Common::Configuration config = default_config(),
-                                          const std::string sub_name = static_id())
+  static std::unique_ptr< ThisType > create(const Common::Configuration config = default_config(),
+                                            const std::string sub_name = static_id())
   {
     // get correct config
     const Common::Configuration cfg         = config.has_sub(sub_name) ? config.sub(sub_name) : config;
@@ -146,15 +158,18 @@ public:
     DUNE_THROW(NotImplemented, "");
   } // ... create(...)
 
-  RandomEllipsoidsFunction(const Common::FieldVector<DomainFieldType, dimDomain>& lowerLeft,
-                           const Common::FieldVector<DomainFieldType, dimDomain>& upperRight,
+  RandomEllipsoidsFunction(const Common::FieldVector< DomainFieldType, dimDomain >& lowerLeft,
+                           const Common::FieldVector< DomainFieldType, dimDomain >& upperRight,
                            const Stuff::Common::Configuration& ellipsoid_cfg, const std::string nm = static_id())
-    : lowerLeft_(lowerLeft), upperRight_(upperRight), name_(nm), ellipsoid_cfg_(ellipsoid_cfg)
+    : lowerLeft_(lowerLeft)
+    , upperRight_(upperRight)
+    , name_(nm)
+    , ellipsoid_cfg_(ellipsoid_cfg)
   {
     typedef unsigned long UL;
     const UL level_0_count = ellipsoid_cfg.get("ellipsoids.count", 10);
     const UL max_depth     = ellipsoid_cfg.get("ellipsoids.recursion_depth", 1);
-    const UL children      = ellipsoid_cfg.get<UL>("ellipsoids.children", 3u); //, DSC::ValidateLess<UL>(0));
+    const UL children      = ellipsoid_cfg.get< UL >("ellipsoids.children", 3u); //, DSC::ValidateLess<UL>(0));
     const UL total_count = level_0_count + level_0_count * std::pow(children, max_depth + 1);
     ellipsoids_.resize(level_0_count);
     ellipsoids_.reserve(total_count);
@@ -162,7 +177,7 @@ public:
     const auto min_radius         = ellipsoid_cfg.get("ellipsoids.min_radius", 0.01);
     const auto max_radius         = ellipsoid_cfg.get("ellipsoids.max_radius", 0.02);
     const auto child_displacement = ellipsoid_cfg.get("ellipsoids.max_child_displacement", max_radius);
-    typedef DSC::DefaultRNG<DomainFieldType> RNG;
+    typedef DSC::DefaultRNG< DomainFieldType > RNG;
     RNG center_rng(0, 1, seed);
     RNG radii_rng(min_radius, max_radius, seed);
     RNG dist_rng(min_radius, child_displacement, seed);
@@ -175,7 +190,7 @@ public:
       std::generate(ellipsoids_[ii].radii.begin(), ellipsoids_[ii].radii.end(), [&radii_rng]() { return radii_rng(); });
     }
 
-    std::function<void(UL, const EllipsoidType&)> recurse_add = [&](UL current_level, const EllipsoidType& parent) {
+    std::function< void(UL, const EllipsoidType&)> recurse_add = [&](UL current_level, const EllipsoidType& parent) {
       if (current_level > max_depth)
         return;
       for (const auto unused_counter : DSC::valueRange(children)) {
@@ -206,9 +221,15 @@ public:
 
   ThisType& operator=(ThisType&& source) = delete;
 
-  virtual std::string type() const override { return BaseType::static_id() + ".RandomEllipsoidsFunction"; }
+  virtual std::string type() const override
+  {
+    return BaseType::static_id() + ".RandomEllipsoidsFunction";
+  }
 
-  virtual std::string name() const override { return name_; }
+  virtual std::string name() const override
+  {
+    return name_;
+  }
 
   void to_file(std::ostream& out) const
   {
@@ -223,12 +244,12 @@ public:
   }
 
 private:
-  std::tuple<typename EllipsoidType::DomainType, typename EllipsoidType::DomainType>
-      bounding_box(const EntityType& entity) const
+  std::tuple< typename EllipsoidType::DomainType, typename EllipsoidType::DomainType >
+  bounding_box(const EntityType& entity) const
   {
     typename EllipsoidType::DomainType ll, ur;
-    typedef Dune::Stuff::Common::MinMaxAvg<DomainFieldType> MinMaxAvgType;
-    std::array<MinMaxAvgType, dimDomain> coord_limits;
+    typedef Dune::Stuff::Common::MinMaxAvg< DomainFieldType > MinMaxAvgType;
+    std::array< MinMaxAvgType, dimDomain > coord_limits;
     const auto& geo = entity.geometry();
     for (auto i : DSC::valueRange(geo.corners())) {
       const auto& corner(geo.corner(i));
@@ -244,7 +265,7 @@ private:
   }
 
 public:
-  virtual std::unique_ptr<LocalfunctionType> local_function(const EntityType& entity) const override
+  virtual std::unique_ptr< LocalfunctionType > local_function(const EntityType& entity) const override
   {
     const auto local_value = DomainFieldType(ellipsoid_cfg_.get("ellipsoids.local_value", 1.));
     // decide on the subdomain the center of the entity belongs to
@@ -253,7 +274,7 @@ public:
     std::tie(ll, ur) = bounding_box(entity);
     std::for_each(ll.begin(), ll.end(), [&max_radius](DomainFieldType& lc) { lc -= 1.1 * max_radius; });
     std::for_each(ur.begin(), ur.end(), [&max_radius](DomainFieldType& uc) { uc += 1.1 * max_radius; });
-    std::vector<EllipsoidType> local_ellipsoids;
+    std::vector< EllipsoidType > local_ellipsoids;
     for (const auto& ellipsoid : ellipsoids_) {
       bool inside = true;
       for (auto ii : DSC::valueRange(dimDomain)) {
@@ -264,16 +285,16 @@ public:
         local_ellipsoids.push_back(ellipsoid);
       }
     }
-    std::vector<EllipsoidType> tmp = ellipsoids_;
-    return std::unique_ptr<Localfunction>(new Localfunction(entity, local_value, std::move(tmp)));
+    std::vector< EllipsoidType > tmp = ellipsoids_;
+    return std::unique_ptr< Localfunction >(new Localfunction(entity, local_value, std::move(tmp)));
   } // ... local_function(...)
 
 private:
-  const Common::FieldVector<DomainFieldType, dimDomain> lowerLeft_;
-  const Common::FieldVector<DomainFieldType, dimDomain> upperRight_;
+  const Common::FieldVector< DomainFieldType, dimDomain > lowerLeft_;
+  const Common::FieldVector< DomainFieldType, dimDomain > upperRight_;
   const std::string name_;
   const Stuff::Common::Configuration ellipsoid_cfg_;
-  std::vector<EllipsoidType> ellipsoids_;
+  std::vector< EllipsoidType > ellipsoids_;
 }; // class RandomEllipsoidsFunction
 
 } // namespace Functions

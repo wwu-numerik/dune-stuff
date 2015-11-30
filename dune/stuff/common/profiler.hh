@@ -39,7 +39,7 @@ Profiler& profiler();
 struct TimingData
 {
 private:
-  std::shared_ptr<boost::timer::cpu_timer> timer_;
+  std::shared_ptr< boost::timer::cpu_timer > timer_;
 
 public:
   std::string name;
@@ -49,7 +49,7 @@ public:
   void stop();
 
   typedef boost::timer::nanosecond_type TimeType;
-  typedef std::array<TimeType, 3> DeltaType;
+  typedef std::array< TimeType, 3 > DeltaType;
 
   /** \return time elapsed since object construction in milliseconds
    *  \note since typical resolutions for user+system time are 10-15ms the nanosecond results are scaled accordingly
@@ -74,11 +74,11 @@ private:
   Profiler();
   ~Profiler();
 
-  typedef std::map<std::string, std::pair<bool, PerThreadValue<TimingData>>> KnownTimersMap;
+  typedef std::map< std::string, std::pair< bool, PerThreadValue< TimingData > > > KnownTimersMap;
   //! section name -> seconds
-  typedef std::map<std::string, TimingData::DeltaType> Datamap;
+  typedef std::map< std::string, TimingData::DeltaType > Datamap;
   //! "Run idx" -> Datamap = section name -> seconds
-  typedef std::vector<Datamap> DatamapVector;
+  typedef std::vector< Datamap > DatamapVector;
 
   //! get runtime of section in run run_number in milliseconds
   TimingData::DeltaType getTimingIdx(const std::string section_name, const size_t run_number) const;
@@ -130,7 +130,7 @@ private:
   //! runtime tables etc go there
   std::string output_dir_;
   // debug counter, only outputted in debug mode
-  std::map<size_t, size_t> counters_;
+  std::map< size_t, size_t > counters_;
 
   KnownTimersMap known_timers_map_;
   const std::string csv_sep_;
@@ -144,7 +144,10 @@ private:
 };
 
 //! global profiler object
-inline Profiler& profiler() { return Profiler::instance(); }
+inline Profiler& profiler()
+{
+  return Profiler::instance();
+}
 
 class ScopedTiming : public boost::noncopyable
 {
@@ -152,12 +155,16 @@ protected:
   const std::string section_name_;
 
 public:
-  inline ScopedTiming(const std::string& section_name) : section_name_(section_name)
+  inline ScopedTiming(const std::string& section_name)
+    : section_name_(section_name)
   {
     profiler().startTiming(section_name_);
   }
 
-  inline ~ScopedTiming() { profiler().stopTiming(section_name_); }
+  inline ~ScopedTiming()
+  {
+    profiler().stopTiming(section_name_);
+  }
 };
 
 struct OutputScopedTiming : public ScopedTiming

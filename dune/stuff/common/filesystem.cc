@@ -12,14 +12,17 @@ namespace Stuff {
 namespace Common {
 
 //! strip filename from \path if present, return empty string if only filename present
-std::string directoryOnly(std::string _path) { return boost::filesystem::path(_path).parent_path().string(); }
+std::string directoryOnly(std::string _path)
+{
+  return boost::filesystem::path(_path).parent_path().string();
+}
 
 //! return everything after the last slash
 std::string filenameOnly(const std::string& _path)
 {
 #if BOOST_FILESYSTEM_VERSION > 2
   return boost::filesystem::path(_path).filename().string();
-#else  // if BOOST_FILESYSTEM_VERSION > 2
+#else // if BOOST_FILESYSTEM_VERSION > 2
   return boost::filesystem::path(_path).filename();
 #endif // if BOOST_FILESYSTEM_VERSION > 2
 } // filenameOnly
@@ -33,7 +36,10 @@ void testCreateDirectory(const std::string _path)
 }
 
 //! pure c++ emulation of system's touch binary
-bool touch(const std::string& _path) { return std::ofstream(_path.c_str()).is_open(); }
+bool touch(const std::string& _path)
+{
+  return std::ofstream(_path.c_str()).is_open();
+}
 
 boost::filesystem::ofstream* make_ofstream(const boost::filesystem::path& path, const std::ios_base::openmode mode)
 {

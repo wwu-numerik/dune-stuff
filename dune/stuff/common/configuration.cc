@@ -23,7 +23,10 @@ namespace Common {
 
 Configuration::Configuration(const Dune::ParameterTree& tree_in, const bool /*record_defaults*/,
                              const bool warn_on_default_access, const bool log_on_exit, const std::string logfile)
-  : BaseType(tree_in), warn_on_default_access_(warn_on_default_access), log_on_exit_(log_on_exit), logfile_(logfile)
+  : BaseType(tree_in)
+  , warn_on_default_access_(warn_on_default_access)
+  , log_on_exit_(log_on_exit)
+  , logfile_(logfile)
 {
   setup_();
 }
@@ -82,7 +85,10 @@ Configuration::~Configuration()
   }
 }
 
-void Configuration::set_warn_on_default_access(const bool value) { warn_on_default_access_ = value; }
+void Configuration::set_warn_on_default_access(const bool value)
+{
+  warn_on_default_access_ = value;
+}
 
 void Configuration::set_log_on_exit(const bool value)
 {
@@ -123,7 +129,10 @@ void loadIntoFemParameter(const Dune::ParameterTree& tree, const std::string pre
 }
 
 // method definitions for Configuration
-bool Configuration::has_key(const std::string& key) const { return BaseType::hasKey(key); }
+bool Configuration::has_key(const std::string& key) const
+{
+  return BaseType::hasKey(key);
+}
 
 Configuration Configuration::sub(const std::string sub_id) const
 {
@@ -142,7 +151,10 @@ Configuration Configuration::sub(const std::string sub_id) const
   return Configuration(BaseType::sub(sub_id));
 } // ... sub(...)
 
-bool Configuration::has_sub(const std::string subTreeName) const { return BaseType::hasSub(subTreeName); }
+bool Configuration::has_sub(const std::string subTreeName) const
+{
+  return BaseType::hasSub(subTreeName);
+}
 
 void Configuration::set(const std::string& key, const char* value, const bool overwrite)
 {
@@ -185,7 +197,10 @@ Configuration& Configuration::operator=(const Configuration& other)
   return *this;
 } // ... operator=(...)
 
-bool Configuration::empty() const { return this->getValueKeys().empty() && this->getSubKeys().empty(); }
+bool Configuration::empty() const
+{
+  return this->getValueKeys().empty() && this->getSubKeys().empty();
+}
 
 void Configuration::report(std::ostream& out, const std::string& prefix) const
 {
@@ -228,14 +243,17 @@ void Configuration::read_command_line(int argc, char* argv[])
   setup_();
 } // readCommandLine
 
-void Configuration::read_options(int argc, char* argv[]) { Dune::ParameterTreeParser::readOptions(argc, argv, *this); }
+void Configuration::read_options(int argc, char* argv[])
+{
+  Dune::ParameterTreeParser::readOptions(argc, argv, *this);
+}
 
 void Configuration::setup_()
 {
   if (logfile_.empty())
     logfile_ = boost::filesystem::path(internal::configuration_logfile).string();
   if (has_key("global.datadir") && has_key("logging.dir"))
-    logfile_ = (boost::filesystem::path(get<std::string>("global.datadir")) / get<std::string>("logging.dir")
+    logfile_ = (boost::filesystem::path(get< std::string >("global.datadir")) / get< std::string >("logging.dir")
                 / "dsc_parameter.log")
                    .string();
   logfile_ = boost::filesystem::path(logfile_).string();
@@ -282,7 +300,7 @@ ParameterTree Configuration::initialize(int argc, char** argv)
     Dune::ParameterTreeParser::readOptions(argc, argv, param_tree);
   }
   if (param_tree.hasKey("paramfile")) {
-    Dune::ParameterTreeParser::readINITree(param_tree.get<std::string>("paramfile"), param_tree, false);
+    Dune::ParameterTreeParser::readINITree(param_tree.get< std::string >("paramfile"), param_tree, false);
   }
   return param_tree;
 } // ... initialize(...)
@@ -298,7 +316,7 @@ ParameterTree Configuration::initialize(int argc, char** argv, std::string filen
     Dune::ParameterTreeParser::readOptions(argc, argv, param_tree);
   }
   if (param_tree.hasKey("paramfile")) {
-    Dune::ParameterTreeParser::readINITree(param_tree.get<std::string>("paramfile"), param_tree, false);
+    Dune::ParameterTreeParser::readINITree(param_tree.get< std::string >("paramfile"), param_tree, false);
   }
   return param_tree;
 } // ... initialize(...)
@@ -306,7 +324,7 @@ ParameterTree Configuration::initialize(int argc, char** argv, std::string filen
 void Configuration::report_as_sub(std::ostream& out, const std::string& prefix, const std::string& sub_path) const
 {
   for (const auto& key : getValueKeys()) {
-    out << prefix << key << " = " << ParameterTree::get<std::string>(key) << std::endl;
+    out << prefix << key << " = " << ParameterTree::get< std::string >(key) << std::endl;
   }
   for (const auto& subkey : getSubKeys()) {
     Configuration sub_tree(sub(subkey));
@@ -346,11 +364,11 @@ void Configuration::report_flatly(const BaseType& subtree, const std::string& pr
   }
 } // ... report_flatly(...)
 
-std::map<std::string, std::string> Configuration::flatten() const
+std::map< std::string, std::string > Configuration::flatten() const
 {
-  std::map<std::string, std::string> ret;
+  std::map< std::string, std::string > ret;
   for (const auto& kk : getValueKeys())
-    ret[kk] = get<std::string>(kk);
+    ret[kk] = get< std::string >(kk);
   for (const auto& ss : getSubKeys()) {
     const auto flat_sub = sub(ss).flatten();
     for (const auto& element : flat_sub)
@@ -365,14 +383,23 @@ std::ostream& operator<<(std::ostream& out, const Configuration& config)
   return out;
 }
 
-bool operator==(const Configuration& left, const Configuration& right) { return left.flatten() == right.flatten(); }
+bool operator==(const Configuration& left, const Configuration& right)
+{
+  return left.flatten() == right.flatten();
+}
 
-bool operator!=(const Configuration& left, const Configuration& right) { return !(left == right); }
+bool operator!=(const Configuration& left, const Configuration& right)
+{
+  return !(left == right);
+}
 
-Configuration::Configuration(const std::vector<std::string> keys, const std::vector<std::string> values_in,
+Configuration::Configuration(const std::vector< std::string > keys, const std::vector< std::string > values_in,
                              const bool /*record_defaults*/, const bool warn_on_default_access, const bool log_on_exit,
                              const std::string logfile)
-  : BaseType(), warn_on_default_access_(warn_on_default_access), log_on_exit_(log_on_exit), logfile_(logfile)
+  : BaseType()
+  , warn_on_default_access_(warn_on_default_access)
+  , log_on_exit_(log_on_exit)
+  , logfile_(logfile)
 {
   if (keys.size() != values_in.size())
     DUNE_THROW(Exceptions::shapes_do_not_match,
@@ -392,18 +419,21 @@ bool operator==(const ParameterTree& left, const ParameterTree& right)
   return Stuff::Common::Configuration(left).flatten() == Stuff::Common::Configuration(right).flatten();
 }
 
-bool operator!=(const ParameterTree& left, const ParameterTree& right) { return !(left == right); }
+bool operator!=(const ParameterTree& left, const ParameterTree& right)
+{
+  return !(left == right);
+}
 
 } // namespace Dune
 namespace std {
 
-bool less<Dune::ParameterTree>::operator()(const Dune::ParameterTree& lhs, const Dune::ParameterTree& rhs) const
+bool less< Dune::ParameterTree >::operator()(const Dune::ParameterTree& lhs, const Dune::ParameterTree& rhs) const
 {
   return Dune::Stuff::Common::Configuration(lhs).flatten() < Dune::Stuff::Common::Configuration(rhs).flatten();
 }
 
-bool less<Dune::Stuff::Common::Configuration>::operator()(const Dune::Stuff::Common::Configuration& lhs,
-                                                          const Dune::Stuff::Common::Configuration& rhs) const
+bool less< Dune::Stuff::Common::Configuration >::operator()(const Dune::Stuff::Common::Configuration& lhs,
+                                                            const Dune::Stuff::Common::Configuration& rhs) const
 {
   return lhs.flatten() < rhs.flatten();
 }

@@ -16,7 +16,7 @@
 // we need this nasty code generation because the testing::Types< ... > only accepts 50 arguments
 // and all combinations of functions and entities and dimensions and fieldtypes would be way too much
 #define TEST_STRUCT_GENERATOR(ftype, etype)                                                                            \
-  template <class Spe10Model2FunctionType>                                                                             \
+  template < class Spe10Model2FunctionType >                                                                           \
   struct ftype##etype##Test : public ::testing::Test                                                                   \
   {                                                                                                                    \
     typedef typename Spe10Model2FunctionType::EntityType EntityType;                                                   \
@@ -30,7 +30,10 @@
     typedef typename Spe10Model2FunctionType::RangeType RangeType;                                                     \
     typedef typename Spe10Model2FunctionType::JacobianRangeType JacobianRangeType;                                     \
                                                                                                                        \
-    void check() const { const Spe10Model2FunctionType zero; }                                                         \
+    void check() const                                                                                                 \
+    {                                                                                                                  \
+      const Spe10Model2FunctionType zero;                                                                              \
+    }                                                                                                                  \
   };
 // TEST_STRUCT_GENERATOR
 
@@ -79,14 +82,18 @@
 
 #include <dune/grid/yaspgrid.hh>
 
-typedef Dune::YaspGrid<3, Dune::EquidistantOffsetCoordinates<double, 3>>::Codim<0>::Entity DuneYaspGrid3dEntityType;
+typedef Dune::YaspGrid< 3, Dune::EquidistantOffsetCoordinates< double, 3 > >::Codim< 0 >::Entity
+    DuneYaspGrid3dEntityType;
 
-typedef testing::Types<Dune::Stuff::Functions::Spe10::Model2<DuneYaspGrid3dEntityType, double, 3, double, 3, 3>>
+typedef testing::Types< Dune::Stuff::Functions::Spe10::Model2< DuneYaspGrid3dEntityType, double, 3, double, 3, 3 > >
     Spe10Model2FunctionYaspGridEntityTypes;
 
 TEST_STRUCT_GENERATOR(Spe10Model2FunctionTest, YaspGridEntity)
 TYPED_TEST_CASE(Spe10Model2FunctionTestYaspGridEntityTest, Spe10Model2FunctionYaspGridEntityTypes);
-TYPED_TEST(Spe10Model2FunctionTestYaspGridEntityTest, provides_required_methods) { this->check(); }
+TYPED_TEST(Spe10Model2FunctionTestYaspGridEntityTest, provides_required_methods)
+{
+  this->check();
+}
 
 //# if HAVE_ALUGRID
 //#   include <dune/stuff/common/disable_warnings.hh>

@@ -19,41 +19,64 @@ namespace Providers {
 
 #if HAVE_DUNE_GRID
 
-template <class GridImp>
-class Default : Common::StorageProvider<GridImp>, public ProviderInterface<GridImp>
+template < class GridImp >
+class Default : Common::StorageProvider< GridImp >, public ProviderInterface< GridImp >
 {
-  typedef Common::StorageProvider<GridImp> StorageProviderBaseType;
-  typedef ProviderInterface<GridImp> GridProviderBaseType;
+  typedef Common::StorageProvider< GridImp > StorageProviderBaseType;
+  typedef ProviderInterface< GridImp > GridProviderBaseType;
 
 public:
   using typename GridProviderBaseType::GridType;
 
-  static const std::string static_id() { return GridProviderBaseType::static_id(); }
+  static const std::string static_id()
+  {
+    return GridProviderBaseType::static_id();
+  }
 
-  explicit Default(GridType& grid_in) : StorageProviderBaseType(grid_in) {}
+  explicit Default(GridType& grid_in)
+    : StorageProviderBaseType(grid_in)
+  {
+  }
 
   /**
    * \note Takes ownership of grid_ptr in the sense that you must not delete it manually!
    */
-  explicit Default(GridType* grid_ptr) : StorageProviderBaseType(grid_ptr) {}
+  explicit Default(GridType* grid_ptr)
+    : StorageProviderBaseType(grid_ptr)
+  {
+  }
 
-  explicit Default(std::shared_ptr<GridType> grid_ptr) : StorageProviderBaseType(grid_ptr) {}
+  explicit Default(std::shared_ptr< GridType > grid_ptr)
+    : StorageProviderBaseType(grid_ptr)
+  {
+  }
 
-  explicit Default(std::unique_ptr<GridType>&& grid_ptr) : StorageProviderBaseType(grid_ptr) {}
+  explicit Default(std::unique_ptr< GridType >&& grid_ptr)
+    : StorageProviderBaseType(grid_ptr)
+  {
+  }
 
-  virtual ~Default() {}
+  virtual ~Default()
+  {
+  }
 
-  virtual GridType& grid() override { return this->storage_access(); }
+  virtual GridType& grid() override
+  {
+    return this->storage_access();
+  }
 
-  virtual const GridType& grid() const override { return this->storage_access(); }
+  virtual const GridType& grid() const override
+  {
+    return this->storage_access();
+  }
 }; // class Default
 
 #else // HAVE_DUNE_GRID
 
-template <class GridImp>
+template < class GridImp >
 class Default
 {
-  static_assert(AlwaysFalse<GridImp>::value, "You are missing dune-grid!");
+  static_assert(AlwaysFalse< GridImp >::value, "You are missing dune-grid!");
 };
 
 #endif // HAVE_DUNE_GRID

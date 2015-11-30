@@ -33,9 +33,9 @@ enum LogFlags
   LOG_NEXT    = 64
 };
 
-class SuspendableStrBuffer : public std::basic_stringbuf<char, std::char_traits<char>>
+class SuspendableStrBuffer : public std::basic_stringbuf< char, std::char_traits< char > >
 {
-  typedef std::basic_stringbuf<char, std::char_traits<char>> BaseType;
+  typedef std::basic_stringbuf< char, std::char_traits< char > > BaseType;
 
 public:
   typedef int PriorityType;
@@ -61,7 +61,10 @@ protected:
   virtual int_type overflow(int_type ch = traits_type::eof());
 
 private:
-  inline bool enabled() const { return (!is_suspended_) && (logflags_ & loglevel_); }
+  inline bool enabled() const
+  {
+    return (!is_suspended_) && (logflags_ & loglevel_);
+  }
 
   SuspendableStrBuffer(const SuspendableStrBuffer&) = delete;
 
@@ -77,7 +80,8 @@ class FileBuffer : public SuspendableStrBuffer
 {
 public:
   FileBuffer(int loglevel, int& logflags, std::ofstream& file)
-    : SuspendableStrBuffer(loglevel, logflags), logfile_(file)
+    : SuspendableStrBuffer(loglevel, logflags)
+    , logfile_(file)
   {
   }
 
@@ -92,7 +96,10 @@ protected:
 class EmptyBuffer : public SuspendableStrBuffer
 {
 public:
-  EmptyBuffer(int loglevel, int& logflags) : SuspendableStrBuffer(loglevel, logflags) {}
+  EmptyBuffer(int loglevel, int& logflags)
+    : SuspendableStrBuffer(loglevel, logflags)
+  {
+  }
 
 protected:
   virtual int sync();
@@ -103,9 +110,9 @@ protected:
  *
  * \note Most likely you do not want to use this class directly, but TimedPrefixedLogStream instead.
  */
-class TimedPrefixedStreamBuffer : public std::basic_stringbuf<char, std::char_traits<char>>
+class TimedPrefixedStreamBuffer : public std::basic_stringbuf< char, std::char_traits< char > >
 {
-  typedef std::basic_stringbuf<char, std::char_traits<char>> BaseType;
+  typedef std::basic_stringbuf< char, std::char_traits< char > > BaseType;
 
 public:
   TimedPrefixedStreamBuffer(const Timer& timer, const std::string prefix, std::ostream& out = std::cout);
@@ -124,18 +131,25 @@ private:
   std::mutex mutex_;
 }; // class TimedPrefixedStreamBuffer
 
-class LogStream : StorageProvider<SuspendableStrBuffer>, public std::basic_ostream<char, std::char_traits<char>>
+class LogStream : StorageProvider< SuspendableStrBuffer >, public std::basic_ostream< char, std::char_traits< char > >
 {
-  typedef StorageProvider<SuspendableStrBuffer> StorageBaseType;
-  typedef std::basic_ostream<char, std::char_traits<char>> BaseType;
+  typedef StorageProvider< SuspendableStrBuffer > StorageBaseType;
+  typedef std::basic_ostream< char, std::char_traits< char > > BaseType;
 
 public:
   typedef SuspendableStrBuffer::PriorityType PriorityType;
   static const PriorityType default_suspend_priority = SuspendableStrBuffer::default_suspend_priority;
 
-  explicit LogStream(SuspendableStrBuffer* buffer) : StorageBaseType(buffer), BaseType(&this->storage_access()) {}
+  explicit LogStream(SuspendableStrBuffer* buffer)
+    : StorageBaseType(buffer)
+    , BaseType(&this->storage_access())
+  {
+  }
 
-  virtual ~LogStream() { flush(); }
+  virtual ~LogStream()
+  {
+    flush();
+  }
 
   //! dump buffer into file/stream and clear it
   virtual LogStream& flush();
@@ -158,7 +172,7 @@ public:
     assert(&this->storage_access());
     this->storage_access().resume(priority);
   } // Resume
-};  // LogStream
+}; // LogStream
 
 /**
  * \brief A std::ostream compatible stream that begins every line by printing elapsed time and prefix.
@@ -183,11 +197,11 @@ out << "\n" << 3 << "\n\nend" << std::endl;
  *
  * \note This class is intended to be used by TimedLogManager.
  */
-class TimedPrefixedLogStream : StorageProvider<TimedPrefixedStreamBuffer>,
-                               public std::basic_ostream<char, std::char_traits<char>>
+class TimedPrefixedLogStream : StorageProvider< TimedPrefixedStreamBuffer >,
+                               public std::basic_ostream< char, std::char_traits< char > >
 {
-  typedef StorageProvider<TimedPrefixedStreamBuffer> StorageBaseType;
-  typedef std::basic_ostream<char, std::char_traits<char>> OstreamBaseType;
+  typedef StorageProvider< TimedPrefixedStreamBuffer > StorageBaseType;
+  typedef std::basic_ostream< char, std::char_traits< char > > OstreamBaseType;
 
 public:
   TimedPrefixedLogStream(const Timer& timer, const std::string prefix, std::ostream& outstream);
@@ -209,7 +223,10 @@ public:
 class EmptyLogStream : public LogStream
 {
 public:
-  explicit EmptyLogStream(int& logflags) : LogStream(new EmptyBuffer(int(LOG_NONE), logflags)) {}
+  explicit EmptyLogStream(int& logflags)
+    : LogStream(new EmptyBuffer(int(LOG_NONE), logflags))
+  {
+  }
 }; // class EmptyLogStream
 
 namespace {

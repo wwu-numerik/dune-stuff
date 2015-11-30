@@ -9,4 +9,6 @@
 
 #include "main.hxx"
 
-TEST(empty, main) {}
+TEST(empty, main)
+{
+}

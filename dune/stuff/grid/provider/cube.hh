@@ -82,20 +82,20 @@ struct ElementVariant
 };
 
 template <int dd, int dw>
-struct ElementVariant<Dune::SGrid<dd, dw>>
+struct ElementVariant<Dune::SGrid<dd, dw> >
 {
   static const int id = 1;
 };
 
 template <int dim, class Coords>
-struct ElementVariant<Dune::YaspGrid<dim, Coords>>
+struct ElementVariant<Dune::YaspGrid<dim, Coords> >
 {
   static const int id = 1;
 };
 
 #if HAVE_DUNE_SPGRID
 template <class ct, int dim, template <int> class Refinement, class Comm>
-struct ElementVariant<Dune::SPGrid<ct, dim, Refinement, Comm>>
+struct ElementVariant<Dune::SPGrid<ct, dim, Refinement, Comm> >
 {
   static const int id = 1;
 };
@@ -104,13 +104,13 @@ struct ElementVariant<Dune::SPGrid<ct, dim, Refinement, Comm>>
 #if HAVE_ALUGRID || HAVE_DUNE_ALUGRID
 
 template <int dimGrid, int dimWorld, class MpiCommImp>
-struct ElementVariant<Dune::ALUGrid<dimGrid, dimWorld, Dune::cube, Dune::conforming, MpiCommImp>>
+struct ElementVariant<Dune::ALUGrid<dimGrid, dimWorld, Dune::cube, Dune::conforming, MpiCommImp> >
 {
   static const int id = 1;
 };
 
 template <int dimGrid, int dimWorld, class MpiCommImp>
-struct ElementVariant<Dune::ALUGrid<dimGrid, dimWorld, Dune::cube, Dune::nonconforming, MpiCommImp>>
+struct ElementVariant<Dune::ALUGrid<dimGrid, dimWorld, Dune::cube, Dune::nonconforming, MpiCommImp> >
 {
   static const int id = 1;
 };
@@ -165,7 +165,7 @@ public:
     return Common::make_unique<ThisType>(
         cfg.get("lower_left", default_config().get<DomainType>("lower_left")),
         cfg.get("upper_right", default_config().get<DomainType>("upper_right")),
-        cfg.get("num_elements", default_config().get<std::vector<unsigned int>>("num_elements"), dimDomain),
+        cfg.get("num_elements", default_config().get<std::vector<unsigned int> >("num_elements"), dimDomain),
         cfg.get("num_refinements", default_config().get<size_t>("num_refinements")),
         overlap_array);
   } // ... create(...)
@@ -181,7 +181,7 @@ public:
    **/
   explicit Cube(const DomainFieldType lower_left = default_config().get<DomainType>("lower_left")[0],
                 const DomainFieldType upper_right = default_config().get<DomainType>("upper_right")[0],
-                const unsigned int num_elements   = default_config().get<std::vector<unsigned int>>("num_elements")[0],
+                const unsigned int num_elements   = default_config().get<std::vector<unsigned int> >("num_elements")[0],
                 const size_t num_refinements = default_config().get<size_t>("num_refinements"),
                 const std::array<unsigned int, dimDomain> overlap =
                     DSC::make_array<unsigned int, dimDomain>(default_config().get<unsigned int>("overlap")))
@@ -192,7 +192,7 @@ public:
 
   Cube(const DSC::FieldVector<DomainFieldType, dimDomain>& lower_left,
        const DSC::FieldVector<DomainFieldType, dimDomain>& upper_right,
-       const unsigned int num_elements = default_config().get<std::vector<unsigned int>>("num_elements")[0],
+       const unsigned int num_elements = default_config().get<std::vector<unsigned int> >("num_elements")[0],
        const size_t num_refinements = default_config().get<size_t>("num_refinements"),
        const std::array<unsigned int, dimDomain> overlap =
            DSC::make_array<unsigned int, dimDomain>(default_config().get<unsigned int>("overlap")))
@@ -262,12 +262,12 @@ private:
     }
     grd_ptr->loadBalance();
 #if HAVE_ALBERTA
-    if (!std::is_same<GridType, AlbertaGrid<dimDomain, dimDomain>>::value)
+    if (!std::is_same<GridType, AlbertaGrid<dimDomain, dimDomain> >::value)
 #endif
       grd_ptr->preAdapt();
     grd_ptr->globalRefine(boost::numeric_cast<int>(num_refinements));
 #if HAVE_ALBERTA
-    if (!std::is_same<GridType, AlbertaGrid<dimDomain, dimDomain>>::value)
+    if (!std::is_same<GridType, AlbertaGrid<dimDomain, dimDomain> >::value)
 #endif
       grd_ptr->postAdapt();
     grd_ptr->loadBalance();

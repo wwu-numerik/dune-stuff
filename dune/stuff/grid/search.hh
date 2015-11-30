@@ -28,26 +28,26 @@ namespace Dune {
 namespace Stuff {
 namespace Grid {
 
-template <class GridViewType>
+template < class GridViewType >
 class EntitySearchBase
 {
   typedef typename GridViewType::Traits ViewTraits;
-  static_assert(std::is_base_of<GridView<ViewTraits>, GridViewType>::value,
+  static_assert(std::is_base_of< GridView< ViewTraits >, GridViewType >::value,
                 "GridViewType has to be derived from GridView!");
 
 public:
-  typedef typename ViewTraits::template Codim<0>::Entity EntityType;
+  typedef typename ViewTraits::template Codim< 0 >::Entity EntityType;
   typedef typename EntityType::Geometry::LocalCoordinate LocalCoordinateType;
   typedef typename EntityType::Geometry::GlobalCoordinate GlobalCoordinateType;
-  typedef std::vector<std::unique_ptr<EntityType>> EntityVectorType;
+  typedef std::vector< std::unique_ptr< EntityType > > EntityVectorType;
 }; // class EntitySearchBase
 
-template <class GridViewType>
-class EntityInlevelSearch : public EntitySearchBase<GridViewType>
+template < class GridViewType >
+class EntityInlevelSearch : public EntitySearchBase< GridViewType >
 {
-  typedef EntitySearchBase<GridViewType> BaseType;
+  typedef EntitySearchBase< GridViewType > BaseType;
 
-  typedef typename GridViewType::template Codim<0>::Iterator IteratorType;
+  typedef typename GridViewType::template Codim< 0 >::Iterator IteratorType;
 
 public:
   typedef typename BaseType::EntityVectorType EntityVectorType;
@@ -59,19 +59,23 @@ private:
     const auto& geometry   = entity.geometry();
     const auto& refElement = DSG::reference_element(geometry);
     if (refElement.checkInside(geometry.local(point))) {
-      return DSC::make_unique<typename BaseType::EntityType>(entity);
+      return DSC::make_unique< typename BaseType::EntityType >(entity);
     }
     return nullptr;
   }
 
 public:
-  EntityInlevelSearch(const GridViewType& gridview) : gridview_(gridview), it_last_(gridview_.template begin<0>()) {}
+  EntityInlevelSearch(const GridViewType& gridview)
+    : gridview_(gridview)
+    , it_last_(gridview_.template begin< 0 >())
+  {
+  }
 
-  template <class PointContainerType>
+  template < class PointContainerType >
   EntityVectorType operator()(const PointContainerType& points)
   {
-    const IteratorType begin = gridview_.template begin<0>();
-    const IteratorType end = gridview_.template end<0>();
+    const IteratorType begin = gridview_.template begin< 0 >();
+    const IteratorType end = gridview_.template end< 0 >();
     EntityVectorType ret(points.size());
     typename EntityVectorType::size_type idx(0);
     for (const auto& point : points) {
@@ -107,20 +111,24 @@ private:
   IteratorType it_last_;
 }; // class EntityInlevelSearch
 
-template <class GridViewType>
-class EntityHierarchicSearch : public EntitySearchBase<GridViewType>
+template < class GridViewType >
+class EntityHierarchicSearch : public EntitySearchBase< GridViewType >
 {
-  typedef EntitySearchBase<GridViewType> BaseType;
+  typedef EntitySearchBase< GridViewType > BaseType;
 
   const GridViewType gridview_;
   const int start_level_;
 
 public:
-  EntityHierarchicSearch(const GridViewType& gridview) : gridview_(gridview), start_level_(0) {}
+  EntityHierarchicSearch(const GridViewType& gridview)
+    : gridview_(gridview)
+    , start_level_(0)
+  {
+  }
 
   typedef typename BaseType::EntityVectorType EntityVectorType;
 
-  template <class PointContainerType>
+  template < class PointContainerType >
   EntityVectorType operator()(const PointContainerType& points) const
   {
     auto level = std::min(gridview_.grid().maxLevel(), start_level_);
@@ -129,7 +137,7 @@ public:
   }
 
 private:
-  template <class QuadpointContainerType, class RangeType>
+  template < class QuadpointContainerType, class RangeType >
   EntityVectorType process(const QuadpointContainerType& quad_points, const RangeType& range) const
   {
     EntityVectorType ret;
@@ -157,16 +165,16 @@ private:
   }
 }; // class EntityHierarchicSearch
 
-template <class GV>
-EntityInlevelSearch<GV> make_entity_in_level_search(const GV& grid_view)
+template < class GV >
+EntityInlevelSearch< GV > make_entity_in_level_search(const GV& grid_view)
 {
-  return EntityInlevelSearch<GV>(grid_view);
+  return EntityInlevelSearch< GV >(grid_view);
 }
 
-template <class GV>
-EntityHierarchicSearch<GV> make_entity_hierarchic_search(const GV& grid_view)
+template < class GV >
+EntityHierarchicSearch< GV > make_entity_hierarchic_search(const GV& grid_view)
 {
-  return EntityHierarchicSearch<GV>(grid_view);
+  return EntityHierarchicSearch< GV >(grid_view);
 }
 
 } // namespace Grid

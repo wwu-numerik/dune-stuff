@@ -62,11 +62,14 @@ const char* StreamModifiers::endunderline = "\033[24m";
 const char* StreamModifiers::endblink     = "\033[25m";
 const char* StreamModifiers::endreverse   = "\033[27m";
 
-std::string color(size_t i) { return "\033[38;5;" + std::to_string(i) + "m"; }
-
-std::map<std::string, std::string>& color_map()
+std::string color(size_t i)
 {
-  static std::map<std::string, std::string> map_;
+  return "\033[38;5;" + std::to_string(i) + "m";
+}
+
+std::map< std::string, std::string >& color_map()
+{
+  static std::map< std::string, std::string > map_;
   static bool created_ = false;
   if (!created_) {
     map_["black"]       = Colors::black;
@@ -99,9 +102,15 @@ std::string color(const std::string id)
     return "";
 }
 
-std::string backcolor(size_t i) { return "\033[38;5;" + std::to_string(i) + "m"; }
+std::string backcolor(size_t i)
+{
+  return "\033[38;5;" + std::to_string(i) + "m";
+}
 
-size_t templateColorChooser(size_t i) { return i % 256; }
+size_t templateColorChooser(size_t i)
+{
+  return i % 256;
+}
 
 /**
  * This is taken from gtest-all.cc!
@@ -173,7 +182,10 @@ std::string colorString(const std::string str, const std::string clr)
     return str;
 }
 
-std::string colorStringRed(const std::string str) { return colorString(str, Colors::red); }
+std::string colorStringRed(const std::string str)
+{
+  return colorString(str, Colors::red);
+}
 
 } // namespace Common
 } // namespace Stuff

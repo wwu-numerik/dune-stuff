@@ -30,26 +30,26 @@ namespace Grid {
 
 #if HAVE_DUNE_GRID
 
-template <class GridPartOrViewType>
+template < class GridPartOrViewType >
 class Intersection
 {
-  template <class GridViewType, bool is_view>
+  template < class GridViewType, bool is_view >
   struct Choose
   {
     typedef typename GridViewType::Intersection Type;
   };
 
-  template <class GridPartType>
-  struct Choose<GridPartType, false>
+  template < class GridPartType >
+  struct Choose< GridPartType, false >
   {
     typedef typename GridPartType::IntersectionType Type;
   };
 
   static const bool this_is_a_grid_view =
-      std::is_base_of<GridView<typename GridPartOrViewType::Traits>, GridPartOrViewType>::value;
+      std::is_base_of< GridView< typename GridPartOrViewType::Traits >, GridPartOrViewType >::value;
 
 public:
-  typedef typename Choose<GridPartOrViewType, this_is_a_grid_view>::Type Type;
+  typedef typename Choose< GridPartOrViewType, this_is_a_grid_view >::Type Type;
 }; // class Intersection
 
 #endif // HAVE_DUNE_GRID
@@ -64,11 +64,11 @@ public:
   \param[out] stream
               std::ostream, into which the information is printed
   **/
-template <class IntersectionType>
+template < class IntersectionType >
 void printIntersection(const IntersectionType& intersection, std::ostream& out = std::cout,
                        const std::string prefix = "")
 {
-  out << prefix << Common::Typename<IntersectionType>::value() << std::endl;
+  out << prefix << Common::Typename< IntersectionType >::value() << std::endl;
   const auto& geometry = intersection.geometry();
   for (auto ii : DSC::valueRange(geometry.corners()))
     out << prefix << "  corner " + Common::toString(ii) << " = " << geometry.corner(ii)
@@ -81,10 +81,10 @@ void printIntersection(const IntersectionType& intersection, std::ostream& out =
  *
  *        Returns true, if global_point lies on the line between the corners of intersection.
  */
-template <class G, class I, class D>
-typename std::enable_if<Dune::Intersection<G, I>::dimension == 2, bool>::type
-    contains(const Dune::Intersection<G, I>& intersection, const Dune::FieldVector<D, 2>& global_point,
-             const D& tolerance = DSC::FloatCmp::DefaultEpsilon<D>::value())
+template < class G, class I, class D >
+typename std::enable_if< Dune::Intersection< G, I >::dimension == 2, bool >::type
+contains(const Dune::Intersection< G, I >& intersection, const Dune::FieldVector< D, 2 >& global_point,
+         const D& tolerance = DSC::FloatCmp::DefaultEpsilon< D >::value())
 {
   const auto& geometry = intersection.geometry();
   // get the global coordinates of the intersections corners
@@ -117,9 +117,9 @@ typename std::enable_if<Dune::Intersection<G, I>::dimension == 2, bool>::type
 * @param[in] globalPoint A Dune::FieldVector with the global coordinates of the point
 * @return Returns true if the point lies on the intersection, false otherwise.
 */
-template <class IntersectionType, class FieldType, int dim>
+template < class IntersectionType, class FieldType, int dim >
 bool DUNE_DEPRECATED_MSG("This method does not produce correct results, use contains() instead!")
-    intersectionContains(const IntersectionType& intersection, const Dune::FieldVector<FieldType, dim>& globalPoint)
+    intersectionContains(const IntersectionType& intersection, const Dune::FieldVector< FieldType, dim >& globalPoint)
 {
   // map global coordinates to local coordinates of the intersection
   const auto& intersectionGeometry = intersection.geometry();
@@ -127,16 +127,16 @@ bool DUNE_DEPRECATED_MSG("This method does not produce correct results, use cont
 
 // get codim 1 reference element
 #if DUNE_VERSION_NEWER(DUNE_GEOMETRY, 2, 3)
-  const auto& refElement = ReferenceElements<FieldType, dim - 1>::general(intersectionGeometry.type());
+  const auto& refElement = ReferenceElements< FieldType, dim - 1 >::general(intersectionGeometry.type());
 #else
-  const auto& refElement = GenericReferenceElements<FieldType, dim - 1>::general(intersectionGeometry.type());
+  const auto& refElement = GenericReferenceElements< FieldType, dim - 1 >::general(intersectionGeometry.type());
 #endif
   // check whether reference element contains the local coordinates
   return refElement.checkInside(localPoint);
 } // end function intersectionContains
 
-template <class IntersectionType, class FieldType>
-bool intersectionContains(const IntersectionType& intersection, const Dune::FieldVector<FieldType, 2>& globalPoint)
+template < class IntersectionType, class FieldType >
+bool intersectionContains(const IntersectionType& intersection, const Dune::FieldVector< FieldType, 2 >& globalPoint)
 {
   return contains(intersection, globalPoint);
 }

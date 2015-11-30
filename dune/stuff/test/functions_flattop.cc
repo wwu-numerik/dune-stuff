@@ -32,10 +32,10 @@
 using namespace Dune;
 using namespace Stuff;
 
-template <class G>
+template < class G >
 class FlatTopFunctionType
 {
-  typedef typename G::template Codim<0>::Entity E;
+  typedef typename G::template Codim< 0 >::Entity E;
   typedef typename G::ctype D;
   static const size_t d = G::dimension;
   typedef double R;
@@ -43,22 +43,25 @@ class FlatTopFunctionType
   static const size_t rC = 1;
 
 public:
-  typedef Functions::FlatTop<E, D, d, R, r, rC> value;
+  typedef Functions::FlatTop< E, D, d, R, r, rC > value;
 }; // struct FlatTopFunctionType
 
-template <class DimDomain>
+template < class DimDomain >
 class FlatTopFunctionTest
     : public FunctionTest<
-          typename FlatTopFunctionType<YaspGrid<DimDomain::value,
-                                                EquidistantOffsetCoordinates<double, DimDomain::value>>>::value>
+          typename FlatTopFunctionType< YaspGrid< DimDomain::value,
+                                                  EquidistantOffsetCoordinates< double, DimDomain::value > > >::value >
 {
 protected:
-  typedef YaspGrid<DimDomain::value, EquidistantOffsetCoordinates<double, DimDomain::value>> GridType;
-  typedef typename FlatTopFunctionType<GridType>::value FunctionType;
+  typedef YaspGrid< DimDomain::value, EquidistantOffsetCoordinates< double, DimDomain::value > > GridType;
+  typedef typename FlatTopFunctionType< GridType >::value FunctionType;
 
-  static std::shared_ptr<GridType> create_grid() { return Stuff::Grid::Providers::Cube<GridType>(0, 3, 12).grid_ptr(); }
+  static std::shared_ptr< GridType > create_grid()
+  {
+    return Stuff::Grid::Providers::Cube< GridType >(0, 3, 12).grid_ptr();
+  }
 
-  template <class P, class V, class L, class R, class D, class E>
+  template < class P, class V, class L, class R, class D, class E >
   static void check(const P& point, const V& value, const L& left, const R& right, const D& delta, const E& top_value)
   {
     if (Common::FloatCmp::lt(point, left - delta) || Common::FloatCmp::gt(point, right + delta)) {
@@ -78,13 +81,19 @@ protected:
       }
     }
   } // ... check(...)
-};  // class FlatTopFunctionTest
+}; // class FlatTopFunctionTest
 
-typedef testing::Types<Int<1>, Int<2>, Int<3>> DimDomains;
+typedef testing::Types< Int< 1 >, Int< 2 >, Int< 3 > > DimDomains;
 
 TYPED_TEST_CASE(FlatTopFunctionTest, DimDomains);
-TYPED_TEST(FlatTopFunctionTest, static_interface_check) { this->static_interface_check(); }
-TYPED_TEST(FlatTopFunctionTest, static_create_check) { this->static_create_check(); }
+TYPED_TEST(FlatTopFunctionTest, static_interface_check)
+{
+  this->static_interface_check();
+}
+TYPED_TEST(FlatTopFunctionTest, static_create_check)
+{
+  this->static_create_check();
+}
 TYPED_TEST(FlatTopFunctionTest, dynamic_interface_check)
 {
   this->dynamic_interface_check(*(TestFixture::FunctionType::create()), *(this->create_grid()));
@@ -92,7 +101,7 @@ TYPED_TEST(FlatTopFunctionTest, dynamic_interface_check)
 TYPED_TEST(FlatTopFunctionTest, evaluate_check)
 {
   auto grid_ptr = this->create_grid();
-  typedef DSC::FieldVector<double, TypeParam::value> DomainType;
+  typedef DSC::FieldVector< double, TypeParam::value > DomainType;
   const DomainType left(1);
   const DomainType right(2);
   const DomainType delta(1e-6);
@@ -101,8 +110,8 @@ TYPED_TEST(FlatTopFunctionTest, evaluate_check)
   func.visualize(grid_ptr->leafGridView(), "dim_" + DSC::toString(int(TypeParam::value)));
   for (const auto& entity : Stuff::Common::entityRange(grid_ptr->leafGridView())) {
     const auto local_func  = func.local_function(entity);
-    const auto& quadrature = QuadratureRules<double, TypeParam::value>::rule(
-        entity.type(), boost::numeric_cast<int>(local_func->order() + 2));
+    const auto& quadrature = QuadratureRules< double, TypeParam::value >::rule(
+        entity.type(), boost::numeric_cast< int >(local_func->order() + 2));
     for (const auto& element : quadrature) {
       const auto& local_point = element.position();
       const auto point        = entity.geometry().global(local_point);
@@ -115,10 +124,20 @@ TYPED_TEST(FlatTopFunctionTest, evaluate_check)
 #else // HAVE_DUNE_GRID
 
 // no-compile placeholders to mark disabled tests in test-binary output
-TEST(DISABLED_FlatTopFunctionTest, static_interface_check) {}
-TEST(DISABLED_FlatTopFunctionTest, static_create_check) {}
-TEST(DISABLED_FlatTopFunctionTest, dynamic_interface_check) {}
-TEST(DISABLED_FlatTopFunctionTest, copy_check) {}
-TEST(DISABLED_FlatTopFunctionTest, evaluate_check) {}
+TEST(DISABLED_FlatTopFunctionTest, static_interface_check)
+{
+}
+TEST(DISABLED_FlatTopFunctionTest, static_create_check)
+{
+}
+TEST(DISABLED_FlatTopFunctionTest, dynamic_interface_check)
+{
+}
+TEST(DISABLED_FlatTopFunctionTest, copy_check)
+{
+}
+TEST(DISABLED_FlatTopFunctionTest, evaluate_check)
+{
+}
 
 #endif // HAVE_DUNE_GRID

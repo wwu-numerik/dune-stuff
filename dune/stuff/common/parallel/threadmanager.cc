@@ -20,7 +20,7 @@
 #include <Eigen/Core>
 #endif
 
-//some assertions only make sense if dune-fem's threading manager is non-trivial
+// some assertions only make sense if dune-fem's threading manager is non-trivial
 #if defined(USE_PTHREADS) || defined(_OPENMP)
 #define WITH_DUNE_FEM_AND_THREADING(expr) WITH_DUNE_FEM(expr)
 #else
@@ -49,7 +49,7 @@ size_t Dune::Stuff::ThreadManager::current_threads()
 size_t Dune::Stuff::ThreadManager::thread()
 {
   const auto tbb_id = std::this_thread::get_id();
-  static std::map<decltype(tbb_id), size_t> thread_ids;
+  static std::map< decltype(tbb_id), size_t > thread_ids;
   const auto it = thread_ids.find(tbb_id);
   if (it == thread_ids.end())
     DSC::map_emplace(thread_ids, tbb_id, thread_ids.size());
@@ -57,7 +57,8 @@ size_t Dune::Stuff::ThreadManager::thread()
 }
 
 //! both std::hw_concur and intel's default_thread_count fail for mic
-size_t Dune::Stuff::ThreadManager::default_max_threads() {
+size_t Dune::Stuff::ThreadManager::default_max_threads()
+{
 #ifndef __MIC__
   return std::thread::hardware_concurrency();
 #else
@@ -72,8 +73,8 @@ void Dune::Stuff::ThreadManager::set_max_threads(const size_t count)
     DSC_LOG_DEBUG << (boost::format("Re-initializing TBB from %d to %d threads") % max_threads_ % count).str();
     tbb_init_.terminate();
   }
-  max_threads_ = count;
-  const int int_count = boost::numeric_cast<int>(count);
+  max_threads_        = count;
+  const int int_count = boost::numeric_cast< int >(count);
   WITH_DUNE_FEM(Dune::Fem::ThreadManager::setMaxNumberThreads(int_count);)
 #if HAVE_EIGEN
   Eigen::setNbThreads(int_count);
@@ -81,7 +82,9 @@ void Dune::Stuff::ThreadManager::set_max_threads(const size_t count)
   tbb_init_.initialize(int_count);
 }
 
-Dune::Stuff::ThreadManager::ThreadManager() : max_threads_(default_max_threads()), tbb_init_(tbb::task_scheduler_init::deferred)
+Dune::Stuff::ThreadManager::ThreadManager()
+  : max_threads_(default_max_threads())
+  , tbb_init_(tbb::task_scheduler_init::deferred)
 {
 #if HAVE_EIGEN
   // must be called before tbb threads are created via tbb::task_scheduler_init object ctor
@@ -93,11 +96,20 @@ Dune::Stuff::ThreadManager::ThreadManager() : max_threads_(default_max_threads()
 
 #else // if HAVE_TBB
 
-size_t Dune::Stuff::ThreadManager::max_threads() { return 1; }
+size_t Dune::Stuff::ThreadManager::max_threads()
+{
+  return 1;
+}
 
-size_t Dune::Stuff::ThreadManager::current_threads() { return 1; }
+size_t Dune::Stuff::ThreadManager::current_threads()
+{
+  return 1;
+}
 
-size_t Dune::Stuff::ThreadManager::thread() { return 0; }
+size_t Dune::Stuff::ThreadManager::thread()
+{
+  return 0;
+}
 
 void Dune::Stuff::ThreadManager::set_max_threads(const size_t count)
 {
@@ -105,10 +117,14 @@ void Dune::Stuff::ThreadManager::set_max_threads(const size_t count)
     DUNE_THROW(InvalidStateException, "Trying to use more than one thread w/o TBB");
 }
 
-size_t Dune::Stuff::ThreadManager::default_max_threads() {
+size_t Dune::Stuff::ThreadManager::default_max_threads()
+{
   return 1;
 }
 
-Dune::Stuff::ThreadManager::ThreadManager() : max_threads_(1) {}
+Dune::Stuff::ThreadManager::ThreadManager()
+  : max_threads_(1)
+{
+}
 
 #endif // HAVE_DUNE_FEM

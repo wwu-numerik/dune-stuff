@@ -31,26 +31,29 @@ namespace Providers {
 /**
  * \brief   Gmsh grid provider
  */
-template <class GridImp>
-class Gmsh : public Grid::ProviderInterface<GridImp>
+template < class GridImp >
+class Gmsh : public Grid::ProviderInterface< GridImp >
 {
-  static_assert(!(std::is_same<GridImp, Dune::YaspGrid<GridImp::dimension>>::value),
+  static_assert(!(std::is_same< GridImp, Dune::YaspGrid< GridImp::dimension > >::value),
                 "GmshReader does not work with YaspGrid!");
-  static_assert(!(std::is_same<GridImp, Dune::SGrid<GridImp::dimension, GridImp::dimension>>::value),
+  static_assert(!(std::is_same< GridImp, Dune::SGrid< GridImp::dimension, GridImp::dimension > >::value),
                 "GmshReader does not work with SGrid!");
-  typedef Grid::ProviderInterface<GridImp> BaseType;
-  typedef Gmsh<GridImp> ThisType;
+  typedef Grid::ProviderInterface< GridImp > BaseType;
+  typedef Gmsh< GridImp > ThisType;
 
 public:
   using typename BaseType::GridType;
 
-  static const std::string static_id() { return BaseType::static_id() + ".gmsh"; }
+  static const std::string static_id()
+  {
+    return BaseType::static_id() + ".gmsh";
+  }
 
   static Common::Configuration default_config(const std::string sub_name = "")
   {
     std::string filename = "g.msh";
-    if (std::is_same<ALUGrid<2, 2, simplex, conforming>, GridType>::value
-        || std::is_same<ALUGrid<2, 2, simplex, nonconforming>, GridType>::value)
+    if (std::is_same< ALUGrid< 2, 2, simplex, conforming >, GridType >::value
+        || std::is_same< ALUGrid< 2, 2, simplex, nonconforming >, GridType >::value)
       filename = "gmsh_2d_simplices.msh";
     Common::Configuration config("filename", filename);
     if (sub_name.empty())
@@ -62,15 +65,18 @@ public:
     }
   } // ... default_config(...)
 
-  static std::unique_ptr<ThisType> create(const Common::Configuration config = default_config(),
-                                          const std::string sub_name = static_id())
+  static std::unique_ptr< ThisType > create(const Common::Configuration config = default_config(),
+                                            const std::string sub_name = static_id())
   {
     const Common::Configuration cfg         = config.has_sub(sub_name) ? config.sub(sub_name) : config;
     const Common::Configuration default_cfg = default_config();
-    return Common::make_unique<ThisType>(cfg.get("filename", default_cfg.get<std::string>("filename")));
+    return Common::make_unique< ThisType >(cfg.get("filename", default_cfg.get< std::string >("filename")));
   }
 
-  Gmsh(const std::string filename) { grid_ = std::shared_ptr<GridType>(GmshReader<GridType>::read(filename)); }
+  Gmsh(const std::string filename)
+  {
+    grid_ = std::shared_ptr< GridType >(GmshReader< GridType >::read(filename));
+  }
 
   Gmsh(ThisType&& source) = default;
   Gmsh(const ThisType& other) = default;
@@ -80,16 +86,28 @@ public:
   ThisType& operator=(const ThisType& other) = default;
   ThisType& operator=(ThisType&& source) = default;
 
-  virtual const GridType& grid() const override final { return *grid_; }
+  virtual const GridType& grid() const override final
+  {
+    return *grid_;
+  }
 
-  virtual GridType& grid() override final { return *grid_; }
+  virtual GridType& grid() override final
+  {
+    return *grid_;
+  }
 
-  const std::shared_ptr<const GridType> grid_ptr() const { return grid_; }
+  const std::shared_ptr< const GridType > grid_ptr() const
+  {
+    return grid_;
+  }
 
-  std::shared_ptr<GridType> grid_ptr() { return grid_; }
+  std::shared_ptr< GridType > grid_ptr()
+  {
+    return grid_;
+  }
 
 private:
-  std::shared_ptr<GridType> grid_;
+  std::shared_ptr< GridType > grid_;
 }; // class Gmsh
 
 } // namespace Providers

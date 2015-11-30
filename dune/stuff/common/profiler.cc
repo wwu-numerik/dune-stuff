@@ -54,15 +54,23 @@ namespace Dune {
 namespace Stuff {
 namespace Common {
 
-TimingData::TimingData(const std::string _name) : timer_(new boost::timer::cpu_timer), name(_name) { timer_->start(); }
+TimingData::TimingData(const std::string _name)
+  : timer_(new boost::timer::cpu_timer)
+  , name(_name)
+{
+  timer_->start();
+}
 
-void TimingData::stop() { timer_->stop(); }
+void TimingData::stop()
+{
+  timer_->stop();
+}
 
 TimingData::DeltaType TimingData::delta() const
 {
   const auto scale   = 1.0 / double(boost::timer::nanosecond_type(1e6));
   const auto elapsed = timer_->elapsed();
-  const auto cast = [=](double var) { return static_cast<typename TimingData::DeltaType::value_type>(var); };
+  const auto cast = [=](double var) { return static_cast< typename TimingData::DeltaType::value_type >(var); };
   return {{cast(elapsed.wall * scale), cast(elapsed.user * scale), cast(elapsed.system * scale)}};
 }
 
@@ -79,7 +87,7 @@ void Profiler::resetTiming(const std::string section_name)
 
 void Profiler::startTiming(const std::string section_name)
 {
-  std::lock_guard<std::mutex> lock(mutex_);
+  std::lock_guard< std::mutex > lock(mutex_);
   if (current_run_number_ >= datamaps_.size()) {
     datamaps_.push_back(Datamap());
   }
@@ -119,7 +127,10 @@ long Profiler::stopTiming(const std::string section_name)
   return delta[0];
 } // StopTiming
 
-long Profiler::getTiming(const std::string section_name) const { return get_delta(section_name)[0]; }
+long Profiler::getTiming(const std::string section_name) const
+{
+  return get_delta(section_name)[0];
+}
 
 TimingData::DeltaType Profiler::get_delta(const std::string section_name) const
 {
@@ -147,7 +158,8 @@ void Profiler::stopAll()
   for (auto&& section : known_timers_map_) {
     try {
       stopTiming(section.first);
-    } catch (Dune::RangeError ) {}
+    } catch (Dune::RangeError) {
+    }
   }
 } // GetTiming
 
@@ -160,7 +172,10 @@ void Profiler::reset(const size_t numRuns)
   current_run_number_ = 0;
 } // Reset
 
-void Profiler::addCount(const size_t num) { counters_[num] += 1; }
+void Profiler::addCount(const size_t num)
+{
+  counters_[num] += 1;
+}
 
 void Profiler::nextRun()
 {
@@ -191,7 +206,7 @@ void Profiler::outputAveraged(const int refineLevel, const long numDofs, const d
 
   boost::filesystem::ofstream csv(filename);
 
-  std::map<std::string, long> averages_map;
+  std::map< std::string, long > averages_map;
   for (const auto& datamap : datamaps_) {
     for (const auto& timing : datamap) {
       //! this used to be GetTiming( it->second ), which is only valid thru an implicit and wrong conversion..
@@ -302,17 +317,22 @@ void Profiler::outputTimings(std::ostream& out) const
   }
 }
 
-Profiler::Profiler() : csv_sep_(",")
+Profiler::Profiler()
+  : csv_sep_(",")
 {
   DSC_LIKWID_INIT;
   reset(1);
   setOutputdir("./profiling");
 }
 
-Profiler::~Profiler() { DSC_LIKWID_CLOSE; }
+Profiler::~Profiler()
+{
+  DSC_LIKWID_CLOSE;
+}
 
 OutputScopedTiming::OutputScopedTiming(const std::string& section_name, std::ostream& out)
-  : ScopedTiming(section_name), out_(out)
+  : ScopedTiming(section_name)
+  , out_(out)
 {
 }
 

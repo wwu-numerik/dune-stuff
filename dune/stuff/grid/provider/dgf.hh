@@ -9,7 +9,7 @@
 #include <memory>
 
 #if HAVE_DUNE_GRID
-#include <dune/grid/io/file/dgfparser/gridptr.hh>        // How convenient that GridPtr requires DGFGridFactory but
+#include <dune/grid/io/file/dgfparser/gridptr.hh> // How convenient that GridPtr requires DGFGridFactory but
 #include <dune/grid/io/file/dgfparser/dgfgridfactory.hh> // does not include it!
 #include <dune/grid/io/file/dgfparser/dgfoned.hh>
 #include <dune/grid/io/file/dgfparser/dgfs.hh>
@@ -33,17 +33,20 @@ namespace Providers {
 
 #if HAVE_DUNE_GRID
 
-template <class GridImp>
-class DGF : public Grid::ProviderInterface<GridImp>
+template < class GridImp >
+class DGF : public Grid::ProviderInterface< GridImp >
 {
-  typedef Grid::ProviderInterface<GridImp> BaseType;
-  typedef DGF<GridImp> ThisType;
+  typedef Grid::ProviderInterface< GridImp > BaseType;
+  typedef DGF< GridImp > ThisType;
 
 public:
   using typename BaseType::GridType;
   using BaseType::dimDomain;
 
-  static const std::string static_id() { return BaseType::static_id() + ".dgf"; }
+  static const std::string static_id()
+  {
+    return BaseType::static_id() + ".dgf";
+  }
 
   static Common::Configuration default_config(const std::string sub_name = "")
   { // size_t(...) required, else linker error with clang
@@ -57,15 +60,18 @@ public:
     }
   } // ... default_config(...)
 
-  static std::unique_ptr<ThisType> create(const Common::Configuration config = default_config(),
-                                          const std::string sub_name = static_id())
+  static std::unique_ptr< ThisType > create(const Common::Configuration config = default_config(),
+                                            const std::string sub_name = static_id())
   {
     const Common::Configuration cfg         = config.has_sub(sub_name) ? config.sub(sub_name) : config;
     const Common::Configuration default_cfg = default_config();
-    return Common::make_unique<ThisType>(cfg.get("filename", default_cfg.get<std::string>("filename")));
+    return Common::make_unique< ThisType >(cfg.get("filename", default_cfg.get< std::string >("filename")));
   }
 
-  DGF(const std::string filename) { grid_ = std::shared_ptr<GridType>(GridPtr<GridType>(filename).release()); }
+  DGF(const std::string filename)
+  {
+    grid_ = std::shared_ptr< GridType >(GridPtr< GridType >(filename).release());
+  }
 
   DGF(ThisType&& source) = default;
   DGF(const ThisType& other) = default;
@@ -75,24 +81,36 @@ public:
   ThisType& operator=(const ThisType& other) = default;
   ThisType& operator=(ThisType&& source) = default;
 
-  virtual const GridType& grid() const override final { return *grid_; }
+  virtual const GridType& grid() const override final
+  {
+    return *grid_;
+  }
 
-  virtual GridType& grid() override final { return *grid_; }
+  virtual GridType& grid() override final
+  {
+    return *grid_;
+  }
 
-  const std::shared_ptr<const GridType> grid_ptr() const { return grid_; }
+  const std::shared_ptr< const GridType > grid_ptr() const
+  {
+    return grid_;
+  }
 
-  std::shared_ptr<GridType> grid_ptr() { return grid_; }
+  std::shared_ptr< GridType > grid_ptr()
+  {
+    return grid_;
+  }
 
 private:
-  std::shared_ptr<GridType> grid_;
+  std::shared_ptr< GridType > grid_;
 }; // class DGF
 
 #else // HAVE_DUNE_GRID
 
-template <class GridImp>
+template < class GridImp >
 class DGF
 {
-  static_assert(AlwaysFalse<GridImp>::value, "You are missing dune-grid!");
+  static_assert(AlwaysFalse< GridImp >::value, "You are missing dune-grid!");
 };
 
 #endif // HAVE_DUNE_GRID
