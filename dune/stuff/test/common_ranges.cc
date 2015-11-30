@@ -20,21 +20,24 @@ using namespace Dune::Stuff::Grid;
 using namespace std;
 
 //! \TODO enable embedded grids
-typedef testing::Types<YaspGrid<1, EquidistantOffsetCoordinates<double, 1>>,
-                       YaspGrid<2, EquidistantOffsetCoordinates<double, 2>>,
-                       YaspGrid<3, EquidistantOffsetCoordinates<double, 3>>,
-                       YaspGrid<4, EquidistantOffsetCoordinates<double, 4>>> Grids;
+typedef testing::Types< YaspGrid< 1, EquidistantOffsetCoordinates< double, 1 > >,
+                        YaspGrid< 2, EquidistantOffsetCoordinates< double, 2 > >,
+                        YaspGrid< 3, EquidistantOffsetCoordinates< double, 3 > >,
+                        YaspGrid< 4, EquidistantOffsetCoordinates< double, 4 > > > Grids;
 
-template <class T>
+template < class T >
 struct CornerRangeTest : public ::testing::Test
 {
   static const size_t level = 4;
   typedef T GridType;
   static const size_t dim_grid = GridType::dimension;
-  const DSG::Providers::Cube<GridType> grid_prv;
-  CornerRangeTest() : grid_prv(0., 1., level) {}
+  const DSG::Providers::Cube< GridType > grid_prv;
+  CornerRangeTest()
+    : grid_prv(0., 1., level)
+  {
+  }
 
-  template <typename Entity, typename RangeType>
+  template < typename Entity, typename RangeType >
   void check_range(const Entity& e, RangeType range)
   {
     auto i  = e.geometry().corners();
@@ -54,8 +57,8 @@ struct CornerRangeTest : public ::testing::Test
   {
     const auto gv = grid_prv.grid().leafGridView();
     const auto DUNE_UNUSED(entities) = gv.size(0);
-    const auto end = gv.template end<0>();
-    for (auto it = gv.template begin<0>(); it != end; ++it) {
+    const auto end = gv.template end< 0 >();
+    for (auto it = gv.template begin< 0 >(); it != end; ++it) {
       check_range(*it, cornerRange(it->geometry()));
       check_range(*it, cornerRange(*it));
     }
@@ -66,6 +69,9 @@ struct CornerRangeTest : public ::testing::Test
 };
 
 TYPED_TEST_CASE(CornerRangeTest, Grids);
-TYPED_TEST(CornerRangeTest, Misc) { this->check(); }
+TYPED_TEST(CornerRangeTest, Misc)
+{
+  this->check();
+}
 
 #endif // #if HAVE_DUNE_GRID

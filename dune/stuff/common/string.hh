@@ -59,10 +59,10 @@ namespace Common {
  *                    token_compress_on --> empty tokens are discarded
  * \return all tokens in a vector, if msg contains no separators, this'll contain msg as its only element
  **/
-template <class T = std::string>
-inline std::vector<T>
-    tokenize(const std::string& msg, const std::string& separators,
-             const boost::algorithm::token_compress_mode_type mode = boost::algorithm::token_compress_off);
+template < class T = std::string >
+inline std::vector< T >
+tokenize(const std::string& msg, const std::string& separators,
+         const boost::algorithm::token_compress_mode_type mode = boost::algorithm::token_compress_off);
 
 } // namespace Common
 } // namespace Stuff
@@ -85,17 +85,17 @@ static constexpr const std::size_t default_to_string_precision = 6u;
  * \param cols Determines the number of columns of the returning matrix if T is a matrix type (0 means automatic;
  *             ignored if T is a vector or scalar type).
  */
-template <class T>
+template < class T >
 static inline T fromString(std::string ss, const size_t size = 0, const size_t cols = 0)
 {
-  return internal::from_string<T>(ss, size, cols);
+  return internal::from_string< T >(ss, size, cols);
 }
 
 /**
  * \brief Converts an object to string.
  * \sa    internal::to_string for implementations
  */
-template <class T>
+template < class T >
 static inline std::string toString(const T& ss, const size_t precision = default_to_string_precision)
 {
   return internal::to_string(ss, precision);
@@ -107,7 +107,7 @@ static inline std::string toString(const T& ss, const size_t precision = default
   \param[in]  whitespace char, optional argument, defines entries of return string
   \return     A string of lengths t' whitespace (or whitespace chars).
   **/
-template <class T>
+template < class T >
 std::string whitespaceify(const T& t, const char whitespace = ' ')
 {
   const std::string s = toString(t);
@@ -118,39 +118,45 @@ std::string whitespaceify(const T& t, const char whitespace = ' ')
   return ret;
 } // ... whitespaceify(...)
 
-template <class T>
-inline std::vector<T> tokenize(const std::string& msg, const std::string& separators,
-                               const boost::algorithm::token_compress_mode_type mode)
+template < class T >
+inline std::vector< T > tokenize(const std::string& msg, const std::string& separators,
+                                 const boost::algorithm::token_compress_mode_type mode)
 {
-  std::vector<std::string> strings;
+  std::vector< std::string > strings;
   boost::algorithm::split(strings, msg, boost::algorithm::is_any_of(separators), mode);
-  std::vector<T> ret(strings.size());
+  std::vector< T > ret(strings.size());
   size_t i = 0;
   // special case for empty strings to avoid non-default init
   std::generate(
-      std::begin(ret), std::end(ret), [&]() { return strings[i++].empty() ? T() : fromString<T>(strings[i - 1]); });
+      std::begin(ret), std::end(ret), [&]() { return strings[i++].empty() ? T() : fromString< T >(strings[i - 1]); });
   return ret;
 } // ... tokenize(...)
 
 template <>
-inline std::vector<std::string> tokenize(const std::string& msg, const std::string& separators,
-                                         const boost::algorithm::token_compress_mode_type mode)
+inline std::vector< std::string > tokenize(const std::string& msg, const std::string& separators,
+                                           const boost::algorithm::token_compress_mode_type mode)
 {
-  std::vector<std::string> strings;
+  std::vector< std::string > strings;
   boost::algorithm::split(strings, msg, boost::algorithm::is_any_of(separators), mode);
   return strings;
 }
 
 //! returns string with local time in current locale's format
-inline std::string stringFromTime(time_t cur_time = time(NULL)) { return ctime(&cur_time); }
+inline std::string stringFromTime(time_t cur_time = time(NULL))
+{
+  return ctime(&cur_time);
+}
 
 //! helper struct for lexical cast
 // see http://stackoverflow.com/a/2079728
-template <typename ElemT>
+template < typename ElemT >
 struct HexToString
 {
   ElemT value;
-  operator ElemT() const { return value; }
+  operator ElemT() const
+  {
+    return value;
+  }
 
   friend std::istream& operator>>(std::istream& in, HexToString& out)
   {
@@ -159,7 +165,7 @@ struct HexToString
   }
 };
 
-static inline char** vectorToMainArgs(const std::vector<std::string>& args)
+static inline char** vectorToMainArgs(const std::vector< std::string >& args)
 {
   char** argv = new char*[args.size()];
   for (auto ii : valueRange(args.size())) {

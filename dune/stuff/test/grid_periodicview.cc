@@ -24,30 +24,31 @@ using namespace Dune;
 using namespace Stuff;
 
 #define YASPGRIDS                                                                                                      \
-  YaspGrid<1, EquidistantOffsetCoordinates<double, 1>>, YaspGrid<2, EquidistantOffsetCoordinates<double, 2>>,          \
-      YaspGrid<3, EquidistantOffsetCoordinates<double, 3>>
+  YaspGrid< 1, EquidistantOffsetCoordinates< double, 1 > >, YaspGrid< 2, EquidistantOffsetCoordinates< double, 2 > >,  \
+      YaspGrid< 3, EquidistantOffsetCoordinates< double, 3 > >
 
 #if HAVE_ALUGRID
-#define ALUCUBEGRIDS ALUGrid<2, 2, cube, nonconforming>, ALUGrid<3, 3, cube, nonconforming>
+#define ALUCUBEGRIDS ALUGrid< 2, 2, cube, nonconforming >, ALUGrid< 3, 3, cube, nonconforming >
 
-#define ALUSIMPLEXGRIDS ALUGrid<2, 2, simplex, conforming>, ALUGrid<3, 3, simplex, conforming>
+#define ALUSIMPLEXGRIDS ALUGrid< 2, 2, simplex, conforming >, ALUGrid< 3, 3, simplex, conforming >
 #endif // HAVE_ALUGRID
 
-template <class GridImp>
+template < class GridImp >
 struct PeriodicViewTestYaspCube : public testing::Test
 {
   typedef GridImp GridType;
   typedef typename GridType::ctype ctype;
-  typedef typename GridType::template Codim<0>::Geometry GeometryType;
-  typedef Dune::Stuff::Grid::Providers::template Cube<GridType> GridProviderType;
+  typedef typename GridType::template Codim< 0 >::Geometry GeometryType;
+  typedef Dune::Stuff::Grid::Providers::template Cube< GridType > GridProviderType;
   typedef typename GridType::LeafGridView GridViewType;
   typedef typename GridViewType::IndexSet IndexSet;
-  typedef typename GridViewType::template Codim<0>::Geometry::GlobalCoordinate DomainType;
-  typedef typename Dune::Stuff::Grid::template PeriodicGridView<GridViewType> PeriodicGridViewType;
-  typedef typename PeriodicGridViewType::template Codim<0>::Entity EntityType;
-  typedef typename PeriodicGridViewType::template Codim<0>::Iterator EntityIteratorType;
-  typedef typename DSG::internal::template PeriodicIntersectionIterator<GridViewType> PeriodicIntersectionIteratorType;
-  typedef typename DSG::internal::template PeriodicIntersection<GridViewType> PeriodicIntersectionType;
+  typedef typename GridViewType::template Codim< 0 >::Geometry::GlobalCoordinate DomainType;
+  typedef typename Dune::Stuff::Grid::template PeriodicGridView< GridViewType > PeriodicGridViewType;
+  typedef typename PeriodicGridViewType::template Codim< 0 >::Entity EntityType;
+  typedef typename PeriodicGridViewType::template Codim< 0 >::Iterator EntityIteratorType;
+  typedef
+      typename DSG::internal::template PeriodicIntersectionIterator< GridViewType > PeriodicIntersectionIteratorType;
+  typedef typename DSG::internal::template PeriodicIntersection< GridViewType > PeriodicIntersectionType;
   typedef typename PeriodicIntersectionType::EntityPointer EntityPointerType;
   typedef typename GridViewType::CollectiveCommunication CollectiveCommunication;
   static const size_t dimDomain = GridViewType::dimension;
@@ -59,9 +60,9 @@ struct PeriodicViewTestYaspCube : public testing::Test
     DomainType lower_left(0);
     DomainType upper_right(1);
     if (variant >= 3)
-      upper_right = DSC::fromString<DomainType>("[2.0 3.0 1.0 4.0]");
+      upper_right = DSC::fromString< DomainType >("[2.0 3.0 1.0 4.0]");
     if (variant >= 6)
-      lower_left = DSC::fromString<DomainType>("[-0.5 0.5 0.7 -1.3]");
+      lower_left = DSC::fromString< DomainType >("[-0.5 0.5 0.7 -1.3]");
 
     // check interface
     const GridType& DSC_UNUSED(test_grid) = periodic_grid_view.grid();
@@ -90,8 +91,8 @@ struct PeriodicViewTestYaspCube : public testing::Test
     size_t boundary_count = 0;
     size_t periodic_count = 0;
     // iterate over all entities
-    const EntityIteratorType it_end = periodic_grid_view.template end<0>();
-    for (EntityIteratorType it = periodic_grid_view.template begin<0>(); it != it_end; ++it) {
+    const EntityIteratorType it_end = periodic_grid_view.template end< 0 >();
+    for (EntityIteratorType it = periodic_grid_view.template begin< 0 >(); it != it_end; ++it) {
       const EntityType& entity = *it;
       EXPECT_TRUE(periodic_grid_view.contains(entity));
       // iterate over all intersections on current entity
@@ -240,19 +241,19 @@ struct PeriodicViewTestYaspCube : public testing::Test
   void checks_for_all_grids(const bool is_simplex)
   {
     // create grid on unit hypercube
-    GridProviderType grid_provider             = *(GridProviderType::create());
-    const std::shared_ptr<const GridType> grid = grid_provider.grid_ptr();
-    const GridViewType grid_view               = grid->leafGridView();
+    GridProviderType grid_provider               = *(GridProviderType::create());
+    const std::shared_ptr< const GridType > grid = grid_provider.grid_ptr();
+    const GridViewType grid_view                 = grid->leafGridView();
 
     // create grid on hyperrectangle
-    DSC::Configuration grid_config                            = GridProviderType::default_config();
-    grid_config["lower_left"]                                 = "[0.0 0.0 0.0 0.0]";
-    grid_config["upper_right"]                                = "[2.0 3.0 1.0 4.0]";
-    GridProviderType hyperrectangle_grid_provider             = *(GridProviderType::create(grid_config));
-    const std::shared_ptr<const GridType> hyperrectangle_grid = hyperrectangle_grid_provider.grid_ptr();
-    const GridViewType hyperrectangle_grid_view               = hyperrectangle_grid->leafGridView();
+    DSC::Configuration grid_config                              = GridProviderType::default_config();
+    grid_config["lower_left"]                                   = "[0.0 0.0 0.0 0.0]";
+    grid_config["upper_right"]                                  = "[2.0 3.0 1.0 4.0]";
+    GridProviderType hyperrectangle_grid_provider               = *(GridProviderType::create(grid_config));
+    const std::shared_ptr< const GridType > hyperrectangle_grid = hyperrectangle_grid_provider.grid_ptr();
+    const GridViewType hyperrectangle_grid_view                 = hyperrectangle_grid->leafGridView();
 
-    std::bitset<dimDomain> periodic_directions;
+    std::bitset< dimDomain > periodic_directions;
     // create PeriodicGridViews that actually are not periodic
     const PeriodicGridViewType non_periodic_grid_view(grid_view, periodic_directions);
     const PeriodicGridViewType hr_non_periodic_grid_view(hyperrectangle_grid_view, periodic_directions);
@@ -277,14 +278,14 @@ struct PeriodicViewTestYaspCube : public testing::Test
   void non_trivial_origin_checks(const bool is_simplex)
   {
     // create grid on hyperrectangle with lower_left != 0 (not possible for YaspGrid)
-    DSC::Configuration grid_config             = GridProviderType::default_config();
-    grid_config["lower_left"]                  = "[-0.5 0.5 0.7 -1.3]";
-    grid_config["upper_right"]                 = "[2.0 3.0 1.0 4.0]";
-    GridProviderType grid_provider             = *(GridProviderType::create(grid_config));
-    const std::shared_ptr<const GridType> grid = grid_provider.grid_ptr();
-    const GridViewType grid_view               = grid->leafGridView();
+    DSC::Configuration grid_config               = GridProviderType::default_config();
+    grid_config["lower_left"]                    = "[-0.5 0.5 0.7 -1.3]";
+    grid_config["upper_right"]                   = "[2.0 3.0 1.0 4.0]";
+    GridProviderType grid_provider               = *(GridProviderType::create(grid_config));
+    const std::shared_ptr< const GridType > grid = grid_provider.grid_ptr();
+    const GridViewType grid_view                 = grid->leafGridView();
 
-    std::bitset<dimDomain> periodic_directions;
+    std::bitset< dimDomain > periodic_directions;
     // create PeriodicGridViewType that actually is not periodic
     const PeriodicGridViewType non_periodic_grid_view(grid_view, periodic_directions);
     // create PeriodicGridViewType that is periodic only in x-direction
@@ -298,12 +299,12 @@ struct PeriodicViewTestYaspCube : public testing::Test
     this->check(partially_periodic_grid_view, grid_view, is_simplex, 7);
     this->check(fully_periodic_grid_view, grid_view, is_simplex, 8);
   } // void additional_checks_for_alu(...)
-};  // ... struct PeriodicViewTestYaspCube ...
+}; // ... struct PeriodicViewTestYaspCube ...
 
-template <class GridImp>
-struct PeriodicViewTestALUCube : public PeriodicViewTestYaspCube<GridImp>
+template < class GridImp >
+struct PeriodicViewTestALUCube : public PeriodicViewTestYaspCube< GridImp >
 {
-  typedef PeriodicViewTestYaspCube<GridImp> BaseType;
+  typedef PeriodicViewTestYaspCube< GridImp > BaseType;
   typedef typename BaseType::GridProviderType GridProviderType;
   typedef typename BaseType::GridType GridType;
   typedef typename BaseType::GridViewType GridViewType;
@@ -312,12 +313,12 @@ struct PeriodicViewTestALUCube : public PeriodicViewTestYaspCube<GridImp>
 
 }; // ... struct PeriodicViewTestALUCube ...
 
-template <class GridImp>
-struct PeriodicViewTestALUSimplex : public PeriodicViewTestALUCube<GridImp>
+template < class GridImp >
+struct PeriodicViewTestALUSimplex : public PeriodicViewTestALUCube< GridImp >
 {
 };
 
-typedef testing::Types<YASPGRIDS> YaspCubeGridTypes;
+typedef testing::Types< YASPGRIDS > YaspCubeGridTypes;
 
 TYPED_TEST_CASE(PeriodicViewTestYaspCube, YaspCubeGridTypes);
 TYPED_TEST(PeriodicViewTestYaspCube, check_yaspcube)
@@ -328,9 +329,9 @@ TYPED_TEST(PeriodicViewTestYaspCube, check_yaspcube)
 
 #if HAVE_ALUGRID
 
-typedef testing::Types<ALUCUBEGRIDS> ALUCubeGridTypes;
+typedef testing::Types< ALUCUBEGRIDS > ALUCubeGridTypes;
 
-typedef testing::Types<ALUSIMPLEXGRIDS> ALUSimplexGridTypes;
+typedef testing::Types< ALUSIMPLEXGRIDS > ALUSimplexGridTypes;
 
 TYPED_TEST_CASE(PeriodicViewTestALUCube, ALUCubeGridTypes);
 TYPED_TEST(PeriodicViewTestALUCube, check_alucube)
@@ -348,12 +349,18 @@ TYPED_TEST(PeriodicViewTestALUSimplex, check_alusimplex)
 
 #else // HAVE_ALUGRID
 
-TEST(DISABLED_PeriodicViewTestALUCube, check_alucube) {}
-TEST(DISABLED_PeriodicViewTestALUSimplex, check_alusimplex) {}
+TEST(DISABLED_PeriodicViewTestALUCube, check_alucube)
+{
+}
+TEST(DISABLED_PeriodicViewTestALUSimplex, check_alusimplex)
+{
+}
 
 #endif // HAVE_ALUGRID
-#else  // HAVE_DUNE_GRID
+#else // HAVE_DUNE_GRID
 
-TEST(DISABLED_PeriodicViewTestYaspCube, check_yaspcube) {}
+TEST(DISABLED_PeriodicViewTestYaspCube, check_yaspcube)
+{
+}
 
 #endif // HAVE_DUNE_GRID

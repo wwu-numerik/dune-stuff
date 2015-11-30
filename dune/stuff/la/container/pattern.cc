@@ -16,9 +16,15 @@ namespace LA {
 // ================================
 // ==== SparsityPatternDefault ====
 // ================================
-SparsityPatternDefault::SparsityPatternDefault(const size_t _size) : vector_of_vectors_(_size) {}
+SparsityPatternDefault::SparsityPatternDefault(const size_t _size)
+  : vector_of_vectors_(_size)
+{
+}
 
-size_t SparsityPatternDefault::size() const { return vector_of_vectors_.size(); }
+size_t SparsityPatternDefault::size() const
+{
+  return vector_of_vectors_.size();
+}
 
 typename SparsityPatternDefault::InnerType& SparsityPatternDefault::inner(const size_t ii)
 {

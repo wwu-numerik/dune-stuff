@@ -47,7 +47,7 @@ void SuspendableStrBuffer::resume(PriorityType priority)
 std::streamsize SuspendableStrBuffer::xsputn(const char_type* s, std::streamsize count)
 {
   if (enabled()) {
-    std::lock_guard<std::mutex> guard(mutex_);
+    std::lock_guard< std::mutex > guard(mutex_);
     return BaseType::xsputn(s, count);
   }
   // pretend everything was written
@@ -70,13 +70,16 @@ int SuspendableStrBuffer::pubsync()
 }
 
 TimedPrefixedStreamBuffer::TimedPrefixedStreamBuffer(const Timer& timer, const std::string prefix, std::ostream& out)
-  : timer_(timer), prefix_(prefix), out_(out), prefix_needed_(true)
+  : timer_(timer)
+  , prefix_(prefix)
+  , out_(out)
+  , prefix_needed_(true)
 {
 }
 
 int TimedPrefixedStreamBuffer::sync()
 {
-  std::lock_guard<std::mutex> DUNE_UNUSED(guard)(mutex_);
+  std::lock_guard< std::mutex > DUNE_UNUSED(guard)(mutex_);
   const std::string tmp_str = str();
   if (prefix_needed_ && !tmp_str.empty()) {
     out_ << elapsed_time_str() << prefix_;
@@ -129,16 +132,20 @@ LogStream& LogStream::flush()
 }
 
 TimedPrefixedLogStream::TimedPrefixedLogStream(const Timer& timer, const std::string prefix, std::ostream& outstream)
-  : StorageBaseType(new TimedPrefixedStreamBuffer(timer, prefix, outstream)), OstreamBaseType(&this->storage_access())
+  : StorageBaseType(new TimedPrefixedStreamBuffer(timer, prefix, outstream))
+  , OstreamBaseType(&this->storage_access())
 {
 }
 
-TimedPrefixedLogStream::~TimedPrefixedLogStream() { flush(); }
+TimedPrefixedLogStream::~TimedPrefixedLogStream()
+{
+  flush();
+}
 
 int FileBuffer::sync()
 {
   // flush buffer into stream
-  std::lock_guard<std::mutex> guard(sync_mutex_);
+  std::lock_guard< std::mutex > guard(sync_mutex_);
   std::cout << str();
   std::cout.flush();
   logfile_ << str();

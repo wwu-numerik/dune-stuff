@@ -27,8 +27,8 @@
   */
 #define CHECK_CRTP(__interface_method_to_call__)                                                                       \
   {                                                                                                                    \
-    std::lock_guard<std::recursive_mutex> crtp_mutex_guard(this->crtp_mutex_);                                         \
-    static std::atomic<bool> call(false);                                                                              \
+    std::lock_guard< std::recursive_mutex > crtp_mutex_guard(this->crtp_mutex_);                                       \
+    static std::atomic< bool > call(false);                                                                            \
     if (call)                                                                                                          \
       DUNE_THROW(Dune::Stuff::Exceptions::CRTP_check_failed,                                                           \
                  "The derived class does not implement the required method!");                                         \
@@ -56,19 +56,31 @@
 namespace Dune {
 namespace Stuff {
 
-template <class InterfaceType, class Traits>
+template < class InterfaceType, class Traits >
 class CRTPInterface
 {
 public:
   typedef typename Traits::derived_type derived_type;
 
-  static inline derived_type& as_imp(InterfaceType& that) { return static_cast<derived_type&>(that); }
+  static inline derived_type& as_imp(InterfaceType& that)
+  {
+    return static_cast< derived_type& >(that);
+  }
 
-  static inline const derived_type& as_imp(const InterfaceType& that) { return static_cast<const derived_type&>(that); }
+  static inline const derived_type& as_imp(const InterfaceType& that)
+  {
+    return static_cast< const derived_type& >(that);
+  }
 
-  inline derived_type& as_imp() { return static_cast<derived_type&>(*this); }
+  inline derived_type& as_imp()
+  {
+    return static_cast< derived_type& >(*this);
+  }
 
-  inline const derived_type& as_imp() const { return static_cast<const derived_type&>(*this); }
+  inline const derived_type& as_imp() const
+  {
+    return static_cast< const derived_type& >(*this);
+  }
 
 protected:
   // nicely avoid warning about non-virtual dtor when derived classes have vfunc
@@ -80,8 +92,8 @@ protected:
 }; // CRTPInterface
 
 #ifndef NDEBUG
-template <class I, class T>
-std::recursive_mutex CRTPInterface<I, T>::crtp_mutex_;
+template < class I, class T >
+std::recursive_mutex CRTPInterface< I, T >::crtp_mutex_;
 #endif
 } // namespace Stuff
 } // namespace Dune

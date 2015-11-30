@@ -19,18 +19,21 @@ using namespace Dune::Stuff::Common;
 using namespace Dune::Stuff::Grid;
 using namespace std;
 
-typedef testing::Types<Int<1>, Int<2>, Int<3>> GridDims;
+typedef testing::Types< Int< 1 >, Int< 2 >, Int< 3 > > GridDims;
 
-template <class T>
+template < class T >
 struct GridInfoTest : public ::testing::Test
 {
   static const size_t griddim     = T::value;
   static const unsigned int level = 1;
-  typedef Dune::YaspGrid<griddim, Dune::EquidistantOffsetCoordinates<double, griddim>> GridType;
-  typedef Dimensions<typename GridType::LeafGridView> DimensionsType;
+  typedef Dune::YaspGrid< griddim, Dune::EquidistantOffsetCoordinates< double, griddim > > GridType;
+  typedef Dimensions< typename GridType::LeafGridView > DimensionsType;
 
-  const DSG::Providers::Cube<GridType> grid_prv;
-  GridInfoTest() : grid_prv(0.f, 1.f, level) {}
+  const DSG::Providers::Cube< GridType > grid_prv;
+  GridInfoTest()
+    : grid_prv(0.f, 1.f, level)
+  {
+  }
 
   void check_dimensions(const DimensionsType& dim, const size_t entities)
   {
@@ -51,7 +54,7 @@ struct GridInfoTest : public ::testing::Test
     const auto gv       = grid_prv.grid().leafGridView();
     const auto entities = gv.size(0);
     check_dimensions(DimensionsType(grid_prv.grid().leafGridView()), entities);
-    const auto& first_entity = *(grid_prv.grid().leafGridView().template begin<0>());
+    const auto& first_entity = *(grid_prv.grid().leafGridView().template begin< 0 >());
     check_dimensions(DimensionsType(first_entity), 1u);
     const Statistics st(gv);
     const auto line = std::pow(2, level);

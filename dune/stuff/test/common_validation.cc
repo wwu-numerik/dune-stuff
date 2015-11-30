@@ -23,13 +23,13 @@
 
 using namespace Dune::Stuff::Common;
 
-typedef testing::Types<double, float, // Dune::bigunsignedint,
-                       int, unsigned int, unsigned long, long long, char> MathTestTypes;
+typedef testing::Types< double, float, // Dune::bigunsignedint,
+                        int, unsigned int, unsigned long, long long, char > MathTestTypes;
 
-template <class T>
+template < class T >
 struct ValidationTest : public testing::Test
 {
-  typedef DefaultRNG<T> RNGType;
+  typedef DefaultRNG< T > RNGType;
   static const T eps;
   /** for some weird reason my compiler thinks ValidationTest is an abstract class
    * if I don't implement "void TestBody();"
@@ -39,23 +39,23 @@ struct ValidationTest : public testing::Test
   {
     using namespace boost::assign;
     const int samples = 100000;
-    std::cout << "\tTesting Validators for type " << Typename<T>::value() << "\n\t\t" << samples
+    std::cout << "\tTesting Validators for type " << Typename< T >::value() << "\n\t\t" << samples
               << " random numbers ..." << std::endl;
     {
-      const T lower = std::numeric_limits<T>::min() + eps;
-      const T upper = std::numeric_limits<T>::max() - eps;
+      const T lower = std::numeric_limits< T >::min() + eps;
+      const T upper = std::numeric_limits< T >::max() - eps;
       RNGType rng(lower, upper);
       for (int i = samples; i > 0; --i) {
         const T arg = rng();
         test(lower, upper, arg);
       }
-      boost::array<T, 10> ar = list_of<T>().repeat_fun(9, rng);
-      ValidateInList<T, boost::array<T, 10>> validator(ar);
+      boost::array< T, 10 > ar = list_of< T >().repeat_fun(9, rng);
+      ValidateInList< T, boost::array< T, 10 > > validator(ar);
       for (T t : ar) {
         EXPECT_TRUE(validator(t));
       }
-      std::vector<T> a;
-      EXPECT_FALSE(ValidateInList<T>(a)(rng()));
+      std::vector< T > a;
+      EXPECT_FALSE(ValidateInList< T >(a)(rng()));
     }
     std::cout << "\t\tfixed interval" << std::endl;
     {
@@ -63,9 +63,9 @@ struct ValidationTest : public testing::Test
       const T upper = T(2);
       const T arg = T(1);
       test(lower, upper, arg);
-      EXPECT_FALSE(ValidateLess<T>(upper)(lower));
-      EXPECT_FALSE(ValidateGreater<T>(lower)(upper));
-      EXPECT_FALSE(ValidateGreaterOrEqual<T>(lower)(upper + Epsilon<T>::value));
+      EXPECT_FALSE(ValidateLess< T >(upper)(lower));
+      EXPECT_FALSE(ValidateGreater< T >(lower)(upper));
+      EXPECT_FALSE(ValidateGreaterOrEqual< T >(lower)(upper + Epsilon< T >::value));
     }
     std::cout << "\t\tdone." << std::endl;
   }
@@ -74,21 +74,21 @@ struct ValidationTest : public testing::Test
   {
 
     const T clamped_arg = clamp(arg, T(lower + eps), T(upper - eps));
-    EXPECT_TRUE(ValidateAny<T>()(arg));
-    EXPECT_TRUE(ValidateLess<T>(clamped_arg)(upper));
-    EXPECT_TRUE(ValidateGreaterOrEqual<T>(arg)(lower));
-    EXPECT_TRUE(ValidateGreater<T>(clamped_arg)(lower));
-    EXPECT_TRUE(ValidateInterval<T>(lower, upper)(arg));
-    EXPECT_FALSE(ValidateNone<T>()(arg));
+    EXPECT_TRUE(ValidateAny< T >()(arg));
+    EXPECT_TRUE(ValidateLess< T >(clamped_arg)(upper));
+    EXPECT_TRUE(ValidateGreaterOrEqual< T >(arg)(lower));
+    EXPECT_TRUE(ValidateGreater< T >(clamped_arg)(lower));
+    EXPECT_TRUE(ValidateInterval< T >(lower, upper)(arg));
+    EXPECT_FALSE(ValidateNone< T >()(arg));
   }
 };
 
-template <typename T>
-const T ValidationTest<T>::eps = Epsilon<T>::value;
+template < typename T >
+const T ValidationTest< T >::eps = Epsilon< T >::value;
 
 TYPED_TEST_CASE(ValidationTest, MathTestTypes);
 TYPED_TEST(ValidationTest, All)
 {
-  ValidationTest<TypeParam> k;
+  ValidationTest< TypeParam > k;
   k.TestBody();
 }

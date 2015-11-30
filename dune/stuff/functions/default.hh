@@ -22,30 +22,35 @@ namespace Functions {
 
 #if HAVE_DUNE_GRID
 
-template <class GridViewType, size_t dimRange, size_t dimRangeCols>
-class VisualizationAdapter : public VTKFunction<GridViewType>
+template < class GridViewType, size_t dimRange, size_t dimRangeCols >
+class VisualizationAdapter : public VTKFunction< GridViewType >
 {
 public:
-  typedef typename GridViewType::template Codim<0>::Entity EntityType;
+  typedef typename GridViewType::template Codim< 0 >::Entity EntityType;
 
   typedef typename GridViewType::ctype DomainFieldType;
   static const size_t dimDomain = GridViewType::dimension;
-  typedef FieldVector<DomainFieldType, dimDomain> DomainType;
+  typedef FieldVector< DomainFieldType, dimDomain > DomainType;
 
-  typedef LocalizableFunctionInterface<EntityType, DomainFieldType, dimDomain, double, dimRange, dimRangeCols>
+  typedef LocalizableFunctionInterface< EntityType, DomainFieldType, dimDomain, double, dimRange, dimRangeCols >
       FunctionType;
 
   VisualizationAdapter(const FunctionType& function, const std::string nm = "")
-    : function_(function), tmp_value_(0), name_(nm)
+    : function_(function)
+    , tmp_value_(0)
+    , name_(nm)
   {
   }
 
 private:
-  template <size_t r, size_t rC, bool anything = true>
+  template < size_t r, size_t rC, bool anything = true >
   class Call
   {
   public:
-    static int ncomps() { return 1; }
+    static int ncomps()
+    {
+      return 1;
+    }
 
     static double evaluate(const int& /*comp*/, const typename FunctionType::RangeType& val)
     {
@@ -53,17 +58,26 @@ private:
     }
   }; // class Call
 
-  template <size_t r, bool anything>
-  class Call<r, 1, anything>
+  template < size_t r, bool anything >
+  class Call< r, 1, anything >
   {
   public:
-    static int ncomps() { return r; }
+    static int ncomps()
+    {
+      return r;
+    }
 
-    static double evaluate(const int& comp, const typename FunctionType::RangeType& val) { return val[comp]; }
+    static double evaluate(const int& comp, const typename FunctionType::RangeType& val)
+    {
+      return val[comp];
+    }
   }; // class Call< ..., 1, ... >
 
 public:
-  virtual int ncomps() const override final { return Call<dimRange, dimRangeCols>::ncomps(); }
+  virtual int ncomps() const override final
+  {
+    return Call< dimRange, dimRangeCols >::ncomps();
+  }
 
   virtual std::string name() const override final
   {
@@ -76,10 +90,10 @@ public:
   virtual double evaluate(int comp, const EntityType& en, const DomainType& xx) const override final
   {
     assert(comp >= 0);
-    assert(comp < boost::numeric_cast<int>(dimRange));
+    assert(comp < boost::numeric_cast< int >(dimRange));
     const auto local_func = function_.local_function(en);
     local_func->evaluate(xx, tmp_value_);
-    return Call<dimRange, dimRangeCols>::evaluate(comp, tmp_value_);
+    return Call< dimRange, dimRangeCols >::evaluate(comp, tmp_value_);
   }
 
 private:

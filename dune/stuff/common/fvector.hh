@@ -19,18 +19,22 @@ namespace Dune {
 namespace Stuff {
 namespace Common {
 
-template <class K, int SIZE>
-class FieldVector : public Dune::FieldVector<K, SIZE>
+template < class K, int SIZE >
+class FieldVector : public Dune::FieldVector< K, SIZE >
 {
   static_assert(SIZE >= 0, "Really?");
 
-  typedef Dune::FieldVector<K, SIZE> BaseType;
-  typedef FieldVector<K, SIZE> ThisType;
+  typedef Dune::FieldVector< K, SIZE > BaseType;
+  typedef FieldVector< K, SIZE > ThisType;
 
 public:
-  FieldVector(const K kk = K(0)) : BaseType(kk) {}
+  FieldVector(const K kk = K(0))
+    : BaseType(kk)
+  {
+  }
 
-  FieldVector(const size_t UNUSED_UNLESS_DEBUG(sz), const K kk) : BaseType(kk)
+  FieldVector(const size_t UNUSED_UNLESS_DEBUG(sz), const K kk)
+    : BaseType(kk)
   {
 #ifndef NDEBUG
     if (sz != SIZE)
@@ -40,11 +44,15 @@ public:
                                                                     << sz
                                                                     << " elements!");
 #endif // NDEBUG
-  }    // ... FieldVector(...)
+  } // ... FieldVector(...)
 
-  FieldVector(const BaseType& other) : BaseType(other) {}
+  FieldVector(const BaseType& other)
+    : BaseType(other)
+  {
+  }
 
-  FieldVector(const std::vector<K>& vec) : BaseType(K(0))
+  FieldVector(const std::vector< K >& vec)
+    : BaseType(K(0))
   {
 #ifndef NDEBUG
     if (vec.size() != SIZE)
@@ -58,7 +66,8 @@ public:
       this->operator[](ii) = vec[ii];
   } // FieldVector(...)
 
-  FieldVector(std::initializer_list<K> list) : BaseType(K(0))
+  FieldVector(std::initializer_list< K > list)
+    : BaseType(K(0))
   {
 #ifndef NDEBUG
     if (list.size() != SIZE)
@@ -79,9 +88,9 @@ public:
     return *this;
   }
 
-  operator std::vector<K>() const
+  operator std::vector< K >() const
   {
-    std::vector<K> ret(SIZE);
+    std::vector< K > ret(SIZE);
     for (size_t ii = 0; ii < SIZE; ++ii)
       ret[ii] = this->operator[](ii);
     return ret;
@@ -97,22 +106,25 @@ public:
   }
 }; // class FieldVector
 
-template <class K, int SIZE, K value>
-class ValueInitFieldVector : public Dune::Stuff::Common::FieldVector<K, SIZE>
+template < class K, int SIZE, K value >
+class ValueInitFieldVector : public Dune::Stuff::Common::FieldVector< K, SIZE >
 {
-  typedef Dune::Stuff::Common::FieldVector<K, SIZE> BaseType;
+  typedef Dune::Stuff::Common::FieldVector< K, SIZE > BaseType;
 
 public:
-  ValueInitFieldVector() : BaseType(value) {}
+  ValueInitFieldVector()
+    : BaseType(value)
+  {
+  }
 }; // class FieldVector
 
 //! Specialization of VectorAbstraction for Dune::Stuff::Common::FieldVector
-template <class K, int SIZE>
-struct VectorAbstraction<Dune::Stuff::Common::FieldVector<K, SIZE>>
+template < class K, int SIZE >
+struct VectorAbstraction< Dune::Stuff::Common::FieldVector< K, SIZE > >
 {
-  typedef Dune::Stuff::Common::FieldVector<K, SIZE> VectorType;
-  typedef typename Dune::FieldTraits<K>::field_type ScalarType;
-  typedef typename Dune::FieldTraits<K>::real_type RealType;
+  typedef Dune::Stuff::Common::FieldVector< K, SIZE > VectorType;
+  typedef typename Dune::FieldTraits< K >::field_type ScalarType;
+  typedef typename Dune::FieldTraits< K >::real_type RealType;
   typedef ScalarType S;
   typedef RealType R;
 
@@ -122,9 +134,15 @@ struct VectorAbstraction<Dune::Stuff::Common::FieldVector<K, SIZE>>
 
   static const size_t static_size = SIZE;
 
-  static inline VectorType create(const size_t sz) { return VectorType(sz); }
+  static inline VectorType create(const size_t sz)
+  {
+    return VectorType(sz);
+  }
 
-  static inline VectorType create(const size_t sz, const ScalarType& val) { return VectorType(sz, val); }
+  static inline VectorType create(const size_t sz, const ScalarType& val)
+  {
+    return VectorType(sz, val);
+  }
 };
 
 } // namespace Common

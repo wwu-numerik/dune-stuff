@@ -17,11 +17,11 @@ using namespace Dune::Stuff::Common;
 
 TEST(FixedMapTest, All)
 {
-  const std::initializer_list<std::pair<std::string, int>> values{{"0", 0}, {"1", 1}, {"2", 2}};
+  const std::initializer_list< std::pair< std::string, int > > values{{"0", 0}, {"1", 1}, {"2", 2}};
 
-  const FixedMap<std::string, int, 1> too_small(values);
-  FixedMap<std::string, int, 3> fits(values);
-  const FixedMap<std::string, int, 6> too_big(values);
+  const FixedMap< std::string, int, 1 > too_small(values);
+  FixedMap< std::string, int, 3 > fits(values);
+  const FixedMap< std::string, int, 6 > too_big(values);
   EXPECT_EQ(0, too_small[toString(0)]);
   EXPECT_THROW(too_small["1"], Dune::RangeError);
   for (int i : {0, 1, 2}) {

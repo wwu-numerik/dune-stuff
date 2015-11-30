@@ -113,67 +113,73 @@ struct CreateByParameterTree
   }
 };
 
-typedef testing::Types<double, float, std::string, std::complex<double>, int, unsigned int, unsigned long, long long,
-                       char> TestTypes;
+typedef testing::Types< double, float, std::string, std::complex< double >, int, unsigned int, unsigned long, long long,
+                        char > TestTypes;
 
-typedef testing::Types<CreateByOperator, CreateByKeyAndValueAndAddConfiguration, CreateByKeyAndValueAndAddParameterTree,
-                       CreateByKeysAndValues, CreateByParameterTree, CreateByOperatorAndAssign> ConfigurationCreators;
+typedef testing::Types< CreateByOperator, CreateByKeyAndValueAndAddConfiguration,
+                        CreateByKeyAndValueAndAddParameterTree, CreateByKeysAndValues, CreateByParameterTree,
+                        CreateByOperatorAndAssign > ConfigurationCreators;
 
-template <class T>
-static DefaultRNG<T> rng_setup()
+template < class T >
+static DefaultRNG< T > rng_setup()
 {
-  return DefaultRNG<T>();
+  return DefaultRNG< T >();
 }
 
 template <>
-DefaultRNG<std::complex<double>> rng_setup()
+DefaultRNG< std::complex< double > > rng_setup()
 {
-  return DefaultRNG<std::complex<double>>(-2, 2);
+  return DefaultRNG< std::complex< double > >(-2, 2);
 }
 
 template <>
-DefaultRNG<double> rng_setup()
+DefaultRNG< double > rng_setup()
 {
-  return DefaultRNG<double>(-2, 2);
+  return DefaultRNG< double >(-2, 2);
 }
 
 
-template <class T>
+template < class T >
 static void val_compare_eq(const T& aa, const T& bb)
 {
   DSC_EXPECT_FLOAT_EQ(aa, bb);
 }
 
-static void val_compare_eq(const std::string& aa, const std::string& bb) { EXPECT_EQ(aa, bb); }
+static void val_compare_eq(const std::string& aa, const std::string& bb)
+{
+  EXPECT_EQ(aa, bb);
+}
 
-template <class T>
+template < class T >
 struct ConfigTest : public testing::Test
 {
   static const int count = 2;
-  DefaultRNG<T> rng;
+  DefaultRNG< T > rng;
   RandomStrings key_gen;
   // std::array is not assignable from list_of it seems. Don't make the following two arrays const (triggers boost/intel
   // compiler bug, last tested with icpc version 14.0.3).
-  boost::array<T, count> values;
-  boost::array<std::string, count> keys;
+  boost::array< T, count > values;
+  boost::array< std::string, count > keys;
   ConfigTest()
-    : rng(rng_setup<T>())
+    : rng(rng_setup< T >())
     , key_gen(8)
-    , values(boost::assign::list_of<T>().repeat_fun(values.size() - 1, rng))
-    , keys(boost::assign::list_of<std::string>().repeat_fun(values.size() - 1, key_gen))
+    , values(boost::assign::list_of< T >().repeat_fun(values.size() - 1, rng))
+    , keys(boost::assign::list_of< std::string >().repeat_fun(values.size() - 1, key_gen))
   {
   }
 
-  virtual ~ConfigTest() {}
+  virtual ~ConfigTest()
+  {
+  }
 
   void get()
   {
-    std::set<std::string> uniq_keys;
+    std::set< std::string > uniq_keys;
     for (T val : values) {
-      const auto key = key_gen();
+      const auto key     = key_gen();
       const auto got_val = DSC_CONFIG_GET(key, val);
       // since the value invariably goes through string conversion, we need to adjust the expected value as well
-      const T adjusted_val = DSC::fromString<T>(DSC::toString(val));
+      const T adjusted_val = DSC::fromString< T >(DSC::toString(val));
       val_compare_eq(adjusted_val, got_val);
       //! TODO add a float compare check that makes sure introduced error is only due to limited precision in str conv
       uniq_keys.insert(key);
@@ -186,10 +192,10 @@ struct ConfigTest : public testing::Test
     for (T val : values) {
       auto key = key_gen();
       // since the value invariably goes through string conversion, we need to adjust the expected value as well
-      const T adjusted_val = DSC::fromString<T>(DSC::toString(val));
+      const T adjusted_val = DSC::fromString< T >(DSC::toString(val));
       DSC_CONFIG.set(key, val);
       // get with default diff from expected
-      auto re = DSC_CONFIG.get(key, T(val + Dune::Stuff::Common::Epsilon<T>::value));
+      auto re = DSC_CONFIG.get(key, T(val + Dune::Stuff::Common::Epsilon< T >::value));
       val_compare_eq(re, adjusted_val);
     }
   }
@@ -198,7 +204,7 @@ struct ConfigTest : public testing::Test
   {
     auto key = this->key_gen();
     DSC_CONFIG.set(key, T());
-    EXPECT_THROW(DSC_CONFIG.get(key, T(), ValidateNone<T>()), Dune::Stuff::Exceptions::configuration_error);
+    EXPECT_THROW(DSC_CONFIG.get(key, T(), ValidateNone< T >()), Dune::Stuff::Exceptions::configuration_error);
   }
 
   void issue_42()
@@ -206,7 +212,7 @@ struct ConfigTest : public testing::Test
     using namespace DSC;
     using namespace std;
     Configuration empty;
-    Configuration to_add(vector<string>{"subsection.key"}, {0l});
+    Configuration to_add(vector< string >{"subsection.key"}, {0l});
     empty.add(to_add, "", true);
     EXPECT_TRUE(empty.has_sub("subsection"));
   }
@@ -214,12 +220,12 @@ struct ConfigTest : public testing::Test
 
 struct StaticCheck
 {
-  typedef boost::mpl::vector<Int<1>, Int<2>> Ints;
+  typedef boost::mpl::vector< Int< 1 >, Int< 2 > > Ints;
 
-  template <class MatrixType>
+  template < class MatrixType >
   static void check_matrix_static_size(const Configuration& config)
   {
-    typedef DSC::MatrixAbstraction<MatrixType> MT;
+    typedef DSC::MatrixAbstraction< MatrixType > MT;
     const auto r = MT::rows(MatrixType());
     const auto c = MT::cols(MatrixType());
 
@@ -233,24 +239,24 @@ struct StaticCheck
 
     check(config.get("matrix", MatrixType(), r, c));
     check(config.get("matrix", MatrixType()));
-    check(config.get<MatrixType>("matrix", r, c));
-    check(config.get<MatrixType>("matrix"));
+    check(config.get< MatrixType >("matrix", r, c));
+    check(config.get< MatrixType >("matrix"));
   }
 
-  template <class U, class V>
+  template < class U, class V >
   static void run(const DSC::Configuration& config)
   {
     const auto rows = U::value;
     const auto cols = V::value;
-    check_matrix_static_size<Dune::Stuff::Common::FieldMatrix<double, rows, cols>>(config);
-    check_matrix_static_size<Dune::FieldMatrix<double, rows, cols>>(config);
+    check_matrix_static_size< Dune::Stuff::Common::FieldMatrix< double, rows, cols > >(config);
+    check_matrix_static_size< Dune::FieldMatrix< double, rows, cols > >(config);
   }
 };
 
-template <class ConfigurationCreator>
+template < class ConfigurationCreator >
 struct ConfigurationTest : public ::testing::Test
 {
-  template <class VectorType>
+  template < class VectorType >
   static void check_vector(const Configuration& config)
   {
     VectorType vec = config.get("vector", VectorType(), 1);
@@ -260,46 +266,46 @@ struct ConfigurationTest : public ::testing::Test
     EXPECT_EQ(2, vec.size());
     for (auto ii : {0.0, 1.0})
       EXPECT_FLOAT_EQ(ii, vec[ii]);
-    vec = config.get<VectorType>("vector", 1);
+    vec = config.get< VectorType >("vector", 1);
     EXPECT_EQ(1, vec.size());
     EXPECT_FLOAT_EQ(0.0, vec[0]);
-    vec = config.get<VectorType>("vector", 2);
+    vec = config.get< VectorType >("vector", 2);
     EXPECT_EQ(2, vec.size());
     for (auto ii : {0.0, 1.0})
       EXPECT_FLOAT_EQ(ii, vec[ii]);
-    vec = config.get<VectorType>("vector");
+    vec = config.get< VectorType >("vector");
     EXPECT_EQ(2, vec.size());
     for (auto ii : {0.0, 1.0})
       EXPECT_FLOAT_EQ(ii, vec[ii]);
   } // ... check_vector< ... >(...)
 
-  template <class K, int d>
+  template < class K, int d >
   static void check_field_vector(const Configuration& config)
   {
-    typedef FieldVector<K, d> VectorType;
+    typedef FieldVector< K, d > VectorType;
     VectorType vec = config.get("vector", VectorType(), d);
     EXPECT_EQ(d, vec.size());
     for (size_t ii = 0; ii < d; ++ii)
       EXPECT_TRUE(FloatCmp::eq(vec[ii], double(ii)));
 
-    vec = config.get<VectorType>("vector", d);
+    vec = config.get< VectorType >("vector", d);
     EXPECT_EQ(vec.size(), d);
 
     for (size_t ii = 0; ii < d; ++ii)
       EXPECT_TRUE(FloatCmp::eq(vec[ii], double(ii)));
 
-    vec = config.get<VectorType>("vector");
+    vec = config.get< VectorType >("vector");
     EXPECT_EQ(vec.size(), d);
 
     for (size_t ii = 0; ii < d; ++ii)
       EXPECT_TRUE(FloatCmp::eq(vec[ii], double(ii)));
   } // ... check_field_vector< ... >(...)
 
-  template <class MatrixType>
+  template < class MatrixType >
   static void check_matrix(const Configuration& config)
   {
     MatrixType mat = config.get("matrix", MatrixType(), 1, 1);
-    typedef DSC::MatrixAbstraction<MatrixType> MT;
+    typedef DSC::MatrixAbstraction< MatrixType > MT;
     EXPECT_FALSE(MT::rows(mat) != 1 || MT::cols(mat) != 1);
     EXPECT_TRUE(FloatCmp::eq(MT::get_entry(mat, 0, 0), 0.0));
     mat = config.get("matrix", MatrixType(), 1, 2);
@@ -323,24 +329,24 @@ struct ConfigurationTest : public ::testing::Test
     EXPECT_TRUE(FloatCmp::eq(MT::get_entry(mat, 1, 0), 1.0));
     EXPECT_TRUE(FloatCmp::eq(MT::get_entry(mat, 1, 1), 2.0));
 
-    mat = config.get<MatrixType>("matrix", 1, 1);
+    mat = config.get< MatrixType >("matrix", 1, 1);
     EXPECT_FALSE(MT::rows(mat) != 1 || MT::cols(mat) != 1);
     EXPECT_TRUE(FloatCmp::eq(MT::get_entry(mat, 0, 0), 0.0));
-    mat = config.get<MatrixType>("matrix", 1, 2);
+    mat = config.get< MatrixType >("matrix", 1, 2);
     EXPECT_FALSE(MT::rows(mat) != 1 || MT::cols(mat) != 2);
     EXPECT_TRUE(FloatCmp::eq(MT::get_entry(mat, 0, 0), 0.0));
     EXPECT_TRUE(FloatCmp::eq(MT::get_entry(mat, 0, 1), 1.0));
-    mat = config.get<MatrixType>("matrix", 2, 1);
+    mat = config.get< MatrixType >("matrix", 2, 1);
     EXPECT_FALSE(MT::rows(mat) != 2 || MT::cols(mat) != 1);
     EXPECT_TRUE(FloatCmp::eq(MT::get_entry(mat, 0, 0), 0.0));
     EXPECT_TRUE(FloatCmp::eq(MT::get_entry(mat, 1, 0), 1.0));
-    mat = config.get<MatrixType>("matrix", 2, 2);
+    mat = config.get< MatrixType >("matrix", 2, 2);
     EXPECT_FALSE(MT::rows(mat) != 2 || MT::cols(mat) != 2);
     EXPECT_TRUE(FloatCmp::eq(MT::get_entry(mat, 0, 0), 0.0));
     EXPECT_TRUE(FloatCmp::eq(MT::get_entry(mat, 0, 1), 1.0));
     EXPECT_TRUE(FloatCmp::eq(MT::get_entry(mat, 1, 0), 1.0));
     EXPECT_TRUE(FloatCmp::eq(MT::get_entry(mat, 1, 1), 2.0));
-    mat = config.get<MatrixType>("matrix");
+    mat = config.get< MatrixType >("matrix");
     EXPECT_FALSE(MT::rows(mat) != 2 || MT::cols(mat) != 2);
     EXPECT_TRUE(FloatCmp::eq(MT::get_entry(mat, 0, 0), 0.0));
     EXPECT_TRUE(FloatCmp::eq(MT::get_entry(mat, 0, 1), 1.0));
@@ -360,7 +366,7 @@ struct ConfigurationTest : public ::testing::Test
     EXPECT_EQ(str, "string");
     str = config.get("foo", std::string("string"));
     EXPECT_EQ(str, "string");
-    str = config.get<std::string>("string");
+    str = config.get< std::string >("string");
     EXPECT_EQ(str, "string");
 
     EXPECT_TRUE(config.has_sub("sub1"));
@@ -369,40 +375,46 @@ struct ConfigurationTest : public ::testing::Test
     EXPECT_EQ(nt, 1);
     nt = sub1_config.get("intt", int(1));
     EXPECT_EQ(nt, 1);
-    nt = sub1_config.get<int>("int");
+    nt = sub1_config.get< int >("int");
     EXPECT_EQ(nt, 1);
     size_t st = config.get("sub2.size_t", size_t(0));
     EXPECT_EQ(st, 1);
     st = config.get("sub2.size_tt", size_t(1));
     EXPECT_EQ(st, 1);
-    st = config.get<size_t>("sub2.size_t");
+    st = config.get< size_t >("sub2.size_t");
     EXPECT_EQ(st, 1);
 
     const auto subsub1 = config.sub("sub2.subsub1");
-    check_vector<std::vector<double>>(subsub1);
-    check_field_vector<double, 1>(subsub1);
-    check_field_vector<double, 2>(subsub1);
-    check_vector<Dune::DynamicVector<double>>(subsub1);
-    check_vector<Dune::Stuff::LA::CommonDenseVector<double>>(subsub1);
+    check_vector< std::vector< double > >(subsub1);
+    check_field_vector< double, 1 >(subsub1);
+    check_field_vector< double, 2 >(subsub1);
+    check_vector< Dune::DynamicVector< double > >(subsub1);
+    check_vector< Dune::Stuff::LA::CommonDenseVector< double > >(subsub1);
 #if HAVE_DUNE_ISTL
-    check_vector<Dune::Stuff::LA::IstlDenseVector<double>>(subsub1);
+    check_vector< Dune::Stuff::LA::IstlDenseVector< double > >(subsub1);
 #endif
 #if HAVE_EIGEN
-    check_vector<Dune::Stuff::LA::EigenDenseVector<double>>(subsub1);
-    check_vector<Dune::Stuff::LA::EigenMappedDenseVector<double>>(subsub1);
-    check_matrix<Dune::Stuff::LA::EigenDenseMatrix<double>>(subsub1);
+    check_vector< Dune::Stuff::LA::EigenDenseVector< double > >(subsub1);
+    check_vector< Dune::Stuff::LA::EigenMappedDenseVector< double > >(subsub1);
+    check_matrix< Dune::Stuff::LA::EigenDenseMatrix< double > >(subsub1);
 #endif // HAVE_EIGEN
-    check_matrix<Dune::DynamicMatrix<double>>(subsub1);
-    check_matrix<Dune::Stuff::LA::CommonDenseMatrix<double>>(subsub1);
+    check_matrix< Dune::DynamicMatrix< double > >(subsub1);
+    check_matrix< Dune::Stuff::LA::CommonDenseMatrix< double > >(subsub1);
 
-    DSC::TupleProduct::Combine<StaticCheck::Ints, StaticCheck::Ints, StaticCheck>::Generate<>::Run(subsub1);
+    DSC::TupleProduct::Combine< StaticCheck::Ints, StaticCheck::Ints, StaticCheck >::Generate<>::Run(subsub1);
 
   } // ... behaves_correctly(...)
-};  // struct ConfigurationTest
+}; // struct ConfigurationTest
 
 TYPED_TEST_CASE(ConfigTest, TestTypes);
-TYPED_TEST(ConfigTest, Get) { this->get(); }
-TYPED_TEST(ConfigTest, Set) { this->set(); }
+TYPED_TEST(ConfigTest, Get)
+{
+  this->get();
+}
+TYPED_TEST(ConfigTest, Set)
+{
+  this->set();
+}
 TYPED_TEST(ConfigTest, Other)
 {
   //  this->other();
@@ -410,4 +422,7 @@ TYPED_TEST(ConfigTest, Other)
 }
 
 TYPED_TEST_CASE(ConfigurationTest, ConfigurationCreators);
-TYPED_TEST(ConfigurationTest, behaves_correctly) { this->behaves_correctly(); }
+TYPED_TEST(ConfigurationTest, behaves_correctly)
+{
+  this->behaves_correctly();
+}

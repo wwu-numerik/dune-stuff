@@ -23,42 +23,42 @@ using namespace Dune::Stuff;
 using namespace Dune::Stuff::LA;
 
 typedef testing::
-    Types<std::tuple<CommonDenseMatrix<double>, CommonDenseVector<double>, CommonDenseVector<double>>,
-          std::tuple<CommonDenseMatrix<std::complex<double>>, CommonDenseVector<std::complex<double>>,
-                     CommonDenseVector<std::complex<double>>>
+    Types< std::tuple< CommonDenseMatrix< double >, CommonDenseVector< double >, CommonDenseVector< double > >,
+           std::tuple< CommonDenseMatrix< std::complex< double > >, CommonDenseVector< std::complex< double > >,
+                       CommonDenseVector< std::complex< double > > >
 #if HAVE_EIGEN
-          ,
-          std::tuple<EigenDenseMatrix<double>, EigenDenseVector<double>, EigenDenseVector<double>>,
-          std::tuple<EigenDenseMatrix<std::complex<double>>, EigenDenseVector<std::complex<double>>,
-                     EigenDenseVector<std::complex<double>>>,
-          std::tuple<EigenDenseMatrix<double>, EigenDenseVector<double>, EigenMappedDenseVector<double>>,
-          std::tuple<EigenDenseMatrix<double>, EigenMappedDenseVector<double>, EigenDenseVector<double>>,
-          std::tuple<EigenDenseMatrix<double>, EigenMappedDenseVector<double>, EigenMappedDenseVector<double>>,
-          std::tuple<EigenRowMajorSparseMatrix<double>, EigenDenseVector<double>, EigenDenseVector<double>>,
-          std::tuple<EigenRowMajorSparseMatrix<std::complex<double>>, EigenDenseVector<std::complex<double>>,
-                     EigenDenseVector<std::complex<double>>>
+           ,
+           std::tuple< EigenDenseMatrix< double >, EigenDenseVector< double >, EigenDenseVector< double > >,
+           std::tuple< EigenDenseMatrix< std::complex< double > >, EigenDenseVector< std::complex< double > >,
+                       EigenDenseVector< std::complex< double > > >,
+           std::tuple< EigenDenseMatrix< double >, EigenDenseVector< double >, EigenMappedDenseVector< double > >,
+           std::tuple< EigenDenseMatrix< double >, EigenMappedDenseVector< double >, EigenDenseVector< double > >,
+           std::tuple< EigenDenseMatrix< double >, EigenMappedDenseVector< double >, EigenMappedDenseVector< double > >,
+           std::tuple< EigenRowMajorSparseMatrix< double >, EigenDenseVector< double >, EigenDenseVector< double > >,
+           std::tuple< EigenRowMajorSparseMatrix< std::complex< double > >, EigenDenseVector< std::complex< double > >,
+                       EigenDenseVector< std::complex< double > > >
 #endif // HAVE_EIGEN
 #if HAVE_DUNE_ISTL
-          ,
-          std::tuple<IstlRowMajorSparseMatrix<double>, IstlDenseVector<double>, IstlDenseVector<double>>
+           ,
+           std::tuple< IstlRowMajorSparseMatrix< double >, IstlDenseVector< double >, IstlDenseVector< double > >
 #endif
-          > MatrixVectorCombinations;
+           > MatrixVectorCombinations;
 
-template <class MatrixVectorCombination>
+template < class MatrixVectorCombination >
 struct SolverTest : public ::testing::Test
 {
-  typedef typename std::tuple_element<0, MatrixVectorCombination>::type MatrixType;
-  typedef typename std::tuple_element<1, MatrixVectorCombination>::type RhsType;
-  typedef typename std::tuple_element<2, MatrixVectorCombination>::type SolutionType;
+  typedef typename std::tuple_element< 0, MatrixVectorCombination >::type MatrixType;
+  typedef typename std::tuple_element< 1, MatrixVectorCombination >::type RhsType;
+  typedef typename std::tuple_element< 2, MatrixVectorCombination >::type SolutionType;
 
-  typedef Solver<MatrixType> SolverType;
+  typedef Solver< MatrixType > SolverType;
 
   static void produces_correct_results()
   {
     const size_t dim        = 10;
-    const MatrixType matrix = ContainerFactory<MatrixType>::create(dim);
-    const RhsType rhs       = ContainerFactory<RhsType>::create(dim);
-    SolutionType solution = ContainerFactory<SolutionType>::create(dim);
+    const MatrixType matrix = ContainerFactory< MatrixType >::create(dim);
+    const RhsType rhs       = ContainerFactory< RhsType >::create(dim);
+    SolutionType solution = ContainerFactory< SolutionType >::create(dim);
     solution.scal(0);
 
     // dynamic test
@@ -68,7 +68,7 @@ struct SolverTest : public ::testing::Test
     solution.scal(0);
 
     // static tests
-    std::vector<std::string> types = SolverType::types();
+    std::vector< std::string > types = SolverType::types();
     if (types.size() == 0)
       DUNE_THROW(Exceptions::results_are_not_as_expected, "Solver has no types!");
     for (auto type : types) {
@@ -85,7 +85,10 @@ struct SolverTest : public ::testing::Test
       EXPECT_TRUE(solution.almost_equal(rhs));
     }
   } // ... produces_correct_results(...)
-};  // struct SolverTest
+}; // struct SolverTest
 
 TYPED_TEST_CASE(SolverTest, MatrixVectorCombinations);
-TYPED_TEST(SolverTest, behaves_correctly) { this->produces_correct_results(); }
+TYPED_TEST(SolverTest, behaves_correctly)
+{
+  this->produces_correct_results();
+}

@@ -38,7 +38,7 @@ class TimedLogManager
 public:
   TimedLogManager(const Timer& timer, const std::string info_prefix, const std::string debug_prefix,
                   const std::string warning_prefix, const ssize_t max_info_level, const ssize_t max_debug_level,
-                  const bool enable_warnings, std::atomic<ssize_t>& current_level,
+                  const bool enable_warnings, std::atomic< ssize_t >& current_level,
                   std::ostream& disabled_out = dev_null, std::ostream& enabled_out = std::cout,
                   std::ostream& warn_out = std::cerr);
 
@@ -52,10 +52,10 @@ public:
 
 private:
   const Timer& timer_;
-  std::atomic<ssize_t>& current_level_;
-  std::shared_ptr<std::ostream> info_;
-  std::shared_ptr<std::ostream> debug_;
-  std::shared_ptr<std::ostream> warn_;
+  std::atomic< ssize_t >& current_level_;
+  std::shared_ptr< std::ostream > info_;
+  std::shared_ptr< std::ostream > debug_;
+  std::shared_ptr< std::ostream > warn_;
 }; // class TimedLogManager
 
 /**
@@ -70,9 +70,18 @@ public:
   static const ssize_t default_max_debug_level = -1;
   static const bool default_enable_warnings    = true;
   static const bool default_enable_colors = true;
-  static const std::string default_info_color() { return "white"; }
-  static const std::string default_debug_color() { return "darkgray"; }
-  static const std::string default_warning_color() { return "red"; }
+  static const std::string default_info_color()
+  {
+    return "white";
+  }
+  static const std::string default_debug_color()
+  {
+    return "darkgray";
+  }
+  static const std::string default_warning_color()
+  {
+    return "red";
+  }
 
   TimedLogging();
 
@@ -108,7 +117,7 @@ private:
   std::string debug_suffix_;
   std::string warning_suffix_;
   bool created_;
-  std::atomic<ssize_t> current_level_;
+  std::atomic< ssize_t > current_level_;
   Timer timer_;
   std::mutex mutex_;
 }; // class TimedLogging

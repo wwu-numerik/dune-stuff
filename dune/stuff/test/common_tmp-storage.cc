@@ -16,13 +16,13 @@
 
 using namespace Dune::Stuff::Common;
 using namespace std;
-typedef testing::Types<double, int, complex<double>> TestTypes;
+typedef testing::Types< double, int, complex< double > > TestTypes;
 
-template <class T>
+template < class T >
 struct TmpTest : public testing::Test
 {
-  typedef TmpVectorsStorage<T> Vector;
-  typedef TmpMatricesStorage<T> Matrix;
+  typedef TmpVectorsStorage< T > Vector;
+  typedef TmpMatricesStorage< T > Matrix;
 
   void check_sizes() const
   {
@@ -44,7 +44,7 @@ struct TmpTest : public testing::Test
 
   void check_empty() const
   {
-    vector<size_t> null;
+    vector< size_t > null;
     EXPECT_THROW(Vector(null, 0), out_of_range);
     EXPECT_THROW(Matrix(null, 0, 0), out_of_range);
   }

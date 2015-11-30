@@ -26,17 +26,17 @@ namespace Spe10 {
  * Grid originally had LL (0,0,0) to UR (365.76, 670.56, 51.816) corners
  *
  */
-template <class EntityImp, class DomainFieldImp, size_t dim_domain, class RangeFieldImp, size_t r, size_t rC>
-class Model2 : public Stuff::GlobalFunctionInterface<EntityImp, DomainFieldImp, dim_domain, RangeFieldImp, r, rC>
+template < class EntityImp, class DomainFieldImp, size_t dim_domain, class RangeFieldImp, size_t r, size_t rC >
+class Model2 : public Stuff::GlobalFunctionInterface< EntityImp, DomainFieldImp, dim_domain, RangeFieldImp, r, rC >
 {
   static_assert(r == rC, "");
   static_assert(dim_domain == rC, "");
   static_assert(dim_domain == 3, "");
-  typedef Stuff::GlobalFunctionInterface<EntityImp, DomainFieldImp, dim_domain, RangeFieldImp, r, rC> BaseType;
+  typedef Stuff::GlobalFunctionInterface< EntityImp, DomainFieldImp, dim_domain, RangeFieldImp, r, rC > BaseType;
 
 public:
   Model2(std::string data_filename = "perm_case2a.dat",
-         DSC::FieldVector<double, dim_domain> upper_right = default_upper_right)
+         DSC::FieldVector< double, dim_domain > upper_right = default_upper_right)
     : deltas_{{upper_right[0] / num_elements[0], upper_right[1] / num_elements[1], upper_right[2] / num_elements[2]}}
     , permeability_(nullptr)
     , permMatrix_(0.0)
@@ -45,9 +45,9 @@ public:
     readPermeability();
   }
 
-  static const DSC::FieldVector<double, dim_domain> default_upper_right;
+  static const DSC::FieldVector< double, dim_domain > default_upper_right;
   // unsigned int mandated by CubeGrid provider
-  static const DSC::FieldVector<unsigned int, dim_domain> num_elements;
+  static const DSC::FieldVector< unsigned int, dim_domain > num_elements;
 
   virtual ~Model2()
   {
@@ -82,7 +82,10 @@ public:
     }
   }
 
-  virtual size_t order() const override { return 0u; }
+  virtual size_t order() const override
+  {
+    return 0u;
+  }
 
 private:
   void readPermeability()
@@ -103,19 +106,19 @@ private:
     file.close();
   }
 
-  std::array<double, dim_domain> deltas_;
+  std::array< double, dim_domain > deltas_;
   double* permeability_; //! TODO automatic memory
   mutable typename BaseType::DomainType permIntervalls_;
-  mutable Dune::FieldMatrix<double, BaseType::DomainType::dimension, BaseType::DomainType::dimension> permMatrix_;
+  mutable Dune::FieldMatrix< double, BaseType::DomainType::dimension, BaseType::DomainType::dimension > permMatrix_;
   const std::string filename_;
 };
 
-template <class EntityImp, class DomainFieldImp, size_t dim_domain, class RangeFieldImp, size_t r, size_t rC>
-const DSC::FieldVector<unsigned int, dim_domain>
-    Model2<EntityImp, DomainFieldImp, dim_domain, RangeFieldImp, r, rC>::num_elements{{60, 220, 85}};
-template <class EntityImp, class DomainFieldImp, size_t dim_domain, class RangeFieldImp, size_t r, size_t rC>
-const DSC::FieldVector<double, dim_domain>
-    Model2<EntityImp, DomainFieldImp, dim_domain, RangeFieldImp, r, rC>::default_upper_right{{1, 3.667, 1.417}};
+template < class EntityImp, class DomainFieldImp, size_t dim_domain, class RangeFieldImp, size_t r, size_t rC >
+const DSC::FieldVector< unsigned int, dim_domain >
+    Model2< EntityImp, DomainFieldImp, dim_domain, RangeFieldImp, r, rC >::num_elements{{60, 220, 85}};
+template < class EntityImp, class DomainFieldImp, size_t dim_domain, class RangeFieldImp, size_t r, size_t rC >
+const DSC::FieldVector< double, dim_domain >
+    Model2< EntityImp, DomainFieldImp, dim_domain, RangeFieldImp, r, rC >::default_upper_right{{1, 3.667, 1.417}};
 } // namespace Spe10
 } // namespace Functions
 } // namespace Stuff

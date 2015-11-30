@@ -38,7 +38,7 @@ struct Statistics
   size_t numberOfInnerIntersections;
   size_t numberOfBoundaryIntersections;
   double maxGridWidth;
-  template <class GridViewType>
+  template < class GridViewType >
   Statistics(const GridViewType& gridView)
     : numberOfEntities(gridView.size(0))
     , numberOfIntersections(0)
@@ -61,7 +61,7 @@ struct Statistics
 
 /** \brief grid statistic output to given stream
    */
-template <class GridViewType>
+template < class GridViewType >
 void printInfo(const GridViewType& gridView, std::ostream& out)
 {
   const Statistics st(gridView);
@@ -75,7 +75,7 @@ void printInfo(const GridViewType& gridView, std::ostream& out)
 /**
 * \attention Not optimal, does a whole grid walk!
 **/
-template <class GridViewType>
+template < class GridViewType >
 size_t maxNumberOfNeighbors(const GridViewType& gridView)
 {
   size_t maxNeighbours = 0;
@@ -91,22 +91,22 @@ size_t maxNumberOfNeighbors(const GridViewType& gridView)
 
 
 //! Provide min/max coordinates for all space dimensions of a GridView
-template <class GridViewType>
+template < class GridViewType >
 struct Dimensions
 {
-  static_assert(std::is_base_of<GridView<typename GridViewType::Traits>, GridViewType>::value,
+  static_assert(std::is_base_of< GridView< typename GridViewType::Traits >, GridViewType >::value,
                 "GridViewType is no GridView");
   typedef typename GridViewType::Grid GridType;
   //! automatic running min/max
-  typedef Dune::Stuff::Common::MinMaxAvg<typename GridType::ctype> MinMaxAvgType;
-  typedef std::array<MinMaxAvgType, GridType::dimensionworld> CoordLimitsType;
-  typedef typename GridType::template Codim<0>::Entity EntityType;
+  typedef Dune::Stuff::Common::MinMaxAvg< typename GridType::ctype > MinMaxAvgType;
+  typedef std::array< MinMaxAvgType, GridType::dimensionworld > CoordLimitsType;
+  typedef typename GridType::template Codim< 0 >::Entity EntityType;
   CoordLimitsType coord_limits;
   MinMaxAvgType entity_volume;
   MinMaxAvgType entity_width;
 
   //! gridwalk functor that does the actual work for \ref GridDimensions
-  class GridDimensionsFunctor : public Functor::Codim0<GridViewType>
+  class GridDimensionsFunctor : public Functor::Codim0< GridViewType >
   {
     CoordLimitsType& coord_limits_;
     MinMaxAvgType& entity_volume_;
@@ -114,7 +114,9 @@ struct Dimensions
 
   public:
     GridDimensionsFunctor(CoordLimitsType& c, MinMaxAvgType& e, MinMaxAvgType& w)
-      : coord_limits_(c), entity_volume_(e), entity_width_(w)
+      : coord_limits_(c)
+      , entity_volume_(e)
+      , entity_width_(w)
     {
     }
 
@@ -131,12 +133,15 @@ struct Dimensions
     } // ()
   };
 
-  double volumeRelation() const { return entity_volume.min() != 0.0 ? entity_volume.max() / entity_volume.min() : -1; }
+  double volumeRelation() const
+  {
+    return entity_volume.min() != 0.0 ? entity_volume.max() / entity_volume.min() : -1;
+  }
 
   Dimensions(const GridViewType& gridView)
   {
     GridDimensionsFunctor f(coord_limits, entity_volume, entity_width);
-    Walker<GridViewType> gw(gridView);
+    Walker< GridViewType > gw(gridView);
     gw.add(f);
     gw.walk();
   }
@@ -148,22 +153,22 @@ struct Dimensions
   }
 };
 
-template <class GridType>
-Dimensions<typename GridType::LeafGridViewType> dimensions(const GridType& grid)
+template < class GridType >
+Dimensions< typename GridType::LeafGridViewType > dimensions(const GridType& grid)
 {
-  return Dimensions<typename GridType::LeafGridViewType>(grid.leafGridView());
+  return Dimensions< typename GridType::LeafGridViewType >(grid.leafGridView());
 }
 
-template <class GridViewType>
-Dimensions<GridViewType> dimensions(const GridViewType& gridView)
+template < class GridViewType >
+Dimensions< GridViewType > dimensions(const GridViewType& gridView)
 {
-  return Dimensions<GridViewType>(gridView);
+  return Dimensions< GridViewType >(gridView);
 }
 
-template <class GridViewType>
-Dimensions<GridViewType> dimensions(const typename GridViewType::Grid::template Codim<0>::Entity& entity)
+template < class GridViewType >
+Dimensions< GridViewType > dimensions(const typename GridViewType::Grid::template Codim< 0 >::Entity& entity)
 {
-  return Dimensions<GridViewType>(entity);
+  return Dimensions< GridViewType >(entity);
 }
 
 #endif // HAVE_DUNE_GRID
@@ -174,8 +179,8 @@ Dimensions<GridViewType> dimensions(const typename GridViewType::Grid::template 
 
 #if HAVE_DUNE_GRID
 
-template <class T>
-inline std::ostream& operator<<(std::ostream& s, const DSG::Dimensions<T>& d)
+template < class T >
+inline std::ostream& operator<<(std::ostream& s, const DSG::Dimensions< T >& d)
 {
   for (size_t k = 0; k < T::dimensionworld; ++k) {
     const auto& mma = d.coord_limits[k];
