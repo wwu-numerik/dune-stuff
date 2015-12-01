@@ -1,4 +1,3 @@
-
 // This file is part of the dune-stuff project:
 //   https://github.com/wwu-numerik/dune-stuff
 // Copyright holders: Rene Milk, Felix Schindler
