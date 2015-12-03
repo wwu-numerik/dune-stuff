@@ -235,6 +235,6 @@ TEST_F(PeriodicViewTest, check_all)
 
 #else  // HAVE_DUNE_GRID
 
-TEST(DISABLED_PeriodicViewTestYaspCube, check_yaspcube) {}
+TEST(DISABLED_PeriodicViewTest, check_all) {}
 
 #endif // HAVE_DUNE_GRID
