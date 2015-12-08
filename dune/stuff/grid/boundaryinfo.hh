@@ -574,8 +574,7 @@ public:
   {
     if (!intersection.boundary())
       return false;
-    const auto entity_ptr = intersection.inside();
-    const auto& entity    = *entity_ptr;
+    const auto entity = intersection.inside();
     const auto xx_global  = intersection.geometry().center();
     const auto xx_entity  = entity.geometry().local(xx_global);
     auto logger = Common::TimedLogger().get("stuff.grid.boundaryinfo.dirichlet");
@@ -596,8 +595,7 @@ public:
   {
     if (!intersection.boundary())
       return false;
-    const auto entity_ptr               = intersection.inside();
-    const auto& entity                  = *entity_ptr;
+    const auto entity = intersection.inside();
     const auto xx_global                = intersection.geometry().center();
     const auto xx_entity                = entity.geometry().local(xx_global);
     const auto local_dirichlet_function = dirichlet_function_->local_function(entity);

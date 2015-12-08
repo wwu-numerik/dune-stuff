@@ -20,7 +20,7 @@
 #include <Eigen/Core>
 #endif
 
-//some assertions only make sense if dune-fem's threading manager is non-trivial
+// some assertions only make sense if dune-fem's threading manager is non-trivial
 #if defined(USE_PTHREADS) || defined(_OPENMP)
 #define WITH_DUNE_FEM_AND_THREADING(expr) WITH_DUNE_FEM(expr)
 #else
