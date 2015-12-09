@@ -147,7 +147,8 @@ void Profiler::stopAll()
   for (auto&& section : known_timers_map_) {
     try {
       stopTiming(section.first);
-    } catch (Dune::RangeError ) {}
+    } catch (Dune::RangeError) {
+    }
   }
 } // GetTiming
 
