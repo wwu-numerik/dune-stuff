@@ -1,0 +1,3 @@
+include grid_periodicview.mini
+
+__name = grid_provider_cube
