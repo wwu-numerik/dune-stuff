@@ -13,33 +13,23 @@
 
 #if HAVE_DUNE_GRID
 
-template< class GridType >
 struct DgfGridProvider
-  : public GridProviderBase< Dune::Stuff::Grid::Providers::DGF< GridType > >
+  : public GridProviderBase< Dune::Stuff::Grid::Providers::DGF< TESTGRIDTYPE > >
 {};
 
-
-typedef testing::Types< SGRIDS
-                      , YASPGRIDS
-# if HAVE_ALUGRID
-                      , ALUGRIDS
-# endif
-                      > GridTypes;
-
-TYPED_TEST_CASE(DgfGridProvider, GridTypes);
-TYPED_TEST(DgfGridProvider, is_default_creatable)
+TEST_F(DgfGridProvider, is_default_creatable)
 {
   this->is_default_creatable();
 }
-TYPED_TEST(DgfGridProvider, fulfills_const_interface)
+TEST_F(DgfGridProvider, fulfills_const_interface)
 {
   this->const_interface();
 }
-TYPED_TEST(DgfGridProvider, is_visualizable)
+TEST_F(DgfGridProvider, is_visualizable)
 {
   this->visualize();
 }
-TYPED_TEST(DgfGridProvider, fulfills_non_const_interface)
+TEST_F(DgfGridProvider, fulfills_non_const_interface)
 {
   this->non_const_interface();
 }
@@ -50,6 +40,7 @@ TYPED_TEST(DgfGridProvider, fulfills_non_const_interface)
 TEST(DISABLED_DgfGridProvider, is_default_creatable) {}
 TEST(DISABLED_DgfGridProvider, fulfills_const_interface) {}
 TEST(DISABLED_DgfGridProvider, is_visualizable) {}
+TEST(DISABLED_DgfGridProvider, fulfills_non_const_interface) {}
 
 #endif // HAVE_DUNE_GRID
 

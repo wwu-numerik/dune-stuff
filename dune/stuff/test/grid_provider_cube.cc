@@ -11,32 +11,24 @@
 
 #if HAVE_DUNE_GRID
 
-template< class GridType >
 struct CubeGridProvider
-  : public GridProviderBase< Dune::Stuff::Grid::Providers::Cube< GridType > >
+  : public GridProviderBase< Dune::Stuff::Grid::Providers::Cube< TESTGRIDTYPE > >
 {};
 
 
-typedef testing::Types< YASPGRIDS
-# if HAVE_ALUGRID
-                      , ALUGRIDS
-# endif
-                      > GridTypes;
-
-TYPED_TEST_CASE(CubeGridProvider, GridTypes);
-TYPED_TEST(CubeGridProvider, is_default_creatable)
+TEST_F(CubeGridProvider, is_default_creatable)
 {
   this->is_default_creatable();
 }
-TYPED_TEST(CubeGridProvider, fulfills_const_interface)
+TEST_F(CubeGridProvider, fulfills_const_interface)
 {
   this->const_interface();
 }
-TYPED_TEST(CubeGridProvider, is_visualizable)
+TEST_F(CubeGridProvider, is_visualizable)
 {
   this->visualize();
 }
-TYPED_TEST(CubeGridProvider, fulfills_non_const_interface)
+TEST_F(CubeGridProvider, fulfills_non_const_interface)
 {
   this->non_const_interface();
 }
@@ -47,6 +39,7 @@ TYPED_TEST(CubeGridProvider, fulfills_non_const_interface)
 TEST(DISABLED_CubeGridProvider, is_default_creatable) {}
 TEST(DISABLED_CubeGridProvider, fulfills_const_interface) {}
 TEST(DISABLED_CubeGridProvider, is_visualizable) {}
+TEST(DISABLED_CubeGridProvider, fulfills_non_const_interface) {}
 
 #endif // HAVE_DUNE_GRID
 
