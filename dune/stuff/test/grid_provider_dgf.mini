@@ -1,3 +1,8 @@
-include grid_periodicview.mini
-
 __name = grid_provider_dgf
+__exec_suffix = yasp_{dimDomain}d, alu_{__local.geometry}_{__local.refinement}_{dimDomain}d | expand grid
+
+include grids.mini
+
+[__static]
+TESTGRIDTYPE = {grid}
+
