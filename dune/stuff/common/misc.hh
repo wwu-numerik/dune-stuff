@@ -127,7 +127,7 @@ std::pair<typename MapType::iterator, bool> map_emplace(MapType& map_in, Key key
 
 template <typename K, typename V, typename MapType>
 std::pair<typename MapType::iterator, bool> map_emplace(MapType& map_in, std::piecewise_construct_t pcw, K&& keys,
-                                                          V&& values)
+                                                        V&& values)
 {
 #if HAVE_MAP_EMPLACE
   return map_in.emplace(pcw, keys, values);
@@ -138,7 +138,8 @@ std::pair<typename MapType::iterator, bool> map_emplace(MapType& map_in, std::pi
 }
 
 template <typename T>
-struct remove_const_reference {
+struct remove_const_reference
+{
   typedef typename std::remove_reference<typename std::remove_const<T>::type>::type type;
 };
 

@@ -255,7 +255,7 @@ public:
 
   AllNeumann() {}
 
-  virtual ~AllNeumann() throw() {};
+  virtual ~AllNeumann() throw(){};
 
   virtual bool has_dirichlet() const override final { return false; }
 
