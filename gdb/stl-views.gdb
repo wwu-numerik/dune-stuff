@@ -1,11 +1,18 @@
-#                                                                                                        
+# This file is part of the dune-stuff project:
+#   https://github.com/wwu-numerik/dune-stuff
+# The copyright lies with the authors of this file (see below).
+# License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+# Authors:
+#   Rene Milk     (2015)
+#   Sven Kaulmann (2010)
+#
 #   STL GDB evaluators/views/utilities - 1.03
 #
-#   The new GDB commands:                                                         
-# 	    are entirely non instrumental                                             
+#   The new GDB commands:
+# 	    are entirely non instrumental
 # 	    do not depend on any "inline"(s) - e.g. size(), [], etc
 #       are extremely tolerant to debugger settings
-#                                                                                 
+#
 #   This file should be "included" in .gdbinit as following:
 #   source stl-views.gdb or just paste it into your .gdbinit file
 #
@@ -29,15 +36,13 @@
 #   Make sure your debugger supports $argc
 #
 #   Simple GDB Macros writen by Dan Marinescu (H-PhD) - License GPL
-#   Inspired by intial work of Tom Malnar, 
+#   Inspired by intial work of Tom Malnar,
 #     Tony Novac (PhD) / Cornell / Stanford,
 #     Gilad Mishne (PhD) and Many Many Others.
 #   Contact: dan_c_marinescu@yahoo.com (Subject: STL)
 #
 #   Modified to work with g++ 4.3 by Anders Elton
 #   Also added _member functions, that instead of printing the entire class in map, prints a member.
-
-
 
 #
 # std::vector<>
