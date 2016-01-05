@@ -23,11 +23,11 @@ namespace Dune {
 namespace Stuff {
 namespace LA {
 
-template < class S, class CommunicatorType >
-class Solver< CommonDenseMatrix< S >, CommunicatorType > : protected SolverUtils
+template <class S, class CommunicatorType>
+class Solver<CommonDenseMatrix<S>, CommunicatorType> : protected SolverUtils
 {
 public:
-  typedef CommonDenseMatrix< S > MatrixType;
+  typedef CommonDenseMatrix<S> MatrixType;
   typedef typename MatrixType::RealType R;
 
   Solver(const MatrixType& matrix)
@@ -40,7 +40,7 @@ public:
   {
   }
 
-  static std::vector< std::string > types()
+  static std::vector<std::string> types()
   {
     return {"superlu"};
   }
@@ -52,23 +52,22 @@ public:
     return Common::Configuration({"type", "post_check_solves_system"}, {tp, "1e-5"});
   } // ... options(...)
 
-  void apply(const CommonDenseVector< S >& rhs, CommonDenseVector< S >& solution) const
+  void apply(const CommonDenseVector<S>& rhs, CommonDenseVector<S>& solution) const
   {
     apply(rhs, solution, types()[0]);
   }
 
-  void apply(const CommonDenseVector< S >& rhs, CommonDenseVector< S >& solution, const std::string& type) const
+  void apply(const CommonDenseVector<S>& rhs, CommonDenseVector<S>& solution, const std::string& type) const
   {
     apply(rhs, solution, options(type));
   }
 
-  void apply(const CommonDenseVector< S >& rhs, CommonDenseVector< S >& solution,
-             const Common::Configuration& opts) const
+  void apply(const CommonDenseVector<S>& rhs, CommonDenseVector<S>& solution, const Common::Configuration& opts) const
   {
     if (!opts.has_key("type"))
       DUNE_THROW(Exceptions::configuration_error,
                  "Given options (see below) need to have at least the key 'type' set!\n\n" << opts);
-    const auto type = opts.get< std::string >("type");
+    const auto type = opts.get<std::string>("type");
     SolverUtils::check_given(type, types());
     const Common::Configuration default_opts = options(type);
     // solve
@@ -82,7 +81,7 @@ public:
     }
     // check
     const R post_check_solves_system_threshold =
-        opts.get("post_check_solves_system", default_opts.get< R >("post_check_solves_system"));
+        opts.get("post_check_solves_system", default_opts.get<R>("post_check_solves_system"));
     if (post_check_solves_system_threshold > 0) {
       auto tmp = rhs.copy();
       matrix_.mv(solution, tmp);

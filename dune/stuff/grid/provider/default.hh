@@ -19,11 +19,11 @@ namespace Providers {
 
 #if HAVE_DUNE_GRID
 
-template < class GridImp >
-class Default : Common::StorageProvider< GridImp >, public ProviderInterface< GridImp >
+template <class GridImp>
+class Default : Common::StorageProvider<GridImp>, public ProviderInterface<GridImp>
 {
-  typedef Common::StorageProvider< GridImp > StorageProviderBaseType;
-  typedef ProviderInterface< GridImp > GridProviderBaseType;
+  typedef Common::StorageProvider<GridImp> StorageProviderBaseType;
+  typedef ProviderInterface<GridImp> GridProviderBaseType;
 
 public:
   using typename GridProviderBaseType::GridType;
@@ -46,12 +46,12 @@ public:
   {
   }
 
-  explicit Default(std::shared_ptr< GridType > grid_ptr)
+  explicit Default(std::shared_ptr<GridType> grid_ptr)
     : StorageProviderBaseType(grid_ptr)
   {
   }
 
-  explicit Default(std::unique_ptr< GridType >&& grid_ptr)
+  explicit Default(std::unique_ptr<GridType>&& grid_ptr)
     : StorageProviderBaseType(grid_ptr)
   {
   }
@@ -73,10 +73,10 @@ public:
 
 #else // HAVE_DUNE_GRID
 
-template < class GridImp >
+template <class GridImp>
 class Default
 {
-  static_assert(AlwaysFalse< GridImp >::value, "You are missing dune-grid!");
+  static_assert(AlwaysFalse<GridImp>::value, "You are missing dune-grid!");
 };
 
 #endif // HAVE_DUNE_GRID

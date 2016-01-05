@@ -33,11 +33,11 @@ namespace Providers {
 
 #if HAVE_DUNE_GRID
 
-template < class GridImp >
-class DGF : public Grid::ProviderInterface< GridImp >
+template <class GridImp>
+class DGF : public Grid::ProviderInterface<GridImp>
 {
-  typedef Grid::ProviderInterface< GridImp > BaseType;
-  typedef DGF< GridImp > ThisType;
+  typedef Grid::ProviderInterface<GridImp> BaseType;
+  typedef DGF<GridImp> ThisType;
 
 public:
   using typename BaseType::GridType;
@@ -60,17 +60,17 @@ public:
     }
   } // ... default_config(...)
 
-  static std::unique_ptr< ThisType > create(const Common::Configuration config = default_config(),
-                                            const std::string sub_name = static_id())
+  static std::unique_ptr<ThisType> create(const Common::Configuration config = default_config(),
+                                          const std::string sub_name = static_id())
   {
     const Common::Configuration cfg         = config.has_sub(sub_name) ? config.sub(sub_name) : config;
     const Common::Configuration default_cfg = default_config();
-    return Common::make_unique< ThisType >(cfg.get("filename", default_cfg.get< std::string >("filename")));
+    return Common::make_unique<ThisType>(cfg.get("filename", default_cfg.get<std::string>("filename")));
   }
 
   DGF(const std::string filename)
   {
-    grid_ = std::shared_ptr< GridType >(GridPtr< GridType >(filename).release());
+    grid_ = std::shared_ptr<GridType>(GridPtr<GridType>(filename).release());
   }
 
   DGF(ThisType&& source) = default;
@@ -91,26 +91,26 @@ public:
     return *grid_;
   }
 
-  const std::shared_ptr< const GridType > grid_ptr() const
+  const std::shared_ptr<const GridType> grid_ptr() const
   {
     return grid_;
   }
 
-  std::shared_ptr< GridType > grid_ptr()
+  std::shared_ptr<GridType> grid_ptr()
   {
     return grid_;
   }
 
 private:
-  std::shared_ptr< GridType > grid_;
+  std::shared_ptr<GridType> grid_;
 }; // class DGF
 
 #else // HAVE_DUNE_GRID
 
-template < class GridImp >
+template <class GridImp>
 class DGF
 {
-  static_assert(AlwaysFalse< GridImp >::value, "You are missing dune-grid!");
+  static_assert(AlwaysFalse<GridImp>::value, "You are missing dune-grid!");
 };
 
 #endif // HAVE_DUNE_GRID

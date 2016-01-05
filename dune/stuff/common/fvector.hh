@@ -19,13 +19,13 @@ namespace Dune {
 namespace Stuff {
 namespace Common {
 
-template < class K, int SIZE >
-class FieldVector : public Dune::FieldVector< K, SIZE >
+template <class K, int SIZE>
+class FieldVector : public Dune::FieldVector<K, SIZE>
 {
   static_assert(SIZE >= 0, "Really?");
 
-  typedef Dune::FieldVector< K, SIZE > BaseType;
-  typedef FieldVector< K, SIZE > ThisType;
+  typedef Dune::FieldVector<K, SIZE> BaseType;
+  typedef FieldVector<K, SIZE> ThisType;
 
 public:
   FieldVector(const K kk = K(0))
@@ -51,7 +51,7 @@ public:
   {
   }
 
-  FieldVector(const std::vector< K >& vec)
+  FieldVector(const std::vector<K>& vec)
     : BaseType(K(0))
   {
 #ifndef NDEBUG
@@ -66,7 +66,7 @@ public:
       this->operator[](ii) = vec[ii];
   } // FieldVector(...)
 
-  FieldVector(std::initializer_list< K > list)
+  FieldVector(std::initializer_list<K> list)
     : BaseType(K(0))
   {
 #ifndef NDEBUG
@@ -88,9 +88,9 @@ public:
     return *this;
   }
 
-  operator std::vector< K >() const
+  operator std::vector<K>() const
   {
-    std::vector< K > ret(SIZE);
+    std::vector<K> ret(SIZE);
     for (size_t ii = 0; ii < SIZE; ++ii)
       ret[ii] = this->operator[](ii);
     return ret;
@@ -106,10 +106,10 @@ public:
   }
 }; // class FieldVector
 
-template < class K, int SIZE, K value >
-class ValueInitFieldVector : public Dune::Stuff::Common::FieldVector< K, SIZE >
+template <class K, int SIZE, K value>
+class ValueInitFieldVector : public Dune::Stuff::Common::FieldVector<K, SIZE>
 {
-  typedef Dune::Stuff::Common::FieldVector< K, SIZE > BaseType;
+  typedef Dune::Stuff::Common::FieldVector<K, SIZE> BaseType;
 
 public:
   ValueInitFieldVector()
@@ -119,12 +119,12 @@ public:
 }; // class FieldVector
 
 //! Specialization of VectorAbstraction for Dune::Stuff::Common::FieldVector
-template < class K, int SIZE >
-struct VectorAbstraction< Dune::Stuff::Common::FieldVector< K, SIZE > >
+template <class K, int SIZE>
+struct VectorAbstraction<Dune::Stuff::Common::FieldVector<K, SIZE>>
 {
-  typedef Dune::Stuff::Common::FieldVector< K, SIZE > VectorType;
-  typedef typename Dune::FieldTraits< K >::field_type ScalarType;
-  typedef typename Dune::FieldTraits< K >::real_type RealType;
+  typedef Dune::Stuff::Common::FieldVector<K, SIZE> VectorType;
+  typedef typename Dune::FieldTraits<K>::field_type ScalarType;
+  typedef typename Dune::FieldTraits<K>::real_type RealType;
   typedef ScalarType S;
   typedef RealType R;
 

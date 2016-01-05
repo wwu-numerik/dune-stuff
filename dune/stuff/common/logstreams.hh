@@ -33,9 +33,9 @@ enum LogFlags
   LOG_NEXT    = 64
 };
 
-class SuspendableStrBuffer : public std::basic_stringbuf< char, std::char_traits< char > >
+class SuspendableStrBuffer : public std::basic_stringbuf<char, std::char_traits<char>>
 {
-  typedef std::basic_stringbuf< char, std::char_traits< char > > BaseType;
+  typedef std::basic_stringbuf<char, std::char_traits<char>> BaseType;
 
 public:
   typedef int PriorityType;
@@ -110,9 +110,9 @@ protected:
  *
  * \note Most likely you do not want to use this class directly, but TimedPrefixedLogStream instead.
  */
-class TimedPrefixedStreamBuffer : public std::basic_stringbuf< char, std::char_traits< char > >
+class TimedPrefixedStreamBuffer : public std::basic_stringbuf<char, std::char_traits<char>>
 {
-  typedef std::basic_stringbuf< char, std::char_traits< char > > BaseType;
+  typedef std::basic_stringbuf<char, std::char_traits<char>> BaseType;
 
 public:
   TimedPrefixedStreamBuffer(const Timer& timer, const std::string prefix, std::ostream& out = std::cout);
@@ -131,10 +131,10 @@ private:
   std::mutex mutex_;
 }; // class TimedPrefixedStreamBuffer
 
-class LogStream : StorageProvider< SuspendableStrBuffer >, public std::basic_ostream< char, std::char_traits< char > >
+class LogStream : StorageProvider<SuspendableStrBuffer>, public std::basic_ostream<char, std::char_traits<char>>
 {
-  typedef StorageProvider< SuspendableStrBuffer > StorageBaseType;
-  typedef std::basic_ostream< char, std::char_traits< char > > BaseType;
+  typedef StorageProvider<SuspendableStrBuffer> StorageBaseType;
+  typedef std::basic_ostream<char, std::char_traits<char>> BaseType;
 
 public:
   typedef SuspendableStrBuffer::PriorityType PriorityType;
@@ -197,11 +197,11 @@ out << "\n" << 3 << "\n\nend" << std::endl;
  *
  * \note This class is intended to be used by TimedLogManager.
  */
-class TimedPrefixedLogStream : StorageProvider< TimedPrefixedStreamBuffer >,
-                               public std::basic_ostream< char, std::char_traits< char > >
+class TimedPrefixedLogStream : StorageProvider<TimedPrefixedStreamBuffer>,
+                               public std::basic_ostream<char, std::char_traits<char>>
 {
-  typedef StorageProvider< TimedPrefixedStreamBuffer > StorageBaseType;
-  typedef std::basic_ostream< char, std::char_traits< char > > OstreamBaseType;
+  typedef StorageProvider<TimedPrefixedStreamBuffer> StorageBaseType;
+  typedef std::basic_ostream<char, std::char_traits<char>> OstreamBaseType;
 
 public:
   TimedPrefixedLogStream(const Timer& timer, const std::string prefix, std::ostream& outstream);

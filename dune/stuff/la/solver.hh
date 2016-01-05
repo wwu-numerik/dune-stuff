@@ -42,7 +42,7 @@ static const constexpr size_t max_size_to_print = 5;
 class SolverUtils
 {
 public:
-  static void check_given(const std::string& type, const std::vector< std::string >& opts)
+  static void check_given(const std::string& type, const std::vector<std::string>& opts)
   {
     if (std::find(opts.begin(), opts.end(), type) == opts.end()) {
       std::stringstream ss;
@@ -56,12 +56,11 @@ public:
   }
 };
 
-template < class MatrixImp, class CommunicatorType = SequentialCommunication >
+template <class MatrixImp, class CommunicatorType = SequentialCommunication>
 class Solver
 {
-  static_assert(AlwaysFalse< MatrixImp >::value,
-                "This is the unspecialized version of LA::Solver< ... >. Please include "
-                "the correct header for your matrix implementation!");
+  static_assert(AlwaysFalse<MatrixImp>::value, "This is the unspecialized version of LA::Solver< ... >. Please include "
+                                               "the correct header for your matrix implementation!");
 
 public:
   typedef MatrixImp MatrixType;
@@ -71,16 +70,16 @@ public:
     DUNE_THROW(NotImplemented,
                "This is the unspecialized version of LA::Solver< ... >. "
                "Please include the correct header for your matrix implementation '"
-                   << Common::Typename< MatrixType >::value()
+                   << Common::Typename<MatrixType>::value()
                    << "'!");
   }
 
-  static std::vector< std::string > types()
+  static std::vector<std::string> types()
   {
     DUNE_THROW(NotImplemented,
                "This is the unspecialized version of LA::Solver< ... >. "
                "Please include the correct header for your matrix implementation '"
-                   << Common::Typename< MatrixType >::value()
+                   << Common::Typename<MatrixType>::value()
                    << "'!");
   }
 
@@ -89,7 +88,7 @@ public:
     DUNE_THROW(NotImplemented,
                "This is the unspecialized version of LA::Solver< ... >. "
                "Please include the correct header for your matrix implementation '"
-                   << Common::Typename< MatrixType >::value()
+                   << Common::Typename<MatrixType>::value()
                    << "'!");
   }
 
@@ -97,33 +96,33 @@ public:
    *  Throws any of the above exceptions, if there was a problem. If none was thrown we beleive that a suitable solution
    *  was found (given the current options).
    */
-  template < class RhsType, class SolutionType >
+  template <class RhsType, class SolutionType>
   void apply(const RhsType& /*rhs*/, SolutionType& /*solution*/) const
   {
     DUNE_THROW(NotImplemented,
                "This is the unspecialized version of LA::Solver< ... >. "
                "Please include the correct header for your matrix implementation '"
-                   << Common::Typename< MatrixType >::value()
+                   << Common::Typename<MatrixType>::value()
                    << "'!");
   }
 
-  template < class RhsType, class SolutionType >
+  template <class RhsType, class SolutionType>
   void apply(const RhsType& /*rhs*/, SolutionType& /*solution*/, const std::string& /*type*/) const
   {
     DUNE_THROW(NotImplemented,
                "This is the unspecialized version of LA::Solver< ... >. "
                "Please include the correct header for your matrix implementation '"
-                   << Common::Typename< MatrixType >::value()
+                   << Common::Typename<MatrixType>::value()
                    << "'!");
   }
 
-  template < class RhsType, class SolutionType >
+  template <class RhsType, class SolutionType>
   void apply(const RhsType& /*rhs*/, SolutionType& /*solution*/, const Common::Configuration& /*options*/) const
   {
     DUNE_THROW(NotImplemented,
                "This is the unspecialized version of LA::Solver< ... >. "
                "Please include the correct header for your matrix implementation '"
-                   << Common::Typename< MatrixType >::value()
+                   << Common::Typename<MatrixType>::value()
                    << "'!");
   }
 }; // class Solver

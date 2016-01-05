@@ -19,7 +19,7 @@ namespace Common {
 void dump_environment(boost::filesystem::ofstream& file, std::string csv_sep)
 {
   using namespace std;
-  vector< string > header, values;
+  vector<string> header, values;
   for (char** current = environ; *current; current++) {
     string line(*current);
     const auto tokens = DSC::tokenize(line, "=");
@@ -28,9 +28,9 @@ void dump_environment(boost::filesystem::ofstream& file, std::string csv_sep)
       values.push_back(tokens[1]);
     }
   }
-  std::copy(header.begin(), header.end(), PrefixOutputIterator< string >(file, csv_sep));
+  std::copy(header.begin(), header.end(), PrefixOutputIterator<string>(file, csv_sep));
   file << '\n';
-  std::copy(values.begin(), values.end(), PrefixOutputIterator< string >(file, csv_sep));
+  std::copy(values.begin(), values.end(), PrefixOutputIterator<string>(file, csv_sep));
 }
 
 } // namespace Common

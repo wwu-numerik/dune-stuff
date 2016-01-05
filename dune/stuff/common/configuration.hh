@@ -39,10 +39,10 @@ static const bool configuration_warn_on_default_access = false;
 static const bool configuration_log_on_exit            = false;
 static const std::string configuration_logfile         = "data/log/dsc_parameter.log";
 
-template < class T >
+template <class T>
 struct Typer
 {
-  typedef typename std::conditional< std::is_convertible< T, std::string >::value, std::string, T >::type type;
+  typedef typename std::conditional<std::is_convertible<T, std::string>::value, std::string, T>::type type;
 };
 
 } // namespace internal
@@ -55,14 +55,13 @@ public:
   /** This ctor has to be marked explicit!
    * enable_if trick to disambiguate const char* (which is implicitly convertible to bool/string) ctors
    **/
-  template < typename T = bool >
-  explicit Configuration(
-      const typename std::enable_if< std::is_same< T, bool >::value, bool >::type /*record_defaults*/ =
-          internal::configuration_record_defaults,
-      const bool warn_on_default_access = internal::configuration_warn_on_default_access,
-      const typename std::enable_if< !std::is_same< T, const char* >::value, bool >::type log_on_exit =
-          internal::configuration_log_on_exit,
-      const std::string logfile = internal::configuration_logfile)
+  template <typename T = bool>
+  explicit Configuration(const typename std::enable_if<std::is_same<T, bool>::value, bool>::type /*record_defaults*/ =
+                             internal::configuration_record_defaults,
+                         const bool warn_on_default_access = internal::configuration_warn_on_default_access,
+                         const typename std::enable_if<!std::is_same<T, const char*>::value, bool>::type log_on_exit =
+                             internal::configuration_log_on_exit,
+                         const std::string logfile = internal::configuration_logfile)
     : BaseType()
     , warn_on_default_access_(warn_on_default_access)
     , log_on_exit_(log_on_exit)
@@ -105,7 +104,7 @@ public:
                 const bool log_on_exit            = internal::configuration_log_on_exit,
                 const std::string logfile = internal::configuration_logfile);
 
-  template < class T >
+  template <class T>
   Configuration(std::string key, T value, const bool /*record_defaults*/ = internal::configuration_record_defaults,
                 const bool warn_on_default_access = internal::configuration_warn_on_default_access,
                 const bool log_on_exit            = internal::configuration_log_on_exit,
@@ -119,14 +118,14 @@ public:
     setup_();
   }
 
-  Configuration(const std::vector< std::string > keys, const std::vector< std::string > values_in,
+  Configuration(const std::vector<std::string> keys, const std::vector<std::string> values_in,
                 const bool /*record_defaults*/    = internal::configuration_record_defaults,
                 const bool warn_on_default_access = internal::configuration_warn_on_default_access,
                 const bool log_on_exit            = internal::configuration_log_on_exit,
                 const std::string logfile = internal::configuration_logfile);
 
-  template < class T >
-  Configuration(const std::vector< std::string > keys, const std::vector< T > values_in,
+  template <class T>
+  Configuration(const std::vector<std::string> keys, const std::vector<T> values_in,
                 const bool record_defaults        = internal::configuration_record_defaults,
                 const bool warn_on_default_access = internal::configuration_warn_on_default_access,
                 const bool log_on_exit            = internal::configuration_log_on_exit,
@@ -167,10 +166,10 @@ public:
    */
 
   //! const get without default value, with validation
-  template < class T, class Validator = ValidateAny< typename internal::Typer< T >::type > >
-  typename internal::Typer< T >::type
+  template <class T, class Validator = ValidateAny<typename internal::Typer<T>::type>>
+  typename internal::Typer<T>::type
   get(std::string key, const size_t size, const size_t cols = 0,
-      const ValidatorInterface< T, Validator >& validator = ValidateAny< typename internal::Typer< T >::type >()) const
+      const ValidatorInterface<T, Validator>& validator = ValidateAny<typename internal::Typer<T>::type>()) const
   {
     if (!has_key(key))
       DUNE_THROW(Exceptions::configuration_error,
@@ -179,10 +178,10 @@ public:
   } // ... get(...)
 
   //! const get without default value, with validation
-  template < class T, class Validator = ValidateAny< typename internal::Typer< T >::type > >
-  typename internal::Typer< T >::type
-  get(std::string key, const ValidatorInterface< typename internal::Typer< T >::type, Validator >& validator =
-                           ValidateAny< typename internal::Typer< T >::type >()) const
+  template <class T, class Validator = ValidateAny<typename internal::Typer<T>::type>>
+  typename internal::Typer<T>::type
+  get(std::string key, const ValidatorInterface<typename internal::Typer<T>::type, Validator>& validator =
+                           ValidateAny<typename internal::Typer<T>::type>()) const
   {
     if (!has_key(key))
       DUNE_THROW(Exceptions::configuration_error,
@@ -191,35 +190,35 @@ public:
   } // ... get(...)
 
   //! get variation with default value, validation
-  template < typename T, class Validator = ValidateAny< typename internal::Typer< T >::type > >
-  typename internal::Typer< T >::type
+  template <typename T, class Validator = ValidateAny<typename internal::Typer<T>::type>>
+  typename internal::Typer<T>::type
   get(std::string key, T def, const size_t size, const size_t cols = 0,
-      const ValidatorInterface< typename internal::Typer< T >::type, Validator >& validator =
-          ValidateAny< typename internal::Typer< T >::type >()) const
+      const ValidatorInterface<typename internal::Typer<T>::type, Validator>& validator =
+          ValidateAny<typename internal::Typer<T>::type>()) const
   {
     return get_(key, def, validator, size, cols);
   } // ... get(...)
 
   //! get variation with default value, validation
-  template < typename T, class Validator = ValidateAny< typename internal::Typer< T >::type > >
-  typename internal::Typer< T >::type
-  get(std::string key, T def, const ValidatorInterface< typename internal::Typer< T >::type, Validator >& validator =
-                                  ValidateAny< typename internal::Typer< T >::type >()) const
+  template <typename T, class Validator = ValidateAny<typename internal::Typer<T>::type>>
+  typename internal::Typer<T>::type
+  get(std::string key, T def, const ValidatorInterface<typename internal::Typer<T>::type, Validator>& validator =
+                                  ValidateAny<typename internal::Typer<T>::type>()) const
   {
     return get_(key, def, validator, 0, 0);
   } // ... get(...)
 
   //! get std::vector< T > from tree_
-  template < typename T, class Validator = ValidateAny< typename internal::Typer< T >::type > >
-  std::vector< typename internal::Typer< T >::type >
+  template <typename T, class Validator = ValidateAny<typename internal::Typer<T>::type>>
+  std::vector<typename internal::Typer<T>::type>
   getList(std::string key, T def = T(), const std::string separators = ";",
-          const ValidatorInterface< typename internal::Typer< T >::type, Validator >& validator =
-              ValidateAny< typename internal::Typer< T >::type >()) const
+          const ValidatorInterface<typename internal::Typer<T>::type, Validator>& validator =
+              ValidateAny<typename internal::Typer<T>::type>()) const
   {
-    typedef typename internal::Typer< T >::type Tt;
-    const auto def_t  = static_cast< Tt >(def);
-    const auto value  = get(key, toString(def_t), ValidateAny< std::string >());
-    const auto tokens = tokenize< Tt >(value, separators);
+    typedef typename internal::Typer<T>::type Tt;
+    const auto def_t  = static_cast<Tt>(def);
+    const auto value  = get(key, toString(def_t), ValidateAny<std::string>());
+    const auto tokens = tokenize<Tt>(value, separators);
     for (auto token : tokens) {
       if (!validator(token)) {
         std::stringstream ss;
@@ -236,7 +235,7 @@ public:
    */
 
   //! set value to key in Configuration
-  template < class T >
+  template <class T>
   void set(std::string key, const T& value, const bool overwrite = false)
   {
     if (has_key(key) && !overwrite)
@@ -291,7 +290,7 @@ public:
   //! store output of report(..., prefix) in std::string
   std::string report_string(const std::string& prefix = "") const;
 
-  std::map< std::string, std::string > flatten() const;
+  std::map<std::string, std::string> flatten() const;
 
   /** get parameters from parameter file or key-value pairs given on the command line and store in Configuration (and
   load into fem parameter, if available) */
@@ -303,22 +302,22 @@ public:
   /**
    *  \note this method is needed for the python bindings
    */
-  template < class T >
+  template <class T>
   T pb_get(std::string key, const DUNE_STUFF_SSIZE_T size = 0) const
   {
     size_t sz = 0;
     try {
-      sz = boost::numeric_cast< size_t >(size);
+      sz = boost::numeric_cast<size_t>(size);
     } catch (boost::bad_numeric_cast& ee) {
       DUNE_THROW(Exceptions::external_error,
                  "There was an error in boost converting '" << size << "' from '"
-                                                            << Typename< DUNE_STUFF_SSIZE_T >::value()
+                                                            << Typename<DUNE_STUFF_SSIZE_T>::value()
                                                             << "' to '"
-                                                            << Typename< size_t >::value()
+                                                            << Typename<size_t>::value()
                                                             << ":\n"
                                                             << ee.what());
     }
-    return get< T >(key, sz);
+    return get<T>(key, sz);
   } // ... get(...)
 
 private:
@@ -327,21 +326,21 @@ private:
   void add_tree_(const Configuration& other, const std::string sub_id, const bool overwrite);
 
   //! get value from tree and validate with validator
-  template < typename T, class Validator >
+  template <typename T, class Validator>
   T get_valid_value(const std::string& key, T def,
-                    const ValidatorInterface< typename internal::Typer< T >::type, Validator >& validator,
+                    const ValidatorInterface<typename internal::Typer<T>::type, Validator>& validator,
                     const size_t size, const size_t cols) const
   {
     std::string valstring = BaseType::get(key, toString(def));
     try {
-      T val = fromString< T >(valstring, size, cols);
+      T val = fromString<T>(valstring, size, cols);
       if (validator(val))
         return val;
       else
         DUNE_THROW(Exceptions::configuration_error, validator.msg());
     } catch (boost::bad_lexical_cast& e) {
       DUNE_THROW(Exceptions::external_error,
-                 "Error in boost while converting the string '" << valstring << "' to type '" << Typename< T >::value()
+                 "Error in boost while converting the string '" << valstring << "' to type '" << Typename<T>::value()
                                                                 << "':\n"
                                                                 << e.what()
                                                                 << "\non accessing key "
@@ -350,8 +349,7 @@ private:
                                                                 << toString(def));
     } catch (std::exception& e) {
       DUNE_THROW(Exceptions::external_error,
-                 "Error in the stl while converting the string '" << valstring << "' to type '"
-                                                                  << Typename< T >::value()
+                 "Error in the stl while converting the string '" << valstring << "' to type '" << Typename<T>::value()
                                                                   << "':\n"
                                                                   << e.what()
                                                                   << "\non accessing key "
@@ -374,10 +372,10 @@ private:
    *  \return value associated to key in Configuration (interpreted as type T),
    *  def if key does not exist in Configuration
    */
-  template < typename T, class Validator >
-  typename internal::Typer< T >::type get_(const std::string& key, typename internal::Typer< T >::type def,
-                                           const ValidatorInterface< T, Validator >& validator, const size_t size,
-                                           const size_t cols) const
+  template <typename T, class Validator>
+  typename internal::Typer<T>::type get_(const std::string& key, typename internal::Typer<T>::type def,
+                                         const ValidatorInterface<T, Validator>& validator, const size_t size,
+                                         const size_t cols) const
   {
 #ifndef NDEBUG
     if (warn_on_default_access_ && !has_key(key)) {
@@ -435,7 +433,7 @@ bool operator!=(const ParameterTree& left, const ParameterTree& right);
 namespace std {
 
 template <>
-struct less< Dune::ParameterTree >
+struct less<Dune::ParameterTree>
 {
   typedef bool result_type;
   typedef Dune::ParameterTree first_argument_type;
@@ -445,7 +443,7 @@ struct less< Dune::ParameterTree >
 }; // struct less< ParameterTree >
 
 template <>
-struct less< Dune::Stuff::Common::Configuration >
+struct less<Dune::Stuff::Common::Configuration>
 {
   typedef bool result_type;
   typedef Dune::Stuff::Common::Configuration first_argument_type;
@@ -458,15 +456,15 @@ struct less< Dune::Stuff::Common::Configuration >
 
 #define DSC_CONFIG Dune::Stuff::Common::Config()
 
-template < typename T >
+template <typename T>
 static auto DSC_CONFIG_GET(std::string key, T def) -> decltype(DSC_CONFIG.get(key, def))
 {
   return DSC_CONFIG.get(key, def);
 }
 
-template < typename T, class V >
+template <typename T, class V>
 static auto DSC_CONFIG_GETV(std::string key, T def,
-                            const DSC::ValidatorInterface< typename DSC::internal::Typer< T >::type, V >& v)
+                            const DSC::ValidatorInterface<typename DSC::internal::Typer<T>::type, V>& v)
     -> decltype(DSC_CONFIG.get(key, def, v))
 {
   return DSC_CONFIG.get(key, def, v);

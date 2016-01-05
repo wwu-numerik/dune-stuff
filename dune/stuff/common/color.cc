@@ -67,9 +67,9 @@ std::string color(size_t i)
   return "\033[38;5;" + std::to_string(i) + "m";
 }
 
-std::map< std::string, std::string >& color_map()
+std::map<std::string, std::string>& color_map()
 {
-  static std::map< std::string, std::string > map_;
+  static std::map<std::string, std::string> map_;
   static bool created_ = false;
   if (!created_) {
     map_["black"]       = Colors::black;

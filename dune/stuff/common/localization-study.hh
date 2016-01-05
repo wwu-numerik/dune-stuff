@@ -21,24 +21,24 @@ namespace Common {
 class LocalizationStudy
 {
 public:
-  LocalizationStudy(const std::vector< std::string > only_these_indicators = {});
+  LocalizationStudy(const std::vector<std::string> only_these_indicators = {});
 
   virtual ~LocalizationStudy();
 
   virtual std::string identifier() const = 0;
 
-  virtual LA::CommonDenseVector< double > compute_reference_indicators() const = 0;
+  virtual LA::CommonDenseVector<double> compute_reference_indicators() const = 0;
 
-  virtual std::vector< std::string > provided_indicators() const = 0;
+  virtual std::vector<std::string> provided_indicators() const = 0;
 
-  virtual LA::CommonDenseVector< double > compute_indicators(const std::string type) const = 0;
+  virtual LA::CommonDenseVector<double> compute_indicators(const std::string type) const = 0;
 
-  std::vector< std::string > used_indicators() const;
+  std::vector<std::string> used_indicators() const;
 
   /*std::map< std::string, std::vector< double > >*/ void run(std::ostream& out = std::cout);
 
 private:
-  const std::vector< std::string > only_these_indicators_;
+  const std::vector<std::string> only_these_indicators_;
 }; // class LocalizationStudy
 
 } // namespace Common

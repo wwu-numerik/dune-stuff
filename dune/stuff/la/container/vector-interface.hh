@@ -43,18 +43,18 @@ class VectorInterface
 
 } // namespace Tags
 
-template < class Traits, class ScalarImp = typename Traits::ScalarType >
-class VectorInterface : public ContainerInterface< Traits, ScalarImp >, public Tags::VectorInterface
+template <class Traits, class ScalarImp = typename Traits::ScalarType>
+class VectorInterface : public ContainerInterface<Traits, ScalarImp>, public Tags::VectorInterface
 {
 public:
   typedef typename Traits::derived_type derived_type;
-  typedef typename Dune::FieldTraits< ScalarImp >::field_type ScalarType;
-  typedef typename Dune::FieldTraits< ScalarImp >::real_type RealType;
+  typedef typename Dune::FieldTraits<ScalarImp>::field_type ScalarType;
+  typedef typename Dune::FieldTraits<ScalarImp>::real_type RealType;
 
-  typedef internal::VectorInputIterator< Traits, ScalarType > const_iterator;
-  typedef internal::VectorOutputIterator< Traits, ScalarType > iterator;
+  typedef internal::VectorInputIterator<Traits, ScalarType> const_iterator;
+  typedef internal::VectorOutputIterator<Traits, ScalarType> iterator;
 
-  static_assert(std::is_same< ScalarType, typename Traits::ScalarType >::value, "");
+  static_assert(std::is_same<ScalarType, typename Traits::ScalarType>::value, "");
 
   virtual ~VectorInterface()
   {
@@ -171,7 +171,7 @@ public:
    *  \return A pair of the lowest index at which the maximum is attained and the absolute maximum value.
    *  \note   If you override this method please use exceptions instead of assertions (for the python bindings).
    */
-  virtual std::pair< size_t, RealType > amax() const
+  virtual std::pair<size_t, RealType> amax() const
   {
     auto result = std::make_pair(size_t(0), RealType(0));
     for (size_t ii = 0; ii < size(); ++ii) {
@@ -195,7 +195,7 @@ public:
    */
   virtual bool
   almost_equal(const derived_type& other,
-               const ScalarType epsilon = Stuff::Common::FloatCmp::DefaultEpsilon< ScalarType >::value()) const
+               const ScalarType epsilon = Stuff::Common::FloatCmp::DefaultEpsilon<ScalarType>::value()) const
   {
     if (other.size() != size())
       DUNE_THROW(Exceptions::shapes_do_not_match,
@@ -211,9 +211,9 @@ public:
    *  \return Truth value of the comparison.
    *  \see    Dune::Stuff::Common::FloatCmp
    */
-  template < class T >
-  bool almost_equal(const VectorInterface< T >& other,
-                    const ScalarType epsilon = Stuff::Common::FloatCmp::DefaultEpsilon< ScalarType >::value()) const
+  template <class T>
+  bool almost_equal(const VectorInterface<T>& other,
+                    const ScalarType epsilon = Stuff::Common::FloatCmp::DefaultEpsilon<ScalarType>::value()) const
   {
     if (other.size() != size())
       DUNE_THROW(Exceptions::shapes_do_not_match,
@@ -492,11 +492,11 @@ public:
   inline DUNE_STUFF_SSIZE_T pb_dim() const
   {
     try {
-      return boost::numeric_cast< DUNE_STUFF_SSIZE_T >(dim());
+      return boost::numeric_cast<DUNE_STUFF_SSIZE_T>(dim());
     } catch (boost::bad_numeric_cast& ee) {
       DUNE_THROW(Exceptions::external_error,
                  "There was an error in boost converting '" << dim() << "' to '"
-                                                            << Common::Typename< ScalarType >::value()
+                                                            << Common::Typename<ScalarType>::value()
                                                             << "': "
                                                             << ee.what());
     }
@@ -509,10 +509,10 @@ public:
   inline void pb_add_to_entry(const DUNE_STUFF_SSIZE_T ii, const ScalarType& value)
   {
     try {
-      add_to_entry(boost::numeric_cast< size_t >(ii), value);
+      add_to_entry(boost::numeric_cast<size_t>(ii), value);
     } catch (boost::bad_numeric_cast& ee) {
       DUNE_THROW(Exceptions::external_error,
-                 "There was an error in boost converting '" << ii << "' to '" << Common::Typename< size_t >::value()
+                 "There was an error in boost converting '" << ii << "' to '" << Common::Typename<size_t>::value()
                                                             << "': "
                                                             << ee.what());
     }
@@ -525,10 +525,10 @@ public:
   inline void pb_set_entry(const DUNE_STUFF_SSIZE_T ii, const ScalarType& value)
   {
     try {
-      set_entry(boost::numeric_cast< size_t >(ii), value);
+      set_entry(boost::numeric_cast<size_t>(ii), value);
     } catch (boost::bad_numeric_cast& ee) {
       DUNE_THROW(Exceptions::external_error,
-                 "There was an error in boost converting '" << ii << "' to '" << Common::Typename< size_t >::value()
+                 "There was an error in boost converting '" << ii << "' to '" << Common::Typename<size_t>::value()
                                                             << "': "
                                                             << ee.what());
     }
@@ -541,10 +541,10 @@ public:
   inline ScalarType pb_get_entry(const DUNE_STUFF_SSIZE_T ii)
   {
     try {
-      return get_entry(boost::numeric_cast< size_t >(ii));
+      return get_entry(boost::numeric_cast<size_t>(ii));
     } catch (boost::bad_numeric_cast& ee) {
       DUNE_THROW(Exceptions::external_error,
-                 "There was an error in boost converting '" << ii << "' to '" << Common::Typename< size_t >::value()
+                 "There was an error in boost converting '" << ii << "' to '" << Common::Typename<size_t>::value()
                                                             << "': "
                                                             << ee.what());
     }
@@ -554,31 +554,31 @@ public:
    * \brief Variant of amax() needed for the python bindings.
    * \see   amax()
    */
-  std::vector< RealType > pb_amax() const
+  std::vector<RealType> pb_amax() const
   {
     const auto max = amax();
     try {
-      return {boost::numeric_cast< RealType >(max.first), max.second};
+      return {boost::numeric_cast<RealType>(max.first), max.second};
     } catch (boost::bad_numeric_cast& ee) {
       DUNE_THROW(Exceptions::external_error,
                  "There was an error in boost converting '" << max.first << "' to '"
-                                                            << Common::Typename< RealType >::value()
+                                                            << Common::Typename<RealType>::value()
                                                             << "': "
                                                             << ee.what());
     }
   } // ... pb_amax(...)
 
-  std::vector< ScalarType > components(const std::vector< DUNE_STUFF_SSIZE_T >& component_indices) const
+  std::vector<ScalarType> components(const std::vector<DUNE_STUFF_SSIZE_T>& component_indices) const
   {
     if (component_indices.size() > dim())
       DUNE_THROW(Exceptions::index_out_of_range,
                  "size of component_indices (" << component_indices.size() << ") is larger than the dim of this ("
                                                << dim()
                                                << ")!");
-    std::vector< ScalarType > values(component_indices.size(), ScalarType(0));
+    std::vector<ScalarType> values(component_indices.size(), ScalarType(0));
     try {
       for (size_t ii = 0; ii < component_indices.size(); ++ii) {
-        const size_t component = boost::numeric_cast< size_t >(component_indices[ii]);
+        const size_t component = boost::numeric_cast<size_t>(component_indices[ii]);
         if (component >= dim())
           DUNE_THROW(Exceptions::index_out_of_range,
                      "component_indices[" << ii << "] is too large for this (" << dim() << ")!");
@@ -612,64 +612,64 @@ public:
     return const_iterator(*this, true);
   }
 
-  operator std::vector< ScalarType >() const
+  operator std::vector<ScalarType>() const
   {
-    std::vector< ScalarType > ret(dim());
+    std::vector<ScalarType> ret(dim());
     for (size_t ii = 0; ii < dim(); ++ii)
       ret[ii] = this->operator[](ii);
     return ret;
   }
 
 private:
-  template < class T, class S >
-  friend std::ostream& operator<<(std::ostream& /*out*/, const VectorInterface< T, S >& /*vector*/);
+  template <class T, class S>
+  friend std::ostream& operator<<(std::ostream& /*out*/, const VectorInterface<T, S>& /*vector*/);
 }; // class VectorInterface
 
 namespace internal {
 
-template < class V >
+template <class V>
 struct is_vector_helper
 {
   DSC_has_typedef_initialize_once(Traits) DSC_has_typedef_initialize_once(ScalarType)
 
-      static const bool is_candidate = DSC_has_typedef(Traits)< V >::value && DSC_has_typedef(ScalarType)< V >::value;
+      static const bool is_candidate = DSC_has_typedef(Traits)<V>::value && DSC_has_typedef(ScalarType)<V>::value;
 }; // class is_vector_helper
 
 } // namespace internal
 
-template < class V, bool candidate = internal::is_vector_helper< V >::is_candidate >
-struct is_vector : public std::is_base_of< VectorInterface< typename V::Traits, typename V::ScalarType >, V >
+template <class V, bool candidate = internal::is_vector_helper<V>::is_candidate>
+struct is_vector : public std::is_base_of<VectorInterface<typename V::Traits, typename V::ScalarType>, V>
 {
 };
 
-template < class V >
-struct is_vector< V, false > : public std::false_type
+template <class V>
+struct is_vector<V, false> : public std::false_type
 {
 };
 
 namespace internal {
 
-template < class VectorImp >
+template <class VectorImp>
 struct VectorAbstractionBase
 {
-  static const bool is_vector = LA::is_vector< VectorImp >::value;
+  static const bool is_vector = LA::is_vector<VectorImp>::value;
 
   static const bool has_static_size = false;
 
-  static const size_t static_size = std::numeric_limits< size_t >::max();
+  static const size_t static_size = std::numeric_limits<size_t>::max();
 
-  typedef typename std::conditional< is_vector, VectorImp, void >::type VectorType;
-  typedef typename std::conditional< is_vector, typename VectorImp::ScalarType, void >::type ScalarType;
-  typedef typename std::conditional< is_vector, typename VectorImp::RealType, void >::type RealType;
+  typedef typename std::conditional<is_vector, VectorImp, void>::type VectorType;
+  typedef typename std::conditional<is_vector, typename VectorImp::ScalarType, void>::type ScalarType;
+  typedef typename std::conditional<is_vector, typename VectorImp::RealType, void>::type RealType;
   typedef ScalarType S;
   typedef RealType R;
 
-  static inline typename std::enable_if< is_vector, VectorType >::type create(const size_t sz)
+  static inline typename std::enable_if<is_vector, VectorType>::type create(const size_t sz)
   {
     return VectorType(sz);
   }
 
-  static inline typename std::enable_if< is_vector, VectorType >::type create(const size_t sz, const ScalarType& val)
+  static inline typename std::enable_if<is_vector, VectorType>::type create(const size_t sz, const ScalarType& val)
   {
     return VectorType(sz, val);
   }
@@ -677,8 +677,8 @@ struct VectorAbstractionBase
 
 } // namespace internal
 
-template < class T, class S >
-std::ostream& operator<<(std::ostream& out, const VectorInterface< T, S >& vector)
+template <class T, class S>
+std::ostream& operator<<(std::ostream& out, const VectorInterface<T, S>& vector)
 {
   out << "[";
   const size_t sz = vector.size();

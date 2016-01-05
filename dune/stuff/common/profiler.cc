@@ -70,7 +70,7 @@ TimingData::DeltaType TimingData::delta() const
 {
   const auto scale   = 1.0 / double(boost::timer::nanosecond_type(1e6));
   const auto elapsed = timer_->elapsed();
-  const auto cast = [=](double var) { return static_cast< typename TimingData::DeltaType::value_type >(var); };
+  const auto cast = [=](double var) { return static_cast<typename TimingData::DeltaType::value_type>(var); };
   return {{cast(elapsed.wall * scale), cast(elapsed.user * scale), cast(elapsed.system * scale)}};
 }
 
@@ -87,7 +87,7 @@ void Profiler::resetTiming(const std::string section_name)
 
 void Profiler::startTiming(const std::string section_name)
 {
-  std::lock_guard< std::mutex > lock(mutex_);
+  std::lock_guard<std::mutex> lock(mutex_);
   if (current_run_number_ >= datamaps_.size()) {
     datamaps_.push_back(Datamap());
   }
@@ -206,7 +206,7 @@ void Profiler::outputAveraged(const int refineLevel, const long numDofs, const d
 
   boost::filesystem::ofstream csv(filename);
 
-  std::map< std::string, long > averages_map;
+  std::map<std::string, long> averages_map;
   for (const auto& datamap : datamaps_) {
     for (const auto& timing : datamap) {
       //! this used to be GetTiming( it->second ), which is only valid thru an implicit and wrong conversion..

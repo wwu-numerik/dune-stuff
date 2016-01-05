@@ -27,8 +27,8 @@ namespace LA {
 
 #if HAVE_DUNE_ISTL
 
-template < class O, int c >
-class IdentityPreconditioner : public Dune::Preconditioner< typename O::domain_type, typename O::range_type >
+template <class O, int c>
+class IdentityPreconditioner : public Dune::Preconditioner<typename O::domain_type, typename O::range_type>
 {
 public:
   //! \brief The domain type of the preconditioner.
@@ -61,13 +61,13 @@ public:
 };
 
 //! the general, parallel case
-template < class S, class CommunicatorType >
+template <class S, class CommunicatorType>
 class AmgApplicator
 {
-  typedef IstlRowMajorSparseMatrix< S > MatrixType;
+  typedef IstlRowMajorSparseMatrix<S> MatrixType;
   typedef typename MatrixType::RealType R;
   typedef typename MatrixType::BackendType IstlMatrixType;
-  typedef typename IstlDenseVector< S >::BackendType IstlVectorType;
+  typedef typename IstlDenseVector<S>::BackendType IstlVectorType;
 
 public:
   AmgApplicator(const MatrixType& matrix, const CommunicatorType& comm)
@@ -76,66 +76,64 @@ public:
   {
   }
 
-  InverseOperatorResult call(IstlDenseVector< S >& rhs, IstlDenseVector< S >& solution,
-                             const Common::Configuration& opts, const Common::Configuration& default_opts,
-                             const std::string& smoother_type)
+  InverseOperatorResult call(IstlDenseVector<S>& rhs, IstlDenseVector<S>& solution, const Common::Configuration& opts,
+                             const Common::Configuration& default_opts, const std::string& smoother_type)
   {
     // define the matrix operator
 
-    typedef OverlappingSchwarzOperator< IstlMatrixType, IstlVectorType, IstlVectorType, CommunicatorType >
+    typedef OverlappingSchwarzOperator<IstlMatrixType, IstlVectorType, IstlVectorType, CommunicatorType>
         MatrixOperatorType;
     MatrixOperatorType matrix_operator(matrix_.backend(), communicator_);
 
     // define the scalar product
-    OverlappingSchwarzScalarProduct< IstlVectorType, CommunicatorType > scalar_product(communicator_);
+    OverlappingSchwarzScalarProduct<IstlVectorType, CommunicatorType> scalar_product(communicator_);
 
     // ILU0 as the smoother for the AMG
-    typedef SeqILU0< IstlMatrixType, IstlVectorType, IstlVectorType, 1 > SequentialSmootherType_ILU;
-    typedef BlockPreconditioner< IstlVectorType, IstlVectorType, CommunicatorType, SequentialSmootherType_ILU >
+    typedef SeqILU0<IstlMatrixType, IstlVectorType, IstlVectorType, 1> SequentialSmootherType_ILU;
+    typedef BlockPreconditioner<IstlVectorType, IstlVectorType, CommunicatorType, SequentialSmootherType_ILU>
         SmootherType_ILU;
-    typename Amg::SmootherTraits< SmootherType_ILU >::Arguments smoother_parameters_ILU;
+    typename Amg::SmootherTraits<SmootherType_ILU>::Arguments smoother_parameters_ILU;
     smoother_parameters_ILU.iterations =
-        opts.get("smoother.iterations", default_opts.get< size_t >("smoother.iterations"));
+        opts.get("smoother.iterations", default_opts.get<size_t>("smoother.iterations"));
     smoother_parameters_ILU.relaxationFactor =
-        opts.get("smoother.relaxation_factor", default_opts.get< S >("smoother.relaxation_factor"));
+        opts.get("smoother.relaxation_factor", default_opts.get<S>("smoother.relaxation_factor"));
     // SSOR as the smoother for the amg
-    typedef SeqSSOR< IstlMatrixType, IstlVectorType, IstlVectorType, 1 > SequentialSmootherType_SSOR;
-    typedef BlockPreconditioner< IstlVectorType, IstlVectorType, CommunicatorType, SequentialSmootherType_SSOR >
+    typedef SeqSSOR<IstlMatrixType, IstlVectorType, IstlVectorType, 1> SequentialSmootherType_SSOR;
+    typedef BlockPreconditioner<IstlVectorType, IstlVectorType, CommunicatorType, SequentialSmootherType_SSOR>
         SmootherType_SSOR;
-    typename Amg::SmootherTraits< SmootherType_SSOR >::Arguments smoother_parameters_SSOR;
+    typename Amg::SmootherTraits<SmootherType_SSOR>::Arguments smoother_parameters_SSOR;
     smoother_parameters_SSOR.iterations =
-        opts.get("smoother.iterations", default_opts.get< size_t >("smoother.iterations"));
+        opts.get("smoother.iterations", default_opts.get<size_t>("smoother.iterations"));
     smoother_parameters_SSOR.relaxationFactor =
-        opts.get("smoother.relaxation_factor", default_opts.get< S >("smoother.relaxation_factor"));
+        opts.get("smoother.relaxation_factor", default_opts.get<S>("smoother.relaxation_factor"));
 
     // define the AMG as the preconditioner for the BiCGStab solver
     Amg::Parameters amg_parameters(
-        opts.get("preconditioner.max_level", default_opts.get< size_t >("preconditioner.max_level")),
-        opts.get("preconditioner.coarse_target", default_opts.get< size_t >("preconditioner.coarse_target")),
-        opts.get("preconditioner.min_coarse_rate", default_opts.get< R >("preconditioner.min_coarse_rate")),
-        opts.get("preconditioner.prolong_damp", default_opts.get< R >("preconditioner.prolong_damp")));
+        opts.get("preconditioner.max_level", default_opts.get<size_t>("preconditioner.max_level")),
+        opts.get("preconditioner.coarse_target", default_opts.get<size_t>("preconditioner.coarse_target")),
+        opts.get("preconditioner.min_coarse_rate", default_opts.get<R>("preconditioner.min_coarse_rate")),
+        opts.get("preconditioner.prolong_damp", default_opts.get<R>("preconditioner.prolong_damp")));
     amg_parameters.setDefaultValuesIsotropic(
-        opts.get("preconditioner.isotropy_dim", default_opts.get< size_t >("preconditioner.isotropy_dim")));
+        opts.get("preconditioner.isotropy_dim", default_opts.get<size_t>("preconditioner.isotropy_dim")));
     amg_parameters.setDefaultValuesAnisotropic(
-        opts.get("preconditioner.anisotropy_dim", default_opts.get< size_t >("preconditioner.anisotropy_dim")));
-    amg_parameters.setDebugLevel(opts.get("preconditioner.verbose", default_opts.get< int >("preconditioner.verbose")));
-    Amg::CoarsenCriterion< Amg::UnSymmetricCriterion< IstlMatrixType, Amg::FirstDiagonal > > amg_criterion(
-        amg_parameters);
+        opts.get("preconditioner.anisotropy_dim", default_opts.get<size_t>("preconditioner.anisotropy_dim")));
+    amg_parameters.setDebugLevel(opts.get("preconditioner.verbose", default_opts.get<int>("preconditioner.verbose")));
+    Amg::CoarsenCriterion<Amg::UnSymmetricCriterion<IstlMatrixType, Amg::FirstDiagonal>> amg_criterion(amg_parameters);
     if (smoother_type == "ilu0") {
-      typedef Amg::AMG< MatrixOperatorType, IstlVectorType, SmootherType_ILU, CommunicatorType > PreconditionerType_ILU;
+      typedef Amg::AMG<MatrixOperatorType, IstlVectorType, SmootherType_ILU, CommunicatorType> PreconditionerType_ILU;
       PreconditionerType_ILU preconditioner(matrix_operator, amg_criterion, smoother_parameters_ILU, communicator_);
 
       // define the BiCGStab as the actual solver
-      BiCGSTABSolver< IstlVectorType > solver(
+      BiCGSTABSolver<IstlVectorType> solver(
           matrix_operator,
           scalar_product,
           preconditioner,
-          opts.get("precision", default_opts.get< S >("precision")),
-          opts.get("max_iter", default_opts.get< size_t >("max_iter")),
+          opts.get("precision", default_opts.get<S>("precision")),
+          opts.get("max_iter", default_opts.get<size_t>("max_iter")),
 #if HAVE_MPI
-          (communicator_.communicator().rank() == 0) ? opts.get("verbose", default_opts.get< int >("verbose")) : 0
+          (communicator_.communicator().rank() == 0) ? opts.get("verbose", default_opts.get<int>("verbose")) : 0
 #else // HAVE_MPI
-          opts.get("verbose", default_opts.get< int >("verbose"))
+          opts.get("verbose", default_opts.get<int>("verbose"))
 #endif
           );
 
@@ -143,21 +141,20 @@ public:
       solver.apply(solution.backend(), rhs.backend(), stats);
       return stats;
     } else if (smoother_type == "ssor") {
-      typedef Amg::AMG< MatrixOperatorType, IstlVectorType, SmootherType_SSOR, CommunicatorType >
-          PreconditionerType_SSOR;
+      typedef Amg::AMG<MatrixOperatorType, IstlVectorType, SmootherType_SSOR, CommunicatorType> PreconditionerType_SSOR;
       PreconditionerType_SSOR preconditioner(matrix_operator, amg_criterion, smoother_parameters_ILU, communicator_);
 
       // define the BiCGStab as the actual solver
-      BiCGSTABSolver< IstlVectorType > solver(
+      BiCGSTABSolver<IstlVectorType> solver(
           matrix_operator,
           scalar_product,
           preconditioner,
-          opts.get("precision", default_opts.get< S >("precision")),
-          opts.get("max_iter", default_opts.get< size_t >("max_iter")),
+          opts.get("precision", default_opts.get<S>("precision")),
+          opts.get("max_iter", default_opts.get<size_t>("max_iter")),
 #if HAVE_MPI
-          (communicator_.communicator().rank() == 0) ? opts.get("verbose", default_opts.get< int >("verbose")) : 0
+          (communicator_.communicator().rank() == 0) ? opts.get("verbose", default_opts.get<int>("verbose")) : 0
 #else // HAVE_MPI
-          opts.get("verbose", default_opts.get< int >("verbose"))
+          opts.get("verbose", default_opts.get<int>("verbose"))
 #endif
           );
 
@@ -173,13 +170,13 @@ protected:
 };
 
 //! specialization for our faux type \ref SequentialCommunication
-template < class S >
-class AmgApplicator< S, SequentialCommunication >
+template <class S>
+class AmgApplicator<S, SequentialCommunication>
 {
-  typedef IstlRowMajorSparseMatrix< S > MatrixType;
+  typedef IstlRowMajorSparseMatrix<S> MatrixType;
   typedef typename MatrixType::RealType R;
   typedef typename MatrixType::BackendType IstlMatrixType;
-  typedef typename IstlDenseVector< S >::BackendType IstlVectorType;
+  typedef typename IstlDenseVector<S>::BackendType IstlVectorType;
 
 public:
   AmgApplicator(const MatrixType& matrix, const SequentialCommunication& comm)
@@ -188,63 +185,61 @@ public:
   {
   }
 
-  InverseOperatorResult call(IstlDenseVector< S >& rhs, IstlDenseVector< S >& solution,
-                             const Common::Configuration& opts, const Common::Configuration& default_opts,
-                             const std::string& smoother_type)
+  InverseOperatorResult call(IstlDenseVector<S>& rhs, IstlDenseVector<S>& solution, const Common::Configuration& opts,
+                             const Common::Configuration& default_opts, const std::string& smoother_type)
   {
-    typedef MatrixAdapter< IstlMatrixType, IstlVectorType, IstlVectorType > MatrixOperatorType;
+    typedef MatrixAdapter<IstlMatrixType, IstlVectorType, IstlVectorType> MatrixOperatorType;
     MatrixOperatorType matrix_operator(matrix_.backend());
 
     // define the scalar product
-    Dune::SeqScalarProduct< typename IstlDenseVector< S >::BackendType > scalar_product;
+    Dune::SeqScalarProduct<typename IstlDenseVector<S>::BackendType> scalar_product;
 
     // define the AMG as the preconditioner for the BiCGStab solver
     Amg::Parameters amg_parameters(
-        opts.get("preconditioner.max_level", default_opts.get< int >("preconditioner.max_level")),
-        opts.get("preconditioner.coarse_target", default_opts.get< int >("preconditioner.coarse_target")),
-        opts.get("preconditioner.min_coarse_rate", default_opts.get< R >("preconditioner.min_coarse_rate")),
-        opts.get("preconditioner.prolong_damp", default_opts.get< R >("preconditioner.prolong_damp")));
+        opts.get("preconditioner.max_level", default_opts.get<int>("preconditioner.max_level")),
+        opts.get("preconditioner.coarse_target", default_opts.get<int>("preconditioner.coarse_target")),
+        opts.get("preconditioner.min_coarse_rate", default_opts.get<R>("preconditioner.min_coarse_rate")),
+        opts.get("preconditioner.prolong_damp", default_opts.get<R>("preconditioner.prolong_damp")));
     amg_parameters.setDefaultValuesIsotropic(
-        opts.get("preconditioner.isotropy_dim", default_opts.get< size_t >("preconditioner.isotropy_dim")));
+        opts.get("preconditioner.isotropy_dim", default_opts.get<size_t>("preconditioner.isotropy_dim")));
     amg_parameters.setDefaultValuesAnisotropic(
-        opts.get("preconditioner.anisotropy_dim", default_opts.get< size_t >("preconditioner.anisotropy_dim")));
-    amg_parameters.setDebugLevel(opts.get("preconditioner.verbose", default_opts.get< int >("preconditioner.verbose")));
-    Amg::CoarsenCriterion< Amg::UnSymmetricCriterion< IstlMatrixType, Amg::FirstDiagonal > > amg_criterion(
-        amg_parameters);
+        opts.get("preconditioner.anisotropy_dim", default_opts.get<size_t>("preconditioner.anisotropy_dim")));
+    amg_parameters.setDebugLevel(opts.get("preconditioner.verbose", default_opts.get<int>("preconditioner.verbose")));
+    Amg::CoarsenCriterion<Amg::UnSymmetricCriterion<IstlMatrixType, Amg::FirstDiagonal>> amg_criterion(amg_parameters);
 
     InverseOperatorResult stats;
     if (smoother_type == "ilu0") {
-      typedef SeqILU0< IstlMatrixType, IstlVectorType, IstlVectorType > SmootherType;
+      typedef SeqILU0<IstlMatrixType, IstlVectorType, IstlVectorType> SmootherType;
 
-      typename Amg::SmootherTraits< SmootherType >::Arguments smoother_parameters;
-      smoother_parameters.iterations = opts.get("smoother.iterations", default_opts.get< int >("smoother.iterations"));
+      typename Amg::SmootherTraits<SmootherType>::Arguments smoother_parameters;
+      smoother_parameters.iterations = opts.get("smoother.iterations", default_opts.get<int>("smoother.iterations"));
       smoother_parameters.relaxationFactor =
-          opts.get("smoother.relaxation_factor", default_opts.get< S >("smoother.relaxation_factor"));
-      typedef Amg::AMG< MatrixOperatorType, IstlVectorType, SmootherType > PreconditionerType;
+          opts.get("smoother.relaxation_factor", default_opts.get<S>("smoother.relaxation_factor"));
+      typedef Amg::AMG<MatrixOperatorType, IstlVectorType, SmootherType> PreconditionerType;
       PreconditionerType preconditioner(matrix_operator, amg_criterion, smoother_parameters);
       // define the BiCGStab as the actual solver
-      BiCGSTABSolver< IstlVectorType > solver(matrix_operator,
-                                              scalar_product,
-                                              preconditioner,
-                                              opts.get("precision", default_opts.get< S >("precision")),
-                                              opts.get("max_iter", default_opts.get< int >("max_iter")),
-                                              opts.get("verbose", default_opts.get< int >("verbose")));
+      BiCGSTABSolver<IstlVectorType> solver(matrix_operator,
+                                            scalar_product,
+                                            preconditioner,
+                                            opts.get("precision", default_opts.get<S>("precision")),
+                                            opts.get("max_iter", default_opts.get<int>("max_iter")),
+                                            opts.get("verbose", default_opts.get<int>("verbose")));
       solver.apply(solution.backend(), rhs.backend(), stats);
     } else if (smoother_type == "ssor") {
-      typedef SeqSSOR< IstlMatrixType, IstlVectorType, IstlVectorType > SmootherType;
+      typedef SeqSSOR<IstlMatrixType, IstlVectorType, IstlVectorType> SmootherType;
 
-      typename Amg::SmootherTraits< SmootherType >::Arguments smoother_parameters;
-      smoother_parameters.iterations = opts.get("smoother.iterations", default_opts.get< int >("smoother.iterations"));
+      typename Amg::SmootherTraits<SmootherType>::Arguments smoother_parameters;
+      smoother_parameters.iterations = opts.get("smoother.iterations", default_opts.get<int>("smoother.iterations"));
       smoother_parameters.relaxationFactor =
-          opts.get("smoother.relaxation_factor", default_opts.get< S >("smoother.relaxation_factor"));
-      typedef Amg::AMG< MatrixOperatorType, IstlVectorType, SmootherType > PreconditionerType;
+          opts.get("smoother.relaxation_factor", default_opts.get<S>("smoother.relaxation_factor"));
+      typedef Amg::AMG<MatrixOperatorType, IstlVectorType, SmootherType> PreconditionerType;
       PreconditionerType preconditioner(matrix_operator, amg_criterion, smoother_parameters);
-      BiCGSTABSolver< IstlVectorType > solver(matrix_operator,
-                                              scalar_product,
-                                              preconditioner,
-                                              opts.get("precision", default_opts.get< S >("precision")),
-                                              opts.get("max_iter", default_opts.get< int >("max_iter")),
-                                              opts.get("verbose", default_opts.get< int >("verbose")));
+      BiCGSTABSolver<IstlVectorType> solver(matrix_operator,
+                                            scalar_product,
+                                            preconditioner,
+                                            opts.get("precision", default_opts.get<S>("precision")),
+                                            opts.get("max_iter", default_opts.get<int>("max_iter")),
+                                            opts.get("verbose", default_opts.get<int>("verbose")));
       solver.apply(solution.backend(), rhs.backend(), stats);
     } else {
       DUNE_THROW(Exceptions::wrong_input_given, "Unknown smoother requested: " << smoother_type);
@@ -259,10 +254,10 @@ protected:
 
 #else // HAVE_DUNE_ISTL
 
-template < class S, class T >
+template <class S, class T>
 class AmgApplicator
 {
-  static_assert(Dune::AlwaysFalse< S >::value, "You are missing dune-istl!");
+  static_assert(Dune::AlwaysFalse<S>::value, "You are missing dune-istl!");
 };
 
 #endif // HAVE_DUNE_ISTL

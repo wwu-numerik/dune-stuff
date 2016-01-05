@@ -56,7 +56,7 @@ public:
   /** \name forwarded Log functions
      * \{
      */
-  template < class T >
+  template <class T>
   void log(T c, int streamID)
   {
     getStream(streamID) << c;
@@ -127,11 +127,11 @@ private:
   boost::filesystem::path filename_;
   boost::filesystem::path filenameWoTime_;
   boost::filesystem::ofstream logfile_;
-  typedef std::map< int, int > FlagMap;
+  typedef std::map<int, int> FlagMap;
   FlagMap flagmap_;
-  typedef std::map< int, std::unique_ptr< LogStream > > StreamMap;
+  typedef std::map<int, std::unique_ptr<LogStream>> StreamMap;
   StreamMap streammap_;
-  typedef std::vector< int > IdVec;
+  typedef std::vector<int> IdVec;
   IdVec streamIDs_;
   int logflags_;
   EmptyLogStream emptyLogStream_;

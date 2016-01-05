@@ -253,7 +253,7 @@ void Configuration::setup_()
   if (logfile_.empty())
     logfile_ = boost::filesystem::path(internal::configuration_logfile).string();
   if (has_key("global.datadir") && has_key("logging.dir"))
-    logfile_ = (boost::filesystem::path(get< std::string >("global.datadir")) / get< std::string >("logging.dir")
+    logfile_ = (boost::filesystem::path(get<std::string>("global.datadir")) / get<std::string>("logging.dir")
                 / "dsc_parameter.log")
                    .string();
   logfile_ = boost::filesystem::path(logfile_).string();
@@ -300,7 +300,7 @@ ParameterTree Configuration::initialize(int argc, char** argv)
     Dune::ParameterTreeParser::readOptions(argc, argv, param_tree);
   }
   if (param_tree.hasKey("paramfile")) {
-    Dune::ParameterTreeParser::readINITree(param_tree.get< std::string >("paramfile"), param_tree, false);
+    Dune::ParameterTreeParser::readINITree(param_tree.get<std::string>("paramfile"), param_tree, false);
   }
   return param_tree;
 } // ... initialize(...)
@@ -316,7 +316,7 @@ ParameterTree Configuration::initialize(int argc, char** argv, std::string filen
     Dune::ParameterTreeParser::readOptions(argc, argv, param_tree);
   }
   if (param_tree.hasKey("paramfile")) {
-    Dune::ParameterTreeParser::readINITree(param_tree.get< std::string >("paramfile"), param_tree, false);
+    Dune::ParameterTreeParser::readINITree(param_tree.get<std::string>("paramfile"), param_tree, false);
   }
   return param_tree;
 } // ... initialize(...)
@@ -324,7 +324,7 @@ ParameterTree Configuration::initialize(int argc, char** argv, std::string filen
 void Configuration::report_as_sub(std::ostream& out, const std::string& prefix, const std::string& sub_path) const
 {
   for (const auto& key : getValueKeys()) {
-    out << prefix << key << " = " << ParameterTree::get< std::string >(key) << std::endl;
+    out << prefix << key << " = " << ParameterTree::get<std::string>(key) << std::endl;
   }
   for (const auto& subkey : getSubKeys()) {
     Configuration sub_tree(sub(subkey));
@@ -364,11 +364,11 @@ void Configuration::report_flatly(const BaseType& subtree, const std::string& pr
   }
 } // ... report_flatly(...)
 
-std::map< std::string, std::string > Configuration::flatten() const
+std::map<std::string, std::string> Configuration::flatten() const
 {
-  std::map< std::string, std::string > ret;
+  std::map<std::string, std::string> ret;
   for (const auto& kk : getValueKeys())
-    ret[kk] = get< std::string >(kk);
+    ret[kk] = get<std::string>(kk);
   for (const auto& ss : getSubKeys()) {
     const auto flat_sub = sub(ss).flatten();
     for (const auto& element : flat_sub)
@@ -393,7 +393,7 @@ bool operator!=(const Configuration& left, const Configuration& right)
   return !(left == right);
 }
 
-Configuration::Configuration(const std::vector< std::string > keys, const std::vector< std::string > values_in,
+Configuration::Configuration(const std::vector<std::string> keys, const std::vector<std::string> values_in,
                              const bool /*record_defaults*/, const bool warn_on_default_access, const bool log_on_exit,
                              const std::string logfile)
   : BaseType()
@@ -427,13 +427,13 @@ bool operator!=(const ParameterTree& left, const ParameterTree& right)
 } // namespace Dune
 namespace std {
 
-bool less< Dune::ParameterTree >::operator()(const Dune::ParameterTree& lhs, const Dune::ParameterTree& rhs) const
+bool less<Dune::ParameterTree>::operator()(const Dune::ParameterTree& lhs, const Dune::ParameterTree& rhs) const
 {
   return Dune::Stuff::Common::Configuration(lhs).flatten() < Dune::Stuff::Common::Configuration(rhs).flatten();
 }
 
-bool less< Dune::Stuff::Common::Configuration >::operator()(const Dune::Stuff::Common::Configuration& lhs,
-                                                            const Dune::Stuff::Common::Configuration& rhs) const
+bool less<Dune::Stuff::Common::Configuration>::operator()(const Dune::Stuff::Common::Configuration& lhs,
+                                                          const Dune::Stuff::Common::Configuration& rhs) const
 {
   return lhs.flatten() < rhs.flatten();
 }

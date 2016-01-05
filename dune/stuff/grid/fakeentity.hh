@@ -12,7 +12,7 @@ namespace Dune {
 namespace Stuff {
 namespace Grid {
 
-template < int dd >
+template <int dd>
 class FakeEntity
 {
 public:
@@ -21,7 +21,7 @@ public:
   class Geometry
   {
   public:
-    template < class T >
+    template <class T>
     T global(const T& t) const
     {
       return t;

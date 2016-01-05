@@ -21,8 +21,8 @@ namespace Dune {
 namespace Stuff {
 namespace Common {
 
-template < class V >
-typename std::enable_if< Dune::Stuff::Common::is_vector< V >::value, void >::type
+template <class V>
+typename std::enable_if<Dune::Stuff::Common::is_vector<V>::value, void>::type
 print(const V& vec, const std::string name, std::ostream& out, const std::string prefix = "")
 {
   out << prefix << name << " = ";
@@ -38,11 +38,11 @@ print(const V& vec, const std::string name, std::ostream& out, const std::string
   }
 } // ... print(...)
 
-template < class M >
-typename std::enable_if< Dune::Stuff::Common::is_matrix< M >::value, void >::type
+template <class M>
+typename std::enable_if<Dune::Stuff::Common::is_matrix<M>::value, void>::type
 print(const M& mat, const std::string name, std::ostream& out, const std::string prefix = "")
 {
-  typedef MatrixAbstraction< M > MM;
+  typedef MatrixAbstraction<M> MM;
   const size_t rows = MM::rows(mat);
   const size_t cols = MM::cols(mat);
   out << prefix << name << " = ";
@@ -75,7 +75,7 @@ print(const M& mat, const std::string name, std::ostream& out, const std::string
 } // ... print(...)
 
 //! useful for visualizing sparsity patterns of matrices
-template < class Matrix >
+template <class Matrix>
 void matrixToGnuplotStream(const Matrix& matrix, std::ostream& stream)
 {
   unsigned long nz = 0;
@@ -107,7 +107,7 @@ inline std::string dimToAxisName(const size_t dim, const bool capitalize = false
  * \see http://codereview.stackexchange.com/questions/30132/comma-formatted-stl-vectors/30181#30181
  * \example std::copy(strings.begin(), strings.end(), PrefixOutputIterator<string>(ostream, ","));
  **/
-template < typename T >
+template <typename T>
 class PrefixOutputIterator
 {
   std::ostream& ostream;

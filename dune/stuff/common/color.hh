@@ -97,7 +97,7 @@ struct StreamModifiers
  */
 std::string color(size_t i);
 
-std::map< std::string, std::string >& color_map();
+std::map<std::string, std::string>& color_map();
 
 std::string color(const std::string id);
 

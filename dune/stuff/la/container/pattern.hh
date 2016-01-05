@@ -17,7 +17,7 @@ namespace LA {
 class SparsityPatternDefault
 {
 private:
-  typedef std::vector< std::vector< size_t > > BaseType;
+  typedef std::vector<std::vector<size_t>> BaseType;
 
 public:
   typedef BaseType::value_type InnerType;

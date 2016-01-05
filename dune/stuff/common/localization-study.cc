@@ -14,7 +14,7 @@ namespace Dune {
 namespace Stuff {
 namespace Common {
 
-LocalizationStudy::LocalizationStudy(const std::vector< std::string > only_these_indicators)
+LocalizationStudy::LocalizationStudy(const std::vector<std::string> only_these_indicators)
   : only_these_indicators_(only_these_indicators)
 {
 }
@@ -23,12 +23,12 @@ LocalizationStudy::~LocalizationStudy()
 {
 }
 
-std::vector< std::string > LocalizationStudy::used_indicators() const
+std::vector<std::string> LocalizationStudy::used_indicators() const
 {
   if (only_these_indicators_.empty())
     return provided_indicators();
   else {
-    std::vector< std::string > ret;
+    std::vector<std::string> ret;
     for (auto indicator : provided_indicators())
       if (std::find(only_these_indicators_.begin(), only_these_indicators_.end(), indicator)
           != only_these_indicators_.end())

@@ -49,7 +49,7 @@ size_t Dune::Stuff::ThreadManager::current_threads()
 size_t Dune::Stuff::ThreadManager::thread()
 {
   const auto tbb_id = std::this_thread::get_id();
-  static std::map< decltype(tbb_id), size_t > thread_ids;
+  static std::map<decltype(tbb_id), size_t> thread_ids;
   const auto it = thread_ids.find(tbb_id);
   if (it == thread_ids.end())
     DSC::map_emplace(thread_ids, tbb_id, thread_ids.size());
@@ -74,7 +74,7 @@ void Dune::Stuff::ThreadManager::set_max_threads(const size_t count)
     tbb_init_.terminate();
   }
   max_threads_        = count;
-  const int int_count = boost::numeric_cast< int >(count);
+  const int int_count = boost::numeric_cast<int>(count);
   WITH_DUNE_FEM(Dune::Fem::ThreadManager::setMaxNumberThreads(int_count);)
 #if HAVE_EIGEN
   Eigen::setNbThreads(int_count);

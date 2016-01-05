@@ -24,17 +24,17 @@ namespace Dune {
 namespace Stuff {
 namespace Grid {
 
-typedef std::array< std::string, 7 > TexColorArrayType;
+typedef std::array<std::string, 7> TexColorArrayType;
 namespace {
 const TexColorArrayType texcolors_ = {{"black", "red", "blue", "green", "yellow", "cyan", "magenta"}};
 }
 
 //! A means to ensure we have exactly 2 coords for tikz to draw, even in 1D
-struct PgfCoordWrapper : Dune::FieldVector< double, 2 >
+struct PgfCoordWrapper : Dune::FieldVector<double, 2>
 {
-  template < int wdim >
-  PgfCoordWrapper(const Dune::FieldVector< double, wdim >& vector)
-    : Dune::FieldVector< double, 2 >(0.0)
+  template <int wdim>
+  PgfCoordWrapper(const Dune::FieldVector<double, wdim>& vector)
+    : Dune::FieldVector<double, 2>(0.0)
   {
     for (size_t i = 0; i < size_t(std::min(wdim, 2)); ++i)
       (*this)[i] = vector[i];
@@ -55,7 +55,7 @@ public:
   {
   }
 
-  template < class Entity >
+  template <class Entity>
   void operator()(const Entity& ent, const int ent_idx)
   {
     const auto& geo = ent.geometry();
@@ -90,10 +90,10 @@ private:
  *  A functor to be used in a \ref GridWalk
  *  \see Pgf
  **/
-template < class GridViewType >
-class PgfEntityFunctorIntersections : public Functor::Codim0And1< GridViewType >
+template <class GridViewType>
+class PgfEntityFunctorIntersections : public Functor::Codim0And1<GridViewType>
 {
-  typedef Functor::Codim0And1< GridViewType > BaseType;
+  typedef Functor::Codim0And1<GridViewType> BaseType;
 
 public:
   PgfEntityFunctorIntersections(const GridViewType& grid_view, std::ostream& file, const std::string color = "black",
@@ -156,10 +156,10 @@ protected:
  *
  *  A functor to be used in a \ref GridWalk
  **/
-template < class GridViewType >
-class PgfEntityFunctorIntersectionsWithShift : public PgfEntityFunctorIntersections< GridViewType >
+template <class GridViewType>
+class PgfEntityFunctorIntersectionsWithShift : public PgfEntityFunctorIntersections<GridViewType>
 {
-  typedef PgfEntityFunctorIntersections< GridViewType > BaseType;
+  typedef PgfEntityFunctorIntersections<GridViewType> BaseType;
 
 public:
   PgfEntityFunctorIntersectionsWithShift(const GridViewType& grid_view, std::ostream& file,
@@ -204,7 +204,7 @@ private:
 /** \brief Provider of three types of latex drawings for \ref Grid
  *  \tparam GridType a \ref Grid implementation
  **/
-template < class GridType >
+template <class GridType>
 class PgfOutput
 {
 public:
@@ -227,8 +227,8 @@ public:
               "\\begin{tikzpicture}[scale=\\gridplotscale]\n";
     } else
       file << "\\begin{tikzpicture}\n";
-    Walker< typename GridType::LeafGridView > gridWalk(grid_.leafGridView());
-    PgfEntityFunctorIntersections< typename GridType::LeafGridView > pgf(grid_.leafGridView(), file);
+    Walker<typename GridType::LeafGridView> gridWalk(grid_.leafGridView());
+    PgfEntityFunctorIntersections<typename GridType::LeafGridView> pgf(grid_.leafGridView(), file);
     gridWalk.add(pgf);
     gridWalk.walk();
 
@@ -260,8 +260,8 @@ public:
     for (int i = 0; i < refineLevel; ++i) {
       typedef typename GridType::LevelGridView ViewType;
       const ViewType& view = grid_.levelGridView(i);
-      Walker< ViewType > gridWalk(view);
-      PgfEntityFunctorIntersectionsWithShift< ViewType > pgf(
+      Walker<ViewType> gridWalk(view);
+      PgfEntityFunctorIntersectionsWithShift<ViewType> pgf(
           view, file, texcolors_[std::min(i, int(texcolors_.size()))], i, true);
       gridWalk.add(pgf);
       gridWalk.walk();
@@ -302,14 +302,14 @@ public:
         char buffer[80] = {'\0'};
         std::snprintf(buffer, 80, "\\subfloat[Level %d]{\n\\begin{tikzpicture}[scale=\\gridplotscale]\n", i);
         file << buffer;
-        Walker< ViewType > gridWalk(view);
-        PgfEntityFunctorIntersections< ViewType > thisLevel(view, file, "black", true);
+        Walker<ViewType> gridWalk(view);
+        PgfEntityFunctorIntersections<ViewType> thisLevel(view, file, "black", true);
         gridWalk.add(thisLevel);
         gridWalk.walk();
       }
       typedef typename GridType::LeafGridView LeafView;
-      Walker< LeafView > leafWalk(grid_.leafGridView());
-      MinMaxCoordinateFunctor< LeafView > minMaxCoord;
+      Walker<LeafView> leafWalk(grid_.leafGridView());
+      MinMaxCoordinateFunctor<LeafView> minMaxCoord;
       leafWalk.add(minMaxCoord);
       leafWalk.walk();
 

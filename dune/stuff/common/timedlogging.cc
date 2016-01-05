@@ -21,19 +21,19 @@ namespace Common {
 TimedLogManager::TimedLogManager(const Timer& timer, const std::string info_prefix, const std::string debug_prefix,
                                  const std::string warning_prefix, const ssize_t max_info_level,
                                  const ssize_t max_debug_level, const bool enable_warnings,
-                                 std::atomic< ssize_t >& current_level, std::ostream& disabled_out,
+                                 std::atomic<ssize_t>& current_level, std::ostream& disabled_out,
                                  std::ostream& enabled_out, std::ostream& warn_out)
   : timer_(timer)
   , current_level_(current_level)
-  , info_(std::make_shared< TimedPrefixedLogStream >(timer_, info_prefix,
-                                                     current_level_ <= max_info_level ? enabled_out : disabled_out))
-  , debug_(std::make_shared< TimedPrefixedLogStream >(timer_, debug_prefix,
+  , info_(std::make_shared<TimedPrefixedLogStream>(timer_, info_prefix,
+                                                   current_level_ <= max_info_level ? enabled_out : disabled_out))
+  , debug_(std::make_shared<TimedPrefixedLogStream>(timer_, debug_prefix,
 #ifdef NDEBUG
-                                                      current_level_ <= max_debug_level ? enabled_out : dev_null))
+                                                    current_level_ <= max_debug_level ? enabled_out : dev_null))
 #else
-                                                      current_level_ <= max_debug_level ? enabled_out : disabled_out))
+                                                    current_level_ <= max_debug_level ? enabled_out : disabled_out))
 #endif
-  , warn_(std::make_shared< TimedPrefixedLogStream >(timer_, warning_prefix, enable_warnings ? warn_out : disabled_out))
+  , warn_(std::make_shared<TimedPrefixedLogStream>(timer_, warning_prefix, enable_warnings ? warn_out : disabled_out))
 {
 }
 
@@ -78,7 +78,7 @@ void TimedLogging::create(const ssize_t max_info_level, const ssize_t max_debug_
                           const bool enable_colors, const std::string info_color, const std::string debug_color,
                           const std::string warning_color)
 {
-  std::lock_guard< std::mutex > DUNE_UNUSED(guard)(mutex_);
+  std::lock_guard<std::mutex> DUNE_UNUSED(guard)(mutex_);
   if (created_)
     DUNE_THROW(Exceptions::you_are_using_this_wrong, "Do not call create() more than once!");
   max_info_level_  = max_info_level;
@@ -95,7 +95,7 @@ void TimedLogging::create(const ssize_t max_info_level, const ssize_t max_debug_
 
 TimedLogManager TimedLogging::get(const std::string id)
 {
-  std::lock_guard< std::mutex > DUNE_UNUSED(guard)(mutex_);
+  std::lock_guard<std::mutex> DUNE_UNUSED(guard)(mutex_);
   ++current_level_;
   return TimedLogManager(timer_,
                          info_prefix_ + (id.empty() ? "info" : id) + ": " + info_suffix_,

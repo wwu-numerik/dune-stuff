@@ -17,17 +17,17 @@ namespace Dune {
 namespace Stuff {
 namespace Common {
 
-ConvergenceStudy::ConvergenceStudy(const std::vector< std::string > only_these_norms)
+ConvergenceStudy::ConvergenceStudy(const std::vector<std::string> only_these_norms)
   : only_these_norms_(only_these_norms)
 {
 }
 
-std::vector< std::string > ConvergenceStudy::used_norms() const
+std::vector<std::string> ConvergenceStudy::used_norms() const
 {
   if (only_these_norms_.empty())
     return provided_norms();
   else {
-    std::vector< std::string > ret;
+    std::vector<std::string> ret;
     for (auto norm : provided_norms())
       if (std::find(only_these_norms_.begin(), only_these_norms_.end(), norm) != only_these_norms_.end())
         ret.push_back(norm);
@@ -35,8 +35,8 @@ std::vector< std::string > ConvergenceStudy::used_norms() const
   }
 } // ... used_norms(...)
 
-std::map< std::string, std::vector< double > > ConvergenceStudy::run(const bool relative, std::ostream& out,
-                                                                     const bool print_timings)
+std::map<std::string, std::vector<double>> ConvergenceStudy::run(const bool relative, std::ostream& out,
+                                                                 const bool print_timings)
 {
   boost::io::ios_all_saver guard(out);
   if (provided_norms().size() == 0)
@@ -45,9 +45,9 @@ std::map< std::string, std::vector< double > > ConvergenceStudy::run(const bool 
   if (actually_used_norms.size() == 0)
     DUNE_THROW(Dune::InvalidStateException, "There are no common norms in 'provided_norms()' and 'only_these_norms'!");
 
-  std::map< std::string, std::vector< double > > ret;
+  std::map<std::string, std::vector<double>> ret;
   for (const auto& norm : actually_used_norms)
-    ret[norm] = std::vector< double >();
+    ret[norm] = std::vector<double>();
 
   // print table header
   out << identifier() << std::endl;
@@ -111,8 +111,8 @@ std::map< std::string, std::vector< double > > ConvergenceStudy::run(const bool 
   out << std::endl;
 
   // prepare data structures
-  std::map< std::string, double > reference_norm;
-  std::map< std::string, double > last_relative_error;
+  std::map<std::string, double> reference_norm;
+  std::map<std::string, double> last_relative_error;
   for (const auto& norm : actually_used_norms) {
     if (relative)
       reference_norm[norm] = norm_reference_solution(norm);
@@ -184,7 +184,7 @@ std::map< std::string, std::vector< double > > ConvergenceStudy::run(const bool 
   return ret;
 } // ... run(...)
 
-std::vector< double > ConvergenceStudy::expected_results(const std::string /*type*/) const
+std::vector<double> ConvergenceStudy::expected_results(const std::string /*type*/) const
 {
   DUNE_THROW(Exceptions::you_have_to_implement_this, "If you want to use this within the test suite!");
 }

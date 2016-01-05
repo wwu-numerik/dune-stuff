@@ -17,7 +17,7 @@ namespace Stuff {
 namespace Common {
 
 //! same as std::copy_if, but with move
-template < class InputIt, class OutputIt, class UnaryPredicate >
+template <class InputIt, class OutputIt, class UnaryPredicate>
 OutputIt move_if(InputIt first, InputIt last, OutputIt d_first, UnaryPredicate pred)
 {
   while (first != last) {
@@ -28,11 +28,11 @@ OutputIt move_if(InputIt first, InputIt last, OutputIt d_first, UnaryPredicate p
   return d_first;
 }
 
-template < class InputIt, class SequenceType = std::vector< std::string > >
+template <class InputIt, class SequenceType = std::vector<std::string>>
 SequenceType make_string_sequence(InputIt first, InputIt last)
 {
   SequenceType ret;
-  const auto to_str = [](const typename std::iterator_traits< InputIt >::value_type& val) { return toString(val); };
+  const auto to_str = [](const typename std::iterator_traits<InputIt>::value_type& val) { return toString(val); };
   std::transform(first, last, std::back_inserter(ret), to_str);
   return ret;
 }

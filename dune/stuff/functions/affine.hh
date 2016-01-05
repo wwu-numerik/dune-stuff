@@ -22,28 +22,28 @@ namespace Functions {
 /**
  * \brief Simple affine function of the form f(x) = A*x + b
  */
-template < class EntityImp, class DomainFieldImp, size_t domainDim, class RangeFieldImp, size_t rangeDim,
-           size_t rangeDimCols = 1 >
+template <class EntityImp, class DomainFieldImp, size_t domainDim, class RangeFieldImp, size_t rangeDim,
+          size_t rangeDimCols = 1>
 class Affine
 {
   Affine()
   {
-    static_assert(AlwaysFalse< EntityImp >::value, "Not available for rangeDimCols > 1!");
+    static_assert(AlwaysFalse<EntityImp>::value, "Not available for rangeDimCols > 1!");
   }
 };
 
-template < class EntityImp, class DomainFieldImp, size_t domainDim, class RangeFieldImp, size_t rangeDim >
-class Affine< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, 1 >
-    : public GlobalFunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, 1 >
+template <class EntityImp, class DomainFieldImp, size_t domainDim, class RangeFieldImp, size_t rangeDim>
+class Affine<EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, 1>
+    : public GlobalFunctionInterface<EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, 1>
 {
-  typedef GlobalFunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, 1 > BaseType;
-  typedef Affine< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, 1 > ThisType;
+  typedef GlobalFunctionInterface<EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, 1> BaseType;
+  typedef Affine<EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, 1> ThisType;
 
 public:
   typedef typename BaseType::DomainType DomainType;
   typedef typename BaseType::RangeType RangeType;
   typedef typename BaseType::JacobianRangeType JacobianRangeType;
-  typedef typename Dune::FieldMatrix< RangeFieldImp, rangeDim, domainDim > MatrixType;
+  typedef typename Dune::FieldMatrix<RangeFieldImp, rangeDim, domainDim> MatrixType;
 
   using typename BaseType::LocalfunctionType;
 
@@ -57,8 +57,8 @@ public:
   static Common::Configuration default_config(const std::string sub_name = "")
   {
     Common::Configuration config;
-    config["A"]    = internal::Get< RangeFieldImp, rangeDim, domainDim >::value_str();
-    config["b"]    = internal::Get< RangeFieldImp, rangeDim, 1 >::value_str();
+    config["A"]    = internal::Get<RangeFieldImp, rangeDim, domainDim>::value_str();
+    config["b"]    = internal::Get<RangeFieldImp, rangeDim, 1>::value_str();
     config["name"] = static_id();
     if (sub_name.empty())
       return config;
@@ -69,15 +69,15 @@ public:
     }
   } // ... default_config(...)
 
-  static std::unique_ptr< ThisType > create(const Common::Configuration config = default_config(),
-                                            const std::string sub_name = static_id())
+  static std::unique_ptr<ThisType> create(const Common::Configuration config = default_config(),
+                                          const std::string sub_name = static_id())
   {
     // get correct config
     const Common::Configuration cfg         = config.has_sub(sub_name) ? config.sub(sub_name) : config;
     const Common::Configuration default_cfg = default_config();
-    return Common::make_unique< ThisType >(cfg.get("A", default_cfg.get< MatrixType >("A")),
-                                           cfg.get("b", default_cfg.get< RangeType >("b")),
-                                           cfg.get("name", default_cfg.get< std::string >("name")));
+    return Common::make_unique<ThisType>(cfg.get("A", default_cfg.get<MatrixType>("A")),
+                                         cfg.get("b", default_cfg.get<RangeType>("b")),
+                                         cfg.get("name", default_cfg.get<std::string>("name")));
   } // ... create(...)
 
   explicit Affine(const MatrixType& matrix, const RangeType& vector = RangeType(0),

@@ -28,11 +28,11 @@ namespace Functions {
  *  \brief base class that makes a function out of the stuff from mathexpr.hh
  *  \attention  Most surely you do not want to use this class directly, but Functions::Expression!
  */
-template < class DomainFieldImp, size_t domainDim, class RangeFieldImp, size_t rangeDim >
+template <class DomainFieldImp, size_t domainDim, class RangeFieldImp, size_t rangeDim>
 class MathExpressionBase
 {
 public:
-  typedef MathExpressionBase< DomainFieldImp, domainDim, RangeFieldImp, rangeDim > ThisType;
+  typedef MathExpressionBase<DomainFieldImp, domainDim, RangeFieldImp, rangeDim> ThisType;
 
   typedef DomainFieldImp DomainFieldType;
   static const size_t dimDomain = domainDim;
@@ -42,11 +42,11 @@ public:
 
   MathExpressionBase(const std::string _variable, const std::string _expression)
   {
-    const std::vector< std::string > expressions(1, _expression);
+    const std::vector<std::string> expressions(1, _expression);
     setup(_variable, expressions);
   }
 
-  MathExpressionBase(const std::string _variable, const std::vector< std::string > _expressions)
+  MathExpressionBase(const std::string _variable, const std::vector<std::string> _expressions)
   {
     setup(_variable, _expressions);
   }
@@ -61,8 +61,8 @@ public:
     if (this != &_other) {
       cleanup();
       variable_    = "";
-      variables_   = std::vector< std::string >();
-      expressions_ = std::vector< std::string >();
+      variables_   = std::vector<std::string>();
+      expressions_ = std::vector<std::string>();
       setup(_other.variable(), _other.expression());
     }
     return this;
@@ -78,63 +78,62 @@ public:
     return variable_;
   }
 
-  const std::vector< std::string >& expression() const
+  const std::vector<std::string>& expression() const
   {
     return expressions_;
   }
 
-  void evaluate(const Dune::FieldVector< DomainFieldType, dimDomain >& arg,
-                Dune::FieldVector< RangeFieldType, dimRange >& ret) const
+  void evaluate(const Dune::FieldVector<DomainFieldType, dimDomain>& arg,
+                Dune::FieldVector<RangeFieldType, dimRange>& ret) const
   {
-    std::lock_guard< std::mutex > guard(mutex_);
+    std::lock_guard<std::mutex> guard(mutex_);
     // copy arg
-    for (typename Dune::FieldVector< DomainFieldType, dimDomain >::size_type ii = 0; ii < dimDomain; ++ii)
+    for (typename Dune::FieldVector<DomainFieldType, dimDomain>::size_type ii = 0; ii < dimDomain; ++ii)
       *(arg_[ii]) = arg[ii];
     // copy ret
-    for (typename Dune::FieldVector< RangeFieldType, dimRange >::size_type ii = 0; ii < dimRange; ++ii)
+    for (typename Dune::FieldVector<RangeFieldType, dimRange>::size_type ii = 0; ii < dimRange; ++ii)
       ret[ii] = op_[ii]->Val();
   }
 
   /**
    *  \attention  arg will be used up to its size, ret will be resized!
    */
-  void evaluate(const Dune::DynamicVector< DomainFieldType >& arg, Dune::DynamicVector< RangeFieldType >& ret) const
+  void evaluate(const Dune::DynamicVector<DomainFieldType>& arg, Dune::DynamicVector<RangeFieldType>& ret) const
   {
-    std::lock_guard< std::mutex > guard(mutex_);
+    std::lock_guard<std::mutex> guard(mutex_);
     // check for sizes
     assert(arg.size() > 0);
     if (ret.size() != dimRange)
-      ret = Dune::DynamicVector< RangeFieldType >(dimRange);
+      ret = Dune::DynamicVector<RangeFieldType>(dimRange);
     // copy arg
     for (size_t ii = 0; ii < std::min(domainDim, arg.size()); ++ii)
       *(arg_[ii]) = arg[ii];
     // copy ret
-    for (typename Dune::DynamicVector< RangeFieldType >::size_type ii = 0; ii < dimRange; ++ii)
+    for (typename Dune::DynamicVector<RangeFieldType>::size_type ii = 0; ii < dimRange; ++ii)
       ret[ii] = op_[ii]->Val();
   }
 
-  void evaluate(const Dune::FieldVector< DomainFieldType, dimDomain >& arg,
-                Dune::DynamicVector< RangeFieldType >& ret) const
+  void evaluate(const Dune::FieldVector<DomainFieldType, dimDomain>& arg,
+                Dune::DynamicVector<RangeFieldType>& ret) const
   {
-    std::lock_guard< std::mutex > guard(mutex_);
+    std::lock_guard<std::mutex> guard(mutex_);
     // check for sizes
     if (ret.size() != dimRange)
-      ret = Dune::DynamicVector< RangeFieldType >(dimRange);
+      ret = Dune::DynamicVector<RangeFieldType>(dimRange);
     // copy arg
-    for (typename Dune::FieldVector< DomainFieldType, dimDomain >::size_type ii = 0; ii < dimDomain; ++ii)
+    for (typename Dune::FieldVector<DomainFieldType, dimDomain>::size_type ii = 0; ii < dimDomain; ++ii)
       *(arg_[ii]) = arg[ii];
     // copy ret
-    for (typename Dune::DynamicVector< RangeFieldType >::size_type ii = 0; ii < dimRange; ++ii)
+    for (typename Dune::DynamicVector<RangeFieldType>::size_type ii = 0; ii < dimRange; ++ii)
       ret[ii] = op_[ii]->Val();
   }
 
   /**
    *  \attention  arg will be used up to its size
    */
-  void evaluate(const Dune::DynamicVector< DomainFieldType >& arg,
-                Dune::FieldVector< RangeFieldType, dimRange >& ret) const
+  void evaluate(const Dune::DynamicVector<DomainFieldType>& arg, Dune::FieldVector<RangeFieldType, dimRange>& ret) const
   {
-    std::lock_guard< std::mutex > guard(mutex_);
+    std::lock_guard<std::mutex> guard(mutex_);
     assert(arg.size() > 0);
     // copy arg
     for (size_t ii = 0; ii < std::min(dimDomain, arg.size()); ++ii)
@@ -161,7 +160,7 @@ public:
   } // void report(const std::string, std::ostream&, const std::string&) const
 
 private:
-  void setup(const std::string& _variable, const std::vector< std::string >& _expression)
+  void setup(const std::string& _variable, const std::vector<std::string>& _expression)
   {
     static_assert((dimDomain > 0), "Really?");
     static_assert((dimRange > 0), "Really?");
@@ -206,8 +205,8 @@ private:
   } // void cleanup()
 
   std::string variable_;
-  std::vector< std::string > variables_;
-  std::vector< std::string > expressions_;
+  std::vector<std::string> variables_;
+  std::vector<std::string> expressions_;
   size_t actualDimRange_;
   mutable DomainFieldType* arg_[dimDomain];
   RVar* var_arg_[dimDomain];

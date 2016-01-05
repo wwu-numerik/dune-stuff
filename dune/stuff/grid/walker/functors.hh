@@ -18,12 +18,12 @@ namespace Stuff {
 namespace Grid {
 namespace Functor {
 
-template < class GridViewImp >
+template <class GridViewImp>
 class Codim0
 {
 public:
   typedef GridViewImp GridViewType;
-  typedef typename Stuff::Grid::Entity< GridViewType >::Type EntityType;
+  typedef typename Stuff::Grid::Entity<GridViewType>::Type EntityType;
 
   virtual ~Codim0()
   {
@@ -40,13 +40,13 @@ public:
   }
 }; // class Codim0
 
-template < class GridViewImp >
+template <class GridViewImp>
 class Codim1
 {
 public:
   typedef GridViewImp GridViewType;
-  typedef typename Stuff::Grid::Entity< GridViewType >::Type EntityType;
-  typedef typename Stuff::Grid::Intersection< GridViewType >::Type IntersectionType;
+  typedef typename Stuff::Grid::Entity<GridViewType>::Type EntityType;
+  typedef typename Stuff::Grid::Intersection<GridViewType>::Type IntersectionType;
 
   virtual ~Codim1()
   {
@@ -64,13 +64,13 @@ public:
   }
 }; // class Codim1
 
-template < class GridViewImp >
+template <class GridViewImp>
 class Codim0And1
 {
 public:
   typedef GridViewImp GridViewType;
-  typedef typename Stuff::Grid::Entity< GridViewType >::Type EntityType;
-  typedef typename Stuff::Grid::Intersection< GridViewType >::Type IntersectionType;
+  typedef typename Stuff::Grid::Entity<GridViewType>::Type EntityType;
+  typedef typename Stuff::Grid::Intersection<GridViewType>::Type IntersectionType;
 
   virtual ~Codim0And1()
   {
@@ -90,17 +90,17 @@ public:
   }
 }; // class Codim0And1
 
-template < class GridViewImp >
-class DirichletDetector : public Codim1< GridViewImp >
+template <class GridViewImp>
+class DirichletDetector : public Codim1<GridViewImp>
 {
-  typedef Codim1< GridViewImp > BaseType;
+  typedef Codim1<GridViewImp> BaseType;
 
 public:
   typedef typename BaseType::GridViewType GridViewType;
   typedef typename BaseType::EntityType EntityType;
   typedef typename BaseType::IntersectionType IntersectionType;
 
-  explicit DirichletDetector(const BoundaryInfoInterface< IntersectionType >& boundary_info)
+  explicit DirichletDetector(const BoundaryInfoInterface<IntersectionType>& boundary_info)
     : boundary_info_(boundary_info)
     , found_(0)
   {
@@ -123,7 +123,7 @@ public:
   }
 
 private:
-  const BoundaryInfoInterface< IntersectionType >& boundary_info_;
+  const BoundaryInfoInterface<IntersectionType>& boundary_info_;
   size_t found_;
 }; // class DirichletDetector
 

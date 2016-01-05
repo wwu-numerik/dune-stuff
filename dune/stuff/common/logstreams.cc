@@ -47,7 +47,7 @@ void SuspendableStrBuffer::resume(PriorityType priority)
 std::streamsize SuspendableStrBuffer::xsputn(const char_type* s, std::streamsize count)
 {
   if (enabled()) {
-    std::lock_guard< std::mutex > guard(mutex_);
+    std::lock_guard<std::mutex> guard(mutex_);
     return BaseType::xsputn(s, count);
   }
   // pretend everything was written
@@ -79,7 +79,7 @@ TimedPrefixedStreamBuffer::TimedPrefixedStreamBuffer(const Timer& timer, const s
 
 int TimedPrefixedStreamBuffer::sync()
 {
-  std::lock_guard< std::mutex > DUNE_UNUSED(guard)(mutex_);
+  std::lock_guard<std::mutex> DUNE_UNUSED(guard)(mutex_);
   const std::string tmp_str = str();
   if (prefix_needed_ && !tmp_str.empty()) {
     out_ << elapsed_time_str() << prefix_;
@@ -145,7 +145,7 @@ TimedPrefixedLogStream::~TimedPrefixedLogStream()
 int FileBuffer::sync()
 {
   // flush buffer into stream
-  std::lock_guard< std::mutex > guard(sync_mutex_);
+  std::lock_guard<std::mutex> guard(sync_mutex_);
   std::cout << str();
   std::cout.flush();
   logfile_ << str();

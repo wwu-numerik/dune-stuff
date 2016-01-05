@@ -36,10 +36,10 @@ namespace Stuff {
 namespace LA {
 
 // forward
-template < class ScalarImp >
+template <class ScalarImp>
 class IstlDenseVector;
 
-template < class ScalarImp >
+template <class ScalarImp>
 class IstlRowMajorSparseMatrix;
 
 #if HAVE_DUNE_ISTL
@@ -49,27 +49,27 @@ namespace internal {
 /**
  * \brief Traits for IstlDenseVector.
  */
-template < class ScalarImp >
+template <class ScalarImp>
 class IstlDenseVectorTraits
 {
 public:
-  typedef typename Dune::FieldTraits< ScalarImp >::field_type ScalarType;
-  typedef typename Dune::FieldTraits< ScalarImp >::real_type RealType;
-  typedef IstlDenseVector< ScalarImp > derived_type;
-  typedef BlockVector< FieldVector< ScalarType, 1 > > BackendType;
+  typedef typename Dune::FieldTraits<ScalarImp>::field_type ScalarType;
+  typedef typename Dune::FieldTraits<ScalarImp>::real_type RealType;
+  typedef IstlDenseVector<ScalarImp> derived_type;
+  typedef BlockVector<FieldVector<ScalarType, 1>> BackendType;
 }; // class IstlDenseVectorTraits
 
 /**
  * \brief Traits for IstlRowMajorSparseMatrix.
  */
-template < class ScalarImp >
+template <class ScalarImp>
 class IstlRowMajorSparseMatrixTraits
 {
 public:
-  typedef typename Dune::FieldTraits< ScalarImp >::field_type ScalarType;
-  typedef typename Dune::FieldTraits< ScalarImp >::real_type RealType;
-  typedef IstlRowMajorSparseMatrix< ScalarType > derived_type;
-  typedef BCRSMatrix< FieldMatrix< ScalarType, 1, 1 > > BackendType;
+  typedef typename Dune::FieldTraits<ScalarImp>::field_type ScalarType;
+  typedef typename Dune::FieldTraits<ScalarImp>::real_type RealType;
+  typedef IstlRowMajorSparseMatrix<ScalarType> derived_type;
+  typedef BCRSMatrix<FieldMatrix<ScalarType, 1, 1>> BackendType;
 }; // class RowMajorSparseMatrixTraits
 
 } // namespace internal
@@ -77,18 +77,18 @@ public:
 /**
  *  \brief A dense vector implementation of VectorInterface using the Dune::BlockVector from dune-istl.
  */
-template < class ScalarImp = double >
-class IstlDenseVector : public VectorInterface< internal::IstlDenseVectorTraits< ScalarImp >, ScalarImp >,
-                        public ProvidesBackend< internal::IstlDenseVectorTraits< ScalarImp > >,
-                        public ProvidesDataAccess< internal::IstlDenseVectorTraits< ScalarImp > >
+template <class ScalarImp = double>
+class IstlDenseVector : public VectorInterface<internal::IstlDenseVectorTraits<ScalarImp>, ScalarImp>,
+                        public ProvidesBackend<internal::IstlDenseVectorTraits<ScalarImp>>,
+                        public ProvidesDataAccess<internal::IstlDenseVectorTraits<ScalarImp>>
 {
-  typedef IstlDenseVector< ScalarImp > ThisType;
-  typedef VectorInterface< internal::IstlDenseVectorTraits< ScalarImp >, ScalarImp > VectorInterfaceType;
-  static_assert(!std::is_same< DUNE_STUFF_SSIZE_T, int >::value,
+  typedef IstlDenseVector<ScalarImp> ThisType;
+  typedef VectorInterface<internal::IstlDenseVectorTraits<ScalarImp>, ScalarImp> VectorInterfaceType;
+  static_assert(!std::is_same<DUNE_STUFF_SSIZE_T, int>::value,
                 "You have to manually disable the constructor below which uses DUNE_STUFF_SSIZE_T!");
 
 public:
-  typedef internal::IstlDenseVectorTraits< ScalarImp > Traits;
+  typedef internal::IstlDenseVectorTraits<ScalarImp> Traits;
   typedef typename Traits::ScalarType ScalarType;
   typedef typename Traits::RealType RealType;
   typedef typename Traits::BackendType BackendType;
@@ -101,24 +101,24 @@ public:
 
   /// This constructor is needed for the python bindings.
   explicit IstlDenseVector(const DUNE_STUFF_SSIZE_T ss, const ScalarType value = ScalarType(0))
-    : IstlDenseVector(internal::boost_numeric_cast< size_t >(ss), value)
+    : IstlDenseVector(internal::boost_numeric_cast<size_t>(ss), value)
   {
   }
 
   /// This constructor is needed because marking the above one as explicit had no effect.
   explicit IstlDenseVector(const int ss, const ScalarType value = ScalarType(0))
-    : IstlDenseVector(internal::boost_numeric_cast< size_t >(ss), value)
+    : IstlDenseVector(internal::boost_numeric_cast<size_t>(ss), value)
   {
   }
 
-  explicit IstlDenseVector(const std::vector< ScalarType >& other)
+  explicit IstlDenseVector(const std::vector<ScalarType>& other)
     : backend_(new BackendType(other.size()))
   {
     for (size_t ii = 0; ii < other.size(); ++ii)
       backend_->operator[](ii)[0] = other[ii];
   }
 
-  explicit IstlDenseVector(const std::initializer_list< ScalarType >& other)
+  explicit IstlDenseVector(const std::initializer_list<ScalarType>& other)
     : backend_(new BackendType(other.size()))
   {
     size_t ii = 0;
@@ -131,7 +131,7 @@ public:
   IstlDenseVector(const ThisType& other) = default;
 
   explicit IstlDenseVector(const BackendType& other, const bool /*prune*/ = false,
-                           const ScalarType /*eps*/ = Common::FloatCmp::DefaultEpsilon< ScalarType >::value())
+                           const ScalarType /*eps*/ = Common::FloatCmp::DefaultEpsilon<ScalarType>::value())
     : backend_(new BackendType(other))
   {
   }
@@ -144,7 +144,7 @@ public:
   {
   }
 
-  explicit IstlDenseVector(std::shared_ptr< BackendType > backend_ptr)
+  explicit IstlDenseVector(std::shared_ptr<BackendType> backend_ptr)
     : backend_(backend_ptr)
   {
   }
@@ -160,7 +160,7 @@ public:
    */
   ThisType& operator=(const BackendType& other)
   {
-    backend_ = std::make_shared< BackendType >(other);
+    backend_ = std::make_shared<BackendType>(other);
     return *this;
   }
 
@@ -361,29 +361,28 @@ private:
   inline void ensure_uniqueness() const
   {
     if (!backend_.unique())
-      backend_ = std::make_shared< BackendType >(*backend_);
+      backend_ = std::make_shared<BackendType>(*backend_);
   } // ... ensure_uniqueness(...)
 
-  friend class VectorInterface< internal::IstlDenseVectorTraits< ScalarType >, ScalarType >;
-  friend class IstlRowMajorSparseMatrix< ScalarType >;
+  friend class VectorInterface<internal::IstlDenseVectorTraits<ScalarType>, ScalarType>;
+  friend class IstlRowMajorSparseMatrix<ScalarType>;
 
-  mutable std::shared_ptr< BackendType > backend_;
+  mutable std::shared_ptr<BackendType> backend_;
 }; // class IstlDenseVector
 
 /**
  * \brief A sparse matrix implementation of the MatrixInterface using the Dune::BCRSMatrix from dune-istl.
  */
-template < class ScalarImp = double >
-class IstlRowMajorSparseMatrix
-    : public MatrixInterface< internal::IstlRowMajorSparseMatrixTraits< ScalarImp >, ScalarImp >,
-      public ProvidesBackend< internal::IstlRowMajorSparseMatrixTraits< ScalarImp > >
+template <class ScalarImp = double>
+class IstlRowMajorSparseMatrix : public MatrixInterface<internal::IstlRowMajorSparseMatrixTraits<ScalarImp>, ScalarImp>,
+                                 public ProvidesBackend<internal::IstlRowMajorSparseMatrixTraits<ScalarImp>>
 {
-  typedef IstlRowMajorSparseMatrix< ScalarImp > ThisType;
-  static_assert(!std::is_same< DUNE_STUFF_SSIZE_T, int >::value,
+  typedef IstlRowMajorSparseMatrix<ScalarImp> ThisType;
+  static_assert(!std::is_same<DUNE_STUFF_SSIZE_T, int>::value,
                 "You have to manually disable the constructor below which uses DUNE_STUFF_SSIZE_T!");
 
 public:
-  typedef internal::IstlRowMajorSparseMatrixTraits< ScalarImp > Traits;
+  typedef internal::IstlRowMajorSparseMatrixTraits<ScalarImp> Traits;
   typedef typename Traits::BackendType BackendType;
   typedef typename Traits::ScalarType ScalarType;
   typedef typename Traits::RealType RealType;
@@ -413,14 +412,14 @@ public:
 
   /// This constructor is needed for the python bindings.
   explicit IstlRowMajorSparseMatrix(const DUNE_STUFF_SSIZE_T rr, const DUNE_STUFF_SSIZE_T cc = 0)
-    : backend_(new BackendType(internal::boost_numeric_cast< size_t >(rr), internal::boost_numeric_cast< size_t >(cc),
+    : backend_(new BackendType(internal::boost_numeric_cast<size_t>(rr), internal::boost_numeric_cast<size_t>(cc),
                                BackendType::row_wise))
   {
   }
 
   /// This constructor is needed for the python bindings.
   explicit IstlRowMajorSparseMatrix(const int rr, const int cc = 0)
-    : backend_(new BackendType(internal::boost_numeric_cast< size_t >(rr), internal::boost_numeric_cast< size_t >(cc),
+    : backend_(new BackendType(internal::boost_numeric_cast<size_t>(rr), internal::boost_numeric_cast<size_t>(cc),
                                BackendType::row_wise))
   {
   }
@@ -428,8 +427,8 @@ public:
   IstlRowMajorSparseMatrix(const ThisType& other) = default;
 
   explicit IstlRowMajorSparseMatrix(const BackendType& mat, const bool prune = false,
-                                    const typename Common::FloatCmp::DefaultEpsilon< ScalarType >::Type eps =
-                                        Common::FloatCmp::DefaultEpsilon< ScalarType >::value())
+                                    const typename Common::FloatCmp::DefaultEpsilon<ScalarType>::Type eps =
+                                        Common::FloatCmp::DefaultEpsilon<ScalarType>::value())
   {
     if (prune) {
       const auto pruned_pattern = pruned_pattern_from_backend(mat, eps);
@@ -444,7 +443,7 @@ public:
         }
       }
     } else
-      backend_ = std::shared_ptr< BackendType >(new BackendType(mat));
+      backend_ = std::shared_ptr<BackendType>(new BackendType(mat));
   } // IstlRowMajorSparseMatrix(...)
 
   /**
@@ -455,7 +454,7 @@ public:
   {
   }
 
-  explicit IstlRowMajorSparseMatrix(std::shared_ptr< BackendType > backend_ptr)
+  explicit IstlRowMajorSparseMatrix(std::shared_ptr<BackendType> backend_ptr)
     : backend_(backend_ptr)
   {
   }
@@ -471,7 +470,7 @@ public:
    */
   ThisType& operator=(const BackendType& other)
   {
-    backend_ = std::make_shared< BackendType >(other);
+    backend_ = std::make_shared<BackendType>(other);
     return *this;
   } // ... operator=(...)
 
@@ -535,7 +534,7 @@ public:
     return backend_->M();
   }
 
-  inline void mv(const IstlDenseVector< ScalarType >& xx, IstlDenseVector< ScalarType >& yy) const
+  inline void mv(const IstlDenseVector<ScalarType>& xx, IstlDenseVector<ScalarType>& yy) const
   {
     DUNE_STUFF_PROFILE_SCOPE(static_id() + ".mv");
     backend_->mv(*(xx.backend_), yy.backend());
@@ -647,8 +646,8 @@ public:
 
   virtual SparsityPatternDefault
   pattern(const bool prune = false,
-          const typename Common::FloatCmp::DefaultEpsilon< ScalarType >::Type
-              eps = Common::FloatCmp::DefaultEpsilon< ScalarType >::value()) const override final
+          const typename Common::FloatCmp::DefaultEpsilon<ScalarType>::Type
+              eps = Common::FloatCmp::DefaultEpsilon<ScalarType>::value()) const override final
   {
     SparsityPatternDefault ret(rows());
     if (prune) {
@@ -667,8 +666,8 @@ public:
     return ret;
   } // ... pattern(...)
 
-  virtual ThisType pruned(const typename Common::FloatCmp::DefaultEpsilon< ScalarType >::Type
-                              eps = Common::FloatCmp::DefaultEpsilon< ScalarType >::value()) const override final
+  virtual ThisType pruned(const typename Common::FloatCmp::DefaultEpsilon<ScalarType>::Type
+                              eps = Common::FloatCmp::DefaultEpsilon<ScalarType>::value()) const override final
   {
     return ThisType(*backend_, true, eps);
   }
@@ -679,7 +678,7 @@ private:
   void build_sparse_matrix(const size_t rr, const size_t cc, const SparsityPatternDefault& patt)
   {
     DUNE_STUFF_PROFILE_SCOPE(static_id() + ".build");
-    backend_ = std::make_shared< BackendType >(rr, cc, BackendType::random);
+    backend_ = std::make_shared<BackendType>(rr, cc, BackendType::random);
     for (size_t ii = 0; ii < patt.size(); ++ii)
       backend_->setrowsize(ii, patt.inner(ii).size());
     backend_->endrowsizes();
@@ -691,8 +690,8 @@ private:
 
   SparsityPatternDefault
   pruned_pattern_from_backend(const BackendType& mat,
-                              const typename Common::FloatCmp::DefaultEpsilon< ScalarType >::Type eps =
-                                  Common::FloatCmp::DefaultEpsilon< ScalarType >::value()) const
+                              const typename Common::FloatCmp::DefaultEpsilon<ScalarType>::Type eps =
+                                  Common::FloatCmp::DefaultEpsilon<ScalarType>::value()) const
   {
     SparsityPatternDefault ret(mat.N());
     for (size_t ii = 0; ii < mat.N(); ++ii) {
@@ -701,7 +700,7 @@ private:
         const auto it_end = row.end();
         for (auto it = row.begin(); it != it_end; ++it) {
           const auto val = it->operator[](0)[0];
-          if (Common::FloatCmp::ne< Common::FloatCmp::Style::absolute >(val, decltype(val)(0), eps))
+          if (Common::FloatCmp::ne<Common::FloatCmp::Style::absolute>(val, decltype(val)(0), eps))
             ret.insert(ii, it.index());
         }
       }
@@ -725,14 +724,14 @@ private:
   inline void ensure_uniqueness() const
   {
     if (!backend_.unique())
-      backend_ = std::make_shared< BackendType >(*backend_);
+      backend_ = std::make_shared<BackendType>(*backend_);
   } // ... ensure_uniqueness(...)
 
-  mutable std::shared_ptr< BackendType > backend_;
+  mutable std::shared_ptr<BackendType> backend_;
 }; // class IstlRowMajorSparseMatrix
 
-template < class S >
-std::ostream& operator<<(std::ostream& out, const IstlRowMajorSparseMatrix< S >& matrix)
+template <class S>
+std::ostream& operator<<(std::ostream& out, const IstlRowMajorSparseMatrix<S>& matrix)
 {
   out << "[";
   const size_t rows = matrix.rows();
@@ -765,16 +764,16 @@ std::ostream& operator<<(std::ostream& out, const IstlRowMajorSparseMatrix< S >&
 
 #else // HAVE_DUNE_ISTL
 
-template < class ScalarImp >
+template <class ScalarImp>
 class IstlDenseVector
 {
-  static_assert(Dune::AlwaysFalse< ScalarImp >::value, "You are missing dune-istl!");
+  static_assert(Dune::AlwaysFalse<ScalarImp>::value, "You are missing dune-istl!");
 };
 
-template < class ScalarImp >
+template <class ScalarImp>
 class IstlRowMajorSparseMatrix
 {
-  static_assert(Dune::AlwaysFalse< ScalarImp >::value, "You are missing dune-istl!");
+  static_assert(Dune::AlwaysFalse<ScalarImp>::value, "You are missing dune-istl!");
 };
 
 #endif // HAVE_DUNE_ISTL
@@ -784,15 +783,14 @@ namespace Common {
 
 #if HAVE_DUNE_ISTL
 
-template < class T >
-struct VectorAbstraction< LA::IstlDenseVector< T > >
-    : public LA::internal::VectorAbstractionBase< LA::IstlDenseVector< T > >
+template <class T>
+struct VectorAbstraction<LA::IstlDenseVector<T>> : public LA::internal::VectorAbstractionBase<LA::IstlDenseVector<T>>
 {
 };
 
-template < class T >
-struct MatrixAbstraction< LA::IstlRowMajorSparseMatrix< T > >
-    : public LA::internal::MatrixAbstractionBase< LA::IstlRowMajorSparseMatrix< T > >
+template <class T>
+struct MatrixAbstraction<LA::IstlRowMajorSparseMatrix<T>>
+    : public LA::internal::MatrixAbstractionBase<LA::IstlRowMajorSparseMatrix<T>>
 {
 };
 
