@@ -23,16 +23,10 @@ using namespace Dune::Stuff::Grid;
 using namespace std;
 
 //! \TODO enable embedded grids
-typedef testing::Types<YaspGrid<1, EquidistantOffsetCoordinates<double, 1>>,
-                       YaspGrid<2, EquidistantOffsetCoordinates<double, 2>>,
-                       YaspGrid<3, EquidistantOffsetCoordinates<double, 3>>,
-                       YaspGrid<4, EquidistantOffsetCoordinates<double, 4>>> Grids;
-
-template <class T>
 struct CornerRangeTest : public ::testing::Test
 {
   static const size_t level = 4;
-  typedef T GridType;
+  typedef TESTGRIDTYPE GridType;
   static const size_t dim_grid = GridType::dimension;
   const DSG::Providers::Cube<GridType> grid_prv;
   CornerRangeTest() : grid_prv(0., 1., level) {}
@@ -62,13 +56,12 @@ struct CornerRangeTest : public ::testing::Test
       check_range(*it, cornerRange(it->geometry()));
       check_range(*it, cornerRange(*it));
     }
-    for (auto v : DSC::valueRange(T::dimensionworld)) {
+    for (auto v : DSC::valueRange(GridType::dimensionworld)) {
       EXPECT_GE(v, 0);
     }
   }
 };
 
-TYPED_TEST_CASE(CornerRangeTest, Grids);
-TYPED_TEST(CornerRangeTest, Misc) { this->check(); }
+TEST_F(CornerRangeTest, Misc) { this->check(); }
 
 #endif // #if HAVE_DUNE_GRID

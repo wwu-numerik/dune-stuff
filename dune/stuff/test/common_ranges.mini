@@ -1,0 +1,7 @@
+__name = common_ranges
+__exec_suffix = yasp_{dimDomain}d
+
+dimDomain = 1, 2, 3, 4 | expand
+
+[__static]
+TESTGRIDTYPE = Dune::YaspGrid<{dimDomain},Dune::EquidistantOffsetCoordinates<double,{dimDomain}>>
