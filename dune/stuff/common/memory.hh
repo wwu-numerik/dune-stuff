@@ -190,6 +190,10 @@ template< class T >
 class ConstStorageProvider
 {
 public:
+  explicit ConstStorageProvider(T& tt)
+    : storage_(std::make_shared< internal::ConstAccessByReference< T > >(tt))
+  {}
+
   explicit ConstStorageProvider(const T& tt)
     : storage_(std::make_shared< internal::ConstAccessByReference< T > >(tt))
   {}
@@ -198,12 +202,29 @@ public:
     : storage_(std::make_shared< internal::ConstAccessByPointer< T > >(tt))
   {}
 
+  explicit ConstStorageProvider(T* tt)
+    : storage_(std::make_shared< internal::ConstAccessByPointer< T > >(tt))
+  {}
+
   explicit ConstStorageProvider(std::unique_ptr< const T >&& tt)
+    : storage_(std::make_shared< internal::ConstAccessByPointer< T > >(tt))
+  {}
+
+  explicit ConstStorageProvider(std::unique_ptr< T >&& tt)
     : storage_(std::make_shared< internal::ConstAccessByPointer< T > >(tt))
   {}
 
   explicit ConstStorageProvider(std::shared_ptr< const T > tt)
     : storage_(std::make_shared< internal::ConstAccessByPointer< T > >(tt))
+  {}
+
+  explicit ConstStorageProvider(std::shared_ptr< T > tt)
+    : storage_(std::make_shared< internal::ConstAccessByPointer< T > >(tt))
+  {}
+
+  template< class ...Args >
+  explicit ConstStorageProvider(Args&& ...args) // using new instead of make_shared for better error messages
+    : storage_(std::make_shared< internal::ConstAccessByPointer< T > >(new T(std::forward< Args >(args)...)))
   {}
 
   explicit ConstStorageProvider(const ConstStorageProvider< T >& other) = default;
@@ -245,6 +266,11 @@ public:
 
   explicit StorageProvider(std::shared_ptr< T > tt)
     : storage_(std::make_shared< internal::AccessByPointer< T > >(tt))
+  {}
+
+  template< class ...Args >
+  explicit StorageProvider(Args&& ...args) // using new instead of make_shared for better error messages
+    : storage_(std::make_shared< internal::AccessByPointer< T > >(new T(std::forward< Args >(args)...)))
   {}
 
   explicit StorageProvider(const StorageProvider< T >& other) = default;
