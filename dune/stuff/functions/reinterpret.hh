@@ -9,6 +9,7 @@
 #include <vector>
 
 #include <dune/common/fvector.hh>
+#include <dune/common/version.hh>
 
 #if DUNE_VERSION_NEWER(DUNE_COMMON,3,9) // EXADUNE
 # include <dune/geometry/referenceelements.hh>
