@@ -130,7 +130,7 @@ endmacro(BEGIN_TESTCASES)
 
 macro(END_TESTCASES)
     add_directory_test_target(_test_target)
-    add_dependencies(${_test_target} ${testnames})
+    #add_dependencies(${_test_target} ${testnames})
     foreach( test ${testnames} )
       add_dune_mpi_flags(${test})
       if(dune-grid_FOUND)
