@@ -98,11 +98,11 @@ struct is_grid_part
 # endif // HAVE_DUNE_FEM
 
 template< class G >
-struct is_grid_part< G
+struct is_grid_part
 # if HAVE_DUNE_FEM
-                      , false
+            < G, false >
 # endif
-                              >
+
   : public std::false_type
 {};
 
