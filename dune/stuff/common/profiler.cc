@@ -79,25 +79,25 @@ TimingData::DeltaType TimingData::delta() const
 
 void Profiler::startTiming(const std::string section_name, const size_t i)
 {
-    const std::string section = section_name + toString(i);
+    const std::string section = section_name + to_string(i);
     startTiming(section);
 }
 
 long  Profiler::stopTiming(const std::string section_name, const size_t i, const bool use_walltime)
 {
-    const std::string section = section_name + toString(i);
+    const std::string section = section_name + to_string(i);
     return stopTiming(section, use_walltime);
 }
 
 long  Profiler::getTiming(const std::string section_name, const size_t i, const bool use_walltime) const
 {
-    const std::string section = section_name + toString(i);
+    const std::string section = section_name + to_string(i);
     return getTiming(section, use_walltime);
 }
 
 void Profiler::resetTiming(const std::string section_name, const size_t i)
 {
-    const std::string section = section_name + toString(i);
+    const std::string section = section_name + to_string(i);
     return resetTiming(section);
 }
 

@@ -331,7 +331,7 @@ public:
   T get(const std::string key, const T& def, const size_t size = 0, const size_t cols = 0)
   {
     Request req(-1, std::string(), key,
-                Dune::Stuff::Common::toString(def),
+                Dune::Stuff::Common::to_string(def),
                 Dune::Stuff::Common::getTypename(ValidateAny< T >()));
     return get_(key, def, ValidateAny< T >(), req, size, cols, true);
   } // ... get(...)
@@ -371,7 +371,7 @@ public:
   {
     const auto def_t = static_cast<typename internal::Typer<T>::type>(def);
     Request req(-1, std::string(), key,
-                Dune::Stuff::Common::toString(def_t),
+                Dune::Stuff::Common::to_string(def_t),
                 Dune::Stuff::Common::getTypename(validator));
     return get_(key, def_t, validator, req, size, cols, true);
   } // ... get(...)
@@ -386,7 +386,7 @@ public:
   {
     const auto def_t = static_cast<typename internal::Typer<T>::type>(def);
     Request req(-1, std::string(), key,
-                Dune::Stuff::Common::toString(def_t),
+                Dune::Stuff::Common::to_string(def_t),
                 Dune::Stuff::Common::getTypename(validator));
     return get_(key, def_t, validator, req, size, cols, true);
   }
@@ -406,9 +406,9 @@ public:
     typedef typename internal::Typer<T>::type Tt;
     const auto def_t = static_cast<Tt>(def);
     Request req(-1, std::string(), key,
-                Dune::Stuff::Common::toString(def_t),
+                Dune::Stuff::Common::to_string(def_t),
                 Dune::Stuff::Common::getTypename(validator));
-    const auto value = get(key, toString(def_t), ValidateAny< std::string >(), req);
+    const auto value = get(key, to_string(def_t), ValidateAny< std::string >(), req);
     const auto tokens = tokenize< Tt >(value, separators);
     for (auto token : tokens)
     {
@@ -435,7 +435,7 @@ public:
       DUNE_THROW(Exceptions::configuration_error,
                  "While setting '" << key << "' in this configuration (see below), it already exists and you requested "
                  << "no overwrite!\n======================\n" << report_string());
-    BaseType::operator[](key) = toString(value);
+    BaseType::operator[](key) = to_string(value);
   } // ... set(..., T, ...)
 
   void set(const std::string& key, const char* value, const bool overwrite = false);
@@ -552,9 +552,9 @@ private:
                     const size_t size,
                     const size_t cols) const
   {
-    std::string valstring = BaseType::get(key, toString(def));
+    std::string valstring = BaseType::get(key, to_string(def));
     try {
-      T val = fromString< T >(valstring, size, cols);
+      T val = from_string< T >(valstring, size, cols);
       if (validator(val))
         return val;
       else
@@ -563,12 +563,12 @@ private:
       DUNE_THROW(Exceptions::external_error,
                  "Error in boost while converting the string '" << valstring << "' to type '"
                  << Typename< T >::value() << "':\n" << e.what()
-                 << "\non accessing key " << key << " with default " << toString(def));
+                 << "\non accessing key " << key << " with default " << to_string(def));
     } catch (std::exception& e) {
       DUNE_THROW(Exceptions::external_error,
                  "Error in the stl while converting the string '" << valstring << "' to type '"
                  << Typename< T >::value() << "':\n" << e.what()
-                 << "\non accessing key " << key << " with default " << toString(def));
+                 << "\non accessing key " << key << " with default " << to_string(def));
     }
   } // ... get_valid_value(...)
 
@@ -693,12 +693,12 @@ struct less< Dune::Stuff::Common::Configuration >
 #define DSC_CONFIG Dune::Stuff::Common::Config()
 
 #define DSC_CONFIG_GET(key,def) \
-  DSC_CONFIG.get(key,def,Dune::Stuff::Common::Request(__LINE__, __FILE__,key,Dune::Stuff::Common::toString(def), "none"))
+  DSC_CONFIG.get(key,def,Dune::Stuff::Common::Request(__LINE__, __FILE__,key,Dune::Stuff::Common::to_string(def), "none"))
 
 #define DSC_CONFIG_GETV(key,def,validator) \
-  DSC_CONFIG.get(key,def, validator, Dune::Stuff::Common::Request(__LINE__, __FILE__,key,Dune::Stuff::Common::toString(def), #validator ))
+  DSC_CONFIG.get(key,def, validator, Dune::Stuff::Common::Request(__LINE__, __FILE__,key,Dune::Stuff::Common::to_string(def), #validator ))
 
 #define DSC_CONFIG_GETB(key,def,use_logger) \
-  DSC_CONFIG.get(key,def,Dune::Stuff::Common::Request(__LINE__, __FILE__,key,Dune::Stuff::Common::toString(def), "none" ), use_logger)
+  DSC_CONFIG.get(key,def,Dune::Stuff::Common::Request(__LINE__, __FILE__,key,Dune::Stuff::Common::to_string(def), "none" ), use_logger)
 
 #endif // DUNE_STUFF_COMMON_CONFIGURATION_HH

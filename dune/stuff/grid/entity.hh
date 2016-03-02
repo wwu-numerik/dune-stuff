@@ -64,7 +64,7 @@ void printEntity(const EntityType& entity,
     out << prefix << name << ":\n";
   const auto& geometry = entity.geometry();
   for (auto ii : DSC::valueRange(geometry.corners()))
-    out << prefix + "  " << "corner " + Common::toString(ii) << " = " << geometry.corner(ii) << "\n";
+    out << prefix + "  " << "corner " + Common::to_string(ii) << " = " << geometry.corner(ii) << "\n";
 } // ... printEntity(...)
 
 

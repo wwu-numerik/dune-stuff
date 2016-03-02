@@ -121,8 +121,8 @@ public:
     DomainType tmp_lower;
     DomainType tmp_upper;
     size_t cc = 0;
-    while (cfg.has_sub(DSC::toString(cc))) {
-      const Stuff::Common::Configuration local_cfg = cfg.sub(DSC::toString(cc));
+    while (cfg.has_sub(DSC::to_string(cc))) {
+      const Stuff::Common::Configuration local_cfg = cfg.sub(DSC::to_string(cc));
       if (local_cfg.has_key("domain") && local_cfg.has_key("value")) {
         auto domains = local_cfg.get< FieldMatrix< DomainFieldType, d, 2 > >("domain");
         for (size_t dd = 0; dd < d; ++dd) {

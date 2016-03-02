@@ -103,8 +103,8 @@ public:
     Common::Configuration config;
     config["filename"] = internal::model1_filename;
     config["lower_left"] = "[0.0 0.0]";
-    config["upper_right"] = "[" + Common::toString(internal::model_1_length_x)
-                            + " " + Common::toString(internal::model_1_length_z) + "]";
+    config["upper_right"] = "[" + Common::to_string(internal::model_1_length_x)
+                            + " " + Common::to_string(internal::model_1_length_z) + "]";
     config.set("min_value", internal::model1_min_value);
     config.set("max_value", internal::model1_max_value);
     config["name"] = static_id();

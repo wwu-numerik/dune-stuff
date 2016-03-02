@@ -68,9 +68,9 @@ struct PeriodicViewTestYaspCube
     DomainType lower_left(0);
     DomainType upper_right(1);
     if (variant >= 3)
-      upper_right = DSC::fromString< DomainType >("[2.0 3.0 1.0 4.0]");
+      upper_right = DSC::from_string< DomainType >("[2.0 3.0 1.0 4.0]");
     if (variant >= 6)
-      lower_left = DSC::fromString< DomainType >("[-0.5 0.5 0.7 -1.3]");
+      lower_left = DSC::from_string< DomainType >("[-0.5 0.5 0.7 -1.3]");
 
     // check interface
     const GridType& DUNE_UNUSED(test_grid) = periodic_grid_view.grid();

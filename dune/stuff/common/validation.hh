@@ -105,7 +105,7 @@ public:
     }
 
     std::string msg() const {
-        return (boost::format("given value was invalid: not less than %s") % toString(baseval_)).str();
+        return (boost::format("given value was invalid: not less than %s") % to_string(baseval_)).str();
     }
 private:
     const T baseval_;
@@ -124,7 +124,7 @@ public:
     }
 
     std::string msg() const {
-        return (boost::format("given value was invalid: not greater than %s") % toString(baseval_)).str();
+        return (boost::format("given value was invalid: not greater than %s") % to_string(baseval_)).str();
     }
 private:
     const T baseval_;

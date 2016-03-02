@@ -513,7 +513,7 @@ private:
       bool found = true;
       size_t counter = 0;
       while (found) {
-        const std::string localKey = key + "." + Dune::Stuff::Common::toString(counter);
+        const std::string localKey = key + "." + Dune::Stuff::Common::to_string(counter);
         if (config.has_key(localKey))
           ret.push_back(config.get< WorldType >(localKey, dimWorld));
         else
