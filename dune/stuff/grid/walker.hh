@@ -82,11 +82,11 @@ public:
           new internal::Codim0FunctorWrapper< GridViewType, Codim0Functor< GridViewType > >(functor, where));
   }
 
-  void add(Functor::Codim1< GridViewType >& functor,
+  void add(Codim1Functor< GridViewType >& functor,
            const ApplyOn::WhichIntersection< GridViewType >* where = new ApplyOn::AllIntersections< GridViewType >())
   {
     codim1_functors_.emplace_back(
-          new internal::Codim1FunctorWrapper<GridViewType, Functor::Codim1< GridViewType > >(functor, where));
+          new internal::Codim1FunctorWrapper<GridViewType, Codim1Functor< GridViewType > >(functor, where));
   }
 
   void add(Functor::Codim0And1< GridViewType >& functor,
