@@ -61,9 +61,8 @@ public:
     : BaseType(real_intersection)
     , periodic_(periodic_pair.first)
     , outside_(periodic_pair.second)
-    , real_grid_view_(new DSC::ConstStorageProvider<RealGridViewType>(real_grid_view))
-  {
-  }
+    , real_grid_view_(real_grid_view)
+  {}
 
   // methods that differ from BaseType
   bool neighbor() const
@@ -105,8 +104,8 @@ private:
   BaseType find_intersection_in_outside() const
   {
     const auto coords                                   = this->geometry().center();
-    RealIntersectionIteratorType outside_i_it           = real_grid_view_->access().ibegin(outside_);
-    const RealIntersectionIteratorType outside_i_it_end = real_grid_view_->access().iend(outside_);
+    RealIntersectionIteratorType outside_i_it           = real_grid_view_.ibegin(outside_);
+    const RealIntersectionIteratorType outside_i_it_end = real_grid_view_.iend(outside_);
     // walk over outside intersections and find an intersection on the boundary that differs only in one coordinate
     for (; outside_i_it != outside_i_it_end; ++outside_i_it) {
       const BaseType& curr_outside_intersection = *outside_i_it;
@@ -124,13 +123,13 @@ private:
       }
     }
     DUNE_THROW(Dune::InvalidStateException, "Could not find outside intersection!");
-    return *(real_grid_view_->access().ibegin(outside_));
+    return *(real_grid_view_.ibegin(outside_));
   } // ... find_intersection_in_outside() const
 
 protected:
-  bool periodic_;
-  EntityType outside_;
-  std::unique_ptr<DSC::ConstStorageProvider<RealGridViewType>> real_grid_view_;
+  const bool periodic_;
+  const EntityType outside_;
+  const RealGridViewType& real_grid_view_;
 }; // ... class PeriodicIntersection ...
 
 /** \brief IntersectionIterator for PeriodicGridView
@@ -146,6 +145,7 @@ class PeriodicIntersectionIterator : public RealGridViewImp::IntersectionIterato
 {
   typedef RealGridViewImp RealGridViewType;
   typedef typename RealGridViewType::IntersectionIterator BaseType;
+  typedef PeriodicIntersectionIterator< RealGridViewImp > ThisType;
 
 public:
   typedef typename BaseType::Intersection RealIntersectionType;
@@ -167,6 +167,15 @@ public:
     , current_intersection_(create_current_intersection_safely())
   {
   }
+
+  PeriodicIntersectionIterator(const ThisType& other)
+    : real_grid_view_(other.real_grid_view_)
+    , entity_(other.entity_)
+    , has_boundary_intersections_(other.has_boundary_intersections_)
+    , intersection_map_(other.intersection_map_)
+    , nonperiodic_pair_(other.nonperiodic_pair_)
+    , current_intersection_(DSC::make_unique< Intersection >(*(other.current_intersection_)))
+  {}
 
   // methods that differ from BaseType
   const Intersection& operator*() const
@@ -353,7 +362,7 @@ public:
               if (outside_ptr == nullptr)
                 DUNE_THROW(Dune::InvalidStateException, "Could not find periodic neighbor entity");
               intersection_neighbor_map.insert(
-                  std::make_pair(index_in_inside, std::make_pair(is_periodic, *outside_ptr)));
+                  std::make_pair(index_in_inside, std::make_pair(is_periodic, *(*outside_ptr))));
             } else {
               intersection_neighbor_map.insert(
                   std::make_pair(index_in_inside, std::make_pair(is_periodic, EntityType(entity))));
