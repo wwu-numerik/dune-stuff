@@ -31,7 +31,15 @@ class FieldVector
   typedef FieldVector< K, SIZE >       ThisType;
 
 public:
-  FieldVector(const K kk = K(0))
+  FieldVector()
+    : BaseType(K(0))
+  {}
+
+  /* This constructor is disabled for SIZE == 1, as FieldVector< K, 1 > is convertible to K. This leads to an
+   * "ambiguous constructor" compilation error if you are using the copy constructor for SIZE == 1. For SIZE == 1, the
+   * copy constructor should be sufficient. */
+  template< class Type = K >
+  FieldVector(const typename std::enable_if< SIZE != 1 && std::is_same< K, Type >::value, K>::type kk)
     : BaseType(kk)
   {}
 
