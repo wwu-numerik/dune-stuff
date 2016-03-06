@@ -231,6 +231,8 @@ public:
 #endif // NDEBUG
   }    // ... evaluate(...)
 
+  using BaseType::jacobian;
+
   virtual void jacobian(const DomainType& xx, JacobianRangeType& ret) const override
   {
     if (gradients_.size() == 0) {
