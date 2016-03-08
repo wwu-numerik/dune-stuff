@@ -73,8 +73,8 @@ struct ElementVariant
 };
 
 #if HAVE_DUNE_GRID
-template< int dim, class CoordType >
-struct ElementVariant< Dune::YaspGrid< dim, CoordType > >
+template< int dim >
+struct ElementVariant< Dune::YaspGrid< dim > >
 {
   static const int id = 1;
 };
