@@ -240,7 +240,7 @@ public:
 
 private:
   template< class S >
-  typename std::enable_if< !std::is_arithmetic< S >::value, S >::type redirect_dot(const derived_type& other)
+  typename std::enable_if< !std::is_arithmetic< S >::value, S >::type redirect_dot(const derived_type& other) const
   {
     S result = 0;
     for (size_t ii = 0; ii < size(); ++ii)
@@ -249,7 +249,7 @@ private:
   }
 
   template< class S >
-  typename std::enable_if< std::is_arithmetic< S >::value, S >::type redirect_dot(const derived_type& other)
+  typename std::enable_if< std::is_arithmetic< S >::value, S >::type redirect_dot(const derived_type& other) const
   {
     S result = 0;
     for (size_t ii = 0; ii < size(); ++ii)
