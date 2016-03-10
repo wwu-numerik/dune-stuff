@@ -31,15 +31,7 @@ class FieldVector
   typedef FieldVector< K, SIZE >       ThisType;
 
 public:
-  FieldVector()
-    : BaseType(K(0))
-  {}
-
-  /* This constructor is disabled for SIZE == 1, as FieldVector< K, 1 > is convertible to K. This leads to an
-   * "ambiguous constructor" compilation error if you are using the copy constructor for SIZE == 1. For SIZE == 1, the
-   * copy constructor should be sufficient. */
-  template< class Type = K >
-  FieldVector(const typename std::enable_if< SIZE != 1 && std::is_same< K, Type >::value, K>::type kk)
+  FieldVector(const K kk = 0)
     : BaseType(kk)
   {}
 
@@ -56,6 +48,14 @@ public:
 
   FieldVector(const BaseType& other)
     : BaseType(other)
+  {}
+
+  /* FieldMatrix< K, 1, 1 > is convertible to K, which in turn is convertible to FieldVector< K, 1 >. Without the
+   * following constructor, this leads to an "ambiguous constructor" error (candidates are copy constructor and
+   * constructor taking a K) */
+  template< class Type = K >
+  FieldVector(const typename std::enable_if< SIZE == 1 && std::is_same< K, Type >::value, typename Dune::FieldMatrix< K, 1, 1 > >::type& mat)
+    : BaseType(mat[0][0])
   {}
 
   FieldVector(const std::vector< K >& vec)
