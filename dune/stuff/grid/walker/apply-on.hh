@@ -257,9 +257,9 @@ public:
   virtual bool apply_on(const GridViewType& grid_view, const IntersectionType& intersection) const override final
   {
     if (intersection.neighbor() && intersection.boundary()) {
-    const auto insideEntity = intersection.inside();
-    const auto outsideNeighbor = intersection.outside();
-    return grid_view.indexSet().index(insideEntity) < grid_view.indexSet().index(outsideNeighbor);
+    const auto insideEntityPtr = intersection.inside();
+    const auto outsideNeighborPtr = intersection.outside();
+    return grid_view.indexSet().index(*insideEntityPtr) < grid_view.indexSet().index(*outsideNeighborPtr);
     } else {
       return false;
     }
