@@ -169,7 +169,8 @@ public:
   }
 
   PeriodicIntersectionIterator(const ThisType& other)
-    : real_grid_view_(other.real_grid_view_)
+    : BaseType(BaseType(other))
+    , real_grid_view_(other.real_grid_view_)
     , entity_(other.entity_)
     , has_boundary_intersections_(other.has_boundary_intersections_)
     , intersection_map_(other.intersection_map_)
