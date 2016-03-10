@@ -34,7 +34,7 @@ struct MatrixStringTestDouble
 {
   void check() const
   {
-    EXPECT_EQ("[1.000000 2.000000; 3.000000 4.000000]", to_string(from_string<MatrixType>("[1.0 2; 3.0 4]")));
+    EXPECT_EQ("[1 2; 3 4]", to_string(from_string<MatrixType>("[1.0 2; 3.0 4]")));
     EXPECT_THROW(from_string<MatrixType>("[1 2; 3 4]", 3, 3), Dune::Stuff::Exceptions::conversion_error);
   }
 };
@@ -56,7 +56,7 @@ struct VectorStringTestDouble
 {
   void check() const
   {
-    EXPECT_EQ("[1.000000 2.000000 3.000000]", to_string(from_string<VectorType>("[1.0 2 3.0]")));
+    EXPECT_EQ("[1 2 3]", to_string(from_string<VectorType>("[1.0 2 3.0]")));
     EXPECT_THROW(from_string<VectorType>("[1.0 2 3.0]", 4), Dune::Stuff::Exceptions::conversion_error);
   }
 };

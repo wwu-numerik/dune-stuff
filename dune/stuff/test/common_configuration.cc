@@ -102,6 +102,17 @@ typedef testing::Types< CreateByOperator
                       > ConfigurationCreators;
 
 
+template <class T>
+static void val_compare_eq(const T& aa, const T& bb)
+{
+  EXPECT_TRUE(DSC::FloatCmp::eq(aa, bb));
+}
+
+static void val_compare_eq(const std::string& aa, const std::string& bb)
+{
+  EXPECT_EQ(aa, bb);
+}
+
 template < class T >
 struct ConfigTest : public testing::Test {
   static const int count = 2;
@@ -116,41 +127,44 @@ struct ConfigTest : public testing::Test {
     , keys(boost::assign::list_of<std::string>().repeat_fun(values.size()-1,key_gen))
   {}
 
-  void get() {
+  void get()
+  {
     std::set<std::string> uniq_keys;
-    for(T val : values) {
-      auto key = key_gen();
-      EXPECT_EQ(val,DSC_CONFIG_GET(key, val));
+    for (T val : values) {
+      const auto key     = key_gen();
+      const auto got_val = DSC_CONFIG_GET(key, val);
+      // since the value invariably goes through string conversion, we need to adjust the expected value as well
+      const T adjusted_val = from_string<T>(to_string(val));
+      val_compare_eq(adjusted_val, got_val);
+      //! TODO add a float compare check that makes sure introduced error is only due to limited precision in str conv
       uniq_keys.insert(key);
-    }
-    const auto mismatches = DSC_CONFIG.get_mismatched_defaults_map();
-    EXPECT_TRUE(mismatches.empty());
-    if(!mismatches.empty()) {
-      DSC_CONFIG.print_mismatched_defaults(std::cerr);
     }
     EXPECT_EQ(values.size(), uniq_keys.size());
   }
 
-  void set() {
-    for(T val : values) {
+  void set()
+  {
+    for (T val : values) {
       auto key = key_gen();
+      // since the value invariably goes through string conversion, we need to adjust the expected value as well
+      const T adjusted_val = from_string<T>(to_string(val));
       DSC_CONFIG.set(key, val);
-      //get with default diff from expected
-      auto re = DSC_CONFIG.get(key, T(val+Dune::Stuff::Common::Epsilon<T>::value));
-      EXPECT_EQ(re, val);
+      // get with default diff from expected
+      auto re = DSC_CONFIG.get(key, T(val + Epsilon<T>::value));
+      val_compare_eq(re, adjusted_val);
     }
   }
 
-  void other() {
-    DSC_CONFIG.print_requests(dev_null);
-    DSC_CONFIG.print_mismatched_defaults(dev_null);
+  void other()
+  {
     auto key = this->key_gen();
     DSC_CONFIG.set(key, T());
-    EXPECT_THROW(DSC_CONFIG.get(key, T(), ValidateNone<T>()), Dune::Stuff::Exceptions::configuration_error);
+    EXPECT_THROW(DSC_CONFIG.get(key, T(), ValidateNone<T>()), DS::Exceptions::configuration_error);
   }
 
-  void issue_42() {
-    using namespace DSC;
+  void issue_42()
+  {
+    using namespace Dune::Stuff::Common;
     using namespace std;
     Configuration empty;
     Configuration to_add(vector<string>{"subsection.key"}, {0l});
