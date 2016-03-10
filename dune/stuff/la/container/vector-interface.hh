@@ -235,12 +235,29 @@ public:
       DUNE_THROW(Exceptions::shapes_do_not_match,
                             "The size of other (" << other.size() << ") does not match the size of this (" << size()
                             << ")!");
-    ScalarType result = 0;
+    return redirect_dot< ScalarType >(other);
+  } // ... dot(...)
+
+private:
+  template< class S >
+  typename std::enable_if< !std::is_arithmetic< S >::value, S >::type redirect_dot(const derived_type& other)
+  {
+    S result = 0;
     for (size_t ii = 0; ii < size(); ++ii)
       result += std::conj(get_entry_ref(ii)) * other.get_entry_ref(ii);
     return result;
-  } // ... dot(...)
+  }
 
+  template< class S >
+  typename std::enable_if< std::is_arithmetic< S >::value, S >::type redirect_dot(const derived_type& other)
+  {
+    S result = 0;
+    for (size_t ii = 0; ii < size(); ++ii)
+      result += get_entry_ref(ii) * other.get_entry_ref(ii);
+    return result;
+  }
+
+public:
   /**
    *  \brief  The l1-norm of the vector.
    *  \return The l1-norm of the vector.
