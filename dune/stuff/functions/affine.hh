@@ -26,7 +26,7 @@ namespace Functions {
 template <class EntityImp, class DomainFieldImp, size_t domainDim, class RangeFieldImp, size_t rangeDim,
           size_t rangeDimCols = 1>
 class Affine
-  : public GlobalFunctionInterface<EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols>
+  : public Dune::Stuff::GlobalFunctionInterface<EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols>
 {
   typedef GlobalFunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols> BaseType;
   typedef Affine< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols > ThisType;
@@ -120,6 +120,20 @@ public:
 
   Affine(const ThisType& other) = default;
 
+// if HAVE_DUNE_FEM is true, GlobalFunctionInterface is derived from Fem::Function which has a deleted copy assignment operator
+#if HAVE_DUNE_FEM
+  ThisType& operator=(const ThisType& other)
+  {
+    A_ = other.A_;
+    b_ = other.b_;
+    b_zero_ = other.b_zero_;
+    sparse_ = other.sparse_;
+    pattern_ = other.pattern_;
+    name_ = other.name_;
+    return *this;
+  }
+#endif
+
   virtual std::string type() const override final { return BaseType::static_id() + ".affine"; }
 
   virtual size_t order() const override final { return 1; }
@@ -138,7 +152,6 @@ public:
   virtual std::string name() const override final { return name_; }
 
 private:
-
   static void calculate_pattern(const MatrixType& A, PatternType& pattern)
   {
     for (size_t ii = 0; ii < dimRange; ++ii) {
