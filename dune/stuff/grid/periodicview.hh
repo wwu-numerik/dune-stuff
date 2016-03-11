@@ -293,7 +293,6 @@ public:
   PeriodicGridViewImp(const BaseType& real_grid_view,
                       const std::bitset< dimDomain > periodic_directions)
     : BaseType(real_grid_view)
-    , empty_intersection_map_(IntersectionMapType())
     , periodic_directions_(periodic_directions)
   {
     auto entity_it = BaseType::template begin< 0 >();
@@ -385,10 +384,20 @@ public:
   } // ... iend(...)
 
 private:
-  std::map< EntityIndexType, IntersectionMapType > entity_to_intersection_map_map_;
-  const IntersectionMapType empty_intersection_map_;
+  static std::map< EntityIndexType, IntersectionMapType > entity_to_intersection_map_map_;
+  static const IntersectionMapType empty_intersection_map_;
   const std::bitset< dimDomain > periodic_directions_;
 }; // ... class PeriodicGridViewImp ...
+
+
+template <class RealGridViewImp >
+std::map<typename PeriodicGridViewImp<RealGridViewImp>::EntityIndexType,
+       typename PeriodicGridViewImp<RealGridViewImp>::IntersectionMapType>
+  PeriodicGridViewImp<RealGridViewImp >::entity_to_intersection_map_map_;
+
+template <class RealGridViewImp >
+const typename PeriodicGridViewImp<RealGridViewImp >::IntersectionMapType
+  PeriodicGridViewImp<RealGridViewImp >::empty_intersection_map_;
 
 
 } // namespace internal
@@ -442,7 +451,7 @@ public:
   {}
 
   PeriodicGridView(const PeriodicGridView& other)
-    : ConstStorProv(other.access())
+    : ConstStorProv(new internal::PeriodicGridViewImp<RealGridViewType>(other.access()))
     , BaseType(ConstStorProv::access())
   {}
 }; // class PeriodicGridView
