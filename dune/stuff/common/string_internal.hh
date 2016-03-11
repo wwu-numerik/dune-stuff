@@ -205,8 +205,22 @@ from_string(std::string ss, const size_t size, const size_t cols = 0)
                                                            << vector_str
                                                            << "]'");
     VectorType ret = VectorAbstraction<VectorType>::create(actual_size);
-    for (size_t ii = 0; ii < actual_size; ++ii)
-      ret[ii] = from_string<S>(trim_copy_safely(tokens[ii]));
+    // check if this is a column vector
+    bool is_column_vector = true;
+    for (size_t ii = 0; ii < actual_size - 1; ++ii) {
+      const std::string str_out = boost::algorithm::trim_copy(tokens[ii]);
+      if (str_out.find(";") != str_out.size() - 1) {
+        is_column_vector = false;
+        break;
+      }
+      ret[ii] = from_string<S>(str_out.substr(0, str_out.size() - 1));
+    }
+    ret[actual_size - 1] = from_string<S>(trim_copy_safely(tokens[actual_size - 1]));
+    // if this is not a column_vector, try to get it as a row vector
+    if (!is_column_vector) {
+      for (size_t ii = 0; ii < actual_size - 1; ++ii)
+        ret[ii] = from_string<S>(trim_copy_safely(tokens[ii]));
+    }
     return ret;
   } else {
     // we treat this as a scalar
