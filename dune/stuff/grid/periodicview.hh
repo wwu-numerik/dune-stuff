@@ -384,20 +384,10 @@ public:
   } // ... iend(...)
 
 private:
-  static std::map< EntityIndexType, IntersectionMapType > entity_to_intersection_map_map_;
-  static const IntersectionMapType empty_intersection_map_;
+  std::map< EntityIndexType, IntersectionMapType > entity_to_intersection_map_map_;
+  const IntersectionMapType empty_intersection_map_;
   const std::bitset< dimDomain > periodic_directions_;
 }; // ... class PeriodicGridViewImp ...
-
-
-template <class RealGridViewImp >
-std::map<typename PeriodicGridViewImp<RealGridViewImp>::EntityIndexType,
-       typename PeriodicGridViewImp<RealGridViewImp>::IntersectionMapType>
-  PeriodicGridViewImp<RealGridViewImp >::entity_to_intersection_map_map_;
-
-template <class RealGridViewImp >
-const typename PeriodicGridViewImp<RealGridViewImp >::IntersectionMapType
-  PeriodicGridViewImp<RealGridViewImp >::empty_intersection_map_;
 
 
 } // namespace internal
