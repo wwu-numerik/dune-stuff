@@ -95,12 +95,24 @@ static inline T from_string(std::string ss, const size_t size = 0, const size_t 
   return internal::from_string<T>(ss, size, cols);
 }
 
+template <class T>
+static inline T fromString(std::string ss, const size_t size = 0, const size_t cols = 0)
+{
+  return internal::from_string<T>(ss, size, cols);
+}
+
 /**
  * \brief Converts an object to string.
  * \sa    internal::to_string for implementations
  */
 template <class T>
 static inline std::string to_string(const T& ss, const size_t precision = default_toString_precision)
+{
+  return internal::to_string(ss, precision);
+}
+
+template <class T>
+static inline std::string toString(const T& ss, const size_t precision = default_toString_precision)
 {
   return internal::to_string(ss, precision);
 }
