@@ -6,6 +6,7 @@
 #ifndef DUNE_STUFF_PARALLEL_THREADSTORAGE_HH
 #define DUNE_STUFF_PARALLEL_THREADSTORAGE_HH
 
+#include <numeric>
 #include <deque>
 #include <algorithm>
 #include <type_traits>
