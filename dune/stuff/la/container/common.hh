@@ -23,6 +23,8 @@
 #include <dune/common/float_cmp.hh>
 #include <dune/common/ftraits.hh>
 
+#include <dune/stuff/aliases.hh>
+
 #include "interfaces.hh"
 #include "pattern.hh"
 
@@ -38,6 +40,9 @@ class CommonDenseVector;
 template< class ScalarImp >
 class CommonDenseMatrix;
 
+template< class ScalarImp >
+class CommonSparseMatrix;
+
 
 namespace internal {
 
@@ -52,7 +57,7 @@ public:
   typedef CommonDenseVector< ScalarType >                     derived_type;
   typedef Dune::DynamicVector< ScalarType >                   BackendType;
   static const constexpr ChooseBackend                        dense_matrix_type  = ChooseBackend::common_dense;
-  static const constexpr ChooseBackend                        sparse_matrix_type = ChooseBackend::common_dense;
+  static const constexpr ChooseBackend                        sparse_matrix_type = ChooseBackend::common_sparse;
 };
 
 
@@ -64,6 +69,18 @@ public:
   typedef typename Dune::FieldTraits< ScalarImp >::real_type  RealType;
   typedef CommonDenseMatrix< ScalarType >                     derived_type;
   typedef Dune::DynamicMatrix< ScalarType >                   BackendType;
+  static const constexpr ChooseBackend                        vector_type  = ChooseBackend::common_dense;
+};
+
+
+template< class ScalarImp = double >
+class CommonSparseMatrixTraits
+{
+public:
+  typedef typename Dune::FieldTraits< ScalarImp >::field_type ScalarType;
+  typedef typename Dune::FieldTraits< ScalarImp >::real_type  RealType;
+  typedef CommonSparseMatrix< ScalarType >                    derived_type;
+  typedef std::vector< std::vector< ScalarType > >            BackendType;
   static const constexpr ChooseBackend                        vector_type  = ChooseBackend::common_dense;
 };
 
@@ -610,6 +627,307 @@ private:
 }; // class CommonDenseMatrix
 
 
+/**
+ * \brief A sparse matrix implementation of the MatrixInterface with row major memory layout.
+ */
+template< class ScalarImp = double >
+class CommonSparseMatrix
+  : public MatrixInterface< internal::CommonSparseMatrixTraits< ScalarImp >, ScalarImp >
+  , public ProvidesBackend< internal::CommonSparseMatrixTraits< ScalarImp > >
+{
+  typedef CommonSparseMatrix< ScalarImp >                                              ThisType;
+  typedef MatrixInterface< internal::CommonSparseMatrixTraits< ScalarImp >, ScalarImp > MatrixInterfaceType;
+  static_assert(!std::is_same< DUNE_STUFF_SSIZE_T, int >::value,
+                "You have to manually disable the constructor below which uses DUNE_STUFF_SSIZE_T!");
+public:
+  typedef internal::CommonSparseMatrixTraits< ScalarImp >        Traits;
+  typedef typename Traits::BackendType                           BackendType;
+  typedef typename Traits::ScalarType                            ScalarType;
+  typedef typename Traits::RealType                              RealType;
+  typedef typename BackendType::value_type                       BackendRowType;
+
+  typedef std::vector< std::map< size_t, size_t > > InversePatternType;
+  typedef SparsityPatternDefault PatternType;
+
+
+  /**
+  * \brief This is the constructor of interest which creates a sparse matrix.
+  */
+  CommonSparseMatrix(const size_t rr, const size_t cc, const PatternType& pattern)
+    : num_rows_(rr)
+    , num_cols_(cc)
+    , backend_(std::make_shared< BackendType >(num_rows_))
+    , pattern_(std::make_shared< PatternType >(pattern))
+    , inverse_pattern_(std::make_shared< InversePatternType >(num_rows_))
+  {
+    if (num_rows_ > 0 && num_cols_ > 0) {
+      if (size_t(pattern_->size()) != num_rows_)
+        DUNE_THROW(Exceptions::shapes_do_not_match,
+                   "The size of the pattern (" << pattern_->size()
+                   << ") does not match the number of rows of this (" << num_rows_ << ")!");
+      for (size_t row = 0; row < num_rows_; ++row) {
+        const auto& columns = pattern_->inner(row);
+        for (size_t col = 0; col < columns.size(); ++col) {
+#ifndef NDEBUG
+          if (col >= num_cols_)
+            DUNE_THROW(Exceptions::shapes_do_not_match,
+                       "The size of row " << row << " of the pattern does not match the number of columns of this ("
+                       << num_cols_ << ")!");
+#endif // NDEBUG
+          inverse_pattern_->operator[](row).insert(std::make_pair(columns[col], col));
+        }
+        backend_->operator[](row) = BackendRowType(columns.size());
+      }
+    }
+  }
+
+  CommonSparseMatrix(const size_t rr = 0, const size_t cc = 0, const ScalarType& value = ScalarType(0))
+    : num_rows_(rr)
+    , num_cols_(cc)
+    , backend_(std::make_shared< BackendType >(num_rows_, BackendRowType(num_cols_, value)))
+    , pattern_(std::make_shared< PatternType >(PatternFactory::make_dense_pattern(num_rows_, num_cols_)))
+    , inverse_pattern_(std::make_shared< InversePatternType >(PatternFactory::make_dense_inverse_pattern(num_rows_, num_cols_)))
+  {}
+
+  /// This constructor is needed for the python bindings.
+  explicit CommonSparseMatrix(const DUNE_STUFF_SSIZE_T rr, const DUNE_STUFF_SSIZE_T cc = 0)
+    : num_rows_(rr)
+    , num_cols_(cc)
+    , backend_(new BackendType(num_rows_, BackendRowType(num_cols_)))
+    , pattern_(new PatternType(PatternFactory::make_dense_pattern(num_rows_, num_cols_)))
+    , inverse_pattern_(new InversePatternType(PatternFactory::make_dense_inverse_pattern(num_rows_, num_cols_)))
+  {}
+
+  explicit CommonSparseMatrix(const int rr, const int cc = 0)
+    : num_rows_(rr)
+    , num_cols_(cc)
+    , backend_(new BackendType(num_rows_, BackendRowType(num_cols_)))
+    , pattern_(new PatternType(PatternFactory::make_dense_pattern(num_rows_, num_cols_)))
+    , inverse_pattern_(new InversePatternType(PatternFactory::make_dense_inverse_pattern(num_rows_, num_cols_)))
+  {}
+
+  CommonSparseMatrix(const ThisType& other)
+    : num_rows_(other.num_rows_)
+    , num_cols_(other.num_cols_)
+    , backend_(other.backend_)
+    , pattern_(other.pattern_)
+    , inverse_pattern_(other.inverse_pattern_)
+  {}
+
+  template< class OtherMatrixType >
+  explicit CommonSparseMatrix(const typename std::enable_if< is_matrix< OtherMatrixType >::value, OtherMatrixType>::type& mat,
+                              const bool prune = false,
+                              const typename Common::FloatCmp::DefaultEpsilon< ScalarType >::Type eps
+                              = Common::FloatCmp::DefaultEpsilon< ScalarType >::value())
+    : num_rows_(DSC::MatrixAbstraction< OtherMatrixType >::rows(mat))
+    , num_cols_(DSC::MatrixAbstraction< OtherMatrixType >::cols(mat))
+    , backend_(std::make_shared< BackendType >(num_rows_))
+    , pattern_(std::make_shared< PatternType >(num_rows_))
+    , inverse_pattern_(std::make_shared< InversePatternType >(num_rows_))
+  {
+      for (size_t rr = 0; rr < num_rows_; ++rr) {
+        for (size_t cc = 0; cc < num_cols_; ++cc) {
+          const auto& value = DSC::MatrixAbstraction< OtherMatrixType >::get_entry(mat, rr, cc);
+          if (!prune || DSC::FloatCmp::ne< Stuff::Common::FloatCmp::Style::absolute >(value, ScalarType(0), eps))
+            pattern_->insert(rr,cc);
+          backend_[rr].push_back(value);
+          inverse_pattern_->operator[](rr).insert(std::make_pair(cc, backend_[rr].size() - 1));
+        }
+      }
+  } // CommonSparseMatrix(...)
+
+  ThisType& operator=(const ThisType& other)
+  {
+    backend_ = other.backend_;
+    pattern_ = other.pattern_;
+    inverse_pattern_ = other.inverse_pattern_;
+    num_rows_ = other.num_rows_;
+    num_cols_ = other.num_cols_;
+    return *this;
+  }
+
+  /// \name Required by the ProvidesBackend interface.
+  /// \{
+
+  BackendType& backend()
+  {
+    ensure_uniqueness();
+    return *backend_;
+  }
+
+  const BackendType& backend() const
+  {
+    return *backend_;
+  }
+
+  /// \}
+  /// \name Required by ContainerInterface.
+  /// \{
+
+  inline ThisType copy() const
+  {
+    CommonSparseMatrix ret(*this);
+    ensure_uniqueness();
+    return ret;
+  }
+
+  inline void scal(const ScalarType& alpha)
+  {
+    ensure_uniqueness();
+    for (auto& row : *backend_)
+      std::transform(row.begin(), row.end(), row.begin(), std::bind1st(std::multiplies<ScalarImp>(),alpha));
+  }
+
+  inline void axpy(const ScalarType& alpha, const ThisType& xx)
+  {
+    assert(has_equal_shape(xx));
+    ensure_uniqueness();
+    const auto& xx_backend = xx.backend();
+    for (size_t ii = 0; ii < num_rows_; ++ii) {
+      const auto& xx_row_entries = xx_backend[ii];
+      auto& row_entries = backend_->operator[](ii);
+      for (size_t jj = 0; jj < row_entries.size(); ++jj) {
+        row_entries[jj] += alpha*xx_row_entries[jj];
+      }
+    }
+  }
+
+  inline bool has_equal_shape(const ThisType& other) const
+  {
+    return (rows() == other.rows()) && (cols() == other.cols());
+  }
+
+  /// \}
+  /// \name Required by MatrixInterface.
+  /// \{
+
+  inline size_t rows() const
+  {
+    return num_rows_;
+  }
+
+  inline size_t cols() const
+  {
+    return num_cols_;
+  }
+
+  template< class XX, class YY >
+  inline void mv(const XX& xx, YY& yy) const
+  {
+    std::fill(yy.begin(), yy.end(), ScalarImp(0));
+    for (size_t rr = 0; rr < num_rows_; ++rr) {
+      const auto& row_pattern = pattern_->inner(rr);
+      for (const auto& cc : row_pattern) {
+        yy[rr] += get_entry(rr, cc)*xx[cc];
+      }
+    }
+  }
+
+  inline void add_to_entry(const size_t rr, const size_t cc, const ScalarImp& value)
+  {
+    ensure_uniqueness();
+    assert(inverse_pattern_->operator[](rr).count(cc));
+    backend_->operator[](rr)[inverse_pattern_->operator[](rr).at(cc)] += value;
+  }
+
+  inline ScalarImp get_entry(const size_t rr, const size_t cc) const
+  {
+    return inverse_pattern_->operator[](rr).count(cc) ? backend_->operator[](rr)[inverse_pattern_->operator[](rr).at(cc)] : ScalarType(0);
+  }
+
+  inline void set_entry(const size_t rr, const size_t cc, const ScalarImp value)
+  {
+    ensure_uniqueness();
+    assert(inverse_pattern_->operator[](rr).count(cc));
+    backend_->operator[](rr)[inverse_pattern_->operator[](rr).at(cc)] = value;
+  }
+
+  inline void clear_row(const size_t rr)
+  {
+    ensure_uniqueness();
+    std::fill(backend_->operator[](rr).begin(), backend_->operator[](rr).end(), ScalarImp(0));
+  }
+
+  inline void clear_col(const size_t cc)
+  {
+    ensure_uniqueness();
+    for (size_t row = 0; row < num_rows_; ++row)
+      if (inverse_pattern_->operator[](row).count(cc))
+        backend_->operator[](row)[inverse_pattern_->operator[](row).at(cc)] = ScalarImp(0);
+  }
+
+  inline void unit_row(const size_t rr)
+  {
+    ensure_uniqueness();
+    clear_row(rr);
+    assert(inverse_pattern_->operator[](rr).count(rr));
+    backend_->operator[](rr)[inverse_pattern_->operator[](rr).at(rr)] = ScalarImp(1);
+  }
+
+  inline void unit_col(const size_t cc)
+  {
+    ensure_uniqueness();
+    clear_col(cc);
+    assert(inverse_pattern_->operator[](cc).count(cc));
+    backend_->operator[](cc)[inverse_pattern_->operator[](cc).at(cc)] = ScalarImp(1);
+  }
+
+  bool valid() const
+  {
+    // iterate over non-zero entries
+    for (const auto& row_entries : *backend_) {
+      for (const auto& entry : row_entries) {
+        if (DSC::isnan(std::real(entry)) || DSC::isnan(std::imag(entry)) || DSC::isinf(std::abs(entry)))
+          return false;
+      }
+    }
+    return true;
+  }
+
+  virtual size_t non_zeros() const override final
+  {
+    size_t num_non_zeros = 0;
+    for (const auto& row_entries : *backend_)
+      num_non_zeros += row_entries.size();
+    return num_non_zeros;
+  }
+
+  virtual SparsityPatternDefault pattern(const bool prune = false,
+                                         const typename Common::FloatCmp::DefaultEpsilon< ScalarType >::Type eps
+                                            = Common::FloatCmp::DefaultEpsilon< ScalarType >::value()) const override
+  {
+    if (prune) {
+      SparsityPatternDefault ret(rows());
+      for (size_t rr = 0; rr < num_rows_; ++rr) {
+        const auto& row_entries = backend_->operator[](rr);
+        for (size_t jj = 0; jj < row_entries.size(); ++jj) {
+          const auto& val = row_entries[jj];
+          if (Common::FloatCmp::ne(val, ScalarType(0), eps))
+            ret.insert(rr, pattern_->inner(rr)[jj]);
+        }
+      }
+      return ret;
+    } else {
+      return *pattern_;
+    }
+  } // ... pattern(...)
+
+  /// \}
+
+private:
+  inline void ensure_uniqueness() const
+  {
+    if (!backend_.unique())
+      backend_ = std::make_shared< BackendType >(*backend_);
+  } // ... ensure_uniqueness(...)
+
+  size_t num_rows_, num_cols_;
+  mutable std::shared_ptr< BackendType > backend_;
+  std::shared_ptr< PatternType > pattern_;
+  std::shared_ptr< InversePatternType > inverse_pattern_;
+}; // class CommonSparseMatrix
+
+
 } // namespace LA
 namespace Common {
 
@@ -623,6 +941,11 @@ struct VectorAbstraction< LA::CommonDenseVector< T > >
 template< class T >
 struct MatrixAbstraction< LA::CommonDenseMatrix< T > >
   : public LA::internal::MatrixAbstractionBase< LA::CommonDenseMatrix< T > >
+{};
+
+template< class T >
+struct MatrixAbstraction< LA::CommonSparseMatrix< T > >
+  : public LA::internal::MatrixAbstractionBase< LA::CommonSparseMatrix< T > >
 {};
 
 

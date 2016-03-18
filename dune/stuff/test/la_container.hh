@@ -42,6 +42,19 @@ public:
   }
 };
 
+template< class S >
+class ContainerFactory< Dune::Stuff::LA::CommonSparseMatrix< S > >
+{
+public:
+  static Dune::Stuff::LA::CommonSparseMatrix< S > create(const size_t size)
+  {
+    Dune::Stuff::LA::CommonSparseMatrix< S > matrix(size, size);
+    for (size_t ii = 0; ii < size; ++ii)
+      matrix.unit_row(ii);
+    return matrix;
+  }
+};
+
 
 #if HAVE_DUNE_ISTL
 template< class S >

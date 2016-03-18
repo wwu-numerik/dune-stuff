@@ -52,6 +52,10 @@ typedef testing::Types<
                                  , Dune::Stuff::LA::CommonDenseVector< double > >
                       , std::pair< Dune::Stuff::LA::CommonDenseMatrix< std::complex< double > >
                                  , Dune::Stuff::LA::CommonDenseVector< std::complex< double > > >
+                      , std::pair< Dune::Stuff::LA::CommonSparseMatrix< double >
+                                 , Dune::Stuff::LA::CommonDenseVector< double > >
+                      , std::pair< Dune::Stuff::LA::CommonSparseMatrix< std::complex< double > >
+                                 , Dune::Stuff::LA::CommonDenseVector< std::complex< double > > >
 #if HAVE_EIGEN
                       , std::pair< Dune::Stuff::LA::EigenRowMajorSparseMatrix< double >
                                  , Dune::Stuff::LA::EigenDenseVector< double > >
@@ -81,8 +85,10 @@ typedef testing::Types<
 typedef testing::Types<
                         Dune::Stuff::LA::CommonDenseVector< double >
                       , Dune::Stuff::LA::CommonDenseMatrix< double >
+                      , Dune::Stuff::LA::CommonSparseMatrix< double >
                       , Dune::Stuff::LA::CommonDenseVector< std::complex< double > >
                       , Dune::Stuff::LA::CommonDenseMatrix< std::complex< double > >
+                      , Dune::Stuff::LA::CommonSparseMatrix< std::complex< double > >
 #if HAVE_EIGEN
                       , Dune::Stuff::LA::EigenDenseVector< double >
                       , Dune::Stuff::LA::EigenMappedDenseVector< double >

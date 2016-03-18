@@ -9,6 +9,7 @@
 #include <cstddef>
 #include <vector>
 #include <set>
+#include <map>
 
 namespace Dune {
 namespace Stuff {
@@ -49,6 +50,33 @@ public:
 private:
   BaseType vector_of_vectors_;
 }; // class SparsityPatternDefault
+
+struct PatternFactory
+{
+  typedef std::vector< std::map< size_t, size_t > > InversePatternType;
+
+  static SparsityPatternDefault make_dense_pattern(const size_t rows, const size_t cols)
+  {
+    SparsityPatternDefault ret(rows);
+    typename SparsityPatternDefault::InnerType row_of_pattern(cols);
+    for (size_t jj = 0; jj < cols; ++jj)
+      row_of_pattern[jj] = jj;
+    for (size_t ii = 0; ii < rows; ++ii)
+      ret.inner(ii) = row_of_pattern;
+    return ret;
+  }
+
+  static InversePatternType make_dense_inverse_pattern(const size_t rows, const size_t cols)
+  {
+    InversePatternType ret(rows);
+    typename InversePatternType::value_type row_of_inverse_pattern;
+    for (size_t jj = 0; jj < cols; ++jj)
+      row_of_inverse_pattern.insert(std::make_pair(jj, jj));
+    for (size_t ii = 0; ii < rows; ++ii)
+       ret[ii] = row_of_inverse_pattern;
+    return ret;
+  }
+};
 
 
 } // namespace LA

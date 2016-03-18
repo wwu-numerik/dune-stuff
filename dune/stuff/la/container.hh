@@ -29,6 +29,12 @@ struct Container< ScalarType, ChooseBackend::common_dense >
   typedef CommonDenseMatrix< ScalarType > MatrixType;
 }; // struct Container< ..., common_dense >
 
+template< class ScalarType >
+struct Container< ScalarType, ChooseBackend::common_sparse >
+{
+  typedef CommonDenseVector< ScalarType > VectorType;
+  typedef CommonSparseMatrix< ScalarType > MatrixType;
+}; // struct Container< ..., common_dense >
 
 template< class ScalarType >
 struct Container< ScalarType, ChooseBackend::eigen_dense >
