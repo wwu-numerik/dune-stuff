@@ -653,11 +653,11 @@ public:
   /**
   * \brief This is the constructor of interest which creates a sparse matrix.
   */
-  CommonSparseMatrix(const size_t rr, const size_t cc, const PatternType& pattern)
+  CommonSparseMatrix(const size_t rr, const size_t cc, const PatternType& patt)
     : num_rows_(rr)
     , num_cols_(cc)
     , backend_(std::make_shared< BackendType >(num_rows_))
-    , pattern_(std::make_shared< PatternType >(pattern))
+    , pattern_(std::make_shared< PatternType >(patt))
     , inverse_pattern_(std::make_shared< InversePatternType >(num_rows_))
   {
     if (num_rows_ > 0 && num_cols_ > 0) {
@@ -775,7 +775,7 @@ public:
   {
     ensure_uniqueness();
     for (auto& row : *backend_)
-      std::transform(row.begin(), row.end(), row.begin(), std::bind1st(std::multiplies<ScalarImp>(),alpha));
+      std::transform(row.begin(), row.end(), row.begin(), std::bind1st(std::multiplies<ScalarType>(),alpha));
   }
 
   inline void axpy(const ScalarType& alpha, const ThisType& xx)
@@ -814,7 +814,7 @@ public:
   template< class XX, class YY >
   inline void mv(const XX& xx, YY& yy) const
   {
-    std::fill(yy.begin(), yy.end(), ScalarImp(0));
+    std::fill(yy.begin(), yy.end(), ScalarType(0));
     for (size_t rr = 0; rr < num_rows_; ++rr) {
       const auto& row_pattern = pattern_->inner(rr);
       for (const auto& cc : row_pattern) {
@@ -823,19 +823,19 @@ public:
     }
   }
 
-  inline void add_to_entry(const size_t rr, const size_t cc, const ScalarImp& value)
+  inline void add_to_entry(const size_t rr, const size_t cc, const ScalarType& value)
   {
     ensure_uniqueness();
     assert(inverse_pattern_->operator[](rr).count(cc));
     backend_->operator[](rr)[inverse_pattern_->operator[](rr).at(cc)] += value;
   }
 
-  inline ScalarImp get_entry(const size_t rr, const size_t cc) const
+  inline ScalarType get_entry(const size_t rr, const size_t cc) const
   {
     return inverse_pattern_->operator[](rr).count(cc) ? backend_->operator[](rr)[inverse_pattern_->operator[](rr).at(cc)] : ScalarType(0);
   }
 
-  inline void set_entry(const size_t rr, const size_t cc, const ScalarImp value)
+  inline void set_entry(const size_t rr, const size_t cc, const ScalarType value)
   {
     ensure_uniqueness();
     assert(inverse_pattern_->operator[](rr).count(cc));
@@ -845,7 +845,7 @@ public:
   inline void clear_row(const size_t rr)
   {
     ensure_uniqueness();
-    std::fill(backend_->operator[](rr).begin(), backend_->operator[](rr).end(), ScalarImp(0));
+    std::fill(backend_->operator[](rr).begin(), backend_->operator[](rr).end(), ScalarType(0));
   }
 
   inline void clear_col(const size_t cc)
@@ -853,7 +853,7 @@ public:
     ensure_uniqueness();
     for (size_t row = 0; row < num_rows_; ++row)
       if (inverse_pattern_->operator[](row).count(cc))
-        backend_->operator[](row)[inverse_pattern_->operator[](row).at(cc)] = ScalarImp(0);
+        backend_->operator[](row)[inverse_pattern_->operator[](row).at(cc)] = ScalarType(0);
   }
 
   inline void unit_row(const size_t rr)
@@ -861,7 +861,7 @@ public:
     ensure_uniqueness();
     clear_row(rr);
     assert(inverse_pattern_->operator[](rr).count(rr));
-    backend_->operator[](rr)[inverse_pattern_->operator[](rr).at(rr)] = ScalarImp(1);
+    backend_->operator[](rr)[inverse_pattern_->operator[](rr).at(rr)] = ScalarType(1);
   }
 
   inline void unit_col(const size_t cc)
@@ -869,7 +869,7 @@ public:
     ensure_uniqueness();
     clear_col(cc);
     assert(inverse_pattern_->operator[](cc).count(cc));
-    backend_->operator[](cc)[inverse_pattern_->operator[](cc).at(cc)] = ScalarImp(1);
+    backend_->operator[](cc)[inverse_pattern_->operator[](cc).at(cc)] = ScalarType(1);
   }
 
   bool valid() const

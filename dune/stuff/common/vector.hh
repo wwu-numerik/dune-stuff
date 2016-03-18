@@ -15,8 +15,6 @@
 
 #include <dune/stuff/common/exceptions.hh>
 #include <dune/stuff/common/type_utils.hh>
-#include <dune/stuff/common/float_cmp.hh>
-
 
 namespace Dune {
 namespace Stuff {

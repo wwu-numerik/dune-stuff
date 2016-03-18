@@ -33,6 +33,12 @@ struct VectorAbstraction;
 template< class VecType >
 struct is_vector;
 
+template< class MatType >
+struct MatrixAbstraction;
+
+template< class MatType >
+struct is_matrix;
+
 
 namespace FloatCmp {
 namespace internal {
@@ -76,6 +82,26 @@ float_cmp_eq(const XType& xx, const YType& yy, const TolType& rtol, const TolTyp
   return true;
 } // ... float_cmp(...)
 
+template< class XType, class YType, class TolType >
+    typename std::enable_if<    is_matrix< XType >::value
+                             && is_matrix< YType >::value
+                             && std::is_arithmetic< TolType >::value
+                             && std::is_same< typename MatrixAbstraction< XType >::R, TolType >::value
+                             && std::is_same< typename MatrixAbstraction< YType >::R, TolType >::value
+                           , bool >::type
+float_cmp_eq(const XType& xx, const YType& yy, const TolType& rtol, const TolType& atol)
+{
+  const auto rows = MatrixAbstraction< XType >::rows(xx);
+  const auto cols = MatrixAbstraction< XType >::cols(xx);
+  if (MatrixAbstraction< YType >::rows(yy) != rows || MatrixAbstraction< YType >::cols(yy) != cols)
+    return false;
+  for (size_t ii = 0; ii < rows; ++ii)
+    for (size_t jj = 0; jj < cols; ++jj)
+      if (!float_cmp_eq(MatrixAbstraction< XType >::get_entry(xx, ii, jj), MatrixAbstraction< YType >::get_entry(yy, ii, jj), rtol, atol))
+        return false;
+  return true;
+} // ... float_cmp(...)
+
 template< Dune::FloatCmp::CmpStyle style, class T >
     typename std::enable_if< std::is_arithmetic< T >::value, bool >::type
 dune_float_cmp_eq(const T& xx, const T& yy, const T& eps)
@@ -107,6 +133,26 @@ dune_float_cmp_eq(const XType& xx, const YType& yy, const EpsType& eps)
       return false;
   return true;
 } // ... dune_float_cmp(...)
+
+template< Dune::FloatCmp::CmpStyle style, class XType, class YType, class EpsType >
+typename std::enable_if<    is_matrix< XType >::value
+                         && is_matrix< YType >::value
+                         && std::is_arithmetic< EpsType >::value
+                         && std::is_same< typename MatrixAbstraction< XType >::R, EpsType >::value
+                         && std::is_same< typename MatrixAbstraction< YType >::R, EpsType >::value
+                       , bool >::type
+dune_float_cmp_eq(const XType& xx, const YType& yy, const EpsType& eps)
+{
+  const auto rows = MatrixAbstraction< XType >::rows(xx);
+  const auto cols = MatrixAbstraction< XType >::cols(xx);
+  if (MatrixAbstraction< YType >::rows(yy) != rows || MatrixAbstraction< YType >::cols(yy) != cols)
+    return false;
+  for (size_t ii = 0; ii < rows; ++ii)
+    for (size_t jj = 0; jj < cols; ++jj)
+      if (!dune_float_cmp_eq< style >(MatrixAbstraction< XType >::get_entry(xx, ii, jj), MatrixAbstraction< YType >::get_entry(yy, ii, jj), eps))
+        return false;
+  return true;
+} // ... float_cmp(...){
 
 template< class T >
     typename std::enable_if< std::is_arithmetic< T >::value, bool >::type
@@ -141,6 +187,24 @@ cmp_gt(const XType& xx, const YType& yy)
   return true;
 } // ... cmp_gt(...)
 
+template< class XType, class YType >
+typename std::enable_if<    is_matrix< XType >::value
+                         && is_matrix< YType >::value
+                         && std::is_same< typename MatrixAbstraction< XType >::S
+                                        , typename MatrixAbstraction< YType >::S >::value
+                       , bool >::type
+cmp_gt(const XType& xx, const YType& yy)
+{
+  const auto rows = MatrixAbstraction< XType >::rows(xx);
+  const auto cols = MatrixAbstraction< XType >::cols(xx);
+  if (MatrixAbstraction< YType >::rows(yy) != rows || MatrixAbstraction< YType >::cols(yy) != cols)
+    return false;
+  for (size_t ii = 0; ii < rows; ++ii)
+    for (size_t jj = 0; jj < cols; ++jj)
+      if (!cmp_gt(MatrixAbstraction< XType >::get_entry(xx, ii, jj), MatrixAbstraction< YType >::get_entry(yy, ii, jj)))
+        return false;
+  return true;
+} // ... cmp_gt(...)
 
 template< class T >
     typename std::enable_if< std::is_arithmetic< T >::value, bool >::type
@@ -171,6 +235,25 @@ cmp_lt(const XType& xx, const YType& yy)
       return false;
   return true;
 } // ... cmp_lt(...)
+
+template< class XType, class YType >
+typename std::enable_if<    is_matrix< XType >::value
+                         && is_matrix< YType >::value
+                         && std::is_same< typename MatrixAbstraction< XType >::S
+                                        , typename MatrixAbstraction< YType >::S >::value
+                       , bool >::type
+cmp_lt(const XType& xx, const YType& yy)
+{
+  const auto rows = MatrixAbstraction< XType >::rows(xx);
+  const auto cols = MatrixAbstraction< XType >::cols(xx);
+  if (MatrixAbstraction< YType >::rows(yy) != rows || MatrixAbstraction< YType >::cols(yy) != cols)
+    return false;
+  for (size_t ii = 0; ii < rows; ++ii)
+    for (size_t jj = 0; jj < cols; ++jj)
+      if (!cmp_lt(MatrixAbstraction< XType >::get_entry(xx, ii, jj), MatrixAbstraction< YType >::get_entry(yy, ii, jj)))
+        return false;
+  return true;
+} // ... cmp_gt(...)
 
 
 template< class FirstType, class SecondType, class ToleranceType, Style style >
@@ -252,7 +335,14 @@ struct cmp_type_check {
                                                        , typename VectorAbstraction< FirstType >::R >::value
                                         && std::is_same< ToleranceType
                                                        , typename VectorAbstraction< SecondType >::R >::value;
-  static constexpr bool value = is_ok_scalar || is_ok_vector;
+  static constexpr bool is_ok_matrix = std::is_arithmetic< ToleranceType >::value
+                                        && is_matrix< FirstType >::value
+                                        && is_matrix< SecondType >::value
+                                        && std::is_same< ToleranceType
+                                                       , typename MatrixAbstraction< FirstType >::R >::value
+                                        && std::is_same< ToleranceType
+                                                       , typename MatrixAbstraction< SecondType >::R >::value;
+  static constexpr bool value = is_ok_scalar || is_ok_vector || is_ok_matrix;
 };
 
 } // namespace internal
@@ -262,5 +352,6 @@ struct cmp_type_check {
 } // namespace Dune
 
 #include <dune/stuff/common/vector.hh>
+#include <dune/stuff/common/matrix.hh>
 
 #endif // DUNE_STUFF_COMMON_FLOAT_CMP_INTERNAL_HH

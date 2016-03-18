@@ -413,6 +413,14 @@ public:
     : backend_(new BackendType(rr, cc, BackendType::row_wise))
   {}
 
+  explicit IstlRowMajorSparseMatrix(const size_t rr, const size_t cc, const ScalarType& value)
+    : IstlRowMajorSparseMatrix(rr, cc, PatternFactory::make_dense_pattern(rr, cc))
+  {
+    for (size_t row = 0; row < rr; ++row)
+      for (size_t col = 0; col < cc; ++col)
+        this->set_entry(row, col, value);
+  }
+
   /// This constructor is needed for the python bindings.
   explicit IstlRowMajorSparseMatrix(const DUNE_STUFF_SSIZE_T rr, const DUNE_STUFF_SSIZE_T cc = 0)
     : backend_(new BackendType(internal::boost_numeric_cast< size_t >(rr),

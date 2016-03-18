@@ -12,7 +12,6 @@
 #include <dune/common/float_cmp.hh>
 
 #include <dune/stuff/common/type_utils.hh>
-#include <dune/stuff/common/vector.hh>
 #include "float_cmp_style.hh"
 #include "float_cmp_internal.hh"
 
@@ -66,7 +65,7 @@ struct DefaultEpsilon< std::complex<T>, Style::numpy >
 
 
 #define DUNE_STUFF_COMMON_FLOAT_CMP_GENERATOR(id) \
-  template< Style style, class FirstType, class SecondType, class ToleranceType = typename VectorAbstraction< FirstType >::R > \
+  template< Style style, class FirstType, class SecondType, class ToleranceType = typename std::conditional< is_matrix< FirstType >::value, typename MatrixAbstraction< FirstType >::R, typename VectorAbstraction< FirstType >::R >::type > \
       typename std::enable_if< internal::cmp_type_check<FirstType, SecondType, ToleranceType>::value, bool >::type \
   id (const FirstType& first, \
       const SecondType& second, \
@@ -81,7 +80,7 @@ struct DefaultEpsilon< std::complex<T>, Style::numpy >
                            style >:: id (first, second, rtol, atol); \
   } \
   \
-  template< class FirstType, class SecondType, class ToleranceType = typename VectorAbstraction< FirstType >::R > \
+  template< class FirstType, class SecondType, class ToleranceType = typename std::conditional< is_matrix< FirstType >::value, typename MatrixAbstraction< FirstType >::R, typename VectorAbstraction< FirstType >::R >::type > \
       typename std::enable_if< internal::cmp_type_check<FirstType, SecondType, ToleranceType>::value, bool >::type \
   id (const FirstType& first, \
       const SecondType& second, \

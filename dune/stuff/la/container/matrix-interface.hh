@@ -124,7 +124,7 @@ public:
 
   /// \}
   /// \name Provided by the interface for convenience.
-  /// \note Those marked with vitual should be overriden by any devired class that can do better.
+  /// \note Those marked with virtual should be overriden by any devired class that can do better.
   /// \{
 
   template< class XX >
@@ -350,8 +350,10 @@ struct MatrixAbstractionBase
   static const size_t static_cols = std::numeric_limits< size_t >::max();
 
   typedef typename std::conditional< is_matrix, MatrixImp, void >::type                      MatrixType;
-  typedef typename std::conditional< is_matrix, typename MatrixImp::ScalarType, void >::type ScalarType;
+  typedef typename std::conditional< is_matrix, typename Dune::FieldTraits< typename MatrixImp::ScalarType>::field_type, void >::type ScalarType;
+  typedef typename std::conditional< is_matrix, typename Dune::FieldTraits< typename MatrixImp::ScalarType>::real_type, void >::type RealType;
   typedef ScalarType S;
+  typedef RealType   R;
 
   static inline
     typename std::enable_if< is_matrix, MatrixType >::type

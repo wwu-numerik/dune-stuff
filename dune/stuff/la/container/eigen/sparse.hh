@@ -93,18 +93,18 @@ public:
   /**
    * \brief This is the constructor of interest which creates a sparse matrix.
    */
-  EigenRowMajorSparseMatrix(const size_t rr, const size_t cc, const SparsityPatternDefault& pattern)
+  EigenRowMajorSparseMatrix(const size_t rr, const size_t cc, const SparsityPatternDefault& patt)
   {
     backend_ = std::make_shared< BackendType >(internal::boost_numeric_cast< EIGEN_size_t >(rr),
                                                internal::boost_numeric_cast< EIGEN_size_t >(cc));
     if (rr > 0 && cc > 0) {
-      if (size_t(pattern.size()) != rr)
+      if (size_t(patt.size()) != rr)
         DUNE_THROW(Exceptions::shapes_do_not_match,
-                   "The size of the pattern (" << pattern.size()
+                   "The size of the pattern (" << patt.size()
                    << ") does not match the number of rows of this (" << rr << ")!");
-      for (size_t row = 0; row < size_t(pattern.size()); ++row) {
+      for (size_t row = 0; row < size_t(patt.size()); ++row) {
         backend_->startVec(internal::boost_numeric_cast< EIGEN_size_t >(row));
-        const auto& columns = pattern.inner(row);
+        const auto& columns = patt.inner(row);
         for (auto& column : columns) {
 #ifndef NDEBUG
           if (column >= cc)
@@ -127,6 +127,14 @@ public:
   explicit EigenRowMajorSparseMatrix(const size_t rr = 0, const size_t cc = 0)
   {
     backend_ = std::make_shared<BackendType>(rr, cc);
+  }
+
+  explicit EigenRowMajorSparseMatrix(const size_t rr, const size_t cc, const ScalarType& value)
+    : EigenRowMajorSparseMatrix(rr, cc, PatternFactory::make_dense_pattern(rr, cc))
+  {
+    for (size_t row = 0; row < rr; ++row)
+      for (size_t col = 0; col < cc; ++col)
+        this->set_entry(row, col, value);
   }
 
   /// This constructor is needed for the python bindings.
@@ -372,7 +380,7 @@ public:
 
   virtual SparsityPatternDefault pattern(const bool prune = false,
                                          const typename Common::FloatCmp::DefaultEpsilon< ScalarType >::Type eps
-                                            = Common::FloatCmp::DefaultEpsilon< ScalarType >::value()) const
+                                            = Common::FloatCmp::DefaultEpsilon< ScalarType >::value()) const override
   {
     SparsityPatternDefault ret(rows());
     if (prune) {

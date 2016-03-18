@@ -11,9 +11,11 @@
 
 #include <dune/common/dynvector.hh>
 #include <dune/common/fvector.hh>
+#include <dune/common/fmatrix.hh>
 
 #include <dune/stuff/common/float_cmp.hh>
 #include <dune/stuff/common/fvector.hh>
+#include <dune/stuff/common/fmatrix.hh>
 #include <dune/stuff/common/vector.hh>
 #include <dune/stuff/la/container/common.hh>
 #include <dune/stuff/la/container/eigen.hh>
@@ -29,6 +31,7 @@ static const Style absolute       = Style::absolute;
 static const Style defaultStyle   = Style::defaultStyle;
 
 static const size_t vec_size = 4;
+static const size_t mat_cols = 3;
 
 
 struct FloatCmpBase
@@ -439,6 +442,55 @@ struct FloatCmpVector
 }; // struct FloatCmpVector
 
 
+template< class M >
+struct FloatCmpMatrix
+  : public FloatCmpBase
+{
+  typedef typename DSC::MatrixAbstraction< M >::ScalarType S;
+
+  static void check_eq()
+  {
+    FloatCmpBase::check_eq(create< M >(vec_size, mat_cols, 0),
+                           create< M >(vec_size, mat_cols, Stuff::Common::FloatCmp::DefaultEpsilon< S >::value()),
+                           create< M >(vec_size, mat_cols, 1));
+  }
+
+  static void check_ne()
+  {
+    FloatCmpBase::check_ne(create< M >(vec_size, mat_cols, 0),
+                           create< M >(vec_size, mat_cols, Stuff::Common::FloatCmp::DefaultEpsilon< S >::value()),
+                           create< M >(vec_size, mat_cols, 1));
+  }
+
+  static void check_gt()
+  {
+    FloatCmpBase::check_gt(create< M >(vec_size, mat_cols, 0),
+                           create< M >(vec_size, mat_cols, Stuff::Common::FloatCmp::DefaultEpsilon< S >::value()),
+                           create< M >(vec_size, mat_cols, 1));
+  }
+
+  static void check_lt()
+  {
+    FloatCmpBase::check_lt(create< M >(vec_size, mat_cols, 0),
+                           create< M >(vec_size, mat_cols, Stuff::Common::FloatCmp::DefaultEpsilon< S >::value()),
+                           create< M >(vec_size, mat_cols, 1));
+  }
+
+  static void check_ge()
+  {
+    FloatCmpBase::check_ge(create< M >(vec_size, mat_cols, 0),
+                           create< M >(vec_size, mat_cols, Stuff::Common::FloatCmp::DefaultEpsilon< S >::value()),
+                           create< M >(vec_size, mat_cols, 1));
+  }
+
+  static void check_le()
+  {
+    FloatCmpBase::check_le(create< M >(vec_size, mat_cols, 0),
+                           create< M >(vec_size, mat_cols, Stuff::Common::FloatCmp::DefaultEpsilon< S >::value()),
+                           create< M >(vec_size, mat_cols, 1));
+  }
+}; // struct FloatCmpMatrix
+
 
 typedef testing::Types< double, std::complex<double>
 //                      , long double // <- this requires a patch in dune/common/float_cmp.cc (bc. of std::max and 1e-6)
@@ -524,6 +576,49 @@ TYPED_TEST(FloatCmpVector, le)
   this->check_le();
 }
 
+typedef testing::Types< Dune::FieldMatrix< double, vec_size, mat_cols >
+                      , Dune::Stuff::Common::FieldMatrix< double, vec_size, mat_cols >
+                      , Dune::Stuff::LA::CommonDenseMatrix< double >
+                      , Dune::Stuff::LA::CommonSparseMatrix< double >
+                      , Dune::FieldMatrix< std::complex< double >, vec_size, mat_cols >
+                      , Dune::Stuff::Common::FieldMatrix< std::complex< double >, vec_size, mat_cols >
+                      , Dune::Stuff::LA::CommonDenseMatrix< std::complex< double > >
+                      , Dune::Stuff::LA::CommonSparseMatrix< std::complex< double > >
+#if HAVE_EIGEN
+                      , Dune::Stuff::LA::EigenRowMajorSparseMatrix< double >
+                      , Dune::Stuff::LA::EigenRowMajorSparseMatrix< std::complex< double > >
+#endif
+#if HAVE_DUNE_ISTL
+                      , Dune::Stuff::LA::IstlRowMajorSparseMatrix< double >
+                      , Dune::Stuff::LA::IstlRowMajorSparseMatrix< std::complex< double > >
+#endif
+                      > MatrixTypes;
+
+TYPED_TEST_CASE(FloatCmpMatrix, MatrixTypes);
+TYPED_TEST(FloatCmpMatrix, eq)
+{
+  this->check_eq();
+}
+TYPED_TEST(FloatCmpMatrix, ne)
+{
+  this->check_ne();
+}
+TYPED_TEST(FloatCmpMatrix, gt)
+{
+  this->check_gt();
+}
+TYPED_TEST(FloatCmpMatrix, lt)
+{
+  this->check_lt();
+}
+TYPED_TEST(FloatCmpMatrix, ge)
+{
+  this->check_ge();
+}
+TYPED_TEST(FloatCmpMatrix, le)
+{
+  this->check_le();
+}
 
 #if !HAVE_DUNE_ISTL
 
@@ -533,6 +628,12 @@ TEST(DISABLED_IstlDenseVector_FloatCmpVector, gt) {}
 TEST(DISABLED_IstlDenseVector_FloatCmpVector, lt) {}
 TEST(DISABLED_IstlDenseVector_FloatCmpVector, ge) {}
 TEST(DISABLED_IstlDenseVector_FloatCmpVector, le) {}
+TEST(DISABLED_IstlRowMajorSparseMatrix_FloatCmpMatrix, eq) {}
+TEST(DISABLED_IstlRowMajorSparseMatrix_FloatCmpMatrix, ne) {}
+TEST(DISABLED_IstlRowMajorSparseMatrix_FloatCmpMatrix, gt) {}
+TEST(DISABLED_IstlRowMajorSparseMatrix_FloatCmpMatrix, lt) {}
+TEST(DISABLED_IstlRowMajorSparseMatrix_FloatCmpMatrix, ge) {}
+TEST(DISABLED_IstlRowMajorSparseMatrix_FloatCmpMatrix, le) {}
 
 #endif
 #if !HAVE_EIGEN
@@ -549,5 +650,11 @@ TEST(DISABLED_EigenMappedDenseVector_FloatCmpVector, gt) {}
 TEST(DISABLED_EigenMappedDenseVector_FloatCmpVector, lt) {}
 TEST(DISABLED_EigenMappedDenseVector_FloatCmpVector, ge) {}
 TEST(DISABLED_EigenMappedDenseVector_FloatCmpVector, le) {}
+TEST(DISABLED_EigenRowMajorSparseMatrix_FloatCmpMatrix, eq) {}
+TEST(DISABLED_EigenRowMajorSparseMatrix_FloatCmpMatrix, ne) {}
+TEST(DISABLED_EigenRowMajorSparseMatrix_FloatCmpMatrix, gt) {}
+TEST(DISABLED_EigenRowMajorSparseMatrix_FloatCmpMatrix, lt) {}
+TEST(DISABLED_EigenRowMajorSparseMatrix_FloatCmpMatrix, ge) {}
+TEST(DISABLED_EigenRowMajorSparseMatrix_FloatCmpMatrix, le) {}
 
 #endif

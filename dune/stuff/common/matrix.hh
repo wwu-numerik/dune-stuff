@@ -13,6 +13,7 @@
 #include <dune/common/dynmatrix.hh>
 #include <dune/common/fmatrix.hh>
 
+#include <dune/stuff/aliases.hh>
 #include <dune/stuff/common/exceptions.hh>
 #include <dune/stuff/common/fmatrix.hh>
 #include <dune/stuff/common/vector.hh>
@@ -34,7 +35,9 @@ struct MatrixAbstraction
 {
   typedef MatType MatrixType;
   typedef MatType ScalarType;
+  typedef MatType RealType;
   typedef MatType S;
+  typedef MatType R;
 
   static const bool is_matrix = false;
 
@@ -79,8 +82,10 @@ template< class K >
 struct MatrixAbstraction< Dune::DynamicMatrix< K > >
 {
   typedef Dune::DynamicMatrix< K > MatrixType;
-  typedef K                        ScalarType;
-  typedef ScalarType               S;
+  typedef typename Dune::FieldTraits< K >::field_type ScalarType;
+  typedef typename Dune::FieldTraits< K >::real_type  RealType;
+  typedef ScalarType S;
+  typedef RealType   R;
 
   static const bool is_matrix = true;
 
@@ -125,8 +130,10 @@ template< class K, int N, int M >
 struct MatrixAbstraction< Dune::FieldMatrix< K, N, M > >
 {
   typedef Dune::FieldMatrix< K, N, M > MatrixType;
-  typedef K                            ScalarType;
-  typedef ScalarType                   S;
+  typedef typename Dune::FieldTraits< K >::field_type ScalarType;
+  typedef typename Dune::FieldTraits< K >::real_type  RealType;
+  typedef ScalarType S;
+  typedef RealType   R;
 
   static const bool is_matrix = true;
 
@@ -183,8 +190,10 @@ template< class K, int N, int M >
 struct MatrixAbstraction< Dune::Stuff::Common::FieldMatrix< K, N, M > >
 {
   typedef Dune::Stuff::Common::FieldMatrix< K, N, M > MatrixType;
-  typedef K                                           ScalarType;
-  typedef ScalarType                                  S;
+  typedef typename Dune::FieldTraits< K >::field_type ScalarType;
+  typedef typename Dune::FieldTraits< K >::real_type  RealType;
+  typedef ScalarType S;
+  typedef RealType   R;
 
   static const bool is_matrix = true;
 
@@ -235,15 +244,50 @@ struct is_matrix
 
 template< class MatrixType >
     typename std::enable_if< is_matrix< MatrixType >::value, MatrixType >::type
-create(const size_t sz, const typename MatrixAbstraction< MatrixType >::S& val)
+create(const size_t rows, const size_t cols, const typename MatrixAbstraction< MatrixType >::S& val)
 {
-  return MatrixAbstraction< MatrixType >::create(sz, val);
+  return MatrixAbstraction< MatrixType >::create(rows, cols, val);
 }
 
 
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
+
+
+template< class S, class M >
+    typename std::enable_if< std::is_arithmetic< S >::value && Dune::Stuff::Common::is_matrix< M >::value , M >::type
+operator*(const S& scalar, const M& mat)
+{
+  M result(mat);
+  for (size_t ii = 0; ii < DSC::MatrixAbstraction< M >::rows(mat); ++ii)
+    for (size_t jj = 0; jj < DSC::MatrixAbstraction< M >::cols(mat); ++jj)
+      DSC::MatrixAbstraction< M >::set_entry(result, ii, jj, DSC::MatrixAbstraction< M >::get_entry(mat, ii, jj) * scalar);
+  return result;
+} // ... operator*(...)
+
+
+template< class L, class R >
+    typename std::enable_if<    Dune::Stuff::Common::is_matrix< L >::value
+                             && Dune::Stuff::Common::is_matrix< R >::value
+                             && std::is_same< typename Dune::Stuff::Common::MatrixAbstraction< L >::S
+                                            , typename Dune::Stuff::Common::MatrixAbstraction< R >::S >::value
+                           , L >::type
+operator+(const L& left, const R& right)
+{
+  const auto rows_left = DSC::MatrixAbstraction< L >::rows(left);
+  const auto cols_left = DSC::MatrixAbstraction< L >::cols(left);
+  const auto rows_right = DSC::MatrixAbstraction< R >::rows(right);
+  const auto cols_right = DSC::MatrixAbstraction< R >::cols(right);
+  if (rows_left != rows_right || cols_left != cols_right)
+    DUNE_THROW(Dune::Stuff::Exceptions::shapes_do_not_match,
+               "left.rows() = " << rows_left << "\nright.rows() = " << rows_right << "\nleft.cols() = " << cols_left << "\nright.cols() = " << cols_right);
+  L result(left);
+  for (size_t ii = 0; ii < rows_left; ++ii)
+    for (size_t jj = 0; jj < cols_left; ++jj)
+       DSC::MatrixAbstraction< L >::set_entry(result, ii, jj, DSC::MatrixAbstraction< L >::get_entry(left, ii, jj) + DSC::MatrixAbstraction< R >::get_entry(right, ii, jj));
+  return result;
+} // ... operator+(...)
 
 
 #endif // DUNE_STUFF_COMMON_MATRIX_HH
