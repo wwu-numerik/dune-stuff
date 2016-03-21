@@ -715,8 +715,8 @@ public:
   {}
 
   template< class OtherMatrixType >
-  explicit CommonSparseMatrix(const typename std::enable_if< is_matrix< OtherMatrixType >::value, OtherMatrixType>::type& mat,
-                              const bool prune = false,
+  explicit CommonSparseMatrix(const OtherMatrixType& mat,
+                              const typename std::enable_if< DSC::MatrixAbstraction< OtherMatrixType >::is_matrix, bool>::type prune = false,
                               const typename Common::FloatCmp::DefaultEpsilon< ScalarType >::Type eps
                               = Common::FloatCmp::DefaultEpsilon< ScalarType >::value())
     : num_rows_(DSC::MatrixAbstraction< OtherMatrixType >::rows(mat))
@@ -728,13 +728,27 @@ public:
       for (size_t rr = 0; rr < num_rows_; ++rr) {
         for (size_t cc = 0; cc < num_cols_; ++cc) {
           const auto& value = DSC::MatrixAbstraction< OtherMatrixType >::get_entry(mat, rr, cc);
-          if (!prune || DSC::FloatCmp::ne< Stuff::Common::FloatCmp::Style::absolute >(value, ScalarType(0), eps))
+          if (!prune || DSC::FloatCmp::ne(value, ScalarType(0), eps)) {
             pattern_->insert(rr,cc);
-          backend_[rr].push_back(value);
-          inverse_pattern_->operator[](rr).insert(std::make_pair(cc, backend_[rr].size() - 1));
+            backend_->operator[](rr).push_back(value);
+            inverse_pattern_->operator[](rr).insert(std::make_pair(cc, backend_->operator[](rr).size() - 1));
+          }
         }
       }
   } // CommonSparseMatrix(...)
+
+  template< int ROWS, int COLS >
+  explicit operator Dune::FieldMatrix< ScalarType, ROWS, COLS >() const
+  {
+    assert(ROWS == num_rows_ && COLS == num_cols_);
+    Dune::FieldMatrix< ScalarType, ROWS, COLS > ret(ScalarType(0));
+    for (size_t rr = 0; rr < ROWS; ++rr) {
+      const auto& pattern_row = pattern_->inner(rr);
+      for (const auto& cc : pattern_row)
+        ret[rr][cc] = get_entry(rr, cc);
+    }
+    return ret;
+  }
 
   ThisType& operator=(const ThisType& other)
   {

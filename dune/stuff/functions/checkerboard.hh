@@ -413,8 +413,7 @@ public:
     for (size_t ii = 0; ii < num_values; ++ii) {
       const MatrixType A_ii = cfg.get< MatrixType >("A." + DSC::to_string(ii), rangeDim, affineDomainDim);
       const RangeType b_ii = cfg.get< RangeType >("b." + DSC::to_string(ii), rangeDim);
-      const bool sparse_ii = cfg.get< bool >("sparse." + DSC::to_string(ii), false);
-      values.emplace_back(AffineFunctionType(A_ii, b_ii, sparse_ii));
+      values.emplace_back(AffineFunctionType(A_ii, b_ii));
     }
     // create
     return Common::make_unique< FunctionCheckerboardType >(

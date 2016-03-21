@@ -8,9 +8,11 @@
 
 #include <memory>
 
+#include <dune/common/fmatrix.hh>
+#include <dune/common/fvector.hh>
+
 #include <dune/stuff/common/configuration.hh>
-#include <dune/stuff/common/fvector.hh>
-#include <dune/stuff/la/container/pattern.hh>
+#include <dune/stuff/la/container.hh>
 #include <dune/stuff/functions/constant.hh>
 
 #include "interfaces.hh"
@@ -39,8 +41,8 @@ public:
   using BaseType::dimDomain;
   using BaseType::dimRange;
   using BaseType::dimRangeCols;
-  typedef typename Dune::FieldMatrix<RangeFieldImp, dimRange, dimDomain> MatrixType;
-  typedef typename DS::LA::SparsityPatternDefault PatternType;
+  typedef typename Dune::Stuff::LA::CommonSparseMatrix<RangeFieldType> MatrixType;
+  typedef typename Dune::FieldMatrix<RangeFieldType, dimRange, dimDomain> FieldMatrixType;
 
   using typename BaseType::LocalfunctionType;
 
@@ -53,7 +55,6 @@ public:
     Common::Configuration config;
     config["A"]      = internal::EyeMatrix<RangeFieldImp, rangeDim, domainDim>::value_str();
     config["b"]      = internal::EyeMatrix<RangeFieldImp, rangeDim, 1>::value_str();
-    config["sparse"] = "false";
     config["name"]   = static_id();
     if (sub_name.empty())
       return config;
@@ -70,50 +71,49 @@ public:
     // get correct config
     const Common::Configuration cfg         = config.has_sub(sub_name) ? config.sub(sub_name) : config;
     const Common::Configuration default_cfg = default_config();
-    Dune::FieldVector<MatrixType, dimRangeCols> A_vector;
-    std::vector<bool> sparse_vector(dimRangeCols);
+    std::vector<MatrixType> A_vector(dimRangeCols);
     for (size_t cc = 0; cc < dimRangeCols; ++cc) {
       if (cc == 0 && cfg.has_key("A")) {
         A_vector[0] = cfg.get<MatrixType>("A", dimRange, dimDomain);
-        sparse_vector[0] = cfg.get<bool>("sparse", false);
       } else {
         A_vector[cc] = cfg.get<MatrixType>("A." + DSC::to_string(cc), dimRange, dimDomain);
-        sparse_vector[cc] = cfg.get<bool>("sparse." + DSC::to_string(cc), false);
       }
     }
     return Common::make_unique<ThisType>(A_vector,
                                          cfg.get<RangeType>("b"),
-                                         sparse_vector,
                                          cfg.get("name", default_cfg.get<std::string>("name")));
   } // ... create(...)
 
   // constructor
-  explicit Affine(const Dune::FieldVector<MatrixType, dimRangeCols> A,
+  explicit Affine(const std::vector<MatrixType> A,
                   const RangeType b = RangeType(0),
-                  const std::vector<bool> sparse = std::vector<bool>(dimRangeCols, false),
                   const std::string name_in = static_id())
     : A_(A)
     , b_(b)
     , name_(name_in)
-    , b_zero_(b_ == RangeType(0))
-    , sparse_(sparse)
-    , pattern_(rangeDimCols, PatternType(dimRange))
+    , b_zero_(DSC::FloatCmp::eq(b_, RangeType(0)))
   {
-    for (size_t ii = 0; ii < dimRangeCols; ++ii) {
-      if (sparse_[ii])
-        calculate_pattern(A_[ii], pattern_[ii]);
-    }
+    assert(A.size() >= dimRangeCols);
+  }
+
+  explicit Affine(const Dune::FieldVector< FieldMatrixType, dimRangeCols> A,
+                  const RangeType b = RangeType(0),
+                  const bool prune = true,
+                  const std::string name_in = static_id())
+    : A_(A.size())
+    , b_(b)
+    , name_(name_in)
+    , b_zero_(DSC::FloatCmp::eq(b_, RangeType(0)))
+  {
+    for (size_t cc = 0; cc < dimRangeCols; ++cc)
+      A_[cc] = MatrixType(A[cc], prune);
   }
 
   // constructor for dimRangeCols = 1.
   explicit Affine(const MatrixType A,
                   const RangeType b = RangeType(0),
-                  const bool sparse = false,
                   const std::string name_in = static_id())
-    : Affine(Dune::FieldVector<MatrixType, dimRangeCols>(A),
-             b,
-             std::vector<bool>(dimRangeCols, sparse),
-             name_in)
+    : Affine(std::vector<MatrixType>(1, A), b, name_in)
   {
     static_assert(dimRangeCols == 1, "Use constructor above for dimRangeCols > 1");
   }
@@ -127,8 +127,6 @@ public:
     A_ = other.A_;
     b_ = other.b_;
     b_zero_ = other.b_zero_;
-    sparse_ = other.sparse_;
-    pattern_ = other.pattern_;
     name_ = other.name_;
     return *this;
   }
@@ -147,67 +145,49 @@ public:
 
   using BaseType::jacobian;
 
-  virtual void jacobian(const DomainType& /*x*/, JacobianRangeType& ret) const override final { ret = A_; }
+  virtual void jacobian(const DomainType& x, JacobianRangeType& ret) const override final
+  {
+    jacobian_helper(x, ret, internal::ChooseVariant< dimRangeCols >());
+  }
 
   virtual std::string name() const override final { return name_; }
 
 private:
-  static void calculate_pattern(const MatrixType& A, PatternType& pattern)
-  {
-    for (size_t ii = 0; ii < dimRange; ++ii) {
-      const auto& row = A[ii];
-      for (size_t jj = 0; jj < dimDomain; ++jj) {
-        if (DSC::FloatCmp::ne(row[jj], RangeFieldImp(0)))
-          pattern.insert(ii,jj);
-      }
-    }
-  }
-
   template< size_t rC >
   void evaluate_helper(const DomainType& x, RangeType& ret, const internal::ChooseVariant< rC >) const
   {
-    for (size_t cc = 0; cc < rC; ++ cc) {
-      if (sparse_[cc]) {
-        std::fill(ret.begin(), ret.end(), 0);
-        for (size_t ii = 0; ii < dimRange; ++ii) {
-          const auto& row_pattern = pattern_[cc].inner(ii);
-          for (const auto& jj : row_pattern) {
-            ret[ii][cc] += A_[cc][ii][jj]*x[jj];
-          }
-        }
-      } else {
-        DSC::FieldVector< RangeFieldType, dimRange > tmp_col;
-        A_[cc].mv(x, tmp_col);
-        for (size_t rr = 0; rr < dimRange; ++rr)
-          ret[rr][cc] = tmp_col[rr];
-      }
-      if (!b_zero_)
-        ret += b_;
-    }
-  }
-
-  void evaluate_helper(const DomainType& x, RangeType& ret, const internal::ChooseVariant< 1 >) const
-  {
-    if (sparse_[0]) {
-      std::fill(ret.begin(), ret.end(), 0);
-      for (size_t ii = 0; ii < dimRange; ++ii) {
-        const auto& row_pattern = pattern_[0].inner(ii);
-        for (const auto& jj : row_pattern) {
-          ret[ii] += A_[0][ii][jj]*x[jj];
-        }
-      }
-    } else {
-      A_[0].mv(x, ret);
+    for (size_t cc = 0; cc < rC; ++cc) {
+    Dune::FieldVector< RangeFieldType, dimRange > tmp_col;
+    A_[cc].mv(x, tmp_col);
+    for (size_t rr = 0; rr < dimRange; ++rr)
+      ret[rr][cc] = tmp_col[rr];
     }
     if (!b_zero_)
       ret += b_;
   }
 
-  Dune::FieldVector< MatrixType, dimRangeCols > A_;
+  void evaluate_helper(const DomainType& x, RangeType& ret, const internal::ChooseVariant< 1 >) const
+  {
+    A_[0].mv(x, ret);
+    if (!b_zero_)
+      ret += b_;
+  }
+
+  template< size_t rC >
+  void jacobian_helper(const DomainType& /*x*/, JacobianRangeType& ret, const internal::ChooseVariant< rC >) const
+  {
+    for (size_t cc = 0; cc < rC; ++cc)
+      ret[cc] = A_[cc].operator FieldMatrixType();
+  }
+
+  void jacobian_helper(const DomainType& /*x*/, JacobianRangeType& ret, const internal::ChooseVariant< 1 >) const
+  {
+    ret = A_[0].operator FieldMatrixType();
+  }
+
+  std::vector< MatrixType > A_;
   RangeType b_;
   bool b_zero_;
-  std::vector< bool > sparse_;
-  std::vector< PatternType > pattern_;
   std::string name_;
 };
 
