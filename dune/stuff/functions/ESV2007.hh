@@ -56,7 +56,7 @@ public:
   static Common::Configuration default_config(const std::string sub_name = "")
   {
     Common::Configuration config;
-    config["integration_order"] = "3";
+    config["integration_order"] = "2";
     config["name"] = static_id();
     if (sub_name.empty())
       return config;
@@ -109,7 +109,7 @@ public:
    */
   virtual void evaluate(const DomainType& xx, RangeType& ret) const override final
   {
-    ret[0] = M_PI_2l * M_PIl * cos(M_PI_2l * xx[0]) * cos(M_PI_2l * xx[1]);
+    ret[0] = M_PI_2 * M_PI * cos(M_PI_2 * xx[0]) * cos(M_PI_2 * xx[1]);
   }
 
   /**
@@ -118,9 +118,10 @@ public:
    */
   virtual void jacobian(const DomainType& xx, JacobianRangeType& ret) const override final
   {
-    const DomainFieldType pre = -0.25 * M_PIl * M_PIl * M_PIl;
-    const DomainFieldType x_arg = M_PI_2l * xx[0];
-    const DomainFieldType y_arg = M_PI_2l * xx[1];
+    std::abort();
+    const DomainFieldType pre = -0.25 * M_PI * M_PI * M_PI;
+    const DomainFieldType x_arg = M_PI_2 * xx[0];
+    const DomainFieldType y_arg = M_PI_2 * xx[1];
     ret[0][0] = pre * sin(x_arg) * cos(y_arg);
     ret[0][1] = pre * cos(x_arg) * sin(y_arg);
   } // ... jacobian(...)
@@ -162,7 +163,7 @@ public:
   static Common::Configuration default_config(const std::string sub_name = "")
   {
     Common::Configuration config;
-    config["integration_order"] = "3";
+    config["integration_order"] = "2";
     config["name"] = static_id();
     if (sub_name.empty())
       return config;
@@ -215,7 +216,7 @@ public:
    */
   virtual void evaluate(const DomainType& xx, RangeType& ret) const override final
   {
-    ret[0] = cos(M_PI_2l * xx[0]) * cos(M_PI_2l * xx[1]);
+    ret[0] = cos(M_PI_2 * xx[0]) * cos(M_PI_2 * xx[1]);
   }
 
   /**
@@ -224,9 +225,9 @@ public:
    */
   virtual void jacobian(const DomainType& xx, JacobianRangeType& ret) const override final
   {
-    const DomainFieldType pre = -0.5 * M_PIl;
-    const DomainFieldType x_arg = M_PI_2l * xx[0];
-    const DomainFieldType y_arg = M_PI_2l * xx[1];
+    const DomainFieldType pre = -0.5 * M_PI;
+    const DomainFieldType x_arg = M_PI_2 * xx[0];
+    const DomainFieldType y_arg = M_PI_2 * xx[1];
     ret[0][0] = pre * sin(x_arg) * cos(y_arg);
     ret[0][1] = pre * cos(x_arg) * sin(y_arg);
   } // ... jacobian(...)
@@ -356,7 +357,7 @@ public:
   }
 
   Cutoff(const DiffusionType& diffusion,
-         const RangeFieldType poincare_constant = 1.0 / (M_PIl * M_PIl),
+         const RangeFieldType poincare_constant = 1.0 / (M_PI * M_PI),
          const std::string nm = static_id())
     : diffusion_(diffusion)
     , poincare_constant_(poincare_constant)
