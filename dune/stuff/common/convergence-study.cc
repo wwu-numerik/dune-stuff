@@ -52,16 +52,16 @@ std::map< std::string, std::vector< double > > ConvergenceStudy::run(const bool 
 
   // print table header
   out << identifier() << std::endl;
-  if (identifier().size() > 22*(actually_used_norms.size() + 1))
+  if (identifier().size() > 27 + 22*(actually_used_norms.size()))
     out << Stuff::Common::whitespaceify(identifier(), '=') << std::endl;
   else {
-    out << "=====================";
+    out << "===========================";
     for (size_t nn = 0; nn < actually_used_norms.size(); ++nn)
       out << "======================";
   }
   out << "\n";
   // * print line of grid and norms
-  out << "        grid         ";
+  out << "        |       grid       ";
   for (const auto& norm : actually_used_norms) {
     std::string relative_norm_str = "";
     if (norm.empty()) {
@@ -96,17 +96,17 @@ std::map< std::string, std::vector< double > > ConvergenceStudy::run(const bool 
   }
   out << "\n";
   // * print thin delimiter
-  out << "---------------------";
+  out << " #DoFs  +------------------";
   for (size_t nn = 0; nn < actually_used_norms.size(); ++nn)
     out << "+---------------------";
   out << "\n";
   // * print size/width/error/EOC markers
-  out << "     size |    width ";
+  out << "        |   size |   width ";
   for (size_t nn = 0; nn < actually_used_norms.size(); ++nn)
     out << "|    error |      EOC ";
   out << "\n";
   // * print thick delimiter
-  out << "==========+==========";
+  out << "========+========+=========";
   for (size_t nn = 0; nn < actually_used_norms.size(); ++nn)
     out << "+==========+==========";
   out << std::endl;
@@ -127,16 +127,18 @@ std::map< std::string, std::vector< double > > ConvergenceStudy::run(const bool 
   for (size_t ii = 0; ii <= num_refinements(); ++ii) {
     // print delimiter
     if (ii > 0) {
-      out << "----------+----------";
+      out << "--------+--------+---------";
       for (size_t nn = 0; nn < actually_used_norms.size(); ++nn)
         out << "+----------+----------";
       out << "\n";
     }
 
+    // print num DoFs
+    out << " " << std::setw(6) << std::setprecision(1) << std::scientific << current_num_DoFs() << std::flush;
     // print grid size
-    out << " " << std::setw(8) << current_grid_size() << std::flush;
+    out << " | " << std::setw(6) << std::setprecision(1) << std::scientific << current_grid_size() << std::flush;
     // print grid with
-    out << " | " << std::setw(8) << std::setprecision(2) << std::scientific << current_grid_width() << std::flush;
+    out << " | " << std::setw(7) << std::setprecision(1) << std::scientific << current_grid_width() << std::flush;
 
     // do the computation
     const double elapsed = compute_on_current_refinement();
