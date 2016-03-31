@@ -312,7 +312,12 @@ struct make_identical_tuple;
 template< typename T, std::size_t N, std::size_t ...Indices >
 struct make_identical_tuple< T, N, indices< Indices... > >
 {
-    using type = std::tuple<T_aliased<T, Indices>...>;
+  using type = std::tuple<T_aliased<T, Indices>...>;
+
+  static type create(const T& t)
+  {
+    return type(T_aliased<T, Indices>{t}...);
+  }
 };
 
 
