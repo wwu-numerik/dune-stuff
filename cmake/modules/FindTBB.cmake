@@ -300,7 +300,6 @@ if ((NOT TBB_LIBTBB) AND("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel"))
       list(APPEND CMAKE_REQUIRED_DEFINITIONS "-D${_definition}")
     endforeach()
     set(CMAKE_REQUIRED_QUIET ON)
-    list(APPEND CMAKE_REQUIRED_DEFINITIONS ${TBB_EXTRA_COMPILE_OPTIONS})
     check_cxx_source_compiles(
       "${tbb_compile_source}"
       TBB_INTEL_COMPILER_INTERNAL_TBB
@@ -308,7 +307,7 @@ if ((NOT TBB_LIBTBB) AND("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel"))
 
     if(TBB_INTEL_COMPILER_INTERNAL_TBB)
       # yeah, success
-      set(TBB_COMPILE_OPTIONS "-tbb ${TBB_EXTRA_COMPILE_OPTIONS}")
+      set(TBB_COMPILE_OPTIONS -tbb)
 
       # now check components
       foreach(component ${TBB_FIND_COMPONENTS})
@@ -351,11 +350,15 @@ foreach(_definition ${TBB_COMPILE_DEFINITIONS})
 endforeach()
 set(CMAKE_REQUIRED_FLAGS ${TBB_COMPILE_OPTIONS})
 set(CMAKE_REQUIRED_LIBRARIES ${TBB_LIBRARIES})
-check_cxx_source_compiles(
-  "${tbb_compile_source}"
-  TBB_COMPILE_TEST
-  )
-cmake_pop_check_state()
+if(NOT TBB_DISABLE_FINAL_CHECK)
+  check_cxx_source_compiles(
+    "${tbb_compile_source}"
+    TBB_COMPILE_TEST
+    )
+  cmake_pop_check_state()
+else(NOT TBB_DISABLE_FINAL_CHECK)
+  set(TBB_COMPILE_TEST TRUE)
+endif(NOT TBB_DISABLE_FINAL_CHECK)
 
 # we don't want to leak any helper variables
 unset(tbb_compile_source)
