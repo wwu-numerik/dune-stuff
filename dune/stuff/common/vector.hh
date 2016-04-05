@@ -232,15 +232,4 @@ typename std::enable_if<Dune::Stuff::Common::is_vector<V>::value, std::basic_ost
   return out;
 } // ... operator<<(...)
 
-namespace std {
-/// clang 3.6 does not consider the overload in the ns for some reason during resultion of a call in gtest
-template <class V, class Alloc, class CharType, class CharTraits>
-std::basic_ostream<CharType, CharTraits>& operator<<(std::basic_ostream<CharType, CharTraits>& out,
-                                                     const std::vector<V, Alloc>& vec)
-{
-  ::operator<<(out, vec);
-  return out;
-} // ... operator<<(...)
-}
-
 #endif // DUNE_STUFF_COMMON_VECTOR_HH

@@ -30,7 +30,7 @@ dune_library_add_sources(dunestuff SOURCES ${lib_dune_stuff_sources})
 add_analyze(${lib_dune_stuff_sources})
 FILE( GLOB_RECURSE _header "${CMAKE_CURRENT_SOURCE_DIR}/*.hh" )
 
-ds_headercheck(${_header})
+#ds_headercheck(${_header})
 
 add_subdirectory(test EXCLUDE_FROM_ALL)
 add_format(${lib_dune_stuff_sources} ${test_sources} ${_header})

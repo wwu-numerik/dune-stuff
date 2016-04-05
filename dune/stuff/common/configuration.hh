@@ -429,16 +429,6 @@ bool operator!=(const ParameterTree& left, const ParameterTree& right);
 namespace std {
 
 template <>
-struct less<Dune::ParameterTree>
-{
-  typedef bool result_type;
-  typedef Dune::ParameterTree first_argument_type;
-  typedef Dune::ParameterTree second_argument_type;
-
-  bool operator()(const Dune::ParameterTree& lhs, const Dune::ParameterTree& rhs) const;
-}; // struct less< ParameterTree >
-
-template <>
 struct less<Dune::Stuff::Common::Configuration>
 {
   typedef bool result_type;

@@ -390,20 +390,8 @@ Configuration::Configuration(const std::vector<std::string> keys, const std::vec
 } // namespace Common
 } // namespace Stuff
 
-bool operator==(const ParameterTree& left, const ParameterTree& right)
-{
-  return Stuff::Common::Configuration(left).flatten() == Stuff::Common::Configuration(right).flatten();
-}
-
-bool operator!=(const ParameterTree& left, const ParameterTree& right) { return !(left == right); }
-
 } // namespace Dune
 namespace std {
-
-bool less<Dune::ParameterTree>::operator()(const Dune::ParameterTree& lhs, const Dune::ParameterTree& rhs) const
-{
-  return Dune::Stuff::Common::Configuration(lhs).flatten() < Dune::Stuff::Common::Configuration(rhs).flatten();
-}
 
 bool less<Dune::Stuff::Common::Configuration>::operator()(const Dune::Stuff::Common::Configuration& lhs,
                                                           const Dune::Stuff::Common::Configuration& rhs) const

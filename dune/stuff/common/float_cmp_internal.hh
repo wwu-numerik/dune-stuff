@@ -18,14 +18,6 @@
 #include <dune/stuff/common/float_cmp_style.hh>
 
 namespace Dune {
-namespace FloatCmp {
-template <class T>
-struct EpsilonType<std::complex<T>>
-{
-  //! The epsilon type corresponding to value type std::complex<T>
-  typedef std::complex<T> Type;
-};
-}
 namespace Stuff {
 namespace Common {
 
