@@ -213,5 +213,4 @@ operator<<(std::ostream& out, const V& vec)
   return out;
 } // ... operator<<(...)
 
-
 #endif // DUNE_STUFF_COMMON_VECTOR_HH
