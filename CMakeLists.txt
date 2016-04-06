@@ -52,11 +52,10 @@ execute_process(
 
 SET( DS_FLAGS_Release
   "-fPIC"
-  CACHE STRING "")
+set(DS_FLAGS_RelWithDebInfo "-g ${DS_FLAGS_ReleaseCC}")
 set(DS_FLAGS_RelWithDebInfo
-  "-fPIC"
+SET( DS_FLAGS_Debug CACHE STRING
   CACHE STRING "")
-SET( DS_FLAGS_Debug
   "-O0" "-g3" "-ggdb" "-Wunused-variable" "-fno-strict-aliasing" "-fPIC" "-Wall" "-Wextra" "-Wparentheses" "-pedantic"  "-Wshadow" "-Wundef" "-Wnon-virtual-dtor" 
   CACHE STRING "")
 
@@ -81,6 +80,7 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
       )
 endif()
 
+  set(DS_COMPILE_OPTIONS ${DS_FLAGS_Release})
 
 include(DuneUtils)
 include(GridUtils)
