@@ -1,7 +1,11 @@
 # This file is part of the dune-stuff project:
 #   https://github.com/wwu-numerik/dune-stuff
-# Copyright holders: Rene Milk, Felix Schindler
+# The copyright lies with the authors of this file (see below).
 # License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+# Authors:
+#   Felix Schindler (2012 - 2015)
+#   Rene Milk       (2010 - 2015)
+#   Sven Kaulmann   (2013)
 
 project("dune-stuff" CXX)
 
@@ -10,14 +14,8 @@ set( ENV{PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../local/bin:$ENV{PATH}" )
 set( ENV{LD_LIBRARY_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../local/lib:$ENV{LD_LIBRARY_PATH}" )
 set( ENV{PKG_CONFIG_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../local/lib/pkgconfig:$ENV{PKG_CONFIG_PATH}" )
 
-if(CMAKE_WITH_AUTOTOOLS)
-  message(FATAL_ERROR "combining autotools with cmake builds is no longer supported")
-endif(CMAKE_WITH_AUTOTOOLS)
-
-# this assumes that we run dunecontrol with the --use-cmake option
-
 # cmake specific
-cmake_minimum_required( VERSION 2.8 )
+cmake_minimum_required( VERSION 3.1 )
 
 set( CMAKE_COLOR_MAKEFILE ON)
 
@@ -46,22 +44,60 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake )
 # General Settings
 #----------------------------------------------------------------------------------------------------
 execute_process(
-COMMAND ${CMAKE_SOURCE_DIR}/getRevision.sh
-OUTPUT_VARIABLE COMMIT
-ERROR_VARIABLE shell_error
-OUTPUT_STRIP_TRAILING_WHITESPACE
+    COMMAND ${CMAKE_SOURCE_DIR}/getRevision.sh
+    OUTPUT_VARIABLE COMMIT
+    ERROR_VARIABLE shell_error
+    OUTPUT_STRIP_TRAILING_WHITESPACE
 )
+
+SET( DS_FLAGS_Release CACHE STRING
+  "-O2 -fPIC ${CMAKE_CXX_FLAGS_RELEASE}")
+set(DS_FLAGS_RelWithDebInfo "-g ${DS_FLAGS_ReleaseCC}")
+
+SET( DS_FLAGS_Debug CACHE STRING
+  "-O0 -g3 -ggdb -Wunused-variable -fno-strict-aliasing -fPIC -Wall -Wextra -Wparentheses -pedantic  -Wshadow -Wundef -Wnon-virtual-dtor")
+
+#aka anything but intel, but cmake has identifier for icc
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+  list( APPEND DS_FLAGS_Debug
+         -Wc++0x-compat -Wredundant-decls -Winline  -ftemplate-backtrace-limit=0
+      )
+else ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+  # for us effectively icc
+  list( APPEND DS_FLAGS_Debug
+        -Wcast-qual -Wformat=2 -Winit-self -Woverloaded-virtual -Wshadow -Wsign-conversion -Wsign-promo -Wundef  -Wno-unused)
+endif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+  list( APPEND DS_FLAGS_Debug
+        -Wnon-literal-null-conversion -Wused-but-marked-unused -Wno-tautological-compare -Wfloat-equal -Wdisabled-macro-expansion -Wcovered-switch-default -Wswitch-enum -Wunreachable-code -Wshorten-64-to-32
+      )
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+  list( APPEND DS_FLAGS_Debug
+        -Wlogical-op  -Og 
+      )
+endif()
+
+if(CMAKE_BUILD_TYPE STREQUAL Debug)
+    set(DS_COMPILE_OPTIONS ${DS_FLAGS_Debug})
+else(CMAKE_BUILD_TYPE STREQUAL Debug)
+  set(DS_COMPILE_OPTIONS ${DS_FLAGS_Release})
+endif(CMAKE_BUILD_TYPE STREQUAL Debug)
+
+dune_enable_all_packages(INCLUDE_DIRS ${dune-stuff_SOURCE_DIR}/dune
+                         COMPILE_DEFINITIONS DNDEBUG DDNDEBUG
+                         COMPILE_OPTIONS ${DS_FLAGS_${CMAKE_BUILD_TYPE}}
+                         MODULE_LIBRARIES dunestuff gtest_dune_stuff
+                         VERBOSE
+                         )
 
 include(DuneUtils)
 include(GridUtils)
-# configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_config.h.in ${CMAKE_CURRENT_BINARY_DIR}/cmake_config.h )
-
-
-link_directories( "/usr/lib" ${CCGNU_LIBRARY_DIRS} )
 
 # header
 file( GLOB_RECURSE stuff "${CMAKE_CURRENT_SOURCE_DIR}/dune/*.hh" )
 set( COMMON_HEADER ${stuff} ${DUNE_HEADERS} )
+
 # add header of dependent modules for header listing
 foreach(_mod ${ALL_DEPENDENCIES})
 file(GLOB_RECURSE HEADER_LIST "${CMAKE_CURRENT_SOURCE_DIR}/../${_mod}/*.hh")
