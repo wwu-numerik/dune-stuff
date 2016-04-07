@@ -50,7 +50,7 @@ public:
 
   virtual ReturnType compute_locally(const EntityType& entity) = 0;
 
-  virtual ReturnType result() const {}
+  virtual ReturnType result() const = 0;
 }; // class Codim0ReturnFunctor
 
 
