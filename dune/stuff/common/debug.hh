@@ -12,7 +12,6 @@
 
 #define SEGFAULT { int* J = 0; * J = 9; }
 
-                            {
 #define __CLASS__ strtok(charcopy(__PRETTY_FUNCTION__), "<(")
 
 #define UNUSED(identifier)  /* identifier */

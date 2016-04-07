@@ -12,7 +12,7 @@
 
 #include <dune/stuff/common/ranges.hh>
 #include <dune/stuff/common/configuration.hh>
-#include <dune/stuff/test/gtest/gtest.h>
+#include <dune/xt/common/test/gtest/gtest.h>
 #include <dune/stuff/functions/interfaces.hh>
 
 namespace Dune {

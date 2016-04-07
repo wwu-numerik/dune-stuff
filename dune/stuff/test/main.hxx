@@ -21,7 +21,7 @@
 # include <dune/fem/misc/mpimanager.hh>
 #endif
 
-#include <dune/stuff/test/gtest/gtest.h>
+#include <dune/xt/common/test/gtest/gtest.h>
 #include <dune/stuff/aliases.hh>
 #include <dune/stuff/common/configuration.hh>
 #include <dune/stuff/common/logging.hh>

@@ -588,20 +588,11 @@ bool operator!=(const Configuration& left, const Configuration& right)
   return !(left == right);
 }
 
-
 } // namespace Common
 } // namespace Stuff
-
-
-{
-  return !(left == right);
-}
-
 } // namespace Dune
-namespace std {
 
-bool less< Dune::ParameterTree >::operator()(const Dune::ParameterTree& lhs,
-                                             const Dune::ParameterTree& rhs) const
+namespace std {
 
 bool less< Dune::Stuff::Common::Configuration >::operator()(const Dune::Stuff::Common::Configuration& lhs,
                                                             const Dune::Stuff::Common::Configuration& rhs) const

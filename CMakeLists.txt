@@ -51,11 +51,10 @@ execute_process(
 )
 
 SET( DS_FLAGS_Release
-  "-fPIC"
-set(DS_FLAGS_RelWithDebInfo "-g ${DS_FLAGS_ReleaseCC}")
+  "-O2" "-fPIC" "${CMAKE_CXX_FLAGS_RELEASE}")
 set(DS_FLAGS_RelWithDebInfo
+  "-g" "${DS_FLAGS_Release}")
 SET( DS_FLAGS_Debug CACHE STRING
-  CACHE STRING "")
   "-O0" "-g3" "-ggdb" "-Wunused-variable" "-fno-strict-aliasing" "-fPIC" "-Wall" "-Wextra" "-Wparentheses" "-pedantic"  "-Wshadow" "-Wundef" "-Wnon-virtual-dtor" 
   CACHE STRING "")
 

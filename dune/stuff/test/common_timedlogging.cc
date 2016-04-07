@@ -9,7 +9,7 @@
 
 #include "config.h"
 
-#include <dune/stuff/test/gtest/gtest.h>
+#include <dune/xt/common/test/gtest/gtest.h>
 #include <dune/stuff/common/timedlogging.hh>
 
 #include "common.hh"

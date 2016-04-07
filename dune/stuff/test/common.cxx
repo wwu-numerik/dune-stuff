@@ -12,7 +12,7 @@
 #include <string>
 #include <sstream>
 
-#include <dune/stuff/test/gtest/gtest.h>
+#include <dune/xt/common/test/gtest/gtest.h>
 #include <dune/stuff/common/configuration.hh>
 #include <dune/stuff/common/exceptions.hh>
 
