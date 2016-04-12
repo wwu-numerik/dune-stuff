@@ -371,7 +371,7 @@ private:
 
 template< class EntityImp,
           class DomainFieldImp, size_t domainDim,
-          class RangeFieldImp, size_t rangeDim, size_t rangeDimCols,
+          class RangeFieldImp, size_t rangeDim, size_t rangeDimCols = 1,
           class TimeFieldImp = double >
 class TimeDependentExpression
     : TimeDependentFunctionInterface< Expression< EntityImp,
@@ -476,16 +476,17 @@ public:
     // create ExpressionStringVectorType with identical expressions
     const std::vector< std::string > expression_row(dimRangeCols, expression);
     const ExpressionStringVectorType expressions(dimRange, expression_row);
-    // create associated gradient vector
-    GradientStringVectorType gradient_expressions(dimRangeCols);
-    assert(gradient.size() == 0 || gradient.size() >= dimDomain);
-    const ExpressionStringVectorType gradient_row(dimRange, gradient);
-    for (size_t cc = 0; cc < dimRangeCols; ++cc) {
-      gradient_expressions[cc] = gradient_row;
-    }
-    // copy to member variables
     expressions_ = expressions;
-    gradient_expressions_ = gradient_expressions;
+    // create associated gradient vector
+    assert(gradient.size() == 0 || gradient.size() >= dimDomain);
+    if (gradient.size() > 0) {
+      GradientStringVectorType gradient_expressions(dimRangeCols);
+      const ExpressionStringVectorType gradient_row(dimRange, gradient);
+      for (size_t cc = 0; cc < dimRangeCols; ++cc) {
+        gradient_expressions[cc] = gradient_row;
+      }
+      gradient_expressions_ = gradient_expressions;
+    }
   }
 
   /**
