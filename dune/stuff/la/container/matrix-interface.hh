@@ -130,7 +130,7 @@ public:
   template< class XX >
   typename XX::derived_type operator*(const VectorInterface< XX, ScalarType >& xx) const
   {
-    typename XX::derived_type yy(cols());
+    typename XX::derived_type yy(rows());
     mv(xx.as_imp(xx), yy);
     return yy;
   }
