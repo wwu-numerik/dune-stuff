@@ -81,12 +81,6 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
       )
 endif()
 
-dune_enable_all_packages(INCLUDE_DIRS ${dune-stuff_SOURCE_DIR}/dune
-                         COMPILE_DEFINITIONS DNDEBUG DDNDEBUG
-                         COMPILE_OPTIONS ${DS_FLAGS_${CMAKE_BUILD_TYPE}}
-                         MODULE_LIBRARIES dunestuff gtest_dune_stuff
-                         VERBOSE
-                         )
 
 include(DuneUtils)
 include(GridUtils)
