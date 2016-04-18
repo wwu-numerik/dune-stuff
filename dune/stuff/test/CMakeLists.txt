@@ -19,17 +19,6 @@ if (LATEX_FOUND)
     add_custom_command(OUTPUT ${grid_texfiles} COMMAND "./test_grid_output_pgf" DEPENDS test_grid_output_pgf)
   endif()
 #
-  set(texfiles ${grid_texfiles})
-
-  add_custom_target(tex_compile)
-  foreach( tex ${texfiles} )
-      add_latex_document( ${tex} DEPENDS ${tex} DEFAULT_PDF MANGLE_TARGET_NAMES )
-      string(REPLACE ".tex" "_pdf" pdf ${tex})
-      add_dependencies(tex_compile ${pdf} )
-      set_source_files_properties(${tex} GENERATED)
-  endforeach( tex )
-  add_test(NAME test_tex_compile COMMAND ${CMAKE_MAKE_PROGRAM} tex_compile)
-  list(APPEND testnames tex_compile )
 endif()
 
 END_TESTCASES()
