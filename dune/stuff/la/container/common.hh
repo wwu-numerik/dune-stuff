@@ -724,8 +724,8 @@ public:
     : num_rows_(DSC::MatrixAbstraction< OtherMatrixType >::rows(mat))
     , num_cols_(DSC::MatrixAbstraction< OtherMatrixType >::cols(mat))
     , backend_(std::make_shared< BackendType >())
-    , row_pointers_(std::make_shared< BackendType >(num_rows_+1))
-    , column_indices_(std::make_shared< BackendType >())
+    , row_pointers_(std::make_shared< IndexVectorType >(num_rows_+1))
+    , column_indices_(std::make_shared< IndexVectorType >())
   {
       for (size_t rr = 0; rr < num_rows_; ++rr) {
         size_t num_nonzero_entries_in_row = 0;
