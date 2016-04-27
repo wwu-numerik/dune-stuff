@@ -126,7 +126,7 @@ TYPED_TEST(CheckerboardFunctionYaspGridEntityTest, provides_required_methods) {
 }
 
 # if HAVE_DUNE_ALUGRID
-#   include <dune/grid/alugrid.hh>
+#   include <dune/alugrid/grid.hh>
 
 typedef Dune::ALUGrid< 2, 2, Dune::simplex, Dune::nonconforming >::Codim< 0 >::Entity  DuneAluSimplexGrid2dEntityType;
 typedef Dune::ALUGrid< 3, 3, Dune::simplex, Dune::nonconforming >::Codim< 0 >::Entity  DuneAluSimplexGrid3dEntityType;

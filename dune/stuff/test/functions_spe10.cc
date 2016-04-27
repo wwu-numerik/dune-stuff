@@ -97,7 +97,7 @@ TYPED_TEST(Spe10Model2FunctionTestYaspGridEntityTest, provides_required_methods)
 
 //# if HAVE_DUNE_ALUGRID
 //#   include <dune/stuff/common/disable_warnings.hh>
-//#     include <dune/grid/alugrid.hh>
+//#     include <dune/alugrid/grid.hh>
 //#   include <dune/stuff/common/reenable_warnings.hh>
 
 //typedef Dune::ALUGrid< 2, 2, Dune::simplex, Dune::nonconforming >::Codim< 0 >::Entity  DuneAluSimplexGrid2dEntityType;

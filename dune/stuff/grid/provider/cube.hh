@@ -18,7 +18,7 @@
 # include <dune/grid/sgrid.hh>
 # include <dune/grid/yaspgrid.hh>
 # if HAVE_DUNE_ALUGRID
-#   include <dune/grid/alugrid.hh>
+#   include <dune/alugrid/grid.hh>
 # endif
 # if HAVE_DUNE_SPGRID
 #   include <dune/grid/spgrid.hh>
