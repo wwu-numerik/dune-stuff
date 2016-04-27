@@ -136,7 +136,7 @@ TYPED_TEST(ExpressionFunctionYaspGridEntityTest, provides_required_methods) {
   this->check();
 }
 
-# if HAVE_ALUGRID
+# if HAVE_DUNE_ALUGRID
 #   include <dune/grid/alugrid.hh>
 
 typedef Dune::ALUGrid< 2, 2, Dune::simplex, Dune::nonconforming>::Codim< 0 >::Entity  DuneAluSimplexGrid2dEntityType;
@@ -180,7 +180,7 @@ TYPED_TEST(ExpressionFunctionAluGridEntityTest, provides_required_methods) {
   this->check();
 }
 
-# endif // HAVE_ALUGRID
+# endif // HAVE_DUNE_ALUGRID
 #endif // HAVE_DUNE_GRID
 
 

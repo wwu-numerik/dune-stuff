@@ -6,7 +6,7 @@
 #include "main.hxx"
 
 #if HAVE_DUNE_GRID
-# if HAVE_ALUGRID
+# if HAVE_DUNE_ALUGRID
 #   include <dune/grid/alugrid.hh>
 # endif
 # include <dune/grid/sgrid.hh>
@@ -36,7 +36,7 @@ using namespace Stuff;
   , YaspGrid< 3 > \
   , YaspGrid< 4 >
 
-# if HAVE_ALUGRID
+# if HAVE_DUNE_ALUGRID
 #   define ALUGRIDS \
     ALUGrid< 2, 2, cube, nonconforming > \
   /*, ALUGrid< 2, 3, cube, nonconforming >     <- provider does not work */ \
@@ -47,7 +47,7 @@ using namespace Stuff;
   , ALUGrid< 2, 2, simplex, conforming > \
   /*, ALUGrid< 2, 3, simplex, conforming >     <- same here */ \
   , ALUGrid< 3, 3, simplex, conforming >
-# endif // HAVE_ALUGRID
+# endif // HAVE_DUNE_ALUGRID
 
 
 template< class GridProviderType >
@@ -188,7 +188,7 @@ struct CubeGridProvider
 
 typedef testing::Types< SGRIDS
                       , YASPGRIDS
-# if HAVE_ALUGRID
+# if HAVE_DUNE_ALUGRID
                       , ALUGRIDS
 # endif
                       > GridTypes;

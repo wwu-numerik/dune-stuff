@@ -32,7 +32,7 @@
 #define DS_FINAL    ; static_assert(false, "Use final instead (21.10.2014)!");
 #define HAVE_DUNE_FEM_PARAMETER_REPLACE 0
 
-#ifndef HAVE_ALUGRID
+#ifndef HAVE_DUNE_ALUGRID
 #  define DUNE_FEM_DONT_WARN_IN_COMM_MANAGER 1
 #endif
 
@@ -110,8 +110,8 @@
 # define HAVE_PETSC 0
 #endif
 
-#ifndef HAVE_ALUGRID
-# define HAVE_ALUGRID 0
+#ifndef HAVE_DUNE_ALUGRID
+# define HAVE_DUNE_ALUGRID 0
 #endif
 
 #ifndef DUNE_FEM_COMPATIBILITY

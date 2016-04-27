@@ -8,7 +8,7 @@
 #include "main.hxx"
 
 #if HAVE_DUNE_GRID
-# if HAVE_ALUGRID
+# if HAVE_DUNE_ALUGRID
 #   include <dune/grid/alugrid.hh>
 # endif
 # include <dune/grid/yaspgrid.hh>
@@ -28,7 +28,7 @@ using namespace Stuff;
   , YaspGrid< 2 > \
   , YaspGrid< 3 >
 
-# if HAVE_ALUGRID
+# if HAVE_DUNE_ALUGRID
 #   define ALUCUBEGRIDS \
     ALUGrid< 2, 2, cube, nonconforming > \
   , ALUGrid< 3, 3, cube, nonconforming >
@@ -36,7 +36,7 @@ using namespace Stuff;
 #   define ALUSIMPLEXGRIDS \
     ALUGrid< 2, 2, simplex, conforming > \
   , ALUGrid< 3, 3, simplex, conforming >
-# endif // HAVE_ALUGRID
+# endif // HAVE_DUNE_ALUGRID
 
 
 template< class GridImp >
@@ -336,7 +336,7 @@ TYPED_TEST(PeriodicViewTestYaspCube, check_yaspcube)
   this->checks_for_all_grids(false);
 }
 
-# if HAVE_ALUGRID
+# if HAVE_DUNE_ALUGRID
 
 typedef testing::Types<
                         ALUCUBEGRIDS
@@ -360,12 +360,12 @@ TYPED_TEST(PeriodicViewTestALUSimplex, check_alusimplex)
   this->additional_checks_for_alu(true);
 }
 
-# else // HAVE_ALUGRID
+# else // HAVE_DUNE_ALUGRID
 
 TEST(DISABLED_PeriodicViewTestALUCube, check_alucube) {}
 TEST(DISABLED_PeriodicViewTestALUSimplex, check_alusimplex) {}
 
-# endif // HAVE_ALUGRID
+# endif // HAVE_DUNE_ALUGRID
 #else // HAVE_DUNE_GRID
 
 TEST(DISABLED_PeriodicViewTestYaspCube, check_yaspcube) {}

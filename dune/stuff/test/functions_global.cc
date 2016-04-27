@@ -129,7 +129,7 @@ TYPED_TEST(GlobalLambdaFunctionTestYaspGridEntityTest, provides_required_methods
   this->check();
 }
 
-# if HAVE_ALUGRID
+# if HAVE_DUNE_ALUGRID
 #   include <dune/stuff/common/disable_warnings.hh>
 #     include <dune/grid/alugrid.hh>
 #   include <dune/stuff/common/reenable_warnings.hh>
@@ -175,7 +175,7 @@ TYPED_TEST(GlobalLambdaFunctionTestAluGridEntityTest, provides_required_methods)
   this->check();
 }
 
-# endif // HAVE_ALUGRID
+# endif // HAVE_DUNE_ALUGRID
 #endif // HAVE_DUNE_GRID
 
 

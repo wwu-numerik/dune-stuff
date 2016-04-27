@@ -9,7 +9,7 @@
 #define DUNE_STUFF_GRID_PROVIDER_STARCD_HH
 
 #if HAVE_DUNE_GRID
-//#if HAVE_ALUGRID || HAVE_ALBERTA || HAVE_UG
+//#if HAVE_DUNE_ALUGRID || HAVE_ALBERTA || HAVE_UG
 //#if defined ALUGRID_CONFORM || defined ALUGRID_CUBE || defined ALUGRID_SIMPLEX || defined ALBERTAGRID || defined UGGRID
 
 #include <iostream>
@@ -259,7 +259,7 @@ private:
 } // namespace Dune
 
 //#endif // defined ALUGRID_CONFORM || defined ALUGRID_CUBE || defined ALUGRID_SIMPLEX || defined ALBERTAGRID || defined UGGRID
-//#endif // HAVE_ALUGRID || HAVE_ALBERTA || HAVE_UG
+//#endif // HAVE_DUNE_ALUGRID || HAVE_ALBERTA || HAVE_UG
 #endif // HAVE_DUNE_GRID
 
 #endif // DUNE_STUFF_GRID_PROVIDER_STARCD_HH

@@ -17,7 +17,7 @@
 #if HAVE_DUNE_GRID
 # include <dune/grid/sgrid.hh>
 # include <dune/grid/yaspgrid.hh>
-# if HAVE_ALUGRID
+# if HAVE_DUNE_ALUGRID
 #   include <dune/grid/alugrid.hh>
 # endif
 # if HAVE_DUNE_SPGRID
@@ -96,7 +96,7 @@ struct ElementVariant< Dune::SPGrid< ct, dim, strategy, Comm > >
 
 #endif // HAVE_DUNE_GRID
 
-#if HAVE_ALUGRID
+#if HAVE_DUNE_ALUGRID
 
 
 template< int dimGrid, int dimWorld >
@@ -120,7 +120,7 @@ struct ElementVariant< Dune::ALUGrid< dimGrid, dimWorld, Dune::cube, Dune::nonco
 };
 
 
-#endif // HAVE_ALUGRID
+#endif // HAVE_DUNE_ALUGRID
 
 } // namespace internal
 

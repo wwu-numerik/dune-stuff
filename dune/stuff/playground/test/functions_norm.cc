@@ -44,7 +44,7 @@ using namespace Dune;
 
 static const int dim = 2;
 typedef testing::Types< Dune::YaspGrid< dim >
-#if HAVE_ALUGRID
+#if HAVE_DUNE_ALUGRID
   , Dune::ALUCubeGrid< dim, dim >
   , Dune::ALUConformGrid< dim, dim >
   , Dune::ALUSimplexGrid< dim, dim >
