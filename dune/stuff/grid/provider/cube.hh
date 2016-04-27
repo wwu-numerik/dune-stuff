@@ -18,7 +18,7 @@
 # include <dune/grid/sgrid.hh>
 # include <dune/grid/yaspgrid.hh>
 # if HAVE_DUNE_ALUGRID
-#   include <dune/alugrid/grid.hh>
+#   include <dune/alugrid/dgf.hh>
 # endif
 # if HAVE_DUNE_SPGRID
 #   include <dune/grid/spgrid.hh>
@@ -97,14 +97,6 @@ struct ElementVariant< Dune::SPGrid< ct, dim, strategy, Comm > >
 #endif // HAVE_DUNE_GRID
 
 #if HAVE_DUNE_ALUGRID
-
-
-template< int dimGrid, int dimWorld >
-struct ElementVariant< Dune::ALUCubeGrid< dimGrid, dimWorld > >
-{
-  static const int id = 1;
-};
-
 
 template< int dimGrid, int dimWorld, class MpiCommImp >
 struct ElementVariant< Dune::ALUGrid< dimGrid, dimWorld, Dune::cube, Dune::conforming, MpiCommImp > >

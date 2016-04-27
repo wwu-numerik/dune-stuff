@@ -15,6 +15,3 @@ add_definitions("-DGRIDDIM=${GRIDDIM}")
 add_definitions("-DGRIDTYPE=${GRIDTYPE}")
 add_definitions("-D${GRIDTYPE}")
 
-if(ALUGRID_FOUND)
-  add_definitions("-DENABLE_ALUGRID=1")
-endif(ALUGRID_FOUND)
