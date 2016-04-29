@@ -326,6 +326,13 @@ public:
   }
 
 #endif // HAVE_DUNE_FEM
+
+  void global_refine(size_t count) {
+    grid().preAdapt();
+    grid().globalRefine(count);
+    grid().postAdapt();
+    grid().loadBalance();
+  }
 }; // class ProviderInterface
 
 
