@@ -31,7 +31,10 @@ namespace Functions {
 template <class E, class D, size_t d, class R, size_t r, size_t rC = 1>
 class FlatTop : public LocalizableFunctionInterface<E, D, d, R, r, rC>
 {
-  FlatTop() { static_assert(AlwaysFalse<E>::value, "Not available for these dimensions!"); }
+  FlatTop()
+  {
+    static_assert(AlwaysFalse<E>::value, "Not available for these dimensions!");
+  }
 };
 
 template <class E, class D, size_t d, class R>
@@ -54,7 +57,10 @@ public:
 
   static const bool available = true;
 
-  static std::string static_id() { return BaseType::static_id() + ".flattop"; }
+  static std::string static_id()
+  {
+    return BaseType::static_id() + ".flattop";
+  }
 
   static Common::Configuration default_config(const std::string sub_name = "")
   {
@@ -89,7 +95,11 @@ public:
   FlatTop(const StuffDomainType& lower_left, const StuffDomainType& upper_right, const StuffDomainType& boundary_layer,
           const StuffRangeType& value = default_config().get<StuffRangeType>("value"),
           const std::string name_in = default_config().get<std::string>("name"))
-    : lower_left_(lower_left), upper_right_(upper_right), boundary_layer_(boundary_layer), value_(value), name_(name_in)
+    : lower_left_(lower_left)
+    , upper_right_(upper_right)
+    , boundary_layer_(boundary_layer)
+    , value_(value)
+    , name_(name_in)
   {
     check_input();
   }
@@ -98,13 +108,24 @@ public:
 
   ThisType& operator=(const ThisType& other) = delete;
 
-  virtual ~FlatTop() {}
+  virtual ~FlatTop()
+  {
+  }
 
-  virtual std::string type() const override final { return BaseType::static_id() + ".flattop"; }
+  virtual std::string type() const override final
+  {
+    return BaseType::static_id() + ".flattop";
+  }
 
-  virtual std::string name() const override final { return name_; }
+  virtual std::string name() const override final
+  {
+    return name_;
+  }
 
-  virtual size_t order() const override { return 3 * dimDomain; }
+  virtual size_t order() const override
+  {
+    return 3 * dimDomain;
+  }
 
   virtual void evaluate(const DomainType& xx, RangeType& ret) const override
   {

@@ -104,16 +104,28 @@ typedef testing::Types<Dune::DynamicMatrix<char>, Dune::Stuff::Common::FieldMatr
 
 // fromString/toString tests for vector and matrix types
 TYPED_TEST_CASE(MatrixStringTestDouble, MatrixTypesDouble);
-TYPED_TEST(MatrixStringTestDouble, CheckDouble) { this->check(); }
+TYPED_TEST(MatrixStringTestDouble, CheckDouble)
+{
+  this->check();
+}
 
 TYPED_TEST_CASE(MatrixStringTestChar, MatrixTypesChar);
-TYPED_TEST(MatrixStringTestChar, CheckChar) { this->check(); }
+TYPED_TEST(MatrixStringTestChar, CheckChar)
+{
+  this->check();
+}
 
 TYPED_TEST_CASE(VectorStringTestDouble, VectorTypesDouble);
-TYPED_TEST(VectorStringTestDouble, CheckDouble) { this->check(); }
+TYPED_TEST(VectorStringTestDouble, CheckDouble)
+{
+  this->check();
+}
 
 TYPED_TEST_CASE(VectorStringTestInt, VectorTypesInt);
-TYPED_TEST(VectorStringTestInt, CheckInt) { this->check(); }
+TYPED_TEST(VectorStringTestInt, CheckInt)
+{
+  this->check();
+}
 
 // Additional fromString/toString tests
 TEST(StringTest, ConvertTo)
@@ -162,7 +174,10 @@ TEST(StringTest, Hex)
   EXPECT_EQ(boost::lexical_cast<HexToString<unsigned long>>("0x00000F"), 15u);
 }
 
-TEST(StringTest, Whitespace) { EXPECT_EQ("---------", whitespaceify("\t\t\t\t\t\t\t\t\t", '-')); }
+TEST(StringTest, Whitespace)
+{
+  EXPECT_EQ("---------", whitespaceify("\t\t\t\t\t\t\t\t\t", '-'));
+}
 
 TEST(StringTest, Tokenizer)
 {
@@ -179,4 +194,7 @@ TEST(StringTest, Tokenizer)
   EXPECT_EQ(numbers_compressed, tokenize<int>(num_msg, seps, boost::algorithm::token_compress_on));
 }
 
-TEST(StringTest, TimeString) { string ts = stringFromTime(-1); }
+TEST(StringTest, TimeString)
+{
+  string ts = stringFromTime(-1);
+}

@@ -50,13 +50,20 @@ class Checkerboard
     typedef typename BaseType::RangeType RangeType;
     typedef typename BaseType::JacobianRangeType JacobianRangeType;
 
-    Localfunction(const EntityType& ent, const RangeType value) : BaseType(ent), value_(value) {}
+    Localfunction(const EntityType& ent, const RangeType value)
+      : BaseType(ent)
+      , value_(value)
+    {
+    }
 
     Localfunction(const Localfunction& /*other*/) = delete;
 
     Localfunction& operator=(const Localfunction& /*other*/) = delete;
 
-    virtual size_t order() const override { return 0; }
+    virtual size_t order() const override
+    {
+      return 0;
+    }
 
     virtual void evaluate(const DomainType& UNUSED_UNLESS_DEBUG(xx), RangeType& ret) const override
     {
@@ -79,7 +86,10 @@ class Checkerboard
       }
     }
 
-    void jacobian_helper(JacobianRangeType& ret, internal::ChooseVariant<1>) const { ret *= RangeFieldType(0); }
+    void jacobian_helper(JacobianRangeType& ret, internal::ChooseVariant<1>) const
+    {
+      ret *= RangeFieldType(0);
+    }
     const RangeType value_;
   }; // class Localfunction
 
@@ -95,7 +105,10 @@ public:
 
   static const bool available = true;
 
-  static std::string static_id() { return BaseType::static_id() + ".checkerboard"; }
+  static std::string static_id()
+  {
+    return BaseType::static_id() + ".checkerboard";
+  }
 
   static Common::Configuration default_config(const std::string sub_name = "")
   {
@@ -172,9 +185,15 @@ public:
 
   ThisType& operator=(ThisType&& source) = delete;
 
-  virtual std::string type() const override { return BaseType::static_id() + ".checkerboard"; }
+  virtual std::string type() const override
+  {
+    return BaseType::static_id() + ".checkerboard";
+  }
 
-  virtual std::string name() const override { return name_; }
+  virtual std::string name() const override
+  {
+    return name_;
+  }
 
   virtual std::unique_ptr<LocalfunctionType> local_function(const EntityType& entity) const override
   {

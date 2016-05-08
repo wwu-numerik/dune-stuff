@@ -87,7 +87,8 @@ void Dune::Stuff::ThreadManager::set_max_threads(const size_t count)
 }
 
 Dune::Stuff::ThreadManager::ThreadManager()
-  : max_threads_(default_max_threads()), tbb_init_(tbb::task_scheduler_init::deferred)
+  : max_threads_(default_max_threads())
+  , tbb_init_(tbb::task_scheduler_init::deferred)
 {
 #if HAVE_EIGEN
   // must be called before tbb threads are created via tbb::task_scheduler_init object ctor
@@ -99,11 +100,20 @@ Dune::Stuff::ThreadManager::ThreadManager()
 
 #else // if HAVE_TBB
 
-size_t Dune::Stuff::ThreadManager::max_threads() { return 1; }
+size_t Dune::Stuff::ThreadManager::max_threads()
+{
+  return 1;
+}
 
-size_t Dune::Stuff::ThreadManager::current_threads() { return 1; }
+size_t Dune::Stuff::ThreadManager::current_threads()
+{
+  return 1;
+}
 
-size_t Dune::Stuff::ThreadManager::thread() { return 0; }
+size_t Dune::Stuff::ThreadManager::thread()
+{
+  return 0;
+}
 
 void Dune::Stuff::ThreadManager::set_max_threads(const size_t count)
 {
@@ -111,8 +121,14 @@ void Dune::Stuff::ThreadManager::set_max_threads(const size_t count)
     DUNE_THROW(InvalidStateException, "Trying to use more than one thread w/o TBB");
 }
 
-size_t Dune::Stuff::ThreadManager::default_max_threads() { return 1; }
+size_t Dune::Stuff::ThreadManager::default_max_threads()
+{
+  return 1;
+}
 
-Dune::Stuff::ThreadManager::ThreadManager() : max_threads_(1) {}
+Dune::Stuff::ThreadManager::ThreadManager()
+  : max_threads_(1)
+{
+}
 
 #endif // HAVE_DUNE_FEM

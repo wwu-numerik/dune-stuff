@@ -97,9 +97,15 @@ public:
   /// \name Required by ContainerInterface.
   /// \{
 
-  VectorImpType copy() const { return VectorImpType(*backend_); }
+  VectorImpType copy() const
+  {
+    return VectorImpType(*backend_);
+  }
 
-  void scal(const ScalarType& alpha) { backend() *= alpha; }
+  void scal(const ScalarType& alpha)
+  {
+    backend() *= alpha;
+  }
 
   template <class T>
   void axpy(const ScalarType& alpha, const EigenBaseVector<T, ScalarType>& xx)
@@ -110,13 +116,19 @@ public:
     backend() += alpha * xx.backend();
   } // ... axpy(...)
 
-  bool has_equal_shape(const VectorImpType& other) const { return size() == other.size(); }
+  bool has_equal_shape(const VectorImpType& other) const
+  {
+    return size() == other.size();
+  }
 
   /// \}
   /// \name Required by VectorInterface.
   /// \{
 
-  inline size_t size() const { return backend_->size(); }
+  inline size_t size() const
+  {
+    return backend_->size();
+  }
 
   void add_to_entry(const size_t ii, const ScalarType& value)
   {
@@ -137,9 +149,15 @@ public:
   }
 
 protected:
-  inline ScalarType& get_entry_ref(const size_t ii) { return backend()[ii]; }
+  inline ScalarType& get_entry_ref(const size_t ii)
+  {
+    return backend()[ii];
+  }
 
-  inline const ScalarType& get_entry_ref(const size_t ii) const { return backend()[ii]; }
+  inline const ScalarType& get_entry_ref(const size_t ii) const
+  {
+    return backend()[ii];
+  }
 
   /// \}
 
@@ -173,13 +191,25 @@ public:
     return backend_->transpose() * *(other.backend_);
   } // ... dot(...)
 
-  virtual ScalarType dot(const VectorImpType& other) const override final { return this->template dot<Traits>(other); }
+  virtual ScalarType dot(const VectorImpType& other) const override final
+  {
+    return this->template dot<Traits>(other);
+  }
 
-  virtual RealType l1_norm() const override final { return backend_->template lpNorm<1>(); }
+  virtual RealType l1_norm() const override final
+  {
+    return backend_->template lpNorm<1>();
+  }
 
-  virtual RealType l2_norm() const override final { return backend_->template lpNorm<2>(); }
+  virtual RealType l2_norm() const override final
+  {
+    return backend_->template lpNorm<2>();
+  }
 
-  virtual RealType sup_norm() const override final { return backend_->template lpNorm<::Eigen::Infinity>(); }
+  virtual RealType sup_norm() const override final
+  {
+    return backend_->template lpNorm<::Eigen::Infinity>();
+  }
 
   template <class T1, class T2>
   void add(const EigenBaseVector<T1, ScalarType>& other, EigenBaseVector<T2, ScalarType>& result) const
@@ -207,7 +237,10 @@ public:
     backend() += *(other.backend_);
   } // ... iadd(...)
 
-  virtual void iadd(const VectorImpType& other) override final { return this->template iadd<Traits>(other); }
+  virtual void iadd(const VectorImpType& other) override final
+  {
+    return this->template iadd<Traits>(other);
+  }
 
   template <class T1, class T2>
   void sub(const EigenBaseVector<T1, ScalarType>& other, EigenBaseVector<T2, ScalarType>& result) const
@@ -235,7 +268,10 @@ public:
     backend() -= *(other.backend_);
   } // ... isub(...)
 
-  virtual void isub(const VectorImpType& other) override final { this->template isub<Traits>(other); }
+  virtual void isub(const VectorImpType& other) override final
+  {
+    this->template isub<Traits>(other);
+  }
 
   /// \{
 

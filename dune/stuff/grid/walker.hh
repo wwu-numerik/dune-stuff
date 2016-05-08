@@ -52,9 +52,15 @@ struct GridPartViewHolder
 {
   typedef GPV type;
 
-  GridPartViewHolder(GPV grid_view) : grid_view_(grid_view) {}
+  GridPartViewHolder(GPV grid_view)
+    : grid_view_(grid_view)
+  {
+  }
 
-  const type& real_grid_view() const { return grid_view_; }
+  const type& real_grid_view() const
+  {
+    return grid_view_;
+  }
 
   const GPV grid_view_;
 };
@@ -64,9 +70,16 @@ struct GridPartViewHolder<GPV, false>
 {
   typedef typename GPV::GridViewType type;
 
-  GridPartViewHolder(GPV grid_part) : grid_view_(grid_part), grid_part_(grid_view_.gridView()) {}
+  GridPartViewHolder(GPV grid_part)
+    : grid_view_(grid_part)
+    , grid_part_(grid_view_.gridView())
+  {
+  }
 
-  const type& real_grid_view() const { return grid_part_; }
+  const type& real_grid_view() const
+  {
+    return grid_part_;
+  }
 
   const GPV grid_view_;
   const type grid_part_;
@@ -84,9 +97,15 @@ public:
   typedef typename Stuff::Grid::Entity<GridViewType>::Type EntityType;
   typedef typename Stuff::Grid::Intersection<GridViewType>::Type IntersectionType;
 
-  explicit Walker(GridViewType grd_vw) : internal::GridPartViewHolder<GridViewImp>(grd_vw) {}
+  explicit Walker(GridViewType grd_vw)
+    : internal::GridPartViewHolder<GridViewImp>(grd_vw)
+  {
+  }
 
-  const GridViewType& grid_view() const { return this->grid_view_; }
+  const GridViewType& grid_view() const
+  {
+    return this->grid_view_;
+  }
 
   ThisType& add(std::function<void(const EntityType&)> lambda,
                 const ApplyOn::WhichEntity<GridViewType>* where = new ApplyOn::AllEntities<GridViewType>())
@@ -248,9 +267,17 @@ protected:
   template <class PartioningType, class WalkerType>
   struct Body
   {
-    Body(WalkerType& walker, PartioningType& partitioning) : walker_(walker), partitioning_(partitioning) {}
+    Body(WalkerType& walker, PartioningType& partitioning)
+      : walker_(walker)
+      , partitioning_(partitioning)
+    {
+    }
 
-    Body(Body& other, tbb::split /*split*/) : walker_(other.walker_), partitioning_(other.partitioning_) {}
+    Body(Body& other, tbb::split /*split*/)
+      : walker_(other.walker_)
+      , partitioning_(other.partitioning_)
+    {
+    }
 
     void operator()(const tbb::blocked_range<std::size_t>& range) const
     {
@@ -261,7 +288,9 @@ protected:
       }
     }
 
-    void join(Body& /*other*/) {}
+    void join(Body& /*other*/)
+    {
+    }
 
     WalkerType& walker_;
     const PartioningType& partitioning_;
@@ -318,7 +347,7 @@ protected:
             apply_local(intersection, entity, entity);
 
         } // walk the intersections
-      }   // only walk the intersections, if there are codim1 functors present
+      } // only walk the intersections, if there are codim1 functors present
     }
   } // ... walk_range(...)
 

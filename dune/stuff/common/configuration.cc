@@ -26,7 +26,10 @@ namespace Common {
 
 Configuration::Configuration(const Dune::ParameterTree& tree_in, const bool /*record_defaults*/,
                              const bool warn_on_default_access, const bool log_on_exit, const std::string logfile)
-  : BaseType(tree_in), warn_on_default_access_(warn_on_default_access), log_on_exit_(log_on_exit), logfile_(logfile)
+  : BaseType(tree_in)
+  , warn_on_default_access_(warn_on_default_access)
+  , log_on_exit_(log_on_exit)
+  , logfile_(logfile)
 {
   setup_();
 }
@@ -85,7 +88,10 @@ Configuration::~Configuration()
   }
 }
 
-void Configuration::set_warn_on_default_access(const bool value) { warn_on_default_access_ = value; }
+void Configuration::set_warn_on_default_access(const bool value)
+{
+  warn_on_default_access_ = value;
+}
 
 void Configuration::set_log_on_exit(const bool value)
 {
@@ -126,7 +132,10 @@ void loadIntoFemParameter(const Dune::ParameterTree& tree, const std::string pre
 }
 
 // method definitions for Configuration
-bool Configuration::has_key(const std::string& key) const { return BaseType::hasKey(key); }
+bool Configuration::has_key(const std::string& key) const
+{
+  return BaseType::hasKey(key);
+}
 
 Configuration Configuration::sub(const std::string sub_id) const
 {
@@ -145,7 +154,10 @@ Configuration Configuration::sub(const std::string sub_id) const
   return Configuration(BaseType::sub(sub_id));
 } // ... sub(...)
 
-bool Configuration::has_sub(const std::string subTreeName) const { return BaseType::hasSub(subTreeName); }
+bool Configuration::has_sub(const std::string subTreeName) const
+{
+  return BaseType::hasSub(subTreeName);
+}
 
 void Configuration::set(const std::string& key, const char* value, const bool overwrite)
 {
@@ -188,7 +200,10 @@ Configuration& Configuration::operator=(const Configuration& other)
   return *this;
 } // ... operator=(...)
 
-bool Configuration::empty() const { return this->getValueKeys().empty() && this->getSubKeys().empty(); }
+bool Configuration::empty() const
+{
+  return this->getValueKeys().empty() && this->getSubKeys().empty();
+}
 
 void Configuration::report(std::ostream& out, const std::string& prefix) const
 {
@@ -231,7 +246,10 @@ void Configuration::read_command_line(int argc, char* argv[])
   setup_();
 } // readCommandLine
 
-void Configuration::read_options(int argc, char* argv[]) { Dune::ParameterTreeParser::readOptions(argc, argv, *this); }
+void Configuration::read_options(int argc, char* argv[])
+{
+  Dune::ParameterTreeParser::readOptions(argc, argv, *this);
+}
 
 void Configuration::setup_()
 {
@@ -368,14 +386,23 @@ std::ostream& operator<<(std::ostream& out, const Configuration& config)
   return out;
 }
 
-bool operator==(const Configuration& left, const Configuration& right) { return left.flatten() == right.flatten(); }
+bool operator==(const Configuration& left, const Configuration& right)
+{
+  return left.flatten() == right.flatten();
+}
 
-bool operator!=(const Configuration& left, const Configuration& right) { return !(left == right); }
+bool operator!=(const Configuration& left, const Configuration& right)
+{
+  return !(left == right);
+}
 
 Configuration::Configuration(const std::vector<std::string> keys, const std::vector<std::string> values_in,
                              const bool /*record_defaults*/, const bool warn_on_default_access, const bool log_on_exit,
                              const std::string logfile)
-  : BaseType(), warn_on_default_access_(warn_on_default_access), log_on_exit_(log_on_exit), logfile_(logfile)
+  : BaseType()
+  , warn_on_default_access_(warn_on_default_access)
+  , log_on_exit_(log_on_exit)
+  , logfile_(logfile)
 {
   if (keys.size() != values_in.size())
     DUNE_THROW(Exceptions::shapes_do_not_match,
@@ -395,7 +422,10 @@ bool operator==(const ParameterTree& left, const ParameterTree& right)
   return Stuff::Common::Configuration(left).flatten() == Stuff::Common::Configuration(right).flatten();
 }
 
-bool operator!=(const ParameterTree& left, const ParameterTree& right) { return !(left == right); }
+bool operator!=(const ParameterTree& left, const ParameterTree& right)
+{
+  return !(left == right);
+}
 
 } // namespace Dune
 namespace std {

@@ -85,9 +85,14 @@ public:
   typedef typename Layer<ChooseLayer::leaf, ChoosePartView::part>::Type LeafGridPartType;
 #endif
 
-  static const std::string static_id() { return "stuff.grid.provider"; }
+  static const std::string static_id()
+  {
+    return "stuff.grid.provider";
+  }
 
-  virtual ~ConstProviderInterface() {}
+  virtual ~ConstProviderInterface()
+  {
+  }
 
   virtual const GridType& grid() const = 0;
 
@@ -114,7 +119,10 @@ public:
     return LeafPartView<GridType, type>::create(grid());
   }
 
-  LeafGridViewType leaf_view() const { return this->template leaf<ChoosePartView::view>(); }
+  LeafGridViewType leaf_view() const
+  {
+    return this->template leaf<ChoosePartView::view>();
+  }
 
   virtual void visualize(const std::string filename = static_id(),
                          const Common::Configuration& boundary_info_cfg = Common::Configuration()) const
@@ -253,7 +261,7 @@ private:
     } // walk the grid
     return data;
   } // ... generateEntityVisualization(...)
-};  // class ConstProviderInterface
+}; // class ConstProviderInterface
 
 template <class GridImp>
 class ProviderInterface : public ConstProviderInterface<GridImp>
@@ -270,9 +278,14 @@ public:
   using typename BaseType::LeafGridPartType;
 #endif
 
-  static const std::string static_id() { return BaseType::static_id(); }
+  static const std::string static_id()
+  {
+    return BaseType::static_id();
+  }
 
-  virtual ~ProviderInterface() {}
+  virtual ~ProviderInterface()
+  {
+  }
 
   using BaseType::grid;
 
@@ -296,7 +309,10 @@ public:
 
 #if HAVE_DUNE_FEM
 
-  LevelGridPartType level_part(const int level_in) { return this->template level<ChoosePartView::part>(level_in); }
+  LevelGridPartType level_part(const int level_in)
+  {
+    return this->template level<ChoosePartView::part>(level_in);
+  }
 
 #endif // HAVE_DUNE_FEM
 
@@ -310,10 +326,13 @@ public:
 
 #if HAVE_DUNE_FEM
 
-  LeafGridPartType leaf_part() { return this->template leaf<ChoosePartView::part>(); }
+  LeafGridPartType leaf_part()
+  {
+    return this->template leaf<ChoosePartView::part>();
+  }
 
 #endif // HAVE_DUNE_FEM
-};     // class ProviderInterface
+}; // class ProviderInterface
 
 #else // HAVE_DUNE_GRID
 

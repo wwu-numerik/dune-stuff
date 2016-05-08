@@ -55,7 +55,10 @@ public:
     setup(_variable, _expressions);
   }
 
-  MathExpressionBase(const ThisType& _other) { setup(_other.variable(), _other.expression()); }
+  MathExpressionBase(const ThisType& _other)
+  {
+    setup(_other.variable(), _other.expression());
+  }
 
   ThisType& operator=(const ThisType& _other)
   {
@@ -69,11 +72,20 @@ public:
     return this;
   }
 
-  ~MathExpressionBase() { cleanup(); }
+  ~MathExpressionBase()
+  {
+    cleanup();
+  }
 
-  std::string variable() const { return variable_; }
+  std::string variable() const
+  {
+    return variable_;
+  }
 
-  const std::vector<std::string>& expression() const { return expressions_; }
+  const std::vector<std::string>& expression() const
+  {
+    return expressions_;
+  }
 
   void evaluate(const Dune::FieldVector<DomainFieldType, dimDomain>& arg,
                 Dune::FieldVector<RangeFieldType, dimRange>& ret) const

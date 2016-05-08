@@ -40,13 +40,25 @@ TimedLogManager::TimedLogManager(const Timer& timer, const std::string info_pref
 {
 }
 
-TimedLogManager::~TimedLogManager() { --current_level_; }
+TimedLogManager::~TimedLogManager()
+{
+  --current_level_;
+}
 
-std::ostream& TimedLogManager::info() { return *info_; }
+std::ostream& TimedLogManager::info()
+{
+  return *info_;
+}
 
-std::ostream& TimedLogManager::debug() { return *debug_; }
+std::ostream& TimedLogManager::debug()
+{
+  return *debug_;
+}
 
-std::ostream& TimedLogManager::warn() { return *warn_; }
+std::ostream& TimedLogManager::warn()
+{
+  return *warn_;
+}
 
 TimedLogging::TimedLogging()
   : max_info_level_(default_max_info_level)

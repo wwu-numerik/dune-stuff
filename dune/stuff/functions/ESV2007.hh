@@ -35,7 +35,10 @@ namespace ESV2007 {
 template <class E, class D, size_t d, class R, size_t r, size_t rC = 1>
 class Testcase1Force : public LocalizableFunctionInterface<E, D, d, R, r, rC>
 {
-  Testcase1Force() { static_assert(AlwaysFalse<E>::value, "Not available for these dimensions!"); }
+  Testcase1Force()
+  {
+    static_assert(AlwaysFalse<E>::value, "Not available for these dimensions!");
+  }
 };
 
 template <class EntityImp, class DomainFieldImp, class RangeFieldImp>
@@ -53,7 +56,10 @@ public:
 
   static const bool available = true;
 
-  static std::string static_id() { return BaseType::static_id() + ".ESV2007.testcase1.force"; }
+  static std::string static_id()
+  {
+    return BaseType::static_id() + ".ESV2007.testcase1.force";
+  }
 
   static Common::Configuration default_config(const std::string sub_name = "")
   {
@@ -82,7 +88,8 @@ public:
 
   Testcase1Force(const size_t ord = default_config().get<size_t>("integration_order"),
                  const std::string nm = static_id())
-    : order_(ord), name_(nm)
+    : order_(ord)
+    , name_(nm)
   {
   }
 
@@ -90,11 +97,20 @@ public:
 
   ThisType& operator=(const ThisType& /*other*/) = delete;
 
-  virtual std::string type() const override final { return BaseType::static_id() + ".ESV2007.testcase1.force"; }
+  virtual std::string type() const override final
+  {
+    return BaseType::static_id() + ".ESV2007.testcase1.force";
+  }
 
-  virtual std::string name() const override final { return name_; }
+  virtual std::string name() const override final
+  {
+    return name_;
+  }
 
-  virtual size_t order() const override final { return order_; }
+  virtual size_t order() const override final
+  {
+    return order_;
+  }
 
   /**
    * \brief "0.5 * pi * pi * cos(0.5 * pi * x[0]) * cos(0.5 * pi * x[1])"
@@ -125,7 +141,10 @@ private:
 template <class E, class D, size_t d, class R, size_t r, size_t rC = 1>
 class Testcase1ExactSolution : public LocalizableFunctionInterface<E, D, d, R, r, rC>
 {
-  Testcase1ExactSolution() { static_assert(AlwaysFalse<E>::value, "Not available for these dimensions!"); }
+  Testcase1ExactSolution()
+  {
+    static_assert(AlwaysFalse<E>::value, "Not available for these dimensions!");
+  }
 };
 
 template <class EntityImp, class DomainFieldImp, class RangeFieldImp>
@@ -143,7 +162,10 @@ public:
 
   static const bool available = true;
 
-  static std::string static_id() { return BaseType::static_id() + ".ESV2007.testcase1.exactsolution"; }
+  static std::string static_id()
+  {
+    return BaseType::static_id() + ".ESV2007.testcase1.exactsolution";
+  }
 
   static Common::Configuration default_config(const std::string sub_name = "")
   {
@@ -172,7 +194,8 @@ public:
 
   Testcase1ExactSolution(const size_t ord = default_config().get<size_t>("integration_order"),
                          const std::string nm = static_id())
-    : order_(ord), name_(nm)
+    : order_(ord)
+    , name_(nm)
   {
   }
 
@@ -180,11 +203,20 @@ public:
 
   ThisType& operator=(const ThisType& /*other*/) = delete;
 
-  virtual std::string type() const override final { return BaseType::static_id() + ".ESV2007.testcase1.exactsolution"; }
+  virtual std::string type() const override final
+  {
+    return BaseType::static_id() + ".ESV2007.testcase1.exactsolution";
+  }
 
-  virtual std::string name() const override final { return name_; }
+  virtual std::string name() const override final
+  {
+    return name_;
+  }
 
-  virtual size_t order() const override final { return order_; }
+  virtual size_t order() const override final
+  {
+    return order_;
+  }
 
   /**
    * \brief "cos(0.5 * pi * x[0]) * cos(0.5 * pi * x[1])"
@@ -264,11 +296,12 @@ class Cutoff<DiffusionType, void>
         const auto& reference_element = ReferenceElements<DomainFieldType, dimDomain>::general(ent.type());
         return local_diffusion->evaluate(reference_element.position(0, 0))[0];
       } // ... min_eigenvalue_of_(...)
-    };  // class Compute< ..., 1, 1 >
+    }; // class Compute< ..., 1, 1 >
 
   public:
     Localfunction(const EntityType& ent, const DiffusionType& diffusion, const RangeFieldType poincare_constant)
-      : BaseType(ent), value_(0)
+      : BaseType(ent)
+      , value_(0)
     {
       const RangeFieldType min_eigen_value =
           Compute<DiffusionType, DiffusionType::dimRange, DiffusionType::dimRangeCols>::min_eigenvalue_of(diffusion,
@@ -282,7 +315,10 @@ class Cutoff<DiffusionType, void>
 
     Localfunction& operator=(const Localfunction& /*other*/) = delete;
 
-    virtual size_t order() const override final { return 0; }
+    virtual size_t order() const override final
+    {
+      return 0;
+    }
 
     virtual void evaluate(const DomainType& UNUSED_UNLESS_DEBUG(xx), RangeType& ret) const override final
     {
@@ -319,11 +355,16 @@ public:
   typedef typename BaseType::LocalfunctionType LocalfunctionType;
   typedef typename BaseType::RangeFieldType RangeFieldType;
 
-  static std::string static_id() { return BaseType::static_id() + ".ESV2007.cutoff"; }
+  static std::string static_id()
+  {
+    return BaseType::static_id() + ".ESV2007.cutoff";
+  }
 
   Cutoff(const DiffusionType& diffusion, const RangeFieldType poincare_constant = 1.0 / (M_PIl * M_PIl),
          const std::string nm = static_id())
-    : diffusion_(diffusion), poincare_constant_(poincare_constant), name_(nm)
+    : diffusion_(diffusion)
+    , poincare_constant_(poincare_constant)
+    , name_(nm)
   {
   }
 
@@ -331,7 +372,10 @@ public:
 
   ThisType& operator=(const ThisType& other) = delete;
 
-  virtual std::string name() const override final { return name_; }
+  virtual std::string name() const override final
+  {
+    return name_;
+  }
 
   virtual std::unique_ptr<LocalfunctionType> local_function(const EntityType& entity) const override final
   {
@@ -420,7 +464,7 @@ class Cutoff
         }
         return minimum;
       } // ... min_of(...)
-    };  // class ComputeDiffusionFactor< ..., 1, 1 >
+    }; // class ComputeDiffusionFactor< ..., 1, 1 >
 
     template <class DT, size_t r, size_t rR>
     struct ComputeDiffusionTensor
@@ -455,14 +499,15 @@ class Cutoff
           min_ev = std::min(min_ev, eigenvalue);
         }
         return min_ev;
-#endif  // HAVE_EIGEN
+#endif // HAVE_EIGEN
       } // ... min_eigenvalue_of_(...)
-    };  // class Compute< ..., d, d >
+    }; // class Compute< ..., d, d >
 
   public:
     Localfunction(const EntityType& ent, const DiffusionFactorType& diffusion_factor,
                   const DiffusionTensorType& diffusion_tensor, const RangeFieldType poincare_constant)
-      : BaseType(ent), value_(0)
+      : BaseType(ent)
+      , value_(0)
     {
       const RangeFieldType min_diffusion_factor =
           ComputeDiffusionFactor<DiffusionFactorType,
@@ -482,7 +527,10 @@ class Cutoff
 
     Localfunction& operator=(const Localfunction& /*other*/) = delete;
 
-    virtual size_t order() const override final { return 0; }
+    virtual size_t order() const override final
+    {
+      return 0;
+    }
 
     virtual void evaluate(const DomainType& UNUSED_UNLESS_DEBUG(xx), RangeType& ret) const override final
     {
@@ -527,7 +575,10 @@ public:
   static const size_t dimRangeCols = BaseType::dimRangeCols;
   typedef typename BaseType::RangeType RangeType;
 
-  static std::string static_id() { return BaseType::static_id() + ".ESV2007.cutoff"; }
+  static std::string static_id()
+  {
+    return BaseType::static_id() + ".ESV2007.cutoff";
+  }
 
   Cutoff(const DiffusionFactorType& diffusion_factor, const DiffusionTensorType& diffusion_tensor,
          const RangeFieldType poincare_constant = 1.0 / (M_PIl * M_PIl), const std::string nm = static_id())
@@ -542,7 +593,10 @@ public:
 
   ThisType& operator=(const ThisType& other) = delete;
 
-  virtual std::string name() const override final { return name_; }
+  virtual std::string name() const override final
+  {
+    return name_;
+  }
 
   virtual std::unique_ptr<LocalfunctionType> local_function(const EntityType& entity) const override final
   {

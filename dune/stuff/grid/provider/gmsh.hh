@@ -20,7 +20,7 @@
 #include <dune/grid/utility/structuredgridfactory.hh>
 #if HAVE_ALUGRID
 #include <dune/grid/alugrid.hh>
-#endif //HAVE_ALUGRID
+#endif // HAVE_ALUGRID
 #include <dune/grid/sgrid.hh>
 #include <dune/grid/yaspgrid.hh>
 #include <dune/grid/io/file/gmshreader.hh>
@@ -50,7 +50,10 @@ class Gmsh : public Grid::ProviderInterface<GridImp>
 public:
   using typename BaseType::GridType;
 
-  static const std::string static_id() { return BaseType::static_id() + ".gmsh"; }
+  static const std::string static_id()
+  {
+    return BaseType::static_id() + ".gmsh";
+  }
 
   static Common::Configuration default_config(const std::string sub_name = "")
   {
@@ -78,7 +81,10 @@ public:
     return Common::make_unique<ThisType>(cfg.get("filename", default_cfg.get<std::string>("filename")));
   }
 
-  Gmsh(const std::string filename) { grid_ = std::shared_ptr<GridType>(GmshReader<GridType>::read(filename)); }
+  Gmsh(const std::string filename)
+  {
+    grid_ = std::shared_ptr<GridType>(GmshReader<GridType>::read(filename));
+  }
 
   Gmsh(ThisType&& source) = default;
   Gmsh(const ThisType& other) = default;
@@ -88,13 +94,25 @@ public:
   ThisType& operator=(const ThisType& other) = default;
   ThisType& operator=(ThisType&& source) = default;
 
-  virtual const GridType& grid() const override final { return *grid_; }
+  virtual const GridType& grid() const override final
+  {
+    return *grid_;
+  }
 
-  virtual GridType& grid() override final { return *grid_; }
+  virtual GridType& grid() override final
+  {
+    return *grid_;
+  }
 
-  const std::shared_ptr<const GridType> grid_ptr() const { return grid_; }
+  const std::shared_ptr<const GridType> grid_ptr() const
+  {
+    return grid_;
+  }
 
-  std::shared_ptr<GridType> grid_ptr() { return grid_; }
+  std::shared_ptr<GridType> grid_ptr()
+  {
+    return grid_;
+  }
 
 private:
   std::shared_ptr<GridType> grid_;

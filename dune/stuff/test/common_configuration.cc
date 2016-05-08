@@ -164,7 +164,10 @@ static void val_compare_eq(const T& aa, const T& bb)
   DSC_EXPECT_FLOAT_EQ(aa, bb);
 }
 
-static void val_compare_eq(const std::string& aa, const std::string& bb) { EXPECT_EQ(aa, bb); }
+static void val_compare_eq(const std::string& aa, const std::string& bb)
+{
+  EXPECT_EQ(aa, bb);
+}
 
 template <class T>
 struct ConfigTest : public testing::Test
@@ -184,7 +187,9 @@ struct ConfigTest : public testing::Test
   {
   }
 
-  virtual ~ConfigTest() {}
+  virtual ~ConfigTest()
+  {
+  }
 
   void get()
   {
@@ -418,11 +423,17 @@ struct ConfigurationTest : public ::testing::Test
     DSC::TupleProduct::Combine<StaticCheck::Ints, StaticCheck::Ints, StaticCheck>::Generate<>::Run(subsub1);
 
   } // ... behaves_correctly(...)
-};  // struct ConfigurationTest
+}; // struct ConfigurationTest
 
 TYPED_TEST_CASE(ConfigTest, TestTypes);
-TYPED_TEST(ConfigTest, Get) { this->get(); }
-TYPED_TEST(ConfigTest, Set) { this->set(); }
+TYPED_TEST(ConfigTest, Get)
+{
+  this->get();
+}
+TYPED_TEST(ConfigTest, Set)
+{
+  this->set();
+}
 TYPED_TEST(ConfigTest, Other)
 {
   //  this->other();
@@ -430,4 +441,7 @@ TYPED_TEST(ConfigTest, Other)
 }
 
 TYPED_TEST_CASE(ConfigurationTest, ConfigurationCreators);
-TYPED_TEST(ConfigurationTest, behaves_correctly) { this->behaves_correctly(); }
+TYPED_TEST(ConfigurationTest, behaves_correctly)
+{
+  this->behaves_correctly();
+}

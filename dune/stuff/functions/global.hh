@@ -39,19 +39,36 @@ private:
 
 public:
   GlobalLambdaFunction(LambdaType lambda, const size_t order_in, const std::string nm = "stuff.globallambdafunction")
-    : lambda_(lambda), order_(order_in), name_(nm)
+    : lambda_(lambda)
+    , order_(order_in)
+    , name_(nm)
   {
   }
 
-  virtual size_t order() const override final { return order_; }
+  virtual size_t order() const override final
+  {
+    return order_;
+  }
 
-  virtual void evaluate(const DomainType& xx, RangeType& ret) const override final { ret = lambda_(xx); }
+  virtual void evaluate(const DomainType& xx, RangeType& ret) const override final
+  {
+    ret = lambda_(xx);
+  }
 
-  virtual RangeType evaluate(const DomainType& xx) const override final { return lambda_(xx); }
+  virtual RangeType evaluate(const DomainType& xx) const override final
+  {
+    return lambda_(xx);
+  }
 
-  virtual std::string type() const override { return "stuff.globallambdafunction"; }
+  virtual std::string type() const override
+  {
+    return "stuff.globallambdafunction";
+  }
 
-  virtual std::string name() const override { return name_; }
+  virtual std::string name() const override
+  {
+    return name_;
+  }
 
 private:
   const LambdaType lambda_;

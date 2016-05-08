@@ -155,11 +155,19 @@ public:
   typedef typename RangeTypeSelector<RangeFieldType, dimRange, dimRangeCols>::type RangeType;
   typedef typename JacobianRangeTypeSelector<dimDomain, RangeFieldType, dimRange, dimRangeCols>::type JacobianRangeType;
 
-  LocalfunctionSetInterface(const EntityType& ent) : entity_(ent) {}
+  LocalfunctionSetInterface(const EntityType& ent)
+    : entity_(ent)
+  {
+  }
 
-  virtual ~LocalfunctionSetInterface() {}
+  virtual ~LocalfunctionSetInterface()
+  {
+  }
 
-  virtual const EntityType& entity() const { return entity_; }
+  virtual const EntityType& entity() const
+  {
+    return entity_;
+  }
 
   /**
    * \defgroup haveto ´´These methods have to be implemented.''
@@ -233,9 +241,14 @@ public:
   typedef typename BaseType::RangeType RangeType;
   typedef typename BaseType::JacobianRangeType JacobianRangeType;
 
-  LocalfunctionInterface(const EntityType& ent) : BaseType(ent) {}
+  LocalfunctionInterface(const EntityType& ent)
+    : BaseType(ent)
+  {
+  }
 
-  virtual ~LocalfunctionInterface() {}
+  virtual ~LocalfunctionInterface()
+  {
+  }
 
   /**
    * \defgroup haveto ´´These methods have to be implemented in addition to the ones required from the BaseType.''
@@ -250,7 +263,10 @@ public:
    * \defgroup providedbase ´´These methods are provided by the interface to please LocalfunctionSetInterface.''
    * @{
    **/
-  virtual size_t size() const override final { return 1; }
+  virtual size_t size() const override final
+  {
+    return 1;
+  }
 
   virtual void evaluate(const DomainType& xx, std::vector<RangeType>& ret) const override final
   {
@@ -340,9 +356,14 @@ public:
   typedef Functions::Sum<ThisType, ThisType> SumType;
   typedef Functions::Divergence<ThisType> DivergenceType;
 
-  virtual ~LocalizableFunctionInterface() {}
+  virtual ~LocalizableFunctionInterface()
+  {
+  }
 
-  static std::string static_id() { return "stuff.function"; }
+  static std::string static_id()
+  {
+    return "stuff.function";
+  }
 
   /**
    * \defgroup haveto ´´These methods have to be implemented.''
@@ -353,23 +374,38 @@ public:
 
   /** \defgroup info ´´These methods should be implemented in order to identify the function.'' */
   /* @{ */
-  virtual std::string type() const { return "stuff.function"; }
+  virtual std::string type() const
+  {
+    return "stuff.function";
+  }
 
-  virtual std::string name() const { return "stuff.function"; }
+  virtual std::string name() const
+  {
+    return "stuff.function";
+  }
   /* @} */
 
-  DifferenceType operator-(const ThisType& other) const { return DifferenceType(*this, other); }
+  DifferenceType operator-(const ThisType& other) const
+  {
+    return DifferenceType(*this, other);
+  }
 
-  SumType operator+(const ThisType& other) const { return SumType(*this, other); }
+  SumType operator+(const ThisType& other) const
+  {
+    return SumType(*this, other);
+  }
 
   template <class OtherType>
   typename std::enable_if<is_localizable_function<OtherType>::value, Functions::Product<ThisType, OtherType>>::type
-      operator*(const OtherType& other) const
+  operator*(const OtherType& other) const
   {
     return Functions::Product<ThisType, OtherType>(*this, other);
   }
 
-  DivergenceType divergence() const { return DivergenceType(*this); }
+  DivergenceType divergence() const
+  {
+    return DivergenceType(*this);
+  }
 
 #if HAVE_DUNE_GRID
   /**
@@ -394,7 +430,7 @@ public:
       vtk_writer->write(path, vtk_output_type);
     else
       vtk_writer->pwrite(filename, directory, "", vtk_output_type);
-  }    // ... visualize(...)
+  } // ... visualize(...)
 #endif // HAVE_DUNE_GRID
 
   virtual void report(std::ostream& out, const std::string prefix = "") const
@@ -436,7 +472,9 @@ public:
   typedef typename BaseType::RangeType RangeType;
   typedef typename BaseType::JacobianRangeType JacobianRangeType;
 
-  virtual ~GlobalFunctionInterface() {}
+  virtual ~GlobalFunctionInterface()
+  {
+  }
 
   virtual size_t order() const = 0;
 
@@ -466,20 +504,30 @@ public:
     return Common::make_unique<Localfunction>(entity, *this);
   }
 
-  virtual std::string type() const override { return "stuff.globalfunction"; }
+  virtual std::string type() const override
+  {
+    return "stuff.globalfunction";
+  }
 
-  virtual std::string name() const override { return "stuff.globalfunction"; }
+  virtual std::string name() const override
+  {
+    return "stuff.globalfunction";
+  }
 
 private:
   class Localfunction : public LocalfunctionType
   {
   public:
     Localfunction(const EntityImp& entity_in, const ThisType& global_function)
-      : LocalfunctionType(entity_in), geometry_(entity_in.geometry()), global_function_(global_function)
+      : LocalfunctionType(entity_in)
+      , geometry_(entity_in.geometry())
+      , global_function_(global_function)
     {
     }
 
-    virtual ~Localfunction() {}
+    virtual ~Localfunction()
+    {
+    }
 
     virtual void evaluate(const DomainType& xx, RangeType& ret) const override final
     {
@@ -493,7 +541,10 @@ private:
       global_function_.jacobian(xx_global, ret);
     }
 
-    virtual size_t order() const override final { return global_function_.order(); }
+    virtual size_t order() const override final
+    {
+      return global_function_.order();
+    }
 
   private:
     const typename EntityImp::Geometry geometry_;
@@ -560,7 +611,9 @@ public:
   static_assert(std::is_same<typename LocalfunctionType::DomainType, DomainType>::value, "DomainType mismatch");
   static_assert(std::is_same<Dune::FieldVector<DomainFieldImp, domainDim>, DomainType>::value, "DomainType mismatch");
 
-  virtual ~GlobalFunctionInterface() {}
+  virtual ~GlobalFunctionInterface()
+  {
+  }
 
   virtual size_t order() const = 0;
 
@@ -590,16 +643,24 @@ public:
     return Common::make_unique<Localfunction>(entity, *this);
   }
 
-  virtual std::string type() const override { return "stuff.globalfunction"; }
+  virtual std::string type() const override
+  {
+    return "stuff.globalfunction";
+  }
 
-  virtual std::string name() const override { return "stuff.globalfunction"; }
+  virtual std::string name() const override
+  {
+    return "stuff.globalfunction";
+  }
 
 private:
   class Localfunction : public LocalfunctionType
   {
   public:
     Localfunction(const EntityImp& entity_in, const ThisType& global_function)
-      : LocalfunctionType(entity_in), geometry_(entity_in.geometry()), global_function_(global_function)
+      : LocalfunctionType(entity_in)
+      , geometry_(entity_in.geometry())
+      , global_function_(global_function)
     {
     }
 
@@ -615,7 +676,10 @@ private:
       global_function_.jacobian(xx_global, ret);
     }
 
-    virtual size_t order() const override final { return global_function_.order(); }
+    virtual size_t order() const override final
+    {
+      return global_function_.order();
+    }
 
   private:
     const typename EntityImp::Geometry geometry_;
@@ -647,9 +711,15 @@ class TransferredGlobalFunction
                                   GlobalFunctionImp::dimRange, GlobalFunctionImp::dimRangeCols> BaseType;
 
 public:
-  TransferredGlobalFunction(const GlobalFunctionImp& function) : function_(function) {}
+  TransferredGlobalFunction(const GlobalFunctionImp& function)
+    : function_(function)
+  {
+  }
 
-  virtual size_t order() const { return function_.order(); }
+  virtual size_t order() const
+  {
+    return function_.order();
+  }
 
   virtual void evaluate(const typename BaseType::DomainType& x, typename BaseType::RangeType& ret) const
   {

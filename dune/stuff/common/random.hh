@@ -51,9 +51,16 @@ struct RNG
   typedef EngineImp EngineType;
   EngineType generator;
   DistributionType distribution;
-  RNG(EngineType g, DistributionType d) : generator(g), distribution(d) {}
+  RNG(EngineType g, DistributionType d)
+    : generator(g)
+    , distribution(d)
+  {
+  }
 
-  inline T operator()() { return distribution(generator); }
+  inline T operator()()
+  {
+    return distribution(generator);
+  }
 };
 
 template <class T, class DistributionImp, class EngineImp>
@@ -63,9 +70,16 @@ struct RNG<std::complex<T>, DistributionImp, EngineImp>
   typedef EngineImp EngineType;
   EngineType generator;
   DistributionType distribution;
-  RNG(EngineType g, DistributionType d) : generator(g), distribution(d) {}
+  RNG(EngineType g, DistributionType d)
+    : generator(g)
+    , distribution(d)
+  {
+  }
 
-  inline std::complex<T> operator()() { return std::complex<T>(distribution(generator), distribution(generator)); }
+  inline std::complex<T> operator()()
+  {
+    return std::complex<T>(distribution(generator), distribution(generator));
+  }
 };
 
 namespace {
@@ -130,7 +144,10 @@ template <>
 class DefaultRNG<std::string> : public RandomStrings
 {
 public:
-  DefaultRNG(size_t ilength = 12) : RandomStrings(ilength) {}
+  DefaultRNG(size_t ilength = 12)
+    : RandomStrings(ilength)
+  {
+  }
 };
 
 } // namespace Common

@@ -100,13 +100,15 @@ public:
   {
   }
 
-  explicit CommonDenseVector(const std::vector<ScalarType>& other) : backend_(new BackendType(other.size()))
+  explicit CommonDenseVector(const std::vector<ScalarType>& other)
+    : backend_(new BackendType(other.size()))
   {
     for (size_t ii = 0; ii < other.size(); ++ii)
       backend_->operator[](ii) = other[ii];
   }
 
-  explicit CommonDenseVector(const std::initializer_list<ScalarType>& other) : backend_(new BackendType(other.size()))
+  explicit CommonDenseVector(const std::initializer_list<ScalarType>& other)
+    : backend_(new BackendType(other.size()))
   {
     size_t ii = 0;
     for (auto element : other) {
@@ -126,9 +128,15 @@ public:
   /**
    *  \note Takes ownership of backend_ptr in the sense that you must not delete it afterwards!
    */
-  explicit CommonDenseVector(BackendType* backend_ptr) : backend_(backend_ptr) {}
+  explicit CommonDenseVector(BackendType* backend_ptr)
+    : backend_(backend_ptr)
+  {
+  }
 
-  explicit CommonDenseVector(std::shared_ptr<BackendType> backend_ptr) : backend_(backend_ptr) {}
+  explicit CommonDenseVector(std::shared_ptr<BackendType> backend_ptr)
+    : backend_(backend_ptr)
+  {
+  }
 
   ThisType& operator=(const ThisType& other)
   {
@@ -172,15 +180,24 @@ public:
   /// \name Required by ProvidesDataAccess.
   /// \{
 
-  ScalarType* data() { return &(backend()[0]); }
+  ScalarType* data()
+  {
+    return &(backend()[0]);
+  }
 
   /// \}
   /// \name Required by ContainerInterface.
   /// \{
 
-  ThisType copy() const { return ThisType(*backend_); }
+  ThisType copy() const
+  {
+    return ThisType(*backend_);
+  }
 
-  void scal(const ScalarType& alpha) { backend() *= alpha; } // ... scal(...)
+  void scal(const ScalarType& alpha)
+  {
+    backend() *= alpha;
+  } // ... scal(...)
 
   void axpy(const ScalarType& alpha, const ThisType& xx)
   {
@@ -194,13 +211,19 @@ public:
       this_ref[ii] += alpha * xx_ref[ii];
   } // ... axpy(...)
 
-  bool has_equal_shape(const ThisType& other) const { return size() == other.size(); }
+  bool has_equal_shape(const ThisType& other) const
+  {
+    return size() == other.size();
+  }
 
   /// \}
   /// \name Required by VectorInterface.
   /// \{
 
-  inline size_t size() const { return backend_->size(); }
+  inline size_t size() const
+  {
+    return backend_->size();
+  }
 
   void add_to_entry(const size_t ii, const ScalarType& value)
   {
@@ -223,9 +246,15 @@ public:
   } // ... get_entry(...)
 
 private:
-  inline ScalarType& get_entry_ref(const size_t ii) { return backend()[ii]; }
+  inline ScalarType& get_entry_ref(const size_t ii)
+  {
+    return backend()[ii];
+  }
 
-  inline const ScalarType& get_entry_ref(const size_t ii) const { return backend_->operator[](ii); }
+  inline const ScalarType& get_entry_ref(const size_t ii) const
+  {
+    return backend_->operator[](ii);
+  }
 
 public:
   /// \}
@@ -240,11 +269,20 @@ public:
     return backend_->operator*(*(other.backend_));
   } // ... dot(...)
 
-  virtual RealType l1_norm() const override final { return backend_->one_norm(); }
+  virtual RealType l1_norm() const override final
+  {
+    return backend_->one_norm();
+  }
 
-  virtual RealType l2_norm() const override final { return backend_->two_norm(); }
+  virtual RealType l2_norm() const override final
+  {
+    return backend_->two_norm();
+  }
 
-  virtual RealType sup_norm() const override final { return backend_->infinity_norm(); }
+  virtual RealType sup_norm() const override final
+  {
+    return backend_->infinity_norm();
+  }
 
   virtual void add(const ThisType& other, ThisType& result) const override final
   {
@@ -356,7 +394,10 @@ public:
   {
   }
 
-  CommonDenseMatrix(const ThisType& other) : backend_(other.backend_) {}
+  CommonDenseMatrix(const ThisType& other)
+    : backend_(other.backend_)
+  {
+  }
 
   /**
    * \note If prune == true, this implementation is not optimal!
@@ -383,9 +424,15 @@ public:
   /**
    *  \note Takes ownership of backend_ptr in the sense that you must not delete it afterwards!
    */
-  explicit CommonDenseMatrix(BackendType* backend_ptr) : backend_(backend_ptr) {}
+  explicit CommonDenseMatrix(BackendType* backend_ptr)
+    : backend_(backend_ptr)
+  {
+  }
 
-  explicit CommonDenseMatrix(std::shared_ptr<BackendType> backend_ptr) : backend_(backend_ptr) {}
+  explicit CommonDenseMatrix(std::shared_ptr<BackendType> backend_ptr)
+    : backend_(backend_ptr)
+  {
+  }
 
   ThisType& operator=(const ThisType& other)
   {
@@ -421,9 +468,15 @@ public:
   /// \name Required by ContainerInterface.
   /// \{
 
-  ThisType copy() const { return ThisType(*backend_); }
+  ThisType copy() const
+  {
+    return ThisType(*backend_);
+  }
 
-  void scal(const ScalarType& alpha) { backend() *= alpha; }
+  void scal(const ScalarType& alpha)
+  {
+    backend() *= alpha;
+  }
 
   void axpy(const ScalarType& alpha, const ThisType& xx)
   {
@@ -437,15 +490,24 @@ public:
     backend().axpy(alpha, *(xx.backend_));
   } // ... axpy(...)
 
-  bool has_equal_shape(const ThisType& other) const { return (rows() == other.rows()) && (cols() == other.cols()); }
+  bool has_equal_shape(const ThisType& other) const
+  {
+    return (rows() == other.rows()) && (cols() == other.cols());
+  }
 
   /// \}
   /// \name Required by MatrixInterface.
   /// \{
 
-  inline size_t rows() const { return backend_->rows(); }
+  inline size_t rows() const
+  {
+    return backend_->rows();
+  }
 
-  inline size_t cols() const { return backend_->cols(); }
+  inline size_t cols() const
+  {
+    return backend_->cols();
+  }
 
   inline void mv(const VectorInterface<internal::CommonDenseVectorTraits<ScalarType>, ScalarType>& xx,
                  VectorInterface<internal::CommonDenseVectorTraits<ScalarType>, ScalarType>& yy) const

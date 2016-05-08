@@ -62,4 +62,7 @@ struct ContainerTest : public ::testing::Test
   } // void fulfills_interface() const
 }; // struct ContainerTest
 
-TEST_F(ContainerTest, fulfills_interface) { this->fulfills_interface(); }
+TEST_F(ContainerTest, fulfills_interface)
+{
+  this->fulfills_interface();
+}

@@ -29,7 +29,9 @@ class Codim0Object : public Functor::Codim0<GridViewType>
 public:
   typedef typename BaseType::EntityType EntityType;
 
-  virtual ~Codim0Object() {}
+  virtual ~Codim0Object()
+  {
+  }
 
   virtual bool apply_on(const GridViewType& grid_view, const EntityType& entity) const = 0;
 };
@@ -43,22 +45,34 @@ public:
   typedef typename BaseType::EntityType EntityType;
 
   Codim0FunctorWrapper(Codim0FunctorType& wrapped_functor, const ApplyOn::WhichEntity<GridViewType>* where)
-    : wrapped_functor_(wrapped_functor), where_(where)
+    : wrapped_functor_(wrapped_functor)
+    , where_(where)
   {
   }
 
-  virtual ~Codim0FunctorWrapper() {}
+  virtual ~Codim0FunctorWrapper()
+  {
+  }
 
-  virtual void prepare() override final { wrapped_functor_.prepare(); }
+  virtual void prepare() override final
+  {
+    wrapped_functor_.prepare();
+  }
 
   virtual bool apply_on(const GridViewType& grid_view, const EntityType& entity) const override final
   {
     return where_->apply_on(grid_view, entity);
   }
 
-  virtual void apply_local(const EntityType& entity) override final { wrapped_functor_.apply_local(entity); }
+  virtual void apply_local(const EntityType& entity) override final
+  {
+    wrapped_functor_.apply_local(entity);
+  }
 
-  virtual void finalize() override final { wrapped_functor_.finalize(); }
+  virtual void finalize() override final
+  {
+    wrapped_functor_.finalize();
+  }
 
 private:
   Codim0FunctorType& wrapped_functor_;
@@ -73,7 +87,9 @@ class Codim1Object : public Functor::Codim1<GridViewType>
 public:
   typedef typename BaseType::IntersectionType IntersectionType;
 
-  virtual ~Codim1Object() {}
+  virtual ~Codim1Object()
+  {
+  }
 
   virtual bool apply_on(const GridViewType& grid_view, const IntersectionType& intersection) const = 0;
 };
@@ -88,11 +104,15 @@ public:
   typedef typename BaseType::IntersectionType IntersectionType;
 
   Codim1FunctorWrapper(Codim1FunctorType& wrapped_functor, const ApplyOn::WhichIntersection<GridViewType>* where)
-    : wrapped_functor_(wrapped_functor), where_(where)
+    : wrapped_functor_(wrapped_functor)
+    , where_(where)
   {
   }
 
-  virtual void prepare() override final { wrapped_functor_.prepare(); }
+  virtual void prepare() override final
+  {
+    wrapped_functor_.prepare();
+  }
 
   virtual bool apply_on(const GridViewType& grid_view, const IntersectionType& intersection) const override final
   {
@@ -105,7 +125,10 @@ public:
     wrapped_functor_.apply_local(intersection, inside_entity, outside_entity);
   }
 
-  virtual void finalize() override final { wrapped_functor_.finalize(); }
+  virtual void finalize() override final
+  {
+    wrapped_functor_.finalize();
+  }
 
 private:
   Codim1FunctorType& wrapped_functor_;
@@ -133,9 +156,14 @@ public:
   {
   }
 
-  virtual ~WalkerWrapper() {}
+  virtual ~WalkerWrapper()
+  {
+  }
 
-  virtual void prepare() override final { grid_walker_.prepare(); }
+  virtual void prepare() override final
+  {
+    grid_walker_.prepare();
+  }
 
   virtual bool apply_on(const GridViewType& grid_view, const EntityType& entity) const override final
   {
@@ -147,7 +175,10 @@ public:
     return which_intersections_->apply_on(grid_view, intersection) && grid_walker_.apply_on(intersection);
   }
 
-  virtual void apply_local(const EntityType& entity) override final { grid_walker_.apply_local(entity); }
+  virtual void apply_local(const EntityType& entity) override final
+  {
+    grid_walker_.apply_local(entity);
+  }
 
   virtual void apply_local(const IntersectionType& intersection, const EntityType& inside_entity,
                            const EntityType& outside_entity) override final
@@ -155,7 +186,10 @@ public:
     grid_walker_.apply_local(intersection, inside_entity, outside_entity);
   }
 
-  virtual void finalize() override final { grid_walker_.finalize(); }
+  virtual void finalize() override final
+  {
+    grid_walker_.finalize();
+  }
 
 private:
   WalkerType& grid_walker_;
@@ -173,18 +207,24 @@ public:
   typedef std::function<void(const EntityType&)> LambdaType;
 
   Codim0LambdaWrapper(LambdaType lambda, const ApplyOn::WhichEntity<GridViewType>* where)
-    : lambda_(lambda), where_(where)
+    : lambda_(lambda)
+    , where_(where)
   {
   }
 
-  virtual ~Codim0LambdaWrapper() {}
+  virtual ~Codim0LambdaWrapper()
+  {
+  }
 
   virtual bool apply_on(const GridViewType& grid_view, const EntityType& entity) const override final
   {
     return where_->apply_on(grid_view, entity);
   }
 
-  virtual void apply_local(const EntityType& entity) override final { lambda_(entity); }
+  virtual void apply_local(const EntityType& entity) override final
+  {
+    lambda_(entity);
+  }
 
 private:
   LambdaType lambda_;
@@ -202,7 +242,8 @@ public:
   typedef std::function<void(const IntersectionType&, const EntityType&, const EntityType&)> LambdaType;
 
   Codim1LambdaWrapper(LambdaType lambda, const ApplyOn::WhichIntersection<GridViewType>* where)
-    : lambda_(lambda), where_(where)
+    : lambda_(lambda)
+    , where_(where)
   {
   }
 

@@ -59,7 +59,10 @@ protected:
   typedef YaspGrid<DimDomain::value, EquidistantOffsetCoordinates<double, DimDomain::value>> GridType;
   typedef typename FlatTopFunctionType<GridType>::value FunctionType;
 
-  static std::shared_ptr<GridType> create_grid() { return Stuff::Grid::Providers::Cube<GridType>(0, 3, 12).grid_ptr(); }
+  static std::shared_ptr<GridType> create_grid()
+  {
+    return Stuff::Grid::Providers::Cube<GridType>(0, 3, 12).grid_ptr();
+  }
 
   template <class P, class V, class L, class R, class D, class E>
   static void check(const P& point, const V& value, const L& left, const R& right, const D& delta, const E& top_value)
@@ -81,13 +84,19 @@ protected:
       }
     }
   } // ... check(...)
-};  // class FlatTopFunctionTest
+}; // class FlatTopFunctionTest
 
 typedef testing::Types<Int<1>, Int<2>, Int<3>> DimDomains;
 
 TYPED_TEST_CASE(FlatTopFunctionTest, DimDomains);
-TYPED_TEST(FlatTopFunctionTest, static_interface_check) { this->static_interface_check(); }
-TYPED_TEST(FlatTopFunctionTest, static_create_check) { this->static_create_check(); }
+TYPED_TEST(FlatTopFunctionTest, static_interface_check)
+{
+  this->static_interface_check();
+}
+TYPED_TEST(FlatTopFunctionTest, static_create_check)
+{
+  this->static_create_check();
+}
 TYPED_TEST(FlatTopFunctionTest, dynamic_interface_check)
 {
   this->dynamic_interface_check(*(TestFixture::FunctionType::create()), *(this->create_grid()));
@@ -118,10 +127,20 @@ TYPED_TEST(FlatTopFunctionTest, evaluate_check)
 #else // HAVE_DUNE_GRID
 
 // no-compile placeholders to mark disabled tests in test-binary output
-TEST(DISABLED_FlatTopFunctionTest, static_interface_check) {}
-TEST(DISABLED_FlatTopFunctionTest, static_create_check) {}
-TEST(DISABLED_FlatTopFunctionTest, dynamic_interface_check) {}
-TEST(DISABLED_FlatTopFunctionTest, copy_check) {}
-TEST(DISABLED_FlatTopFunctionTest, evaluate_check) {}
+TEST(DISABLED_FlatTopFunctionTest, static_interface_check)
+{
+}
+TEST(DISABLED_FlatTopFunctionTest, static_create_check)
+{
+}
+TEST(DISABLED_FlatTopFunctionTest, dynamic_interface_check)
+{
+}
+TEST(DISABLED_FlatTopFunctionTest, copy_check)
+{
+}
+TEST(DISABLED_FlatTopFunctionTest, evaluate_check)
+{
+}
 
 #endif // HAVE_DUNE_GRID

@@ -51,11 +51,18 @@ public:
     category = c
   };
 
-  void pre(domain_type&, range_type&) {}
+  void pre(domain_type&, range_type&)
+  {
+  }
 
-  void apply(domain_type& v, const range_type& d) { v = d; }
+  void apply(domain_type& v, const range_type& d)
+  {
+    v = d;
+  }
 
-  void post(domain_type&) {}
+  void post(domain_type&)
+  {
+  }
 };
 
 //! the general, parallel case
@@ -68,7 +75,11 @@ class AmgApplicator
   typedef typename IstlDenseVector<S>::BackendType IstlVectorType;
 
 public:
-  AmgApplicator(const MatrixType& matrix, const CommunicatorType& comm) : matrix_(matrix), communicator_(comm) {}
+  AmgApplicator(const MatrixType& matrix, const CommunicatorType& comm)
+    : matrix_(matrix)
+    , communicator_(comm)
+  {
+  }
 
   InverseOperatorResult call(IstlDenseVector<S>& rhs, IstlDenseVector<S>& solution, const Common::Configuration& opts,
                              const Common::Configuration& default_opts, const std::string& smoother_type)
@@ -173,7 +184,11 @@ class AmgApplicator<S, SequentialCommunication>
   typedef typename IstlDenseVector<S>::BackendType IstlVectorType;
 
 public:
-  AmgApplicator(const MatrixType& matrix, const SequentialCommunication& comm) : matrix_(matrix), communicator_(comm) {}
+  AmgApplicator(const MatrixType& matrix, const SequentialCommunication& comm)
+    : matrix_(matrix)
+    , communicator_(comm)
+  {
+  }
 
   InverseOperatorResult call(IstlDenseVector<S>& rhs, IstlDenseVector<S>& solution, const Common::Configuration& opts,
                              const Common::Configuration& default_opts, const std::string& smoother_type)

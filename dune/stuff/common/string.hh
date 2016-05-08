@@ -67,8 +67,8 @@ namespace Common {
  **/
 template <class T = std::string>
 inline std::vector<T>
-    tokenize(const std::string& msg, const std::string& separators,
-             const boost::algorithm::token_compress_mode_type mode = boost::algorithm::token_compress_off);
+tokenize(const std::string& msg, const std::string& separators,
+         const boost::algorithm::token_compress_mode_type mode = boost::algorithm::token_compress_off);
 
 } // namespace Common
 } // namespace Stuff
@@ -148,7 +148,10 @@ inline std::vector<std::string> tokenize(const std::string& msg, const std::stri
 }
 
 //! returns string with local time in current locale's format
-inline std::string stringFromTime(time_t cur_time = time(NULL)) { return ctime(&cur_time); }
+inline std::string stringFromTime(time_t cur_time = time(NULL))
+{
+  return ctime(&cur_time);
+}
 
 //! helper struct for lexical cast
 // see http://stackoverflow.com/a/2079728
@@ -156,7 +159,10 @@ template <typename ElemT>
 struct HexToString
 {
   ElemT value;
-  operator ElemT() const { return value; }
+  operator ElemT() const
+  {
+    return value;
+  }
 
   friend std::istream& operator>>(std::istream& in, HexToString& out)
   {

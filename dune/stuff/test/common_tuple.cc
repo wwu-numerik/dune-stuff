@@ -45,7 +45,10 @@ struct print_value
   }
 };
 
-TEST(TypeTransform, All) { typedef TUPLE_TYPEDEFS_2_TUPLE(MyTuple, MyFancyType) MySubTupleType; }
+TEST(TypeTransform, All)
+{
+  typedef TUPLE_TYPEDEFS_2_TUPLE(MyTuple, MyFancyType) MySubTupleType;
+}
 
 TEST(Product, All)
 {

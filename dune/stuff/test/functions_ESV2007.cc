@@ -20,21 +20,25 @@
 #include <dune/grid/yaspgrid.hh>
 #if HAVE_ALUGRID
 #include <dune/grid/alugrid.hh>
-#endif //HAVE_ALUGRID
+#endif // HAVE_ALUGRID
 
-struct ESV2007FunctionTest : public DS::FunctionTest< TESTFUNCTIONTYPE >
+struct ESV2007FunctionTest : public DS::FunctionTest<TESTFUNCTIONTYPE>
 {
   virtual void check() const
   {
-    const std::unique_ptr<const FunctionType> function(
-        FunctionType::create(FunctionType::default_config()));
+    const std::unique_ptr<const FunctionType> function(FunctionType::create(FunctionType::default_config()));
   }
 };
 
-TEST_F(ESV2007FunctionTest, provides_required_methods) { this->check(); }
+TEST_F(ESV2007FunctionTest, provides_required_methods)
+{
+  this->check();
+}
 
 #else // HAVE_DUNE_GRID
 
-TEST(DISABLED_ESV2007FunctionTest, provides_required_methods) {}
+TEST(DISABLED_ESV2007FunctionTest, provides_required_methods)
+{
+}
 
 #endif // HAVE_DUNE_GRID

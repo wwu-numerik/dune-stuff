@@ -126,9 +126,9 @@ struct VectorTest : public ::testing::Test
     typedef typename VectorImp::RealType RealType;
 
     // create test vectors
-    VectorImp zeros(dim);               // [0, 0, 0, 0]
+    VectorImp zeros(dim); // [0, 0, 0, 0]
     VectorImp ones(dim, ScalarType(1)); // [1, 1, 1, 1]
-    VectorImp countingup(dim);          //[0, 1, 2, 3]
+    VectorImp countingup(dim); //[0, 1, 2, 3]
     for (size_t ii = 0; ii < dim; ++ii)
       countingup.set_entry(ii, ScalarType(ii));
     VectorImp testvector_1(dim); // [0, -2, 2, 1]
@@ -529,5 +529,11 @@ struct VectorTest : public ::testing::Test
 }; // struct VectorTest
 
 
-TEST_F(VectorTest, fulfills_interface) { this->fulfills_interface(); }
-TEST_F(VectorTest, produces_correct_results) { this->produces_correct_results(); }
+TEST_F(VectorTest, fulfills_interface)
+{
+  this->fulfills_interface();
+}
+TEST_F(VectorTest, produces_correct_results)
+{
+  this->produces_correct_results();
+}

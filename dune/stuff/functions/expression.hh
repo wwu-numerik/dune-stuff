@@ -53,7 +53,10 @@ public:
   typedef typename std::vector<std::vector<std::string>> ExpressionStringVectorType;
   typedef typename std::vector<std::vector<std::vector<std::string>>> GradientStringVectorType;
 
-  static std::string static_id() { return BaseType::static_id() + ".expression"; }
+  static std::string static_id()
+  {
+    return BaseType::static_id() + ".expression";
+  }
 
   static Common::Configuration default_config(const std::string sub_name = "")
   {
@@ -117,7 +120,8 @@ public:
    */
   Expression(const std::string variable, const std::string expression, const size_t ord = 0,
              const std::string nm = static_id(), const std::vector<std::string> gradient = std::vector<std::string>())
-    : order_(ord), name_(nm)
+    : order_(ord)
+    , name_(nm)
   {
     // create ExpressionStringVectorType with identical expressions
     const std::vector<std::string> expression_row(dimRangeCols, expression);
@@ -144,7 +148,9 @@ public:
   Expression(const std::string variable, const std::vector<std::string> expressions,
              const size_t ord = default_config().get<size_t>("order"), const std::string nm = static_id(),
              const std::vector<std::vector<std::string>> gradient_expressions = std::vector<std::vector<std::string>>())
-    : function_(new MathExpressionFunctionType(variable, expressions)), order_(ord), name_(nm)
+    : function_(new MathExpressionFunctionType(variable, expressions))
+    , order_(ord)
+    , name_(nm)
   {
     static_assert(dimRangeCols == 1, "This constructor does not make sense for dimRangeCols > 1!");
     GradientStringVectorType gradient_expressions_vec;
@@ -170,7 +176,8 @@ public:
   Expression(const std::string variable, const ExpressionStringVectorType expressions, const size_t ord = 0,
              const std::string nm                                = static_id(),
              const GradientStringVectorType gradient_expressions = GradientStringVectorType())
-    : order_(ord), name_(nm)
+    : order_(ord)
+    , name_(nm)
   {
     build_function(variable, expressions);
     build_gradients(variable, gradient_expressions);
@@ -189,11 +196,20 @@ public:
     return *this;
   }
 
-  virtual std::string type() const override final { return BaseType::static_id() + ".expression"; }
+  virtual std::string type() const override final
+  {
+    return BaseType::static_id() + ".expression";
+  }
 
-  virtual std::string name() const override { return name_; }
+  virtual std::string name() const override
+  {
+    return name_;
+  }
 
-  virtual size_t order() const override { return order_; }
+  virtual size_t order() const override
+  {
+    return order_;
+  }
 
   virtual void evaluate(const DomainType& xx, RangeType& ret) const override
   {
@@ -237,7 +253,7 @@ public:
     }
 #endif // DUNE_STUFF_FUNCTIONS_EXPRESSION_DISABLE_CHECKS
 #endif // NDEBUG
-  }    // ... evaluate(...)
+  } // ... evaluate(...)
 
   virtual void jacobian(const DomainType& xx, JacobianRangeType& ret) const override
   {

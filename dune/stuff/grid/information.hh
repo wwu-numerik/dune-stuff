@@ -118,7 +118,9 @@ struct Dimensions
 
   public:
     GridDimensionsFunctor(CoordLimitsType& c, MinMaxAvgType& e, MinMaxAvgType& w)
-      : coord_limits_(c), entity_volume_(e), entity_width_(w)
+      : coord_limits_(c)
+      , entity_volume_(e)
+      , entity_width_(w)
     {
     }
 
@@ -135,7 +137,10 @@ struct Dimensions
     } // ()
   };
 
-  double volumeRelation() const { return entity_volume.min() != 0.0 ? entity_volume.max() / entity_volume.min() : -1; }
+  double volumeRelation() const
+  {
+    return entity_volume.min() != 0.0 ? entity_volume.max() / entity_volume.min() : -1;
+  }
 
   Dimensions(const GridViewType& gridView)
   {

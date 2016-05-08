@@ -52,7 +52,8 @@ class FemAdapter
     typedef typename BaseType::JacobianRangeType JacobianRangeType;
 
     Localfunction(const DiscreteFunctionType& df, const EntityType& ent)
-      : BaseType(ent), wrapped_localfunction_(df.localFunction(ent))
+      : BaseType(ent)
+      , wrapped_localfunction_(df.localFunction(ent))
     {
     }
 
@@ -60,7 +61,10 @@ class FemAdapter
 
     Localfunction& operator=(const Localfunction& /*other*/) = delete;
 
-    virtual size_t order() const override { return wrapped_localfunction_.order(); }
+    virtual size_t order() const override
+    {
+      return wrapped_localfunction_.order();
+    }
 
     virtual void evaluate(const DomainType& xx, RangeType& ret) const override
     {
@@ -81,15 +85,30 @@ public:
   typedef typename BaseType::EntityType EntityType;
   typedef typename BaseType::LocalfunctionType LocalfunctionType;
 
-  FemAdapter(const DiscreteFunctionType& df) : df_(df) {}
+  FemAdapter(const DiscreteFunctionType& df)
+    : df_(df)
+  {
+  }
 
-  static std::string static_id() { return BaseType::static_id() + ".femadapter"; }
+  static std::string static_id()
+  {
+    return BaseType::static_id() + ".femadapter";
+  }
 
-  virtual ThisType* copy() const override { return new ThisType(*this); }
+  virtual ThisType* copy() const override
+  {
+    return new ThisType(*this);
+  }
 
-  virtual std::string type() const override { return BaseType::static_id() + ".femadapter"; }
+  virtual std::string type() const override
+  {
+    return BaseType::static_id() + ".femadapter";
+  }
 
-  virtual std::string name() const override { return df_.name(); }
+  virtual std::string name() const override
+  {
+    return df_.name();
+  }
 
   //! this intentionally hides
   virtual std::unique_ptr<LocalfunctionType> local_function(const EntityType& entity) const

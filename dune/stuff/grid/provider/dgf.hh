@@ -15,7 +15,7 @@
 #include <memory>
 
 #if HAVE_DUNE_GRID
-#include <dune/grid/io/file/dgfparser/gridptr.hh>        // How convenient that GridPtr requires DGFGridFactory but
+#include <dune/grid/io/file/dgfparser/gridptr.hh> // How convenient that GridPtr requires DGFGridFactory but
 #include <dune/grid/io/file/dgfparser/dgfgridfactory.hh> // does not include it!
 #include <dune/grid/io/file/dgfparser/dgfoned.hh>
 #include <dune/grid/io/file/dgfparser/dgfs.hh>
@@ -49,7 +49,10 @@ public:
   using typename BaseType::GridType;
   using BaseType::dimDomain;
 
-  static const std::string static_id() { return BaseType::static_id() + ".dgf"; }
+  static const std::string static_id()
+  {
+    return BaseType::static_id() + ".dgf";
+  }
 
   static Common::Configuration default_config(const std::string sub_name = "")
   { // size_t(...) required, else linker error with clang
@@ -71,7 +74,10 @@ public:
     return Common::make_unique<ThisType>(cfg.get("filename", default_cfg.get<std::string>("filename")));
   }
 
-  DGF(const std::string filename) { grid_ = std::shared_ptr<GridType>(GridPtr<GridType>(filename).release()); }
+  DGF(const std::string filename)
+  {
+    grid_ = std::shared_ptr<GridType>(GridPtr<GridType>(filename).release());
+  }
 
   DGF(ThisType&& source) = default;
   DGF(const ThisType& other) = default;
@@ -81,13 +87,25 @@ public:
   ThisType& operator=(const ThisType& other) = default;
   ThisType& operator=(ThisType&& source) = default;
 
-  virtual const GridType& grid() const override final { return *grid_; }
+  virtual const GridType& grid() const override final
+  {
+    return *grid_;
+  }
 
-  virtual GridType& grid() override final { return *grid_; }
+  virtual GridType& grid() override final
+  {
+    return *grid_;
+  }
 
-  const std::shared_ptr<const GridType> grid_ptr() const { return grid_; }
+  const std::shared_ptr<const GridType> grid_ptr() const
+  {
+    return grid_;
+  }
 
-  std::shared_ptr<GridType> grid_ptr() { return grid_; }
+  std::shared_ptr<GridType> grid_ptr()
+  {
+    return grid_;
+  }
 
 private:
   std::shared_ptr<GridType> grid_;

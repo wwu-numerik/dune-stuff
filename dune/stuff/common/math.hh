@@ -79,12 +79,18 @@ const T Epsilon<T, false>::value = std::numeric_limits<T>::epsilon();
 template <class T, bool isUnsigned = std::is_unsigned<T>::value>
 struct absoluteValue
 {
-  static T result(const T& val) { return std::abs(val); }
+  static T result(const T& val)
+  {
+    return std::abs(val);
+  }
 };
 template <class T>
 struct absoluteValue<T, true>
 {
-  static T result(const T& val) { return val; }
+  static T result(const T& val)
+  {
+    return val;
+  }
 };
 
 template <class T, bool is_enum = std::is_enum<T>::value>
@@ -116,7 +122,9 @@ protected:
   typedef MinMaxAvg<ElementType> ThisType;
 
 public:
-  MinMaxAvg() {}
+  MinMaxAvg()
+  {
+  }
 
   template <class stl_container_type>
   MinMaxAvg(const stl_container_type& elements)
@@ -126,17 +134,32 @@ public:
     acc_ = std::for_each(elements.begin(), elements.end(), acc_);
   }
 
-  std::size_t count() const { return boost::accumulators::count(acc_); }
-  ElementType sum() const { return boost::accumulators::sum(acc_); }
-  ElementType min() const { return boost::accumulators::min(acc_); }
-  ElementType max() const { return boost::accumulators::max(acc_); }
+  std::size_t count() const
+  {
+    return boost::accumulators::count(acc_);
+  }
+  ElementType sum() const
+  {
+    return boost::accumulators::sum(acc_);
+  }
+  ElementType min() const
+  {
+    return boost::accumulators::min(acc_);
+  }
+  ElementType max() const
+  {
+    return boost::accumulators::max(acc_);
+  }
   ElementType average() const
   {
     // for integer ElementType this just truncates from floating-point
     return ElementType(boost::accumulators::mean(acc_));
   }
 
-  void operator()(const ElementType& el) { acc_(el); }
+  void operator()(const ElementType& el)
+  {
+    acc_(el);
+  }
 
   void output(std::ostream& stream)
   {

@@ -65,13 +65,25 @@ class CRTPInterface
 public:
   typedef typename Traits::derived_type derived_type;
 
-  static inline derived_type& as_imp(InterfaceType& that) { return static_cast<derived_type&>(that); }
+  static inline derived_type& as_imp(InterfaceType& that)
+  {
+    return static_cast<derived_type&>(that);
+  }
 
-  static inline const derived_type& as_imp(const InterfaceType& that) { return static_cast<const derived_type&>(that); }
+  static inline const derived_type& as_imp(const InterfaceType& that)
+  {
+    return static_cast<const derived_type&>(that);
+  }
 
-  inline derived_type& as_imp() { return static_cast<derived_type&>(*this); }
+  inline derived_type& as_imp()
+  {
+    return static_cast<derived_type&>(*this);
+  }
 
-  inline const derived_type& as_imp() const { return static_cast<const derived_type&>(*this); }
+  inline const derived_type& as_imp() const
+  {
+    return static_cast<const derived_type&>(*this);
+  }
 
 protected:
   // nicely avoid warning about non-virtual dtor when derived classes have vfunc

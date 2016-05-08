@@ -135,9 +135,9 @@ public:
 #endif // HAVE_EIGEN
 
 #define EXPECT_DOUBLE_OR_COMPLEX_EQ(expected, actual)                                                                  \
-{                                                                                                                      \
+  {                                                                                                                    \
     EXPECT_DOUBLE_EQ(expected, std::real(actual));                                                                     \
     EXPECT_DOUBLE_EQ(0, std::imag(actual));                                                                            \
-}
+  }
 
 #endif // DUNE_STUFF_TEST_LA_CONTAINER_HH

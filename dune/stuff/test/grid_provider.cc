@@ -13,9 +13,9 @@
 
 #if HAVE_DUNE_GRID
 
-struct TestGridProvider
-  : public GridProviderBase< Dune::Stuff::Grid::Providers::TESTGRIDPROVIDERTYPE< TESTGRIDTYPE > >
-{};
+struct TestGridProvider : public GridProviderBase<Dune::Stuff::Grid::Providers::TESTGRIDPROVIDERTYPE<TESTGRIDTYPE>>
+{
+};
 
 TEST_F(TestGridProvider, is_default_creatable)
 {
@@ -36,9 +36,14 @@ TEST_F(TestGridProvider, fulfills_non_const_interface)
 
 #else // HAVE_DUNE_GRID
 
-TEST(DISABLED_TestGridProvider, is_default_creatable) {}
-TEST(DISABLED_TestGridProvider, fulfills_const_interface) {}
-TEST(DISABLED_TestGridProvider, is_visualizable) {}
+TEST(DISABLED_TestGridProvider, is_default_creatable)
+{
+}
+TEST(DISABLED_TestGridProvider, fulfills_const_interface)
+{
+}
+TEST(DISABLED_TestGridProvider, is_visualizable)
+{
+}
 
 #endif // HAVE_DUNE_GRID
-

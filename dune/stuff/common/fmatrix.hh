@@ -28,7 +28,10 @@ class FieldMatrix : public Dune::FieldMatrix<K, ROWS, COLS>
   typedef FieldMatrix<K, ROWS, COLS> ThisType;
 
 public:
-  FieldMatrix(const K kk = K(0)) : BaseType(kk) {} // ... FieldMatrix(...)
+  FieldMatrix(const K kk = K(0))
+    : BaseType(kk)
+  {
+  } // ... FieldMatrix(...)
 
   FieldMatrix(const size_t UNUSED_UNLESS_DEBUG(rr), const size_t UNUSED_UNLESS_DEBUG(cc), const K kk = K(0))
     : BaseType(kk)
@@ -43,9 +46,12 @@ public:
                                                                     << cc
                                                                     << " columns!");
 #endif // NDEBUG
-  }    // ... FieldMatrix(...)
+  } // ... FieldMatrix(...)
 
-  FieldMatrix(const BaseType& other) : BaseType(other) {}
+  FieldMatrix(const BaseType& other)
+    : BaseType(other)
+  {
+  }
 
   Dune::FieldVector<K, ROWS> operator*(const Dune::FieldVector<K, COLS>& vec) const
   {
@@ -79,7 +85,10 @@ class FieldMatrix<K, 1, 1> : public Dune::FieldMatrix<K, 1, 1>
   typedef FieldMatrix<K, ROWS, COLS> ThisType;
 
 public:
-  FieldMatrix(const K kk = K(0)) : BaseType(kk) {}
+  FieldMatrix(const K kk = K(0))
+    : BaseType(kk)
+  {
+  }
 
   FieldMatrix(const size_t UNUSED_UNLESS_DEBUG(rr), const size_t UNUSED_UNLESS_DEBUG(cc), const K kk = K(0))
     : BaseType(kk)
@@ -94,13 +103,22 @@ public:
                                                                     << cc
                                                                     << " columns!");
 #endif // NDEBUG
-  }    // ... FieldMatrix(...)
+  } // ... FieldMatrix(...)
 
-  FieldMatrix(const BaseType& other) : BaseType(other) {}
+  FieldMatrix(const BaseType& other)
+    : BaseType(other)
+  {
+  }
 
-  FieldMatrix(const Dune::Stuff::Common::FieldVector<K, 1>& other) : BaseType(other[0]) {}
+  FieldMatrix(const Dune::Stuff::Common::FieldVector<K, 1>& other)
+    : BaseType(other[0])
+  {
+  }
 
-  FieldMatrix(const Dune::FieldVector<K, 1>& other) : BaseType(other[0]) {}
+  FieldMatrix(const Dune::FieldVector<K, 1>& other)
+    : BaseType(other[0])
+  {
+  }
 
   using BaseType::operator=;
 

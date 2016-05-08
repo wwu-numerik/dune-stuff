@@ -55,7 +55,10 @@ struct PgfCoordWrapper : Dune::FieldVector<double, 2>
 class PgfEntityFunctor
 {
 public:
-  PgfEntityFunctor(std::ostream& output) : file_(output) {}
+  PgfEntityFunctor(std::ostream& output)
+    : file_(output)
+  {
+  }
 
   template <class Entity>
   void operator()(const Entity& ent, const int ent_idx)
@@ -100,7 +103,10 @@ class PgfEntityFunctorIntersections : public Functor::Codim0And1<GridViewType>
 public:
   PgfEntityFunctorIntersections(const GridViewType& grid_view, std::ostream& file, const std::string color = "black",
                                 const bool printEntityIndex = false)
-    : file_(file), color_(color), printEntityIndex_(printEntityIndex), grid_view_(grid_view)
+    : file_(file)
+    , color_(color)
+    , printEntityIndex_(printEntityIndex)
+    , grid_view_(grid_view)
   {
   }
 
@@ -164,7 +170,8 @@ public:
   PgfEntityFunctorIntersectionsWithShift(const GridViewType& grid_view, std::ostream& file,
                                          const std::string color = "black", const int level = 0,
                                          bool printEntityIndex = false)
-    : BaseType(grid_view, file, color, printEntityIndex), level_(level)
+    : BaseType(grid_view, file, color, printEntityIndex)
+    , level_(level)
   {
   }
 
@@ -206,7 +213,10 @@ template <class GridType>
 class PgfOutput
 {
 public:
-  PgfOutput(GridType& grid) : grid_(grid) {}
+  PgfOutput(GridType& grid)
+    : grid_(grid)
+  {
+  }
 
   //! print a tex representation of any given 2D grid leaf level to file
   void leaf(std::ostream& file, const bool includable = true) const

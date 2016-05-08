@@ -71,9 +71,20 @@ struct ElementVisualization
   class FunctorBase
   {
   public:
-    FunctorBase(const std::string fname, const std::string dname) : filename_(fname), dir_(dname) {}
-    const std::string filename() const { return filename_; }
-    const std::string dir() const { return dir_; }
+    FunctorBase(const std::string fname, const std::string dname)
+      : filename_(fname)
+      , dir_(dname)
+    {
+    }
+    const std::string filename() const
+    {
+      return filename_;
+    }
+    const std::string dir() const
+    {
+      return dir_;
+    }
+
   protected:
     const std::string filename_;
     const std::string dir_;
@@ -82,7 +93,10 @@ struct ElementVisualization
   class VolumeFunctor : public FunctorBase
   {
   public:
-    VolumeFunctor(const std::string fname, const std::string dname) : FunctorBase(fname, dname) {}
+    VolumeFunctor(const std::string fname, const std::string dname)
+      : FunctorBase(fname, dname)
+    {
+    }
 
     template <class Entity>
     double operator()(const Entity& ent) const
@@ -94,7 +108,10 @@ struct ElementVisualization
   class ProcessIdFunctor : public FunctorBase
   {
   public:
-    ProcessIdFunctor(const std::string fname, const std::string dname) : FunctorBase(fname, dname) {}
+    ProcessIdFunctor(const std::string fname, const std::string dname)
+      : FunctorBase(fname, dname)
+    {
+    }
 
     template <class Entity>
     double operator()(const Entity& /*ent*/) const
@@ -110,7 +127,8 @@ struct ElementVisualization
 
   public:
     BoundaryFunctor(const GridType& grid, const std::string fname, const std::string dname)
-      : FunctorBase(fname, dname), grid_(grid)
+      : FunctorBase(fname, dname)
+      , grid_(grid)
     {
     }
 
@@ -139,7 +157,10 @@ struct ElementVisualization
   {
 
   public:
-    AreaMarker(const std::string fname, const std::string dname) : FunctorBase(fname, dname) {}
+    AreaMarker(const std::string fname, const std::string dname)
+      : FunctorBase(fname, dname)
+    {
+    }
 
     template <class Entity>
     double operator()(const Entity& entity) const
@@ -171,7 +192,10 @@ struct ElementVisualization
   class GeometryFunctor : public FunctorBase
   {
   public:
-    GeometryFunctor(const std::string fname, const std::string dname) : FunctorBase(fname, dname) {}
+    GeometryFunctor(const std::string fname, const std::string dname)
+      : FunctorBase(fname, dname)
+    {
+    }
 
     template <class Entity>
     double operator()(const Entity& ent) const

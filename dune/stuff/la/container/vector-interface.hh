@@ -59,7 +59,9 @@ public:
 
   static_assert(std::is_same<ScalarType, typename Traits::ScalarType>::value, "");
 
-  virtual ~VectorInterface() {}
+  virtual ~VectorInterface()
+  {
+  }
 
   /// \name Have to be implemented by a derived class in addition to the ones required by ContainerInterface!
   /// \{
@@ -135,19 +137,28 @@ public:
   /**
    * \brief Get writable reference to the iith entry.
    */
-  inline ScalarType& operator[](const size_t ii) { return get_entry_ref(ii); }
+  inline ScalarType& operator[](const size_t ii)
+  {
+    return get_entry_ref(ii);
+  }
 
   /**
    * \brief Get read-only reference to the iith entry.
    */
-  inline const ScalarType& operator[](const size_t ii) const { return get_entry_ref(ii); }
+  inline const ScalarType& operator[](const size_t ii) const
+  {
+    return get_entry_ref(ii);
+  }
 
   /**
    * \brief   The dimension of the vector.
    * \return  The dimension of the vector.
    * \see     size()
    */
-  inline size_t dim() const { return size(); }
+  inline size_t dim() const
+  {
+    return size();
+  }
 
   virtual ScalarType mean() const
   {
@@ -186,8 +197,8 @@ public:
    *  \note   If you override this method please use exceptions instead of assertions (for the python bindings).
    */
   virtual bool
-      almost_equal(const derived_type& other,
-                   const ScalarType epsilon = Stuff::Common::FloatCmp::DefaultEpsilon<ScalarType>::value()) const
+  almost_equal(const derived_type& other,
+               const ScalarType epsilon = Stuff::Common::FloatCmp::DefaultEpsilon<ScalarType>::value()) const
   {
     if (other.size() != size())
       DUNE_THROW(Exceptions::shapes_do_not_match,
@@ -259,7 +270,10 @@ public:
    *  \return The l-infintiy-norm of the vector.
    *  \note   If you override this method please use exceptions instead of assertions (for the python bindings).
    */
-  virtual RealType sup_norm() const { return amax().second; }
+  virtual RealType sup_norm() const
+  {
+    return amax().second;
+  }
 
   virtual ScalarType standard_deviation() const
   {
@@ -381,7 +395,10 @@ public:
    *  \return The scalar product.
    *  \see dot()
    */
-  virtual ScalarType operator*(const derived_type& other) { return dot(other); }
+  virtual ScalarType operator*(const derived_type& other)
+  {
+    return dot(other);
+  }
 
   /**
    *  \brief  Adds another vector to this, in-place variant.
@@ -410,14 +427,20 @@ public:
    *  \param  other The second summand.
    *  \return The sum of the two vectors.
    */
-  virtual derived_type operator+(const derived_type& other) const { return add(other); }
+  virtual derived_type operator+(const derived_type& other) const
+  {
+    return add(other);
+  }
 
   /**
    *  \brief  Substracts two vectors.
    *  \param  other The subtrahend
    *  \return The difference.
    */
-  virtual derived_type operator-(const derived_type& other) const { return sub(other); }
+  virtual derived_type operator-(const derived_type& other) const
+  {
+    return sub(other);
+  }
 
   virtual derived_type& operator+=(const ScalarType& scalar)
   {
@@ -446,14 +469,20 @@ public:
    *  \return Truth value of the comparison.
    *  \see    almost_equal()
    */
-  virtual bool operator==(const derived_type& other) const { return almost_equal(other); }
+  virtual bool operator==(const derived_type& other) const
+  {
+    return almost_equal(other);
+  }
 
   /**
    *  \brief  Check vectors for inequality using !almost_equal()
    *  \param  other   A vector of same dimension to compare with.
    *  \return Truth value of the comparison.
    */
-  virtual bool operator!=(const derived_type& other) const { return !(this->operator==(other)); }
+  virtual bool operator!=(const derived_type& other) const
+  {
+    return !(this->operator==(other));
+  }
 
   /// \}
   /// \name Necesarry for the python bindings.
@@ -566,13 +595,25 @@ public:
 
   /// \}
 
-  iterator begin() { return iterator(*this); }
+  iterator begin()
+  {
+    return iterator(*this);
+  }
 
-  const_iterator begin() const { return const_iterator(*this); }
+  const_iterator begin() const
+  {
+    return const_iterator(*this);
+  }
 
-  iterator end() { return iterator(*this, true); }
+  iterator end()
+  {
+    return iterator(*this, true);
+  }
 
-  const_iterator end() const { return const_iterator(*this, true); }
+  const_iterator end() const
+  {
+    return const_iterator(*this, true);
+  }
 
   operator std::vector<ScalarType>() const
   {
@@ -626,7 +667,10 @@ struct VectorAbstractionBase
   typedef ScalarType S;
   typedef RealType R;
 
-  static inline typename std::enable_if<is_vector, VectorType>::type create(const size_t sz) { return VectorType(sz); }
+  static inline typename std::enable_if<is_vector, VectorType>::type create(const size_t sz)
+  {
+    return VectorType(sz);
+  }
 
   static inline typename std::enable_if<is_vector, VectorType>::type create(const size_t sz, const ScalarType& val)
   {

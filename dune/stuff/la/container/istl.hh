@@ -97,7 +97,8 @@ public:
   typedef typename Traits::RealType RealType;
   typedef typename Traits::BackendType BackendType;
 
-  explicit IstlDenseVector(const size_t ss = 0, const ScalarType value = ScalarType(0)) : backend_(new BackendType(ss))
+  explicit IstlDenseVector(const size_t ss = 0, const ScalarType value = ScalarType(0))
+    : backend_(new BackendType(ss))
   {
     backend_->operator=(value);
   }
@@ -114,13 +115,15 @@ public:
   {
   }
 
-  explicit IstlDenseVector(const std::vector<ScalarType>& other) : backend_(new BackendType(other.size()))
+  explicit IstlDenseVector(const std::vector<ScalarType>& other)
+    : backend_(new BackendType(other.size()))
   {
     for (size_t ii = 0; ii < other.size(); ++ii)
       backend_->operator[](ii)[0] = other[ii];
   }
 
-  explicit IstlDenseVector(const std::initializer_list<ScalarType>& other) : backend_(new BackendType(other.size()))
+  explicit IstlDenseVector(const std::initializer_list<ScalarType>& other)
+    : backend_(new BackendType(other.size()))
   {
     size_t ii = 0;
     for (auto element : other) {
@@ -140,9 +143,15 @@ public:
   /**
    *  \note Takes ownership of backend_ptr in the sense that you must not delete it afterwards!
    */
-  explicit IstlDenseVector(BackendType* backend_ptr) : backend_(backend_ptr) {}
+  explicit IstlDenseVector(BackendType* backend_ptr)
+    : backend_(backend_ptr)
+  {
+  }
 
-  explicit IstlDenseVector(std::shared_ptr<BackendType> backend_ptr) : backend_(backend_ptr) {}
+  explicit IstlDenseVector(std::shared_ptr<BackendType> backend_ptr)
+    : backend_(backend_ptr)
+  {
+  }
 
   ThisType& operator=(const ThisType& other)
   {
@@ -186,15 +195,24 @@ public:
   /// \name Required by ProvidesDataAccess.
   /// \{
 
-  ScalarType* data() { return &(backend()[0][0]); }
+  ScalarType* data()
+  {
+    return &(backend()[0][0]);
+  }
 
   /// \}
   /// \name Required by ContainerInterface.
   /// \{
 
-  ThisType copy() const { return ThisType(*backend_); }
+  ThisType copy() const
+  {
+    return ThisType(*backend_);
+  }
 
-  void scal(const ScalarType& alpha) { backend() *= alpha; }
+  void scal(const ScalarType& alpha)
+  {
+    backend() *= alpha;
+  }
 
   void axpy(const ScalarType& alpha, const ThisType& xx)
   {
@@ -204,7 +222,10 @@ public:
     backend().axpy(alpha, *(xx.backend_));
   }
 
-  bool has_equal_shape(const ThisType& other) const { return size() == other.size(); }
+  bool has_equal_shape(const ThisType& other) const
+  {
+    return size() == other.size();
+  }
 
   /// \}
   /// \name Required by VectorInterface.
@@ -237,9 +258,15 @@ public:
   }
 
 private:
-  inline ScalarType& get_entry_ref(const size_t ii) { return backend()[ii][0]; }
+  inline ScalarType& get_entry_ref(const size_t ii)
+  {
+    return backend()[ii][0];
+  }
 
-  inline const ScalarType& get_entry_ref(const size_t ii) const { return backend_->operator[](ii)[0]; }
+  inline const ScalarType& get_entry_ref(const size_t ii) const
+  {
+    return backend_->operator[](ii)[0];
+  }
 
 public:
   /// \}
@@ -254,11 +281,20 @@ public:
     return backend_->dot(*(other.backend_));
   } // ... dot(...)
 
-  virtual RealType l1_norm() const override final { return backend_->one_norm(); }
+  virtual RealType l1_norm() const override final
+  {
+    return backend_->one_norm();
+  }
 
-  virtual RealType l2_norm() const override final { return backend_->two_norm(); }
+  virtual RealType l2_norm() const override final
+  {
+    return backend_->two_norm();
+  }
 
-  virtual RealType sup_norm() const override final { return backend_->infinity_norm(); }
+  virtual RealType sup_norm() const override final
+  {
+    return backend_->infinity_norm();
+  }
 
   virtual void add(const ThisType& other, ThisType& result) const override final
   {
@@ -355,7 +391,10 @@ public:
   typedef typename Traits::ScalarType ScalarType;
   typedef typename Traits::RealType RealType;
 
-  static std::string static_id() { return "stuff.la.container.istl.istlrowmajorsparsematrix"; }
+  static std::string static_id()
+  {
+    return "stuff.la.container.istl.istlrowmajorsparsematrix";
+  }
 
   /**
    * \brief This is the constructor of interest which creates a sparse matrix.
@@ -414,9 +453,15 @@ public:
   /**
    *  \note Takes ownership of backend_ptr in the sense that you must not delete it afterwards!
    */
-  explicit IstlRowMajorSparseMatrix(BackendType* backend_ptr) : backend_(backend_ptr) {}
+  explicit IstlRowMajorSparseMatrix(BackendType* backend_ptr)
+    : backend_(backend_ptr)
+  {
+  }
 
-  explicit IstlRowMajorSparseMatrix(std::shared_ptr<BackendType> backend_ptr) : backend_(backend_ptr) {}
+  explicit IstlRowMajorSparseMatrix(std::shared_ptr<BackendType> backend_ptr)
+    : backend_(backend_ptr)
+  {
+  }
 
   ThisType& operator=(const ThisType& other)
   {
@@ -452,9 +497,15 @@ public:
   /// \name Required by ContainerInterface.
   /// \{
 
-  ThisType copy() const { return ThisType(*backend_); }
+  ThisType copy() const
+  {
+    return ThisType(*backend_);
+  }
 
-  void scal(const ScalarType& alpha) { backend() *= alpha; }
+  void scal(const ScalarType& alpha)
+  {
+    backend() *= alpha;
+  }
 
   void axpy(const ScalarType& alpha, const ThisType& xx)
   {
@@ -468,15 +519,24 @@ public:
     backend().axpy(alpha, *(xx.backend_));
   } // ... axpy(...)
 
-  bool has_equal_shape(const ThisType& other) const { return (rows() == other.rows()) && (cols() == other.cols()); }
+  bool has_equal_shape(const ThisType& other) const
+  {
+    return (rows() == other.rows()) && (cols() == other.cols());
+  }
 
   /// \}
   /// \name Required by MatrixInterface.
   /// \{
 
-  inline size_t rows() const { return backend_->N(); }
+  inline size_t rows() const
+  {
+    return backend_->N();
+  }
 
-  inline size_t cols() const { return backend_->M(); }
+  inline size_t cols() const
+  {
+    return backend_->M();
+  }
 
   inline void mv(const IstlDenseVector<ScalarType>& xx, IstlDenseVector<ScalarType>& yy) const
   {
@@ -583,12 +643,15 @@ public:
    * \attention Use and interprete with care, since the Dune::BCRSMatrix is known to report strange things here,
    * depending on its state!
    */
-  virtual size_t non_zeros() const override final { return backend_->nonzeroes(); }
+  virtual size_t non_zeros() const override final
+  {
+    return backend_->nonzeroes();
+  }
 
   virtual SparsityPatternDefault
-      pattern(const bool prune = false,
-              const typename Common::FloatCmp::DefaultEpsilon<ScalarType>::Type
-                  eps = Common::FloatCmp::DefaultEpsilon<ScalarType>::value()) const override final
+  pattern(const bool prune = false,
+          const typename Common::FloatCmp::DefaultEpsilon<ScalarType>::Type
+              eps = Common::FloatCmp::DefaultEpsilon<ScalarType>::value()) const override final
   {
     SparsityPatternDefault ret(rows());
     if (prune) {
@@ -630,9 +693,9 @@ private:
   } // ... build_sparse_matrix(...)
 
   SparsityPatternDefault
-      pruned_pattern_from_backend(const BackendType& mat,
-                                  const typename Common::FloatCmp::DefaultEpsilon<ScalarType>::Type eps =
-                                      Common::FloatCmp::DefaultEpsilon<ScalarType>::value()) const
+  pruned_pattern_from_backend(const BackendType& mat,
+                              const typename Common::FloatCmp::DefaultEpsilon<ScalarType>::Type eps =
+                                  Common::FloatCmp::DefaultEpsilon<ScalarType>::value()) const
   {
     SparsityPatternDefault ret(mat.N());
     for (size_t ii = 0; ii < mat.N(); ++ii) {

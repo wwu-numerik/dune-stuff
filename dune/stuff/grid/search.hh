@@ -69,7 +69,11 @@ private:
   }
 
 public:
-  EntityInlevelSearch(const GridViewType& gridview) : gridview_(gridview), it_last_(gridview_.template begin<0>()) {}
+  EntityInlevelSearch(const GridViewType& gridview)
+    : gridview_(gridview)
+    , it_last_(gridview_.template begin<0>())
+  {
+  }
 
   template <class PointContainerType>
   EntityVectorType operator()(const PointContainerType& points)
@@ -120,7 +124,11 @@ class EntityHierarchicSearch : public EntitySearchBase<GridViewType>
   const int start_level_;
 
 public:
-  EntityHierarchicSearch(const GridViewType& gridview) : gridview_(gridview), start_level_(0) {}
+  EntityHierarchicSearch(const GridViewType& gridview)
+    : gridview_(gridview)
+    , start_level_(0)
+  {
+  }
 
   typedef typename BaseType::EntityVectorType EntityVectorType;
 

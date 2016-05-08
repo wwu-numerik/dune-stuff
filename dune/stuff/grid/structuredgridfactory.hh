@@ -71,9 +71,9 @@ public:
    *  \param overlap    Size of overlap in each coordinate direction
    */
   static std::shared_ptr<GridType>
-      createCubeGrid(const FieldVector<ctype, dimworld>& lowerLeft, const FieldVector<ctype, dimworld>& upperRight,
-                     const array<unsigned int, dim>& elements, const array<unsigned int, dim>& overlap,
-                     Dune::MPIHelper::MPICommunicator communicator = Dune::MPIHelper::getCommunicator())
+  createCubeGrid(const FieldVector<ctype, dimworld>& lowerLeft, const FieldVector<ctype, dimworld>& upperRight,
+                 const array<unsigned int, dim>& elements, const array<unsigned int, dim>& overlap,
+                 Dune::MPIHelper::MPICommunicator communicator = Dune::MPIHelper::getCommunicator())
   {
     Dune::array<int, dim> cells;
     Dune::array<int, dim> over;
@@ -124,11 +124,11 @@ class StructuredGridFactory : public Dune::StructuredGridFactory<GridType>
 
 public:
   static std::shared_ptr<GridType>
-      createCubeGrid(const Dune::FieldVector<ctype, GridType::dimension>& lowerLeft,
-                     const Dune::FieldVector<ctype, GridType::dimension>& upperRight,
-                     const Dune::array<unsigned int, GridType::dimension>& elements,
-                     Dune::array<unsigned int, GridType::dimension> /*overlap*/ = default_overlap<GridType>(),
-                     Dune::MPIHelper::MPICommunicator /*communicator*/          = Dune::MPIHelper::getCommunicator())
+  createCubeGrid(const Dune::FieldVector<ctype, GridType::dimension>& lowerLeft,
+                 const Dune::FieldVector<ctype, GridType::dimension>& upperRight,
+                 const Dune::array<unsigned int, GridType::dimension>& elements,
+                 Dune::array<unsigned int, GridType::dimension> /*overlap*/ = default_overlap<GridType>(),
+                 Dune::MPIHelper::MPICommunicator /*communicator*/          = Dune::MPIHelper::getCommunicator())
   {
     return Dune::StructuredGridFactory<GridType>::createCubeGrid(lowerLeft, upperRight, elements);
   }
@@ -144,10 +144,10 @@ class StructuredGridFactory<Dune::SPGrid<ct, dim, Refinement, Comm>>
 
 public:
   static std::shared_ptr<GridType>
-      createCubeGrid(const Dune::FieldVector<ctype, dim>& lowerLeft, const Dune::FieldVector<ctype, dim>& upperRight,
-                     const Dune::array<unsigned int, dim>& elements,
-                     Dune::array<unsigned int, dim> overlap        = default_overlap<GridType>(),
-                     Dune::MPIHelper::MPICommunicator communicator = Dune::MPIHelper::getCommunicator())
+  createCubeGrid(const Dune::FieldVector<ctype, dim>& lowerLeft, const Dune::FieldVector<ctype, dim>& upperRight,
+                 const Dune::array<unsigned int, dim>& elements,
+                 Dune::array<unsigned int, dim> overlap        = default_overlap<GridType>(),
+                 Dune::MPIHelper::MPICommunicator communicator = Dune::MPIHelper::getCommunicator())
   {
     return Dune::StructuredGridFactory<GridType>::createCubeGrid(
         lowerLeft, upperRight, elements, overlap, communicator);
@@ -166,10 +166,10 @@ class StructuredGridFactory<Dune::YaspGrid<dim, Coords>>
 public:
   //! creates a non-periodic Yasp grid
   static std::shared_ptr<GridType>
-      createCubeGrid(const Dune::FieldVector<ctype, dim>& lowerLeft, const Dune::FieldVector<ctype, dim>& upperRight,
-                     const Dune::array<unsigned int, dim>& elements_in,
-                     Dune::array<unsigned int, dim> overlap        = default_overlap<GridType>(),
-                     Dune::MPIHelper::MPICommunicator communicator = Dune::MPIHelper::getCommunicator())
+  createCubeGrid(const Dune::FieldVector<ctype, dim>& lowerLeft, const Dune::FieldVector<ctype, dim>& upperRight,
+                 const Dune::array<unsigned int, dim>& elements_in,
+                 Dune::array<unsigned int, dim> overlap        = default_overlap<GridType>(),
+                 Dune::MPIHelper::MPICommunicator communicator = Dune::MPIHelper::getCommunicator())
   {
     const auto no_periodic_direction = std::bitset<dim>();
     std::array<int, dim> elements;

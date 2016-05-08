@@ -40,7 +40,9 @@ public:
   typedef GridViewImp GridViewType;
   typedef typename Stuff::Grid::Entity<GridViewType>::Type EntityType;
 
-  virtual ~WhichEntity() {}
+  virtual ~WhichEntity()
+  {
+  }
 
   virtual bool apply_on(const GridViewType& /*grid_view*/, const EntityType& /*entity*/) const = 0;
 }; // class WhichEntity
@@ -99,7 +101,9 @@ public:
   typedef GridViewImp GridViewType;
   typedef typename Stuff::Grid::Intersection<GridViewType>::Type IntersectionType;
 
-  virtual ~WhichIntersection<GridViewImp>() {}
+  virtual ~WhichIntersection<GridViewImp>()
+  {
+  }
 
   virtual bool apply_on(const GridViewType& /*grid_view*/, const IntersectionType& /*intersection*/) const = 0;
 }; // class WhichIntersection< GridViewImp >
@@ -243,7 +247,10 @@ public:
   typedef typename BaseType::IntersectionType IntersectionType;
   typedef std::function<bool(const GridViewType&, const IntersectionType&)> FilterType;
 
-  FilteredIntersections(FilterType filter) : filter_(filter) {}
+  FilteredIntersections(FilterType filter)
+    : filter_(filter)
+  {
+  }
 
   virtual bool apply_on(const GridViewType& grid_view, const IntersectionType& intersection) const override final
   {

@@ -22,7 +22,9 @@ LocalizationStudy::LocalizationStudy(const std::vector<std::string> only_these_i
 {
 }
 
-LocalizationStudy::~LocalizationStudy() {}
+LocalizationStudy::~LocalizationStudy()
+{
+}
 
 std::vector<std::string> LocalizationStudy::used_indicators() const
 {

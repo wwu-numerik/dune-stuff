@@ -25,7 +25,11 @@ struct ClampTest : public testing::Test
 {
   const T lower;
   const T upper;
-  ClampTest() : lower(T(-1)), upper(T(1)) {}
+  ClampTest()
+    : lower(T(-1))
+    , upper(T(1))
+  {
+  }
 };
 
 TYPED_TEST_CASE(ClampTest, TestTypes);
@@ -42,7 +46,10 @@ struct EpsilonTest : public testing::Test
 };
 
 TYPED_TEST_CASE(EpsilonTest, TestTypes);
-TYPED_TEST(EpsilonTest, All) { EXPECT_NE(Epsilon<TypeParam>::value, TypeParam(0)); }
+TYPED_TEST(EpsilonTest, All)
+{
+  EXPECT_NE(Epsilon<TypeParam>::value, TypeParam(0));
+}
 
 template <class T>
 struct MinMaxAvgTest : public testing::Test

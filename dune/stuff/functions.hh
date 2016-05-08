@@ -57,9 +57,15 @@ private:
   template <class FunctionType, bool available = false>
   struct Call
   {
-    static std::vector<std::string> append(std::vector<std::string> in) { return in; }
+    static std::vector<std::string> append(std::vector<std::string> in)
+    {
+      return in;
+    }
 
-    static bool compare(const std::string& /*type*/) { return false; }
+    static bool compare(const std::string& /*type*/)
+    {
+      return false;
+    }
 
     static Common::Configuration default_config(const std::string /*sub_name*/)
     {
@@ -83,7 +89,10 @@ private:
       return in;
     }
 
-    static bool compare(const std::string& type) { return type == FunctionType::static_id(); }
+    static bool compare(const std::string& type)
+    {
+      return type == FunctionType::static_id();
+    }
 
     static Common::Configuration default_config(const std::string sub_name)
     {

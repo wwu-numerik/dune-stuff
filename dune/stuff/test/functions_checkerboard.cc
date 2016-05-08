@@ -15,27 +15,31 @@
 #include <dune/common/exceptions.hh>
 
 #include <dune/stuff/functions/interfaces.hh>
-#include <dune/stuff/functions/checkerboard.hh>                                                              
+#include <dune/stuff/functions/checkerboard.hh>
 
 #if HAVE_DUNE_GRID
 #include <dune/grid/yaspgrid.hh>
 #if HAVE_ALUGRID
 #include <dune/grid/alugrid.hh>
-#endif //HAVE_ALUGRID
+#endif // HAVE_ALUGRID
 
-struct CheckerboardFunctionTest : public DS::FunctionTest< TESTFUNCTIONTYPE >
+struct CheckerboardFunctionTest : public DS::FunctionTest<TESTFUNCTIONTYPE>
 {
-    void check() const
-    {
-        const std::unique_ptr<const FunctionType> function(
-                    FunctionType::create(FunctionType::default_config()));
-    }
+  void check() const
+  {
+    const std::unique_ptr<const FunctionType> function(FunctionType::create(FunctionType::default_config()));
+  }
 };
 
-TEST_F(CheckerboardFunctionTest, provides_required_methods) { this->check(); }
+TEST_F(CheckerboardFunctionTest, provides_required_methods)
+{
+  this->check();
+}
 
 #else // HAVE_DUNE_GRID
 
-TEST(DISABLED_CheckerboardFunctionTest, provides_required_methods) {}
+TEST(DISABLED_CheckerboardFunctionTest, provides_required_methods)
+{
+}
 
 #endif // HAVE_DUNE_GRID

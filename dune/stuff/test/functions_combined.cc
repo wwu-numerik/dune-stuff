@@ -69,12 +69,15 @@ protected:
     auto right = std::make_shared<ConstantFunctionType>(rr);
     return std::unique_ptr<FunctionType>(new FunctionType(left, right));
   } // ... create(...)
-};  // class DifferenceFunctionTest
+}; // class DifferenceFunctionTest
 
 typedef testing::Types<Int<1>, Int<2>, Int<3>> DimDomains;
 
 TYPED_TEST_CASE(DifferenceFunctionTest, DimDomains);
-TYPED_TEST(DifferenceFunctionTest, static_interface_check) { this->static_interface_check(); }
+TYPED_TEST(DifferenceFunctionTest, static_interface_check)
+{
+  this->static_interface_check();
+}
 TYPED_TEST(DifferenceFunctionTest, dynamic_interface_check)
 {
   this->dynamic_interface_check(*(this->create(1.0, 1.0)), *(this->create_grid()));
@@ -99,8 +102,14 @@ TYPED_TEST(DifferenceFunctionTest, evaluate_check)
 #else // HAVE_DUNE_GRID
 
 // no-compile placeholders to mark disabled tests in test-binary output
-TEST(DISABLED_FlatTopFunctionTest, static_interface_check) {}
-TEST(DISABLED_DifferenceFunctionTest, dynamic_interface_check) {}
-TEST(DISABLED_DifferenceFunctionTest, evaluate_check) {}
+TEST(DISABLED_FlatTopFunctionTest, static_interface_check)
+{
+}
+TEST(DISABLED_DifferenceFunctionTest, dynamic_interface_check)
+{
+}
+TEST(DISABLED_DifferenceFunctionTest, evaluate_check)
+{
+}
 
 #endif // HAVE_DUNE_GRID

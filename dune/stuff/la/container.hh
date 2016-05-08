@@ -54,8 +54,8 @@ struct Container<ScalarType, ChooseBackend::istl_sparse>
 // template< class Traits, size_t domainDim, size_t rangeDim, size_t rangeDimCols > class SpaceInterface
 template <class Space>
 typename Space::RangeFieldType
-    communicated_dot(const Dune::Stuff::LA::IstlDenseVector<typename Space::RangeFieldType>& vector,
-                     const Dune::Stuff::LA::IstlDenseVector<typename Space::RangeFieldType>& source, const Space& space)
+communicated_dot(const Dune::Stuff::LA::IstlDenseVector<typename Space::RangeFieldType>& vector,
+                 const Dune::Stuff::LA::IstlDenseVector<typename Space::RangeFieldType>& source, const Space& space)
 {
   typename Space::RangeFieldType result = typename Space::RangeFieldType(0);
   space.communicator().dot(vector.backend(), source.backend(), result);

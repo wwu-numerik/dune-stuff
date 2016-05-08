@@ -29,7 +29,8 @@ struct MaximumEntityVolumeRefineFunctor : public Functor::Codim0<GridViewType>
   typedef Functor::Codim0<GridViewType> BaseType;
   typedef typename GridViewType::GridType GridType;
   MaximumEntityVolumeRefineFunctor(GridType& grid, double volume, double factor)
-    : threshold_volume_(volume * factor), grid_(grid)
+    : threshold_volume_(volume * factor)
+    , grid_(grid)
   {
   }
 
@@ -77,7 +78,8 @@ struct MinMaxCoordinateFunctor : public Functor::Codim0<GridViewType>
   typedef typename EntityGeometryType::ctype ctype;
   typedef FieldVector<ctype, EntityGeometryType::coorddimension> VectorType;
   MinMaxCoordinateFunctor()
-    : minima_(VectorType(std::numeric_limits<ctype>::max())), maxima_(VectorType(std::numeric_limits<ctype>::min()))
+    : minima_(VectorType(std::numeric_limits<ctype>::max()))
+    , maxima_(VectorType(std::numeric_limits<ctype>::min()))
   {
   }
 

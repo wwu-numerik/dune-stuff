@@ -61,7 +61,7 @@ struct FloatCmpBase : public testing::Test
 
     DSC_EXPECT_FLOAT_EQ(zero, 0.9 * epsilon);
     DSC_EXPECT_FLOAT_EQ<numpy>(zero, 0.9 * epsilon);
-    EXPECT_FALSE(Stuff::Common::FloatCmp::eq<relativeWeak>(zero, 0.9 * epsilon));   /* <- NOTE */
+    EXPECT_FALSE(Stuff::Common::FloatCmp::eq<relativeWeak>(zero, 0.9 * epsilon)); /* <- NOTE */
     EXPECT_FALSE(Stuff::Common::FloatCmp::eq<relativeStrong>(zero, 0.9 * epsilon)); /* <- NOTE */
     DSC_EXPECT_FLOAT_EQ<absolute>(zero, 0.9 * epsilon);
     DSC_EXPECT_FLOAT_EQ<defaultStyle>(zero, 0.9 * epsilon);
@@ -88,11 +88,11 @@ struct FloatCmpBase : public testing::Test
     DSC_EXPECT_FLOAT_EQ<absolute>(one, eps_plus);
     DSC_EXPECT_FLOAT_EQ<defaultStyle>(one, eps_plus);
 
-    DSC_EXPECT_FLOAT_EQ(one, one + 1.1 * epsilon);        /* <- NOTE */
+    DSC_EXPECT_FLOAT_EQ(one, one + 1.1 * epsilon); /* <- NOTE */
     DSC_EXPECT_FLOAT_EQ<numpy>(one, one + 1.1 * epsilon); /* <- NOTE */
     EXPECT_FALSE(Stuff::Common::FloatCmp::eq<relativeWeak>(one, one + 1.1 * epsilon));
     EXPECT_FALSE(Stuff::Common::FloatCmp::eq<relativeStrong>(one, one + 1.1 * epsilon));
-    DSC_EXPECT_FLOAT_EQ<absolute>(one, one + 1.1 * epsilon);     /* <- NOTE */
+    DSC_EXPECT_FLOAT_EQ<absolute>(one, one + 1.1 * epsilon); /* <- NOTE */
     DSC_EXPECT_FLOAT_EQ<defaultStyle>(one, one + 1.1 * epsilon); /* <- NOTE */
 
     EXPECT_FALSE(Stuff::Common::FloatCmp::eq(one, 2. * one));
@@ -114,7 +114,7 @@ struct FloatCmpBase : public testing::Test
 
     EXPECT_FALSE(Stuff::Common::FloatCmp::ne(zero, 0.9 * epsilon));
     EXPECT_FALSE(Stuff::Common::FloatCmp::ne<numpy>(zero, 0.9 * epsilon));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::ne<relativeWeak>(zero, 0.9 * epsilon));   /* <- NOTE */
+    EXPECT_TRUE(Stuff::Common::FloatCmp::ne<relativeWeak>(zero, 0.9 * epsilon)); /* <- NOTE */
     EXPECT_TRUE(Stuff::Common::FloatCmp::ne<relativeStrong>(zero, 0.9 * epsilon)); /* <- NOTE */
     EXPECT_FALSE(Stuff::Common::FloatCmp::ne<absolute>(zero, 0.9 * epsilon));
     EXPECT_FALSE(Stuff::Common::FloatCmp::ne<defaultStyle>(zero, 0.9 * epsilon));
@@ -140,11 +140,11 @@ struct FloatCmpBase : public testing::Test
     EXPECT_FALSE(Stuff::Common::FloatCmp::ne<absolute>(one, one + 0.9 * epsilon));
     EXPECT_FALSE(Stuff::Common::FloatCmp::ne<defaultStyle>(one, one + 0.9 * epsilon));
 
-    EXPECT_FALSE(Stuff::Common::FloatCmp::ne(one, one + 1.1 * epsilon));        /* <- NOTE */
+    EXPECT_FALSE(Stuff::Common::FloatCmp::ne(one, one + 1.1 * epsilon)); /* <- NOTE */
     EXPECT_FALSE(Stuff::Common::FloatCmp::ne<numpy>(one, one + 1.1 * epsilon)); /* <- NOTE */
     EXPECT_TRUE(Stuff::Common::FloatCmp::ne<relativeWeak>(one, one + 1.1 * epsilon));
     EXPECT_TRUE(Stuff::Common::FloatCmp::ne<relativeStrong>(one, one + 1.1 * epsilon));
-    EXPECT_FALSE(Stuff::Common::FloatCmp::ne<absolute>(one, one + 1.1 * epsilon));     /* <- NOTE */
+    EXPECT_FALSE(Stuff::Common::FloatCmp::ne<absolute>(one, one + 1.1 * epsilon)); /* <- NOTE */
     EXPECT_FALSE(Stuff::Common::FloatCmp::ne<defaultStyle>(one, one + 1.1 * epsilon)); /* <- NOTE */
 
     EXPECT_TRUE(Stuff::Common::FloatCmp::ne(one, 2. * one));
@@ -166,7 +166,7 @@ struct FloatCmpBase : public testing::Test
 
     EXPECT_FALSE(Stuff::Common::FloatCmp::gt(0.9 * epsilon, zero));
     EXPECT_FALSE(Stuff::Common::FloatCmp::gt<numpy>(0.9 * epsilon, zero));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::gt<relativeWeak>(0.9 * epsilon, zero));   /* <- NOTE */
+    EXPECT_TRUE(Stuff::Common::FloatCmp::gt<relativeWeak>(0.9 * epsilon, zero)); /* <- NOTE */
     EXPECT_TRUE(Stuff::Common::FloatCmp::gt<relativeStrong>(0.9 * epsilon, zero)); /* <- NOTE */
     EXPECT_FALSE(Stuff::Common::FloatCmp::gt<absolute>(0.9 * epsilon, zero));
     EXPECT_FALSE(Stuff::Common::FloatCmp::gt<defaultStyle>(0.9 * epsilon, zero));
@@ -192,11 +192,11 @@ struct FloatCmpBase : public testing::Test
     EXPECT_FALSE(Stuff::Common::FloatCmp::gt<absolute>(one + 0.9 * epsilon, one));
     EXPECT_FALSE(Stuff::Common::FloatCmp::gt<defaultStyle>(one + 0.9 * epsilon, one));
 
-    EXPECT_FALSE(Stuff::Common::FloatCmp::gt(one + 1.1 * epsilon, one));        /* <- NOTE */
+    EXPECT_FALSE(Stuff::Common::FloatCmp::gt(one + 1.1 * epsilon, one)); /* <- NOTE */
     EXPECT_FALSE(Stuff::Common::FloatCmp::gt<numpy>(one + 1.1 * epsilon, one)); /* <- NOTE */
     EXPECT_TRUE(Stuff::Common::FloatCmp::gt<relativeWeak>(one + 1.1 * epsilon, one));
     EXPECT_TRUE(Stuff::Common::FloatCmp::gt<relativeStrong>(one + 1.1 * epsilon, one));
-    EXPECT_FALSE(Stuff::Common::FloatCmp::gt<absolute>(one + 1.1 * epsilon, one));     /* <- NOTE */
+    EXPECT_FALSE(Stuff::Common::FloatCmp::gt<absolute>(one + 1.1 * epsilon, one)); /* <- NOTE */
     EXPECT_FALSE(Stuff::Common::FloatCmp::gt<defaultStyle>(one + 1.1 * epsilon, one)); /* <- NOTE */
 
     EXPECT_TRUE(Stuff::Common::FloatCmp::gt(2. * one, one));
@@ -218,7 +218,7 @@ struct FloatCmpBase : public testing::Test
 
     EXPECT_FALSE(Stuff::Common::FloatCmp::lt(zero, 0.9 * epsilon));
     EXPECT_FALSE(Stuff::Common::FloatCmp::lt<numpy>(zero, 0.9 * epsilon));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::lt<relativeWeak>(zero, 0.9 * epsilon));   /* <- NOTE */
+    EXPECT_TRUE(Stuff::Common::FloatCmp::lt<relativeWeak>(zero, 0.9 * epsilon)); /* <- NOTE */
     EXPECT_TRUE(Stuff::Common::FloatCmp::lt<relativeStrong>(zero, 0.9 * epsilon)); /* <- NOTE */
     EXPECT_FALSE(Stuff::Common::FloatCmp::lt<absolute>(zero, 0.9 * epsilon));
     EXPECT_FALSE(Stuff::Common::FloatCmp::lt<defaultStyle>(zero, 0.9 * epsilon));
@@ -244,11 +244,11 @@ struct FloatCmpBase : public testing::Test
     EXPECT_FALSE(Stuff::Common::FloatCmp::lt<absolute>(one, one + 0.9 * epsilon));
     EXPECT_FALSE(Stuff::Common::FloatCmp::lt<defaultStyle>(one, one + 0.9 * epsilon));
 
-    EXPECT_FALSE(Stuff::Common::FloatCmp::lt(one, one + 1.1 * epsilon));        /* <- NOTE */
+    EXPECT_FALSE(Stuff::Common::FloatCmp::lt(one, one + 1.1 * epsilon)); /* <- NOTE */
     EXPECT_FALSE(Stuff::Common::FloatCmp::lt<numpy>(one, one + 1.1 * epsilon)); /* <- NOTE */
     EXPECT_TRUE(Stuff::Common::FloatCmp::lt<relativeWeak>(one, one + 1.1 * epsilon));
     EXPECT_TRUE(Stuff::Common::FloatCmp::lt<relativeStrong>(one, one + 1.1 * epsilon));
-    EXPECT_FALSE(Stuff::Common::FloatCmp::lt<absolute>(one, one + 1.1 * epsilon));     /* <- NOTE */
+    EXPECT_FALSE(Stuff::Common::FloatCmp::lt<absolute>(one, one + 1.1 * epsilon)); /* <- NOTE */
     EXPECT_FALSE(Stuff::Common::FloatCmp::lt<defaultStyle>(one, one + 1.1 * epsilon)); /* <- NOTE */
 
     EXPECT_TRUE(Stuff::Common::FloatCmp::lt(one, 2. * one));
@@ -391,12 +391,30 @@ typedef testing::Types<double //, float
                        > ScalarTypes;
 
 TYPED_TEST_CASE(FloatCmpScalar, ScalarTypes);
-TYPED_TEST(FloatCmpScalar, eq) { this->check_eq(); }
-TYPED_TEST(FloatCmpScalar, ne) { this->check_ne(); }
-TYPED_TEST(FloatCmpScalar, gt) { this->check_gt(); }
-TYPED_TEST(FloatCmpScalar, lt) { this->check_lt(); }
-TYPED_TEST(FloatCmpScalar, ge) { this->check_ge(); }
-TYPED_TEST(FloatCmpScalar, le) { this->check_le(); }
+TYPED_TEST(FloatCmpScalar, eq)
+{
+  this->check_eq();
+}
+TYPED_TEST(FloatCmpScalar, ne)
+{
+  this->check_ne();
+}
+TYPED_TEST(FloatCmpScalar, gt)
+{
+  this->check_gt();
+}
+TYPED_TEST(FloatCmpScalar, lt)
+{
+  this->check_lt();
+}
+TYPED_TEST(FloatCmpScalar, ge)
+{
+  this->check_ge();
+}
+TYPED_TEST(FloatCmpScalar, le)
+{
+  this->check_le();
+}
 
 typedef testing::
     Types<std::vector<double>, Dune::FieldVector<double, vec_size>, Dune::Stuff::Common::FieldVector<double, vec_size>,
@@ -426,36 +444,90 @@ typedef testing::
           > VectorTypes;
 
 TYPED_TEST_CASE(FloatCmpVector, VectorTypes);
-TYPED_TEST(FloatCmpVector, eq) { this->check_eq(); }
-TYPED_TEST(FloatCmpVector, ne) { this->check_ne(); }
-TYPED_TEST(FloatCmpVector, gt) { this->check_gt(); }
-TYPED_TEST(FloatCmpVector, lt) { this->check_lt(); }
-TYPED_TEST(FloatCmpVector, ge) { this->check_ge(); }
-TYPED_TEST(FloatCmpVector, le) { this->check_le(); }
+TYPED_TEST(FloatCmpVector, eq)
+{
+  this->check_eq();
+}
+TYPED_TEST(FloatCmpVector, ne)
+{
+  this->check_ne();
+}
+TYPED_TEST(FloatCmpVector, gt)
+{
+  this->check_gt();
+}
+TYPED_TEST(FloatCmpVector, lt)
+{
+  this->check_lt();
+}
+TYPED_TEST(FloatCmpVector, ge)
+{
+  this->check_ge();
+}
+TYPED_TEST(FloatCmpVector, le)
+{
+  this->check_le();
+}
 
 #if !HAVE_DUNE_ISTL
 
-TEST(DISABLED_IstlDenseVector_FloatCmpVector, eq) {}
-TEST(DISABLED_IstlDenseVector_FloatCmpVector, ne) {}
-TEST(DISABLED_IstlDenseVector_FloatCmpVector, gt) {}
-TEST(DISABLED_IstlDenseVector_FloatCmpVector, lt) {}
-TEST(DISABLED_IstlDenseVector_FloatCmpVector, ge) {}
-TEST(DISABLED_IstlDenseVector_FloatCmpVector, le) {}
+TEST(DISABLED_IstlDenseVector_FloatCmpVector, eq)
+{
+}
+TEST(DISABLED_IstlDenseVector_FloatCmpVector, ne)
+{
+}
+TEST(DISABLED_IstlDenseVector_FloatCmpVector, gt)
+{
+}
+TEST(DISABLED_IstlDenseVector_FloatCmpVector, lt)
+{
+}
+TEST(DISABLED_IstlDenseVector_FloatCmpVector, ge)
+{
+}
+TEST(DISABLED_IstlDenseVector_FloatCmpVector, le)
+{
+}
 
 #endif
 #if !HAVE_EIGEN
 
-TEST(DISABLED_EigenDenseVector_FloatCmpVector, eq) {}
-TEST(DISABLED_EigenDenseVector_FloatCmpVector, ne) {}
-TEST(DISABLED_EigenDenseVector_FloatCmpVector, gt) {}
-TEST(DISABLED_EigenDenseVector_FloatCmpVector, lt) {}
-TEST(DISABLED_EigenDenseVector_FloatCmpVector, ge) {}
-TEST(DISABLED_EigenDenseVector_FloatCmpVector, le) {}
-TEST(DISABLED_EigenMappedDenseVector_FloatCmpVector, eq) {}
-TEST(DISABLED_EigenMappedDenseVector_FloatCmpVector, ne) {}
-TEST(DISABLED_EigenMappedDenseVector_FloatCmpVector, gt) {}
-TEST(DISABLED_EigenMappedDenseVector_FloatCmpVector, lt) {}
-TEST(DISABLED_EigenMappedDenseVector_FloatCmpVector, ge) {}
-TEST(DISABLED_EigenMappedDenseVector_FloatCmpVector, le) {}
+TEST(DISABLED_EigenDenseVector_FloatCmpVector, eq)
+{
+}
+TEST(DISABLED_EigenDenseVector_FloatCmpVector, ne)
+{
+}
+TEST(DISABLED_EigenDenseVector_FloatCmpVector, gt)
+{
+}
+TEST(DISABLED_EigenDenseVector_FloatCmpVector, lt)
+{
+}
+TEST(DISABLED_EigenDenseVector_FloatCmpVector, ge)
+{
+}
+TEST(DISABLED_EigenDenseVector_FloatCmpVector, le)
+{
+}
+TEST(DISABLED_EigenMappedDenseVector_FloatCmpVector, eq)
+{
+}
+TEST(DISABLED_EigenMappedDenseVector_FloatCmpVector, ne)
+{
+}
+TEST(DISABLED_EigenMappedDenseVector_FloatCmpVector, gt)
+{
+}
+TEST(DISABLED_EigenMappedDenseVector_FloatCmpVector, lt)
+{
+}
+TEST(DISABLED_EigenMappedDenseVector_FloatCmpVector, ge)
+{
+}
+TEST(DISABLED_EigenMappedDenseVector_FloatCmpVector, le)
+{
+}
 
 #endif

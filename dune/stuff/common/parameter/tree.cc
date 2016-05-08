@@ -16,19 +16,23 @@ namespace Stuff {
 namespace Common {
 
 ExtendedParameterTree::ExtendedParameterTree()
-{}
+{
+}
 
 ExtendedParameterTree::ExtendedParameterTree(const std::string filename)
   : BaseType(init(filename))
-{}
+{
+}
 
 ExtendedParameterTree::ExtendedParameterTree(int argc, char** argv, std::string filename)
   : ExtendedParameterTree::BaseType(init(argc, argv, filename))
-{}
+{
+}
 
 ExtendedParameterTree::ExtendedParameterTree(const Dune::ParameterTree& other)
   : ExtendedParameterTree::BaseType(other)
-{}
+{
+}
 
 ExtendedParameterTree& ExtendedParameterTree::operator=(const Dune::ParameterTree& other)
 {
@@ -41,7 +45,8 @@ ExtendedParameterTree& ExtendedParameterTree::operator=(const Dune::ParameterTre
 /**
  *  \brief adds another Dune::ParameterTree
  */
-void ExtendedParameterTree::add(const Dune::ParameterTree& _other, const std::string _subName /*= ""*/, bool overwrite /*= false*/)
+void ExtendedParameterTree::add(const Dune::ParameterTree& _other, const std::string _subName /*= ""*/,
+                                bool overwrite /*= false*/)
 {
   if (_subName.empty()) {
     // copy each key/value pair and append subName
@@ -50,13 +55,13 @@ void ExtendedParameterTree::add(const Dune::ParameterTree& _other, const std::st
       const std::string key = keyVector[ii];
       if (BaseType::hasKey(key) && !overwrite && (BaseType::operator[](key) != _other[key]))
         DUNE_THROW(Dune::InvalidStateException,
-                   "\n" << DSC::colorStringRed("ERROR:")
-                   << " key '" << key << "' already exists in the following Dune::ParameterTree:\n"
-                   << reportString("  "));
-      BaseType::operator[](key) = _other.get< std::string >(key);
+                   "\n" << DSC::colorStringRed("ERROR:") << " key '" << key
+                        << "' already exists in the following Dune::ParameterTree:\n"
+                        << reportString("  "));
+      BaseType::operator[](key) = _other.get<std::string>(key);
     }
   } else {
-      if (BaseType::hasSub(_subName)) {
+    if (BaseType::hasSub(_subName)) {
       ExtendedParameterTree _sub = BaseType::sub(_subName);
       _sub.add(_other, "", overwrite);
       BaseType::sub(_subName) = _sub;
@@ -68,9 +73,10 @@ void ExtendedParameterTree::add(const Dune::ParameterTree& _other, const std::st
 ExtendedParameterTree ExtendedParameterTree::sub(const std::string& _sub) const
 {
   if (!hasSub(_sub))
-      DUNE_THROW(Dune::RangeError,
-                 "\n" << DSC::colorStringRed("ERROR:")
-                 << " sub '" << _sub << "' missing in the following Dune::ParameterTree:\n" << reportString("  "));
+    DUNE_THROW(Dune::RangeError,
+               "\n" << DSC::colorStringRed("ERROR:") << " sub '" << _sub
+                    << "' missing in the following Dune::ParameterTree:\n"
+                    << reportString("  "));
   return ExtendedParameterTree(BaseType::sub(_sub));
 }
 
@@ -102,9 +108,8 @@ std::string ExtendedParameterTree::reportString(const std::string& prefix /*= ""
 bool ExtendedParameterTree::hasVector(const std::string& key) const
 {
   if (hasKey(key)) {
-    const std::string str = BaseType::get< std::string >(key, "meaningless_default_value");
-    return (str.substr(0, 1) ==  "["
-        && str.substr(str.size() - 1, 1) == "]");
+    const std::string str = BaseType::get<std::string>(key, "meaningless_default_value");
+    return (str.substr(0, 1) == "[" && str.substr(str.size() - 1, 1) == "]");
   }
   return false;
 } // bool hasVector(const std::string& vector) const
@@ -113,8 +118,9 @@ void ExtendedParameterTree::assertKey(const std::string& key) const
 {
   if (!BaseType::hasKey(key))
     DUNE_THROW(Dune::RangeError,
-               "\n" << DSC::colorStringRed("ERROR:")
-               << " key '" << key << "' missing  in the following Dune::ParameterTree:\n" << reportString("  "));
+               "\n" << DSC::colorStringRed("ERROR:") << " key '" << key
+                    << "' missing  in the following Dune::ParameterTree:\n"
+                    << reportString("  "));
 }
 
 void ExtendedParameterTree::assertSub(const std::string& _sub) const
@@ -123,8 +129,9 @@ void ExtendedParameterTree::assertSub(const std::string& _sub) const
     DUNE_THROW_COLORFULLY(Exceptions::configuration_error, "Given sub_id must not be empty!");
   if (!BaseType::hasSub(_sub))
     DUNE_THROW(Dune::RangeError,
-               "\n" << DSC::colorStringRed("ERROR:")
-               << " sub '" << _sub << "' missing  in the following Dune::ParameterTree:\n" << reportString("  "));
+               "\n" << DSC::colorStringRed("ERROR:") << " sub '" << _sub
+                    << "' missing  in the following Dune::ParameterTree:\n"
+                    << reportString("  "));
 }
 
 /**
@@ -146,7 +153,7 @@ ParameterTree ExtendedParameterTree::init(int argc, char** argv, std::string fil
     Dune::ParameterTreeParser::readOptions(argc, argv, paramTree);
   }
   if (paramTree.hasKey("paramfile")) {
-    Dune::ParameterTreeParser::readINITree(paramTree.get< std::string >("paramfile"), paramTree, false);
+    Dune::ParameterTreeParser::readINITree(paramTree.get<std::string>("paramfile"), paramTree, false);
   }
   return paramTree;
 } // static ExtendedParameterTree init(...)
@@ -158,11 +165,12 @@ ParameterTree ExtendedParameterTree::init(const std::string filename)
   return paramTree;
 } // static ExtendedParameterTree init(...)
 
-void ExtendedParameterTree::reportAsSub(std::ostream& stream, const std::string& prefix, const std::string& subPath) const
+void ExtendedParameterTree::reportAsSub(std::ostream& stream, const std::string& prefix,
+                                        const std::string& subPath) const
 {
   for (auto pair : values)
     stream << prefix << pair.first << " = " << pair.second << std::endl;
-//      stream << prefix << pair.first << " = \"" << pair.second << "\"" << std::endl;
+  //      stream << prefix << pair.first << " = \"" << pair.second << "\"" << std::endl;
   for (auto pair : subs) {
     ExtendedParameterTree subTree(pair.second);
     if (subTree.getValueKeys().size())
@@ -171,7 +179,8 @@ void ExtendedParameterTree::reportAsSub(std::ostream& stream, const std::string&
   }
 } // void reportAsSub(std::ostream& stream = std::cout, const std::string& prefix = "") const
 
-std::string ExtendedParameterTree::findCommonPrefix(const BaseType& subtree, const std::string previousPrefix /*= ""*/) const
+std::string ExtendedParameterTree::findCommonPrefix(const BaseType& subtree,
+                                                    const std::string previousPrefix /*= ""*/) const
 {
   const auto& valuekeys = subtree.getValueKeys();
   const auto& subkeys = subtree.getSubKeys();
@@ -198,7 +207,7 @@ void ExtendedParameterTree::reportFlatly(const BaseType& subtree, const std::str
     if (prefix.empty())
       reportFlatly(subtree.sub(subkey), subkey + ".", stream);
     else
-      reportFlatly(subtree.sub(subkey), prefix + subkey+ "." , stream);
+      reportFlatly(subtree.sub(subkey), prefix + subkey + ".", stream);
   }
 }
 

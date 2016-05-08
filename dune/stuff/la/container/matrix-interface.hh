@@ -52,7 +52,9 @@ public:
   typedef typename Dune::FieldTraits<ScalarImp>::real_type RealType;
   static_assert(std::is_same<ScalarType, typename Traits::ScalarType>::value, "");
 
-  virtual ~MatrixInterface() {}
+  virtual ~MatrixInterface()
+  {
+  }
 
   /// \name Have to be implemented by a derived class in addition to the ones required by ContainerInterface!
   /// \{
@@ -91,13 +93,25 @@ public:
     return this->as_imp().get_entry(ii, jj);
   }
 
-  inline void clear_row(const size_t ii) { CHECK_AND_CALL_CRTP(this->as_imp().clear_row(ii)); }
+  inline void clear_row(const size_t ii)
+  {
+    CHECK_AND_CALL_CRTP(this->as_imp().clear_row(ii));
+  }
 
-  inline void clear_col(const size_t jj) { CHECK_AND_CALL_CRTP(this->as_imp().clear_col(jj)); }
+  inline void clear_col(const size_t jj)
+  {
+    CHECK_AND_CALL_CRTP(this->as_imp().clear_col(jj));
+  }
 
-  inline void unit_row(const size_t ii) { CHECK_AND_CALL_CRTP(this->as_imp().unit_row(ii)); }
+  inline void unit_row(const size_t ii)
+  {
+    CHECK_AND_CALL_CRTP(this->as_imp().unit_row(ii));
+  }
 
-  inline void unit_col(const size_t jj) { CHECK_AND_CALL_CRTP(this->as_imp().unit_col(jj)); }
+  inline void unit_col(const size_t jj)
+  {
+    CHECK_AND_CALL_CRTP(this->as_imp().unit_col(jj));
+  }
 
   /**
    * \brief  Checks entries for inf or nan.
@@ -139,7 +153,10 @@ public:
    * \note Some implementations do not report the correct number here, so use and interpret only if you know what you
    * are doing!
    */
-  virtual size_t non_zeros() const { return rows() * cols(); }
+  virtual size_t non_zeros() const
+  {
+    return rows() * cols();
+  }
 
   /**
    * \brief Computes the sparsity pattern of the matrix.
@@ -234,13 +251,25 @@ public:
     return get_entry(boost::numeric_cast<size_t>(ii), boost::numeric_cast<size_t>(jj));
   }
 
-  inline void pb_clear_row(const DUNE_STUFF_SSIZE_T ii) { clear_row(boost::numeric_cast<size_t>(ii)); }
+  inline void pb_clear_row(const DUNE_STUFF_SSIZE_T ii)
+  {
+    clear_row(boost::numeric_cast<size_t>(ii));
+  }
 
-  inline void pb_clear_col(const DUNE_STUFF_SSIZE_T jj) { clear_col(boost::numeric_cast<size_t>(jj)); }
+  inline void pb_clear_col(const DUNE_STUFF_SSIZE_T jj)
+  {
+    clear_col(boost::numeric_cast<size_t>(jj));
+  }
 
-  inline void pb_unit_row(const DUNE_STUFF_SSIZE_T ii) { unit_row(boost::numeric_cast<size_t>(ii)); }
+  inline void pb_unit_row(const DUNE_STUFF_SSIZE_T ii)
+  {
+    unit_row(boost::numeric_cast<size_t>(ii));
+  }
 
-  inline void pb_unit_col(const DUNE_STUFF_SSIZE_T jj) { unit_col(boost::numeric_cast<size_t>(jj)); }
+  inline void pb_unit_col(const DUNE_STUFF_SSIZE_T jj)
+  {
+    unit_col(boost::numeric_cast<size_t>(jj));
+  }
 
   DUNE_STUFF_SSIZE_T pb_non_zeros() const
   {
@@ -335,9 +364,15 @@ struct MatrixAbstractionBase
     return MatrixType(rows, cols, val);
   }
 
-  static inline typename std::enable_if<is_matrix, size_t>::type rows(const MatrixType& mat) { return mat.rows(); }
+  static inline typename std::enable_if<is_matrix, size_t>::type rows(const MatrixType& mat)
+  {
+    return mat.rows();
+  }
 
-  static inline typename std::enable_if<is_matrix, size_t>::type cols(const MatrixType& mat) { return mat.cols(); }
+  static inline typename std::enable_if<is_matrix, size_t>::type cols(const MatrixType& mat)
+  {
+    return mat.cols();
+  }
 
   static void set_entry(MatrixType& mat, const size_t row, const size_t col, const ScalarType& val)
   {

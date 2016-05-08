@@ -41,7 +41,10 @@ struct UnitMatrix<K, 1>
 {
   typedef FieldVector<K, 1> type;
 
-  static type value() { return type(1); }
+  static type value()
+  {
+    return type(1);
+  }
 }; // struct UnitMatrix
 
 template <class K, int dim>
@@ -92,13 +95,19 @@ struct Get<R, 1, rC>
 template <class R, size_t r>
 struct Get<R, r, 1>
 {
-  static std::string value_str() { return Get<R, 1, r>::value_str(); }
+  static std::string value_str()
+  {
+    return Get<R, 1, r>::value_str();
+  }
 };
 
 template <class R>
 struct Get<R, 1, 1>
 {
-  static std::string value_str() { return "1"; }
+  static std::string value_str()
+  {
+    return "1";
+  }
 };
 
 } // namespace internal
@@ -124,7 +133,10 @@ public:
 
   static const bool available = true;
 
-  static std::string static_id() { return BaseType::static_id() + ".constant"; }
+  static std::string static_id()
+  {
+    return BaseType::static_id() + ".constant";
+  }
 
   static Common::Configuration default_config(const std::string sub_name = "")
   {
@@ -151,29 +163,43 @@ public:
   } // ... create(...)
 
   explicit Constant(const RangeType& constant, const std::string name_in = static_id())
-    : constant_(constant), name_(name_in)
+    : constant_(constant)
+    , name_(name_in)
   {
   }
 
   explicit Constant(const RangeFieldImp& constant, const std::string name_in = static_id())
-    : constant_(constant), name_(name_in)
+    : constant_(constant)
+    , name_(name_in)
   {
   }
 
   Constant(const ThisType& other) = default;
 
-  virtual std::string type() const override final { return BaseType::static_id() + ".constant"; }
+  virtual std::string type() const override final
+  {
+    return BaseType::static_id() + ".constant";
+  }
 
-  virtual size_t order() const override final { return 0; }
+  virtual size_t order() const override final
+  {
+    return 0;
+  }
 
-  virtual void evaluate(const DomainType& /*x*/, RangeType& ret) const override final { ret = constant_; }
+  virtual void evaluate(const DomainType& /*x*/, RangeType& ret) const override final
+  {
+    ret = constant_;
+  }
 
   virtual void jacobian(const DomainType& /*x*/, JacobianRangeType& ret) const override final
   {
     jacobian_helper(ret, internal::ChooseVariant<rangeDimCols>());
   }
 
-  virtual std::string name() const override final { return name_; }
+  virtual std::string name() const override final
+  {
+    return name_;
+  }
 
 private:
   template <size_t rC>
@@ -184,7 +210,10 @@ private:
     }
   }
 
-  void jacobian_helper(JacobianRangeType& ret, internal::ChooseVariant<1>) const { ret *= 0; }
+  void jacobian_helper(JacobianRangeType& ret, internal::ChooseVariant<1>) const
+  {
+    ret *= 0;
+  }
   const RangeType constant_;
   const std::string name_;
 };

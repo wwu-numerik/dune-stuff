@@ -31,7 +31,10 @@ struct GridInfoTest : public ::testing::Test
   typedef Dimensions<typename GridType::LeafGridView> DimensionsType;
 
   const DSG::Providers::Cube<GridType> grid_prv;
-  GridInfoTest() : grid_prv(0.f, 1.f, level) {}
+  GridInfoTest()
+    : grid_prv(0.f, 1.f, level)
+  {
+  }
 
   void check_dimensions(const DimensionsType& dim, const size_t entities)
   {

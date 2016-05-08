@@ -38,13 +38,29 @@ public:
   using typename BaseType::GridType;
   using BaseType::Level;
 
-  explicit EOC(GridType& grd, const size_t num_refs) : BaseType(grd) { setup(num_refs); }
+  explicit EOC(GridType& grd, const size_t num_refs)
+    : BaseType(grd)
+  {
+    setup(num_refs);
+  }
 
-  explicit EOC(GridType* grid_ptr, const size_t num_refs) : BaseType(grid_ptr) { setup(num_refs); }
+  explicit EOC(GridType* grid_ptr, const size_t num_refs)
+    : BaseType(grid_ptr)
+  {
+    setup(num_refs);
+  }
 
-  explicit EOC(std::shared_ptr<GridType> grid_ptr, const size_t num_refs) : BaseType(grid_ptr) { setup(num_refs); }
+  explicit EOC(std::shared_ptr<GridType> grid_ptr, const size_t num_refs)
+    : BaseType(grid_ptr)
+  {
+    setup(num_refs);
+  }
 
-  explicit EOC(std::unique_ptr<GridType>&& grid_ptr, const size_t num_refs) : BaseType(grid_ptr) { setup(num_refs); }
+  explicit EOC(std::unique_ptr<GridType>&& grid_ptr, const size_t num_refs)
+    : BaseType(grid_ptr)
+  {
+    setup(num_refs);
+  }
 
   size_t num_refinements() const
   {
@@ -58,9 +74,15 @@ public:
     return levels_[refinement];
   }
 
-  int reference_level() const { return reference_level_; }
+  int reference_level() const
+  {
+    return reference_level_;
+  }
 
-  typename BaseType::LevelGridViewType reference_grid_view() const { return this->level_view(reference_level_); }
+  typename BaseType::LevelGridViewType reference_grid_view() const
+  {
+    return this->level_view(reference_level_);
+  }
 
 private:
   void setup(const size_t num_refinements)

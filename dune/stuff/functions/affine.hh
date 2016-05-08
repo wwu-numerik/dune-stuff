@@ -29,7 +29,10 @@ template <class EntityImp, class DomainFieldImp, size_t domainDim, class RangeFi
           size_t rangeDimCols = 1>
 class Affine
 {
-  Affine() { static_assert(AlwaysFalse<EntityImp>::value, "Not available for rangeDimCols > 1!"); }
+  Affine()
+  {
+    static_assert(AlwaysFalse<EntityImp>::value, "Not available for rangeDimCols > 1!");
+  }
 };
 
 template <class EntityImp, class DomainFieldImp, size_t domainDim, class RangeFieldImp, size_t rangeDim>
@@ -49,7 +52,10 @@ public:
 
   static const bool available = true;
 
-  static std::string static_id() { return BaseType::static_id() + ".affine"; }
+  static std::string static_id()
+  {
+    return BaseType::static_id() + ".affine";
+  }
 
   static Common::Configuration default_config(const std::string sub_name = "")
   {
@@ -79,15 +85,23 @@ public:
 
   explicit Affine(const MatrixType& matrix, const RangeType& vector = RangeType(0),
                   const std::string name_in = static_id())
-    : A_(matrix), b_(vector), name_(name_in)
+    : A_(matrix)
+    , b_(vector)
+    , name_(name_in)
   {
   }
 
   Affine(const ThisType& other) = default;
 
-  virtual std::string type() const override final { return BaseType::static_id() + ".affine"; }
+  virtual std::string type() const override final
+  {
+    return BaseType::static_id() + ".affine";
+  }
 
-  virtual size_t order() const override final { return 1; }
+  virtual size_t order() const override final
+  {
+    return 1;
+  }
 
   virtual void evaluate(const DomainType& x, RangeType& ret) const override final
   {
@@ -95,9 +109,15 @@ public:
     ret += b_;
   }
 
-  virtual void jacobian(const DomainType& /*x*/, JacobianRangeType& ret) const override final { ret = A_; }
+  virtual void jacobian(const DomainType& /*x*/, JacobianRangeType& ret) const override final
+  {
+    ret = A_;
+  }
 
-  virtual std::string name() const override final { return name_; }
+  virtual std::string name() const override final
+  {
+    return name_;
+  }
 
 private:
   const MatrixType A_;

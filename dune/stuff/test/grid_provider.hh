@@ -35,10 +35,16 @@ private:
                 "GridProviderType has to be derived from Dune::Stuff::Grid::ConstProviderInterface!");
 
 protected:
-  static std::unique_ptr<GridProviderType> create() { return GridProviderType::create(); }
+  static std::unique_ptr<GridProviderType> create()
+  {
+    return GridProviderType::create();
+  }
 
 public:
-  static void is_default_creatable() { std::unique_ptr<GridProviderType> DUNE_UNUSED(grd_prvdr) = create(); }
+  static void is_default_creatable()
+  {
+    std::unique_ptr<GridProviderType> DUNE_UNUSED(grd_prvdr) = create();
+  }
 
   static void static_interface()
   {

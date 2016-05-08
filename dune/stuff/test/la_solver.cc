@@ -66,6 +66,9 @@ struct SolverTest : public ::testing::Test
       EXPECT_TRUE(solution.almost_equal(rhs));
     }
   } // ... produces_correct_results(...)
-};  // struct SolverTest
+}; // struct SolverTest
 
-TEST_F(SolverTest, behaves_correctly) { this->produces_correct_results(); }
+TEST_F(SolverTest, behaves_correctly)
+{
+  this->produces_correct_results();
+}

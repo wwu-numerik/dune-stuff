@@ -45,11 +45,19 @@ public:
   {
   }
 
-  virtual ~TmpMatricesStorage() {}
+  virtual ~TmpMatricesStorage()
+  {
+  }
 
-  std::vector<std::vector<LocalMatrixType>>& matrices() { return *matrices_; }
+  std::vector<std::vector<LocalMatrixType>>& matrices()
+  {
+    return *matrices_;
+  }
 
-  std::vector<Dune::DynamicVector<size_t>>& indices() { return *indices_; }
+  std::vector<Dune::DynamicVector<size_t>>& indices()
+  {
+    return *indices_;
+  }
 
 protected:
   PerThreadValue<LocalMatrixContainerType> matrices_;
@@ -74,11 +82,19 @@ public:
   {
   }
 
-  virtual ~TmpVectorsStorage() {}
+  virtual ~TmpVectorsStorage()
+  {
+  }
 
-  std::vector<std::vector<LocalVectorType>>& vectors() { return *vectors_; }
+  std::vector<std::vector<LocalVectorType>>& vectors()
+  {
+    return *vectors_;
+  }
 
-  Dune::DynamicVector<size_t>& indices() { return *indices_; }
+  Dune::DynamicVector<size_t>& indices()
+  {
+    return *indices_;
+  }
 
 protected:
   PerThreadValue<std::vector<std::vector<LocalVectorType>>> vectors_;

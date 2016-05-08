@@ -41,7 +41,10 @@ namespace Stuff {
 namespace Grid {
 namespace internal {
 
-inline static std::string boundary_info_static_id() { return "stuff.grid.boundaryinfo"; }
+inline static std::string boundary_info_static_id()
+{
+  return "stuff.grid.boundaryinfo";
+}
 
 } // namespace internal
 
@@ -64,15 +67,26 @@ public:
   typedef Common::FieldVector<DomainFieldType, dimDomain> DomainType;
   typedef Common::FieldVector<DomainFieldType, dimWorld> WorldType;
 
-  static const std::string static_id() { return internal::boundary_info_static_id(); }
+  static const std::string static_id()
+  {
+    return internal::boundary_info_static_id();
+  }
 
   /** \note throw spec here and in derived classes are only there to work around icc-mic bug
    **/
-  virtual ~BoundaryInfoInterface() throw() {}
+  virtual ~BoundaryInfoInterface() throw()
+  {
+  }
 
-  virtual bool has_dirichlet() const { return true; }
+  virtual bool has_dirichlet() const
+  {
+    return true;
+  }
 
-  virtual bool has_neumann() const { return true; }
+  virtual bool has_neumann() const
+  {
+    return true;
+  }
 
   virtual bool dirichlet(const IntersectionType& intersection) const = 0;
 
@@ -92,14 +106,17 @@ public:
     return neumann(intersection_geometry.intersection());
   }
 #endif // HAVE_DUNE_PDELAB
-};     // class BoundaryInfoInterface
+}; // class BoundaryInfoInterface
 
 namespace BoundaryInfoConfigs {
 
 class AllDirichlet
 {
 public:
-  static std::string static_id() { return internal::boundary_info_static_id() + ".alldirichlet"; }
+  static std::string static_id()
+  {
+    return internal::boundary_info_static_id() + ".alldirichlet";
+  }
 
   static Common::Configuration default_config(const std::string sub_name = "")
   {
@@ -113,7 +130,10 @@ public:
 class AllNeumann
 {
 public:
-  static std::string static_id() { return internal::boundary_info_static_id() + ".allneumann"; }
+  static std::string static_id()
+  {
+    return internal::boundary_info_static_id() + ".allneumann";
+  }
 
   static Common::Configuration default_config(const std::string sub_name = "")
   {
@@ -129,7 +149,10 @@ public:
 class IdBased
 {
 public:
-  static const std::string static_id() { return internal::boundary_info_static_id() + ".idbased"; }
+  static const std::string static_id()
+  {
+    return internal::boundary_info_static_id() + ".idbased";
+  }
 
   static Common::Configuration default_config(const std::string sub_name = "")
   {
@@ -144,14 +167,17 @@ public:
       return tmp;
     }
   } // ... default_config(...)
-};  // class IdBased
+}; // class IdBased
 
 #endif // #if DUNE_GRID_EXPERIMENTAL_GRID_EXTENSIONS
 
 class NormalBased
 {
 public:
-  static const std::string static_id() { return internal::boundary_info_static_id() + ".normalbased"; }
+  static const std::string static_id()
+  {
+    return internal::boundary_info_static_id() + ".normalbased";
+  }
 
   static Common::Configuration default_config(const std::string sub_name = "")
   {
@@ -168,12 +194,15 @@ public:
       return tmp;
     }
   } // ... default_config(...)
-};  // class NormalBased
+}; // class NormalBased
 
 class FunctionBased
 {
 public:
-  static const std::string static_id() { return internal::boundary_info_static_id() + ".functionbased"; }
+  static const std::string static_id()
+  {
+    return internal::boundary_info_static_id() + ".functionbased";
+  }
 
   static Common::Configuration default_config(const std::string sub_name = "")
   {
@@ -193,7 +222,7 @@ public:
       return tmp;
     }
   } // ... default_config(...)
-};  // class FunctionBased
+}; // class FunctionBased
 
 } // namespace BoundaryInfoConfigs
 
@@ -208,7 +237,10 @@ class AllDirichlet : public Stuff::Grid::BoundaryInfoInterface<IntersectionImp>
 public:
   typedef typename BaseType::IntersectionType IntersectionType;
 
-  static const std::string static_id() { return BoundaryInfoConfigs::AllDirichlet::static_id(); }
+  static const std::string static_id()
+  {
+    return BoundaryInfoConfigs::AllDirichlet::static_id();
+  }
 
   static Common::Configuration default_config(const std::string sub_name = "")
   {
@@ -221,17 +253,33 @@ public:
     return Common::make_unique<ThisType>();
   }
 
-  AllDirichlet() {}
+  AllDirichlet()
+  {
+  }
 
-  virtual ~AllDirichlet() throw() {}
+  virtual ~AllDirichlet() throw()
+  {
+  }
 
-  virtual bool has_dirichlet() const override final { return true; }
+  virtual bool has_dirichlet() const override final
+  {
+    return true;
+  }
 
-  virtual bool has_neumann() const override final { return false; }
+  virtual bool has_neumann() const override final
+  {
+    return false;
+  }
 
-  virtual bool dirichlet(const IntersectionType& intersection) const override final { return intersection.boundary(); }
+  virtual bool dirichlet(const IntersectionType& intersection) const override final
+  {
+    return intersection.boundary();
+  }
 
-  virtual bool neumann(const IntersectionType& /*intersection*/) const override final { return false; }
+  virtual bool neumann(const IntersectionType& /*intersection*/) const override final
+  {
+    return false;
+  }
 }; // class AllDirichlet
 
 template <class IntersectionImp>
@@ -243,7 +291,10 @@ class AllNeumann : public Stuff::Grid::BoundaryInfoInterface<IntersectionImp>
 public:
   typedef typename BaseType::IntersectionType IntersectionType;
 
-  static const std::string static_id() { return BoundaryInfoConfigs::AllNeumann::static_id(); }
+  static const std::string static_id()
+  {
+    return BoundaryInfoConfigs::AllNeumann::static_id();
+  }
 
   static Common::Configuration default_config(const std::string sub_name = "")
   {
@@ -256,17 +307,31 @@ public:
     return Common::make_unique<ThisType>();
   }
 
-  AllNeumann() {}
+  AllNeumann()
+  {
+  }
 
   virtual ~AllNeumann() throw(){};
 
-  virtual bool has_dirichlet() const override final { return false; }
+  virtual bool has_dirichlet() const override final
+  {
+    return false;
+  }
 
-  virtual bool has_neumann() const override final { return true; }
+  virtual bool has_neumann() const override final
+  {
+    return true;
+  }
 
-  virtual bool dirichlet(const IntersectionType& /*intersection*/) const override final { return false; }
+  virtual bool dirichlet(const IntersectionType& /*intersection*/) const override final
+  {
+    return false;
+  }
 
-  virtual bool neumann(const IntersectionType& intersection) const override final { return intersection.boundary(); }
+  virtual bool neumann(const IntersectionType& intersection) const override final
+  {
+    return intersection.boundary();
+  }
 }; // class AllNeumann
 
 #if DUNE_GRID_EXPERIMENTAL_GRID_EXTENSIONS
@@ -280,7 +345,10 @@ class IdBased : public Stuff::Grid::BoundaryInfoInterface<IntersectionImp>
 public:
   typedef typename BaseType::IntersectionType IntersectionType;
 
-  static const std::string static_id() { return BoundaryInfoConfigs::IdBased::static_id(); }
+  static const std::string static_id()
+  {
+    return BoundaryInfoConfigs::IdBased::static_id();
+  }
 
   static Common::Configuration default_config(const std::string sub_name = "")
   {
@@ -311,11 +379,20 @@ public:
 
   virtual ~IdBased() = default;
 
-  const std::map<std::string, std::set<int>>& id_to_type_map() const { return id_to_type_map_; }
+  const std::map<std::string, std::set<int>>& id_to_type_map() const
+  {
+    return id_to_type_map_;
+  }
 
-  virtual bool has_dirichlet() const override final { return hasDirichlet_; }
+  virtual bool has_dirichlet() const override final
+  {
+    return hasDirichlet_;
+  }
 
-  virtual bool has_neumann() const override final { return hasNeumann_; }
+  virtual bool has_neumann() const override final
+  {
+    return hasNeumann_;
+  }
 
   virtual bool dirichlet(const IntersectionType& intersection) const override final
   {
@@ -377,7 +454,10 @@ public:
   using BaseType::dimDomain;
   using BaseType::dimWorld;
 
-  static const std::string static_id() { return BoundaryInfoConfigs::NormalBased::static_id(); }
+  static const std::string static_id()
+  {
+    return BoundaryInfoConfigs::NormalBased::static_id();
+  }
 
   static Common::Configuration default_config(const std::string sub_name = "")
   {
@@ -424,11 +504,19 @@ public:
     }
   } // NormalBased(...)
 
-  virtual ~NormalBased() throw() {}
+  virtual ~NormalBased() throw()
+  {
+  }
 
-  virtual bool has_dirichlet() const override final { return default_to_dirichlet_ || (dirichlet_normals_.size() > 0); }
+  virtual bool has_dirichlet() const override final
+  {
+    return default_to_dirichlet_ || (dirichlet_normals_.size() > 0);
+  }
 
-  virtual bool has_neumann() const override final { return !default_to_dirichlet_ || (neumann_normals_.size() > 0); }
+  virtual bool has_neumann() const override final
+  {
+    return !default_to_dirichlet_ || (neumann_normals_.size() > 0);
+  }
 
   virtual bool dirichlet(const IntersectionType& intersection) const override final
   {
@@ -509,7 +597,10 @@ private:
   typedef LocalizableFunctionInterface<EntityType, DomainFieldType, dimDomain, double, 1> FunctionType;
 
 public:
-  static const std::string static_id() { return BoundaryInfoConfigs::FunctionBased::static_id(); }
+  static const std::string static_id()
+  {
+    return BoundaryInfoConfigs::FunctionBased::static_id();
+  }
 
   static Common::Configuration default_config(const std::string sub_name = "")
   {
@@ -518,7 +609,7 @@ public:
 
 private:
   static std::vector<Common::FieldVector<double, 2>>
-      get_value_range(const Common::Configuration& cfg, const Common::Configuration& default_cfg, const std::string& id)
+  get_value_range(const Common::Configuration& cfg, const Common::Configuration& default_cfg, const std::string& id)
   {
     auto logger = Common::TimedLogger().get("stuff.grid.boundaryinfo.get_value_range");
     std::vector<Common::FieldVector<double, 2>> value_range;
@@ -571,7 +662,9 @@ public:
   {
   }
 
-  virtual ~FunctionBased() throw() {}
+  virtual ~FunctionBased() throw()
+  {
+  }
 
   virtual bool dirichlet(const IntersectionType& intersection) const override final
   {
@@ -701,7 +794,7 @@ public:
       DUNE_THROW(Exceptions::wrong_input_given,
                  "'" << type << "' is not a valid " << InterfaceType::static_id() << "!");
   } // ... create(...)
-};  // class BoundaryInfoProvider
+}; // class BoundaryInfoProvider
 
 } // namespace Grid
 

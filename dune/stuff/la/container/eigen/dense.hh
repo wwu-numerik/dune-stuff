@@ -168,9 +168,15 @@ public:
   /**
    *  \note Takes ownership of backend_ptr in the sense that you must not delete it afterwards!
    */
-  explicit EigenDenseVector(BackendType* backend_ptr) { backend_ = std::shared_ptr<BackendType>(backend_ptr); }
+  explicit EigenDenseVector(BackendType* backend_ptr)
+  {
+    backend_ = std::shared_ptr<BackendType>(backend_ptr);
+  }
 
-  explicit EigenDenseVector(std::shared_ptr<BackendType> backend_ptr) { backend_ = backend_ptr; }
+  explicit EigenDenseVector(std::shared_ptr<BackendType> backend_ptr)
+  {
+    backend_ = backend_ptr;
+  }
 
   using BaseType::operator=;
 
@@ -190,7 +196,10 @@ public:
   /// \name Required by ProvidesDataAccess.
   /// \{
 
-  ScalarType* data() { return backend().data(); }
+  ScalarType* data()
+  {
+    return backend().data();
+  }
 
   /// \}
 
@@ -282,7 +291,10 @@ public:
   /**
    *  \brief  This constructor does not do a deep copy.
    */
-  EigenMappedDenseVector(const ThisType& other) { backend_ = other.backend_; }
+  EigenMappedDenseVector(const ThisType& other)
+  {
+    backend_ = other.backend_;
+  }
 
   /**
    * \brief This constructor does a deep copy.
@@ -298,9 +310,15 @@ public:
   /**
    *  \note Takes ownership of backend_ptr in the sense that you must not delete it afterwards!
    */
-  explicit EigenMappedDenseVector(BackendType* backend_ptr) { backend_ = std::shared_ptr<BackendType>(backend_ptr); }
+  explicit EigenMappedDenseVector(BackendType* backend_ptr)
+  {
+    backend_ = std::shared_ptr<BackendType>(backend_ptr);
+  }
 
-  explicit EigenMappedDenseVector(std::shared_ptr<BackendType> backend_ptr) { backend_ = backend_ptr; }
+  explicit EigenMappedDenseVector(std::shared_ptr<BackendType> backend_ptr)
+  {
+    backend_ = backend_ptr;
+  }
 
   using BaseType::operator=;
 
@@ -425,9 +443,15 @@ public:
   /**
    *  \note Takes ownership of backend_ptr in the sense that you must not delete it afterwards!
    */
-  explicit EigenDenseMatrix(BackendType* backend_ptr) : backend_(backend_ptr) {}
+  explicit EigenDenseMatrix(BackendType* backend_ptr)
+    : backend_(backend_ptr)
+  {
+  }
 
-  explicit EigenDenseMatrix(std::shared_ptr<BackendType> backend_ptr) : backend_(backend_ptr) {}
+  explicit EigenDenseMatrix(std::shared_ptr<BackendType> backend_ptr)
+    : backend_(backend_ptr)
+  {
+  }
 
   ThisType& operator=(const ThisType& other)
   {
@@ -463,15 +487,24 @@ public:
   /// \name Required by the ProvidesDataAccess interface.
   /// \{
 
-  ScalarType* data() { return backend_->data(); }
+  ScalarType* data()
+  {
+    return backend_->data();
+  }
 
   /// \}
   /// \name Required by ContainerInterface.
   /// \{
 
-  ThisType copy() const { return ThisType(*backend_); }
+  ThisType copy() const
+  {
+    return ThisType(*backend_);
+  }
 
-  void scal(const ScalarType& alpha) { backend() *= alpha; }
+  void scal(const ScalarType& alpha)
+  {
+    backend() *= alpha;
+  }
 
   void axpy(const ScalarType& alpha, const ThisType& xx)
   {
@@ -486,15 +519,24 @@ public:
     backend() += alpha * xx_ref;
   } // ... axpy(...)
 
-  bool has_equal_shape(const ThisType& other) const { return (rows() == other.rows()) && (cols() == other.cols()); }
+  bool has_equal_shape(const ThisType& other) const
+  {
+    return (rows() == other.rows()) && (cols() == other.cols());
+  }
 
   /// \}
   /// \name Required by MatrixInterface.
   /// \{
 
-  inline size_t rows() const { return backend_->rows(); }
+  inline size_t rows() const
+  {
+    return backend_->rows();
+  }
 
-  inline size_t cols() const { return backend_->cols(); }
+  inline size_t cols() const
+  {
+    return backend_->cols();
+  }
 
   template <class T1, class T2>
   inline void mv(const EigenBaseVector<T1, ScalarType>& xx, EigenBaseVector<T2, ScalarType>& yy) const

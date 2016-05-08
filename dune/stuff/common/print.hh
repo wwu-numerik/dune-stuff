@@ -26,7 +26,7 @@ namespace Common {
 
 template <class V>
 typename std::enable_if<Dune::Stuff::Common::is_vector<V>::value, void>::type
-    print(const V& vec, const std::string name, std::ostream& out, const std::string prefix = "")
+print(const V& vec, const std::string name, std::ostream& out, const std::string prefix = "")
 {
   out << prefix << name << " = ";
   if (vec.size() == 0)
@@ -43,7 +43,7 @@ typename std::enable_if<Dune::Stuff::Common::is_vector<V>::value, void>::type
 
 template <class M>
 typename std::enable_if<Dune::Stuff::Common::is_matrix<M>::value, void>::type
-    print(const M& mat, const std::string name, std::ostream& out, const std::string prefix = "")
+print(const M& mat, const std::string name, std::ostream& out, const std::string prefix = "")
 {
   typedef MatrixAbstraction<M> MM;
   const size_t rows = MM::rows(mat);
@@ -124,11 +124,25 @@ public:
   typedef T reference;
   typedef std::output_iterator_tag iterator_category;
 
-  PrefixOutputIterator(std::ostream& o, std::string const& p = "") : ostream(o), prefix(p), first(true) {}
+  PrefixOutputIterator(std::ostream& o, std::string const& p = "")
+    : ostream(o)
+    , prefix(p)
+    , first(true)
+  {
+  }
 
-  PrefixOutputIterator& operator*() { return *this; }
-  PrefixOutputIterator& operator++() { return *this; }
-  PrefixOutputIterator& operator++(int) { return *this; }
+  PrefixOutputIterator& operator*()
+  {
+    return *this;
+  }
+  PrefixOutputIterator& operator++()
+  {
+    return *this;
+  }
+  PrefixOutputIterator& operator++(int)
+  {
+    return *this;
+  }
 
   void operator=(T const& value)
   {

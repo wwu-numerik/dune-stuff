@@ -64,7 +64,10 @@ public:
                          const typename std::enable_if<!std::is_same<T, const char*>::value, bool>::type log_on_exit =
                              internal::configuration_log_on_exit,
                          const std::string logfile = internal::configuration_logfile)
-    : BaseType(), warn_on_default_access_(warn_on_default_access), log_on_exit_(log_on_exit), logfile_(logfile)
+    : BaseType()
+    , warn_on_default_access_(warn_on_default_access)
+    , log_on_exit_(log_on_exit)
+    , logfile_(logfile)
   {
     setup_();
   }
@@ -108,7 +111,10 @@ public:
                 const bool warn_on_default_access = internal::configuration_warn_on_default_access,
                 const bool log_on_exit            = internal::configuration_log_on_exit,
                 const std::string logfile = internal::configuration_logfile)
-    : BaseType(), warn_on_default_access_(warn_on_default_access), log_on_exit_(log_on_exit), logfile_(logfile)
+    : BaseType()
+    , warn_on_default_access_(warn_on_default_access)
+    , log_on_exit_(log_on_exit)
+    , logfile_(logfile)
   {
     set(key, value);
     setup_();
@@ -164,8 +170,8 @@ public:
   //! const get without default value, with validation
   template <class T, class Validator = ValidateAny<typename internal::Typer<T>::type>>
   typename internal::Typer<T>::type
-      get(std::string key, const size_t size, const size_t cols = 0,
-          const ValidatorInterface<T, Validator>& validator = ValidateAny<typename internal::Typer<T>::type>()) const
+  get(std::string key, const size_t size, const size_t cols = 0,
+      const ValidatorInterface<T, Validator>& validator = ValidateAny<typename internal::Typer<T>::type>()) const
   {
     if (!has_key(key))
       DUNE_THROW(Exceptions::configuration_error,
@@ -176,8 +182,8 @@ public:
   //! const get without default value, with validation
   template <class T, class Validator = ValidateAny<typename internal::Typer<T>::type>>
   typename internal::Typer<T>::type
-      get(std::string key, const ValidatorInterface<typename internal::Typer<T>::type, Validator>& validator =
-                               ValidateAny<typename internal::Typer<T>::type>()) const
+  get(std::string key, const ValidatorInterface<typename internal::Typer<T>::type, Validator>& validator =
+                           ValidateAny<typename internal::Typer<T>::type>()) const
   {
     if (!has_key(key))
       DUNE_THROW(Exceptions::configuration_error,
@@ -188,9 +194,9 @@ public:
   //! get variation with default value, validation
   template <typename T, class Validator = ValidateAny<typename internal::Typer<T>::type>>
   typename internal::Typer<T>::type
-      get(std::string key, T def, const size_t size, const size_t cols = 0,
-          const ValidatorInterface<typename internal::Typer<T>::type, Validator>& validator =
-              ValidateAny<typename internal::Typer<T>::type>()) const
+  get(std::string key, T def, const size_t size, const size_t cols = 0,
+      const ValidatorInterface<typename internal::Typer<T>::type, Validator>& validator =
+          ValidateAny<typename internal::Typer<T>::type>()) const
   {
     return get_(key, def, validator, size, cols);
   } // ... get(...)
@@ -198,8 +204,8 @@ public:
   //! get variation with default value, validation
   template <typename T, class Validator = ValidateAny<typename internal::Typer<T>::type>>
   typename internal::Typer<T>::type
-      get(std::string key, T def, const ValidatorInterface<typename internal::Typer<T>::type, Validator>& validator =
-                                      ValidateAny<typename internal::Typer<T>::type>()) const
+  get(std::string key, T def, const ValidatorInterface<typename internal::Typer<T>::type, Validator>& validator =
+                                  ValidateAny<typename internal::Typer<T>::type>()) const
   {
     return get_(key, def, validator, 0, 0);
   } // ... get(...)
@@ -207,9 +213,9 @@ public:
   //! get std::vector< T > from tree_
   template <typename T, class Validator = ValidateAny<typename internal::Typer<T>::type>>
   std::vector<typename internal::Typer<T>::type>
-      getList(std::string key, T def = T(), const std::string separators = ";",
-              const ValidatorInterface<typename internal::Typer<T>::type, Validator>& validator =
-                  ValidateAny<typename internal::Typer<T>::type>()) const
+  getList(std::string key, T def = T(), const std::string separators = ";",
+          const ValidatorInterface<typename internal::Typer<T>::type, Validator>& validator =
+              ValidateAny<typename internal::Typer<T>::type>()) const
   {
     typedef typename internal::Typer<T>::type Tt;
     const auto def_t  = static_cast<Tt>(def);

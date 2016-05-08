@@ -30,7 +30,10 @@ template <class T, Style style = Style::defaultStyle>
 struct DefaultEpsilon
 {
   typedef typename Dune::FloatCmp::EpsilonType<T>::Type Type;
-  static Type value() { return Dune::FloatCmp::DefaultEpsilon<T, internal::ConvertStyle<style>::value>::value(); }
+  static Type value()
+  {
+    return Dune::FloatCmp::DefaultEpsilon<T, internal::ConvertStyle<style>::value>::value();
+  }
 };
 
 //! since we treat complex like a vector its epsilon is (eps,eps) of its scalar type
@@ -49,7 +52,10 @@ template <class T>
 struct DefaultEpsilon<T, Style::numpy>
 {
   typedef typename Dune::FloatCmp::EpsilonType<T>::Type Type;
-  static Type value() { return Dune::FloatCmp::DefaultEpsilon<T, Dune::FloatCmp::relativeStrong>::value(); }
+  static Type value()
+  {
+    return Dune::FloatCmp::DefaultEpsilon<T, Dune::FloatCmp::relativeStrong>::value();
+  }
 };
 
 //! necessary to avoid ambig. partial specialization
@@ -75,10 +81,10 @@ struct MT
   template <Style style, class FirstType, class SecondType>                                                            \
   typename std::enable_if<internal::cmp_type_check<FirstType, SecondType, typename MT<FirstType>::T>::value,           \
                           bool>::type                                                                                  \
-      id(const FirstType& first,                                                                                       \
-         const SecondType& second,                                                                                     \
-         const typename MT<FirstType>::Eps& rtol = DefaultEpsilon<typename MT<FirstType>::T, style>::value(),          \
-         const typename MT<FirstType>::Eps& atol = DefaultEpsilon<typename MT<FirstType>::T, style>::value())          \
+  id(const FirstType& first,                                                                                           \
+     const SecondType& second,                                                                                         \
+     const typename MT<FirstType>::Eps& rtol = DefaultEpsilon<typename MT<FirstType>::T, style>::value(),              \
+     const typename MT<FirstType>::Eps& atol = DefaultEpsilon<typename MT<FirstType>::T, style>::value())              \
   {                                                                                                                    \
     return internal::Call<FirstType, SecondType, typename MT<FirstType>::Eps, style>::id(first, second, rtol, atol);   \
   }                                                                                                                    \
@@ -86,12 +92,12 @@ struct MT
   template <class FirstType, class SecondType>                                                                         \
   typename std::enable_if<internal::cmp_type_check<FirstType, SecondType, typename MT<FirstType>::T>::value,           \
                           bool>::type                                                                                  \
-      id(const FirstType& first,                                                                                       \
-         const SecondType& second,                                                                                     \
-         const typename MT<FirstType>::Eps& rtol =                                                                     \
-             DefaultEpsilon<typename MT<FirstType>::T, Style::defaultStyle>::value(),                                  \
-         const typename MT<FirstType>::Eps& atol =                                                                     \
-             DefaultEpsilon<typename MT<FirstType>::T, Style::defaultStyle>::value())                                  \
+  id(const FirstType& first,                                                                                           \
+     const SecondType& second,                                                                                         \
+     const typename MT<FirstType>::Eps& rtol =                                                                         \
+         DefaultEpsilon<typename MT<FirstType>::T, Style::defaultStyle>::value(),                                      \
+     const typename MT<FirstType>::Eps& atol =                                                                         \
+         DefaultEpsilon<typename MT<FirstType>::T, Style::defaultStyle>::value())                                      \
   {                                                                                                                    \
     return id<Style::defaultStyle>(first, second, rtol, atol);                                                         \
   }

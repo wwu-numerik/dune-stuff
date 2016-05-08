@@ -115,9 +115,15 @@ private:
   class Call<Combination::difference, anything>
   {
   public:
-    static std::string type() { return "difference"; }
+    static std::string type()
+    {
+      return "difference";
+    }
 
-    static size_t order(const size_t left_order, const size_t right_order) { return std::max(left_order, right_order); }
+    static size_t order(const size_t left_order, const size_t right_order)
+    {
+      return std::max(left_order, right_order);
+    }
 
     static void evaluate(const LeftLocalfunctionType& left_local, const RightLocalfunctionType& right_local,
                          const DomainType& xx, RangeType& ret, RangeType& tmp_ret)
@@ -134,15 +140,21 @@ private:
       right_local.jacobian(xx, tmp_ret);
       ret -= tmp_ret;
     } // ... jacobian(...)
-  };  // class Call< ..., difference >
+  }; // class Call< ..., difference >
 
   template <bool anything>
   class Call<Combination::sum, anything>
   {
   public:
-    static std::string type() { return "sum"; }
+    static std::string type()
+    {
+      return "sum";
+    }
 
-    static size_t order(const size_t left_order, const size_t right_order) { return std::max(left_order, right_order); }
+    static size_t order(const size_t left_order, const size_t right_order)
+    {
+      return std::max(left_order, right_order);
+    }
 
     static void evaluate(const LeftLocalfunctionType& left_local, const RightLocalfunctionType& right_local,
                          const DomainType& xx, RangeType& ret, RangeType& tmp_ret)
@@ -159,16 +171,22 @@ private:
       right_local.jacobian(xx, tmp_ret);
       ret += tmp_ret;
     } // ... jacobian(...)
-  };  // class Call< ..., sum >
+  }; // class Call< ..., sum >
 
   // left only scalar atm
   template <bool anything>
   class Call<Combination::product, anything>
   {
   public:
-    static std::string type() { return "product"; }
+    static std::string type()
+    {
+      return "product";
+    }
 
-    static size_t order(const size_t left_order, const size_t right_order) { return left_order + right_order; }
+    static size_t order(const size_t left_order, const size_t right_order)
+    {
+      return left_order + right_order;
+    }
 
     static void evaluate(const LeftLocalfunctionType& left_local, const RightLocalfunctionType& right_local,
                          const DomainType& xx, RangeType& ret, RangeType& /*tmp_ret*/)
@@ -186,7 +204,10 @@ private:
   }; // class Call< ..., product >
 
 public:
-  static std::string type() { return Call<comb>::type(); }
+  static std::string type()
+  {
+    return Call<comb>::type();
+  }
 
   static size_t order(const size_t left_order, const size_t right_order)
   {
@@ -240,7 +261,10 @@ public:
   {
   }
 
-  virtual size_t order() const override final { return Select::order(left_local_->order(), right_local_->order()); }
+  virtual size_t order() const override final
+  {
+    return Select::order(left_local_->order(), right_local_->order());
+  }
 
   virtual void evaluate(const DomainType& xx, RangeType& ret) const override final
   {
@@ -359,7 +383,10 @@ public:
     return DSC::make_unique<RealLocalFunctionType>(left_->storage_access(), right_->storage_access(), entity);
   } // ... local_function(...)
 
-  virtual ThisType* copy() const { DUNE_THROW(NotImplemented, "Are you kidding me?"); }
+  virtual ThisType* copy() const
+  {
+    DUNE_THROW(NotImplemented, "Are you kidding me?");
+  }
 
   virtual std::string type() const override final
   {
@@ -367,7 +394,10 @@ public:
            + right_->storage_access().type() + "'";
   } // ... type(...)
 
-  virtual std::string name() const override final { return name_; }
+  virtual std::string name() const override final
+  {
+    return name_;
+  }
 
 private:
   std::unique_ptr<const LeftStorageType> left_;

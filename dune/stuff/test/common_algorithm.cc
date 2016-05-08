@@ -14,7 +14,10 @@ using namespace Dune::Stuff::Common;
 
 struct Moveable
 {
-  Moveable(int i) : v(i) {}
+  Moveable(int i)
+    : v(i)
+  {
+  }
   int v;
 };
 

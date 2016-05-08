@@ -85,7 +85,10 @@ private:
   class Call<Derivative::divergence, anything>
   {
   public:
-    static std::string type() { return "divergence"; }
+    static std::string type()
+    {
+      return "divergence";
+    }
 
     static size_t order(const size_t ord)
     {
@@ -109,9 +112,15 @@ private:
   }; // class Call< ..., divergence >
 
 public:
-  static std::string type() { return Call<derivative>::type(); }
+  static std::string type()
+  {
+    return Call<derivative>::type();
+  }
 
-  static size_t order(const size_t ord) { return Call<derivative>::order(ord); }
+  static size_t order(const size_t ord)
+  {
+    return Call<derivative>::order(ord);
+  }
 
   static void evaluate(const FunctionLocalfunctionType& func_local, const DomainType& xx, RangeType& ret)
   {
@@ -145,11 +154,15 @@ public:
   typedef typename BaseType::JacobianRangeType JacobianRangeType;
 
   DerivedLocalFunction(const FunctionType& func, const EntityType& ent)
-    : BaseType(ent), func_local_(func.local_function(this->entity()))
+    : BaseType(ent)
+    , func_local_(func.local_function(this->entity()))
   {
   }
 
-  virtual size_t order() const override final { return Select::order(func_local_->order()); }
+  virtual size_t order() const override final
+  {
+    return Select::order(func_local_->order());
+  }
 
   virtual void evaluate(const DomainType& xx, RangeType& ret) const override final
   {
@@ -210,14 +223,20 @@ public:
     return DSC::make_unique<RealLocalFunctionType>(func_->storage_access(), entity);
   } // ... local_function(...)
 
-  virtual ThisType* copy() const { DUNE_THROW(NotImplemented, "Are you kidding me?"); }
+  virtual ThisType* copy() const
+  {
+    DUNE_THROW(NotImplemented, "Are you kidding me?");
+  }
 
   virtual std::string type() const override final
   {
     return SelectDerived<FunctionType, derivative>::type() + " of '" + func_->storage_access().type() + "'";
   }
 
-  virtual std::string name() const override final { return name_; }
+  virtual std::string name() const override final
+  {
+    return name_;
+  }
 
 private:
   std::unique_ptr<const FunctionStorageType> func_;

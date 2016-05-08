@@ -55,8 +55,8 @@ namespace Common {
 // only necessary for headercheck
 template <class T = std::string>
 inline std::vector<T>
-    tokenize(const std::string& msg, const std::string& separators,
-             const boost::algorithm::token_compress_mode_type mode = boost::algorithm::token_compress_off);
+tokenize(const std::string& msg, const std::string& separators,
+         const boost::algorithm::token_compress_mode_type mode = boost::algorithm::token_compress_off);
 #endif
 
 namespace internal {
@@ -95,7 +95,10 @@ static inline T convert_safely(std::string ss)
 template <class T, bool anything = true>
 struct Helper
 {
-  static inline T from_string(std::string ss) { return convert_safely<T>(ss); }
+  static inline T from_string(std::string ss)
+  {
+    return convert_safely<T>(ss);
+  }
 }; // struct Helper
 
 // variant for bool, to correctly parse true and false
@@ -120,7 +123,10 @@ struct Helper<bool, anything>
   template <bool anything>                                                                                             \
   struct Helper<tn, anything>                                                                                          \
   {                                                                                                                    \
-    static inline tn from_string(std::string ss) { return std::sto##tns(ss); }                                         \
+    static inline tn from_string(std::string ss)                                                                       \
+    {                                                                                                                  \
+      return std::sto##tns(ss);                                                                                        \
+    }                                                                                                                  \
   };
 
 DUNE_STUFF_COMMON_STRING_GENERATE_HELPER(int, i)
@@ -137,7 +143,7 @@ DUNE_STUFF_COMMON_STRING_GENERATE_HELPER(long double, ld)
 // variant for everything that is not a matrix or a vector or complex value
 template <class T>
 static inline typename std::enable_if<!is_vector<T>::value && !is_matrix<T>::value && !is_complex<T>::value, T>::type
-    from_string(std::string ss, const size_t UNUSED_UNLESS_DEBUG(rows) = 0, const size_t UNUSED_UNLESS_DEBUG(cols) = 0)
+from_string(std::string ss, const size_t UNUSED_UNLESS_DEBUG(rows) = 0, const size_t UNUSED_UNLESS_DEBUG(cols) = 0)
 {
   assert(rows == 0);
   assert(cols == 0);
@@ -146,7 +152,7 @@ static inline typename std::enable_if<!is_vector<T>::value && !is_matrix<T>::val
 
 template <class V>
 static inline typename std::enable_if<is_complex<V>::value, V>::type
-    from_string(std::string ss, const size_t /*size*/ = 0, const size_t /*cols*/ = 0)
+from_string(std::string ss, const size_t /*size*/ = 0, const size_t /*cols*/ = 0)
 {
   boost::algorithm::trim(ss);
   if (ss.size() < 1)
@@ -168,7 +174,7 @@ static inline typename std::enable_if<is_complex<V>::value, V>::type
 
 template <class VectorType>
 static inline typename std::enable_if<is_vector<VectorType>::value, VectorType>::type
-    from_string(std::string ss, const size_t size, const size_t UNUSED_UNLESS_DEBUG(cols) = 0)
+from_string(std::string ss, const size_t size, const size_t UNUSED_UNLESS_DEBUG(cols) = 0)
 {
   auto vector_str = ss;
   typedef typename VectorAbstraction<VectorType>::S S;
@@ -228,7 +234,7 @@ static inline typename std::enable_if<is_vector<VectorType>::value, VectorType>:
 
 template <class MatrixType>
 static inline typename std::enable_if<is_matrix<MatrixType>::value, MatrixType>::type
-    from_string(std::string matrix_str, const size_t rows, const size_t cols)
+from_string(std::string matrix_str, const size_t rows, const size_t cols)
 {
   typedef typename MatrixAbstraction<MatrixType>::S S;
   // check if this is a matrix
@@ -335,7 +341,7 @@ static inline typename std::enable_if<is_matrix<MatrixType>::value, MatrixType>:
 // variant for everything that is not a matrix, a vector or any of the types specified below
 template <class T>
 static inline typename std::enable_if<!is_vector<T>::value && !is_matrix<T>::value, std::string>::type
-    to_string(const T& ss, const std::size_t precision)
+to_string(const T& ss, const std::size_t precision)
 {
   std::ostringstream out;
   out << std::setprecision(boost::numeric_cast<int>(precision)) << ss;
@@ -363,11 +369,20 @@ static inline std::string to_string(const Dune::bigunsignedint<size>& ss, const 
   return os.str();
 }
 
-inline std::string to_string(const char* ss, const std::size_t /*precision*/) { return std::string(ss); }
+inline std::string to_string(const char* ss, const std::size_t /*precision*/)
+{
+  return std::string(ss);
+}
 
-inline std::string to_string(char ss, const std::size_t /*precision*/) { return std::string(1, ss); }
+inline std::string to_string(char ss, const std::size_t /*precision*/)
+{
+  return std::string(1, ss);
+}
 
-inline std::string to_string(const std::string ss, const std::size_t /*precision*/) { return std::string(ss); }
+inline std::string to_string(const std::string ss, const std::size_t /*precision*/)
+{
+  return std::string(ss);
+}
 
 template <class V>
 static inline typename std::enable_if<is_vector<V>::value, std::string>::type to_string(const V& vec,

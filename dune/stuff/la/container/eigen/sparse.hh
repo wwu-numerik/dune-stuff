@@ -145,7 +145,10 @@ public:
   {
   }
 
-  EigenRowMajorSparseMatrix(const ThisType& other) : backend_(other.backend_) {}
+  EigenRowMajorSparseMatrix(const ThisType& other)
+    : backend_(other.backend_)
+  {
+  }
 
   explicit EigenRowMajorSparseMatrix(const BackendType& mat, const bool prune = false,
                                      const typename Common::FloatCmp::DefaultEpsilon<ScalarType>::Type eps =
@@ -175,9 +178,15 @@ public:
   /**
    *  \note Takes ownership of backend_ptr in the sense that you must not delete it afterwards!
    */
-  explicit EigenRowMajorSparseMatrix(BackendType* backend_ptr) : backend_(backend_ptr) {}
+  explicit EigenRowMajorSparseMatrix(BackendType* backend_ptr)
+    : backend_(backend_ptr)
+  {
+  }
 
-  explicit EigenRowMajorSparseMatrix(std::shared_ptr<BackendType> backend_ptr) : backend_(backend_ptr) {}
+  explicit EigenRowMajorSparseMatrix(std::shared_ptr<BackendType> backend_ptr)
+    : backend_(backend_ptr)
+  {
+  }
 
   ThisType& operator=(const ThisType& other)
   {
@@ -213,9 +222,15 @@ public:
   /// \name Required by ContainerInterface.
   /// \{
 
-  ThisType copy() const { return ThisType(*backend_); }
+  ThisType copy() const
+  {
+    return ThisType(*backend_);
+  }
 
-  void scal(const ScalarType& alpha) { backend() *= alpha; } // ... scal(...)
+  void scal(const ScalarType& alpha)
+  {
+    backend() *= alpha;
+  } // ... scal(...)
 
   void axpy(const ScalarType& alpha, const ThisType& xx)
   {
@@ -230,15 +245,24 @@ public:
     backend() += alpha * xx_ref;
   } // ... axpy(...)
 
-  bool has_equal_shape(const ThisType& other) const { return (rows() == other.rows()) && (cols() == other.cols()); }
+  bool has_equal_shape(const ThisType& other) const
+  {
+    return (rows() == other.rows()) && (cols() == other.cols());
+  }
 
   /// \}
   /// \name Required by MatrixInterface.
   /// \{
 
-  inline size_t rows() const { return backend_->rows(); }
+  inline size_t rows() const
+  {
+    return backend_->rows();
+  }
 
-  inline size_t cols() const { return backend_->cols(); }
+  inline size_t cols() const
+  {
+    return backend_->cols();
+  }
 
   template <class T1, class T2>
   inline void mv(const EigenBaseVector<T1, ScalarType>& xx, EigenBaseVector<T2, ScalarType>& yy) const
@@ -353,11 +377,14 @@ public:
     return true;
   }
 
-  virtual size_t non_zeros() const override final { return backend_->nonZeros(); }
+  virtual size_t non_zeros() const override final
+  {
+    return backend_->nonZeros();
+  }
 
   virtual SparsityPatternDefault
-      pattern(const bool prune = false,
-              const ScalarType eps = Common::FloatCmp::DefaultEpsilon<ScalarType>::value()) const override
+  pattern(const bool prune = false,
+          const ScalarType eps = Common::FloatCmp::DefaultEpsilon<ScalarType>::value()) const override
   {
     SparsityPatternDefault ret(rows());
     const auto zero = typename Common::FloatCmp::DefaultEpsilon<ScalarType>::Type(0);
@@ -381,7 +408,7 @@ public:
   } // ... pattern(...)
 
   virtual ThisType
-      pruned(const ScalarType eps = Common::FloatCmp::DefaultEpsilon<ScalarType>::value()) const override final
+  pruned(const ScalarType eps = Common::FloatCmp::DefaultEpsilon<ScalarType>::value()) const override final
   {
     return ThisType(*backend_, true, eps);
   }

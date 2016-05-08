@@ -79,7 +79,10 @@ struct wraparound_array : public Dune::array<T, N>
       this->operator[](i) = other[i];
   }
 
-  typename BaseType::reference operator[](std::size_t i) { return BaseType::operator[](i % N); }
+  typename BaseType::reference operator[](std::size_t i)
+  {
+    return BaseType::operator[](i % N);
+  }
 
   typename BaseType::reference operator[](int i)
   {
@@ -87,7 +90,10 @@ struct wraparound_array : public Dune::array<T, N>
     return BaseType::operator[](real_index);
   } // []
 
-  typename BaseType::const_reference operator[](std::size_t i) const { return BaseType::operator[](i % N); }
+  typename BaseType::const_reference operator[](std::size_t i) const
+  {
+    return BaseType::operator[](i % N);
+  }
 
   typename BaseType::const_reference operator[](int i) const
   {

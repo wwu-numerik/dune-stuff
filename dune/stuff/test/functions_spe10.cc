@@ -20,18 +20,26 @@
 #include <dune/grid/yaspgrid.hh>
 #if HAVE_ALUGRID
 #include <dune/grid/alugrid.hh>
-#endif //HAVE_ALUGRID
+#endif // HAVE_ALUGRID
 
-struct Spe10Model2FunctionTest : public DS::FunctionTest< TESTFUNCTIONTYPE >
+struct Spe10Model2FunctionTest : public DS::FunctionTest<TESTFUNCTIONTYPE>
 {
-    void check() const { const FunctionType zero; }
+  void check() const
+  {
+    const FunctionType zero;
+  }
 };
 
 
-TEST_F(Spe10Model2FunctionTest, provides_required_methods) { this->check(); }
+TEST_F(Spe10Model2FunctionTest, provides_required_methods)
+{
+  this->check();
+}
 
 #else // HAVE_DUNE_GRID
 
-TEST(DISABLED_Spe10Model2FunctionTest, provides_required_methods) {}
+TEST(DISABLED_Spe10Model2FunctionTest, provides_required_methods)
+{
+}
 
 #endif // HAVE_DUNE_GRID

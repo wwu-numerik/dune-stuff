@@ -73,7 +73,7 @@ public:
       DUNE_THROW(Exceptions::wrong_input_given,
                  "'" << type << "' is not a valid " << InterfaceType::static_id() << "!");
   } // ... create(...)
-};  // class GridProviders
+}; // class GridProviders
 
 #else // HAVE_DUNE_GRID
 

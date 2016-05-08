@@ -39,14 +39,19 @@ public:
 private:
   struct ConstHolder
   {
-    explicit ConstHolder(const VectorType& vec) : element(vec) {}
+    explicit ConstHolder(const VectorType& vec)
+      : element(vec)
+    {
+    }
 
     const VectorType& element;
   }; // struct ConstHolder
 
 public:
   explicit VectorInputIterator(const VectorType& vec, const bool end = false)
-    : const_holder_(std::make_shared<ConstHolder>(vec)), position_(0), end_(end)
+    : const_holder_(std::make_shared<ConstHolder>(vec))
+    , position_(0)
+    , end_(end)
   {
   }
 
@@ -64,7 +69,10 @@ public:
     return (end_ && other.end_) || ((!end_ && !other.end_) && (position_ == other.position_));
   }
 
-  bool operator!=(const ThisType& other) { return !operator==(other); }
+  bool operator!=(const ThisType& other)
+  {
+    return !operator==(other);
+  }
 
   const ScalarType& operator*() const
   {
@@ -97,14 +105,18 @@ private:
 
   struct Holder
   {
-    explicit Holder(VectorType& vec) : element(vec) {}
+    explicit Holder(VectorType& vec)
+      : element(vec)
+    {
+    }
 
     VectorType& element;
   }; // struct Holder
 
 public:
   explicit VectorOutputIterator(VectorType& vec, const bool end = false)
-    : BaseType(vec, end), holder_(std::make_shared<Holder>(vec))
+    : BaseType(vec, end)
+    , holder_(std::make_shared<Holder>(vec))
   {
   }
 

@@ -251,8 +251,8 @@ struct end_of_recursion_tag
   }
 };
 
-template <class UTypes,  // Forward Sequence, e.g. boost::mpl::vector
-          class VTypes,  // Forward Sequence, e.g. boost::mpl::vector
+template <class UTypes, // Forward Sequence, e.g. boost::mpl::vector
+          class VTypes, // Forward Sequence, e.g. boost::mpl::vector
           class TestFunc // class type that has a nested templated run() member function
           >
 struct Combine

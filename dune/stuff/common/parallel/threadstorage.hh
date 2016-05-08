@@ -39,7 +39,8 @@ private:
 
 public:
   //! Initialization by copy construction of ValueType
-  explicit FallbackPerThreadValue(ConstValueType& value) : values_(threadManager().max_threads())
+  explicit FallbackPerThreadValue(ConstValueType& value)
+    : values_(threadManager().max_threads())
   {
     std::generate(values_.begin(), values_.end(), [=]() { return Common::make_unique<ValueType>(value); });
   }
@@ -64,15 +65,30 @@ public:
     return *this;
   }
 
-  operator ValueType() const { return this->operator*(); }
+  operator ValueType() const
+  {
+    return this->operator*();
+  }
 
-  ValueType& operator*() { return *values_[threadManager().thread()]; }
+  ValueType& operator*()
+  {
+    return *values_[threadManager().thread()];
+  }
 
-  ConstValueType& operator*() const { return *values_[threadManager().thread()]; }
+  ConstValueType& operator*() const
+  {
+    return *values_[threadManager().thread()];
+  }
 
-  ValueType* operator->() { return values_[threadManager().thread()].get(); }
+  ValueType* operator->()
+  {
+    return values_[threadManager().thread()].get();
+  }
 
-  ConstValueType* operator->() const { return values_[threadManager().thread()].get(); }
+  ConstValueType* operator->() const
+  {
+    return values_[threadManager().thread()].get();
+  }
 
   template <class BinaryOperation>
   ValueType accumulate(ValueType init, BinaryOperation op) const
@@ -82,7 +98,10 @@ public:
     return std::accumulate(values_.begin(), values_.end(), init, l);
   }
 
-  ValueType sum() const { return accumulate(ValueType(0), std::plus<ValueType>()); }
+  ValueType sum() const
+  {
+    return accumulate(ValueType(0), std::plus<ValueType>());
+  }
 
 private:
   ContainerType values_;
@@ -127,15 +146,30 @@ public:
     return *this;
   }
 
-  operator ValueImp() const { return this->operator*(); }
+  operator ValueImp() const
+  {
+    return this->operator*();
+  }
 
-  ValueType& operator*() { return *values_->local(); }
+  ValueType& operator*()
+  {
+    return *values_->local();
+  }
 
-  ConstValueType& operator*() const { return *values_->local(); }
+  ConstValueType& operator*() const
+  {
+    return *values_->local();
+  }
 
-  ValueType* operator->() { return values_->local().get(); }
+  ValueType* operator->()
+  {
+    return values_->local().get();
+  }
 
-  ConstValueType* operator->() const { return values_->local().get(); }
+  ConstValueType* operator->() const
+  {
+    return values_->local().get();
+  }
 
   template <class BinaryOperation>
   ValueType accumulate(ValueType init, BinaryOperation op) const
@@ -145,7 +179,10 @@ public:
     return std::accumulate(values_->begin(), values_->end(), init, l);
   }
 
-  ValueType sum() const { return accumulate(ValueType(), std::plus<ValueType>()); }
+  ValueType sum() const
+  {
+    return accumulate(ValueType(), std::plus<ValueType>());
+  }
 
 private:
   mutable std::unique_ptr<ContainerType> values_;

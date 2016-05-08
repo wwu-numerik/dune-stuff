@@ -105,7 +105,10 @@ struct LeafPartView<GridType, ChoosePartView::view>
 {
   typedef typename Layer<GridType, ChooseLayer::leaf, ChoosePartView::view>::Type Type;
 
-  static Type create(const GridType& grid, const int /*level*/ = 0) { return grid.leafGridView(); }
+  static Type create(const GridType& grid, const int /*level*/ = 0)
+  {
+    return grid.leafGridView();
+  }
 }; // struct LeafPartView< ..., view >
 
 #if HAVE_DUNE_FEM
@@ -124,7 +127,10 @@ struct LeafPartView<GridType, ChoosePartView::part>
                   "dune-fem does not allow the creation of a leaf grid part from a non-const grid!");
   }
 
-  static Type create(GridType& grid, const int /*level*/ = 0) { return Type(grid); }
+  static Type create(GridType& grid, const int /*level*/ = 0)
+  {
+    return Type(grid);
+  }
 }; // struct LeafPartView< ..., part >
 
 #else // HAVE_DUNE_FEM
@@ -394,7 +400,7 @@ struct Layer<GridType, ChooseLayer::local_oversampled, ChoosePartView::part>
 };
 
 #endif // HAVE_DUNE_GRID_MULTISCALE
-#else  // HAVE_DUNE_GRID
+#else // HAVE_DUNE_GRID
 
 template <class GridType, ChooseLayer layer, ChoosePartView type>
 struct Layer

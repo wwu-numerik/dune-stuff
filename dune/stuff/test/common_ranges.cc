@@ -29,7 +29,10 @@ struct CornerRangeTest : public ::testing::Test
   typedef TESTGRIDTYPE GridType;
   static const size_t dim_grid = GridType::dimension;
   const DSG::Providers::Cube<GridType> grid_prv;
-  CornerRangeTest() : grid_prv(0., 1., level) {}
+  CornerRangeTest()
+    : grid_prv(0., 1., level)
+  {
+  }
 
   template <typename Entity, typename RangeType>
   void check_range(const Entity& e, RangeType range)
@@ -62,6 +65,9 @@ struct CornerRangeTest : public ::testing::Test
   }
 };
 
-TEST_F(CornerRangeTest, Misc) { this->check(); }
+TEST_F(CornerRangeTest, Misc)
+{
+  this->check();
+}
 
 #endif // #if HAVE_DUNE_GRID

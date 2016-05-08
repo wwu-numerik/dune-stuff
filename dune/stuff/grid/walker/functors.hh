@@ -28,13 +28,19 @@ public:
   typedef GridViewImp GridViewType;
   typedef typename Stuff::Grid::Entity<GridViewType>::Type EntityType;
 
-  virtual ~Codim0() {}
+  virtual ~Codim0()
+  {
+  }
 
-  virtual void prepare() {}
+  virtual void prepare()
+  {
+  }
 
   virtual void apply_local(const EntityType& entity) = 0;
 
-  virtual void finalize() {}
+  virtual void finalize()
+  {
+  }
 }; // class Codim0
 
 template <class GridViewImp>
@@ -45,14 +51,20 @@ public:
   typedef typename Stuff::Grid::Entity<GridViewType>::Type EntityType;
   typedef typename Stuff::Grid::Intersection<GridViewType>::Type IntersectionType;
 
-  virtual ~Codim1() {}
+  virtual ~Codim1()
+  {
+  }
 
-  virtual void prepare() {}
+  virtual void prepare()
+  {
+  }
 
   virtual void apply_local(const IntersectionType& /*intersection*/, const EntityType& /*inside_entity*/,
                            const EntityType& /*outside_entity*/) = 0;
 
-  virtual void finalize() {}
+  virtual void finalize()
+  {
+  }
 }; // class Codim1
 
 template <class GridViewImp>
@@ -63,16 +75,22 @@ public:
   typedef typename Stuff::Grid::Entity<GridViewType>::Type EntityType;
   typedef typename Stuff::Grid::Intersection<GridViewType>::Type IntersectionType;
 
-  virtual ~Codim0And1() {}
+  virtual ~Codim0And1()
+  {
+  }
 
-  virtual void prepare() {}
+  virtual void prepare()
+  {
+  }
 
   virtual void apply_local(const EntityType& entity) = 0;
 
   virtual void apply_local(const IntersectionType& /*intersection*/, const EntityType& /*inside_entity*/,
                            const EntityType& /*outside_entity*/) = 0;
 
-  virtual void finalize() {}
+  virtual void finalize()
+  {
+  }
 }; // class Codim0And1
 
 template <class GridViewImp>
@@ -86,11 +104,14 @@ public:
   typedef typename BaseType::IntersectionType IntersectionType;
 
   explicit DirichletDetector(const BoundaryInfoInterface<IntersectionType>& boundary_info)
-    : boundary_info_(boundary_info), found_(0)
+    : boundary_info_(boundary_info)
+    , found_(0)
   {
   }
 
-  virtual ~DirichletDetector() {}
+  virtual ~DirichletDetector()
+  {
+  }
 
   virtual void apply_local(const IntersectionType& intersection, const EntityType& /*inside_entity*/,
                            const EntityType& /*outside_entity*/) override
@@ -99,7 +120,10 @@ public:
       ++found_;
   }
 
-  bool found() const { return found_ > 0; }
+  bool found() const
+  {
+    return found_ > 0;
+  }
 
 private:
   const BoundaryInfoInterface<IntersectionType>& boundary_info_;

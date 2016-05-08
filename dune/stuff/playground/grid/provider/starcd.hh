@@ -56,7 +56,10 @@ public:
   using typename BaseType::GridType;
   using BaseType::dimDomain;
 
-  static const std::string static_id() { return BaseType::static_id() + ".starcd"; }
+  static const std::string static_id()
+  {
+    return BaseType::static_id() + ".starcd";
+  }
 
   static Common::Configuration default_config(const std::string sub_name = "")
   {
@@ -192,13 +195,25 @@ public:
   ThisType& operator=(ThisType&& source) = default;
   ThisType& operator=(const ThisType& other) = default;
 
-  virtual const GridType& grid() const override final { return *grid_; }
+  virtual const GridType& grid() const override final
+  {
+    return *grid_;
+  }
 
-  virtual GridType& grid() override final { return *grid_; }
+  virtual GridType& grid() override final
+  {
+    return *grid_;
+  }
 
-  const std::shared_ptr<const GridType> grid_ptr() const { return grid_; }
+  const std::shared_ptr<const GridType> grid_ptr() const
+  {
+    return grid_;
+  }
 
-  std::shared_ptr<GridType> grid_ptr() { return grid_; }
+  std::shared_ptr<GridType> grid_ptr()
+  {
+    return grid_;
+  }
 
   virtual std::unique_ptr<Grid::ConstProviderInterface<GridType>> copy() const override final
   {

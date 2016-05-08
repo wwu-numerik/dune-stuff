@@ -62,7 +62,7 @@ struct IstlSolverTraits
 
   template <class SequentialPreconditionerType>
   static BlockPreconditioner<IstlVectorType, IstlVectorType, CommunicatorType, SequentialPreconditionerType>
-      make_preconditioner(SequentialPreconditionerType& seq_preconditioner, const CommunicatorType& communicator)
+  make_preconditioner(SequentialPreconditionerType& seq_preconditioner, const CommunicatorType& communicator)
   {
     return BlockPreconditioner<IstlVectorType, IstlVectorType, CommunicatorType, SequentialPreconditionerType>(
         seq_preconditioner, communicator);
@@ -102,9 +102,15 @@ public:
   typedef IstlRowMajorSparseMatrix<S> MatrixType;
   typedef typename MatrixType::RealType R;
 
-  Solver(const MatrixType& matrix) : matrix_(matrix), communicator_(new CommunicatorType()) {}
+  Solver(const MatrixType& matrix)
+    : matrix_(matrix)
+    , communicator_(new CommunicatorType())
+  {
+  }
 
-  Solver(const MatrixType& matrix, const CommunicatorType& communicator) : matrix_(matrix), communicator_(communicator)
+  Solver(const MatrixType& matrix, const CommunicatorType& communicator)
+    : matrix_(matrix)
+    , communicator_(communicator)
   {
   }
 
@@ -139,7 +145,7 @@ public:
       iterative_options.set("preconditioner.min_coarse_rate", "1.2");
       iterative_options.set("preconditioner.prolong_damp", "1.6");
       iterative_options.set("preconditioner.anisotropy_dim", "2"); // <- this should be the dimDomain of the problem!
-      iterative_options.set("preconditioner.isotropy_dim", "2");   // <- this as well
+      iterative_options.set("preconditioner.isotropy_dim", "2"); // <- this as well
       iterative_options.set("preconditioner.verbose", "0");
       return iterative_options;
     } else if (tp == "bicgstab.ilut" || tp == "bicgstab.ssor") {
@@ -159,7 +165,10 @@ public:
     return Common::Configuration();
   } // ... options(...)
 
-  void apply(const IstlDenseVector<S>& rhs, IstlDenseVector<S>& solution) const { apply(rhs, solution, types()[0]); }
+  void apply(const IstlDenseVector<S>& rhs, IstlDenseVector<S>& solution) const
+  {
+    apply(rhs, solution, types()[0]);
+  }
 
   void apply(const IstlDenseVector<S>& rhs, IstlDenseVector<S>& solution, const std::string& type) const
   {

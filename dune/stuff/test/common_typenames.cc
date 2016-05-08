@@ -33,7 +33,10 @@ TEST(Typename, Knowns)
   EXPECT_EQ(Typename<char>::value(), "char");
 }
 
-TEST(Typename, Unknowns) { EXPECT_NE(Typename<Dune::Exception>::value(), string()); }
+TEST(Typename, Unknowns)
+{
+  EXPECT_NE(Typename<Dune::Exception>::value(), string());
+}
 
 TEST(Typename, Extended)
 {

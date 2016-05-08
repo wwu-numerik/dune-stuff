@@ -32,21 +32,35 @@ class FixedMapIterator : public boost::iterator_facade<FixedMapIterator<FixedMap
   typedef FixedMapIterator<FixedMapType> ThisType;
 
 public:
-  FixedMapIterator() : index_(FixedMapType::N), map_(nullptr) {}
+  FixedMapIterator()
+    : index_(FixedMapType::N)
+    , map_(nullptr)
+  {
+  }
 
-  explicit FixedMapIterator(FixedMapType* map, std::size_t i) : index_(i), map_(map) {}
+  explicit FixedMapIterator(FixedMapType* map, std::size_t i)
+    : index_(i)
+    , map_(map)
+  {
+  }
 
 private:
   friend class boost::iterator_core_access;
 
-  void increment() { index_++; }
+  void increment()
+  {
+    index_++;
+  }
 
   bool equal(ThisType const& other) const
   {
     return this->map_ && (index_ == other.index_) && (this->map_ == other.map_);
   }
 
-  typename FixedMapType::value_type& dereference() const { return map_->map_[index_]; }
+  typename FixedMapType::value_type& dereference() const
+  {
+    return map_->map_[index_];
+  }
 
   std::size_t index_;
   FixedMapType* const map_;
@@ -61,21 +75,35 @@ class ConstFixedMapIterator
   typedef ConstFixedMapIterator<FixedMapType> ThisType;
 
 public:
-  ConstFixedMapIterator() : index_(FixedMapType::N), map_(nullptr) {}
+  ConstFixedMapIterator()
+    : index_(FixedMapType::N)
+    , map_(nullptr)
+  {
+  }
 
-  explicit ConstFixedMapIterator(const FixedMapType* const map, std::size_t i) : index_(i), map_(map) {}
+  explicit ConstFixedMapIterator(const FixedMapType* const map, std::size_t i)
+    : index_(i)
+    , map_(map)
+  {
+  }
 
 private:
   friend class boost::iterator_core_access;
 
-  void increment() { index_++; }
+  void increment()
+  {
+    index_++;
+  }
 
   bool equal(ThisType const& other) const
   {
     return this->map_ && (index_ == other.index_) && (this->map_ == other.map_);
   }
 
-  const typename FixedMapType::value_type& dereference() const { return map_->map_[index_]; }
+  const typename FixedMapType::value_type& dereference() const
+  {
+    return map_->map_[index_];
+  }
 
   std::size_t index_;
   const FixedMapType* const map_;
@@ -105,7 +133,9 @@ public:
   typedef FixedMapIterator<ThisType> iterator;
   typedef ConstFixedMapIterator<ThisType> const_iterator;
 
-  FixedMap() {}
+  FixedMap()
+  {
+  }
   /** inserts key-value value pairs from  initializer list
    * if list.size() > N only the first N elements are considered
    * if list.size() < N the Map is padded with default constructed elements
@@ -117,7 +147,10 @@ public:
   {
   }
 
-  FixedMap(const MapType& map) : map_(map) {}
+  FixedMap(const MapType& map)
+    : map_(map)
+  {
+  }
 
   std::size_t getIdx(const key_type& key) const
   {
@@ -143,19 +176,40 @@ public:
     return map_[it].second;
   }
 
-  const_iterator find(const key_type& key) const { return const_iterator(this, getIdx(key)); }
+  const_iterator find(const key_type& key) const
+  {
+    return const_iterator(this, getIdx(key));
+  }
 
-  iterator find(const key_type& key) { return iterator(this, getIdx(key)); }
+  iterator find(const key_type& key)
+  {
+    return iterator(this, getIdx(key));
+  }
 
-  iterator begin() { return iterator(this, 0); }
+  iterator begin()
+  {
+    return iterator(this, 0);
+  }
 
-  iterator end() { return iterator(this, N); }
+  iterator end()
+  {
+    return iterator(this, N);
+  }
 
-  const_iterator begin() const { return const_iterator(this, 0); }
+  const_iterator begin() const
+  {
+    return const_iterator(this, 0);
+  }
 
-  const_iterator end() const { return const_iterator(this, N); }
+  const_iterator end() const
+  {
+    return const_iterator(this, N);
+  }
 
-  std::size_t size() const { return N; }
+  std::size_t size() const
+  {
+    return N;
+  }
 
   void print(std::ostream& out) const
   {

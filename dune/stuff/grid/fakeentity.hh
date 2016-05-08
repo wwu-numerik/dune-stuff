@@ -31,7 +31,10 @@ public:
     }
   }; // class Geometry
 
-  Geometry geometry() const { return Geometry(); }
+  Geometry geometry() const
+  {
+    return Geometry();
+  }
 
   static constexpr int dimension = dd;
 }; // class FakeEntity

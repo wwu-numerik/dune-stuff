@@ -140,7 +140,9 @@ public:
 
   using typename CRTP::derived_type;
 
-  virtual ~ContainerInterface() {}
+  virtual ~ContainerInterface()
+  {
+  }
 
   /// \name Have to be implemented by a derived class!
   /// \{
@@ -159,7 +161,10 @@ public:
    * \brief BLAS SCAL operation (in-place sclar multiplication).
    * \param alpha The scalar coefficient with which each element of the container is multiplied.
    */
-  inline void scal(const ScalarType& alpha) { CHECK_AND_CALL_CRTP(this->as_imp().scal(alpha)); }
+  inline void scal(const ScalarType& alpha)
+  {
+    CHECK_AND_CALL_CRTP(this->as_imp().scal(alpha));
+  }
 
   /**
    * \brief BLAS AXPY operation.
@@ -186,7 +191,10 @@ public:
   /// \note Those marked as virtual may be implemented more efficiently in a derived class!
   /// \{
 
-  static std::string type_this() { return Common::Typename<derived_type>::value(); }
+  static std::string type_this()
+  {
+    return Common::Typename<derived_type>::value();
+  }
 
   virtual derived_type& operator*=(const ScalarType& alpha)
   {

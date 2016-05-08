@@ -357,7 +357,7 @@ private:
     schwarzParams.schwarz_mmsize = description.get<int>("schwarzParams.schwarz_mmsize", 200);
     return schwarzParams;
   } // ... initSchwarzParams(...)
-};  // class AmgSolver
+}; // class AmgSolver
 
 } // namespace LA
 } // namespace Stuff

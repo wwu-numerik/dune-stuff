@@ -20,33 +20,39 @@
 #include <dune/grid/yaspgrid.hh>
 #if HAVE_ALUGRID
 #include <dune/grid/alugrid.hh>
-#endif //HAVE_ALUGRID
+#endif // HAVE_ALUGRID
 
-                                                                       \
+
 /* we just take the constant function as a container for the types we need */
 /* since this one always exists for all combinations */
-struct FunctionsTest : public DS::FunctionTest< TESTFUNCTIONTYPE >
+struct FunctionsTest : public DS::FunctionTest<TESTFUNCTIONTYPE>
 {
-    typedef Dune::Stuff::FunctionsProvider<EntityType, DomainFieldType, dimDomain, RangeFieldType, dimRange, dimRangeCols> FunctionsProvider;
-    typedef typename FunctionsProvider::InterfaceType InterfaceType;
+  typedef Dune::Stuff::FunctionsProvider<EntityType, DomainFieldType, dimDomain, RangeFieldType, dimRange, dimRangeCols>
+      FunctionsProvider;
+  typedef typename FunctionsProvider::InterfaceType InterfaceType;
 
-    virtual void check() const
-    {
-        for (const auto& type : FunctionsProvider::available()) {
-            const Dune::Stuff::Common::Configuration config = FunctionsProvider::default_config(type);
-            try {
-                const std::unique_ptr<InterfaceType> function = FunctionsProvider::create(type, config);
-            } catch (Dune::Stuff::Exceptions::spe10_data_file_missing&) {
-            }
-        }
+  virtual void check() const
+  {
+    for (const auto& type : FunctionsProvider::available()) {
+      const Dune::Stuff::Common::Configuration config = FunctionsProvider::default_config(type);
+      try {
+        const std::unique_ptr<InterfaceType> function = FunctionsProvider::create(type, config);
+      } catch (Dune::Stuff::Exceptions::spe10_data_file_missing&) {
+      }
     }
+  }
 };
 
 
-TEST_F(FunctionsTest, provides_required_methods) { this->check(); }
+TEST_F(FunctionsTest, provides_required_methods)
+{
+  this->check();
+}
 
 #else // HAVE_DUNE_GRID
 
-TEST(DISABLED_FunctionsTest, provides_required_methods) {}
+TEST(DISABLED_FunctionsTest, provides_required_methods)
+{
+}
 
 #endif // HAVE_DUNE_GRID

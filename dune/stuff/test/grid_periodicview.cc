@@ -46,19 +46,19 @@ struct PeriodicViewTest : public testing::Test
 
   static constexpr int factorial(int n)
   {
-    return n > 0 ? n*factorial(n-1) : 1;
+    return n > 0 ? n * factorial(n - 1) : 1;
   }
 
   static void check()
   {
     // create grid and get gridview
-    DSC::Configuration grid_config = DSC_CONFIG.sub("test_grid_periodicview");
-    GridProviderType grid_provider = *(GridProviderType::create(grid_config));
+    DSC::Configuration grid_config             = DSC_CONFIG.sub("test_grid_periodicview");
+    GridProviderType grid_provider             = *(GridProviderType::create(grid_config));
     const std::shared_ptr<const GridType> grid = grid_provider.grid_ptr();
     const GridViewType grid_view               = grid->leafGridView();
 
     // check whether grid is periodic
-    const bool is_nonperiodic = grid_config["periodic"] == "no";
+    const bool is_nonperiodic        = grid_config["periodic"] == "no";
     const bool is_partially_periodic = grid_config["periodic"] == "partial";
 
     // create periodic grid_view
@@ -69,9 +69,9 @@ struct PeriodicViewTest : public testing::Test
       periodic_directions.set();
     const PeriodicGridViewType periodic_grid_view(grid_view, periodic_directions);
 
-    const bool is_simplex = DSC::fromString<bool>(grid_config["is_simplex"]);
-    const bool is_cube = !is_simplex;
-    const DomainType lower_left = DSC::fromString<DomainType>(grid_config["lower_left"]);
+    const bool is_simplex        = DSC::fromString<bool>(grid_config["is_simplex"]);
+    const bool is_cube           = !is_simplex;
+    const DomainType lower_left  = DSC::fromString<DomainType>(grid_config["lower_left"]);
     const DomainType upper_right = DSC::fromString<DomainType>(grid_config["upper_right"]);
 
     // check interface
@@ -156,27 +156,30 @@ struct PeriodicViewTest : public testing::Test
     }
 
     // the cube/rectangle grid has 2*dimDomain faces
-    const size_t num_faces = 2*dimDomain;
-    // on each face, there are 8**(dimDomain-1) intersections. For a simplex grid in 3 dimensions, there are twice as much.
+    const size_t num_faces = 2 * dimDomain;
+    // on each face, there are 8**(dimDomain-1) intersections. For a simplex grid in 3 dimensions, there are twice as
+    // much.
     size_t num_intersections_on_face = std::pow(8, dimDomain - 1);
     // use dimDomain from config here to avoid "code will never be executed" warning
-    assert(dimDomain == DSC::fromString< int >(grid_config["dimDomain"]));
+    assert(dimDomain == DSC::fromString<int>(grid_config["dimDomain"]));
     if (is_simplex && DSC::fromString<int>(grid_config["dimDomain"]) == 3)
       num_intersections_on_face *= 2;
-    // In a fully periodic grid, all intersections are periodic. In a partially periodic grid, only the intersections on two
+    // In a fully periodic grid, all intersections are periodic. In a partially periodic grid, only the intersections on
+    // two
     // faces are periodic. In a nonperiodic grid, no intersections are periodic.
     size_t num_periodic_faces = is_partially_periodic ? 2 : num_faces;
     if (is_nonperiodic)
       num_periodic_faces *= 0;
-    const size_t expected_num_periodic_intersections = num_periodic_faces*num_intersections_on_face;
+    const size_t expected_num_periodic_intersections = num_periodic_faces * num_intersections_on_face;
     EXPECT_EQ(expected_num_periodic_intersections, periodic_count);
     // The boundary count should be the number of interfaces on the boundary without the periodic interfaces
-    const size_t expected_num_boundary_intersections = num_faces*num_intersections_on_face - expected_num_periodic_intersections;
+    const size_t expected_num_boundary_intersections =
+        num_faces * num_intersections_on_face - expected_num_periodic_intersections;
     EXPECT_EQ(expected_num_boundary_intersections, boundary_count);
     // neighbor_count should equal the number of intersections without intersections on non-periodic boundaries
-    const size_t num_intersections_per_entity = is_cube ? 2*dimDomain : dimDomain+1;
+    const size_t num_intersections_per_entity = is_cube ? 2 * dimDomain : dimDomain + 1;
     const size_t num_entities = grid_view.size(0);
-    EXPECT_EQ(num_entities*num_intersections_per_entity-expected_num_boundary_intersections, neighbor_count);
+    EXPECT_EQ(num_entities * num_intersections_per_entity - expected_num_boundary_intersections, neighbor_count);
   } // void check(...)
 };
 
@@ -185,8 +188,10 @@ TEST_F(PeriodicViewTest, check_all)
   this->check();
 }
 
-#else  // HAVE_DUNE_GRID
+#else // HAVE_DUNE_GRID
 
-TEST(DISABLED_PeriodicViewTest, check_all) {}
+TEST(DISABLED_PeriodicViewTest, check_all)
+{
+}
 
 #endif // HAVE_DUNE_GRID

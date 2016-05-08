@@ -76,11 +76,20 @@ class EntityRange
   const GridPartViewType& part_view_;
 
 public:
-  EntityRange(const GridPartViewType& part_view) : part_view_(part_view) {}
+  EntityRange(const GridPartViewType& part_view)
+    : part_view_(part_view)
+  {
+  }
 
-  auto begin() const -> decltype(part_view_.template begin<codim>()) { return part_view_.template begin<codim>(); }
+  auto begin() const -> decltype(part_view_.template begin<codim>())
+  {
+    return part_view_.template begin<codim>();
+  }
 
-  auto end() const -> decltype(part_view_.template end<codim>()) { return part_view_.template end<codim>(); }
+  auto end() const -> decltype(part_view_.template end<codim>())
+  {
+    return part_view_.template end<codim>();
+  }
 }; // class EntityRange
 
 template <class GridViewTraits, size_t codim = 0>
@@ -109,17 +118,27 @@ class IntersectionRange
   const EntityType& entity_;
 
 public:
-  IntersectionRange(const GridAbstractionType& view, const EntityType& entity) : view_(view), entity_(entity) {}
+  IntersectionRange(const GridAbstractionType& view, const EntityType& entity)
+    : view_(view)
+    , entity_(entity)
+  {
+  }
 
-  auto begin() const -> decltype(view_.ibegin(entity_)) { return view_.ibegin(entity_); }
+  auto begin() const -> decltype(view_.ibegin(entity_))
+  {
+    return view_.ibegin(entity_);
+  }
 
-  auto end() const -> decltype(view_.iend(entity_)) { return view_.iend(entity_); }
+  auto end() const -> decltype(view_.iend(entity_))
+  {
+    return view_.iend(entity_);
+  }
 };
 
 template <class GridViewTraits>
 IntersectionRange<Dune::GridView<GridViewTraits>, typename Dune::GridView<GridViewTraits>::template Codim<0>::Entity>
-    intersectionRange(const Dune::GridView<GridViewTraits>& gridview,
-                      const typename Dune::GridView<GridViewTraits>::template Codim<0>::Entity& entity)
+intersectionRange(const Dune::GridView<GridViewTraits>& gridview,
+                  const typename Dune::GridView<GridViewTraits>::template Codim<0>::Entity& entity)
 {
   return IntersectionRange<Dune::GridView<GridViewTraits>,
                            typename Dune::GridView<GridViewTraits>::template Codim<0>::Entity>(gridview, entity);
@@ -135,21 +154,35 @@ class ConstCornerIterator
   typedef typename GeometryType::GlobalCoordinate CornerType;
 
 public:
-  ConstCornerIterator() : index_(-1), geometry_(nullptr) {}
+  ConstCornerIterator()
+    : index_(-1)
+    , geometry_(nullptr)
+  {
+  }
 
-  explicit ConstCornerIterator(const GeometryType* const geometry, int i = 0) : index_(i), geometry_(geometry) {}
+  explicit ConstCornerIterator(const GeometryType* const geometry, int i = 0)
+    : index_(i)
+    , geometry_(geometry)
+  {
+  }
 
 private:
   friend class boost::iterator_core_access;
 
-  void increment() { index_++; }
+  void increment()
+  {
+    index_++;
+  }
 
   bool equal(ThisType const& other) const
   {
     return this->geometry_ && (index_ == other.index_) && (this->geometry_ == other.geometry_);
   }
 
-  CornerType dereference() const { return geometry_->corner(index_); }
+  CornerType dereference() const
+  {
+    return geometry_->corner(index_);
+  }
 
   int index_;
   const GeometryType* const geometry_;
@@ -161,18 +194,28 @@ class CornerRange
   typedef ConstCornerIterator<GeometryType> IteratorType;
 
 public:
-  CornerRange(const GeometryType& geometry) : geometry_(geometry) {}
+  CornerRange(const GeometryType& geometry)
+    : geometry_(geometry)
+  {
+  }
 
-  IteratorType begin() const { return IteratorType(&geometry_, 0); }
+  IteratorType begin() const
+  {
+    return IteratorType(&geometry_, 0);
+  }
 
-  IteratorType end() const { return IteratorType(&geometry_, geometry_.corners()); }
+  IteratorType end() const
+  {
+    return IteratorType(&geometry_, geometry_.corners());
+  }
+
 private:
   const GeometryType& geometry_;
 };
 
 template <int mydim, int cdim, class GridImp, template <int, int, class> class GeometryImp>
 CornerRange<Dune::Geometry<mydim, cdim, GridImp, GeometryImp>>
-    cornerRange(const Dune::Geometry<mydim, cdim, GridImp, GeometryImp>& geometry)
+cornerRange(const Dune::Geometry<mydim, cdim, GridImp, GeometryImp>& geometry)
 {
   return CornerRange<Dune::Geometry<mydim, cdim, GridImp, GeometryImp>>(geometry);
 }
@@ -202,23 +245,31 @@ public:
    */
   template <class DiscreteFunctionspaceType, class EntityType>
   LagrangePointSetRange(const DiscreteFunctionspaceType& space, const EntityType& entity, const size_t subEntity)
-    : lp_set_(space.lagrangePointSet(entity)), subEntity_(subEntity)
+    : lp_set_(space.lagrangePointSet(entity))
+    , subEntity_(subEntity)
   {
   }
 
   LagrangePointSetRange(const LagrangePointSetType& lp_set, const size_t subEntity)
-    : lp_set_(lp_set), subEntity_(subEntity)
+    : lp_set_(lp_set)
+    , subEntity_(subEntity)
   {
   }
 
-  SubEntityIteratorType begin() const { return lp_set_.template beginSubEntity<faceCodim>(subEntity_); }
-  SubEntityIteratorType end() const { return lp_set_.template endSubEntity<faceCodim>(subEntity_); }
+  SubEntityIteratorType begin() const
+  {
+    return lp_set_.template beginSubEntity<faceCodim>(subEntity_);
+  }
+  SubEntityIteratorType end() const
+  {
+    return lp_set_.template endSubEntity<faceCodim>(subEntity_);
+  }
 };
 
 template <size_t codim, class DiscreteFunctionspaceType, class EntityType>
 LagrangePointSetRange<typename DiscreteFunctionspaceType::GridPartType, DiscreteFunctionspaceType::polynomialOrder,
                       codim>
-    lagrangePointSetRange(const DiscreteFunctionspaceType& space, const EntityType& entity, const size_t subEntity)
+lagrangePointSetRange(const DiscreteFunctionspaceType& space, const EntityType& entity, const size_t subEntity)
 {
   return LagrangePointSetRange<typename DiscreteFunctionspaceType::GridPartType,
                                DiscreteFunctionspaceType::polynomialOrder,
@@ -227,7 +278,7 @@ LagrangePointSetRange<typename DiscreteFunctionspaceType::GridPartType, Discrete
 
 template <class LgPointSetType, size_t codim = 1>
 LagrangePointSetRange<typename LgPointSetType::GridPartType, LgPointSetType::polynomialOrder, codim>
-    lagrangePointSetRange(const LgPointSetType& lpset, const size_t subEntity)
+lagrangePointSetRange(const LgPointSetType& lpset, const size_t subEntity)
 {
   return LagrangePointSetRange<typename LgPointSetType::GridPartType, LgPointSetType::polynomialOrder, codim>(
       lpset, subEntity);
@@ -236,9 +287,8 @@ LagrangePointSetRange<typename LgPointSetType::GridPartType, LgPointSetType::pol
 template <class GridPartTraits>
 IntersectionRange<Dune::Fem::GridPartInterface<GridPartTraits>,
                   typename Dune::Fem::GridPartInterface<GridPartTraits>::template Codim<0>::EntityType>
-    intersectionRange(
-        const Dune::Fem::GridPartInterface<GridPartTraits>& gridpart,
-        const typename Dune::Fem::GridPartInterface<GridPartTraits>::template Codim<0>::EntityType& entity)
+intersectionRange(const Dune::Fem::GridPartInterface<GridPartTraits>& gridpart,
+                  const typename Dune::Fem::GridPartInterface<GridPartTraits>::template Codim<0>::EntityType& entity)
 {
   return IntersectionRange<Dune::Fem::GridPartInterface<GridPartTraits>,
                            typename Dune::Fem::GridPartInterface<GridPartTraits>::template Codim<0>::EntityType>(
@@ -266,8 +316,8 @@ typename std::enable_if<!std::is_enum<T>::value, sequence>::type valueRange(cons
 //! signature for enumeration Types T
 template <class T, class sequence = std::vector<typename absretval<T>::type>>
 typename std::enable_if<std::is_enum<T>::value, sequence>::type
-    valueRange(const T start, const T end,
-               const typename absretval<T>::type increment = Epsilon<typename absretval<T>::type>::value)
+valueRange(const T start, const T end,
+           const typename absretval<T>::type increment = Epsilon<typename absretval<T>::type>::value)
 {
   typedef typename absretval<T>::type R;
   return valueRange(static_cast<R>(start), static_cast<R>(end), increment);

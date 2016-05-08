@@ -21,7 +21,10 @@ namespace Dune {
 namespace Stuff {
 namespace Common {
 
-Logging::Logging() : streamIDs_({LOG_ERROR, LOG_DEBUG, LOG_INFO}), logflags_(LOG_NONE), emptyLogStream_(logflags_)
+Logging::Logging()
+  : streamIDs_({LOG_ERROR, LOG_DEBUG, LOG_INFO})
+  , logflags_(LOG_NONE)
+  , emptyLogStream_(logflags_)
 {
   for (const auto id : streamIDs_)
     streammap_[id] = Dune::Stuff::Common::make_unique<EmptyLogStream>(logflags_);
@@ -36,7 +39,10 @@ void Logging::deinit()
   }
 }
 
-Logging::~Logging() { deinit(); }
+Logging::~Logging()
+{
+  deinit();
+}
 
 void Logging::create(int logflags, const std::string logfile, const std::string datadir, const std::string _logdir)
 {

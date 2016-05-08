@@ -32,9 +32,13 @@ class FieldVector : public Dune::FieldVector<K, SIZE>
   typedef FieldVector<K, SIZE> ThisType;
 
 public:
-  FieldVector(const K kk = K(0)) : BaseType(kk) {}
+  FieldVector(const K kk = K(0))
+    : BaseType(kk)
+  {
+  }
 
-  FieldVector(const size_t UNUSED_UNLESS_DEBUG(sz), const K kk) : BaseType(kk)
+  FieldVector(const size_t UNUSED_UNLESS_DEBUG(sz), const K kk)
+    : BaseType(kk)
   {
 #ifndef NDEBUG
     if (sz != SIZE)
@@ -44,11 +48,15 @@ public:
                                                                     << sz
                                                                     << " elements!");
 #endif // NDEBUG
-  }    // ... FieldVector(...)
+  } // ... FieldVector(...)
 
-  FieldVector(const BaseType& other) : BaseType(other) {}
+  FieldVector(const BaseType& other)
+    : BaseType(other)
+  {
+  }
 
-  FieldVector(const std::vector<K>& vec) : BaseType(K(0))
+  FieldVector(const std::vector<K>& vec)
+    : BaseType(K(0))
   {
 #ifndef NDEBUG
     if (vec.size() != SIZE)
@@ -62,7 +70,8 @@ public:
       this->operator[](ii) = vec[ii];
   } // FieldVector(...)
 
-  FieldVector(std::initializer_list<K> list) : BaseType(K(0))
+  FieldVector(std::initializer_list<K> list)
+    : BaseType(K(0))
   {
 #ifndef NDEBUG
     if (list.size() != SIZE)
@@ -107,7 +116,10 @@ class ValueInitFieldVector : public Dune::Stuff::Common::FieldVector<K, SIZE>
   typedef Dune::Stuff::Common::FieldVector<K, SIZE> BaseType;
 
 public:
-  ValueInitFieldVector() : BaseType(value) {}
+  ValueInitFieldVector()
+    : BaseType(value)
+  {
+  }
 }; // class FieldVector
 
 //! Specialization of VectorAbstraction for Dune::Stuff::Common::FieldVector
@@ -126,9 +138,15 @@ struct VectorAbstraction<Dune::Stuff::Common::FieldVector<K, SIZE>>
 
   static const size_t static_size = SIZE;
 
-  static inline VectorType create(const size_t sz) { return VectorType(sz); }
+  static inline VectorType create(const size_t sz)
+  {
+    return VectorType(sz);
+  }
 
-  static inline VectorType create(const size_t sz, const ScalarType& val) { return VectorType(sz, val); }
+  static inline VectorType create(const size_t sz, const ScalarType& val)
+  {
+    return VectorType(sz, val);
+  }
 };
 
 } // namespace Common

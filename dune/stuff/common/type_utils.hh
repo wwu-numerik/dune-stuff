@@ -32,7 +32,10 @@
   template <>                                                                                                          \
   struct Typename<NAME>                                                                                                \
   {                                                                                                                    \
-    static const char* value() { return #NAME; }                                                                       \
+    static const char* value()                                                                                         \
+    {                                                                                                                  \
+      return #NAME;                                                                                                    \
+    }                                                                                                                  \
   };                                                                                                                   \
   }                                                                                                                    \
   }                                                                                                                    \
@@ -46,7 +49,7 @@ inline std::string demangleTypename(const std::string& mangled_name)
 {
 #ifdef __GNUC__
   return abi::__cxa_demangle(mangled_name.c_str(), nullptr, nullptr, nullptr);
-#else  // ifdef __GNUC__
+#else // ifdef __GNUC__
   return mangled_name;
 #endif // ifdef __GNUC__
 }
@@ -117,13 +120,19 @@ struct is_smart_ptr<T, typename std::enable_if<std::is_same<std::weak_ptr<typena
 template <class T, class = void>
 struct PtrCaller
 {
-  static T& call(T& ptr) { return ptr; }
+  static T& call(T& ptr)
+  {
+    return ptr;
+  }
 };
 
 template <class T>
 struct PtrCaller<T, typename std::enable_if<is_smart_ptr<T>::value || std::is_pointer<T>::value>::type>
 {
-  static typename T::element_type& call(T& ptr) { return *ptr; }
+  static typename T::element_type& call(T& ptr)
+  {
+    return *ptr;
+  }
 };
 
 //! workaround for gcc 4.7 missing underlying type, via

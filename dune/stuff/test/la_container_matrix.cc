@@ -124,42 +124,42 @@ struct MatrixTest : public ::testing::Test
     sparse_pattern.inner(2).push_back(3); //|-, -, -, -|
 
     // create test matrizes
-    MatrixImp matrix_zeros_dense(dim, dim, dense_pattern);   // |0, 0, 0, 0|
-    for (size_t ii = 0; ii < dim; ++ii) {                    // |0, 0, 0, 0|
-      for (size_t jj = 0; jj < dim; ++jj)                    // |0, 0, 0, 0|
+    MatrixImp matrix_zeros_dense(dim, dim, dense_pattern); // |0, 0, 0, 0|
+    for (size_t ii = 0; ii < dim; ++ii) { // |0, 0, 0, 0|
+      for (size_t jj = 0; jj < dim; ++jj) // |0, 0, 0, 0|
         matrix_zeros_dense.set_entry(ii, jj, ScalarType(0)); // |0, 0, 0, 0|
     }
     MatrixImp matrix_zeros_sparse(dim, dim, sparse_pattern); //|-, -, 0, -|
-    matrix_zeros_sparse.set_entry(0, 2, ScalarType(0));      //|0, 0, -, -|
-    matrix_zeros_sparse.set_entry(1, 0, ScalarType(0));      //|-, -, -, 0|
-    matrix_zeros_sparse.set_entry(1, 1, ScalarType(0));      //|-, -, -, -|
+    matrix_zeros_sparse.set_entry(0, 2, ScalarType(0)); //|0, 0, -, -|
+    matrix_zeros_sparse.set_entry(1, 0, ScalarType(0)); //|-, -, -, 0|
+    matrix_zeros_sparse.set_entry(1, 1, ScalarType(0)); //|-, -, -, -|
     matrix_zeros_sparse.set_entry(2, 3, ScalarType(0));
-    MatrixImp matrix_ones(dim, dim, dense_pattern);   // |1, 1, 1, 1|
-    for (size_t ii = 0; ii < dim; ++ii) {             // |1, 1, 1, 1|
-      for (size_t jj = 0; jj < dim; ++jj)             // |1, 1, 1, 1|
+    MatrixImp matrix_ones(dim, dim, dense_pattern); // |1, 1, 1, 1|
+    for (size_t ii = 0; ii < dim; ++ii) { // |1, 1, 1, 1|
+      for (size_t jj = 0; jj < dim; ++jj) // |1, 1, 1, 1|
         matrix_ones.set_entry(ii, jj, ScalarType(1)); // |1, 1, 1, 1|
     }
-    MatrixImp testmatrix_1(dim, dim, dense_pattern);                     // |0, 1, 2, 3|
-    for (size_t ii = 0; ii < dim; ++ii) {                                // |1, 2, 3, 4|
-      for (size_t jj = 0; jj < dim; ++jj)                                // |2, 3, 4, 5|
+    MatrixImp testmatrix_1(dim, dim, dense_pattern); // |0, 1, 2, 3|
+    for (size_t ii = 0; ii < dim; ++ii) { // |1, 2, 3, 4|
+      for (size_t jj = 0; jj < dim; ++jj) // |2, 3, 4, 5|
         testmatrix_1.set_entry(ii, jj, ScalarType(ii) + ScalarType(jj)); // |3, 4, 5, 6|
     }
     MatrixImp testmatrix_2(dim, dim, dense_pattern); // | 0.0, 1.5, 3.0, 4.5|
-    for (size_t ii = 0; ii < dim; ++ii) {            // |-0.5, 1.0, 2.5, 4.0|
-      for (size_t jj = 0; jj < dim; ++jj)            // |-1.0, 0.5, 2.0, 3.5|
+    for (size_t ii = 0; ii < dim; ++ii) { // |-0.5, 1.0, 2.5, 4.0|
+      for (size_t jj = 0; jj < dim; ++jj) // |-1.0, 0.5, 2.0, 3.5|
         testmatrix_2.set_entry(
             ii, jj, ScalarType(-0.5) * ScalarType(ii) + ScalarType(1.5) * ScalarType(jj)); // |-1.5, 0.0, 1.5, 3.0|
     }
     MatrixImp testmatrix_sparse(dim, dim, sparse_pattern); //|-,   -, 0.5,    -|
-    testmatrix_sparse.set_entry(0, 2, ScalarType(0.5));    //|1, 1.5,   -,    -|
-    testmatrix_sparse.set_entry(1, 0, ScalarType(1));      //|-,   -,   -, -0.5|
-    testmatrix_sparse.set_entry(1, 1, ScalarType(1.5));    //|-,   -,   -,    -|
+    testmatrix_sparse.set_entry(0, 2, ScalarType(0.5)); //|1, 1.5,   -,    -|
+    testmatrix_sparse.set_entry(1, 0, ScalarType(1)); //|-,   -,   -, -0.5|
+    testmatrix_sparse.set_entry(1, 1, ScalarType(1.5)); //|-,   -,   -,    -|
     testmatrix_sparse.set_entry(2, 3, ScalarType(-0.5));
 
     // create test vectors
-    VectorImp vector_zeros(dim);               // [0, 0, 0, 0]
+    VectorImp vector_zeros(dim); // [0, 0, 0, 0]
     VectorImp vector_ones(dim, ScalarType(1)); // [1, 1, 1, 1]
-    VectorImp vector_countingup(dim);          //[0, 1, 2, 3]
+    VectorImp vector_countingup(dim); //[0, 1, 2, 3]
     for (size_t ii = 0; ii < dim; ++ii)
       vector_countingup.set_entry(ii, ScalarType(ii));
     VectorImp testvector_1(dim); // [0, -2, 2, 1]
@@ -315,5 +315,11 @@ struct MatrixTest : public ::testing::Test
   } // void produces_correct_results() const
 }; // struct MatrixTest
 
-TEST_F(MatrixTest, fulfills_interface) { this->fulfills_interface(); }
-TEST_F(MatrixTest, produces_correct_results) { this->produces_correct_results(); }
+TEST_F(MatrixTest, fulfills_interface)
+{
+  this->fulfills_interface();
+}
+TEST_F(MatrixTest, produces_correct_results)
+{
+  this->produces_correct_results();
+}

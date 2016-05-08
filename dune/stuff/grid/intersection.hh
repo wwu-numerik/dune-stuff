@@ -87,8 +87,8 @@ void printIntersection(const IntersectionType& intersection, std::ostream& out =
  */
 template <class G, class I, class D>
 typename std::enable_if<Dune::Intersection<G, I>::dimension == 2, bool>::type
-    contains(const Dune::Intersection<G, I>& intersection, const Dune::FieldVector<D, 2>& global_point,
-             const D& tolerance = DSC::FloatCmp::DefaultEpsilon<D>::value())
+contains(const Dune::Intersection<G, I>& intersection, const Dune::FieldVector<D, 2>& global_point,
+         const D& tolerance = DSC::FloatCmp::DefaultEpsilon<D>::value())
 {
   const auto& geometry = intersection.geometry();
   // get the global coordinates of the intersections corners

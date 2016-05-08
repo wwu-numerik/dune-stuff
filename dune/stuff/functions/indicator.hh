@@ -29,7 +29,10 @@ namespace Functions {
 template <class E, class D, size_t d, class R, size_t r, size_t rC = 1>
 class Indicator : public LocalizableFunctionInterface<E, D, d, R, r, rC>
 {
-  Indicator() { static_assert(AlwaysFalse<E>::value, "Not available for these dimensions!"); }
+  Indicator()
+  {
+    static_assert(AlwaysFalse<E>::value, "Not available for these dimensions!");
+  }
 };
 
 template <class E, class D, size_t d, class R>
@@ -48,9 +51,16 @@ class Indicator<E, D, d, R, 1> : public LocalizableFunctionInterface<E, D, d, R,
     using typename InterfaceType::RangeType;
     using typename InterfaceType::JacobianRangeType;
 
-    Localfunction(const EntityType& entity, const RangeType& value) : InterfaceType(entity), value_(value) {}
+    Localfunction(const EntityType& entity, const RangeType& value)
+      : InterfaceType(entity)
+      , value_(value)
+    {
+    }
 
-    virtual size_t order() const override final { return 0; }
+    virtual size_t order() const override final
+    {
+      return 0;
+    }
 
     virtual void evaluate(const DomainType& xx, RangeType& ret) const override final
     {
@@ -78,7 +88,10 @@ public:
 
   static const bool available = true;
 
-  static std::string static_id() { return BaseType::static_id() + ".indicator"; }
+  static std::string static_id()
+  {
+    return BaseType::static_id() + ".indicator";
+  }
 
   static Common::Configuration default_config(const std::string sub_name = "")
   {
@@ -129,19 +142,26 @@ public:
   } // ... create(...)
 
   Indicator(const std::vector<std::tuple<DomainType, DomainType, R>>& values, const std::string name_in = "indicator")
-    : values_(values), name_(name_in)
+    : values_(values)
+    , name_(name_in)
   {
   }
 
   Indicator(const std::vector<std::pair<std::pair<Common::FieldVector<D, d>, Common::FieldVector<D, d>>, R>>& values,
             const std::string name_in = "indicator")
-    : values_(convert(values)), name_(name_in)
+    : values_(convert(values))
+    , name_(name_in)
   {
   }
 
-  virtual ~Indicator() {}
+  virtual ~Indicator()
+  {
+  }
 
-  virtual std::string name() const override final { return name_; }
+  virtual std::string name() const override final
+  {
+    return name_;
+  }
 
   virtual std::unique_ptr<LocalfunctionType> local_function(const EntityType& entity) const override final
   {
@@ -154,7 +174,7 @@ public:
 
 private:
   static std::vector<std::tuple<DomainType, DomainType, R>>
-      convert(const std::vector<std::pair<std::pair<Common::FieldVector<D, d>, Common::FieldVector<D, d>>, R>>& values)
+  convert(const std::vector<std::pair<std::pair<Common::FieldVector<D, d>, Common::FieldVector<D, d>>, R>>& values)
   {
     std::vector<std::tuple<DomainType, DomainType, R>> ret;
     for (const auto& element : values)

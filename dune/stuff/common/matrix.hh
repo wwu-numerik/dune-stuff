@@ -94,16 +94,25 @@ struct MatrixAbstraction<Dune::DynamicMatrix<K>>
 
   static const size_t static_cols = std::numeric_limits<size_t>::max();
 
-  static inline MatrixType create(const size_t rows, const size_t cols) { return MatrixType(rows, cols); }
+  static inline MatrixType create(const size_t rows, const size_t cols)
+  {
+    return MatrixType(rows, cols);
+  }
 
   static inline MatrixType create(const size_t rows, const size_t cols, const ScalarType& val)
   {
     return MatrixType(rows, cols, val);
   }
 
-  static inline size_t rows(const MatrixType& mat) { return mat.rows(); }
+  static inline size_t rows(const MatrixType& mat)
+  {
+    return mat.rows();
+  }
 
-  static inline size_t cols(const MatrixType& mat) { return mat.cols(); }
+  static inline size_t cols(const MatrixType& mat)
+  {
+    return mat.cols();
+  }
 
   static inline void set_entry(MatrixType& mat, const size_t row, const size_t col, const ScalarType& val)
   {
@@ -149,9 +158,15 @@ struct MatrixAbstraction<Dune::FieldMatrix<K, N, M>>
     return MatrixType(val);
   }
 
-  static inline size_t rows(const MatrixType& /*mat*/) { return boost::numeric_cast<size_t>(N); }
+  static inline size_t rows(const MatrixType& /*mat*/)
+  {
+    return boost::numeric_cast<size_t>(N);
+  }
 
-  static inline size_t cols(const MatrixType& /*mat*/) { return boost::numeric_cast<size_t>(M); }
+  static inline size_t cols(const MatrixType& /*mat*/)
+  {
+    return boost::numeric_cast<size_t>(M);
+  }
 
   static inline void set_entry(MatrixType& mat, const size_t row, const size_t col, const ScalarType& val)
   {
@@ -179,16 +194,25 @@ struct MatrixAbstraction<Dune::Stuff::Common::FieldMatrix<K, N, M>>
 
   static const size_t static_cols = M;
 
-  static inline MatrixType create(const size_t rows, const size_t cols) { return MatrixType(rows, cols); }
+  static inline MatrixType create(const size_t rows, const size_t cols)
+  {
+    return MatrixType(rows, cols);
+  }
 
   static inline MatrixType create(const size_t rows, const size_t cols, const ScalarType& val)
   {
     return MatrixType(rows, cols, val);
   }
 
-  static inline size_t rows(const MatrixType& /*mat*/) { return N; }
+  static inline size_t rows(const MatrixType& /*mat*/)
+  {
+    return N;
+  }
 
-  static inline size_t cols(const MatrixType& /*mat*/) { return M; }
+  static inline size_t cols(const MatrixType& /*mat*/)
+  {
+    return M;
+  }
 
   static inline void set_entry(MatrixType& mat, const size_t row, const size_t col, const ScalarType& val)
   {
@@ -209,7 +233,7 @@ struct is_matrix
 
 template <class MatrixType>
 typename std::enable_if<is_matrix<MatrixType>::value, MatrixType>::type
-    create(const size_t sz, const typename MatrixAbstraction<MatrixType>::S& val)
+create(const size_t sz, const typename MatrixAbstraction<MatrixType>::S& val)
 {
   return MatrixAbstraction<MatrixType>::create(sz, val);
 }

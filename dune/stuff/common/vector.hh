@@ -85,9 +85,15 @@ struct VectorAbstraction<std::vector<T>>
 
   static constexpr size_t static_size = std::numeric_limits<size_t>::max();
 
-  static inline VectorType create(const size_t sz) { return VectorType(sz); }
+  static inline VectorType create(const size_t sz)
+  {
+    return VectorType(sz);
+  }
 
-  static inline VectorType create(const size_t sz, const ScalarType& val) { return VectorType(sz, val); }
+  static inline VectorType create(const size_t sz, const ScalarType& val)
+  {
+    return VectorType(sz, val);
+  }
 };
 
 template <class K>
@@ -105,9 +111,15 @@ struct VectorAbstraction<Dune::DynamicVector<K>>
 
   static constexpr size_t static_size = std::numeric_limits<size_t>::max();
 
-  static inline VectorType create(const size_t sz) { return VectorType(sz); }
+  static inline VectorType create(const size_t sz)
+  {
+    return VectorType(sz);
+  }
 
-  static inline VectorType create(const size_t sz, const ScalarType& val) { return VectorType(sz, val); }
+  static inline VectorType create(const size_t sz, const ScalarType& val)
+  {
+    return VectorType(sz, val);
+  }
 };
 
 template <class K, int SIZE>
@@ -155,16 +167,25 @@ struct VectorAbstraction<std::complex<T>>
 
   static constexpr size_t static_size = 2u;
 
-  static inline VectorType create(const size_t /*sz*/) { return VectorType(0, 0); }
+  static inline VectorType create(const size_t /*sz*/)
+  {
+    return VectorType(0, 0);
+  }
 
-  static inline VectorType create(const size_t /*sz*/, const ScalarType& val) { return VectorType(val); }
-  static inline VectorType create(const size_t /*sz*/, const RealType& val) { return VectorType(val, val); }
+  static inline VectorType create(const size_t /*sz*/, const ScalarType& val)
+  {
+    return VectorType(val);
+  }
+  static inline VectorType create(const size_t /*sz*/, const RealType& val)
+  {
+    return VectorType(val, val);
+  }
 };
 
 template <class VectorType>
 typename std::enable_if<is_vector<VectorType>::value, VectorType>::type
-    create(const size_t sz,
-           const typename VectorAbstraction<VectorType>::S& val = typename VectorAbstraction<VectorType>::S(0))
+create(const size_t sz,
+       const typename VectorAbstraction<VectorType>::S& val = typename VectorAbstraction<VectorType>::S(0))
 {
   return VectorAbstraction<VectorType>::create(sz, val);
 }
@@ -178,8 +199,8 @@ typename std::enable_if<is_complex<T>::value, T>::type create(const size_t /*sz*
 
 template <class VectorType>
 typename std::enable_if<std::is_arithmetic<VectorType>::value, VectorType>::type
-    create(const size_t /*sz*/,
-           const typename VectorAbstraction<VectorType>::S& val = typename VectorAbstraction<VectorType>::S(0))
+create(const size_t /*sz*/,
+       const typename VectorAbstraction<VectorType>::S& val = typename VectorAbstraction<VectorType>::S(0))
 {
   return val;
 }
@@ -190,7 +211,7 @@ typename std::enable_if<std::is_arithmetic<VectorType>::value, VectorType>::type
 
 template <class S, class V>
 typename std::enable_if<std::is_arithmetic<S>::value && Dune::Stuff::Common::is_vector<V>::value, V>::type
-    operator*(const S& scalar, const V& vec)
+operator*(const S& scalar, const V& vec)
 {
   V result(vec);
   for (size_t ii = 0; ii < vec.size(); ++ii)
@@ -203,7 +224,7 @@ typename std::enable_if<Dune::Stuff::Common::is_vector<L>::value && Dune::Stuff:
                             && std::is_same<typename Dune::Stuff::Common::VectorAbstraction<L>::S,
                                             typename Dune::Stuff::Common::VectorAbstraction<R>::S>::value,
                         L>::type
-    operator+(const L& left, const R& right)
+operator+(const L& left, const R& right)
 {
   const auto sz = left.size();
   if (right.size() != sz)
@@ -217,7 +238,7 @@ typename std::enable_if<Dune::Stuff::Common::is_vector<L>::value && Dune::Stuff:
 
 template <class V, class CharType, class CharTraits>
 typename std::enable_if<Dune::Stuff::Common::is_vector<V>::value, std::basic_ostream<CharType, CharTraits>&>::type
-    operator<<(std::basic_ostream<CharType, CharTraits>& out, const V& vec)
+operator<<(std::basic_ostream<CharType, CharTraits>& out, const V& vec)
 {
   if (vec.size() == 0)
     out << "[]";

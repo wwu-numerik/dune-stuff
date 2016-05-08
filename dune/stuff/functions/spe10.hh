@@ -137,7 +137,10 @@ public:
   {
   }
 
-  virtual std::string type() const override { return BaseType::static_id() + ".spe10.model1"; }
+  virtual std::string type() const override
+  {
+    return BaseType::static_id() + ".spe10.model1";
+  }
 }; // class Model1Base
 
 } // namespace internal
@@ -146,7 +149,10 @@ public:
 template <class E, class D, size_t d, class R, size_t r, size_t rC = 1>
 class Model1 : public LocalizableFunctionInterface<E, D, d, R, r, rC>
 {
-  Model1() { static_assert(AlwaysFalse<E>::value, "Not available for these dimensions!"); }
+  Model1()
+  {
+    static_assert(AlwaysFalse<E>::value, "Not available for these dimensions!");
+  }
 };
 
 /**
@@ -195,10 +201,16 @@ private:
   template <bool anything>
   struct Call<1, anything>
   {
-    static RangeType unit_matrix() { return RangeType(1); }
+    static RangeType unit_matrix()
+    {
+      return RangeType(1);
+    }
   };
 
-  static RangeType unit_matrix() { return Call<r>::unit_matrix(); }
+  static RangeType unit_matrix()
+  {
+    return Call<r>::unit_matrix();
+  }
 }; // class Model1< ..., 2, ..., r, r >
 
 } // namespace Spe10

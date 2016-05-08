@@ -56,9 +56,15 @@ public:
   typedef EigenDenseMatrix<S> MatrixType;
   typedef typename MatrixType::RealType R;
 
-  Solver(const MatrixType& matrix) : matrix_(matrix) {}
+  Solver(const MatrixType& matrix)
+    : matrix_(matrix)
+  {
+  }
 
-  Solver(const MatrixType& matrix, const CommunicatorType& /*communicator*/) : matrix_(matrix) {}
+  Solver(const MatrixType& matrix, const CommunicatorType& /*communicator*/)
+    : matrix_(matrix)
+  {
+  }
 
   static std::vector<std::string> types()
   {
@@ -233,9 +239,15 @@ private:
   typedef typename MatrixType::BackendType::Index EIGEN_size_t;
 
 public:
-  Solver(const MatrixType& matrix) : matrix_(matrix) {}
+  Solver(const MatrixType& matrix)
+    : matrix_(matrix)
+  {
+  }
 
-  Solver(const MatrixType& matrix, const CommunicatorType& /*communicator*/) : matrix_(matrix) {}
+  Solver(const MatrixType& matrix, const CommunicatorType& /*communicator*/)
+    : matrix_(matrix)
+  {
+  }
 
   static std::vector<std::string> types()
   {
@@ -259,14 +271,14 @@ public:
         "cg.identity.lower" // <- does only work with symmetric matrices, may produce correct results
         ,
         "cg.identity.upper" // <- does only work with symmetric matrices, may produce correct results
-                            //           , "spqr"                  // <- does not compile
-                            //           , "llt.cholmodsupernodal" // <- does not compile
-                            //#if HAVE_UMFPACK
-                            //           , "lu.umfpack"            // <- untested
-                            //#endif
-                            //#if HAVE_SUPERLU
-                            //           , "superlu"               // <- untested
-                            //#endif
+        //           , "spqr"                  // <- does not compile
+        //           , "llt.cholmodsupernodal" // <- does not compile
+        //#if HAVE_UMFPACK
+        //           , "lu.umfpack"            // <- untested
+        //#endif
+        //#if HAVE_SUPERLU
+        //           , "superlu"               // <- untested
+        //#endif
     };
   } // ... types()
 

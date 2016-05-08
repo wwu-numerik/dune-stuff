@@ -64,7 +64,7 @@ typename std::enable_if<is_vector<XType>::value && is_vector<YType>::value
                             && std::is_same<typename VectorAbstraction<XType>::S, TolType>::value
                             && std::is_same<typename VectorAbstraction<YType>::S, TolType>::value,
                         bool>::type
-    float_cmp_eq(const XType& xx, const YType& yy, const TolType& rtol, const TolType& atol)
+float_cmp_eq(const XType& xx, const YType& yy, const TolType& rtol, const TolType& atol)
 {
   const auto sz = xx.size();
   if (yy.size() != sz)
@@ -95,7 +95,7 @@ typename std::enable_if<is_vector<XType>::value && is_vector<YType>::value
                             && std::is_same<typename VectorAbstraction<XType>::S, EpsType>::value
                             && std::is_same<typename VectorAbstraction<YType>::S, EpsType>::value,
                         bool>::type
-    dune_float_cmp_eq(const XType& xx, const YType& yy, const EpsType& eps)
+dune_float_cmp_eq(const XType& xx, const YType& yy, const EpsType& eps)
 {
   const auto sz = xx.size();
   if (yy.size() != sz)
@@ -124,7 +124,7 @@ typename std::enable_if<is_vector<XType>::value && is_vector<YType>::value
                             && std::is_same<typename VectorAbstraction<XType>::S,
                                             typename VectorAbstraction<YType>::S>::value,
                         bool>::type
-    cmp_gt(const XType& xx, const YType& yy)
+cmp_gt(const XType& xx, const YType& yy)
 {
   const auto sz = xx.size();
   if (yy.size() != sz)
@@ -153,7 +153,7 @@ typename std::enable_if<is_vector<XType>::value && is_vector<YType>::value
                             && std::is_same<typename VectorAbstraction<XType>::S,
                                             typename VectorAbstraction<YType>::S>::value,
                         bool>::type
-    cmp_lt(const XType& xx, const YType& yy)
+cmp_lt(const XType& xx, const YType& yy)
 {
   const auto sz = xx.size();
   if (yy.size() != sz)

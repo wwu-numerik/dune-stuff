@@ -114,6 +114,6 @@ int main(int argc, char** argv)
   } catch (...) {
     std::cerr << "Unknown exception thrown!" << std::endl;
     std::abort();
-  }    // try
+  } // try
 #endif // DUNE_STUFF_TEST_MAIN_CATCH_EXCEPTIONS
 } // ... main(...)

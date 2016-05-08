@@ -22,7 +22,10 @@ void scoped_busywait(const std::string& name, size_t ms)
   busywait(ms);
 }
 
-static double confidence_margin() { return 0.90f; }
+static double confidence_margin()
+{
+  return 0.90f;
+}
 
 TEST(ProfilerTest, Timing)
 {

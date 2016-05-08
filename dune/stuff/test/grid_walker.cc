@@ -37,7 +37,10 @@ struct GridWalkerTest : public ::testing::Test
   typedef typename DSG::Entity<GridViewType>::Type EntityType;
   typedef typename DSG::Intersection<GridViewType>::Type IntersectionType;
   const DSG::Providers::Cube<GridType> grid_prv;
-  GridWalkerTest() : grid_prv(0.f, 1.f, level) {}
+  GridWalkerTest()
+    : grid_prv(0.f, 1.f, level)
+  {
+  }
 
   void check_count()
   {
