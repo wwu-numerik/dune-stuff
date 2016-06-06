@@ -138,7 +138,7 @@ public:
 
   void operator()(const ElementType& el) { acc_(el); }
 
-  void output(std::ostream& stream)
+  void output(std::ostream& stream) const
   {
     stream << boost::format("min: %e\tmax: %e\tavg: %e\n") % min() % max() % average();
   }
@@ -210,10 +210,18 @@ bool isinf(std::complex<T> val)
   return isinf(std::real(val)) || isinf(std::imag(val));
 }
 
+template <class T>
+inline std::ostream& operator<<(std::ostream& s, const MinMaxAvg<T>& d)
+{
+  d.output(s);
+  return s;
+}
+
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
 
 namespace std {
 }
+
 #endif // DUNE_STUFF_COMMON_MATH_HH
