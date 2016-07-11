@@ -1,7 +1,11 @@
 // This file is part of the dune-stuff project:
 //   https://github.com/wwu-numerik/dune-stuff
-// Copyright holders: Rene Milk, Felix Schindler
+// The copyright lies with the authors of this file (see below).
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+// Authors:
+//   Felix Schindler (2012 - 2015)
+//   Rene Milk       (2013 - 2015)
+//   Sven Kaulmann   (2014)
 
 #ifndef DUNE_STUFF_LA_CONTAINER_PATTERN_HH
 #define DUNE_STUFF_LA_CONTAINER_PATTERN_HH
@@ -15,14 +19,13 @@ namespace Dune {
 namespace Stuff {
 namespace LA {
 
-
 class SparsityPatternDefault
 {
 private:
-  typedef std::vector< std::vector< size_t > > BaseType;
+  typedef std::vector<std::vector<size_t>> BaseType;
 
 public:
-  typedef BaseType::value_type              InnerType;
+  typedef BaseType::value_type InnerType;
   typedef typename BaseType::const_iterator ConstOuterIteratorType;
 
   explicit SparsityPatternDefault(const size_t _size = 0);
@@ -64,7 +67,6 @@ struct PatternFactory
     return ret;
   }
 };
-
 
 } // namespace LA
 } // namespace Stuff

@@ -1,9 +1,12 @@
 // This file is part of the dune-stuff project:
 //   https://github.com/wwu-numerik/dune-stuff
-// Copyright holders: Rene Milk, Felix Schindler
+// The copyright lies with the authors of this file (see below).
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
-//
-// Contributors: Sven Kaulmann
+// Authors:
+//   Felix Schindler (2013 - 2015)
+//   Rene Milk       (2013 - 2015)
+//   Sven Kaulmann   (2013)
+//   Tobias Leibner  (2014)
 
 #ifndef DUNE_STUFF_FUNCTION_GLOBAL_HH
 #define DUNE_STUFF_FUNCTION_GLOBAL_HH
@@ -16,62 +19,45 @@
 namespace Dune {
 namespace Stuff {
 
-
 /**
  * Global-valued function you can pass a lambda expression to that gets evaluated
  * \example LambdaType lambda([](DomainType x) { return x;}, 1 );
  */
-template< class EntityImp, class DomainFieldImp, size_t domainDim, class RangeFieldImp, size_t rangeDim, size_t rangeDimCols = 1 >
+template <class EntityImp, class DomainFieldImp, size_t domainDim, class RangeFieldImp, size_t rangeDim,
+          size_t rangeDimCols = 1>
 class GlobalLambdaFunction
-  : public GlobalFunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols >
+    : public GlobalFunctionInterface<EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols>
 {
-  typedef GlobalFunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols >
-      BaseType;
+  typedef GlobalFunctionInterface<EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols> BaseType;
+
 public:
   typedef typename BaseType::DomainType DomainType;
-  typedef typename BaseType::RangeType  RangeType;
+  typedef typename BaseType::RangeType RangeType;
 
 private:
-  typedef std::function< RangeType(DomainType) > LambdaType;
+  typedef std::function<RangeType(DomainType)> LambdaType;
 
 public:
   GlobalLambdaFunction(LambdaType lambda, const size_t order_in, const std::string nm = "stuff.globallambdafunction")
-    : lambda_(lambda)
-    , order_(order_in)
-    , name_(nm)
-  {}
-
-  virtual size_t order() const override final
+    : lambda_(lambda), order_(order_in), name_(nm)
   {
-    return order_;
   }
 
-  virtual void evaluate(const DomainType& xx, RangeType& ret) const override final
-  {
-    ret = lambda_(xx);
-  }
+  virtual size_t order() const override final { return order_; }
 
-  virtual RangeType evaluate(const DomainType& xx) const override final
-  {
-    return lambda_(xx);
-  }
+  virtual void evaluate(const DomainType& xx, RangeType& ret) const override final { ret = lambda_(xx); }
 
-  virtual std::string type() const override
-  {
-    return "stuff.globallambdafunction";
-  }
+  virtual RangeType evaluate(const DomainType& xx) const override final { return lambda_(xx); }
 
-  virtual std::string name() const override
-  {
-    return name_;
-  }
+  virtual std::string type() const override { return "stuff.globallambdafunction"; }
+
+  virtual std::string name() const override { return name_; }
 
 private:
   const LambdaType lambda_;
   const size_t order_;
   const std::string name_;
 };
-
 
 } // namespace Stuff
 } // namespace Dune

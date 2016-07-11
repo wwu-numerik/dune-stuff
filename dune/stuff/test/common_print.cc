@@ -1,7 +1,9 @@
 // This file is part of the dune-stuff project:
 //   https://github.com/wwu-numerik/dune-stuff
-// Copyright holders: Rene Milk, Felix Schindler
+// The copyright lies with the authors of this file (see below).
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+// Authors:
+//   Rene Milk (2015)
 
 #include "main.hxx"
 
@@ -10,10 +12,11 @@
 using namespace DSC;
 using namespace std;
 
-TEST(OutputIterator, All) {
-  const vector<int> ints{0,1,2};
+TEST(OutputIterator, All)
+{
+  const vector<int> ints{0, 1, 2};
   const string s_ints("0,1,2");
-  const vector<string> strings{"a","b","c"};
+  const vector<string> strings{"a", "b", "c"};
   const string s_strings("a,b,c");
   stringstream stream;
   std::copy(ints.begin(), ints.end(), PrefixOutputIterator<int>(stream, ","));

@@ -1,13 +1,14 @@
 // This file is part of the dune-stuff project:
 //   https://github.com/wwu-numerik/dune-stuff
-// Copyright holders: Rene Milk, Felix Schindler
+// The copyright lies with the authors of this file (see below).
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+// Authors:
+//   Andreas Buhr    (2014)
+//   Felix Schindler (2009, 2012 - 2015)
+//   Rene Milk       (2009 - 2015)
+//   Sven Kaulmann   (2011 - 2012)
+//   Tobias Leibner  (2014 - 2015)
 
-/**
- * \file  string.hh
- * \brief contains methods to read/write scalar types and container types from/to strings and methods to manipulate
- *        strings
- **/
 #ifndef DUNE_STUFF_COMMON_STRING_INTERNAL_HH
 #define DUNE_STUFF_COMMON_STRING_INTERNAL_HH
 
@@ -43,8 +44,8 @@
 #include <dune/stuff/common/ranges.hh>
 #include <dune/stuff/common/type_utils.hh>
 #include <dune/stuff/common/vector.hh>
-#include <dune/stuff/common/matrix.hh>
 #include <dune/stuff/common/math.hh>
+#include <dune/stuff/la/container/interfaces.hh>
 
 namespace Dune {
 namespace Stuff {
@@ -142,7 +143,7 @@ DUNE_STUFF_COMMON_STRING_GENERATE_HELPER(long double, ld)
 // variant for everything that is not a matrix or a vector or complex value
 template <class T>
 static inline typename std::enable_if<!is_vector<T>::value && !is_matrix<T>::value && !is_complex<T>::value, T>::type
-from_string(std::string ss, const size_t rows = 0, const size_t cols = 0)
+    from_string(std::string ss, const size_t UNUSED_UNLESS_DEBUG(rows) = 0, const size_t UNUSED_UNLESS_DEBUG(cols) = 0)
 {
   assert(rows == 0);
   assert(cols == 0);
@@ -367,9 +368,9 @@ static inline std::string to_string(const std::complex<T>& val, const std::size_
   using namespace std;
   stringstream os;
   const auto im       = imag(val);
-  const string sign   = signum(im) < 0 ? "" : "+";
-  const auto real_str = internal::to_string(real(val), precision);
-  const auto imag_str = internal::to_string(im, precision);
+  const string sign   = Dune::Stuff::Common::signum(im) < 0 ? "" : "+";
+  const auto real_str = Dune::Stuff::Common::internal::to_string(real(val), precision);
+  const auto imag_str = Dune::Stuff::Common::internal::to_string(im, precision);
   os << real_str << sign << imag_str << "i";
   return os.str();
 }
@@ -405,7 +406,7 @@ static inline typename std::enable_if<is_vector<V>::value, std::string>::type to
   for (auto ii : valueRange(vec.size())) {
     if (ii > 0)
       ret += " ";
-    ret += internal::to_string(vec[ii], precision);
+    ret += Dune::Stuff::Common::internal::to_string(vec[ii], precision);
   }
   ret += "]";
   return ret;
@@ -422,7 +423,7 @@ static inline typename std::enable_if<is_matrix<M>::value, std::string>::type to
     for (auto cc : valueRange(MatrixAbstraction<M>::cols(mat))) {
       if (cc > 0)
         ret += " ";
-      ret += internal::to_string(MatrixAbstraction<M>::get_entry(mat, rr, cc), precision);
+      ret += Dune::Stuff::Common::internal::to_string(MatrixAbstraction<M>::get_entry(mat, rr, cc), precision);
     }
   }
   ret += "]";
@@ -431,7 +432,7 @@ static inline typename std::enable_if<is_matrix<M>::value, std::string>::type to
 
 } // namespace internal
 } // namespace Common
-} // namespace STUFF
+} // namespace Stuff
 } // namespace Dune
 
 #endif // DUNE_STUFF_COMMON_STRING_INTERNAL_HH

@@ -1,7 +1,11 @@
 // This file is part of the dune-stuff project:
 //   https://github.com/wwu-numerik/dune-stuff
-// Copyright holders: Rene Milk, Felix Schindler
+// The copyright lies with the authors of this file (see below).
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+// Authors:
+//   Felix Schindler (2012, 2014)
+//   Rene Milk       (2010 - 2015)
+//   Sven Kaulmann   (2011)
 
 #ifndef DUNE_STUFF_FILESYSTEM_HH
 #define DUNE_STUFF_FILESYSTEM_HH
@@ -32,7 +36,7 @@ void testCreateDirectory(const std::string _path);
 bool touch(const std::string& _path);
 
 boost::filesystem::ofstream* make_ofstream(const boost::filesystem::path& path,
-                                           const std::ios_base::openmode mode = std::ios_base::out );
+                                           const std::ios_base::openmode mode = std::ios_base::out);
 
 boost::filesystem::ifstream* make_ifstream(const boost::filesystem::path& path,
                                            const std::ios_base::openmode mode = std::ios_base::in);

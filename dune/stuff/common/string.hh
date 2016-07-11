@@ -1,7 +1,13 @@
 // This file is part of the dune-stuff project:
 //   https://github.com/wwu-numerik/dune-stuff
-// Copyright holders: Rene Milk, Felix Schindler
+// The copyright lies with the authors of this file (see below).
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+// Authors:
+//   Andreas Buhr    (2014)
+//   Felix Schindler (2009, 2012 - 2015)
+//   Rene Milk       (2009 - 2015)
+//   Sven Kaulmann   (2011 - 2012)
+//   Tobias Leibner  (2014)
 
 /**
  * \file  string.hh
@@ -24,9 +30,9 @@
 #include <iostream>
 
 #include <dune/stuff/common/disable_warnings.hh>
-# include <boost/algorithm/string.hpp>
-# include <boost/lexical_cast.hpp>
-# include <boost/numeric/conversion/cast.hpp>
+#include <boost/algorithm/string.hpp>
+#include <boost/lexical_cast.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 #include <dune/stuff/common/reenable_warnings.hh>
 
 #include <dune/common/array.hh>
@@ -50,7 +56,6 @@ namespace Dune {
 namespace Stuff {
 namespace Common {
 
-
 // forward, std::string variant needed in internal::from_string
 
 /**
@@ -63,22 +68,20 @@ namespace Common {
  **/
 template <class T = std::string>
 inline std::vector<T>
-tokenize(const std::string& msg, const std::string& separators,
-         const boost::algorithm::token_compress_mode_type mode = boost::algorithm::token_compress_off);
+    tokenize(const std::string& msg, const std::string& separators,
+             const boost::algorithm::token_compress_mode_type mode = boost::algorithm::token_compress_off);
 
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
 
-
 #include "string_internal.hh"
-
 
 namespace Dune {
 namespace Stuff {
 namespace Common {
 
-static constexpr const std::size_t default_toString_precision = 6u;
+static constexpr const std::size_t default_to_string_precision = 6u;
 
 /**
  * \brief Reads an object from a string.
@@ -116,7 +119,6 @@ static inline std::string toString(const T& ss, const size_t precision = default
 {
   return internal::to_string(ss, precision);
 }
-
 /**
   \brief Returns a string of lengths t' whitespace (or whitespace chars).
   \param[in]  t          defines the length of the return string (after conversion to string)
@@ -128,7 +130,7 @@ std::string whitespaceify(const T& t, const char whitespace = ' ')
 {
   const std::string s = to_string(t);
   std::string ret = "";
-  for (auto ii : valueRange(s.size())) {
+  for (auto DSC_UNUSED(ii) : valueRange(s.size())) {
     ret += whitespace;
   }
   return ret;
@@ -144,7 +146,7 @@ inline std::vector<T> tokenize(const std::string& msg, const std::string& separa
   size_t i = 0;
   // special case for empty strings to avoid non-default init
   std::generate(
-      std::begin(ret), std::end(ret), [&]() { return strings[i++].empty() ? T() : from_string<T>(strings[i - 1]); });
+      std::begin(ret), std::end(ret), [&]() { return strings[i++].empty() ? T() : fromString<T>(strings[i - 1]); });
   return ret;
 } // ... tokenize(...)
 
@@ -158,21 +160,14 @@ inline std::vector<std::string> tokenize(const std::string& msg, const std::stri
 }
 
 //! returns string with local time in current locale's format
-inline std::string stringFromTime(time_t cur_time = time(NULL))
-{
-  return ctime(&cur_time);
-}
-
+inline std::string stringFromTime(time_t cur_time = time(NULL)) { return ctime(&cur_time); }
 //! helper struct for lexical cast
 // see http://stackoverflow.com/a/2079728
 template <typename ElemT>
 struct HexToString
 {
   ElemT value;
-  operator ElemT() const
-  {
-    return value;
-  }
+  operator ElemT() const { return value; }
 
   friend std::istream& operator>>(std::istream& in, HexToString& out)
   {
@@ -190,7 +185,6 @@ static inline char** vector_to_main_args(const std::vector<std::string>& args)
   }
   return argv;
 } // ... vector_to_main_args(...)
-
 
 } // namespace Common
 } // namespace Stuff

@@ -1,7 +1,10 @@
 // This file is part of the dune-stuff project:
 //   https://github.com/wwu-numerik/dune-stuff
-// Copyright holders: Rene Milk, Felix Schindler
+// The copyright lies with the authors of this file (see below).
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+// Authors:
+//   Felix Schindler (2012, 2014)
+//   Rene Milk       (2010, 2012 - 2013, 2015)
 
 #ifndef DUNE_STUFF_SIGNALS
 #define DUNE_STUFF_SIGNALS
@@ -21,7 +24,7 @@ void resetSignal(int signal);
 void handleInterrupt(int signal);
 
 //! type of handler functions
-typedef void handler_type (int);
+typedef void handler_type(int);
 
 //! calling this from your main() will install handler as callback when signal is received
 void installSignalHandler(int signal = SIGINT, handler_type handler = handleInterrupt);

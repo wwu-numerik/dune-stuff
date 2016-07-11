@@ -21,6 +21,8 @@ This software comes with absolutely no warranty.
 
 #include "mathexpr.hh"
 
+// clang-format off
+
 char* MidStr(const char*s,int i1,int i2)
 {
  if(i1<0||i2>=(int)strlen(s)||i1>i2){
@@ -1255,3 +1257,5 @@ void ROperation::BuildCode()
        ppile,mmb2->ppile,pfuncpile,mmb2->pfuncpile,&FonctionError);
   }
 }
+
+// clang-format on

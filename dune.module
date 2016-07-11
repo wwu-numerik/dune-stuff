@@ -1,10 +1,13 @@
 # This file is part of the dune-stuff project:
 #   https://github.com/wwu-numerik/dune-stuff
-# Copyright holders: Rene Milk, Felix Schindler
+# The copyright lies with the authors of this file (see below).
 # License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+# Authors:
+#   Felix Schindler (2012 - 2014)
+#   Rene Milk       (2009, 2011 - 2015)
 
 Module:dune-stuff
-Version:2.3.0
+Version: 2.4.0
 Maintainer:rene.milk@uni-muenster.de
-Depends: dune-common (> 2.2) dune-geometry (> 2.2)
-Suggests: dune-grid (> 2.2) dune-fem (> 1.3) dune-istl (> 2.2) dune-pdelab dune-typetree dune-alugrid
+Depends: dune-xt-common dune-common (>= 2.4) dune-geometry (>= 2.4) dune-testtools (>= 2.4)
+Suggests: dune-grid (>= 2.4) dune-fem (> 1.3) dune-istl (>= 2.4) dune-pdelab (> 2.3) dune-typetree

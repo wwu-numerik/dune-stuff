@@ -1,14 +1,17 @@
 // This file is part of the dune-stuff project:
 //   https://github.com/wwu-numerik/dune-stuff
-// Copyright holders: Rene Milk, Felix Schindler
+// The copyright lies with the authors of this file (see below).
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+// Authors:
+//   Felix Schindler (2014 - 2015)
+//   Rene Milk       (2013 - 2015)
 
 #ifndef DUNE_STUFF_COMMON_THREADMANAGER_HH
 #define DUNE_STUFF_COMMON_THREADMANAGER_HH
 
 #include <thread>
 #if HAVE_TBB
-# include <tbb/task_scheduler_init.h>
+#include <tbb/task_scheduler_init.h>
 #endif
 
 namespace Dune {
@@ -23,6 +26,8 @@ ThreadManager& threadManager();
  **/
 struct ThreadManager
 {
+  static size_t default_max_threads();
+
   //! return maximal number of threads possbile in the current run
   size_t max_threads();
 
@@ -33,9 +38,10 @@ struct ThreadManager
   size_t thread();
 
   //! set maximal number of threads available during run
-  void set_max_threads( const size_t count );
+  void set_max_threads(const size_t count);
 
   ~ThreadManager() = default;
+
 private:
   friend ThreadManager& threadManager();
   //! init tbb with given thread count, prepare Eigen for smp if possible
@@ -43,15 +49,15 @@ private:
 
   size_t max_threads_;
 #if HAVE_TBB
-  std::unique_ptr<tbb::task_scheduler_init> tbb_init_;
+  tbb::task_scheduler_init tbb_init_;
 #endif
 };
 
-inline ThreadManager& threadManager() {
+inline ThreadManager& threadManager()
+{
   static ThreadManager tm;
   return tm;
 }
-
 }
 }
 

@@ -1,9 +1,12 @@
 // This file is part of the dune-stuff project:
 //   https://github.com/wwu-numerik/dune-stuff
-// Copyright holders: Rene Milk, Felix Schindler
+// The copyright lies with the authors of this file (see below).
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
-//
-// Contributors: Sven Kaulmann
+// Authors:
+//   Felix Schindler (2010, 2012 - 2015)
+//   Rene Milk       (2009 - 2015)
+//   Sven Kaulmann   (2011 - 2012)
+//   Tobias Leibner  (2014)
 
 #ifndef DUNESTUFF_PRINTING_HH_INCLUDED
 #define DUNESTUFF_PRINTING_HH_INCLUDED
@@ -21,10 +24,9 @@ namespace Dune {
 namespace Stuff {
 namespace Common {
 
-
-template< class V >
-    typename std::enable_if< Dune::Stuff::Common::is_vector< V >::value, void >::type
-print(const V& vec, const std::string name, std::ostream& out, const std::string prefix = "")
+template <class V>
+typename std::enable_if<Dune::Stuff::Common::is_vector<V>::value, void>::type
+    print(const V& vec, const std::string name, std::ostream& out, const std::string prefix = "")
 {
   out << prefix << name << " = ";
   if (vec.size() == 0)
@@ -39,12 +41,11 @@ print(const V& vec, const std::string name, std::ostream& out, const std::string
   }
 } // ... print(...)
 
-
-template< class M >
-    typename std::enable_if< Dune::Stuff::Common::is_matrix< M >::value, void >::type
-print(const M& mat, const std::string name, std::ostream& out, const std::string prefix = "")
+template <class M>
+typename std::enable_if<Dune::Stuff::Common::is_matrix<M>::value, void>::type
+    print(const M& mat, const std::string name, std::ostream& out, const std::string prefix = "")
 {
-  typedef MatrixAbstraction< M > MM;
+  typedef MatrixAbstraction<M> MM;
   const size_t rows = MM::rows(mat);
   const size_t cols = MM::cols(mat);
   out << prefix << name << " = ";
@@ -76,18 +77,16 @@ print(const M& mat, const std::string name, std::ostream& out, const std::string
   }
 } // ... print(...)
 
-
 //! useful for visualizing sparsity patterns of matrices
-template< class Matrix >
-void matrixToGnuplotStream(const Matrix& matrix, std::ostream& stream) {
+template <class Matrix>
+void matrixToGnuplotStream(const Matrix& matrix, std::ostream& stream)
+{
   unsigned long nz = 0;
 
   const auto cols = matrix.cols();
-  for (auto row : valueRange(matrix.rows()))
-  {
-    for (auto col : valueRange(cols))
-    {
-      if ( matrix.find(row, col) )
+  for (auto row : valueRange(matrix.rows())) {
+    for (auto col : valueRange(cols)) {
+      if (matrix.find(row, col))
         stream << row << "\t" << col << "\t" << matrix(row, col) << "\n";
     }
     nz += matrix.numNonZeros(row);
@@ -97,7 +96,8 @@ void matrixToGnuplotStream(const Matrix& matrix, std::ostream& stream) {
 } // matrixToGnuplotStream
 
 //! maps 1,2,3 to x,y,z / X,Y,Z
-inline std::string dimToAxisName(const size_t dim, const bool capitalize = false) {
+inline std::string dimToAxisName(const size_t dim, const bool capitalize = false)
+{
   char c = 'x';
 
   c += dim;
@@ -111,7 +111,8 @@ inline std::string dimToAxisName(const size_t dim, const bool capitalize = false
  * \example std::copy(strings.begin(), strings.end(), PrefixOutputIterator<string>(ostream, ","));
  **/
 template <typename T>
-class PrefixOutputIterator {
+class PrefixOutputIterator
+{
   std::ostream& ostream;
   std::string prefix;
   bool first;
@@ -123,16 +124,14 @@ public:
   typedef T reference;
   typedef std::output_iterator_tag iterator_category;
 
-  PrefixOutputIterator(std::ostream& o, std::string const& p = "")
-    : ostream(o)
-    , prefix(p)
-    , first(true) {}
+  PrefixOutputIterator(std::ostream& o, std::string const& p = "") : ostream(o), prefix(p), first(true) {}
 
   PrefixOutputIterator& operator*() { return *this; }
   PrefixOutputIterator& operator++() { return *this; }
   PrefixOutputIterator& operator++(int) { return *this; }
 
-  void operator=(T const& value) {
+  void operator=(T const& value)
+  {
     if (first) {
       ostream << value;
       first = false;

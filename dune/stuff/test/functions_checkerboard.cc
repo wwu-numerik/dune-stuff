@@ -1,174 +1,41 @@
 // This file is part of the dune-stuff project:
 //   https://github.com/wwu-numerik/dune-stuff
-// Copyright holders: Rene Milk, Felix Schindler
+// The copyright lies with the authors of this file (see below).
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+// Authors:
+//   Felix Schindler (2013 - 2015)
+//   Rene Milk       (2014 - 2015)
+//   Tobias Leibner  (2014)
 
 #include "main.hxx"
+#include "functions.hh"
 
 #include <memory>
 
 #include <dune/common/exceptions.hh>
 
 #include <dune/stuff/functions/interfaces.hh>
-#include <dune/stuff/functions/checkerboard.hh>
-
-
-// we need this nasty code generation because the testing::Types< ... > only accepts 50 arguments
-// and all combinations of functions and entities and dimensions and fieldtypes would be way too much
-#define TEST_STRUCT_GENERATOR(ftype, etype) \
-  template< class LocalizableFunctionType > \
-  struct ftype ## etype ## Test \
-    : public ::testing::Test \
-  { \
-    typedef typename LocalizableFunctionType::EntityType EntityType; \
-    typedef typename LocalizableFunctionType::LocalfunctionType LocalfunctionType; \
-    typedef typename LocalizableFunctionType::DomainFieldType DomainFieldType; \
-    static const size_t                                       dimDomain = LocalizableFunctionType::dimDomain; \
-    typedef typename LocalizableFunctionType::DomainType      DomainType; \
-    typedef typename LocalizableFunctionType::RangeFieldType  RangeFieldType; \
-    static const size_t                                       dimRange = LocalizableFunctionType::dimRange; \
-    static const size_t                                       dimRangeCols = LocalizableFunctionType::dimRangeCols; \
-    typedef typename LocalizableFunctionType::RangeType       RangeType; \
-    typedef typename LocalizableFunctionType::JacobianRangeType JacobianRangeType; \
- \
-    void check() const \
-    { \
-      const std::unique_ptr< const LocalizableFunctionType > \
-          function(LocalizableFunctionType::create(LocalizableFunctionType::default_config())); \
-    } \
-  };
-// TEST_STRUCT_GENERATOR
-
+#include <dune/stuff/functions/checkerboard.hh>                                                              
 
 #if HAVE_DUNE_GRID
+#include <dune/grid/yaspgrid.hh>
+#if HAVE_ALUGRID
+#include <dune/grid/alugrid.hh>
+#endif //HAVE_ALUGRID
 
-# include <dune/grid/sgrid.hh>
+struct CheckerboardFunctionTest : public DS::FunctionTest< TESTFUNCTIONTYPE >
+{
+    void check() const
+    {
+        const std::unique_ptr<const FunctionType> function(
+                    FunctionType::create(FunctionType::default_config()));
+    }
+};
 
-typedef Dune::SGrid< 1, 1 >::Codim< 0 >::Entity DuneSGrid1dEntityType;
-typedef Dune::SGrid< 2, 2 >::Codim< 0 >::Entity DuneSGrid2dEntityType;
-typedef Dune::SGrid< 3, 3 >::Codim< 0 >::Entity DuneSGrid3dEntityType;
+TEST_F(CheckerboardFunctionTest, provides_required_methods) { this->check(); }
 
-typedef testing::Types< Dune::Stuff::Functions::Checkerboard< DuneSGrid1dEntityType, double, 1, double, 1, 1 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneSGrid1dEntityType, double, 1, double, 1, 2 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneSGrid1dEntityType, double, 1, double, 1, 3 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneSGrid1dEntityType, double, 1, double, 2, 1 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneSGrid1dEntityType, double, 1, double, 2, 2 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneSGrid1dEntityType, double, 1, double, 2, 3 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneSGrid1dEntityType, double, 1, double, 3, 1 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneSGrid1dEntityType, double, 1, double, 3, 2 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneSGrid1dEntityType, double, 1, double, 3, 3 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneSGrid2dEntityType, double, 2, double, 1, 1 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneSGrid2dEntityType, double, 2, double, 1, 2 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneSGrid2dEntityType, double, 2, double, 1, 3 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneSGrid2dEntityType, double, 2, double, 2, 1 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneSGrid2dEntityType, double, 2, double, 2, 2 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneSGrid2dEntityType, double, 2, double, 2, 3 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneSGrid2dEntityType, double, 2, double, 3, 1 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneSGrid2dEntityType, double, 2, double, 3, 2 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneSGrid2dEntityType, double, 2, double, 3, 3 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneSGrid3dEntityType, double, 3, double, 1, 1 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneSGrid3dEntityType, double, 3, double, 1, 2 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneSGrid3dEntityType, double, 3, double, 1, 3 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneSGrid3dEntityType, double, 3, double, 2, 1 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneSGrid3dEntityType, double, 3, double, 2, 2 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneSGrid3dEntityType, double, 3, double, 2, 3 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneSGrid3dEntityType, double, 3, double, 3, 1 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneSGrid3dEntityType, double, 3, double, 3, 2 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneSGrid3dEntityType, double, 3, double, 3, 3 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneSGrid3dEntityType, double, 3, std::complex<double>, 3, 3 >
-                        > CheckerboardFunctionSGridEntityTypes;
+#else // HAVE_DUNE_GRID
 
-TEST_STRUCT_GENERATOR(CheckerboardFunction, SGridEntity)
-TYPED_TEST_CASE(CheckerboardFunctionSGridEntityTest, CheckerboardFunctionSGridEntityTypes);
-TYPED_TEST(CheckerboardFunctionSGridEntityTest, provides_required_methods) {
-  this->check();
-}
+TEST(DISABLED_CheckerboardFunctionTest, provides_required_methods) {}
 
-# include <dune/grid/yaspgrid.hh>
-
-typedef Dune::YaspGrid< 1 >::Codim< 0 >::Entity DuneYaspGrid1dEntityType;
-typedef Dune::YaspGrid< 2 >::Codim< 0 >::Entity DuneYaspGrid2dEntityType;
-typedef Dune::YaspGrid< 3 >::Codim< 0 >::Entity DuneYaspGrid3dEntityType;
-
-typedef testing::Types< Dune::Stuff::Functions::Checkerboard< DuneYaspGrid1dEntityType, double, 1, double, 1, 1 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneYaspGrid1dEntityType, double, 1, double, 1, 2 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneYaspGrid1dEntityType, double, 1, double, 1, 3 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneYaspGrid1dEntityType, double, 1, double, 2, 1 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneYaspGrid1dEntityType, double, 1, double, 2, 2 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneYaspGrid1dEntityType, double, 1, double, 2, 3 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneYaspGrid1dEntityType, double, 1, double, 3, 1 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneYaspGrid1dEntityType, double, 1, double, 3, 2 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneYaspGrid1dEntityType, double, 1, double, 3, 3 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneYaspGrid2dEntityType, double, 2, double, 1, 1 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneYaspGrid2dEntityType, double, 2, double, 1, 2 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneYaspGrid2dEntityType, double, 2, double, 1, 3 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneYaspGrid2dEntityType, double, 2, double, 2, 1 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneYaspGrid2dEntityType, double, 2, double, 2, 2 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneYaspGrid2dEntityType, double, 2, double, 2, 3 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneYaspGrid2dEntityType, double, 2, double, 3, 1 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneYaspGrid2dEntityType, double, 2, double, 3, 2 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneYaspGrid2dEntityType, double, 2, double, 3, 3 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneYaspGrid3dEntityType, double, 3, double, 1, 1 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneYaspGrid3dEntityType, double, 3, double, 1, 2 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneYaspGrid3dEntityType, double, 3, double, 1, 3 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneYaspGrid3dEntityType, double, 3, double, 2, 1 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneYaspGrid3dEntityType, double, 3, double, 2, 2 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneYaspGrid3dEntityType, double, 3, double, 2, 3 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneYaspGrid3dEntityType, double, 3, double, 3, 1 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneYaspGrid3dEntityType, double, 3, double, 3, 2 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneYaspGrid3dEntityType, double, 3, double, 3, 3 >
-                        > CheckerboardFunctionYaspGridEntityTypes;
-
-TEST_STRUCT_GENERATOR(CheckerboardFunction, YaspGridEntity)
-TYPED_TEST_CASE(CheckerboardFunctionYaspGridEntityTest, CheckerboardFunctionYaspGridEntityTypes);
-TYPED_TEST(CheckerboardFunctionYaspGridEntityTest, provides_required_methods) {
-  this->check();
-}
-
-# if HAVE_DUNE_ALUGRID
-#   include <dune/alugrid/dgf.hh>
-
-typedef Dune::ALUGrid< 2, 2, Dune::simplex, Dune::nonconforming >::Codim< 0 >::Entity  DuneAluSimplexGrid2dEntityType;
-typedef Dune::ALUGrid< 3, 3, Dune::simplex, Dune::nonconforming >::Codim< 0 >::Entity  DuneAluSimplexGrid3dEntityType;
-typedef Dune::ALUGrid< 3, 3, Dune::cube, Dune::nonconforming >::Codim< 0 >::Entity     DuneAluCubeGrid3dEntityType;
-
-typedef testing::Types< Dune::Stuff::Functions::Checkerboard< DuneAluSimplexGrid2dEntityType, double, 2, double, 1, 1 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneAluSimplexGrid2dEntityType, double, 2, double, 1, 2 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneAluSimplexGrid2dEntityType, double, 2, double, 1, 3 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneAluSimplexGrid2dEntityType, double, 2, double, 2, 1 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneAluSimplexGrid2dEntityType, double, 2, double, 2, 2 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneAluSimplexGrid2dEntityType, double, 2, double, 2, 3 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneAluSimplexGrid2dEntityType, double, 2, double, 3, 1 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneAluSimplexGrid2dEntityType, double, 2, double, 3, 2 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneAluSimplexGrid2dEntityType, double, 2, double, 3, 3 >
-
-                      , Dune::Stuff::Functions::Checkerboard< DuneAluSimplexGrid3dEntityType, double, 3, double, 1, 1 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneAluSimplexGrid3dEntityType, double, 3, double, 1, 2 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneAluSimplexGrid3dEntityType, double, 3, double, 1, 3 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneAluSimplexGrid3dEntityType, double, 3, double, 2, 1 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneAluSimplexGrid3dEntityType, double, 3, double, 2, 2 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneAluSimplexGrid3dEntityType, double, 3, double, 2, 3 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneAluSimplexGrid3dEntityType, double, 3, double, 3, 1 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneAluSimplexGrid3dEntityType, double, 3, double, 3, 2 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneAluSimplexGrid3dEntityType, double, 3, double, 3, 3 >
-
-                      , Dune::Stuff::Functions::Checkerboard< DuneAluCubeGrid3dEntityType, double, 3, double, 1, 1 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneAluCubeGrid3dEntityType, double, 3, double, 1, 2 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneAluCubeGrid3dEntityType, double, 3, double, 1, 3 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneAluCubeGrid3dEntityType, double, 3, double, 2, 1 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneAluCubeGrid3dEntityType, double, 3, double, 2, 2 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneAluCubeGrid3dEntityType, double, 3, double, 2, 3 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneAluCubeGrid3dEntityType, double, 3, double, 3, 1 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneAluCubeGrid3dEntityType, double, 3, double, 3, 2 >
-                      , Dune::Stuff::Functions::Checkerboard< DuneAluCubeGrid3dEntityType, double, 3, double, 3, 3 >
-                        > CheckerboardFunctionAluGridEntityTypes;
-
-TEST_STRUCT_GENERATOR(CheckerboardFunction, AluGridEntity)
-TYPED_TEST_CASE(CheckerboardFunctionAluGridEntityTest, CheckerboardFunctionAluGridEntityTypes);
-TYPED_TEST(CheckerboardFunctionAluGridEntityTest, provides_required_methods) {
-  this->check();
-}
-
-# endif // HAVE_DUNE_ALUGRID_SERIAL || HAVE_DUNE_ALUGRID_PARALLEL
 #endif // HAVE_DUNE_GRID
-

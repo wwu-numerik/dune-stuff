@@ -1,3 +1,10 @@
+// This file is part of the dune-stuff project:
+//   https://github.com/wwu-numerik/dune-stuff
+// The copyright lies with the authors of this file (see below).
+// License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+// Authors:
+//   Rene Milk (2014 - 2015)
+
 #ifndef DUNE_STUFF_COMMON_PARALLEL_PARTITIONER_HH
 #define DUNE_STUFF_COMMON_PARALLEL_PARTITIONER_HH
 
@@ -12,27 +19,19 @@ namespace Stuff {
  * usable with \ref Dune::SeedListPartitioning for example \ref Dune::PartitioningInterface
  **/
 template <class GridViewType>
-struct IndexSetPartitioner {
+struct IndexSetPartitioner
+{
   typedef typename GridViewType::IndexSet IndexSetType;
   typedef typename GridViewType::template Codim<0>::Entity EntityType;
-  explicit IndexSetPartitioner(const IndexSetType& index_set)
-    : index_set_(index_set)
-  {}
+  explicit IndexSetPartitioner(const IndexSetType& index_set) : index_set_(index_set) {}
 
-  std::size_t partition(const EntityType &e) const
-  {
-    return index_set_.index(e);
-  }
+  std::size_t partition(const EntityType& e) const { return index_set_.index(e); }
 
-  std::size_t partitions() const
-  {
-    return index_set_.size(0);
-  }
+  std::size_t partitions() const { return index_set_.size(0); }
 
 private:
   const IndexSetType& index_set_;
 };
-
 }
 }
 

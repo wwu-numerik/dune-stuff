@@ -1,7 +1,11 @@
 // This file is part of the dune-stuff project:
 //   https://github.com/wwu-numerik/dune-stuff
-// Copyright holders: Rene Milk, Felix Schindler
+// The copyright lies with the authors of this file (see below).
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+// Authors:
+//   Felix Schindler (2014)
+//   Rene Milk       (2012 - 2015)
+//   Tobias Leibner  (2014)
 
 #include "main.hxx"
 
@@ -15,7 +19,8 @@ STUFF_TYPENAME(Dune::MPIHelper)
 using namespace Dune::Stuff::Common;
 using namespace std;
 
-TEST(Typename, Knowns) {
+TEST(Typename, Knowns)
+{
   EXPECT_EQ(Typename<unsigned long>::value(), "unsigned long");
   EXPECT_EQ(Typename<unsigned long>::value(), "unsigned long");
   EXPECT_EQ(Typename<int>::value(), "int");
@@ -28,18 +33,16 @@ TEST(Typename, Knowns) {
   EXPECT_EQ(Typename<char>::value(), "char");
 }
 
-TEST(Typename, Unknowns) {
-  EXPECT_NE(Typename<Dune::Exception>::value(),  string());
-}
+TEST(Typename, Unknowns) { EXPECT_NE(Typename<Dune::Exception>::value(), string()); }
 
-TEST(Typename, Extended) {
-  EXPECT_EQ(Typename<Dune::MPIHelper>::value(),  string("Dune::MPIHelper"));
+TEST(Typename, Extended)
+{
+  EXPECT_EQ(Typename<Dune::MPIHelper>::value(), string("Dune::MPIHelper"));
   {
     using namespace Dune;
-    EXPECT_EQ(Typename<MPIHelper>::value(),  string("Dune::MPIHelper"));
+    EXPECT_EQ(Typename<MPIHelper>::value(), string("Dune::MPIHelper"));
   }
   typedef Dune::Stuff::Common::ValidateAny<int> Valid;
   Valid v;
-  EXPECT_EQ(getTypename(v),  string("Dune::Stuff::Common::Parameter::ValidateAny<T>"));
+  EXPECT_EQ(getTypename(v), string("Dune::Stuff::Common::Parameter::ValidateAny<T>"));
 }
-

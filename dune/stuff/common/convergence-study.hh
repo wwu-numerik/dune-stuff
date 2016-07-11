@@ -1,7 +1,10 @@
-﻿// This file is part of the dune-stuff project:
+// This file is part of the dune-stuff project:
 //   https://github.com/wwu-numerik/dune-stuff
-// Copyright holders: Rene Milk, Felix Schindler
+// The copyright lies with the authors of this file (see below).
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+// Authors:
+//   Felix Schindler (2013 - 2014)
+//   Rene Milk       (2014 - 2015)
 
 #ifndef DUNE_STUFF_COMMON_CONVERGENCE_STUDY_HH
 #define DUNE_STUFF_COMMON_CONVERGENCE_STUDY_HH
@@ -17,11 +20,10 @@ namespace Dune {
 namespace Stuff {
 namespace Common {
 
-
 class ConvergenceStudy
 {
 public:
-  ConvergenceStudy(const std::vector< std::string > only_these_norms = {});
+  ConvergenceStudy(const std::vector<std::string> only_these_norms = {});
 
   virtual ~ConvergenceStudy() {}
 
@@ -29,7 +31,7 @@ public:
 
   virtual size_t num_refinements() = 0;
 
-  virtual std::vector< std::string > provided_norms() const = 0;
+  virtual std::vector<std::string> provided_norms() const = 0;
 
   virtual size_t expected_rate(const std::string type) = 0;
 
@@ -50,18 +52,16 @@ public:
 
   virtual void refine() = 0;
 
-  std::vector< std::string > used_norms() const;
+  std::vector<std::string> used_norms() const;
 
-  std::map< std::string, std::vector< double > > run(const bool relative = false,
-                                                     std::ostream& out = DSC_LOG_INFO_0,
-                                                     const bool print_timings = true);
+  std::map<std::string, std::vector<double>> run(const bool relative = false, std::ostream& out = DSC_LOG_INFO_0,
+                                                 const bool print_timings = true);
 
-  virtual std::vector< double > expected_results(const std::string /*type*/) const;
+  virtual std::vector<double> expected_results(const std::string /*type*/) const;
 
 private:
-  std::vector< std::string > only_these_norms_;
+  std::vector<std::string> only_these_norms_;
 }; // class ConvergenceStudy
-
 
 } // namespace Common
 } // namespace Stuff

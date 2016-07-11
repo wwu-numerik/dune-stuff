@@ -1,9 +1,12 @@
 // This file is part of the dune-stuff project:
 //   https://github.com/wwu-numerik/dune-stuff
-// Copyright holders: Rene Milk, Felix Schindler
+// The copyright lies with the authors of this file (see below).
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
-//
-// Contributors: Stefan Girke
+// Authors:
+//   Felix Schindler (2012 - 2015)
+//   Rene Milk       (2012 - 2013, 2015)
+//   Stefan Girke    (2012)
+//   Tobias Leibner  (2014)
 
 #ifndef DUNE_COMMON_COLOR_HH
 #define DUNE_COMMON_COLOR_HH
@@ -14,7 +17,7 @@
 #include <string>
 
 #ifdef __GNUC__
- #include <cxxabi.h>
+#include <cxxabi.h>
 #endif
 #include <string>
 
@@ -22,9 +25,7 @@ namespace Dune {
 namespace Stuff {
 namespace Common {
 
-
-#define DS_CONST_CHAR const char*
-
+#define DS_CONST_CHAR const char *
 
 /**
  * @brief namespace to define color constants that can be
@@ -35,64 +36,61 @@ namespace Common {
  */
 struct Colors
 {
-// foreground colors
-static DS_CONST_CHAR black;
-static DS_CONST_CHAR red;
-static DS_CONST_CHAR green;
-static DS_CONST_CHAR brown;
-static DS_CONST_CHAR blue;
-static DS_CONST_CHAR purple;
-static DS_CONST_CHAR cyan;
-static DS_CONST_CHAR lightgray;
-// light foreground colors
-static DS_CONST_CHAR darkgray;
-static DS_CONST_CHAR lightred;
-static DS_CONST_CHAR lightgreen;
-static DS_CONST_CHAR yellow;
-static DS_CONST_CHAR lightblue;
-static DS_CONST_CHAR lightpurple;
-static DS_CONST_CHAR lightcyan;
-static DS_CONST_CHAR white;
+  // foreground colors
+  static DS_CONST_CHAR black;
+  static DS_CONST_CHAR red;
+  static DS_CONST_CHAR green;
+  static DS_CONST_CHAR brown;
+  static DS_CONST_CHAR blue;
+  static DS_CONST_CHAR purple;
+  static DS_CONST_CHAR cyan;
+  static DS_CONST_CHAR lightgray;
+  // light foreground colors
+  static DS_CONST_CHAR darkgray;
+  static DS_CONST_CHAR lightred;
+  static DS_CONST_CHAR lightgreen;
+  static DS_CONST_CHAR yellow;
+  static DS_CONST_CHAR lightblue;
+  static DS_CONST_CHAR lightpurple;
+  static DS_CONST_CHAR lightcyan;
+  static DS_CONST_CHAR white;
 
-// background colors
-static DS_CONST_CHAR bblack;
-static DS_CONST_CHAR bred;
-static DS_CONST_CHAR bgreen;
-static DS_CONST_CHAR bbrown;
-static DS_CONST_CHAR bblue;
-static DS_CONST_CHAR bpurple;
-static DS_CONST_CHAR bcyan;
-static DS_CONST_CHAR blightgray;
-// light background colors
-static DS_CONST_CHAR bdarkgray;
-static DS_CONST_CHAR blightred;
-static DS_CONST_CHAR blightgreen;
-static DS_CONST_CHAR byellow;
-static DS_CONST_CHAR blightblue;
-static DS_CONST_CHAR blightpurple;
-static DS_CONST_CHAR blightcyan;
-static DS_CONST_CHAR bwhite;
+  // background colors
+  static DS_CONST_CHAR bblack;
+  static DS_CONST_CHAR bred;
+  static DS_CONST_CHAR bgreen;
+  static DS_CONST_CHAR bbrown;
+  static DS_CONST_CHAR bblue;
+  static DS_CONST_CHAR bpurple;
+  static DS_CONST_CHAR bcyan;
+  static DS_CONST_CHAR blightgray;
+  // light background colors
+  static DS_CONST_CHAR bdarkgray;
+  static DS_CONST_CHAR blightred;
+  static DS_CONST_CHAR blightgreen;
+  static DS_CONST_CHAR byellow;
+  static DS_CONST_CHAR blightblue;
+  static DS_CONST_CHAR blightpurple;
+  static DS_CONST_CHAR blightcyan;
+  static DS_CONST_CHAR bwhite;
 }; // struct Colors
-
 
 // modifiers
 struct StreamModifiers
 {
-static DS_CONST_CHAR normal;
-static DS_CONST_CHAR bold;
-static DS_CONST_CHAR italic;
-static DS_CONST_CHAR underline;
-static DS_CONST_CHAR blink;
-static DS_CONST_CHAR reverse;
-static DS_CONST_CHAR enditalic;
-static DS_CONST_CHAR endunderline;
-static DS_CONST_CHAR endblink;
-static DS_CONST_CHAR endreverse;
+  static DS_CONST_CHAR normal;
+  static DS_CONST_CHAR bold;
+  static DS_CONST_CHAR italic;
+  static DS_CONST_CHAR underline;
+  static DS_CONST_CHAR blink;
+  static DS_CONST_CHAR reverse;
+  static DS_CONST_CHAR enditalic;
+  static DS_CONST_CHAR endunderline;
+  static DS_CONST_CHAR endblink;
+  static DS_CONST_CHAR endreverse;
 }; // struct StreamModifiers
 
-
 #undef DS_CONST_CHAR
-
 
 /**
  * @brief Chooses a color from a 256 color map for a foreground color.
@@ -102,7 +100,7 @@ static DS_CONST_CHAR endreverse;
  */
 std::string color(size_t i);
 
-std::map< std::string, std::string >& color_map();
+std::map<std::string, std::string>& color_map();
 
 std::string color(const std::string id);
 
@@ -117,9 +115,7 @@ std::string backcolor(size_t i);
 // maybe you want to choose your own color
 size_t templateColorChooser(size_t i);
 
-
 bool terminal_supports_color();
-
 
 /**
  * @brief Highlights templates depending on the "template"-level.

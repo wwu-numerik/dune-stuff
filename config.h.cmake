@@ -1,3 +1,12 @@
+// This file is part of the dune-stuff project:
+//   https://github.com/wwu-numerik/dune-stuff
+// The copyright lies with the authors of this file (see below).
+// License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+// Authors:
+//   Felix Schindler (2013 - 2015)
+//   Rene Milk       (2013 - 2015)
+//   Tobias Leibner  (2014)
+
 /* begin dune-stuff */
 // NEVER delete/alter above comment, dune's cmake crap relies on it
 
@@ -17,16 +26,26 @@
 #define DUNE_STUFF_VERSION_REVISION ${DUNE_STUFF_VERSION_REVISION}
 
 /* Define to 1 if eigen was found, else 0 */
+#ifndef HAVE_EIGEN
 #define HAVE_EIGEN ${HAVE_EIGEN}
+#endif
 
 /* Define to 1 if threading building blocks were found, else 0 */
+#ifndef HAVE_TBB
 #define HAVE_TBB ${HAVE_TBB}
+#endif
+
+#cmakedefine HAS_WORKING_UNUSED_ATTRIBUTE  1
 
 #define HAVE_LIKWID ${HAVE_LIKWID}
 #define ENABLE_PERFMON ${ENABLE_PERFMON}
 #if ENABLE_PERFMON && HAVE_LIKWID
 # define LIKWID_PERFMON 1
 #endif
+
+#cmakedefine HAVE_MAP_EMPLACE 1
+
+#define DS_MAX_MIC_THREADS ${DS_MAX_MIC_THREADS}
 
 #define DS_OVERRIDE ; static_assert(false, "Use override instead (21.10.2014)!");
 #define DS_FINAL    ; static_assert(false, "Use final instead (21.10.2014)!");
@@ -130,6 +149,14 @@
 # define HAVE_GRAPE 0
 #endif
 
+#endif
+
+#ifndef DUNE_GRID_EXPERIMENTAL_GRID_EXTENSIONS
+# define DUNE_GRID_EXPERIMENTAL_GRID_EXTENSIONS 0
+#endif
+
+#ifndef HAVE_MAP_EMPLACE
+#define HAVE_MAP_EMPLACE 0
 /*** End: Silence implicitly False evaluation of undefined macro warnings ****/
 
 /* end dune-stuff */

@@ -1,9 +1,12 @@
 // This file is part of the dune-stuff project:
 //   https://github.com/wwu-numerik/dune-stuff
-// Copyright holders: Rene Milk, Felix Schindler
+// The copyright lies with the authors of this file (see below).
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
-//
-// Contributors: Kirsten Weber, Tobias Leibner
+// Authors:
+//   Felix Schindler (2012 - 2015)
+//   Kirsten Weber   (2013)
+//   Rene Milk       (2012 - 2015)
+//   Tobias Leibner  (2014 - 2015)
 
 #ifndef DUNE_STUFF_FUNCTIONS_EXPRESSION_HH
 #define DUNE_STUFF_FUNCTIONS_EXPRESSION_HH
@@ -31,7 +34,7 @@ template <class EntityImp, class DomainFieldImp, size_t domainDim, class RangeFi
 class Expression
     : public GlobalFunctionInterface<EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols>
 {
-  typedef GlobalFunctionInterface<EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols>
+  typedef LocalizableFunctionInterface<EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols>
       BaseType;
   typedef Expression<EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols> ThisType;
   typedef MathExpressionBase<DomainFieldImp, domainDim, RangeFieldImp, rangeDim * rangeDimCols>
@@ -164,13 +167,10 @@ public:
    *  [[[0 0] [2 0]] [[cos(x[0]) 0] [0 1]]] would be the gradient_expression corresponding to the expression above (if
    *  dimDomain = dimRange = dimRangeCols = 2)
    */
-  Expression(const std::string variable,
-             const ExpressionStringVectorType expressions,
-             const size_t ord = 0,
-             const std::string nm = static_id(),
+  Expression(const std::string variable, const ExpressionStringVectorType expressions, const size_t ord = 0,
+             const std::string nm                                = static_id(),
              const GradientStringVectorType gradient_expressions = GradientStringVectorType())
-    : order_(ord)
-    , name_(nm)
+    : order_(ord), name_(nm)
   {
     build_function(variable, expressions);
     build_gradients(variable, gradient_expressions);
@@ -195,8 +195,6 @@ public:
 
   virtual size_t order() const override { return order_; }
 
-  using BaseType::evaluate;
-
   virtual void evaluate(const DomainType& xx, RangeType& ret) const override
   {
     evaluate_helper(xx, ret, internal::ChooseVariant<dimRangeCols>());
@@ -219,12 +217,22 @@ public:
         }
         if (failure)
           DUNE_THROW(Stuff::Exceptions::internal_error,
-                     "evaluating this function yielded " << error_type << "!\n"
-                     << "The variable of this function is:   " << function_->variable() << "\n"
-                     << "The expression of this function is: " << function_->expression().at(rr * dimRangeCols + cc) << "\n"
-                     << "You tried to evaluate it with: xx = " << xx << "\n"
-                     << "The result was:                     " << tmp_row_->operator[](cc) << "\n\n"
-                     << "You can disable this check by defining DUNE_STUFF_FUNCTIONS_EXPRESSION_DISABLE_CHECKS\n");
+                     "evaluating this function yielded "
+                         << error_type
+                         << "!\n"
+                         << "The variable of this function is:     "
+                         << function_->variable()
+                         << "\n"
+                         << "The expression of this functional is: "
+                         << function_->expression().at(rr * dimRangeCols + cc)
+                         << "\n"
+                         << "You tried to evaluate it with:   xx = "
+                         << xx
+                         << "\n"
+                         << "The result was:                       "
+                         << tmp_row_->operator[](cc)
+                         << "\n\n"
+                         << "You can disable this check by defining DUNE_STUFF_FUNCTIONS_EXPRESSION_DISABLE_CHECKS\n");
       }
     }
 #endif // DUNE_STUFF_FUNCTIONS_EXPRESSION_DISABLE_CHECKS
@@ -582,50 +590,46 @@ private:
 
   // the following and the create() methods are simply copied from Expression, TODO: remove code duplication
   template< size_t rC >
-  static void get_expression_helper(const Common::Configuration& cfg,
-                                    ExpressionStringVectorType& expression_as_vectors,
-                                    internal::ChooseVariant< rC >)
+                                    internal::ChooseVariant<rC>)
   {
-    typedef typename Dune::FieldMatrix< std::string, dimRange, dimRangeCols > ExpressionMatrixType;
-    const ExpressionMatrixType expression_as_matrix = cfg.get< ExpressionMatrixType >("expression");
+    typedef typename Dune::FieldMatrix<std::string, dimRange, dimRangeCols> ExpressionMatrixType;
+    const ExpressionMatrixType expression_as_matrix = cfg.get<ExpressionMatrixType>("expression");
     // convert FieldMatrix to ExpressionStringVectorType
     for (size_t rr = 0; rr < dimRange; ++rr) {
-      std::vector< std::string > expression_row;
+      std::vector<std::string> expression_row;
       for (size_t cc = 0; cc < dimRangeCols; ++cc)
         expression_row.emplace_back(expression_as_matrix[rr][cc]);
       expression_as_vectors.emplace_back(expression_row);
     }
   } // ... get_expression_helper(...)
 
-  static void get_expression_helper(const Common::Configuration& cfg,
-                                    ExpressionStringVectorType& expression_as_vectors,
-                                    internal::ChooseVariant< 1 >)
+  static void get_expression_helper(const Common::Configuration& cfg, ExpressionStringVectorType& expression_as_vectors,
+                                    internal::ChooseVariant<1>)
   {
-    typedef typename Dune::FieldVector< std::string, dimRange > ExpressionVectorType;
-    const ExpressionVectorType expression_as_vector = cfg.get< ExpressionVectorType >("expression");
+    typedef typename Dune::FieldVector<std::string, dimRange> ExpressionVectorType;
+    const ExpressionVectorType expression_as_vector = cfg.get<ExpressionVectorType>("expression");
     // convert Vector to ExpressionStringVectorType
     for (size_t rr = 0; rr < dimRange; ++rr) {
-      std::vector< std::string > expression_row(1, expression_as_vector[rr]);
+      std::vector<std::string> expression_row(1, expression_as_vector[rr]);
       expression_as_vectors.emplace_back(expression_row);
     }
   } // ... get_expression_helper(..., ...< 1 >)
 
-  static void get_gradient(const Common::Configuration& cfg,
-                           GradientStringVectorType& gradient_as_vectors,
+  static void get_gradient(const Common::Configuration& cfg, GradientStringVectorType& gradient_as_vectors,
                            const std::string first_gradient_key)
   {
     // create vector of gradient keys
-    std::vector< std::string > gradient_keys(1, first_gradient_key);
+    std::vector<std::string> gradient_keys(1, first_gradient_key);
     for (size_t cc = 1; cc < dimRangeCols; ++cc)
       gradient_keys.emplace_back("gradient." + DSC::to_string(cc));
     // get gradient as FieldMatrix for every key
-    for (std::string key: gradient_keys) {
+    for (std::string key : gradient_keys) {
       ExpressionStringVectorType gradient_as_vectors_component;
-      typedef typename Dune::FieldMatrix< std::string, dimRange, dimDomain > JacobianMatrixType;
-      const JacobianMatrixType gradient_as_matrix = cfg.get< JacobianMatrixType >(key);
+      typedef typename Dune::FieldMatrix<std::string, dimRange, dimDomain> JacobianMatrixType;
+      const JacobianMatrixType gradient_as_matrix = cfg.get<JacobianMatrixType>(key);
       // convert FieldMatrix to ExpressionStringVectorType
       for (size_t rr = 0; rr < dimRange; ++rr) {
-        std::vector< std::string > gradient_expression;
+        std::vector<std::string> gradient_expression;
         for (size_t ii = 0; ii < dimDomain; ++ii)
           gradient_expression.emplace_back(gradient_as_matrix[rr][ii]);
         gradient_as_vectors_component.emplace_back(gradient_expression);
@@ -634,12 +638,12 @@ private:
     }
   } // ... get_gradient(...)
 
-  const std::string variable_;
+  std::shared_ptr<const MathExpressionFunctionType> function_;
   size_t order_;
   std::string name_;
-  ExpressionStringVectorType expressions_;
-  GradientStringVectorType gradient_expressions_;
-}; // class TimeDependentExpression
+  mutable typename DS::PerThreadValue<FieldVector<RangeFieldType, dimRange * dimRangeCols>> tmp_vector_;
+  mutable typename DS::PerThreadValue<FieldVector<RangeFieldType, dimRangeCols>> tmp_row_;
+  std::vector<std::vector<std::shared_ptr<const MathExpressionGradientType>>> gradients_;
 
 } // namespace Functions
 } // namespace Stuff

@@ -1,7 +1,9 @@
 // This file is part of the dune-stuff project:
-//   https://github.com/wwu-numerik/dune-stuff/
-// Copyright holders: Rene Milk, Felix Schindler
+//   https://github.com/wwu-numerik/dune-stuff
+// The copyright lies with the authors of this file (see below).
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+// Authors:
+//   Rene Milk (2015)
 
 #ifndef DUNE_STUFF_FUNCTIONS_SPE10MODEL2_HH
 #define DUNE_STUFF_FUNCTIONS_SPE10MODEL2_HH
@@ -27,16 +29,17 @@ namespace Spe10 {
  *
  */
 template <class EntityImp, class DomainFieldImp, size_t dim_domain, class RangeFieldImp, size_t r, size_t rC>
-class Model2 : public Stuff::GlobalFunctionInterface<EntityImp, DomainFieldImp, dim_domain, RangeFieldImp, r, rC> {
-  static_assert(r==rC,"");
-  static_assert(dim_domain==rC,"");
-  static_assert(dim_domain==3,"");
+class Model2 : public Stuff::GlobalFunctionInterface<EntityImp, DomainFieldImp, dim_domain, RangeFieldImp, r, rC>
+{
+  static_assert(r == rC, "");
+  static_assert(dim_domain == rC, "");
+  static_assert(dim_domain == 3, "");
   typedef Stuff::GlobalFunctionInterface<EntityImp, DomainFieldImp, dim_domain, RangeFieldImp, r, rC> BaseType;
 
 public:
   Model2(std::string data_filename = "perm_case2a.dat",
-         DSC::FieldVector<double,dim_domain> upper_right = default_upper_right)
-    : deltas_{{upper_right[0]/num_elements[0], upper_right[1]/num_elements[1], upper_right[2]/num_elements[2]}}
+         DSC::FieldVector<double, dim_domain> upper_right = default_upper_right)
+    : deltas_{{upper_right[0] / num_elements[0], upper_right[1] / num_elements[1], upper_right[2] / num_elements[2]}}
     , permeability_(nullptr)
     , permMatrix_(0.0)
     , filename_(data_filename)
@@ -44,17 +47,20 @@ public:
     readPermeability();
   }
 
-  static const DSC::FieldVector<double ,dim_domain> default_upper_right;
+  static const DSC::FieldVector<double, dim_domain> default_upper_right;
   // unsigned int mandated by CubeGrid provider
-  static const DSC::FieldVector<unsigned int,dim_domain> num_elements;
+  static const DSC::FieldVector<unsigned int, dim_domain> num_elements;
 
-  virtual ~Model2() {
+  virtual ~Model2()
+  {
     delete permeability_;
     permeability_ = nullptr;
   }
 
   //! currently used in gdt assembler
-  virtual void evaluate(const typename BaseType::DomainType& x, typename BaseType::RangeType& diffusion) const final override {
+  virtual void evaluate(const typename BaseType::DomainType& x,
+                        typename BaseType::RangeType& diffusion) const final override
+  {
 
     if (!permeability_) {
       DSC_LOG_ERROR_0 << "The SPE10-permeability data file could not be opened. This file does\n"
@@ -68,28 +74,28 @@ public:
 
     // 3 is the maximum space dimension
     for (size_t dim = 0; dim < dim_domain; ++dim)
-      permIntervalls_[dim] = std::min(unsigned(std::floor(x[dim] / deltas_[dim])), num_elements[dim] -1);
+      permIntervalls_[dim] = std::min(unsigned(std::floor(x[dim] / deltas_[dim])), num_elements[dim] - 1);
 
     const int offset = permIntervalls_[0] + permIntervalls_[1] * num_elements[0]
                        + permIntervalls_[2] * num_elements[1] * num_elements[0];
     for (size_t dim = 0; dim < dim_domain; ++dim) {
-      const auto idx = offset + dim * 1122000;
+      const auto idx      = offset + dim * 1122000;
       diffusion[dim][dim] = permeability_[idx];
     }
   }
 
-  virtual size_t order() const {
-    return 0u;
-  }
+  virtual size_t order() const override { return 0u; }
+
 private:
-  void readPermeability() {
+  void readPermeability()
+  {
     std::ifstream file(filename_);
     double val;
     if (!file) { // file couldn't be opened
       return;
     }
     file >> val;
-    int counter = 0;
+    int counter   = 0;
     permeability_ = new double[3366000];
     while (!file.eof()) {
       // keep reading until end-of-file
@@ -107,15 +113,14 @@ private:
 };
 
 template <class EntityImp, class DomainFieldImp, size_t dim_domain, class RangeFieldImp, size_t r, size_t rC>
-const DSC::FieldVector<unsigned int,dim_domain> Model2<EntityImp, DomainFieldImp, dim_domain, RangeFieldImp, r, rC>
-    ::num_elements{{60, 220, 85}};
+const DSC::FieldVector<unsigned int, dim_domain>
+    Model2<EntityImp, DomainFieldImp, dim_domain, RangeFieldImp, r, rC>::num_elements{{60, 220, 85}};
 template <class EntityImp, class DomainFieldImp, size_t dim_domain, class RangeFieldImp, size_t r, size_t rC>
-const DSC::FieldVector<double,dim_domain> Model2<EntityImp, DomainFieldImp, dim_domain, RangeFieldImp, r, rC>
-    ::default_upper_right{{1, 3.667, 1.417}};
+const DSC::FieldVector<double, dim_domain>
+    Model2<EntityImp, DomainFieldImp, dim_domain, RangeFieldImp, r, rC>::default_upper_right{{1, 3.667, 1.417}};
 } // namespace Spe10
 } // namespace Functions
 } // namespace Stuff
 } // namespace Dune
 
 #endif // DUNE_STUFF_FUNCTIONS_SPE10MODEL2_HH
-

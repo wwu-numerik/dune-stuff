@@ -1,7 +1,9 @@
 // This file is part of the dune-stuff project:
 //   https://github.com/wwu-numerik/dune-stuff
-// Copyright holders: Rene Milk, Felix Schindler
+// The copyright lies with the authors of this file (see below).
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+// Authors:
+//   Rene Milk (2015)
 
 #ifndef DUNE_STUFF_COMMON_FLOAT_CMP_STYLE_HH
 #define DUNE_STUFF_COMMON_FLOAT_CMP_STYLE_HH
@@ -17,7 +19,8 @@ namespace Stuff {
 namespace Common {
 namespace FloatCmp {
 
-enum class Style {
+enum class Style
+{
   numpy,
   relativeWeak,
   relativeStrong,
@@ -27,28 +30,28 @@ enum class Style {
 
 namespace internal {
 
-template< Style style >
+template <Style style>
 struct ConvertStyle;
 
-template<>
-struct ConvertStyle< Style::relativeWeak >
+template <>
+struct ConvertStyle<Style::relativeWeak>
 {
   static const Dune::FloatCmp::CmpStyle value = Dune::FloatCmp::CmpStyle::relativeWeak;
 };
 
-template<>
-struct ConvertStyle< Style::relativeStrong >
+template <>
+struct ConvertStyle<Style::relativeStrong>
 {
   static const Dune::FloatCmp::CmpStyle value = Dune::FloatCmp::CmpStyle::relativeStrong;
 };
 
-template<>
-struct ConvertStyle< Style::absolute >
+template <>
+struct ConvertStyle<Style::absolute>
 {
   static const Dune::FloatCmp::CmpStyle value = Dune::FloatCmp::CmpStyle::absolute;
 };
 
-} //namespace internal
+} // namespace internal
 
 } // namespace FloatCmp
 } // namespace Common

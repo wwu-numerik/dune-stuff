@@ -1,13 +1,23 @@
-Rene Milk <rene.milk@uni-muenster.de> Rene Milk <koshi@springlobby.info>
-Rene Milk <rene.milk@uni-muenster.de> Rene Milk <r_milk01@DUNE-PROJECT.(none)>
-Rene Milk <rene.milk@uni-muenster.de> Rene Milk <r_milk01@DUNE-PROJECT.uni-muenster.de>
-Rene Milk <rene.milk@uni-muenster.de> Rene Milk <r_milk01@stinson.(none)>
-Rene Milk <rene.milk@uni-muenster.de> Rene Milk <r_milk01@LOCKHEED.uni-muenster.de>
-Rene Milk <rene.milk@uni-muenster.de> Rene Milk <kosh@cpt-awesome.(none)>
-Rene Milk <rene.milk@uni-muenster.de> Rene Milk <kosh@koshmob.(none)>
-Rene Milk <rene.milk@uni-muenster.de> Rene Milk <r_milk01@JAX.uni-muenster.de>
-Rene Milk <rene.milk@uni-muenster.de> Rene Milk <r_milk01@SCORPION.uni-muenster.de>
-Rene Milk <rene.milk@uni-muenster.de> Rene Milk <r_milk01@BARNEY.uni-muenster.de>
+# This file is part of the dune-stuff project:
+#   https://github.com/wwu-numerik/dune-stuff
+# The copyright lies with the authors of this file (see below).
+# License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+# Authors:
+#   Felix Schindler (2014 - 2015)
+#   Rene Milk       (2011, 2013, 2015)
+
+Rene Milk <rene.milk@wwu.de> Rene Milk <rene.milk@uni-muenster.de>
+Rene Milk <rene.milk@wwu.de> Rene Milk <koshi@springlobby.info>
+Rene Milk <rene.milk@wwu.de> Rene Milk <r_milk01@DUNE-PROJECT.(none)>
+Rene Milk <rene.milk@wwu.de> Rene Milk <r_milk01@DUNE-PROJECT.uni-muenster.de>
+Rene Milk <rene.milk@wwu.de> Rene Milk <r_milk01@stinson.(none)>
+Rene Milk <rene.milk@wwu.de> Rene Milk <r_milk01@LOCKHEED.uni-muenster.de>
+Rene Milk <rene.milk@wwu.de> Rene Milk <kosh@cpt-awesome.(none)>
+Rene Milk <rene.milk@wwu.de> Rene Milk <kosh@koshmob.(none)>
+Rene Milk <rene.milk@wwu.de> Rene Milk <r_milk01@JAX.uni-muenster.de>
+Rene Milk <rene.milk@wwu.de> Rene Milk <r_milk01@SCORPION.uni-muenster.de>
+Rene Milk <rene.milk@wwu.de> Rene Milk <r_milk01@BARNEY.uni-muenster.de>
+Rene Milk <rene.milk@wwu.de> Rene Milk <renemilk@users.noreply.github.com>
 Felix Schindler <felix.schindler@wwu.de> Felix Albrecht <felix@almob.(none)>
 Felix Schindler <felix.schindler@wwu.de> Felix Albrecht <felix@server.(none)>
 Felix Schindler <felix.schindler@wwu.de> Felix Tobias Albrecht <f_albr01@SCORPION.uni-muenster.de>
@@ -17,17 +27,20 @@ Felix Schindler <felix.schindler@wwu.de> Felix Albrecht <felix.albrecht@uni-muen
 Felix Schindler <felix.schindler@wwu.de> Felix Albrecht <felix.albrecht@math.uni-muenster.de>
 Felix Schindler <felix.schindler@wwu.de> Felix Tobias Albrecht <falbr_01@BARNEY.(none)>
 Felix Schindler <felix.schindler@wwu.de> Felix Albrecht <mail@felixalbrecht.de>
+Felix Schindler <felix.schindler@wwu.de> Felix Schindler <ftalbrecht@users.noreply.github.com>
 Kirsten Weber <k_webe11@wwu.de> Kirsten <kirsten@kirsten>
 Kirsten Weber <k_webe11@wwu.de> Kirsten Weber <k_webe11@LOCKHEED.uni-muenster.de>
 Kirsten Weber <k_webe11@wwu.de> Kirsten Weber <k_webe11@pingpong.(none)>
 Kirsten Weber <k_webe11@wwu.de> Kirsten Weber <k_webe11@wwu.de>
 Stefan Girke <stefan.girke@gmx.de> Stefan Girke <s_girk01@pris.(none)>
 Stefan Girke <stefan.girke@gmx.de> Stefan <stefan@stefan.(none)>
-Tobias Leibner <tobias.leibner@googlemail.com> tobiasleibner <tobias.leibner@googlemail.com>
+Tobias Leibner <tobias.leibner@uni-muenster.de> tobiasleibner <tobias.leibner@googlemail.com>
+Tobias Leibner <tobias.leibner@uni-muenster.de> Tobias Leibner <tobias.leibner@googlemail.com>
+Barbara Verfürth <b_verf01@uni-muenster.de> b_verf01 <b_verf01@uni-muenster.de>
 
 # geratene duneadm zuordnung
-Rene Milk <rene.milk@uni-muenster.de> Mario Ohlberger <duneadm@DUNE-PROJECT.(none)>
-Rene Milk <rene.milk@uni-muenster.de> Mario Ohlberger <duneadm@SCORPION.uni-muenster.de>
+Rene Milk <rene.milk@wwu.de> Mario Ohlberger <duneadm@DUNE-PROJECT.(none)>
+Rene Milk <rene.milk@wwu.de> Mario Ohlberger <duneadm@SCORPION.uni-muenster.de>
 Felix Schindler <felix.schindler@wwu.de> Mario Ohlberger <duneadm@JAX.uni-muenster.de>
 Felix Schindler <felix.schindler@wwu.de> Mario Ohlberger <duneadm@BARNEY.(none)>
-Rene Milk <rene.milk@uni-muenster.de> Mario Ohlberger <duneadm@zivsmp001.cvos.cluster>
+Rene Milk <rene.milk@wwu.de> Mario Ohlberger <duneadm@zivsmp001.cvos.cluster>

@@ -1,12 +1,21 @@
 // This file is part of the dune-stuff project:
 //   https://github.com/wwu-numerik/dune-stuff
-// Copyright holders: Rene Milk, Felix Schindler
+// The copyright lies with the authors of this file (see below).
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+// Authors:
+//   Andreas Buhr    (2014)
+//   Felix Schindler (2014 - 2015)
+//   Rene Milk       (2014 - 2015)
 
 #ifndef DUNE_STUFF_GRID_LAYERS_HH
 #define DUNE_STUFF_GRID_LAYERS_HH
 
 #include <memory>
+#include <cassert>
+
+#if HAVE_DUNE_GRID
+#include <dune/grid/common/gridview.hh>
+#endif
 
 #if HAVE_DUNE_GRID
 # include <dune/grid/common/gridview.hh>
@@ -14,12 +23,12 @@
 
 #if HAVE_DUNE_FEM
 # include <dune/fem/gridpart/common/gridpart.hh>
-# include <dune/fem/gridpart/leafgridpart.hh>
-# include <dune/fem/gridpart/levelgridpart.hh>
+#include <dune/fem/gridpart/leafgridpart.hh>
+#include <dune/fem/gridpart/levelgridpart.hh>
 #endif
 
 #if HAVE_DUNE_GRID_MULTISCALE
-# include <dune/grid/multiscale/default.hh>
+#include <dune/grid/multiscale/default.hh>
 #endif
 
 #include <dune/stuff/common/type_utils.hh>
@@ -27,25 +36,51 @@
 namespace Dune {
 namespace Stuff {
 namespace Grid {
+namespace internal {
 
+template <class G>
+struct is_grid_view_helper
+{
+  DSC_has_typedef_initialize_once(Traits)
+
+      static const bool is_candidate = DSC_has_typedef(Traits)<G>::value;
+}; // class is_grid_view_helper
+
+} // namespace internal
+
+#if HAVE_DUNE_GRID
+template <class G, bool candidate = internal::is_grid_view_helper<G>::is_candidate>
+struct is_grid_view : public std::is_base_of<Dune::GridView<typename G::Traits>, G>
+{
+};
+#else
+template <class G, bool candidate>
+struct is_grid_view : public std::false_type
+{
+};
+#endif
+
+template <class G>
+struct is_grid_view<G, false> : public std::false_type
+{
+};
 
 enum class ChoosePartView
 {
-    view
-  , part
+  view,
+  part
 }; // enum class ChoosePartView
-
 
 enum class ChooseLayer
 {
-    level
-  , leaf
+  level,
+  leaf
 #if HAVE_DUNE_GRID_MULTISCALE
-  , local
-  , local_oversampled
+  ,
+  local,
+  local_oversampled
 #endif
 }; // enum class ChooseLayer
-
 
 #if HAVE_DUNE_GRID
 
@@ -112,83 +147,73 @@ struct is_grid_layer
   : public integral_constant< bool, is_grid_view< G >::value || is_grid_part< G >::value >
 {};
 
-
 // forwards
-template< class GridType, ChooseLayer layer, ChoosePartView part_view >
+template <class GridType, ChooseLayer layer, ChoosePartView part_view>
 struct Layer;
 
-template< class GridType, ChoosePartView type >
+template <class GridType, ChoosePartView type>
 struct LevelPartView;
 
-template< class GridType, ChoosePartView type >
+template <class GridType, ChoosePartView type>
 struct LeafPartView;
 
-template< class GridType, ChooseLayer type >
+template <class GridType, ChooseLayer type>
 struct LayerView;
 
-template< class GridType, ChooseLayer type >
+template <class GridType, ChooseLayer type>
 struct LayerPart;
-
 
 // specializations of LeafPartView
 
 /**
  * \brief Allows to statically create a leaf part or view (view variant).
  */
-template< class GridType >
-struct LeafPartView< GridType, ChoosePartView::view >
+template <class GridType>
+struct LeafPartView<GridType, ChoosePartView::view>
 {
-  typedef typename Layer< GridType, ChooseLayer::leaf, ChoosePartView::view >::Type Type;
+  typedef typename Layer<GridType, ChooseLayer::leaf, ChoosePartView::view>::Type Type;
 
-  static Type create(const GridType& grid, const int /*level*/ = 0)
-  {
-    return grid.leafGridView();
-  }
+  static Type create(const GridType& grid, const int /*level*/ = 0) { return grid.leafGridView(); }
 }; // struct LeafPartView< ..., view >
-
 
 #if HAVE_DUNE_FEM
 
 /**
  * \brief Allows to statically create a leaf part or view (part variant, only from a non-const grid).
  */
-template< class GridType >
-struct LeafPartView< GridType, ChoosePartView::part >
+template <class GridType>
+struct LeafPartView<GridType, ChoosePartView::part>
 {
-  typedef typename Layer< GridType, ChooseLayer::leaf, ChoosePartView::part >::Type Type;
+  typedef typename Layer<GridType, ChooseLayer::leaf, ChoosePartView::part>::Type Type;
 
   static Type create(const GridType& /*grid*/, const int /*level*/ = 0)
   {
-    static_assert(AlwaysFalse< GridType >::value,
+    static_assert(AlwaysFalse<GridType>::value,
                   "dune-fem does not allow the creation of a leaf grid part from a non-const grid!");
   }
 
-  static Type create(GridType& grid, const int /*level*/ = 0)
-  {
-    return Type(grid);
-  }
+  static Type create(GridType& grid, const int /*level*/ = 0) { return Type(grid); }
 }; // struct LeafPartView< ..., part >
 
 #else // HAVE_DUNE_FEM
 
-template< class GridType >
-struct LeafPartView< GridType, ChoosePartView::part >
+template <class GridType>
+struct LeafPartView<GridType, ChoosePartView::part>
 {
-  static_assert(AlwaysFalse< GridType >::value, "You are missing dune-fem!");
+  static_assert(AlwaysFalse<GridType>::value, "You are missing dune-fem!");
 };
 
 #endif // HAVE_DUNE_FEM
-
 
 // specializations of LevelPartView
 
 /**
  * \brief Allows to statically create a level part or view (view variant).
  */
-template< class GridType >
-struct LevelPartView< GridType, ChoosePartView::view >
+template <class GridType>
+struct LevelPartView<GridType, ChoosePartView::view>
 {
-  typedef typename Layer< GridType, ChooseLayer::level, ChoosePartView::view >::Type Type;
+  typedef typename Layer<GridType, ChooseLayer::level, ChoosePartView::view>::Type Type;
 
   static Type create(const GridType& grid, const int level)
   {
@@ -203,14 +228,14 @@ struct LevelPartView< GridType, ChoosePartView::view >
 /**
  * \brief Allows to statically create a level part or view (part variant, only from a non-const grid).
  */
-template< class GridType >
-struct LevelPartView< GridType, ChoosePartView::part >
+template <class GridType>
+struct LevelPartView<GridType, ChoosePartView::part>
 {
-  typedef typename Layer< GridType, ChooseLayer::level, ChoosePartView::part >::Type Type;
+  typedef typename Layer<GridType, ChooseLayer::level, ChoosePartView::part>::Type Type;
 
   static Type create(const GridType& /*grid*/, const int /*level*/)
   {
-    static_assert(AlwaysFalse< GridType >::value,
+    static_assert(AlwaysFalse<GridType>::value,
                   "dune-fem does not allow the creation of a level grid part from a non-const grid!");
   }
 
@@ -222,102 +247,99 @@ struct LevelPartView< GridType, ChoosePartView::part >
   }
 }; // struct LevelPartView< ..., part >
 
-
 // specializations of LayerPart
 
 /**
  * \brief Allows to statically create a leaf or level part (leaf variant, only from a non-const grid).
  */
-template< class GridType >
-struct LayerPart< GridType, ChooseLayer::leaf >
+template <class GridType>
+struct LayerPart<GridType, ChooseLayer::leaf>
 {
-  typedef typename Layer< GridType, ChooseLayer::leaf, ChoosePartView::part >::Type Type;
+  typedef typename Layer<GridType, ChooseLayer::leaf, ChoosePartView::part>::Type Type;
 
   static Type create(const GridType& /*grid*/, const int /*level*/ = 0)
   {
-    static_assert(AlwaysFalse< GridType >::value,
+    static_assert(AlwaysFalse<GridType>::value,
                   "dune-fem does not allow the creation of a leaf grid part from a non-const grid!");
   }
 
   static Type create(GridType& grid, const int /*level*/ = 0)
   {
-    return LeafPartView< GridType, ChoosePartView::part >::create(grid);
+    return LeafPartView<GridType, ChoosePartView::part>::create(grid);
   }
 }; // struct LayerPart< ..., leaf >
 
 /**
  * \brief Allows to statically create a leaf or level part (level variant, only from a non-const grid).
  */
-template< class GridType >
-struct LayerPart< GridType, ChooseLayer::level >
+template <class GridType>
+struct LayerPart<GridType, ChooseLayer::level>
 {
-  typedef typename Layer< GridType, ChooseLayer::level, ChoosePartView::part >::Type Type;
+  typedef typename Layer<GridType, ChooseLayer::level, ChoosePartView::part>::Type Type;
 
   static Type create(const GridType& /*grid*/, const int /*level*/)
   {
-    static_assert(AlwaysFalse< GridType >::value,
+    static_assert(AlwaysFalse<GridType>::value,
                   "dune-fem does not allow the creation of a level grid part from a non-const grid!");
   }
 
   static Type create(GridType& grid, const int level)
   {
-    return LevelPartView< GridType, ChoosePartView::part >::create(grid, level);
+    return LevelPartView<GridType, ChoosePartView::part>::create(grid, level);
   }
 }; // struct LayerPart< ..., level >
 
 #else // HAVE_DUNE_FEM
 
-template< class GridType >
-struct LevelPartView< GridType, ChoosePartView::part >
+template <class GridType>
+struct LevelPartView<GridType, ChoosePartView::part>
 {
-  static_assert(AlwaysFalse< GridType >::value, "You are missing dune-fem!");
+  static_assert(AlwaysFalse<GridType>::value, "You are missing dune-fem!");
 };
 
-template< class GridType >
-struct LayerPart< GridType, ChooseLayer::leaf >
+template <class GridType>
+struct LayerPart<GridType, ChooseLayer::leaf>
 {
-  static_assert(AlwaysFalse< GridType >::value, "You are missing dune-fem!");
+  static_assert(AlwaysFalse<GridType>::value, "You are missing dune-fem!");
 };
 
-template< class GridType >
-struct LayerPart< GridType, ChooseLayer::level >
+template <class GridType>
+struct LayerPart<GridType, ChooseLayer::level>
 {
-  static_assert(AlwaysFalse< GridType >::value, "You are missing dune-fem!");
+  static_assert(AlwaysFalse<GridType>::value, "You are missing dune-fem!");
 };
 
 #endif // HAVE_DUNE_FEM
-
 
 // specializations of LayerView
 
 /**
  * \brief Allows to statically create a leaf or level view (leaf variant).
  */
-template< class GridType >
-struct LayerView< GridType, ChooseLayer::leaf >
+template <class GridType>
+struct LayerView<GridType, ChooseLayer::leaf>
 {
-  typedef typename Layer< GridType, ChooseLayer::leaf, ChoosePartView::view >::Type Type;
+  typedef typename Layer<GridType, ChooseLayer::leaf, ChoosePartView::view>::Type Type;
 
   static Type create(const GridType& grid, const int /*level*/ = 0)
   {
-    return LeafPartView< GridType, ChoosePartView::view >::create(grid);
+    return LeafPartView<GridType, ChoosePartView::view>::create(grid);
   }
 }; // struct LayerView< ..., leaf >
 
 /**
  * \brief Allows to statically create a leaf or level view (level variant).
  */
-template< class GridType >
-struct LayerView< GridType, ChooseLayer::level >
+template <class GridType>
+struct LayerView<GridType, ChooseLayer::level>
 {
-  typedef typename Layer< GridType, ChooseLayer::level, ChoosePartView::view >::Type Type;
+  typedef typename Layer<GridType, ChooseLayer::level, ChoosePartView::view>::Type Type;
 
   static Type create(const GridType& grid, const int level)
   {
-    return LevelPartView< GridType, ChoosePartView::view >::create(grid, level);
+    return LevelPartView<GridType, ChoosePartView::view>::create(grid, level);
   }
 }; // struct LayerView< ..., level >
-
 
 // specializatins of Layer
 
@@ -326,29 +348,29 @@ struct LayerView< GridType, ChooseLayer::level >
 /**
  * \brief Allows to statically create a leaf or level part or view (leaf part variant, only from a non-const grid).
  */
-template< class GridType >
-struct Layer< GridType, ChooseLayer::leaf, ChoosePartView::part >
+template <class GridType>
+struct Layer<GridType, ChooseLayer::leaf, ChoosePartView::part>
 {
-  typedef Dune::Fem::LeafGridPart< GridType > Type;
+  typedef Dune::Fem::LeafGridPart<GridType> Type;
 
   static Type create(const GridType& /*grid*/, const int /*level*/ = 0)
   {
-    static_assert(AlwaysFalse< GridType >::value,
+    static_assert(AlwaysFalse<GridType>::value,
                   "dune-fem does not allow the creation of a leaf grid part from a non-const grid!");
   }
 
   static Type create(GridType& grid, const int /*level*/ = 0)
   {
-    return LeafPartView< GridType, ChoosePartView::part >::create(grid);
+    return LeafPartView<GridType, ChoosePartView::part>::create(grid);
   }
 }; // struct Layer< ..., leaf, part >
 
 #else // HAVE_DUNE_FEM
 
-template< class GridType >
-struct Layer< GridType, ChooseLayer::leaf, ChoosePartView::part >
+template <class GridType>
+struct Layer<GridType, ChooseLayer::leaf, ChoosePartView::part>
 {
-  static_assert(AlwaysFalse< GridType >::value, "You are missing dune-fem!");
+  static_assert(AlwaysFalse<GridType>::value, "You are missing dune-fem!");
 };
 
 #endif // HAVE_DUNE_FEM
@@ -356,14 +378,14 @@ struct Layer< GridType, ChooseLayer::leaf, ChoosePartView::part >
 /**
  * \brief Allows to statically create a leaf or level part or view (leaf view variant).
  */
-template< class GridType >
-struct Layer< GridType, ChooseLayer::leaf, ChoosePartView::view >
+template <class GridType>
+struct Layer<GridType, ChooseLayer::leaf, ChoosePartView::view>
 {
   typedef typename GridType::LeafGridView Type;
 
   static Type create(const GridType& grid, const int /*level*/ = 0)
   {
-    return LeafPartView< GridType, ChoosePartView::view >::create(grid);
+    return LeafPartView<GridType, ChoosePartView::view>::create(grid);
   }
 }; // struct Layer< ..., leaf, view >
 
@@ -372,29 +394,29 @@ struct Layer< GridType, ChooseLayer::leaf, ChoosePartView::view >
 /**
  * \brief Allows to statically create a leaf or level part or view (level part variant, only from a non-const grid).
  */
-template< class GridType >
-struct Layer< GridType, ChooseLayer::level, ChoosePartView::part >
+template <class GridType>
+struct Layer<GridType, ChooseLayer::level, ChoosePartView::part>
 {
-  typedef Dune::Fem::LevelGridPart< GridType > Type;
+  typedef Dune::Fem::LevelGridPart<GridType> Type;
 
   static Type create(const GridType& /*grid*/, const int /*level*/)
   {
-    static_assert(AlwaysFalse< GridType >::value,
+    static_assert(AlwaysFalse<GridType>::value,
                   "dune-fem does not allow the creation of a level grid part from a non-const grid!");
   }
 
   static Type create(GridType& grid, const int level)
   {
-    return LevelPartView< GridType, ChoosePartView::part >::create(grid, level);
+    return LevelPartView<GridType, ChoosePartView::part>::create(grid, level);
   }
 }; // struct Layer< ..., level, part >
 
 #else // HAVE_DUNE_FEM
 
-template< class GridType >
-struct Layer< GridType, ChooseLayer::level, ChoosePartView::part >
+template <class GridType>
+struct Layer<GridType, ChooseLayer::level, ChoosePartView::part>
 {
-  static_assert(AlwaysFalse< GridType >::value, "You are missing dune-fem!");
+  static_assert(AlwaysFalse<GridType>::value, "You are missing dune-fem!");
 };
 
 #endif // HAVE_DUNE_FEM
@@ -402,73 +424,63 @@ struct Layer< GridType, ChooseLayer::level, ChoosePartView::part >
 /**
  * \brief Allows to statically create a leaf or level part or view (leaf view variant).
  */
-template< class GridType >
-struct Layer< GridType, ChooseLayer::level, ChoosePartView::view >
+template <class GridType>
+struct Layer<GridType, ChooseLayer::level, ChoosePartView::view>
 {
   typedef typename GridType::LevelGridView Type;
 
   static Type create(const GridType& grid, const int level)
   {
-    return LevelPartView< GridType, ChoosePartView::view >::create(grid, level);
+    return LevelPartView<GridType, ChoosePartView::view>::create(grid, level);
   }
 }; // struct Layer< ..., level, view >
 
+#if HAVE_DUNE_GRID_MULTISCALE
 
-# if HAVE_DUNE_GRID_MULTISCALE
-
-
-template< class GridType >
-struct Layer< GridType, ChooseLayer::local, ChoosePartView::view >
+template <class GridType>
+struct Layer<GridType, ChooseLayer::local, ChoosePartView::view>
 {
-  typedef typename grid::Multiscale::Default< GridType >::LocalGridViewType Type;
+  typedef typename grid::Multiscale::Default<GridType>::LocalGridViewType Type;
 };
 
-
-template< class GridType >
-struct Layer< GridType, ChooseLayer::local_oversampled, ChoosePartView::view >
+template <class GridType>
+struct Layer<GridType, ChooseLayer::local_oversampled, ChoosePartView::view>
 {
-  typedef typename grid::Multiscale::Default< GridType >::LocalGridViewType Type;
+  typedef typename grid::Multiscale::Default<GridType>::LocalGridViewType Type;
 };
 
-
-template< class GridType >
-struct Layer< GridType, ChooseLayer::local, ChoosePartView::part >
+template <class GridType>
+struct Layer<GridType, ChooseLayer::local, ChoosePartView::part>
 {
-  typedef typename grid::Multiscale::Default< GridType >::LocalGridPartType Type;
+  typedef typename grid::Multiscale::Default<GridType>::LocalGridPartType Type;
 };
 
-
-template< class GridType >
-struct Layer< GridType, ChooseLayer::local_oversampled, ChoosePartView::part >
+template <class GridType>
+struct Layer<GridType, ChooseLayer::local_oversampled, ChoosePartView::part>
 {
-  typedef typename grid::Multiscale::Default< GridType >::LocalGridPartType Type;
+  typedef typename grid::Multiscale::Default<GridType>::LocalGridPartType Type;
 };
 
+#endif // HAVE_DUNE_GRID_MULTISCALE
+#else  // HAVE_DUNE_GRID
 
-# endif // HAVE_DUNE_GRID_MULTISCALE
-#else // HAVE_DUNE_GRID
-
-
-template< class GridType, ChooseLayer layer, ChoosePartView type >
+template <class GridType, ChooseLayer layer, ChoosePartView type>
 struct Layer
 {
-  static_assert(AlwaysFalse< GridType >::value, "You are missing dune-grid!");
+  static_assert(AlwaysFalse<GridType>::value, "You are missing dune-grid!");
 };
 
-
-template< class GridType, ChoosePartView type >
+template <class GridType, ChoosePartView type>
 struct LevelPartView
 {
-  static_assert(AlwaysFalse< GridType >::value, "You are missing dune-grid!");
+  static_assert(AlwaysFalse<GridType>::value, "You are missing dune-grid!");
 };
 
-
-template< class GridType, ChoosePartView type >
+template <class GridType, ChoosePartView type>
 struct LeafPartView
 {
-  static_assert(AlwaysFalse< GridType >::value, "You are missing dune-grid!");
+  static_assert(AlwaysFalse<GridType>::value, "You are missing dune-grid!");
 };
-
 
 #endif // HAVE_DUNE_GRID
 

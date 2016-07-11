@@ -1,7 +1,12 @@
 // This file is part of the dune-stuff project:
 //   https://github.com/wwu-numerik/dune-stuff
-// Copyright holders: Rene Milk, Felix Schindler
+// The copyright lies with the authors of this file (see below).
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+// Authors:
+//   Andreas Buhr    (2014)
+//   Felix Schindler (2012 - 2015)
+//   Rene Milk       (2013 - 2015)
+//   Tobias Leibner  (2014 - 2015)
 
 #ifndef DUNE_STUFF_FUNCTIONS_CHECKERBOARD_HH
 #define DUNE_STUFF_FUNCTIONS_CHECKERBOARD_HH
@@ -81,14 +86,14 @@ class Checkerboard
   }; // class Localfunction
 
 public:
-  using typename BaseType::EntityType;
-  using typename BaseType::LocalfunctionType;
+  typedef typename BaseType::EntityType EntityType;
+  typedef typename BaseType::LocalfunctionType LocalfunctionType;
   using typename BaseType::DomainFieldType;
-  using BaseType::dimDomain;
-  using typename BaseType::RangeFieldType;
+  typedef typename BaseType::DomainFieldType DomainFieldType;
+  static const size_t dimDomain = BaseType::dimDomain;
   using BaseType::dimRange;
   using BaseType::dimRangeCols;
-  using typename BaseType::RangeType;
+  typedef typename BaseType::RangeType RangeType;
 
   static const bool available = true;
 
@@ -511,17 +516,11 @@ public:
 
   ThisType& operator=(ThisType&& source) = delete;
 
-  virtual std::string type() const override
-  {
     return BaseType::static_id() + ".functioncheckerboard";
-  }
 
-  virtual std::string name() const override
-  {
-    return name_;
-  }
+  virtual std::string name() const override { return name_; }
 
-  virtual std::unique_ptr< LocalfunctionType > local_function(const EntityType& entity) const override
+  virtual std::unique_ptr<LocalfunctionType> local_function(const EntityType& entity) const override
   {
     return LocalFunctionChooser< LocalfunctionType,
                                  LocalizableFunctionType,
@@ -560,33 +559,32 @@ private:
   {
     // decide on the subdomain the center of the entity belongs to
     const auto center = entity.geometry().center();
-    std::vector< size_t > whichPartition(dimDomain, 0);
+    std::vector<size_t> whichPartition(dimDomain, 0);
     const auto& ll = *lowerLeft_;
     const auto& ur = *upperRight_;
     const auto& ne = *numElements_;
     for (size_t dd = 0; dd < dimDomain; ++dd) {
       // for points that are on upperRight_[d], this selects one partition too much
       // so we need to cap this
-      whichPartition[dd] = std::min(size_t(std::floor(ne[dd]*((center[dd] - ll[dd])/(ur[dd] - ll[dd])))),
-                                    ne[dd] - 1);
+      whichPartition[dd] =
+          std::min(size_t(std::floor(ne[dd] * ((center[dd] - ll[dd]) / (ur[dd] - ll[dd])))), ne[dd] - 1);
     }
     size_t subdomain = 0;
     if (dimDomain == 1)
       subdomain = whichPartition[0];
     else if (dimDomain == 2)
-      subdomain = whichPartition[0] + whichPartition[1]*ne[0];
+      subdomain = whichPartition[0] + whichPartition[1] * ne[0];
     else
-      subdomain = whichPartition[0] + whichPartition[1]*ne[0] + whichPartition[2]*ne[1]*ne[0];
+      subdomain = whichPartition[0] + whichPartition[1] * ne[0] + whichPartition[2] * ne[1] * ne[0];
     return subdomain;
   } // ... find_subdomain(...)
 
-  std::shared_ptr< const Common::FieldVector< DomainFieldType, dimDomain > > lowerLeft_;
-  std::shared_ptr< const Common::FieldVector< DomainFieldType, dimDomain > > upperRight_;
-  std::shared_ptr< const Common::FieldVector< size_t, dimDomain > > numElements_;
+  std::shared_ptr<const Common::FieldVector<DomainFieldType, dimDomain>> lowerLeft_;
+  std::shared_ptr<const Common::FieldVector<DomainFieldType, dimDomain>> upperRight_;
+  std::shared_ptr<const Common::FieldVector<size_t, dimDomain>> numElements_;
   std::vector< std::shared_ptr< const LocalizableFunctionType > > values_;
   std::string name_;
 }; // class FunctionCheckerboard
-
 
 
 } // namespace Functions

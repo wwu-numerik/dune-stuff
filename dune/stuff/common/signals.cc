@@ -1,7 +1,10 @@
 // This file is part of the dune-stuff project:
 //   https://github.com/wwu-numerik/dune-stuff
-// Copyright holders: Rene Milk, Felix Schindler
+// The copyright lies with the authors of this file (see below).
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+// Authors:
+//   Felix Schindler (2014)
+//   Rene Milk       (2013, 2015)
 
 #include "config.h"
 
@@ -15,7 +18,8 @@ namespace Stuff {
 namespace Common {
 
 //! reset given signal to default handler
-void resetSignal(int signal) {
+void resetSignal(int signal)
+{
   struct sigaction new_action;
 
   new_action.sa_handler = SIG_DFL;
@@ -25,7 +29,8 @@ void resetSignal(int signal) {
 } // resetSignal
 
 //! example signal handler
-void handleInterrupt(int signal) {
+void handleInterrupt(int signal)
+{
   DSC_LOG_INFO << "forcefully terminated at " << stringFromTime() << std::endl;
   // reset signal handler and commit suicide
   resetSignal(signal);
@@ -33,10 +38,11 @@ void handleInterrupt(int signal) {
 } // handleInterrupt
 
 //! type of handler functions
-typedef void handler_type (int);
+typedef void handler_type(int);
 
 //! calling this from your main() will install handler as callback when signal is received
-void installSignalHandler(int signal, handler_type handler) {
+void installSignalHandler(int signal, handler_type handler)
+{
   struct sigaction new_action;
 
   /* Set up the structure to specify the new action. */
@@ -46,7 +52,6 @@ void installSignalHandler(int signal, handler_type handler) {
 
   sigaction(signal, &new_action, NULL);
 } // installSignalHandler
-
 
 } // namepsace Common
 } // namepsace Stuff

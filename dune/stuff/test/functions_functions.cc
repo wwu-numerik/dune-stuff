@@ -1,9 +1,14 @@
 // This file is part of the dune-stuff project:
 //   https://github.com/wwu-numerik/dune-stuff
-// Copyright holders: Rene Milk, Felix Schindler
+// The copyright lies with the authors of this file (see below).
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+// Authors:
+//   Felix Schindler (2013 - 2015)
+//   Rene Milk       (2013 - 2015)
+//   Tobias Leibner  (2014)
 
 #include "main.hxx"
+#include "functions.hh"
 
 #include <memory>
 
@@ -11,167 +16,37 @@
 
 #include <dune/stuff/functions.hh>
 
-
-// we need this nasty code generation because the testing::Types< ... > only accepts 50 arguments
-// and all combinations of functions and entities and dimensions and fieldtypes would be way too much
-#define TEST_STRUCT_GENERATOR(ftype, etype) \
-  /* we just take the constant function as a container for the types we need */ \
-  /* since this one always exists for all combinations */ \
-  template< class ConstantFunctionType > \
-  struct ftype ## etype ## Test \
-    : public ::testing::Test \
-  { \
-    typedef typename ConstantFunctionType::EntityType       E; \
-    typedef typename ConstantFunctionType::DomainFieldType  D; \
-    static const size_t                                     d = ConstantFunctionType::dimDomain; \
-    typedef typename ConstantFunctionType::RangeFieldType R; \
-    static const size_t                                   r = ConstantFunctionType::dimRange; \
-    static const size_t                                   rC = ConstantFunctionType::dimRangeCols; \
-    typedef Dune::Stuff::FunctionsProvider< E, D, d, R, r, rC > FunctionsProvider; \
-    typedef typename FunctionsProvider::InterfaceType InterfaceType; \
- \
-    void check() const \
-    { \
-      for (const auto& type : FunctionsProvider::available()) { \
-        const Dune::Stuff::Common::Configuration config = FunctionsProvider::default_config(type); \
-        try { \
-          const std::unique_ptr< InterfaceType > function = FunctionsProvider::create(type, config); \
-        } catch (Dune::Stuff::Exceptions::spe10_data_file_missing&) {} \
-      } \
-    } \
-  };
-// TEST_STRUCT_GENERATOR
-
-
 #if HAVE_DUNE_GRID
+#include <dune/grid/yaspgrid.hh>
+#if HAVE_ALUGRID
+#include <dune/grid/alugrid.hh>
+#endif //HAVE_ALUGRID
 
-# include <dune/grid/sgrid.hh>
+                                                                       \
+/* we just take the constant function as a container for the types we need */
+/* since this one always exists for all combinations */
+struct FunctionsTest : public DS::FunctionTest< TESTFUNCTIONTYPE >
+{
+    typedef Dune::Stuff::FunctionsProvider<EntityType, DomainFieldType, dimDomain, RangeFieldType, dimRange, dimRangeCols> FunctionsProvider;
+    typedef typename FunctionsProvider::InterfaceType InterfaceType;
 
-typedef Dune::SGrid< 1, 1 >::Codim< 0 >::Entity DuneSGrid1dEntityType;
-typedef Dune::SGrid< 2, 2 >::Codim< 0 >::Entity DuneSGrid2dEntityType;
-typedef Dune::SGrid< 3, 3 >::Codim< 0 >::Entity DuneSGrid3dEntityType;
+    virtual void check() const
+    {
+        for (const auto& type : FunctionsProvider::available()) {
+            const Dune::Stuff::Common::Configuration config = FunctionsProvider::default_config(type);
+            try {
+                const std::unique_ptr<InterfaceType> function = FunctionsProvider::create(type, config);
+            } catch (Dune::Stuff::Exceptions::spe10_data_file_missing&) {
+            }
+        }
+    }
+};
 
-typedef testing::Types< Dune::Stuff::Functions::Constant< DuneSGrid1dEntityType, double, 1, double, 1, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid1dEntityType, double, 1, double, 1, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid1dEntityType, double, 1, double, 1, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid1dEntityType, double, 1, double, 2, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid1dEntityType, double, 1, double, 2, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid1dEntityType, double, 1, double, 2, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid1dEntityType, double, 1, double, 3, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid1dEntityType, double, 1, double, 3, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid1dEntityType, double, 1, double, 3, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid2dEntityType, double, 2, double, 1, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid2dEntityType, double, 2, double, 1, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid2dEntityType, double, 2, double, 1, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid2dEntityType, double, 2, double, 2, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid2dEntityType, double, 2, double, 2, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid2dEntityType, double, 2, double, 2, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid2dEntityType, double, 2, double, 3, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid2dEntityType, double, 2, double, 3, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid2dEntityType, double, 2, double, 3, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid3dEntityType, double, 3, double, 1, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid3dEntityType, double, 3, double, 1, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid3dEntityType, double, 3, double, 1, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid3dEntityType, double, 3, double, 2, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid3dEntityType, double, 3, double, 2, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid3dEntityType, double, 3, double, 2, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid3dEntityType, double, 3, double, 3, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid3dEntityType, double, 3, double, 3, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid3dEntityType, double, 3, double, 3, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneSGrid3dEntityType, double, 3, std::complex<double>, 3, 3 >
-                        > FunctionsSGridEntityTypes;
 
-TEST_STRUCT_GENERATOR(Functions, SGridEntity)
-TYPED_TEST_CASE(FunctionsSGridEntityTest, FunctionsSGridEntityTypes);
-TYPED_TEST(FunctionsSGridEntityTest, provides_required_methods) {
-  this->check();
-}
+TEST_F(FunctionsTest, provides_required_methods) { this->check(); }
 
-# include <dune/grid/yaspgrid.hh>
+#else // HAVE_DUNE_GRID
 
-typedef Dune::YaspGrid< 1 >::Codim< 0 >::Entity DuneYaspGrid1dEntityType;
-typedef Dune::YaspGrid< 2 >::Codim< 0 >::Entity DuneYaspGrid2dEntityType;
-typedef Dune::YaspGrid< 3 >::Codim< 0 >::Entity DuneYaspGrid3dEntityType;
+TEST(DISABLED_FunctionsTest, provides_required_methods) {}
 
-typedef testing::Types< Dune::Stuff::Functions::Constant< DuneYaspGrid1dEntityType, double, 1, double, 1, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid1dEntityType, double, 1, double, 1, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid1dEntityType, double, 1, double, 1, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid1dEntityType, double, 1, double, 2, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid1dEntityType, double, 1, double, 2, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid1dEntityType, double, 1, double, 2, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid1dEntityType, double, 1, double, 3, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid1dEntityType, double, 1, double, 3, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid1dEntityType, double, 1, double, 3, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid2dEntityType, double, 2, double, 1, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid2dEntityType, double, 2, double, 1, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid2dEntityType, double, 2, double, 1, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid2dEntityType, double, 2, double, 2, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid2dEntityType, double, 2, double, 2, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid2dEntityType, double, 2, double, 2, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid2dEntityType, double, 2, double, 3, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid2dEntityType, double, 2, double, 3, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid2dEntityType, double, 2, double, 3, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid3dEntityType, double, 3, double, 1, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid3dEntityType, double, 3, double, 1, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid3dEntityType, double, 3, double, 1, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid3dEntityType, double, 3, double, 2, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid3dEntityType, double, 3, double, 2, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid3dEntityType, double, 3, double, 2, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid3dEntityType, double, 3, double, 3, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid3dEntityType, double, 3, double, 3, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneYaspGrid3dEntityType, double, 3, double, 3, 3 >
-                        > FunctionsYaspGridEntityTypes;
-
-TEST_STRUCT_GENERATOR(Functions, YaspGridEntity)
-TYPED_TEST_CASE(FunctionsYaspGridEntityTest, FunctionsYaspGridEntityTypes);
-TYPED_TEST(FunctionsYaspGridEntityTest, provides_required_methods) {
-  this->check();
-}
-
-# if HAVE_DUNE_ALUGRID
-#   include <dune/alugrid/dgf.hh>
-
-typedef Dune::ALUGrid< 2, 2, Dune::simplex, Dune::nonconforming>::Codim< 0 >::Entity  DuneAluSimplexGrid2dEntityType;
-typedef Dune::ALUGrid< 3, 3, Dune::simplex, Dune::nonconforming>::Codim< 0 >::Entity  DuneAluSimplexGrid3dEntityType;
-typedef Dune::ALUGrid< 3, 3, Dune::cube, Dune::nonconforming>::Codim< 0 >::Entity     DuneAluCubeGrid3dEntityType;
-
-typedef testing::Types< Dune::Stuff::Functions::Constant< DuneAluSimplexGrid2dEntityType, double, 2, double, 1, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneAluSimplexGrid2dEntityType, double, 2, double, 1, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneAluSimplexGrid2dEntityType, double, 2, double, 1, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneAluSimplexGrid2dEntityType, double, 2, double, 2, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneAluSimplexGrid2dEntityType, double, 2, double, 2, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneAluSimplexGrid2dEntityType, double, 2, double, 2, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneAluSimplexGrid2dEntityType, double, 2, double, 3, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneAluSimplexGrid2dEntityType, double, 2, double, 3, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneAluSimplexGrid2dEntityType, double, 2, double, 3, 3 >
-
-                      , Dune::Stuff::Functions::Constant< DuneAluSimplexGrid3dEntityType, double, 3, double, 1, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneAluSimplexGrid3dEntityType, double, 3, double, 1, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneAluSimplexGrid3dEntityType, double, 3, double, 1, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneAluSimplexGrid3dEntityType, double, 3, double, 2, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneAluSimplexGrid3dEntityType, double, 3, double, 2, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneAluSimplexGrid3dEntityType, double, 3, double, 2, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneAluSimplexGrid3dEntityType, double, 3, double, 3, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneAluSimplexGrid3dEntityType, double, 3, double, 3, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneAluSimplexGrid3dEntityType, double, 3, double, 3, 3 >
-
-                      , Dune::Stuff::Functions::Constant< DuneAluCubeGrid3dEntityType, double, 3, double, 1, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneAluCubeGrid3dEntityType, double, 3, double, 1, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneAluCubeGrid3dEntityType, double, 3, double, 1, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneAluCubeGrid3dEntityType, double, 3, double, 2, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneAluCubeGrid3dEntityType, double, 3, double, 2, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneAluCubeGrid3dEntityType, double, 3, double, 2, 3 >
-                      , Dune::Stuff::Functions::Constant< DuneAluCubeGrid3dEntityType, double, 3, double, 3, 1 >
-                      , Dune::Stuff::Functions::Constant< DuneAluCubeGrid3dEntityType, double, 3, double, 3, 2 >
-                      , Dune::Stuff::Functions::Constant< DuneAluCubeGrid3dEntityType, double, 3, double, 3, 3 >
-                        > FunctionsAluGridEntityTypes;
-
-TEST_STRUCT_GENERATOR(Functions, AluGridEntity)
-TYPED_TEST_CASE(FunctionsAluGridEntityTest, FunctionsAluGridEntityTypes);
-TYPED_TEST(FunctionsAluGridEntityTest, provides_required_methods) {
-  this->check();
-}
-
-# endif // HAVE_DUNE_ALUGRID
 #endif // HAVE_DUNE_GRID
-

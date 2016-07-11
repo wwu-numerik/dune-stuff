@@ -1,7 +1,11 @@
 // This file is part of the dune-stuff project:
-//   https://github.com/wwu-numerik/dune-stuff/
-// Copyright holders: Rene Milk, Felix Schindler
+//   https://github.com/wwu-numerik/dune-stuff
+// The copyright lies with the authors of this file (see below).
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+// Authors:
+//   Felix Schindler (2013 - 2015)
+//   Rene Milk       (2014 - 2015)
+//   Tobias Leibner  (2014)
 
 // This one has to come first (includes the config.h)!
 #include "main.hxx"
@@ -16,44 +20,26 @@
 #include "la_container.hh"
 
 // toggle output
-//std::ostream& out = std::cout;
+// std::ostream& out = std::cout;
 std::ostream& out = DSC_LOG.devnull();
 
 using namespace Dune::Stuff;
 using namespace Dune::Stuff::LA;
 
-typedef testing::Types< std::tuple< CommonDenseMatrix< double >, CommonDenseVector< double >, CommonDenseVector< double > >
-                      , std::tuple< CommonDenseMatrix< std::complex<double> >, CommonDenseVector< std::complex<double> >, CommonDenseVector< std::complex<double> > >
-#if HAVE_EIGEN
-                      , std::tuple< EigenDenseMatrix< double >, EigenDenseVector< double >, EigenDenseVector< double > >
-                      , std::tuple< EigenDenseMatrix< std::complex<double> >, EigenDenseVector< std::complex<double> >, EigenDenseVector< std::complex<double> > >
-                      , std::tuple< EigenDenseMatrix< double >, EigenDenseVector< double >, EigenMappedDenseVector< double > >
-                      , std::tuple< EigenDenseMatrix< double >, EigenMappedDenseVector< double >, EigenDenseVector< double > >
-                      , std::tuple< EigenDenseMatrix< double >, EigenMappedDenseVector< double >, EigenMappedDenseVector< double > >
-                      , std::tuple< EigenRowMajorSparseMatrix< double >, EigenDenseVector< double >, EigenDenseVector< double > >
-                      , std::tuple< EigenRowMajorSparseMatrix< std::complex<double> >, EigenDenseVector< std::complex<double> >, EigenDenseVector< std::complex<double> > >
-#endif // HAVE_EIGEN
-#if HAVE_DUNE_ISTL
-                      , std::tuple< IstlRowMajorSparseMatrix< double >, IstlDenseVector< double >, IstlDenseVector< double > >
-#endif
-                      > MatrixVectorCombinations;
-
-template< class MatrixVectorCombination >
-struct SolverTest
-  : public ::testing::Test
+struct SolverTest : public ::testing::Test
 {
-  typedef typename std::tuple_element< 0, MatrixVectorCombination >::type MatrixType;
-  typedef typename std::tuple_element< 1, MatrixVectorCombination >::type RhsType;
-  typedef typename std::tuple_element< 2, MatrixVectorCombination >::type SolutionType;
+  typedef TESTMATRIXTYPE MatrixType;
+  typedef TESTRHSVECTORTYPE RhsType;
+  typedef TESTSOLUTIONVECTORTYPE SolutionType;
 
-  typedef Solver< MatrixType > SolverType;
+  typedef Solver<MatrixType> SolverType;
 
   static void produces_correct_results()
   {
-    const size_t dim = 10;
-    const MatrixType matrix = ContainerFactory< MatrixType >::create(dim);
-    const RhsType rhs = ContainerFactory< RhsType >::create(dim);
-    SolutionType solution = ContainerFactory< SolutionType >::create(dim);
+    const size_t dim        = 10;
+    const MatrixType matrix = ContainerFactory<MatrixType>::create(dim);
+    const RhsType rhs       = ContainerFactory<RhsType>::create(dim);
+    SolutionType solution = ContainerFactory<SolutionType>::create(dim);
     solution.scal(0);
 
     // dynamic test
@@ -63,9 +49,9 @@ struct SolverTest
     solution.scal(0);
 
     // static tests
-    typedef typename SolverType::MatrixType M;
-    std::vector< std::string > types = SolverType::types();
-    if (types.size() == 0) DUNE_THROW(Exceptions::results_are_not_as_expected, "Solver has no types!");
+    std::vector<std::string> types = SolverType::types();
+    if (types.size() == 0)
+      DUNE_THROW(Exceptions::results_are_not_as_expected, "Solver has no types!");
     for (auto type : types) {
       out << "solving with type '" << type << "' and options" << std::endl;
       Common::Configuration options = SolverType::options(type);
@@ -80,10 +66,6 @@ struct SolverTest
       EXPECT_TRUE(solution.almost_equal(rhs));
     }
   } // ... produces_correct_results(...)
-}; // struct SolverTest
+};  // struct SolverTest
 
-TYPED_TEST_CASE(SolverTest, MatrixVectorCombinations);
-TYPED_TEST(SolverTest, behaves_correctly) {
-  this->produces_correct_results();
-}
-
+TEST_F(SolverTest, behaves_correctly) { this->produces_correct_results(); }

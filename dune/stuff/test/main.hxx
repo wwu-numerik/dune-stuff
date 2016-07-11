@@ -1,7 +1,10 @@
 // This file is part of the dune-stuff project:
 //   https://github.com/wwu-numerik/dune-stuff
-// Copyright holders: Rene Milk, Felix Schindler
+// The copyright lies with the authors of this file (see below).
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+// Authors:
+//   Felix Schindler (2014 - 2015)
+//   Rene Milk       (2014 - 2015)
 
 #include "config.h"
 
@@ -24,44 +27,14 @@
 #include <dune/stuff/test/gtest/gtest.h>
 #include <dune/stuff/aliases.hh>
 #include <dune/stuff/common/configuration.hh>
+#include <dune/stuff/common/exceptions.hh>
 #include <dune/stuff/common/logging.hh>
 #include <dune/stuff/common/timedlogging.hh>
 #include <dune/stuff/common/convergence-study.hh>
 #include <dune/stuff/common/parallel/threadmanager.hh>
+#include <dune/stuff/common/vector.hh>
 
 #include "common.hh"
-
-
-class
-  DUNE_DEPRECATED_MSG("Use the expectation macros of the gtest test suite (20.08.2014)!")
-      errors_are_not_as_expected
-  : public Dune::Exception
-{};
-
-
-std::vector< double >
-  DUNE_DEPRECATED_MSG("Use the expectation macros of the gtest test suite (20.08.2014)!")
-                      truncate_vector(const std::vector< double >& in, const size_t size)
-{
-  assert(size <= in.size());
-  if (size == in.size())
-    return in;
-  else {
-    std::vector< double > ret(size);
-    for (size_t ii = 0; ii < size; ++ii)
-      ret[ii] = in[ii];
-    return ret;
-  }
-} // ... truncate_vector(...)
-
-
-unsigned int
-  DUNE_DEPRECATED_MSG()
-             dsc_grid_elements()
-{
-  return Dune::Stuff::Test::grid_elements();
-}
-
 
 int main(int argc, char** argv)
 {
@@ -70,7 +43,8 @@ int main(int argc, char** argv)
 #endif
 
     testing::InitGoogleTest(&argc, argv);
-    DSC_CONFIG.read_options(argc, argv);
+    if (argc > 1)
+      DSC_CONFIG.read_command_line(argc, argv);
 #if HAVE_DUNE_FEM
     Dune::Fem::MPIManager::initialize(argc, argv);
 #else
@@ -101,11 +75,7 @@ int main(int argc, char** argv)
                                                                                                          );
     const size_t threads = DSC_CONFIG.has_key("threading.max_count")      // <- doing this so complicated to
                          ? DSC_CONFIG.get< size_t >("threading.max_count") //    silence the WARNING: ...
-#if HAVE_TBB
-                         : std::thread::hardware_concurrency();
-#else
                          : 1u;
-#endif
     DS::threadManager().set_max_threads(threads);
 
     return RUN_ALL_TESTS();
