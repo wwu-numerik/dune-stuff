@@ -27,6 +27,7 @@ struct ExpressionFunctionTest : public DS::FunctionTest< TESTFUNCTIONTYPE >
 {
     virtual void check() const
     {
+        typedef TESTFUNCTIONTYPE FunctionType;
         Dune::Stuff::Common::Configuration config = FunctionType::default_config();
         const std::unique_ptr<const FunctionType> function(FunctionType::create(config));
         config["expression"] = "[2*x[0] 3*x[0] 4*x[0]; 1 sin(x[0]) 0; cos(x[0]) x[0] 0]";

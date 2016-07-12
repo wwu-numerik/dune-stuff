@@ -902,6 +902,8 @@ struct MatrixAbstraction<LA::CommonDenseMatrix<T>>
 template< class T >
 struct MatrixAbstraction< LA::CommonSparseMatrix< T > >
   : public LA::internal::MatrixAbstractionBase< LA::CommonSparseMatrix< T > >
+{
+};
 
 } // namespace Common
 } // namespace Stuff

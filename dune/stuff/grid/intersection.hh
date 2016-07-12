@@ -53,10 +53,9 @@ class Intersection
     typedef typename GridPartType::IntersectionType Type;
   };
 
-      std::is_base_of<GridView<typename GridPartOrViewType::Traits>, GridPartOrViewType>::value;
 public:
-  typedef typename Choose<GridPartOrViewType, this_is_a_grid_view>::Type Type;
   typedef typename Choose< GridPartOrViewType, is_grid_view< GridPartOrViewType >::value >::Type type;
+  typedef type Type;
 }; // class Intersection
 
 #endif // HAVE_DUNE_GRID

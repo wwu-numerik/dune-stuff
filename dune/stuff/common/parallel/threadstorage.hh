@@ -120,6 +120,7 @@ public:
     : values_(new ContainerType([=]() { return Common::make_unique<ValueType>(ctor_args...); }))
 #endif
   {
+  }
 
   TBBPerThreadValue(ThisType&& source) = default;
 

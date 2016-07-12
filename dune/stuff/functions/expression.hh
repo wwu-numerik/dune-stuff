@@ -239,7 +239,6 @@ public:
 #endif // NDEBUG
   }    // ... evaluate(...)
 
-  using BaseType::jacobian;
 
   virtual void jacobian(const DomainType& xx, JacobianRangeType& ret) const override
   {
@@ -407,7 +406,9 @@ public:
                       RangeFieldImp, dimRange, dimRangeCols >               ExpressionFunctionType;
   typedef typename ExpressionFunctionType::DomainType                       DomainType;
   typedef typename ExpressionFunctionType::ExpressionStringVectorType       ExpressionStringVectorType;
-  typedef typename ExpressionFunctionType::GradientStringVectorType         GradientStringVectorType;
+  typedef typename ExpressionFunctionType::GradientStringVectorType       GradientStringVectorType;
+  typedef typename ExpressionFunctionType::MathExpressionFunctionType         MathExpressionFunctionType;
+  typedef typename ExpressionFunctionType::MathExpressionGradientType         MathExpressionGradientType;
 
   static std::string static_id()
   {
@@ -589,7 +590,8 @@ private:
   } // ... replaceAll(...)
 
   // the following and the create() methods are simply copied from Expression, TODO: remove code duplication
-  template< size_t rC >
+  template< size_t rC >  
+static void get_expression_helper(const Common::Configuration& cfg, ExpressionStringVectorType& expression_as_vectors,
                                     internal::ChooseVariant<rC>)
   {
     typedef typename Dune::FieldMatrix<std::string, dimRange, dimRangeCols> ExpressionMatrixType;
@@ -638,12 +640,14 @@ private:
     }
   } // ... get_gradient(...)
 
-  std::shared_ptr<const MathExpressionFunctionType> function_;
+  const std::string variable_;
   size_t order_;
   std::string name_;
-  mutable typename DS::PerThreadValue<FieldVector<RangeFieldType, dimRange * dimRangeCols>> tmp_vector_;
-  mutable typename DS::PerThreadValue<FieldVector<RangeFieldType, dimRangeCols>> tmp_row_;
+  ExpressionStringVectorType expressions_;
+  GradientStringVectorType gradient_expressions_;
   std::vector<std::vector<std::shared_ptr<const MathExpressionGradientType>>> gradients_;
+}; // class Expression
+
 
 } // namespace Functions
 } // namespace Stuff

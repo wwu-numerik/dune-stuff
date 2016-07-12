@@ -34,7 +34,6 @@
 # if HAVE_DUNE_ALUGRID
 #   include <dune/alugrid/grid.hh>
 # endif
-# endif
 # if HAVE_DUNE_SPGRID
 #   include <dune/grid/spgrid.hh>
 # endif

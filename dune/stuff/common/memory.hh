@@ -146,8 +146,6 @@ class ConstStorageProvider
 {
 public:
   explicit ConstStorageProvider(const T& tt) : storage_(std::make_shared<internal::ConstAccessByReference<T>>(tt)) {}
-    : storage_(std::make_shared< internal::ConstAccessByReference< T > >(tt))
-  {}
 
 
   explicit ConstStorageProvider(const T* tt) : storage_(std::make_shared<internal::ConstAccessByPointer<T>>(tt)) {}
@@ -204,11 +202,11 @@ public:
   explicit StorageProvider(std::unique_ptr<T>&& tt) : storage_(std::make_shared<internal::AccessByPointer<T>>(tt)) {}
 
   explicit StorageProvider(std::shared_ptr<T> tt) : storage_(std::make_shared<internal::AccessByPointer<T>>(tt)) {}
-  {}
 
   template< class ...Args >
   explicit StorageProvider(Args&& ...args) // using new instead of make_shared for better error messages
     : storage_(std::make_shared< internal::AccessByPointer< T > >(new T(std::forward< Args >(args)...)))
+  {}
 
   explicit StorageProvider(const StorageProvider<T>& other) = default;
   explicit StorageProvider(StorageProvider<T>&& source) = default;

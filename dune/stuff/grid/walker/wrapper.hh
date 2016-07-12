@@ -104,10 +104,9 @@ public:
 
   Codim1FunctorWrapper(Codim1FunctorType& wrapped_functor, const ApplyOn::WhichIntersection<GridViewType>* where)
     : wrapped_functor_(wrapped_functor), where_(where)
-  virtual ~Codim1FunctorWrapper() = default;
+  {}
 
-  {
-  }
+  virtual ~Codim1FunctorWrapper() = default;
 
   virtual void prepare() override final { wrapped_functor_.prepare(); }
 

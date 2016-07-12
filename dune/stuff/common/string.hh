@@ -109,13 +109,13 @@ static inline T fromString(std::string ss, const size_t size = 0, const size_t c
  * \sa    internal::to_string for implementations
  */
 template <class T>
-static inline std::string to_string(const T& ss, const size_t precision = default_toString_precision)
+static inline std::string to_string(const T& ss, const size_t precision = default_to_string_precision)
 {
   return internal::to_string(ss, precision);
 }
 
 template <class T>
-static inline std::string toString(const T& ss, const size_t precision = default_toString_precision)
+static inline std::string toString(const T& ss, const size_t precision = default_to_string_precision)
 {
   return internal::to_string(ss, precision);
 }

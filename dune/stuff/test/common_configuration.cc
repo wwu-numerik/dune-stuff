@@ -169,7 +169,6 @@ static void val_compare_eq(const std::string& aa, const std::string& bb) { EXPEC
 template <class T>
 struct ConfigTest : public testing::Test
 {
-template < class T >
   static const int count = 2;
   DefaultRNG<T> rng;
   RandomStrings key_gen;

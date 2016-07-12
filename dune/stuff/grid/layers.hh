@@ -86,16 +86,6 @@ enum class ChooseLayer
 
 namespace internal {
 
-
-template< class G >
-struct is_grid_view_helper
-{
-  DSC_has_typedef_initialize_once(Traits)
-
-  static const bool is_candidate = DSC_has_typedef(Traits)< G >::value;
-}; // class is_grid_view_helper
-
-
 # if HAVE_DUNE_FEM
 
 template< class G >
@@ -110,18 +100,6 @@ struct is_grid_part_helper
 
 
 } // namespace internal
-
-
-template< class G, bool candidate = internal::is_grid_view_helper< G >::is_candidate >
-struct is_grid_view
-  : public std::is_base_of< Dune::GridView< typename G::Traits >, G >
-{};
-
-template< class G >
-struct is_grid_view< G, false >
-  : public std::false_type
-{};
-
 
 #if HAVE_DUNE_FEM
 

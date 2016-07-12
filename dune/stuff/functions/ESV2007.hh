@@ -111,7 +111,6 @@ public:
   virtual void jacobian(const DomainType& xx, JacobianRangeType& ret) const override final
   {
     const DomainFieldType pre   = -0.25 * M_PIl * M_PIl * M_PIl;
-    const DomainFieldType pre = -0.25 * M_PI * M_PI * M_PI;
     const DomainFieldType x_arg = M_PI_2 * xx[0];
     const DomainFieldType y_arg = M_PI_2 * xx[1];
     ret[0][0]                   = pre * sin(x_arg) * cos(y_arg);

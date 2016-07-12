@@ -149,14 +149,13 @@
 # define HAVE_GRAPE 0
 #endif
 
-#endif
-
 #ifndef DUNE_GRID_EXPERIMENTAL_GRID_EXTENSIONS
 # define DUNE_GRID_EXPERIMENTAL_GRID_EXTENSIONS 0
 #endif
 
 #ifndef HAVE_MAP_EMPLACE
-#define HAVE_MAP_EMPLACE 0
+# define HAVE_MAP_EMPLACE 0
+#endif
 /*** End: Silence implicitly False evaluation of undefined macro warnings ****/
 
 /* end dune-stuff */

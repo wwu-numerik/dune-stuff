@@ -88,12 +88,12 @@ class Checkerboard
 public:
   typedef typename BaseType::EntityType EntityType;
   typedef typename BaseType::LocalfunctionType LocalfunctionType;
-  using typename BaseType::DomainFieldType;
   typedef typename BaseType::DomainFieldType DomainFieldType;
-  static const size_t dimDomain = BaseType::dimDomain;
+  typedef typename BaseType::RangeFieldType RangeFieldType;
+  typedef typename BaseType::RangeType RangeType;
+  using BaseType::dimDomain;
   using BaseType::dimRange;
   using BaseType::dimRangeCols;
-  typedef typename BaseType::RangeType RangeType;
 
   static const bool available = true;
 
@@ -515,8 +515,6 @@ public:
   ThisType& operator=(const ThisType& other) = delete;
 
   ThisType& operator=(ThisType&& source) = delete;
-
-    return BaseType::static_id() + ".functioncheckerboard";
 
   virtual std::string name() const override { return name_; }
 

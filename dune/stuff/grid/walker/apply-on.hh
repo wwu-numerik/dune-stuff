@@ -234,7 +234,7 @@ public:
 }; // class PeriodicIntersections
 
 template <class GridViewImp>
-class FilteredIntersections : public WhichIntersection<GridViewImp>
+class PeriodicIntersectionsPrimally : public WhichIntersection<GridViewImp>
 {
   typedef WhichIntersection<GridViewImp> BaseType;
 
@@ -256,6 +256,7 @@ public:
 
 
 template< class GridViewImp >
+class FilteredIntersections : public WhichIntersection<GridViewImp>
 {
   typedef WhichIntersection<GridViewImp> BaseType;
 

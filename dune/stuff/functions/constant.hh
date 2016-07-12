@@ -22,10 +22,10 @@ namespace Stuff {
 namespace Functions {
 namespace internal {
 
-template <class K, int dim>
+template< class K, int rows, int cols >
 struct EyeMatrix
 {
-  typedef FieldMatrix<K, dim, dim> type;
+  typedef FieldMatrix<K, rows, cols> type;
 
   static type value()
   {
@@ -54,6 +54,10 @@ struct EyeMatrix
     return str;
   }
 }; // struct EyeMatrix
+template< class K, int dim >
+struct UnitMatrix
+    : EyeMatrix< K, dim, dim >
+{};
 template <class K>
 struct UnitMatrix<K, 1>
 {
@@ -67,10 +71,6 @@ struct UnitMatrix<K, 1>
   }
 }; // struct EyeMatrix< K, 1, 1 >
 
-template< class K, int dim >
-struct UnitMatrix
-    : EyeMatrix< K, dim, dim >
-{};
 template <class K, int dim>
 typename UnitMatrix<K, dim>::type unit_matrix()
 {
@@ -81,12 +81,37 @@ template <class R, size_t r, size_t rC>
 struct Get
 {
   static std::string value_str()
+  {
+    std::string str = "[";
+    for (size_t rr = 0; rr < r; ++rr) {
+      if (rr > 0)
+        str += "; ";
+      for (size_t cc = 0; cc < rC; ++cc) {
+        if (cc > 0)
+          str += " ";
+        if (cc == rr)
+          str += "1";
+        else
+          str += "0";
+      }
+    }
+    str += "]";
+    return str;
   }
 };
 template <class R, size_t rC>
 struct Get<R, 1, rC>
 {
   static std::string value_str()
+  {
+    std::string str = "[";
+    for (size_t cc = 0; cc < rC; ++cc) {
+      if (cc > 0)
+        str += " ";
+      str += "1";
+    }
+    str += "]";
+    return str;
   }
 };
 template <class R, size_t r>
@@ -127,7 +152,7 @@ public:
   static Common::Configuration default_config(const std::string sub_name = "")
   {
     Common::Configuration config;
-    config["value"] = internal::Get<RangeFieldImp, rangeDim, rangeDimCols>::value_str();
+    config["value"] = internal::EyeMatrix< RangeFieldImp, rangeDim, rangeDimCols >::value_str();
     config["name"] = static_id();
     if (sub_name.empty())
       return config;

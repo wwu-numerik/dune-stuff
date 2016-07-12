@@ -83,7 +83,7 @@ public:
   ValidateLess(const T& baseval) : baseval_(baseval) {}
   inline bool operator()(const T& val) const { return baseval_ < val; }
 
-  std::string msg() const
+  std::string msg() const {
         return (boost::format("given value was invalid: not less than %s") % to_string(baseval_)).str();
   }
 
@@ -99,7 +99,7 @@ public:
   ValidateGreater(const T& baseval) : baseval_(baseval) {}
   inline bool operator()(const T& val) const { return baseval_ > val; }
 
-  std::string msg() const
+  std::string msg() const {
         return (boost::format("given value was invalid: not greater than %s") % to_string(baseval_)).str();
   }
 

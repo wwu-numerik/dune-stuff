@@ -21,6 +21,7 @@
 
 #include <dune/stuff/common/exceptions.hh>
 #include <dune/stuff/common/type_utils.hh>
+#include <dune/stuff/common/float_cmp.hh>
 namespace Dune {
 namespace Stuff {
 namespace Common {
@@ -156,21 +157,23 @@ struct VectorAbstraction<std::complex<T>>
   static inline VectorType create(const size_t /*sz*/, const ScalarType& val) { return VectorType(val); }
   static inline VectorType create(const size_t /*sz*/, const RealType& val) { return VectorType(val, val); }
 };
+
 template <class VectorType>
 typename std::enable_if<is_vector<VectorType>::value, VectorType>::type
     create(const size_t sz,
            const typename VectorAbstraction<VectorType>::S& val = typename VectorAbstraction<VectorType>::S(0))
-  return VectorAbstraction<VectorType>::create(sz, val);
+{  return VectorAbstraction<VectorType>::create(sz, val); }
+
 template <class T, class SR>
 typename std::enable_if<is_complex<T>::value, T>::type create(const size_t /*sz*/,
                                                               const SR& val = typename VectorAbstraction<T>::R(0))
-  return VectorAbstraction<T>::create(0, val);
+{ return VectorAbstraction<T>::create(0, val); }
 
 template <class VectorType>
 typename std::enable_if<std::is_arithmetic<VectorType>::value, VectorType>::type
     create(const size_t /*sz*/,
            const typename VectorAbstraction<VectorType>::S& val = typename VectorAbstraction<VectorType>::S(0))
-  return val;
+{ return val; }
 
 } // namespace Common
 } // namespace Stuff
