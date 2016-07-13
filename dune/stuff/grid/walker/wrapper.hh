@@ -22,9 +22,9 @@ namespace Grid {
 namespace internal {
 
 template <class GridViewType>
-class Codim0Object : public Functor::Codim0<GridViewType>
+class Codim0Object : public Codim0Functor<GridViewType>
 {
-  typedef Functor::Codim0<GridViewType> BaseType;
+  typedef Codim0Functor<GridViewType> BaseType;
 
 public:
   typedef typename BaseType::EntityType EntityType;
@@ -81,9 +81,9 @@ private:
 }; // class Codim0FunctorWrapper
 
 template <class GridViewType>
-class Codim1Object : public Functor::Codim1<GridViewType>
+class Codim1Object : public Codim1Functor<GridViewType>
 {
-  typedef Functor::Codim1<GridViewType> BaseType;
+  typedef Codim1Functor<GridViewType> BaseType;
 
 public:
   typedef typename BaseType::IntersectionType IntersectionType;

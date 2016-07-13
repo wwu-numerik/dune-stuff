@@ -1,5 +1,5 @@
-// This file is part of the dune-stuff project:
 //   https://github.com/wwu-numerik/dune-stuff
+// This file is part of the dune-stuff project:
 // The copyright lies with the authors of this file (see below).
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 // Authors:
@@ -73,31 +73,6 @@ public:
   virtual void finalize() {}
 }; // class Codim1Functor
 
-
-namespace Functor {
-
-
-template< class GridViewImp >
-class
-  DUNE_DEPRECATED_MSG("Use Codim0Functor instead (03.07.2015)!")
-      Codim0
-  : public Codim0Functor< GridViewImp >
-{
-public:
-  virtual ~Codim0() = default;
-};
-
-
-template< class GridViewImp >
-class
-  DUNE_DEPRECATED_MSG("Use Codim1Functor instead (25.09.2015)!")
-      Codim1
-  : public Codim1Functor< GridViewImp >
-{
-public:
-  virtual ~Codim1() = default;
-};
-
 template <class GridViewImp>
 class Codim0And1
 {
@@ -118,10 +93,13 @@ public:
   virtual void finalize() {}
 }; // class Codim0And1
 
+template <class T>
+using Codim0And1Functor = Codim0And1<T>;
+
 template <class GridViewImp>
-class DirichletDetector : public Codim1<GridViewImp>
+class DirichletDetector : public Codim1Functor<GridViewImp>
 {
-  typedef Codim1<GridViewImp> BaseType;
+  typedef Codim1Functor<GridViewImp> BaseType;
 
 public:
   typedef typename BaseType::GridViewType GridViewType;
@@ -149,7 +127,6 @@ private:
   size_t found_;
 }; // class DirichletDetector
 
-} // namespace Functor
 } // namespace Grid
 } // namespace Stuff
 } // namespace Dune

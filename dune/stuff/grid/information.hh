@@ -110,7 +110,7 @@ struct Dimensions
   MinMaxAvgType entity_width;
 
   //! gridwalk functor that does the actual work for \ref GridDimensions
-  class GridDimensionsFunctor : public Functor::Codim0<GridViewType>
+  class GridDimensionsFunctor : public Codim0Functor<GridViewType>
   {
     CoordLimitsType& coord_limits_;
     MinMaxAvgType& entity_volume_;
