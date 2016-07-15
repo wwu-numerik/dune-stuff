@@ -29,17 +29,26 @@ namespace Dune {
 namespace Stuff {
 namespace Functions {
 
+template< class EntityImp,
+          class DomainFieldImp, size_t domainDim,
+          class RangeFieldImp, size_t rangeDim, size_t rangeDimCols = 1,
+          class TimeFieldImp = double >
+class TimeDependentExpression;
+
 template <class EntityImp, class DomainFieldImp, size_t domainDim, class RangeFieldImp, size_t rangeDim,
           size_t rangeDimCols = 1>
 class Expression
     : public GlobalFunctionInterface<EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols>
 {
-  typedef LocalizableFunctionInterface<EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols>
+  typedef GlobalFunctionInterface<EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols>
       BaseType;
   typedef Expression<EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols> ThisType;
   typedef MathExpressionBase<DomainFieldImp, domainDim, RangeFieldImp, rangeDim * rangeDimCols>
       MathExpressionFunctionType;
   typedef MathExpressionBase<DomainFieldImp, domainDim, RangeFieldImp, domainDim> MathExpressionGradientType;
+
+  template< class FE, class FD, size_t dD, class RF, size_t rD, size_t rDC, class TF >
+  friend class TimeDependentExpression;
 
 public:
   using typename BaseType::EntityType;
@@ -195,6 +204,8 @@ public:
 
   virtual size_t order() const override { return order_; }
 
+  using BaseType::evaluate;
+
   virtual void evaluate(const DomainType& xx, RangeType& ret) const override
   {
     evaluate_helper(xx, ret, internal::ChooseVariant<dimRangeCols>());
@@ -239,6 +250,7 @@ public:
 #endif // NDEBUG
   }    // ... evaluate(...)
 
+  using BaseType::jacobian;
 
   virtual void jacobian(const DomainType& xx, JacobianRangeType& ret) const override
   {
@@ -378,8 +390,8 @@ private:
 
 template< class EntityImp,
           class DomainFieldImp, size_t domainDim,
-          class RangeFieldImp, size_t rangeDim, size_t rangeDimCols = 1,
-          class TimeFieldImp = double >
+          class RangeFieldImp, size_t rangeDim, size_t rangeDimCols,
+          class TimeFieldImp>
 class TimeDependentExpression
     : TimeDependentFunctionInterface< Expression< EntityImp,
                                                   DomainFieldImp, domainDim,
