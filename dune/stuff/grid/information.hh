@@ -161,6 +161,20 @@ Dimensions<GridViewType> dimensions(const typename GridViewType::Grid::template 
 
 #endif // HAVE_DUNE_GRID
 
+template< class T >
+struct is_alugrid
+  : public std::false_type
+{};
+
+#if HAVE_DUNE_ALUGRID
+
+template<int dim, int dimworld, ALUGridElementType elType, ALUGridRefinementType refineType, class Comm >
+struct is_alugrid<ALUGrid<dim,dimworld,elType,refineType,Comm>>
+  : public std::true_type
+{};
+
+#endif // HAVE_DUNE_ALUGRID
+
 } // namespace Grid
 } // end of namespace Stuff
 } // namespace Dune
