@@ -166,10 +166,20 @@ struct is_alugrid
   : public std::false_type
 {};
 
+template< class T >
+struct is_conforming_alugrid
+  : public std::false_type
+{};
+
 #if HAVE_DUNE_ALUGRID
 
 template<int dim, int dimworld, ALUGridElementType elType, ALUGridRefinementType refineType, class Comm >
 struct is_alugrid<ALUGrid<dim,dimworld,elType,refineType,Comm>>
+  : public std::true_type
+{};
+
+template<int dim, int dimworld, ALUGridElementType elType, class Comm >
+struct is_conforming_alugrid<ALUGrid<dim,dimworld,elType,Dune::conforming,Comm>>
   : public std::true_type
 {};
 
