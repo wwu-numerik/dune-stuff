@@ -28,9 +28,16 @@
 #include <dune/stuff/common/timedlogging.hh>
 #include <dune/stuff/common/convergence-study.hh>
 #include <dune/stuff/common/parallel/threadmanager.hh>
+// is_alugrid<>
+#include <dune/stuff/grid/information.hh>
 
 #include "common.hh"
 
+static const double LocalizableProjectionOperator_default_tolerance = 1e-15;
+static const double LocalizableProjectionOperator_alugrid_tolerance = 3.8e-11;
+static const double L2ProjectionLocalizableOperator_alugrid_tolerance = 3.7965e-11;
+//static const double LocalizableProjectionOperator_alugrid_tolerance = LocalizableProjectionOperator_default_tolerance;
+//static const double L2ProjectionLocalizableOperator_alugrid_tolerance = LocalizableProjectionOperator_default_tolerance;
 
 class
   DUNE_DEPRECATED_MSG("Use the expectation macros of the gtest test suite (20.08.2014)!")
