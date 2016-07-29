@@ -106,6 +106,7 @@ MACRO( SET_CONFIGHEADER_VARS )
 ENDMACRO( SET_CONFIGHEADER_VARS )
 
 set( DUNE_TEST_TIMEOUT 180 CACHE STRING "per-test timeout in seconds")
+set( DUNE_TEST_PROCS 1   CACHE STRING "run N tests in parallel")
 
 include(CTest)
 macro(BEGIN_TESTCASES)
@@ -119,17 +120,16 @@ macro(BEGIN_TESTCASES)
     add_executable( test_${testname} ${source} ${COMMON_HEADER} )
     target_link_libraries( test_${testname} ${ARGN} ${COMMON_LIBS} ${GRID_LIBS} gtest_dune_stuff )
     add_test( NAME test_${testname} COMMAND ${CMAKE_CURRENT_BINARY_DIR}/test_${testname}
-                   --gtest_output=xml:${CMAKE_CURRENT_BINARY_DIR}/test_${testname}.xml )
-    # currently property seems to have no effect
-    set_tests_properties(test_${testname} PROPERTIES TIMEOUT ${DUNE_TEST_TIMEOUT})
+                   --gtest_output=xml:${CMAKE_CURRENT_BINARY_DIR}/test_${testname}.xml 
+                   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 		list(APPEND testnames test_${testname} )
 	endforeach( source )
 endmacro(BEGIN_TESTCASES)
 
 macro(END_TESTCASES)
     add_directory_test_target(_test_target)
-    #add_dependencies(${_test_target} ${testnames})
     foreach( test ${testnames} )
+      message(STATUS "TESTNAME ${test}")
       add_dune_mpi_flags(${test})
       if(dune-grid_FOUND)
         add_dune_alugrid_flags(${test})
@@ -138,9 +138,12 @@ macro(END_TESTCASES)
       if(COMMAND add_dune_tbb_flags AND TBB_FOUND)
         add_dune_tbb_flags(${test})
       endif()
+      set_tests_properties(${test} PROPERTIES TIMEOUT ${DUNE_TEST_TIMEOUT})
      endforeach( test ${testnames} )
 	add_custom_target(test_binaries DEPENDS ${testnames})
-	add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} --timeout ${DUNE_TEST_TIMEOUT}
+        add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} --timeout ${DUNE_TEST_TIMEOUT} -j ${DUNE_TEST_PROCS}
+                  DEPENDS test_binaries)
+                add_custom_target(recheck COMMAND ${CMAKE_CTEST_COMMAND} --timeout ${DUNE_TEST_TIMEOUT} --rerun-failed -j ${DUNE_TEST_PROCS}
                   DEPENDS test_binaries)
 endmacro(END_TESTCASES)
 
