@@ -18,6 +18,9 @@
 #if HAVE_DUNE_SPGRID
 # include <dune/grid/spgrid.hh>
 #endif
+#if HAVE_DUNE_ALUGRID
+# include <dune/alugrid/common/structuredgridfactory.hh>
+#endif
 
 #include <dune/stuff/aliases.hh>
 #include <dune/stuff/common/ranges.hh>
