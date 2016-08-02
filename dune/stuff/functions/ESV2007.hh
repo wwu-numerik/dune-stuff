@@ -79,7 +79,7 @@ public:
           cfg.get("name",              default_cfg.get< std::string >("name")));
   } // ... create(...)
 
-  Testcase1Force(const size_t ord = default_config().get< size_t >("integration_order"),
+  Testcase1Force(const size_t ord = default_config().template get< size_t >("integration_order"),
                  const std::string nm = static_id())
     : order_(ord)
     , name_(nm)
@@ -186,7 +186,7 @@ public:
           cfg.get("name",              default_cfg.get< std::string >("name")));
   } // ... create(...)
 
-  Testcase1ExactSolution(const size_t ord = default_config().get< size_t >("integration_order"),
+  Testcase1ExactSolution(const size_t ord = default_config().template get< size_t >("integration_order"),
                          const std::string nm = static_id())
     : order_(ord)
     , name_(nm)
