@@ -139,7 +139,7 @@ public:
    * std::vector< std::vector< std::string > to ExpressionStringVectorType and GradientStringVectorType, respectively.
    */
   Expression(const std::string variable, const std::vector<std::string> expressions,
-             const size_t ord = default_config().get<size_t>("order"), const std::string nm = static_id(),
+             const size_t ord = default_config().template get<size_t>("order"), const std::string nm = static_id(),
              const std::vector<std::vector<std::string>> gradient_expressions = std::vector<std::vector<std::string>>())
     : function_(new MathExpressionFunctionType(variable, expressions)), order_(ord), name_(nm)
   {
@@ -494,7 +494,7 @@ public:
    */
   TimeDependentExpression(const std::string variable,
                           const std::vector< std::string > expressions,
-                          const size_t ord = default_config().get< size_t >("order"),
+                          const size_t ord = default_config().template get< size_t >("order"),
                           const std::string nm = static_id(),
                           const std::vector< std::vector< std::string > > gradient_expressions
                                      = std::vector< std::vector< std::string > >())
