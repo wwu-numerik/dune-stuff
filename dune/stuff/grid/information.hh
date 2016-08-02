@@ -183,7 +183,7 @@ struct is_conforming_alugrid<ALUGrid<dim,dimworld,elType,Dune::conforming,Comm>>
   : public std::true_type
 {};
 
-#endif // HAVE_DUNE_ALUGRID
+#endif // HAVE_ALUGRID || HAVE_DUNE_ALUGRID
 
 } // namespace Grid
 } // end of namespace Stuff
