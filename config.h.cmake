@@ -114,6 +114,10 @@
 # define HAVE_DUNE_ALUGRID 0
 #endif
 
+#ifndef HAVE_ALUGRID
+# define HAVE_ALUGRID 0
+#endif
+
 #ifndef DUNE_FEM_COMPATIBILITY
 # define DUNE_FEM_COMPATIBILITY 0
 #endif
@@ -131,6 +135,12 @@
 #endif
 
 /*** End: Silence implicitly False evaluation of undefined macro warnings ****/
+
+#if HAVE_DUNE_ALUGRID || defined(HAVE_ALUGRID)
+# define DSC_HAVE_ALUGRID 1
+#else
+# define DSC_HAVE_ALUGRID 0
+#endif
 
 /* end dune-stuff */
 // NEVER delete/alter above comment, dune's cmake crap relies on it

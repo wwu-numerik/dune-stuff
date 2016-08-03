@@ -20,6 +20,11 @@
 # if HAVE_DUNE_ALUGRID
 #   include <dune/alugrid/dgf.hh>
 # endif
+#if HAVE_DUNE_ALUGRID
+#  include<dune/alugrid/grid.hh>
+#  include<dune/grid/io/file/dgfparser/dgfalu.hh>
+#  include<dune/grid/io/file/dgfparser/dgfparser.hh>
+#endif
 # if HAVE_DUNE_SPGRID
 #   include <dune/grid/spgrid.hh>
 # endif
@@ -96,7 +101,7 @@ struct ElementVariant< Dune::SPGrid< ct, dim, strategy, Comm > >
 
 #endif // HAVE_DUNE_GRID
 
-#if HAVE_DUNE_ALUGRID
+#if DSC_HAVE_ALUGRID
 
 template< int dimGrid, int dimWorld, class MpiCommImp >
 struct ElementVariant< Dune::ALUGrid< dimGrid, dimWorld, Dune::cube, Dune::conforming, MpiCommImp > >

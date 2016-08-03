@@ -21,6 +21,10 @@
 #if HAVE_DUNE_ALUGRID
 # include <dune/alugrid/common/structuredgridfactory.hh>
 #endif
+#if HAVE_ALUGRID
+# include <dune/grid/alugrid/3d/alu3dgridfactory.hh>
+# include <dune/grid/alugrid/2d/alu2dgridfactory.hh>
+#endif
 
 #include <dune/stuff/aliases.hh>
 #include <dune/stuff/common/ranges.hh>
