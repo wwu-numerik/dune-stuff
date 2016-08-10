@@ -24,8 +24,8 @@ struct TmpTest : public testing::Test {
   typedef TmpMatricesStorage<T> Matrix;
 
   void check_sizes() const {
-    const auto dims{0u, 3u, 6u};
-    const auto sizes{0u, 3u, 6u};
+    const array<unsigned, 3> dims{{0u, 3u, 6u}};
+    const array<unsigned, 3> sizes{{0u, 3u, 6u}};
     for(auto size : sizes) {
       for(auto row : dims) {
         Vector vec({size,size}, row);
