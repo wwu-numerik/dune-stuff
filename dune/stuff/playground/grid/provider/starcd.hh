@@ -46,7 +46,7 @@ namespace Stuff {
  *          Implemented for dimensions 1, 2, and 3.
  *
  */
-template< class GridImp = Dune::SGrid< 2, 2 > >
+template< class GridImp = Dune::YaspGrid< 2, Dune::EquidistantOffsetCoordinates<double, 2 > >
 class GridProviderStarCD
   : public Grid::ProviderInterface< GridImp >
 {

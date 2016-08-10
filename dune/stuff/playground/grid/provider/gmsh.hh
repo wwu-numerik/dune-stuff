@@ -38,7 +38,7 @@ namespace Stuff {
 /**
  * \brief   Gmsh grid provider
  */
-template< class GridImp = Dune::SGrid< 2, 2 > >
+template< class GridImp = Dune::YaspGrid< 2, Dune::EquidistantOffsetCoordinates<double, 2 > >
 class GridProviderGmsh
   : public GridProviderInterface< GridImp >
 {
@@ -65,7 +65,7 @@ public:
   GridProviderGmsh(const std::string filename)
   {
     static_assert(!(Dune::is_same< GridType, Dune::YaspGrid< dim > >::value), "GmshReader does not work with YaspGrid!");
-    static_assert(!(Dune::is_same< GridType, Dune::SGrid< 2, 2 > >::value), "GmshReader does not work with SGrid!");
+    static_assert(!(Dune::is_same< GridType, Dune::YaspGrid< 2, Dune::EquidistantOffsetCoordinates<double, 2 > >::value), "GmshReader does not work with SGrid!");
     grid_ = std::shared_ptr< GridType >(GmshReader< GridType >::read(filename));
   }
 
