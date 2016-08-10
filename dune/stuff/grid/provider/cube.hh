@@ -6,29 +6,28 @@
 #ifndef DUNE_STUFF_GRIDS_PROVIDER_CUBE_HH
 #define DUNE_STUFF_GRIDS_PROVIDER_CUBE_HH
 
+#include <array>
 #include <memory>
 #include <sstream>
 #include <type_traits>
 #include <vector>
-#include <array>
 
 #include <boost/numeric/conversion/cast.hpp>
 
 #if HAVE_DUNE_GRID
-# include <dune/grid/sgrid.hh>
-# include <dune/grid/yaspgrid.hh>
-# if HAVE_DUNE_ALUGRID
-#   include <dune/alugrid/dgf.hh>
-# endif
+#include <dune/grid/yaspgrid.hh>
 #if HAVE_DUNE_ALUGRID
-#  include<dune/alugrid/grid.hh>
-#  include<dune/grid/io/file/dgfparser/dgfalu.hh>
-#  include<dune/grid/io/file/dgfparser/dgfparser.hh>
+#include <dune/alugrid/dgf.hh>
 #endif
-# if HAVE_DUNE_SPGRID
-#   include <dune/grid/spgrid.hh>
-# endif
-# include <dune/stuff/grid/structuredgridfactory.hh>
+#if HAVE_DUNE_ALUGRID
+#include <dune/alugrid/grid.hh>
+#include <dune/grid/io/file/dgfparser/dgfalu.hh>
+#include <dune/grid/io/file/dgfparser/dgfparser.hh>
+#endif
+#if HAVE_DUNE_SPGRID
+#include <dune/grid/spgrid.hh>
+#endif
+#include <dune/stuff/grid/structuredgridfactory.hh>
 #endif
 
 #include <dune/stuff/common/fvector.hh>
@@ -66,35 +65,28 @@ static Common::Configuration Cube_default(const std::string sub_name = "")
 } // namespace Configs
 namespace internal {
 
-
-template< typename GridType >
+template <typename GridType>
 struct ElementVariant;
 
-
-template< typename GridType >
-struct ElementVariant
-{
+template <typename GridType>
+struct ElementVariant {
   static const int id = 2;
 };
 
 #if HAVE_DUNE_GRID
-template< int dim >
-struct ElementVariant< Dune::YaspGrid< dim > >
-{
+template <int dim>
+struct ElementVariant<Dune::YaspGrid<dim, Dune::EquidistantOffsetCoordinates<double, dim>>> {
   static const int id = 1;
 };
 
-
-template< int dimGrid, int dimWorld >
-struct ElementVariant< Dune::SGrid< dimGrid, dimWorld > >
-{
+template <int dim>
+struct ElementVariant<Dune::YaspGrid<dim, Dune::EquidistantCoordinates<double, dim>>> {
   static const int id = 1;
 };
 
 #if HAVE_DUNE_SPGRID
-template< class ct, int dim, SPRefinementStrategy strategy, class Comm >
-struct ElementVariant< Dune::SPGrid< ct, dim, strategy, Comm > >
-{
+template <class ct, int dim, SPRefinementStrategy strategy, class Comm>
+struct ElementVariant<Dune::SPGrid<ct, dim, strategy, Comm>> {
   static const int id = 1;
 };
 #endif
@@ -103,26 +95,21 @@ struct ElementVariant< Dune::SPGrid< ct, dim, strategy, Comm > >
 
 #if DSC_HAVE_ALUGRID
 
-template< int dimGrid, int dimWorld, class MpiCommImp >
-struct ElementVariant< Dune::ALUGrid< dimGrid, dimWorld, Dune::cube, Dune::conforming, MpiCommImp > >
-{
+template <int dimGrid, int dimWorld, class MpiCommImp>
+struct ElementVariant<Dune::ALUGrid<dimGrid, dimWorld, Dune::cube, Dune::conforming, MpiCommImp>> {
   static const int id = 1;
 };
 
-
-template< int dimGrid, int dimWorld, class MpiCommImp >
-struct ElementVariant< Dune::ALUGrid< dimGrid, dimWorld, Dune::cube, Dune::nonconforming, MpiCommImp > >
-{
+template <int dimGrid, int dimWorld, class MpiCommImp>
+struct ElementVariant<Dune::ALUGrid<dimGrid, dimWorld, Dune::cube, Dune::nonconforming, MpiCommImp>> {
   static const int id = 1;
 };
-
 
 #endif // HAVE_DUNE_ALUGRID
 
 } // namespace internal
 
 #if HAVE_DUNE_GRID
-
 
 /**
  *  \brief  Creates a grid of a cube in various dimensions.
