@@ -16,9 +16,6 @@
 /* Define to the revision of dune-stuff */
 #define DUNE_STUFF_VERSION_REVISION ${DUNE_STUFF_VERSION_REVISION}
 
-/* Define to 1 if eigen was found, else 0 */
-#define HAVE_EIGEN ${HAVE_EIGEN}
-
 /* Define to 1 if threading building blocks were found, else 0 */
 #define HAVE_TBB ${HAVE_TBB}
 
