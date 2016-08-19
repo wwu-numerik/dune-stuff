@@ -28,45 +28,6 @@
 #include <dune/stuff/common/math.hh>
 
 namespace Dune {
-
-#if HAVE_DUNE_FEM
-
-namespace Fem {
-
-
-template < class DiscreteFunctionTraits >
-auto begin( const Dune::Fem::DiscreteFunctionInterface< DiscreteFunctionTraits >& func )
-  -> decltype(func.dbegin())
-{
-  return func.dbegin();
-}
-
-template < class DiscreteFunctionTraits >
-auto end( const Dune::Fem::DiscreteFunctionInterface< DiscreteFunctionTraits >& func )
-  -> decltype(func.dend())
-{
-  return func.dend();
-}
-
-template < class DiscreteFunctionTraits >
-auto begin( Dune::Fem::DiscreteFunctionInterface< DiscreteFunctionTraits >& func )
-  -> decltype(func.dbegin())
-{
-  return func.dbegin();
-}
-
-template < class DiscreteFunctionTraits >
-auto end( Dune::Fem::DiscreteFunctionInterface< DiscreteFunctionTraits >& func )
-  -> decltype(func.dend())
-{
-  return func.dend();
-}
-
-
-} // namespace Fem
-
-#endif // HAVE_DUNE_FEM
-
 namespace Stuff {
 namespace Common {
 
