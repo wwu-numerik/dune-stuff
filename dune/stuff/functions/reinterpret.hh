@@ -19,7 +19,7 @@
 
 #include <dune/stuff/common/exceptions.hh>
 #include <dune/stuff/common/memory.hh>
-#include <dune/stuff/grid/search.hh>
+#include <dune/xt/grid/search.hh>
 #include <dune/stuff/grid/layers.hh>
 
 #include "interfaces.hh"
@@ -45,13 +45,13 @@ namespace Functions {
  */
 template< class SourceType, class GridViewType >
 class Reinterpret
-  : public LocalizableFunctionInterface< typename Grid::Entity< GridViewType >::type, typename GridViewType::ctype,
+  : public LocalizableFunctionInterface< typename XT::Grid::Entity< GridViewType >::type, typename GridViewType::ctype,
                                          GridViewType::dimension, typename SourceType::RangeFieldType,
                                          SourceType::dimRange, SourceType::dimRangeCols >
 {
   static_assert(is_localizable_function< SourceType >::value, "");
   static_assert(Grid::is_grid_layer< GridViewType >::value, "");
-  typedef LocalizableFunctionInterface< typename Grid::Entity< GridViewType >::type, typename GridViewType::ctype,
+  typedef LocalizableFunctionInterface< typename XT::Grid::Entity< GridViewType >::type, typename GridViewType::ctype,
                                         GridViewType::dimension, typename SourceType::RangeFieldType,
                                         SourceType::dimRange, SourceType::dimRangeCols > BaseType;
   typedef Reinterpret< SourceType, GridViewType >                                        ThisType;
@@ -154,7 +154,7 @@ private:
 
   const SourceType& source_;
   const GridViewType& source_grid_view_;
-  mutable Stuff::Grid::EntityInlevelSearch< GridViewType > entity_search_;
+  mutable XT::Grid::EntityInlevelSearch< GridViewType > entity_search_;
   const size_t guessed_source_order_;
 }; // class Reinterpret
 
