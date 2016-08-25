@@ -22,74 +22,81 @@ namespace Common {
 
 namespace FloatCmp {
 
-template< class T, Style style = Style::defaultStyle >
+template <class T, Style style = Style::defaultStyle>
 struct DefaultEpsilon
 {
-  typedef typename Dune::FloatCmp::EpsilonType< T >::Type Type;
+  typedef typename Dune::FloatCmp::EpsilonType<T>::Type Type;
   static Type value()
   {
-    return Dune::FloatCmp::DefaultEpsilon< T, internal::ConvertStyle< style >::value >::value();
+    return Dune::FloatCmp::DefaultEpsilon<T, internal::ConvertStyle<style>::value>::value();
   }
 };
 
 //! we use the scalar field's type from std::complex for its epsilon
-template< class T, Style style>
+template <class T, Style style>
 struct DefaultEpsilon<std::complex<T>, style>
 {
-  typedef typename Dune::FloatCmp::EpsilonType< T >::Type Type;
+  typedef typename Dune::FloatCmp::EpsilonType<T>::Type Type;
   static Type value()
   {
-    return Dune::FloatCmp::DefaultEpsilon< T, internal::ConvertStyle< style >::value >::value();
+    return Dune::FloatCmp::DefaultEpsilon<T, internal::ConvertStyle<style>::value>::value();
   }
 };
 
-template< class T >
-struct DefaultEpsilon< T, Style::numpy >
+template <class T>
+struct DefaultEpsilon<T, Style::numpy>
 {
-  typedef typename Dune::FloatCmp::EpsilonType< T >::Type Type;
+  typedef typename Dune::FloatCmp::EpsilonType<T>::Type Type;
   static Type value()
   {
-    return Dune::FloatCmp::DefaultEpsilon< T, Dune::FloatCmp::relativeStrong >::value();
+    return Dune::FloatCmp::DefaultEpsilon<T, Dune::FloatCmp::relativeStrong>::value();
   }
 };
 
-template< class T >
-struct DefaultEpsilon< std::complex<T>, Style::numpy >
+template <class T>
+struct DefaultEpsilon<std::complex<T>, Style::numpy>
 {
-  typedef typename Dune::FloatCmp::EpsilonType< T >::Type Type;
+  typedef typename Dune::FloatCmp::EpsilonType<T>::Type Type;
   static Type value()
   {
-    return Dune::FloatCmp::DefaultEpsilon< T, Dune::FloatCmp::relativeStrong >::value();
+    return Dune::FloatCmp::DefaultEpsilon<T, Dune::FloatCmp::relativeStrong>::value();
   }
 };
 
 
-#define DUNE_STUFF_COMMON_FLOAT_CMP_GENERATOR(id) \
-  template< Style style, class FirstType, class SecondType, class ToleranceType = typename std::conditional< is_matrix< FirstType >::value, typename MatrixAbstraction< FirstType >::R, typename VectorAbstraction< FirstType >::R >::type > \
-      typename std::enable_if< internal::cmp_type_check<FirstType, SecondType, ToleranceType>::value, bool >::type \
-  id (const FirstType& first, \
-      const SecondType& second, \
-      const typename Dune::FloatCmp::EpsilonType< ToleranceType >::Type& rtol \
-        = DefaultEpsilon< ToleranceType, style >::value(), \
-      const typename Dune::FloatCmp::EpsilonType< ToleranceType >::Type& atol \
-        = DefaultEpsilon< ToleranceType, style >::value()) \
-  { \
-    return internal::Call< FirstType, \
-                           SecondType, \
-                           typename Dune::FloatCmp::EpsilonType< ToleranceType >::Type, \
-                           style >:: id (first, second, rtol, atol); \
-  } \
-  \
-  template< class FirstType, class SecondType, class ToleranceType = typename std::conditional< is_matrix< FirstType >::value, typename MatrixAbstraction< FirstType >::R, typename VectorAbstraction< FirstType >::R >::type > \
-      typename std::enable_if< internal::cmp_type_check<FirstType, SecondType, ToleranceType>::value, bool >::type \
-  id (const FirstType& first, \
-      const SecondType& second, \
-      const typename Dune::FloatCmp::EpsilonType< ToleranceType >::Type& rtol \
-        = DefaultEpsilon< ToleranceType, Style::defaultStyle >::value(), \
-      const typename Dune::FloatCmp::EpsilonType< ToleranceType >::Type& atol \
-        = DefaultEpsilon< ToleranceType, Style::defaultStyle >::value()) \
-  { \
-    return id < Style::defaultStyle >(first, second, rtol, atol); \
+#define DUNE_STUFF_COMMON_FLOAT_CMP_GENERATOR(id)                                                                      \
+  template <Style style,                                                                                               \
+            class FirstType,                                                                                           \
+            class SecondType,                                                                                          \
+            class ToleranceType = typename std::conditional<is_matrix<FirstType>::value,                               \
+                                                            typename MatrixAbstraction<FirstType>::R,                  \
+                                                            typename VectorAbstraction<FirstType>::R>::type>           \
+  typename std::enable_if<internal::cmp_type_check<FirstType, SecondType, ToleranceType>::value, bool>::type id(       \
+      const FirstType& first,                                                                                          \
+      const SecondType& second,                                                                                        \
+      const typename Dune::FloatCmp::EpsilonType<ToleranceType>::Type& rtol =                                          \
+          DefaultEpsilon<ToleranceType, style>::value(),                                                               \
+      const typename Dune::FloatCmp::EpsilonType<ToleranceType>::Type& atol =                                          \
+          DefaultEpsilon<ToleranceType, style>::value())                                                               \
+  {                                                                                                                    \
+    return internal::Call<FirstType, SecondType, typename Dune::FloatCmp::EpsilonType<ToleranceType>::Type, style>::   \
+        id(first, second, rtol, atol);                                                                                 \
+  }                                                                                                                    \
+                                                                                                                       \
+  template <class FirstType,                                                                                           \
+            class SecondType,                                                                                          \
+            class ToleranceType = typename std::conditional<is_matrix<FirstType>::value,                               \
+                                                            typename MatrixAbstraction<FirstType>::R,                  \
+                                                            typename VectorAbstraction<FirstType>::R>::type>           \
+  typename std::enable_if<internal::cmp_type_check<FirstType, SecondType, ToleranceType>::value, bool>::type id(       \
+      const FirstType& first,                                                                                          \
+      const SecondType& second,                                                                                        \
+      const typename Dune::FloatCmp::EpsilonType<ToleranceType>::Type& rtol =                                          \
+          DefaultEpsilon<ToleranceType, Style::defaultStyle>::value(),                                                 \
+      const typename Dune::FloatCmp::EpsilonType<ToleranceType>::Type& atol =                                          \
+          DefaultEpsilon<ToleranceType, Style::defaultStyle>::value())                                                 \
+  {                                                                                                                    \
+    return id<Style::defaultStyle>(first, second, rtol, atol);                                                         \
   }
 
 

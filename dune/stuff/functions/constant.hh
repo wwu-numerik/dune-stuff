@@ -20,10 +20,10 @@ namespace Functions {
 namespace internal {
 
 
-template< class K, int rows, int cols >
+template <class K, int rows, int cols>
 struct EyeMatrix
 {
-  typedef FieldMatrix< K, rows, cols > type;
+  typedef FieldMatrix<K, rows, cols> type;
 
   static type value()
   {
@@ -53,10 +53,10 @@ struct EyeMatrix
   }
 }; // struct EyeMatrix
 
-template< class K >
-struct EyeMatrix< K, 1, 1 >
+template <class K>
+struct EyeMatrix<K, 1, 1>
 {
-  typedef FieldVector< K, 1 > type;
+  typedef FieldVector<K, 1> type;
 
   static type value()
   {
@@ -69,32 +69,36 @@ struct EyeMatrix< K, 1, 1 >
   }
 }; // struct EyeMatrix< K, 1, 1 >
 
-template< class K, int dim >
-struct UnitMatrix
-    : EyeMatrix< K, dim, dim >
-{};
-
-template< class K, int dim >
-typename UnitMatrix< K, dim >::type unit_matrix()
+template <class K, int dim>
+struct UnitMatrix : EyeMatrix<K, dim, dim>
 {
-  return UnitMatrix< K, dim >::value();
+};
+
+template <class K, int dim>
+typename UnitMatrix<K, dim>::type unit_matrix()
+{
+  return UnitMatrix<K, dim>::value();
 }
 
 
 } // namespace internal
 
 
-template< class EntityImp, class DomainFieldImp, size_t domainDim, class RangeFieldImp, size_t rangeDim, size_t rangeDimCols = 1 >
+template <class EntityImp,
+          class DomainFieldImp,
+          size_t domainDim,
+          class RangeFieldImp,
+          size_t rangeDim,
+          size_t rangeDimCols = 1>
 class Constant
-  : public GlobalFunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols>
+    : public GlobalFunctionInterface<EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols>
 {
-  typedef GlobalFunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols >
-      BaseType;
-  typedef Constant < EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols >  ThisType;
+  typedef GlobalFunctionInterface<EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols> BaseType;
+  typedef Constant<EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols> ThisType;
 
 public:
-  typedef typename BaseType::DomainType        DomainType;
-  typedef typename BaseType::RangeType         RangeType;
+  typedef typename BaseType::DomainType DomainType;
+  typedef typename BaseType::RangeType RangeType;
   typedef typename BaseType::JacobianRangeType JacobianRangeType;
 
   using typename BaseType::LocalfunctionType;
@@ -109,7 +113,7 @@ public:
   static Common::Configuration default_config(const std::string sub_name = "")
   {
     Common::Configuration config;
-    config["value"] = internal::EyeMatrix< RangeFieldImp, rangeDim, rangeDimCols >::value_str();
+    config["value"] = internal::EyeMatrix<RangeFieldImp, rangeDim, rangeDimCols>::value_str();
     config["name"] = static_id();
     if (sub_name.empty())
       return config;
@@ -120,26 +124,27 @@ public:
     }
   } // ... default_config(...)
 
-  static std::unique_ptr< ThisType > create(const Common::Configuration config = default_config(),
-                                            const std::string sub_name = static_id())
+  static std::unique_ptr<ThisType> create(const Common::Configuration config = default_config(),
+                                          const std::string sub_name = static_id())
   {
     // get correct config
     const Common::Configuration cfg = config.has_sub(sub_name) ? config.sub(sub_name) : config;
     const Common::Configuration default_cfg = default_config();
-    return Common::make_unique< ThisType >(
-          cfg.get("value", default_cfg.get< RangeType >("value")),
-          cfg.get("name",  default_cfg.get< std::string >("name")));
+    return Common::make_unique<ThisType>(cfg.get("value", default_cfg.get<RangeType>("value")),
+                                         cfg.get("name", default_cfg.get<std::string>("name")));
   } // ... create(...)
 
   explicit Constant(const RangeType& constant, const std::string name_in = static_id())
     : constant_(constant)
     , name_(name_in)
-  {}
+  {
+  }
 
   explicit Constant(const RangeFieldImp& constant, const std::string name_in = static_id())
     : constant_(constant)
     , name_(name_in)
-  {}
+  {
+  }
 
   Constant(const ThisType& other) = default;
 
@@ -160,7 +165,7 @@ public:
 
   virtual void jacobian(const DomainType& /*x*/, JacobianRangeType& ret) const override final
   {
-    jacobian_helper(ret, internal::ChooseVariant< rangeDimCols >());
+    jacobian_helper(ret, internal::ChooseVariant<rangeDimCols>());
   }
 
   virtual std::string name() const override final
@@ -169,15 +174,15 @@ public:
   }
 
 private:
-  template< size_t rC >
-  void jacobian_helper(JacobianRangeType& ret, internal::ChooseVariant< rC >) const
+  template <size_t rC>
+  void jacobian_helper(JacobianRangeType& ret, internal::ChooseVariant<rC>) const
   {
-    for (auto& col_jacobian: ret) {
+    for (auto& col_jacobian : ret) {
       col_jacobian *= 0;
     }
   }
 
-  void jacobian_helper(JacobianRangeType& ret, internal::ChooseVariant< 1 >) const
+  void jacobian_helper(JacobianRangeType& ret, internal::ChooseVariant<1>) const
   {
     ret *= 0;
   }

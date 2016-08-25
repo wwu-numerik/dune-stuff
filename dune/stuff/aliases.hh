@@ -9,12 +9,16 @@
 namespace Dune {
 namespace Stuff {
 
-namespace Common {}
-namespace Grid {}
-namespace Fem {}
-namespace Functions {}
-namespace LA {}
-
+namespace Common {
+}
+namespace Grid {
+}
+namespace Fem {
+}
+namespace Functions {
+}
+namespace LA {
+}
 }
 }
 

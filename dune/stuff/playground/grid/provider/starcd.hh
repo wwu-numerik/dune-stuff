@@ -10,7 +10,8 @@
 
 #if HAVE_DUNE_GRID
 //#if HAVE_DUNE_ALUGRID || HAVE_ALBERTA || HAVE_UG
-//#if defined ALUGRID_CONFORM || defined ALUGRID_CUBE || defined ALUGRID_SIMPLEX || defined ALBERTAGRID || defined UGGRID
+//#if defined ALUGRID_CONFORM || defined ALUGRID_CUBE || defined ALUGRID_SIMPLEX || defined ALBERTAGRID || defined
+//UGGRID
 
 #include <iostream>
 #include <fstream>
@@ -46,17 +47,17 @@ namespace Stuff {
  *          Implemented for dimensions 1, 2, and 3.
  *
  */
-template< class GridImp = Dune::YaspGrid< 2, Dune::EquidistantOffsetCoordinates<double, 2 > >
-class GridProviderStarCD
-  : public Grid::ProviderInterface< GridImp >
+template <class GridImp =
+              Dune::YaspGrid<2, Dune::EquidistantOffsetCoordinates<double, 2>> class GridProviderStarCD : public Grid::
+                  ProviderInterface<GridImp>
 {
 public:
   //! Type of the provided grid.
   typedef GridImp GridType;
 
-  typedef Grid::ProviderInterface< GridType > BaseType;
+  typedef Grid::ProviderInterface<GridType> BaseType;
 
-  typedef GridProviderStarCD< GridType > ThisType;
+  typedef GridProviderStarCD<GridType> ThisType;
 
   //! Dimension of the provided grid.
   static const size_t dim = BaseType::dim;
@@ -70,8 +71,7 @@ public:
     return BaseType::id() + ".starcd";
   }
 
-  GridProviderStarCD(const std::string filename,
-                     std::ostream& out = Dune::Stuff::Common::Logger().devnull())
+  GridProviderStarCD(const std::string filename, std::ostream& out = Dune::Stuff::Common::Logger().devnull())
   {
     // set up the grid factory
     GridFactory<GridType> factory;
@@ -82,32 +82,31 @@ public:
     // set the vertex input stream
     std::ifstream vertexFile(vertexFileName);
     if (!vertexFile)
-        DUNE_THROW(Dune::IOError, "Could not open " << vertexFileName);
+      DUNE_THROW(Dune::IOError, "Could not open " << vertexFileName);
 
     std::string line;
 
-    if (!std::getline(vertexFile,line))
+    if (!std::getline(vertexFile, line))
       DUNE_THROW(Dune::IOError, "File " << vertexFileName << " is too short!");
-    if (! (line == "PROSTAR_VERTEX"))
-      DUNE_THROW(Dune::IOError, "First line of File " << vertexFileName << " (" << line << "is not equal to 'PROSTAR_VERTEX' !");
-    if (!std::getline(vertexFile,line))
+    if (!(line == "PROSTAR_VERTEX"))
+      DUNE_THROW(Dune::IOError,
+                 "First line of File " << vertexFileName << " (" << line << "is not equal to 'PROSTAR_VERTEX' !");
+    if (!std::getline(vertexFile, line))
       DUNE_THROW(Dune::IOError, "File " << vertexFileName << " is too short!");
 
     // read the vertices
     size_t numberOfVertices = 0;
-    Dune::FieldVector<double,dim> position;
+    Dune::FieldVector<double, dim> position;
 
     out << "Reading " << vertexFileName << " ...   " << std::flush;
-    while(std::getline(vertexFile,line))
-    {
-        numberOfVertices++;
-        const std::vector<double> items = Dune::Stuff::Common::tokenize<double>(line, " ");
-        if (items.size() != dim + 1)
-          DUNE_THROW(Dune::IOError,
-                     "Error: " << items.size() << " = items.size() != dim + 1 = " << dim + 1 << "!");
-        for (size_t ii = 0; ii < dim; ++ii)
-          position[ii] = items[ii + 1];
-        factory.insertVertex(position);
+    while (std::getline(vertexFile, line)) {
+      numberOfVertices++;
+      const std::vector<double> items = Dune::Stuff::Common::tokenize<double>(line, " ");
+      if (items.size() != dim + 1)
+        DUNE_THROW(Dune::IOError, "Error: " << items.size() << " = items.size() != dim + 1 = " << dim + 1 << "!");
+      for (size_t ii = 0; ii < dim; ++ii)
+        position[ii] = items[ii + 1];
+      factory.insertVertex(position);
     }
     out << "done: " << numberOfVertices << " vertices read." << std::endl;
 
@@ -117,13 +116,14 @@ public:
     // set the element input stream
     std::ifstream elementFile(elementFileName);
     if (!elementFile)
-        DUNE_THROW(Dune::IOError, "Could not open " << elementFileName);
+      DUNE_THROW(Dune::IOError, "Could not open " << elementFileName);
 
-    if (!std::getline(elementFile,line))
+    if (!std::getline(elementFile, line))
       DUNE_THROW(Dune::IOError, "File " << elementFileName << " is too short!");
     if (!(line == "PROSTAR_CELL"))
-      DUNE_THROW(Dune::IOError, "First line of File " << elementFileName << " (" << line << "is not equal to 'PROSTAR_CELL' !");
-    if (!std::getline(elementFile,line))
+      DUNE_THROW(Dune::IOError,
+                 "First line of File " << elementFileName << " (" << line << "is not equal to 'PROSTAR_CELL' !");
+    if (!std::getline(elementFile, line))
       DUNE_THROW(Dune::IOError, "File " << elementFileName << " is too short!");
 
     // read the elements
@@ -138,69 +138,72 @@ public:
     std::string firstLine;
     std::string secondLine;
     out << "Reading " << elementFileName << " ...   " << std::flush;
-    while(std::getline(elementFile, firstLine))
-    {
-        if (!std::getline(elementFile, secondLine))
-          DUNE_THROW(Dune::IOError, "No vertex data available in file " << elementFileName << " for element " << numberOfElements+1 << "!");
-        numberOfElements++;
+    while (std::getline(elementFile, firstLine)) {
+      if (!std::getline(elementFile, secondLine))
+        DUNE_THROW(Dune::IOError,
+                   "No vertex data available in file " << elementFileName << " for element " << numberOfElements + 1
+                                                       << "!");
+      numberOfElements++;
 
-        const std::vector<int> items1 = Dune::Stuff::Common::tokenize<int>(firstLine, " ");
-        std::vector<int> items2 = Dune::Stuff::Common::tokenize<int>(secondLine, " ");
+      const std::vector<int> items1 = Dune::Stuff::Common::tokenize<int>(firstLine, " ");
+      std::vector<int> items2 = Dune::Stuff::Common::tokenize<int>(secondLine, " ");
 
-        // Erase zeros at the beginning of the line
-        items2.erase(std::remove(items2.begin(), items2.end(), 0), items2.end());
+      // Erase zeros at the beginning of the line
+      items2.erase(std::remove(items2.begin(), items2.end(), 0), items2.end());
 
-        if (!(items1[0]==items2[0]) || !(numberOfElements==items2[0]))
-          DUNE_THROW(Dune::IOError, "Elementindices do not correspond!");
+      if (!(items1[0] == items2[0]) || !(numberOfElements == items2[0]))
+        DUNE_THROW(Dune::IOError, "Elementindices do not correspond!");
 
-        if (items2.size() == numberOfVerticesCube + 1) //cube
-        {
-          numberOfCubes++;
-          for (size_t k = 0; k < numberOfVerticesCube; k++)
-          {
-            cubeVertices[k] = items2[k+1] - 1;
-          }
-          if(dim>1)
-            std::swap(cubeVertices[2], cubeVertices[3]);
-          if(dim==3)
-            std::swap(cubeVertices[6], cubeVertices[7]);
-          factory.insertElement(Dune::GeometryType(Dune::GeometryType::cube,dim), cubeVertices);
+      if (items2.size() == numberOfVerticesCube + 1) // cube
+      {
+        numberOfCubes++;
+        for (size_t k = 0; k < numberOfVerticesCube; k++) {
+          cubeVertices[k] = items2[k + 1] - 1;
         }
-        else if ((items2.size() == numberOfVerticesPrism + 1) && (dim==3)) //prism
-        {
-          numberOfPrisms++;
-          for (size_t k = 0; k < numberOfVerticesPrism; k++)
-          {
-            prismVertices[k] = items2[k+1] - 1;
-          }
-          factory.insertElement(Dune::GeometryType(Dune::GeometryType::prism,dim), prismVertices);
+        if (dim > 1)
+          std::swap(cubeVertices[2], cubeVertices[3]);
+        if (dim == 3)
+          std::swap(cubeVertices[6], cubeVertices[7]);
+        factory.insertElement(Dune::GeometryType(Dune::GeometryType::cube, dim), cubeVertices);
+      } else if ((items2.size() == numberOfVerticesPrism + 1) && (dim == 3)) // prism
+      {
+        numberOfPrisms++;
+        for (size_t k = 0; k < numberOfVerticesPrism; k++) {
+          prismVertices[k] = items2[k + 1] - 1;
         }
-        else //not cube or prism
-        {
-          DUNE_THROW(Dune::IOError, "Type of element " << numberOfElements << " is not cube or prism!");
-        }
-    } //while loop
+        factory.insertElement(Dune::GeometryType(Dune::GeometryType::prism, dim), prismVertices);
+      } else // not cube or prism
+      {
+        DUNE_THROW(Dune::IOError, "Type of element " << numberOfElements << " is not cube or prism!");
+      }
+    } // while loop
 
     if (!(numberOfElements == (numberOfCubes + numberOfPrisms)))
-      DUNE_THROW(Dune::IOError, "Number of Elements (" << numberOfElements << ") is not equal to number of cubes (" << numberOfCubes << ") and number of prisms (" << numberOfPrisms << ").");
+      DUNE_THROW(Dune::IOError,
+                 "Number of Elements (" << numberOfElements << ") is not equal to number of cubes (" << numberOfCubes
+                                        << ") and number of prisms ("
+                                        << numberOfPrisms
+                                        << ").");
 
-    out << "done: " << numberOfElements << " elements read ("
-        << numberOfPrisms << " prisms and " << numberOfCubes << " cubes)." << std::endl;
+    out << "done: " << numberOfElements << " elements read (" << numberOfPrisms << " prisms and " << numberOfCubes
+        << " cubes)." << std::endl;
 
     // finish off the construction of the grid object
     out << "Starting createGrid() ... " << std::endl;
 
-    grid_ = std::shared_ptr< GridType >(factory.createGrid());
-  } //constructor
+    grid_ = std::shared_ptr<GridType>(factory.createGrid());
+  } // constructor
 
 
   GridProviderStarCD(ThisType& other)
     : grid_(other.grid_)
-  {}
+  {
+  }
 
   GridProviderStarCD(const ThisType& other)
     : grid_(other.grid_)
-  {}
+  {
+  }
 
   static Dune::ParameterTree defaultSettings(const std::string subName = "")
   {
@@ -226,7 +229,8 @@ public:
     // create and return
     if (!settings.hasKey("filename"))
       DUNE_THROW(Dune::RangeError,
-                 "\nMissing key 'filename' in the following Dune::ParameterTree:\n" << settings.report_string("  "));
+                 "\nMissing key 'filename' in the following Dune::ParameterTree:\n"
+                     << settings.report_string("  "));
     const std::string filename = settings.get("filename", "meaningless_default_value");
     return new ThisType(filename);
   } // ... create(...)
@@ -246,19 +250,20 @@ public:
   }
 
   //! const access to shared ptr
-  virtual const std::shared_ptr< const GridType > grid() const
+  virtual const std::shared_ptr<const GridType> grid() const
   {
     return grid_;
   }
 
 private:
-  std::shared_ptr< GridType > grid_;
+  std::shared_ptr<GridType> grid_;
 }; // class GridProviderStarCD
 
 } // namespace Stuff
 } // namespace Dune
 
-//#endif // defined ALUGRID_CONFORM || defined ALUGRID_CUBE || defined ALUGRID_SIMPLEX || defined ALBERTAGRID || defined UGGRID
+//#endif // defined ALUGRID_CONFORM || defined ALUGRID_CUBE || defined ALUGRID_SIMPLEX || defined ALBERTAGRID || defined
+//UGGRID
 //#endif // HAVE_DUNE_ALUGRID || HAVE_ALBERTA || HAVE_UG
 #endif // HAVE_DUNE_GRID
 

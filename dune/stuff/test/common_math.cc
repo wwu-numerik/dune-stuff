@@ -13,49 +13,59 @@
 #include <dune/stuff/common/ranges.hh>
 
 using namespace Dune::Stuff::Common;
-typedef testing::Types< double, int > TestTypes;
-typedef testing::Types< std::complex<double>, double, int > ComplexTestTypes;
+typedef testing::Types<double, int> TestTypes;
+typedef testing::Types<std::complex<double>, double, int> ComplexTestTypes;
 
 template <class T>
-struct ClampTest : public testing::Test{
+struct ClampTest : public testing::Test
+{
   const T lower;
   const T upper;
   ClampTest()
-    :lower(T(-1)), upper(T(1))
-  {}
+    : lower(T(-1))
+    , upper(T(1))
+  {
+  }
 };
 
 TYPED_TEST_CASE(ClampTest, TestTypes);
-TYPED_TEST(ClampTest, All) {
+TYPED_TEST(ClampTest, All)
+{
   EXPECT_EQ(clamp(TypeParam(-2), this->lower, this->upper), this->lower);
   EXPECT_EQ(clamp(TypeParam(2), this->lower, this->upper), this->upper);
   EXPECT_EQ(clamp(TypeParam(0), this->lower, this->upper), TypeParam(0));
 }
 
 template <class T>
-struct EpsilonTest : public testing::Test{
+struct EpsilonTest : public testing::Test
+{
 };
 
 TYPED_TEST_CASE(EpsilonTest, TestTypes);
-TYPED_TEST(EpsilonTest, All){
+TYPED_TEST(EpsilonTest, All)
+{
   EXPECT_NE(Epsilon<TypeParam>::value, TypeParam(0));
 }
 
-template < class T >
-struct MinMaxAvgTest : public testing::Test{
+template <class T>
+struct MinMaxAvgTest : public testing::Test
+{
 };
 
-template < class MMType, class TypeParam >
-void mmCheck(const MMType& mma) {
+template <class MMType, class TypeParam>
+void mmCheck(const MMType& mma)
+{
   EXPECT_TRUE(Dune::FloatCmp::eq(mma.min(), TypeParam(-4.0)));
   EXPECT_TRUE(Dune::FloatCmp::eq(mma.max(), TypeParam(1.0)));
   EXPECT_TRUE(Dune::FloatCmp::eq(mma.average(), TypeParam(-1.0)));
 }
 
 TYPED_TEST_CASE(MinMaxAvgTest, TestTypes);
-TYPED_TEST(MinMaxAvgTest, All){
+TYPED_TEST(MinMaxAvgTest, All)
+{
   MinMaxAvg<TypeParam> mma;
-  mma(-1);mma(1);
+  mma(-1);
+  mma(1);
   EXPECT_TRUE(Dune::FloatCmp::eq(mma.min(), TypeParam(-1.0)));
   EXPECT_TRUE(Dune::FloatCmp::eq(mma.max(), TypeParam(1.0)));
   EXPECT_TRUE(Dune::FloatCmp::eq(mma.average(), TypeParam(0.0)));
@@ -69,37 +79,41 @@ TYPED_TEST(MinMaxAvgTest, All){
   mmCheck<MinMaxAvg<TypeParam>, TypeParam>(mmb);
 }
 
-TEST(OtherMath, Range) {
-  EXPECT_EQ((std::vector<unsigned int>{0,1,2,3}), valueRange(4u));
-  EXPECT_EQ((std::vector<int>{4,3,2,1}), valueRange(4,0,-1));
-  EXPECT_EQ((std::vector<int>{-1,0,1}), valueRange(-1,2));
+TEST(OtherMath, Range)
+{
+  EXPECT_EQ((std::vector<unsigned int>{0, 1, 2, 3}), valueRange(4u));
+  EXPECT_EQ((std::vector<int>{4, 3, 2, 1}), valueRange(4, 0, -1));
+  EXPECT_EQ((std::vector<int>{-1, 0, 1}), valueRange(-1, 2));
   EXPECT_EQ((std::vector<float>()), valueRange(0.f));
   EXPECT_EQ((std::vector<float>{0.f}), valueRange(Epsilon<float>::value));
-  Dune::FieldMatrix< double, 2, 2 > fMatrix;
+  Dune::FieldMatrix<double, 2, 2> fMatrix;
   fMatrix = 0.0;
   EXPECT_DOUBLE_EQ(fMatrix[1][1], 0.0);
-  Dune::DynamicMatrix< double > dMatrix(2, 2);
+  Dune::DynamicMatrix<double> dMatrix(2, 2);
   dMatrix = 0.0;
   EXPECT_DOUBLE_EQ(dMatrix[1][1], 0.0);
 }
 
-TEST(OtherMath, Sign) {
-  EXPECT_EQ(DSC::sign( 1),  1);
+TEST(OtherMath, Sign)
+{
+  EXPECT_EQ(DSC::sign(1), 1);
   EXPECT_EQ(DSC::sign(-1), -1);
-  EXPECT_EQ(DSC::sign( 1.),  1);
+  EXPECT_EQ(DSC::sign(1.), 1);
   EXPECT_EQ(DSC::sign(-1.), -1);
 }
 
-TEST(OtherMath, AbsoluteValue) {
-  EXPECT_EQ(DSC::abs(1.0f),  1.0f);
-  EXPECT_EQ(DSC::abs(-1l),   1l);
-  EXPECT_EQ(DSC::abs(0u),    0u);
-  EXPECT_EQ(DSC::abs(0),     0);
-  EXPECT_EQ(DSC::abs(std::complex<int>(0)),  0);
-  EXPECT_EQ(DSC::abs(std::complex<int>(-1)),  1);
+TEST(OtherMath, AbsoluteValue)
+{
+  EXPECT_EQ(DSC::abs(1.0f), 1.0f);
+  EXPECT_EQ(DSC::abs(-1l), 1l);
+  EXPECT_EQ(DSC::abs(0u), 0u);
+  EXPECT_EQ(DSC::abs(0), 0);
+  EXPECT_EQ(DSC::abs(std::complex<int>(0)), 0);
+  EXPECT_EQ(DSC::abs(std::complex<int>(-1)), 1);
 }
 
-TEST(OtherMath, FloatCmp) {
+TEST(OtherMath, FloatCmp)
+{
   std::vector<double> ones{1., 1.};
   std::vector<double> twos{2., 2.};
   Dune::FieldVector<double, 2> dones(1.);
@@ -116,4 +130,3 @@ TEST(OtherMath, FloatCmp) {
   EXPECT_TRUE(DSC::FloatCmp::lt(ones, twos));
   EXPECT_TRUE(DSC::FloatCmp::gt(twos, ones));
 }
-

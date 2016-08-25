@@ -13,7 +13,7 @@
 #include <dune/geometry/referenceelements.hh>
 
 #if HAVE_DUNE_GRID
-# include <dune/grid/common/gridview.hh>
+#include <dune/grid/common/gridview.hh>
 #endif
 
 #include <dune/stuff/common/string.hh>
@@ -32,26 +32,26 @@ namespace Grid {
 #if HAVE_DUNE_GRID
 
 
-template< class GridPartOrViewType >
+template <class GridPartOrViewType>
 class Intersection
 {
-  static_assert(is_grid_layer< GridPartOrViewType >::value, "");
+  static_assert(is_grid_layer<GridPartOrViewType>::value, "");
 
-  template< class GridViewType, bool is_view >
+  template <class GridViewType, bool is_view>
   struct Choose
   {
     typedef typename GridViewType::Intersection Type;
   };
 
-  template< class GridPartType >
-  struct Choose< GridPartType, false >
+  template <class GridPartType>
+  struct Choose<GridPartType, false>
   {
     typedef typename GridPartType::IntersectionType Type;
   };
 
 public:
-  typedef typename Choose< GridPartOrViewType, is_grid_view< GridPartOrViewType >::value >::Type Type;
-  typedef typename Choose< GridPartOrViewType, is_grid_view< GridPartOrViewType >::value >::Type type;
+  typedef typename Choose<GridPartOrViewType, is_grid_view<GridPartOrViewType>::value>::Type Type;
+  typedef typename Choose<GridPartOrViewType, is_grid_view<GridPartOrViewType>::value>::Type type;
 }; // class Intersection
 
 
@@ -68,15 +68,16 @@ public:
   \param[out] stream
               std::ostream, into which the information is printed
   **/
-template< class IntersectionType >
+template <class IntersectionType>
 void printIntersection(const IntersectionType& intersection,
                        std::ostream& out = std::cout,
                        const std::string prefix = "")
 {
-  out << prefix << Common::Typename< IntersectionType >::value() << std::endl;
+  out << prefix << Common::Typename<IntersectionType>::value() << std::endl;
   const auto& geometry = intersection.geometry();
   for (auto ii : DSC::valueRange(geometry.corners()))
-    out << prefix + "  " << "corner " + Common::to_string(ii) << " = " << geometry.corner(ii) << "\n";
+    out << prefix + "  "
+        << "corner " + Common::to_string(ii) << " = " << geometry.corner(ii) << "\n";
 } // ... printIntersection(...)
 
 /** Check whether a spatial point lies on an intersection.
@@ -85,18 +86,18 @@ void printIntersection(const IntersectionType& intersection,
 * @param[in] globalPoint A Dune::FieldVector with the global coordinates of the point
 * @return Returns true if the point lies on the intersection, false otherwise.
 */
-template< class IntersectionType, class FieldType, size_t dim >
-bool intersectionContains( const IntersectionType& intersection, const Dune::FieldVector< FieldType, dim >& globalPoint )
+template <class IntersectionType, class FieldType, size_t dim>
+bool intersectionContains(const IntersectionType& intersection, const Dune::FieldVector<FieldType, dim>& globalPoint)
 {
   // map global coordinates to local coordinates of the intersection
   const auto& intersectionGeometry = intersection.geometry();
   const auto& localPoint = intersectionGeometry.local(globalPoint);
 
-  // get codim 1 reference element
+// get codim 1 reference element
 #if DUNE_VERSION_NEWER(DUNE_GEOMETRY, 2, 3)
-  const auto& refElement = ReferenceElements< FieldType, dim-1 >::general(intersectionGeometry.type());
+  const auto& refElement = ReferenceElements<FieldType, dim - 1>::general(intersectionGeometry.type());
 #else
-  const auto& refElement = GenericReferenceElements< FieldType, dim-1 >::general(intersectionGeometry.type());
+  const auto& refElement = GenericReferenceElements<FieldType, dim - 1>::general(intersectionGeometry.type());
 #endif
   // check whether reference element contains the local coordinates
   return refElement.checkInside(localPoint);

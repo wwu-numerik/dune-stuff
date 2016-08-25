@@ -56,22 +56,19 @@ void Cornerpoint::visualize(Dune::ParameterTree& paramTree)
     typedef GridType::LeafGridView GridView;
     GridView gridView = grid.leafView();
     // mapper
-    Dune::LeafMultipleCodimMultipleGeomTypeMapper< GridType, P0Layout > mapper(grid);
-    std::vector< double > data(mapper.size());
+    Dune::LeafMultipleCodimMultipleGeomTypeMapper<GridType, P0Layout> mapper(grid);
+    std::vector<double> data(mapper.size());
     // walk the grid
     typedef GridView::Codim<0>::Iterator ElementIterator;
     typedef GridView::Codim<0>::Entity ElementType;
     typedef ElementType::LeafIntersectionIterator FacetIteratorType;
-    for (ElementIterator it = gridView.begin<0>(); it != gridView.end<0>(); ++it)
-    {
+    for (ElementIterator it = gridView.begin<0>(); it != gridView.end<0>(); ++it) {
       ElementType& element = *it;
       data[mapper.map(element)] = 0.0;
       int numberOfBoundarySegments = 0;
       bool isOnBoundary = false;
-      for (FacetIteratorType facet = element.ileafbegin();
-           facet != element.ileafend();
-           ++facet) {
-        if (!facet->neighbor() && facet->boundary()){
+      for (FacetIteratorType facet = element.ileafbegin(); facet != element.ileafend(); ++facet) {
+        if (!facet->neighbor() && facet->boundary()) {
           isOnBoundary = true;
           numberOfBoundarySegments += 1;
           data[mapper.map(element)] += double(facet->boundaryId());
@@ -82,7 +79,7 @@ void Cornerpoint::visualize(Dune::ParameterTree& paramTree)
       }
     }
     // write to vtk
-    Dune::VTKWriter< GridView > vtkwriter(gridView);
+    Dune::VTKWriter<GridView> vtkwriter(gridView);
     vtkwriter.addCellData(data, "boundaryId");
     vtkwriter.write(filenameGrid, Dune::VTK::ascii);
   } // check for grid visualization

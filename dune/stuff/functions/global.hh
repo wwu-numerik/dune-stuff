@@ -21,25 +21,31 @@ namespace Stuff {
  * Global-valued function you can pass a lambda expression to that gets evaluated
  * \example LambdaType lambda([](DomainType x) { return x;}, 1 );
  */
-template< class EntityImp, class DomainFieldImp, size_t domainDim, class RangeFieldImp, size_t rangeDim, size_t rangeDimCols = 1 >
+template <class EntityImp,
+          class DomainFieldImp,
+          size_t domainDim,
+          class RangeFieldImp,
+          size_t rangeDim,
+          size_t rangeDimCols = 1>
 class GlobalLambdaFunction
-  : public GlobalFunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols >
+    : public GlobalFunctionInterface<EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols>
 {
-  typedef GlobalFunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols >
-      BaseType;
+  typedef GlobalFunctionInterface<EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols> BaseType;
+
 public:
   typedef typename BaseType::DomainType DomainType;
-  typedef typename BaseType::RangeType  RangeType;
+  typedef typename BaseType::RangeType RangeType;
 
 private:
-  typedef std::function< RangeType(DomainType) > LambdaType;
+  typedef std::function<RangeType(DomainType)> LambdaType;
 
 public:
   GlobalLambdaFunction(LambdaType lambda, const size_t order_in, const std::string nm = "stuff.globallambdafunction")
     : lambda_(lambda)
     , order_(order_in)
     , name_(nm)
-  {}
+  {
+  }
 
   virtual size_t order() const override final
   {

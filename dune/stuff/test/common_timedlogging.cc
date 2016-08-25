@@ -4,7 +4,7 @@
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
 #ifndef DUNE_STUFF_TEST_MAIN_CATCH_EXCEPTIONS
-# define DUNE_STUFF_TEST_MAIN_CATCH_EXCEPTIONS 0
+#define DUNE_STUFF_TEST_MAIN_CATCH_EXCEPTIONS 0
 #endif
 
 #include "config.h"

@@ -6,7 +6,7 @@
 #ifndef DUNE_STUFF_GRID_WALKER_APPLY_ON_HH
 #define DUNE_STUFF_GRID_WALKER_APPLY_ON_HH
 
-//nothing here will compile w/o grid present
+// nothing here will compile w/o grid present
 #if HAVE_DUNE_GRID
 
 #include <dune/stuff/grid/entity.hh>
@@ -30,14 +30,16 @@ virtual bool apply_on(const GridViewType& grid_view, const EntityType& entity) c
 }
 \endcode
  */
-template< class GridViewImp >
+template <class GridViewImp>
 class WhichEntity
 {
 public:
   typedef GridViewImp GridViewType;
-  typedef typename Stuff::Grid::Entity< GridViewType >::Type EntityType;
+  typedef typename Stuff::Grid::Entity<GridViewType>::Type EntityType;
 
-  virtual ~WhichEntity() {}
+  virtual ~WhichEntity()
+  {
+  }
 
   virtual bool apply_on(const GridViewType& /*grid_view*/, const EntityType& /*entity*/) const = 0;
 }; // class WhichEntity
@@ -46,14 +48,14 @@ public:
 /**
  *  \brief Selects all entities.
  */
-template< class GridViewImp >
-class AllEntities
-  : public WhichEntity< GridViewImp >
+template <class GridViewImp>
+class AllEntities : public WhichEntity<GridViewImp>
 {
-  typedef WhichEntity< GridViewImp > BaseType;
+  typedef WhichEntity<GridViewImp> BaseType;
+
 public:
   typedef typename BaseType::GridViewType GridViewType;
-  typedef typename BaseType::EntityType   EntityType;
+  typedef typename BaseType::EntityType EntityType;
 
   virtual bool apply_on(const GridViewType& /*grid_view*/, const EntityType& /*entity*/) const override final
   {
@@ -65,14 +67,14 @@ public:
 /**
  *  \brief Selects entities which have a boundary intersection.
  */
-template< class GridViewImp >
-class BoundaryEntities
-  : public WhichEntity< GridViewImp >
+template <class GridViewImp>
+class BoundaryEntities : public WhichEntity<GridViewImp>
 {
-  typedef WhichEntity< GridViewImp > BaseType;
+  typedef WhichEntity<GridViewImp> BaseType;
+
 public:
   typedef typename BaseType::GridViewType GridViewType;
-  typedef typename BaseType::EntityType   EntityType;
+  typedef typename BaseType::EntityType EntityType;
 
   virtual bool apply_on(const GridViewType& /*grid_view*/, const EntityType& entity) const override final
   {
@@ -92,30 +94,31 @@ virtual bool apply_on(const GridViewType& grid_view, const IntersectionType& int
 }
 \endcode
  */
-template< class GridViewImp >
+template <class GridViewImp>
 class WhichIntersection
 {
 public:
   typedef GridViewImp GridViewType;
-  typedef typename Stuff::Grid::Intersection< GridViewType >::Type IntersectionType;
+  typedef typename Stuff::Grid::Intersection<GridViewType>::Type IntersectionType;
 
-  virtual ~WhichIntersection< GridViewImp >() {}
+  virtual ~WhichIntersection<GridViewImp>()
+  {
+  }
 
   virtual bool apply_on(const GridViewType& /*grid_view*/, const IntersectionType& /*intersection*/) const = 0;
 }; // class WhichIntersection< GridViewImp >
 
 
-
 /**
  *  \brief Selects all intersections.
  */
-template< class GridViewImp >
-class AllIntersections
-  : public WhichIntersection< GridViewImp >
+template <class GridViewImp>
+class AllIntersections : public WhichIntersection<GridViewImp>
 {
-  typedef WhichIntersection< GridViewImp > BaseType;
+  typedef WhichIntersection<GridViewImp> BaseType;
+
 public:
-  typedef typename BaseType::GridViewType     GridViewType;
+  typedef typename BaseType::GridViewType GridViewType;
   typedef typename BaseType::IntersectionType IntersectionType;
 
   virtual bool apply_on(const GridViewType& /*grid_view*/,
@@ -135,17 +138,16 @@ intersection.neighbor() && !intersection.boundary()
 \endcode
  *  is used.
  */
-template< class GridViewImp >
-class InnerIntersections
-  : public WhichIntersection< GridViewImp >
+template <class GridViewImp>
+class InnerIntersections : public WhichIntersection<GridViewImp>
 {
-  typedef WhichIntersection< GridViewImp > BaseType;
+  typedef WhichIntersection<GridViewImp> BaseType;
+
 public:
-  typedef typename BaseType::GridViewType     GridViewType;
+  typedef typename BaseType::GridViewType GridViewType;
   typedef typename BaseType::IntersectionType IntersectionType;
 
-  virtual bool apply_on(const GridViewType& /*grid_view*/,
-                        const IntersectionType& intersection) const override final
+  virtual bool apply_on(const GridViewType& /*grid_view*/, const IntersectionType& intersection) const override final
   {
     return intersection.neighbor() && !intersection.boundary();
   }
@@ -162,13 +164,13 @@ intersection.neighbor() && !intersection.boundary()
  *  is used, and true is returned, if the index of the inside() entity is smaller than the index of the outside()
  *  entity.
  */
-template< class GridViewImp >
-class InnerIntersectionsPrimally
-  : public WhichIntersection< GridViewImp >
+template <class GridViewImp>
+class InnerIntersectionsPrimally : public WhichIntersection<GridViewImp>
 {
-  typedef WhichIntersection< GridViewImp > BaseType;
+  typedef WhichIntersection<GridViewImp> BaseType;
+
 public:
-  typedef typename BaseType::GridViewType     GridViewType;
+  typedef typename BaseType::GridViewType GridViewType;
   typedef typename BaseType::IntersectionType IntersectionType;
 
   virtual bool apply_on(const GridViewType& grid_view, const IntersectionType& intersection) const override final
@@ -185,34 +187,32 @@ public:
 }; // class InnerIntersections
 
 
-template< class GridViewImp >
-class BoundaryIntersections
-  : public WhichIntersection< GridViewImp >
+template <class GridViewImp>
+class BoundaryIntersections : public WhichIntersection<GridViewImp>
 {
-  typedef WhichIntersection< GridViewImp > BaseType;
+  typedef WhichIntersection<GridViewImp> BaseType;
+
 public:
-  typedef typename BaseType::GridViewType     GridViewType;
+  typedef typename BaseType::GridViewType GridViewType;
   typedef typename BaseType::IntersectionType IntersectionType;
 
-  virtual bool apply_on(const GridViewType& /*grid_view*/,
-                        const IntersectionType& intersection) const override final
+  virtual bool apply_on(const GridViewType& /*grid_view*/, const IntersectionType& intersection) const override final
   {
     return intersection.boundary();
   }
 }; // class BoundaryIntersections
 
 
-template< class GridViewImp >
-class NonPeriodicBoundaryIntersections
-  : public WhichIntersection< GridViewImp >
+template <class GridViewImp>
+class NonPeriodicBoundaryIntersections : public WhichIntersection<GridViewImp>
 {
-  typedef WhichIntersection< GridViewImp > BaseType;
+  typedef WhichIntersection<GridViewImp> BaseType;
+
 public:
-  typedef typename BaseType::GridViewType     GridViewType;
+  typedef typename BaseType::GridViewType GridViewType;
   typedef typename BaseType::IntersectionType IntersectionType;
 
-  virtual bool apply_on(const GridViewType& /*grid_view*/,
-                        const IntersectionType& intersection) const override final
+  virtual bool apply_on(const GridViewType& /*grid_view*/, const IntersectionType& intersection) const override final
   {
     return intersection.boundary() && !intersection.neighbor();
   }
@@ -228,17 +228,16 @@ intersection.neighbor() && intersection.boundary()
 \endcode
  *  is used.
  */
-template< class GridViewImp >
-class PeriodicIntersections
-  : public WhichIntersection< GridViewImp >
+template <class GridViewImp>
+class PeriodicIntersections : public WhichIntersection<GridViewImp>
 {
-  typedef WhichIntersection< GridViewImp > BaseType;
+  typedef WhichIntersection<GridViewImp> BaseType;
+
 public:
-  typedef typename BaseType::GridViewType     GridViewType;
+  typedef typename BaseType::GridViewType GridViewType;
   typedef typename BaseType::IntersectionType IntersectionType;
 
-  virtual bool apply_on(const GridViewType& /*grid_view*/,
-                        const IntersectionType& intersection) const override final
+  virtual bool apply_on(const GridViewType& /*grid_view*/, const IntersectionType& intersection) const override final
   {
     return intersection.neighbor() && intersection.boundary();
   }
@@ -257,9 +256,9 @@ public:
   virtual bool apply_on(const GridViewType& grid_view, const IntersectionType& intersection) const override final
   {
     if (intersection.neighbor() && intersection.boundary()) {
-    const auto insideEntityPtr = intersection.inside();
-    const auto outsideNeighborPtr = intersection.outside();
-    return grid_view.indexSet().index(*insideEntityPtr) < grid_view.indexSet().index(*outsideNeighborPtr);
+      const auto insideEntityPtr = intersection.inside();
+      const auto outsideNeighborPtr = intersection.outside();
+      return grid_view.indexSet().index(*insideEntityPtr) < grid_view.indexSet().index(*outsideNeighborPtr);
     } else {
       return false;
     }
@@ -267,75 +266,75 @@ public:
 }; // class PeriodicIntersectionsPrimally
 
 
-template< class GridViewImp >
-class FilteredIntersections
-  : public WhichIntersection< GridViewImp >
+template <class GridViewImp>
+class FilteredIntersections : public WhichIntersection<GridViewImp>
 {
-  typedef WhichIntersection< GridViewImp > BaseType;
+  typedef WhichIntersection<GridViewImp> BaseType;
 
 public:
-  typedef typename BaseType::GridViewType     GridViewType;
+  typedef typename BaseType::GridViewType GridViewType;
   typedef typename BaseType::IntersectionType IntersectionType;
   typedef std::function<bool(const GridViewType&, const IntersectionType&)> FilterType;
 
   FilteredIntersections(FilterType filter)
     : filter_(filter)
-  {}
+  {
+  }
 
-  virtual bool apply_on(const GridViewType& grid_view,
-                        const IntersectionType& intersection) const override final
+  virtual bool apply_on(const GridViewType& grid_view, const IntersectionType& intersection) const override final
   {
     return filter_(grid_view, intersection);
   }
+
 private:
   const FilterType filter_;
 }; // class BoundaryIntersections
 
-template< class GridViewImp >
-class DirichletIntersections
-  : public WhichIntersection< GridViewImp >
+template <class GridViewImp>
+class DirichletIntersections : public WhichIntersection<GridViewImp>
 {
-  typedef WhichIntersection< GridViewImp > BaseType;
+  typedef WhichIntersection<GridViewImp> BaseType;
+
 public:
-  typedef typename BaseType::GridViewType     GridViewType;
+  typedef typename BaseType::GridViewType GridViewType;
   typedef typename BaseType::IntersectionType IntersectionType;
 
-  explicit DirichletIntersections(const BoundaryInfoInterface< IntersectionType >& boundary_info)
+  explicit DirichletIntersections(const BoundaryInfoInterface<IntersectionType>& boundary_info)
     : boundary_info_(boundary_info)
-  {}
+  {
+  }
 
-  virtual bool apply_on(const GridViewType& /*grid_view*/,
-                        const IntersectionType& intersection) const override final
+  virtual bool apply_on(const GridViewType& /*grid_view*/, const IntersectionType& intersection) const override final
   {
     return boundary_info_.dirichlet(intersection);
   }
 
 private:
-  const BoundaryInfoInterface< IntersectionType >& boundary_info_;
+  const BoundaryInfoInterface<IntersectionType>& boundary_info_;
 }; // class DirichletIntersections
 
 
-template< class GridViewImp >
-class NeumannIntersections
-  : public WhichIntersection< GridViewImp >
+template <class GridViewImp>
+class NeumannIntersections : public WhichIntersection<GridViewImp>
 {
-  typedef WhichIntersection< GridViewImp > BaseType;
+  typedef WhichIntersection<GridViewImp> BaseType;
+
 public:
-  typedef typename BaseType::GridViewType     GridViewType;
+  typedef typename BaseType::GridViewType GridViewType;
   typedef typename BaseType::IntersectionType IntersectionType;
 
-  explicit NeumannIntersections(const BoundaryInfoInterface< IntersectionType >& boundary_info)
+  explicit NeumannIntersections(const BoundaryInfoInterface<IntersectionType>& boundary_info)
     : boundary_info_(boundary_info)
-  {}
+  {
+  }
 
-  virtual bool apply_on(const GridViewType& /*grid_view*/,
-                        const IntersectionType& intersection) const override final
+  virtual bool apply_on(const GridViewType& /*grid_view*/, const IntersectionType& intersection) const override final
   {
     return boundary_info_.neumann(intersection);
   }
 
 private:
-  const BoundaryInfoInterface< IntersectionType >& boundary_info_;
+  const BoundaryInfoInterface<IntersectionType>& boundary_info_;
 }; // class NeumannIntersections
 
 

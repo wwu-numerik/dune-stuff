@@ -12,8 +12,8 @@ namespace Stuff {
 namespace Grid {
 
 
-template< int dd >
-GeometryType FakeEntity< dd >::type() const
+template <int dd>
+GeometryType FakeEntity<dd>::type() const
 {
   return GeometryType(GeometryType::simplex, dd);
 }
@@ -23,6 +23,6 @@ GeometryType FakeEntity< dd >::type() const
 } // namespace Stuff
 } // namespace Dune
 
-template class Dune::Stuff::Grid::FakeEntity< 1 >;
-template class Dune::Stuff::Grid::FakeEntity< 2 >;
-template class Dune::Stuff::Grid::FakeEntity< 3 >;
+template class Dune::Stuff::Grid::FakeEntity<1>;
+template class Dune::Stuff::Grid::FakeEntity<2>;
+template class Dune::Stuff::Grid::FakeEntity<3>;

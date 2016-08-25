@@ -35,10 +35,9 @@ enum LogFlags
 };
 
 
-class SuspendableStrBuffer
-  : public std::basic_stringbuf< char, std::char_traits<char> >
+class SuspendableStrBuffer : public std::basic_stringbuf<char, std::char_traits<char>>
 {
-  typedef std::basic_stringbuf< char, std::char_traits<char> > BaseType;
+  typedef std::basic_stringbuf<char, std::char_traits<char>> BaseType;
 
 public:
   typedef int PriorityType;
@@ -50,7 +49,7 @@ public:
      * the suspend_priority_ mechanism provides a way to silence streams from 'higher' modules
      * no-op if already suspended
      ***/
-  void suspend(PriorityType priority );
+  void suspend(PriorityType priority);
 
   /** \brief start accepting input into the buffer again
      * no-op if not suspended
@@ -60,11 +59,12 @@ public:
   int pubsync();
 
 protected:
-  virtual std::streamsize xsputn( const char_type* s, std::streamsize count );
-  virtual int_type overflow( int_type ch = traits_type::eof() );
+  virtual std::streamsize xsputn(const char_type* s, std::streamsize count);
+  virtual int_type overflow(int_type ch = traits_type::eof());
 
 private:
-  inline bool enabled() const {
+  inline bool enabled() const
+  {
     return (!is_suspended_) && (logflags_ & loglevel_);
   }
 
@@ -79,30 +79,31 @@ private:
 }; // class SuspendableStrBuffer
 
 
-class FileBuffer
-  : public SuspendableStrBuffer
+class FileBuffer : public SuspendableStrBuffer
 {
 public:
   FileBuffer(int loglevel, int& logflags, std::ofstream& file)
     : SuspendableStrBuffer(loglevel, logflags)
     , logfile_(file)
-  {}
+  {
+  }
 
 private:
   std::ofstream& logfile_;
   std::mutex sync_mutex_;
+
 protected:
   virtual int sync();
 }; // class FileBuffer
 
 
-class EmptyBuffer
-  : public SuspendableStrBuffer
+class EmptyBuffer : public SuspendableStrBuffer
 {
 public:
   EmptyBuffer(int loglevel, int& logflags)
     : SuspendableStrBuffer(loglevel, logflags)
-  {}
+  {
+  }
 
 protected:
   virtual int sync();
@@ -114,10 +115,10 @@ protected:
  *
  * \note Most likely you do not want to use this class directly, but TimedPrefixedLogStream instead.
  */
-class TimedPrefixedStreamBuffer
-  : public std::basic_stringbuf< char, std::char_traits< char > >
+class TimedPrefixedStreamBuffer : public std::basic_stringbuf<char, std::char_traits<char>>
 {
-  typedef std::basic_stringbuf< char, std::char_traits< char > > BaseType;
+  typedef std::basic_stringbuf<char, std::char_traits<char>> BaseType;
+
 public:
   TimedPrefixedStreamBuffer(const Timer& timer, const std::string prefix, std::ostream& out = std::cout);
 
@@ -136,12 +137,11 @@ private:
 }; // class TimedPrefixedStreamBuffer
 
 
-class LogStream
-  : StorageProvider< SuspendableStrBuffer >
-  , public std::basic_ostream< char, std::char_traits<char> >
+class LogStream : StorageProvider<SuspendableStrBuffer>, public std::basic_ostream<char, std::char_traits<char>>
 {
-  typedef StorageProvider< SuspendableStrBuffer > StorageBaseType;
-  typedef std::basic_ostream< char, std::char_traits<char> > BaseType;
+  typedef StorageProvider<SuspendableStrBuffer> StorageBaseType;
+  typedef std::basic_ostream<char, std::char_traits<char>> BaseType;
+
 public:
   typedef SuspendableStrBuffer::PriorityType PriorityType;
   static const PriorityType default_suspend_priority = SuspendableStrBuffer::default_suspend_priority;
@@ -149,7 +149,8 @@ public:
   explicit LogStream(SuspendableStrBuffer* buffer)
     : StorageBaseType(buffer)
     , BaseType(&this->storage_access())
-  {}
+  {
+  }
 
   virtual ~LogStream()
   {
@@ -176,9 +177,8 @@ public:
   {
     assert(&this->storage_access());
     this->storage_access().resume(priority);
-  }   // Resume
+  } // Resume
 }; // LogStream
-
 
 
 /**
@@ -204,12 +204,11 @@ out << "\n" << 3 << "\n\nend" << std::endl;
  *
  * \note This class is intended to be used by TimedLogManager.
  */
-class TimedPrefixedLogStream
-  : StorageProvider< TimedPrefixedStreamBuffer >
-  , public std::basic_ostream< char, std::char_traits< char > >
+class TimedPrefixedLogStream : StorageProvider<TimedPrefixedStreamBuffer>,
+                               public std::basic_ostream<char, std::char_traits<char>>
 {
-  typedef StorageProvider< TimedPrefixedStreamBuffer >         StorageBaseType;
-  typedef std::basic_ostream< char, std::char_traits< char > > OstreamBaseType;
+  typedef StorageProvider<TimedPrefixedStreamBuffer> StorageBaseType;
+  typedef std::basic_ostream<char, std::char_traits<char>> OstreamBaseType;
 
 public:
   TimedPrefixedLogStream(const Timer& timer, const std::string prefix, std::ostream& outstream);
@@ -219,30 +218,30 @@ public:
 
 
 //! ostream compatible class wrapping file and console output
-class FileLogStream
-  : public LogStream
+class FileLogStream : public LogStream
 {
 public:
   FileLogStream(int loglevel, int& logflags, /*std::ofstream& file,*/ std::ofstream& fileWoTime)
     : LogStream(new FileBuffer(loglevel, logflags, /*file,*/ fileWoTime))
-  {}
+  {
+  }
 }; // class FileLogStream
 
 
 //! /dev/null
-class EmptyLogStream
-  : public LogStream
+class EmptyLogStream : public LogStream
 {
 public:
   explicit EmptyLogStream(int& logflags)
     : LogStream(new EmptyBuffer(int(LOG_NONE), logflags))
-  {}
+  {
+  }
 }; // class EmptyLogStream
 
 
 namespace {
-  int dev_null_logflag;
-  EmptyLogStream dev_null(dev_null_logflag);
+int dev_null_logflag;
+EmptyLogStream dev_null(dev_null_logflag);
 }
 
 

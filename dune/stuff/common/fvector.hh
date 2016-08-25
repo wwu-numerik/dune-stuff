@@ -22,19 +22,19 @@ namespace Stuff {
 namespace Common {
 
 
-template< class K, int SIZE >
-class FieldVector
-  : public Dune::FieldVector< K, SIZE >
+template <class K, int SIZE>
+class FieldVector : public Dune::FieldVector<K, SIZE>
 {
   static_assert(SIZE >= 0, "Really?");
 
-  typedef Dune::FieldVector< K, SIZE > BaseType;
-  typedef FieldVector< K, SIZE >       ThisType;
+  typedef Dune::FieldVector<K, SIZE> BaseType;
+  typedef FieldVector<K, SIZE> ThisType;
 
 public:
   FieldVector(const K kk = 0)
     : BaseType(kk)
-  {}
+  {
+  }
 
   FieldVector(const size_t UNUSED_UNLESS_DEBUG(sz), const K kk)
     : BaseType(kk)
@@ -42,44 +42,53 @@ public:
 #ifndef NDEBUG
     if (sz != SIZE)
       DUNE_THROW(Exceptions::wrong_input_given,
-                 "You are trying to construct a FieldVector< ..., " << SIZE << " > (of " << "static size) with " << sz
-                 << " elements!");
+                 "You are trying to construct a FieldVector< ..., " << SIZE << " > (of "
+                                                                    << "static size) with "
+                                                                    << sz
+                                                                    << " elements!");
 #endif // NDEBUG
   } // ... FieldVector(...)
 
   FieldVector(const BaseType& other)
     : BaseType(other)
-  {}
+  {
+  }
 
   /* FieldMatrix< K, 1, 1 > is convertible to K, which in turn is convertible to FieldVector< K, 1 >. Without the
    * following constructor, this leads to an "ambiguous constructor" error (candidates are copy constructor and
    * constructor taking a K) */
-  template< class Type = K >
-  FieldVector(const typename std::enable_if< SIZE == 1 && std::is_same< K, Type >::value, typename Dune::FieldMatrix< K, 1, 1 > >::type& mat)
+  template <class Type = K>
+  FieldVector(const typename std::enable_if<SIZE == 1 && std::is_same<K, Type>::value,
+                                            typename Dune::FieldMatrix<K, 1, 1>>::type& mat)
     : BaseType(mat[0][0])
-  {}
+  {
+  }
 
-  FieldVector(const std::vector< K >& vec)
+  FieldVector(const std::vector<K>& vec)
     : BaseType(K(0))
   {
 #ifndef NDEBUG
     if (vec.size() != SIZE)
       DUNE_THROW(Exceptions::wrong_input_given,
                  "You are trying to construct a FieldVector< ..., " << SIZE << " > (of "
-                 << "static size) from a vector of size " << vec.size() << "!");
+                                                                    << "static size) from a vector of size "
+                                                                    << vec.size()
+                                                                    << "!");
 #endif // NDEBUG
     for (size_t ii = 0; ii < SIZE; ++ii)
       this->operator[](ii) = vec[ii];
   } // FieldVector(...)
 
-  FieldVector(std::initializer_list< K > list)
+  FieldVector(std::initializer_list<K> list)
     : BaseType(K(0))
   {
 #ifndef NDEBUG
     if (list.size() != SIZE)
       DUNE_THROW(Exceptions::wrong_input_given,
                  "You are trying to construct a FieldVector< ..., " << SIZE << " > (of "
-                 << "static size) from a list of size " << list.size() << "!");
+                                                                    << "static size) from a list of size "
+                                                                    << list.size()
+                                                                    << "!");
 #endif // NDEBUG
     size_t ii = 0;
     for (auto element : list)
@@ -92,9 +101,9 @@ public:
     return *this;
   }
 
-  operator std::vector< K >() const
+  operator std::vector<K>() const
   {
-    std::vector< K > ret(SIZE);
+    std::vector<K> ret(SIZE);
     for (size_t ii = 0; ii < SIZE; ++ii)
       ret[ii] = this->operator[](ii);
     return ret;
@@ -111,34 +120,34 @@ public:
 }; // class FieldVector
 
 
-template< class K, int SIZE, K value >
-class ValueInitFieldVector
-  : public Dune::Stuff::Common::FieldVector< K, SIZE >
+template <class K, int SIZE, K value>
+class ValueInitFieldVector : public Dune::Stuff::Common::FieldVector<K, SIZE>
 {
-  typedef Dune::Stuff::Common::FieldVector< K, SIZE > BaseType;
+  typedef Dune::Stuff::Common::FieldVector<K, SIZE> BaseType;
 
 public:
   ValueInitFieldVector()
     : BaseType(value)
-  {}
+  {
+  }
 }; // class FieldVector
 
 
 //! Specialization of VectorAbstraction for Dune::Stuff::Common::FieldVector
-template< class K, int SIZE >
-struct VectorAbstraction< Dune::Stuff::Common::FieldVector< K, SIZE > >
+template <class K, int SIZE>
+struct VectorAbstraction<Dune::Stuff::Common::FieldVector<K, SIZE>>
 {
-  typedef Dune::Stuff::Common::FieldVector< K, SIZE >  VectorType;
-  typedef typename Dune::FieldTraits< K >::field_type  ScalarType;
-  typedef typename Dune::FieldTraits< K >::real_type RealType;
+  typedef Dune::Stuff::Common::FieldVector<K, SIZE> VectorType;
+  typedef typename Dune::FieldTraits<K>::field_type ScalarType;
+  typedef typename Dune::FieldTraits<K>::real_type RealType;
   typedef ScalarType S;
-  typedef RealType   R;
+  typedef RealType R;
 
   static const bool is_vector = true;
 
   static const bool has_static_size = true;
 
-  static const  size_t static_size = SIZE;
+  static const size_t static_size = SIZE;
 
   static inline VectorType create(const size_t sz)
   {

@@ -36,24 +36,26 @@ namespace LA {
 namespace Tags {
 
 
-class MatrixInterface {};
+class MatrixInterface
+{
+};
 
 
 } // namespace Tags
 
 
-template< class Traits, class ScalarImp = typename Traits::ScalarType >
-class MatrixInterface
-  : public ContainerInterface< Traits, ScalarImp >
-  , public Tags::MatrixInterface
+template <class Traits, class ScalarImp = typename Traits::ScalarType>
+class MatrixInterface : public ContainerInterface<Traits, ScalarImp>, public Tags::MatrixInterface
 {
 public:
-  typedef typename Traits::derived_type                       derived_type;
-  typedef typename Dune::FieldTraits< ScalarImp >::field_type ScalarType;
-  typedef typename Dune::FieldTraits< ScalarImp >::real_type  RealType;
-  static const constexpr ChooseBackend                        vector_type = Traits::vector_type;
+  typedef typename Traits::derived_type derived_type;
+  typedef typename Dune::FieldTraits<ScalarImp>::field_type ScalarType;
+  typedef typename Dune::FieldTraits<ScalarImp>::real_type RealType;
+  static const constexpr ChooseBackend vector_type = Traits::vector_type;
 
-  virtual ~MatrixInterface() {}
+  virtual ~MatrixInterface()
+  {
+  }
 
   /// \name Have to be implemented by a derived class in addition to the ones required by ContainerInterface!
   /// \{
@@ -70,7 +72,7 @@ public:
     return this->as_imp().cols();
   }
 
-  template< class XX, class YY >
+  template <class XX, class YY>
   inline void mv(const XX& xx, YY& yy) const
   {
     CHECK_AND_CALL_CRTP(this->as_imp().mv(xx, yy));
@@ -127,8 +129,8 @@ public:
   /// \note Those marked with virtual should be overriden by any devired class that can do better.
   /// \{
 
-  template< class XX >
-  typename XX::derived_type operator*(const VectorInterface< XX, ScalarType >& xx) const
+  template <class XX>
+  typename XX::derived_type operator*(const VectorInterface<XX, ScalarType>& xx) const
   {
     typename XX::derived_type yy(rows());
     mv(xx.as_imp(xx), yy);
@@ -149,7 +151,8 @@ public:
    *
    * This is mainly useful for sparse matrices and returns rows() times cols() for dense matrices.
    *
-   * \note Some implementations do not report the correct number here, so use and interpret only if you know what you are doing!
+   * \note Some implementations do not report the correct number here, so use and interpret only if you know what you
+   * are doing!
    */
   virtual size_t non_zeros() const
   {
@@ -161,17 +164,18 @@ public:
    *
    * This is mainly useful for sparse matrices and returns a full pattern for dense matrices
    *
-   * \param prune If true, treats all entries smaller than eps as zero and does not include these indices in the returned pattern
+   * \param prune If true, treats all entries smaller than eps as zero and does not include these indices in the
+   * returned pattern
    */
   virtual SparsityPatternDefault pattern(const bool prune = false,
-                                         const typename Common::FloatCmp::DefaultEpsilon< ScalarType >::Type eps
-                                            = Common::FloatCmp::DefaultEpsilon< ScalarType >::value()) const
+                                         const typename Common::FloatCmp::DefaultEpsilon<ScalarType>::Type eps =
+                                             Common::FloatCmp::DefaultEpsilon<ScalarType>::value()) const
   {
     SparsityPatternDefault ret(rows());
     if (prune) {
       for (size_t ii = 0; ii < rows(); ++ii)
         for (size_t jj = 0; jj < cols(); ++jj)
-          if (Common::FloatCmp::ne< Common::FloatCmp::Style::absolute >(get_entry(ii, jj), ScalarType(0), eps))
+          if (Common::FloatCmp::ne<Common::FloatCmp::Style::absolute>(get_entry(ii, jj), ScalarType(0), eps))
             ret.insert(ii, jj);
     } else {
       for (size_t ii = 0; ii < rows(); ++ii)
@@ -191,8 +195,8 @@ public:
    * \sa    pattern
    * \param eps Is forwarded to pattern(true, eps)
    */
-  virtual derived_type pruned(const typename Common::FloatCmp::DefaultEpsilon< ScalarType >::Type eps
-                                = Common::FloatCmp::DefaultEpsilon< ScalarType >::value()) const
+  virtual derived_type pruned(const typename Common::FloatCmp::DefaultEpsilon<ScalarType>::Type eps =
+                                  Common::FloatCmp::DefaultEpsilon<ScalarType>::value()) const
   {
     auto pruned_pattern = pattern(true, eps);
     derived_type ret(rows(), cols(), pruned_pattern);
@@ -209,81 +213,87 @@ public:
   inline DUNE_STUFF_SSIZE_T pb_rows() const
   {
     try {
-      return boost::numeric_cast< DUNE_STUFF_SSIZE_T >(rows());
+      return boost::numeric_cast<DUNE_STUFF_SSIZE_T>(rows());
     } catch (boost::bad_numeric_cast& ee) {
       DUNE_THROW(Exceptions::external_error,
                  "There was an error in boost converting '" << rows() << "' to '"
-                 << Common::Typename< ScalarType >::value() << "': " << ee.what());
+                                                            << Common::Typename<ScalarType>::value()
+                                                            << "': "
+                                                            << ee.what());
     }
   } // ... pb_rows(...)
 
   inline DUNE_STUFF_SSIZE_T pb_cols() const
   {
     try {
-      return boost::numeric_cast< DUNE_STUFF_SSIZE_T >(cols());
+      return boost::numeric_cast<DUNE_STUFF_SSIZE_T>(cols());
     } catch (boost::bad_numeric_cast& ee) {
       DUNE_THROW(Exceptions::external_error,
                  "There was an error in boost converting '" << cols() << "' to '"
-                 << Common::Typename< ScalarType >::value() << "': " << ee.what());
+                                                            << Common::Typename<ScalarType>::value()
+                                                            << "': "
+                                                            << ee.what());
     }
   } // ... pb_cols(...)
 
   inline void pb_add_to_entry(const DUNE_STUFF_SSIZE_T ii, const DUNE_STUFF_SSIZE_T jj, const ScalarType& value)
   {
-    add_to_entry(boost::numeric_cast< size_t >(ii), boost::numeric_cast< size_t >(jj), value);
+    add_to_entry(boost::numeric_cast<size_t>(ii), boost::numeric_cast<size_t>(jj), value);
   }
 
   inline void pb_set_entry(const DUNE_STUFF_SSIZE_T ii, const DUNE_STUFF_SSIZE_T jj, const ScalarType& value)
   {
-    set_entry(boost::numeric_cast< size_t >(ii), boost::numeric_cast< size_t >(jj), value);
+    set_entry(boost::numeric_cast<size_t>(ii), boost::numeric_cast<size_t>(jj), value);
   }
 
   inline ScalarType pb_get_entry(const DUNE_STUFF_SSIZE_T ii, const DUNE_STUFF_SSIZE_T jj) const
   {
-    return get_entry(boost::numeric_cast< size_t >(ii), boost::numeric_cast< size_t >(jj));
+    return get_entry(boost::numeric_cast<size_t>(ii), boost::numeric_cast<size_t>(jj));
   }
 
   inline void pb_clear_row(const DUNE_STUFF_SSIZE_T ii)
   {
-    clear_row(boost::numeric_cast< size_t >(ii));
+    clear_row(boost::numeric_cast<size_t>(ii));
   }
 
   inline void pb_clear_col(const DUNE_STUFF_SSIZE_T jj)
   {
-    clear_col(boost::numeric_cast< size_t >(jj));
+    clear_col(boost::numeric_cast<size_t>(jj));
   }
 
   inline void pb_unit_row(const DUNE_STUFF_SSIZE_T ii)
   {
-    unit_row(boost::numeric_cast< size_t >(ii));
+    unit_row(boost::numeric_cast<size_t>(ii));
   }
 
   inline void pb_unit_col(const DUNE_STUFF_SSIZE_T jj)
   {
-    unit_col(boost::numeric_cast< size_t >(jj));
+    unit_col(boost::numeric_cast<size_t>(jj));
   }
 
   DUNE_STUFF_SSIZE_T pb_non_zeros() const
   {
     try {
-      return boost::numeric_cast< DUNE_STUFF_SSIZE_T >(non_zeros());
+      return boost::numeric_cast<DUNE_STUFF_SSIZE_T>(non_zeros());
     } catch (boost::bad_numeric_cast& ee) {
       DUNE_THROW(Exceptions::external_error,
                  "There was an error in boost converting '" << non_zeros() << "' to '"
-                 << Common::Typename< ScalarType >::value() << "': " << ee.what());
+                                                            << Common::Typename<ScalarType>::value()
+                                                            << "': "
+                                                            << ee.what());
     }
   } // ... pb_non_zeros(...)
 
   /// \}
 
 private:
-  template< class T, class S >
-  friend std::ostream& operator<<(std::ostream& /*out*/, const MatrixInterface< T, S >& /*matrix*/);
+  template <class T, class S>
+  friend std::ostream& operator<<(std::ostream& /*out*/, const MatrixInterface<T, S>& /*matrix*/);
 }; // class MatrixInterface
 
 
-template< class T, class S >
-std::ostream& operator<<(std::ostream& out, const MatrixInterface< T, S >& matrix)
+template <class T, class S>
+std::ostream& operator<<(std::ostream& out, const MatrixInterface<T, S>& matrix)
 {
   out << "[";
   const size_t rows = matrix.rows();
@@ -309,76 +319,71 @@ std::ostream& operator<<(std::ostream& out, const MatrixInterface< T, S >& matri
 namespace internal {
 
 
-template< class M >
+template <class M>
 struct is_matrix_helper
 {
-  DSC_has_typedef_initialize_once(Traits)
-  DSC_has_typedef_initialize_once(ScalarType)
+  DSC_has_typedef_initialize_once(Traits) DSC_has_typedef_initialize_once(ScalarType)
 
-  static const bool is_candidate = DSC_has_typedef(Traits)< M >::value
-                                   && DSC_has_typedef(ScalarType)< M >::value;
+      static const bool is_candidate = DSC_has_typedef(Traits)<M>::value && DSC_has_typedef(ScalarType)<M>::value;
 }; // class is_matrix_helper
 
 
 } // namespace internal
 
 
-template< class M, bool candidate = internal::is_matrix_helper< M >::is_candidate >
-struct is_matrix
-  : public std::is_base_of< MatrixInterface< typename M::Traits, typename M::ScalarType >, M >
-{};
+template <class M, bool candidate = internal::is_matrix_helper<M>::is_candidate>
+struct is_matrix : public std::is_base_of<MatrixInterface<typename M::Traits, typename M::ScalarType>, M>
+{
+};
 
 
-template< class M >
-struct is_matrix< M, false >
-  : public std::false_type
-{};
+template <class M>
+struct is_matrix<M, false> : public std::false_type
+{
+};
 
 
 namespace internal {
 
 
-template< class MatrixImp >
+template <class MatrixImp>
 struct MatrixAbstractionBase
 {
-  static const bool is_matrix = LA::is_matrix< MatrixImp >::value;
+  static const bool is_matrix = LA::is_matrix<MatrixImp>::value;
 
   static const bool has_static_size = false;
 
-  static const size_t static_rows = std::numeric_limits< size_t >::max();
+  static const size_t static_rows = std::numeric_limits<size_t>::max();
 
-  static const size_t static_cols = std::numeric_limits< size_t >::max();
+  static const size_t static_cols = std::numeric_limits<size_t>::max();
 
-  typedef typename std::conditional< is_matrix, MatrixImp, void >::type                      MatrixType;
-  typedef typename std::conditional< is_matrix, typename Dune::FieldTraits< typename MatrixImp::ScalarType>::field_type, void >::type ScalarType;
-  typedef typename std::conditional< is_matrix, typename Dune::FieldTraits< typename MatrixImp::ScalarType>::real_type, void >::type RealType;
+  typedef typename std::conditional<is_matrix, MatrixImp, void>::type MatrixType;
+  typedef typename std::conditional<is_matrix,
+                                    typename Dune::FieldTraits<typename MatrixImp::ScalarType>::field_type,
+                                    void>::type ScalarType;
+  typedef typename std::conditional<is_matrix,
+                                    typename Dune::FieldTraits<typename MatrixImp::ScalarType>::real_type,
+                                    void>::type RealType;
   typedef ScalarType S;
-  typedef RealType   R;
+  typedef RealType R;
 
-  static inline
-    typename std::enable_if< is_matrix, MatrixType >::type
-                create(const size_t rows, const size_t cols)
+  static inline typename std::enable_if<is_matrix, MatrixType>::type create(const size_t rows, const size_t cols)
   {
     return MatrixType(rows, cols);
   }
 
-  static inline
-    typename std::enable_if< is_matrix, MatrixType >::type
-                create(const size_t rows, const size_t cols, const ScalarType& val)
+  static inline typename std::enable_if<is_matrix, MatrixType>::type
+  create(const size_t rows, const size_t cols, const ScalarType& val)
   {
     return MatrixType(rows, cols, val);
   }
 
-  static inline
-    typename std::enable_if< is_matrix, size_t >::type
-                rows(const MatrixType& mat)
+  static inline typename std::enable_if<is_matrix, size_t>::type rows(const MatrixType& mat)
   {
     return mat.rows();
   }
 
-  static inline
-    typename std::enable_if< is_matrix, size_t >::type
-                cols(const MatrixType& mat)
+  static inline typename std::enable_if<is_matrix, size_t>::type cols(const MatrixType& mat)
   {
     return mat.cols();
   }
@@ -388,9 +393,8 @@ struct MatrixAbstractionBase
     mat.set_entry(row, col, val);
   }
 
-  static inline
-    typename std::enable_if< is_matrix, ScalarType >::type
-                get_entry(const MatrixType& mat, const size_t row, const size_t col)
+  static inline typename std::enable_if<is_matrix, ScalarType>::type
+  get_entry(const MatrixType& mat, const size_t row, const size_t col)
   {
     return mat.get_entry(row, col);
   }

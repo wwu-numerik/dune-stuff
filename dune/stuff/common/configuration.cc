@@ -10,48 +10,57 @@
 #include "configuration.hh"
 
 #if HAVE_DUNE_FEM
-# include <dune/fem/io/parameter.hh>
+#include <dune/fem/io/parameter.hh>
 #endif
 
 #ifndef HAVE_DUNE_FEM_PARAMETER_REPLACE
-# define HAVE_DUNE_FEM_PARAMETER_REPLACE 0
+#define HAVE_DUNE_FEM_PARAMETER_REPLACE 0
 #endif
 
-#define DSC_ORDER_REL_GENERIC(var,a,b) \
-  if (a.var < b.var) { \
-  return true;} \
-  if (a.var > b.var) { \
-  return false; }
+#define DSC_ORDER_REL_GENERIC(var, a, b)                                                                               \
+  if (a.var < b.var) {                                                                                                 \
+    return true;                                                                                                       \
+  }                                                                                                                    \
+  if (a.var > b.var) {                                                                                                 \
+    return false;                                                                                                      \
+  }
 
-#define DSC_ORDER_REL(var) DSC_ORDER_REL_GENERIC(var,(*this),other)
+#define DSC_ORDER_REL(var) DSC_ORDER_REL_GENERIC(var, (*this), other)
 
 namespace Dune {
 namespace Stuff {
 namespace Common {
 
-Request::Request(const int _line, const std::string _file, const std::string _key,
-                 const std::string _def, const std::string _validator)
+Request::Request(const int _line,
+                 const std::string _file,
+                 const std::string _key,
+                 const std::string _def,
+                 const std::string _validator)
   : line(_line)
   , file(_file)
   , key(_key)
   , def(_def)
   , validator(_validator)
-{}
-
-bool Request::operator < (const Request& other) const {
-  DSC_ORDER_REL(key)
-      DSC_ORDER_REL(def)
-      DSC_ORDER_REL(file)
-      DSC_ORDER_REL(line)
-      return validator < other.validator;
+{
 }
 
-bool strictRequestCompare(const Request& a, const Request& b) {
-  DSC_ORDER_REL_GENERIC(key,a,b);
+bool Request::operator<(const Request& other) const
+{
+  DSC_ORDER_REL(key)
+  DSC_ORDER_REL(def)
+  DSC_ORDER_REL(file)
+  DSC_ORDER_REL(line)
+  return validator < other.validator;
+}
+
+bool strictRequestCompare(const Request& a, const Request& b)
+{
+  DSC_ORDER_REL_GENERIC(key, a, b);
   return a.def < b.def;
 }
 
-std::ostream& operator <<(std::ostream& out, const Request& r) {
+std::ostream& operator<<(std::ostream& out, const Request& r)
+{
   boost::format out_f("Request for %s with default %s in %s:%d (validation: %s)");
   out_f % r.key % r.def % r.file % r.line % r.validator;
   out << out_f.str();
@@ -107,7 +116,8 @@ Configuration::Configuration(const Configuration& other)
   , warn_on_default_access_(other.warn_on_default_access_)
   , log_on_exit_(other.log_on_exit_)
   , logfile_(other.logfile_)
-{}
+{
+}
 
 Configuration::Configuration(std::istream& in,
                              const bool record_defaults,
@@ -120,7 +130,8 @@ Configuration::Configuration(std::istream& in,
   , warn_on_default_access_(warn_on_default_access)
   , log_on_exit_(log_on_exit)
   , logfile_(logfile)
-{}
+{
+}
 
 Configuration::Configuration(const std::string filename,
                              const bool record_defaults,
@@ -128,7 +139,8 @@ Configuration::Configuration(const std::string filename,
                              const bool log_on_exit,
                              const std::string logfile)
   : Configuration::Configuration(initialize(filename), record_defaults, warn_on_default_access, log_on_exit, logfile)
-{}
+{
+}
 
 Configuration::Configuration(int argc,
                              char** argv,
@@ -137,7 +149,8 @@ Configuration::Configuration(int argc,
                              const bool log_on_exit,
                              const std::string logfile)
   : Configuration::Configuration(initialize(argc, argv), record_defaults, warn_on_default_access, log_on_exit, logfile)
-{}
+{
+}
 
 Configuration::Configuration(int argc,
                              char** argv,
@@ -146,9 +159,10 @@ Configuration::Configuration(int argc,
                              const bool warn_on_default_access,
                              const bool log_on_exit,
                              const std::string logfile)
-  : Configuration::Configuration(initialize(argc, argv, filename),
-                                 record_defaults, warn_on_default_access, log_on_exit, logfile)
-{}
+  : Configuration::Configuration(
+        initialize(argc, argv, filename), record_defaults, warn_on_default_access, log_on_exit, logfile)
+{
+}
 
 Configuration::Configuration(const std::string key,
                              const char* value,
@@ -184,26 +198,23 @@ Configuration::Configuration(const char* key,
   setup_();
 }
 
-Configuration::Configuration(const std::vector< std::string > keys,
-                             const std::initializer_list< std::string > value_list,
+Configuration::Configuration(const std::vector<std::string> keys,
+                             const std::initializer_list<std::string> value_list,
                              const bool record_defaults,
                              const bool warn_on_default_access,
                              const bool log_on_exit,
                              const std::string logfile)
-  : Configuration(keys,
-                    std::vector< std::string >(value_list),
-                    record_defaults,
-                    warn_on_default_access,
-                    log_on_exit,
-                    logfile)
-{}
+  : Configuration(
+        keys, std::vector<std::string>(value_list), record_defaults, warn_on_default_access, log_on_exit, logfile)
+{
+}
 
 Configuration::~Configuration()
 {
   if (log_on_exit_ && !empty()) {
     testCreateDirectory(directoryOnly(logfile_));
     report(*DSC::make_ofstream(logfile_));
-    print_mismatched_defaults(*DSC::make_ofstream(logfile_+".requests"));
+    print_mismatched_defaults(*DSC::make_ofstream(logfile_ + ".requests"));
   }
 }
 
@@ -234,8 +245,8 @@ void Configuration::set_logfile(const std::string logfile)
 
 std::set<Request> Configuration::get_mismatched_defaults(Configuration::RequestMapType::value_type pair) const
 {
-  typedef bool (*func)(const Request&,const Request&);
-  std::set<Request,func> mismatched(&strictRequestCompare);
+  typedef bool (*func)(const Request&, const Request&);
+  std::set<Request, func> mismatched(&strictRequestCompare);
   mismatched.insert(pair.second.begin(), pair.second.end());
   if (mismatched.size() <= std::size_t(1))
     return std::set<Request>();
@@ -251,7 +262,7 @@ std::set<Request> Configuration::get_mismatched_defaults(Configuration::RequestM
 void loadIntoFemParameter(const Dune::ParameterTree& tree, const std::string pref = "")
 {
 #if HAVE_DUNE_FEM_PARAMETER_REPLACE
-  for(auto key : tree.getValueKeys()) {
+  for (auto key : tree.getValueKeys()) {
     const auto val = tree.get(key, std::string());
     key = pref + "." + key;
     Dune::Fem::Parameter::replaceKey(key, val);
@@ -277,13 +288,15 @@ Configuration Configuration::sub(const std::string sub_id) const
   if (empty())
     DUNE_THROW(Exceptions::configuration_error,
                "You can not get anything from an empty Configuration, use has_sub(\"" << sub_id
-               << "\") to check first!");
+                                                                                      << "\") to check first!");
   if (sub_id.empty())
     DUNE_THROW(Exceptions::configuration_error, "Given sub_id must not be empty!");
   if (!has_sub(sub_id))
     DUNE_THROW(Exceptions::configuration_error,
                "Subtree '" << sub_id << "' does not exist in this Configuration (see below), use has_sub(\"" << sub_id
-               << "\") to check first!" << "\n======================\n" << report_string());
+                           << "\") to check first!"
+                           << "\n======================\n"
+                           << report_string());
   return Configuration(BaseType::sub(sub_id));
 } // ... sub(...)
 
@@ -374,9 +387,9 @@ std::string Configuration::report_string(const std::string& prefix) const
   return stream.str();
 } // ... report_string(...)
 
-void Configuration::read_command_line(int argc, char* argv[]) {
-  if (argc < 2)
-  {
+void Configuration::read_command_line(int argc, char* argv[])
+{
+  if (argc < 2) {
     boost::format usage("usage: %s parameter.file *[-section.key override-value]");
     DUNE_THROW(Dune::Exception, (usage % argv[0]).str());
   }
@@ -394,21 +407,24 @@ void Configuration::read_options(int argc, char* argv[])
 }
 
 #ifdef DSC_CONFIGURATION_DEBUG
-  void Configuration::requests_map_insert(Request request, std::string name) {
-    std::lock_guard<std::mutex> guard(requests_mutex_);
-    requests_map_[name].insert(request);
-  }
+void Configuration::requests_map_insert(Request request, std::string name)
+{
+  std::lock_guard<std::mutex> guard(requests_mutex_);
+  requests_map_[name].insert(request);
+}
 #else
-  void Configuration::requests_map_insert(Request /*request*/, std::string /*name*/) {}
+void Configuration::requests_map_insert(Request /*request*/, std::string /*name*/)
+{
+}
 #endif
 
 void Configuration::print_requests(std::ostream& out) const
 {
   if (!requests_map_.empty()) {
     out << "Config requests:";
-    for( const auto& pair : requests_map_ ) {
+    for (const auto& pair : requests_map_) {
       out << "Key: " << pair.first;
-      for( const auto& req : pair.second ) {
+      for (const auto& req : pair.second) {
         out << "\n\t" << req;
       }
       out << std::endl;
@@ -419,9 +435,9 @@ void Configuration::print_requests(std::ostream& out) const
 Configuration::RequestMapType Configuration::get_mismatched_defaults_map() const
 {
   RequestMapType ret;
-  for( const auto& pair : requests_map_ ) {
+  for (const auto& pair : requests_map_) {
     auto mismatches = get_mismatched_defaults(pair);
-    if(mismatches.size() > 1)
+    if (mismatches.size() > 1)
       ret[pair.first] = mismatches;
   }
   return ret;
@@ -429,11 +445,11 @@ Configuration::RequestMapType Configuration::get_mismatched_defaults_map() const
 
 void Configuration::print_mismatched_defaults(std::ostream& out) const
 {
-  for( const auto& pair : requests_map_ ) {
+  for (const auto& pair : requests_map_) {
     auto mismatched = get_mismatched_defaults(pair);
     if (mismatched.size() > 1) {
       out << "Mismatched uses for key " << pair.first << ": ";
-      for( const auto& req : mismatched ) {
+      for (const auto& req : mismatched) {
         out << "\n\t" << req;
       }
       out << "\n";
@@ -446,10 +462,9 @@ void Configuration::setup_()
   if (logfile_.empty())
     logfile_ = boost::filesystem::path(internal::configuration_logfile).string();
   if (has_key("global.datadir") && has_key("logging.dir"))
-    logfile_ = (boost::filesystem::path(get< std::string >("global.datadir"))
-                / get< std::string >("logging.dir")
-                / "dsc_parameter.log"
-               ).string();
+    logfile_ = (boost::filesystem::path(get<std::string>("global.datadir")) / get<std::string>("logging.dir")
+                / "dsc_parameter.log")
+                   .string();
   logfile_ = boost::filesystem::path(logfile_).string();
 } // ... setup_(...)
 
@@ -463,8 +478,12 @@ void Configuration::add_tree_(const Configuration& other, const std::string sub_
       set(key, element.second, overwrite);
     } catch (Exceptions::configuration_error& ee) {
       DUNE_THROW(Exceptions::configuration_error,
-                 "There was an error adding other (see below) to this:\n\n" << ee.what() << "\n\n"
-                 << "======================\n" << other.report_string() << "\n");
+                 "There was an error adding other (see below) to this:\n\n"
+                     << ee.what()
+                     << "\n\n"
+                     << "======================\n"
+                     << other.report_string()
+                     << "\n");
     }
   }
 } // ... add_tree_(...)
@@ -488,11 +507,11 @@ ParameterTree Configuration::initialize(int argc, char** argv)
   ParameterTree param_tree;
   if (argc == 2) {
     Dune::ParameterTreeParser::readINITree(argv[1], param_tree);
-  } else if (argc > 2){
+  } else if (argc > 2) {
     Dune::ParameterTreeParser::readOptions(argc, argv, param_tree);
   }
   if (param_tree.hasKey("paramfile")) {
-    Dune::ParameterTreeParser::readINITree(param_tree.get< std::string >("paramfile"), param_tree, false);
+    Dune::ParameterTreeParser::readINITree(param_tree.get<std::string>("paramfile"), param_tree, false);
   }
   return param_tree;
 } // ... initialize(...)
@@ -508,7 +527,7 @@ ParameterTree Configuration::initialize(int argc, char** argv, std::string filen
     Dune::ParameterTreeParser::readOptions(argc, argv, param_tree);
   }
   if (param_tree.hasKey("paramfile")) {
-    Dune::ParameterTreeParser::readINITree(param_tree.get< std::string >("paramfile"), param_tree, false);
+    Dune::ParameterTreeParser::readINITree(param_tree.get<std::string>("paramfile"), param_tree, false);
   }
   return param_tree;
 } // ... initialize(...)
@@ -553,16 +572,16 @@ void Configuration::report_flatly(const BaseType& subtree, const std::string& pr
     if (prefix.empty())
       report_flatly(subtree.sub(subkey), subkey + ".", out);
     else
-      report_flatly(subtree.sub(subkey), prefix + subkey+ "." , out);
+      report_flatly(subtree.sub(subkey), prefix + subkey + ".", out);
   }
 } // ... report_flatly(...)
 
 
-std::map< std::string, std::string > Configuration::flatten() const
+std::map<std::string, std::string> Configuration::flatten() const
 {
-  std::map< std::string, std::string > ret;
+  std::map<std::string, std::string> ret;
   for (const auto& kk : getValueKeys())
-    ret[kk] = get< std::string >(kk);
+    ret[kk] = get<std::string>(kk);
   for (const auto& ss : getSubKeys()) {
     const auto flat_sub = sub(ss).flatten();
     for (const auto& element : flat_sub)
@@ -594,8 +613,8 @@ bool operator!=(const Configuration& left, const Configuration& right)
 
 namespace std {
 
-bool less< Dune::Stuff::Common::Configuration >::operator()(const Dune::Stuff::Common::Configuration& lhs,
-                                                            const Dune::Stuff::Common::Configuration& rhs) const
+bool less<Dune::Stuff::Common::Configuration>::operator()(const Dune::Stuff::Common::Configuration& lhs,
+                                                          const Dune::Stuff::Common::Configuration& rhs) const
 {
   return lhs.flatten() < rhs.flatten();
 }

@@ -21,15 +21,17 @@ namespace Common {
 class ConvergenceStudy
 {
 public:
-  ConvergenceStudy(const std::vector< std::string > only_these_norms = {});
+  ConvergenceStudy(const std::vector<std::string> only_these_norms = {});
 
-  virtual ~ConvergenceStudy() {}
+  virtual ~ConvergenceStudy()
+  {
+  }
 
   virtual std::string identifier() = 0;
 
   virtual size_t num_refinements() = 0;
 
-  virtual std::vector< std::string > provided_norms() const = 0;
+  virtual std::vector<std::string> provided_norms() const = 0;
 
   virtual size_t expected_rate(const std::string type) = 0;
 
@@ -50,16 +52,15 @@ public:
 
   virtual void refine() = 0;
 
-  std::vector< std::string > used_norms() const;
+  std::vector<std::string> used_norms() const;
 
-  std::map< std::string, std::vector< double > > run(const bool relative = false,
-                                                     std::ostream& out = DSC_LOG_INFO_0,
-                                                     const bool print_timings = true);
+  std::map<std::string, std::vector<double>>
+  run(const bool relative = false, std::ostream& out = DSC_LOG_INFO_0, const bool print_timings = true);
 
-  virtual std::vector< double > expected_results(const std::string /*type*/) const;
+  virtual std::vector<double> expected_results(const std::string /*type*/) const;
 
 private:
-  std::vector< std::string > only_these_norms_;
+  std::vector<std::string> only_these_norms_;
 }; // class ConvergenceStudy
 
 

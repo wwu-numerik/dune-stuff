@@ -14,42 +14,37 @@
 
 class A
 {
-    public:
-    typedef int MyFancyType;
+public:
+  typedef int MyFancyType;
 };
 
 class B
 {
-    public:
-    typedef int MyFancyType;
+public:
+  typedef int MyFancyType;
 };
 
-typedef Dune::tuple< A, B, B >
-    MyTuple;
+typedef Dune::tuple<A, B, B> MyTuple;
 
 struct print_value
 {
-    template< class U, class V >
-    static void run()
-    {
-      std::cout << "("
-            << U::value << ","
-            << V::value << ")"
-            << std::endl;
-    }
+  template <class U, class V>
+  static void run()
+  {
+    std::cout << "(" << U::value << "," << V::value << ")" << std::endl;
+  }
 };
 
-TEST(TypeTransform, All) {
-    typedef TUPLE_TYPEDEFS_2_TUPLE( MyTuple, MyFancyType )
-        MySubTupleType;
+TEST(TypeTransform, All)
+{
+  typedef TUPLE_TYPEDEFS_2_TUPLE(MyTuple, MyFancyType) MySubTupleType;
 }
 
-TEST(Product, All) {
+TEST(Product, All)
+{
   using namespace DSC::TupleProduct;
   typedef boost::mpl::vector<Int<1>, Int<2>> u_types;
   typedef boost::mpl::vector<Int<3>, Int<4>> v_types;
-  typedef Combine< u_types, v_types, print_value
-                  >::Generate<> base_generator_type;
+  typedef Combine<u_types, v_types, print_value>::Generate<> base_generator_type;
   base_generator_type::Run();
 }
-

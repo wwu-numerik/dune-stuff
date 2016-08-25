@@ -22,38 +22,40 @@ namespace LA {
 
 
 // forward
-template< class Traits, class ScalarImp >
+template <class Traits, class ScalarImp>
 class VectorInterface;
 
 
 namespace internal {
 
 
-template< class Traits, class ScalarImp >
-class VectorInputIterator
-  : public std::iterator< std::input_iterator_tag, typename Traits::ScalarType >
+template <class Traits, class ScalarImp>
+class VectorInputIterator : public std::iterator<std::input_iterator_tag, typename Traits::ScalarType>
 {
-  typedef VectorInputIterator< Traits, ScalarImp > ThisType;
+  typedef VectorInputIterator<Traits, ScalarImp> ThisType;
+
 public:
-  typedef VectorInterface< Traits, ScalarImp >     VectorType;
-  typedef typename VectorType::ScalarType          ScalarType;
+  typedef VectorInterface<Traits, ScalarImp> VectorType;
+  typedef typename VectorType::ScalarType ScalarType;
 
 private:
   struct ConstHolder
   {
     explicit ConstHolder(const VectorType& vec)
       : element(vec)
-    {}
+    {
+    }
 
     const VectorType& element;
   }; // struct ConstHolder
 
 public:
   explicit VectorInputIterator(const VectorType& vec, const bool end = false)
-    : const_holder_(std::make_shared< ConstHolder >(vec))
+    : const_holder_(std::make_shared<ConstHolder>(vec))
     , position_(0)
     , end_(end)
-  {}
+  {
+  }
 
   ThisType& operator++()
   {
@@ -82,32 +84,34 @@ public:
   }
 
 private:
-  std::shared_ptr< ConstHolder > const_holder_;
+  std::shared_ptr<ConstHolder> const_holder_;
+
 protected:
   size_t position_;
   bool end_;
 }; // class VectorInputIterator
 
 
-template< class Traits, class ScalarImp >
-class VectorOutputIterator
-  : public VectorInputIterator< Traits, ScalarImp >
-  , public std::iterator< std::output_iterator_tag, typename Traits::ScalarType >
+template <class Traits, class ScalarImp>
+class VectorOutputIterator : public VectorInputIterator<Traits, ScalarImp>,
+                             public std::iterator<std::output_iterator_tag, typename Traits::ScalarType>
 {
-  typedef VectorInputIterator< Traits, ScalarImp >  BaseType;
-  typedef VectorOutputIterator< Traits, ScalarImp > ThisType;
+  typedef VectorInputIterator<Traits, ScalarImp> BaseType;
+  typedef VectorOutputIterator<Traits, ScalarImp> ThisType;
+
 public:
-  typedef VectorInterface< Traits, ScalarImp > VectorType;
-  typedef typename VectorType::ScalarType      ScalarType;
+  typedef VectorInterface<Traits, ScalarImp> VectorType;
+  typedef typename VectorType::ScalarType ScalarType;
 
 private:
-  static_assert(std::is_same< ScalarImp, ScalarType >::value, "");
+  static_assert(std::is_same<ScalarImp, ScalarType>::value, "");
 
   struct Holder
   {
     explicit Holder(VectorType& vec)
       : element(vec)
-    {}
+    {
+    }
 
     VectorType& element;
   }; // struct Holder
@@ -115,8 +119,9 @@ private:
 public:
   explicit VectorOutputIterator(VectorType& vec, const bool end = false)
     : BaseType(vec, end)
-    , holder_(std::make_shared< Holder >(vec))
-  {}
+    , holder_(std::make_shared<Holder>(vec))
+  {
+  }
 
   ScalarType& operator*()
   {
@@ -126,7 +131,7 @@ public:
   } // ... operator*()
 
 private:
-  std::shared_ptr< Holder > holder_;
+  std::shared_ptr<Holder> holder_;
 }; // class VectorOutputIterator
 
 

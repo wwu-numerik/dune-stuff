@@ -114,7 +114,7 @@ public:
   static std::unique_ptr<ThisType> create(const Common::Configuration config = default_config(),
                                           const std::string sub_name = static_id())
   {
-    const Common::Configuration cfg     = config.has_sub(sub_name) ? config.sub(sub_name) : config;
+    const Common::Configuration cfg = config.has_sub(sub_name) ? config.sub(sub_name) : config;
     const Common::Configuration def_cfg = default_config();
     std::vector<std::tuple<DomainType, DomainType, RangeFieldType>> values;
     DomainType tmp_lower;
@@ -137,16 +137,14 @@ public:
     return Common::make_unique<ThisType>(values, cfg.get("name", def_cfg.get<std::string>("name")));
   } // ... create(...)
 
-  Indicator(const std::vector<std::tuple<DomainType, DomainType, R>>& values,
-                    const std::string name_in = "indicator")
+  Indicator(const std::vector<std::tuple<DomainType, DomainType, R>>& values, const std::string name_in = "indicator")
     : values_(values)
     , name_(name_in)
   {
   }
 
-  Indicator(
-      const std::vector<std::pair<std::pair<Common::FieldVector<D, d>, Common::FieldVector<D, d>>, R>>& values,
-      const std::string name_in = "indicator")
+  Indicator(const std::vector<std::pair<std::pair<Common::FieldVector<D, d>, Common::FieldVector<D, d>>, R>>& values,
+            const std::string name_in = "indicator")
     : values_(convert(values))
     , name_(name_in)
   {

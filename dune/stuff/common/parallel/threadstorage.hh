@@ -11,7 +11,7 @@
 #include <algorithm>
 #include <type_traits>
 #if HAVE_TBB
-# include <tbb/enumerable_thread_specific.h>
+#include <tbb/enumerable_thread_specific.h>
 #endif
 #include <boost/noncopyable.hpp>
 
@@ -26,7 +26,8 @@ namespace Stuff {
 /** Automatic Storage of non-static, N thread-local values
  **/
 template <class ValueImp>
-class FallbackPerThreadValue : public boost::noncopyable {
+class FallbackPerThreadValue : public boost::noncopyable
+{
 public:
   typedef ValueImp ValueType;
   typedef typename std::conditional<std::is_const<ValueImp>::value, ValueImp, const ValueImp>::type ConstValueType;
@@ -37,72 +38,80 @@ private:
 
 public:
   //! Initialization by copy construction of ValueType
-  explicit FallbackPerThreadValue( ConstValueType& value )
-    : values_( threadManager().max_threads())
+  explicit FallbackPerThreadValue(ConstValueType& value)
+    : values_(threadManager().max_threads())
   {
-    std::generate(values_.begin(), values_.end(),
-                  [=](){return Common::make_unique<ValueType>(value);});
+    std::generate(values_.begin(), values_.end(), [=]() { return Common::make_unique<ValueType>(value); });
   }
 
   //! Initialization by in-place construction ValueType with \param ctor_args
-  template < class... InitTypes >
-  explicit FallbackPerThreadValue( InitTypes&& ...ctor_args )
-    : values_( threadManager().max_threads() )
+  template <class... InitTypes>
+  explicit FallbackPerThreadValue(InitTypes&&... ctor_args)
+    : values_(threadManager().max_threads())
   {
 #if __GNUC__
     // cannot unpack in lambda due to https://gcc.gnu.org/bugzilla/show_bug.cgi?id=47226
     ValueType v(ctor_args...);
-    std::generate(values_.begin(), values_.end(),
-                  [&](){return Common::make_unique<ValueType>(v);});
+    std::generate(values_.begin(), values_.end(), [&]() { return Common::make_unique<ValueType>(v); });
 #else
-    std::generate(values_.begin(), values_.end(),
-                  [&](){return Common::make_unique<ValueType>(ctor_args...);});
+    std::generate(values_.begin(), values_.end(), [&]() { return Common::make_unique<ValueType>(ctor_args...); });
 #endif
   }
 
-  ThisType& operator = (ConstValueType&& value) {
-    std::generate(values_.begin(), values_.end(), [=](){return Common::make_unique<ValueType>(value);});
+  ThisType& operator=(ConstValueType&& value)
+  {
+    std::generate(values_.begin(), values_.end(), [=]() { return Common::make_unique<ValueType>(value); });
     return *this;
   }
 
-  operator ValueType() const { return this->operator *(); }
+  operator ValueType() const
+  {
+    return this->operator*();
+  }
 
-  ValueType& operator * () {
+  ValueType& operator*()
+  {
     return *values_[threadManager().thread()];
   }
 
-  ConstValueType& operator * () const {
+  ConstValueType& operator*() const
+  {
     return *values_[threadManager().thread()];
   }
 
-  ValueType* operator -> () {
+  ValueType* operator->()
+  {
     return values_[threadManager().thread()].get();
   }
 
-  ConstValueType* operator -> () const {
+  ConstValueType* operator->() const
+  {
     return values_[threadManager().thread()].get();
   }
 
   template <class BinaryOperation>
-  ValueType accumulate(ValueType init, BinaryOperation op) const {
+  ValueType accumulate(ValueType init, BinaryOperation op) const
+  {
     typedef const typename ContainerType::value_type ptr;
-    auto l = [&](ConstValueType& a, ptr& b){return op(a, *b);};
+    auto l = [&](ConstValueType& a, ptr& b) { return op(a, *b); };
     return std::accumulate(values_.begin(), values_.end(), init, l);
   }
 
-  ValueType sum() const {
+  ValueType sum() const
+  {
     return accumulate(ValueType(0), std::plus<ValueType>());
   }
 
 private:
-   ContainerType values_;
+  ContainerType values_;
 };
 
 #if HAVE_TBB
 /** Automatic Storage of non-static, N thread-local values
  **/
 template <class ValueImp>
-class TBBPerThreadValue : public boost::noncopyable {
+class TBBPerThreadValue : public boost::noncopyable
+{
 public:
   typedef ValueImp ValueType;
   typedef typename std::conditional<std::is_const<ValueImp>::value, ValueImp, const ValueImp>::type ConstValueType;
@@ -113,65 +122,77 @@ private:
 
 public:
   //! Initialization by copy construction of ValueType
-  explicit TBBPerThreadValue( ValueType value )
-    : values_(new ContainerType([=](){return Common::make_unique<ValueType>(value);}))
-  {}
+  explicit TBBPerThreadValue(ValueType value)
+    : values_(new ContainerType([=]() { return Common::make_unique<ValueType>(value); }))
+  {
+  }
 
   //! Initialization by in-place construction ValueType with \param ctor_args
-  template < class... InitTypes >
-  explicit TBBPerThreadValue( InitTypes&& ...ctor_args )
+  template <class... InitTypes>
+  explicit TBBPerThreadValue(InitTypes&&... ctor_args)
 #if __GNUC__
-  // cannot unpack in lambda due to https://gcc.gnu.org/bugzilla/show_bug.cgi?id=47226
-    : TBBPerThreadValue(ValueType(ctor_args...))
+      // cannot unpack in lambda due to https://gcc.gnu.org/bugzilla/show_bug.cgi?id=47226
+      : TBBPerThreadValue(ValueType(ctor_args...))
 #else
-    : values_(new ContainerType([=](){return Common::make_unique<ValueType>(ctor_args...);}))
+    : values_(new ContainerType([=]() { return Common::make_unique<ValueType>(ctor_args...); }))
 #endif
-  {}
+  {
+  }
 
   TBBPerThreadValue(ThisType&& source) = default;
 
-  ThisType& operator = (ValueType&& value) {
-    values_ = Common::make_unique<ContainerType>([=](){return Common::make_unique<ValueType>(value);});
+  ThisType& operator=(ValueType&& value)
+  {
+    values_ = Common::make_unique<ContainerType>([=]() { return Common::make_unique<ValueType>(value); });
     return *this;
   }
 
-  operator ValueImp() const { return this->operator *(); }
+  operator ValueImp() const
+  {
+    return this->operator*();
+  }
 
-  ValueType& operator * () {
+  ValueType& operator*()
+  {
     return *values_->local();
   }
 
-  ConstValueType& operator * () const {
+  ConstValueType& operator*() const
+  {
     return *values_->local();
   }
 
-  ValueType* operator -> () {
+  ValueType* operator->()
+  {
     return values_->local().get();
   }
 
-  ConstValueType* operator -> () const {
+  ConstValueType* operator->() const
+  {
     return values_->local().get();
   }
 
   template <class BinaryOperation>
-  ValueType accumulate(ValueType init, BinaryOperation op) const {
+  ValueType accumulate(ValueType init, BinaryOperation op) const
+  {
     typedef const typename ContainerType::value_type ptr;
-    auto l = [&](ConstValueType& a, ptr& b){return op(a, *b);};
+    auto l = [&](ConstValueType& a, ptr& b) { return op(a, *b); };
     return std::accumulate(values_->begin(), values_->end(), init, l);
   }
 
-  ValueType sum() const {
+  ValueType sum() const
+  {
     return accumulate(ValueType(), std::plus<ValueType>());
   }
 
 private:
-   mutable std::unique_ptr<ContainerType> values_;
+  mutable std::unique_ptr<ContainerType> values_;
 };
 
-template<typename T>
+template <typename T>
 using PerThreadValue = TBBPerThreadValue<T>;
 #else // HAVE_TBB
-template<typename T>
+template <typename T>
 using PerThreadValue = FallbackPerThreadValue<T>;
 #endif
 }

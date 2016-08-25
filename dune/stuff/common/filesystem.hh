@@ -32,7 +32,7 @@ void testCreateDirectory(const std::string _path);
 bool touch(const std::string& _path);
 
 boost::filesystem::ofstream* make_ofstream(const boost::filesystem::path& path,
-                                           const std::ios_base::openmode mode = std::ios_base::out );
+                                           const std::ios_base::openmode mode = std::ios_base::out);
 
 boost::filesystem::ifstream* make_ifstream(const boost::filesystem::path& path,
                                            const std::ios_base::openmode mode = std::ios_base::in);

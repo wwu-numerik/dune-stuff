@@ -11,10 +11,10 @@
 #include <dune/common/fvector.hh>
 #include <dune/common/version.hh>
 
-#if DUNE_VERSION_NEWER(DUNE_COMMON,3,9) // EXADUNE
-# include <dune/geometry/referenceelements.hh>
+#if DUNE_VERSION_NEWER(DUNE_COMMON, 3, 9) // EXADUNE
+#include <dune/geometry/referenceelements.hh>
 #else
-# include <dune/geometry/referenceelements.hh>
+#include <dune/geometry/referenceelements.hh>
 #endif
 
 #include <dune/stuff/common/exceptions.hh>
@@ -43,18 +43,25 @@ namespace Functions {
  * \note  There is no way to reliably obtain the local polynomial order of the source, and we thus use the order of the
  *        local_function corresponding to the first entity.
  */
-template< class SourceType, class GridViewType >
-class Reinterpret
-  : public LocalizableFunctionInterface< typename XT::Grid::Entity< GridViewType >::type, typename GridViewType::ctype,
-                                         GridViewType::dimension, typename SourceType::RangeFieldType,
-                                         SourceType::dimRange, SourceType::dimRangeCols >
+template <class SourceType, class GridViewType>
+class Reinterpret : public LocalizableFunctionInterface<typename XT::Grid::Entity<GridViewType>::type,
+                                                        typename GridViewType::ctype,
+                                                        GridViewType::dimension,
+                                                        typename SourceType::RangeFieldType,
+                                                        SourceType::dimRange,
+                                                        SourceType::dimRangeCols>
 {
-  static_assert(is_localizable_function< SourceType >::value, "");
-  static_assert(Grid::is_grid_layer< GridViewType >::value, "");
-  typedef LocalizableFunctionInterface< typename XT::Grid::Entity< GridViewType >::type, typename GridViewType::ctype,
-                                        GridViewType::dimension, typename SourceType::RangeFieldType,
-                                        SourceType::dimRange, SourceType::dimRangeCols > BaseType;
-  typedef Reinterpret< SourceType, GridViewType >                                        ThisType;
+  static_assert(is_localizable_function<SourceType>::value, "");
+  static_assert(Grid::is_grid_layer<GridViewType>::value, "");
+  typedef LocalizableFunctionInterface<typename XT::Grid::Entity<GridViewType>::type,
+                                       typename GridViewType::ctype,
+                                       GridViewType::dimension,
+                                       typename SourceType::RangeFieldType,
+                                       SourceType::dimRange,
+                                       SourceType::dimRangeCols>
+      BaseType;
+  typedef Reinterpret<SourceType, GridViewType> ThisType;
+
 public:
   using typename BaseType::EntityType;
   using typename BaseType::DomainFieldType;
@@ -66,10 +73,11 @@ public:
 
 private:
   class ReinterpretLocalfunction
-    : public LocalfunctionInterface< EntityType, DomainFieldType, dimDomain, RangeFieldType, dimRange, dimRangeCols >
+      : public LocalfunctionInterface<EntityType, DomainFieldType, dimDomain, RangeFieldType, dimRange, dimRangeCols>
   {
-    typedef LocalfunctionInterface< EntityType, DomainFieldType, dimDomain, RangeFieldType, dimRange, dimRangeCols >
+    typedef LocalfunctionInterface<EntityType, DomainFieldType, dimDomain, RangeFieldType, dimRange, dimRangeCols>
         BaseType;
+
   public:
     using typename BaseType::DomainType;
     using typename BaseType::RangeType;
@@ -80,7 +88,8 @@ private:
       , order_(order)
       , func_(func)
       , points_(1)
-    {}
+    {
+    }
 
     virtual size_t order() const override final
     {
@@ -93,7 +102,8 @@ private:
       const auto source_entity_ptr_unique_ptrs = func_.entity_search_(points_);
       if (source_entity_ptr_unique_ptrs.size() != 1)
         DUNE_THROW(Exceptions::reinterpretation_error,
-                   "It was not possible to find a source entity for this point:\n\n" << points_[0]);
+                   "It was not possible to find a source entity for this point:\n\n"
+                       << points_[0]);
       const auto source_entity_ptr = *source_entity_ptr_unique_ptrs[0];
       const auto& source_entity = *source_entity_ptr;
       const auto source_local_function = func_.source_.local_function(source_entity);
@@ -106,7 +116,8 @@ private:
       const auto source_entity_ptr_unique_ptrs = func_.entity_search_(points_);
       if (source_entity_ptr_unique_ptrs.size() != 1)
         DUNE_THROW(Exceptions::reinterpretation_error,
-                   "It was not possible to find a source entity for this point:\n\n" << points_[0]);
+                   "It was not possible to find a source entity for this point:\n\n"
+                       << points_[0]);
       const auto source_entity_ptr = *source_entity_ptr_unique_ptrs[0];
       const auto& source_entity = *source_entity_ptr;
       const auto source_local_function = func_.source_.local_function(source_entity);
@@ -116,7 +127,7 @@ private:
   private:
     const size_t order_;
     const ThisType& func_;
-    mutable std::vector< DomainType > points_;
+    mutable std::vector<DomainType> points_;
   }; // class ReinterpretLocalfunction
 
 public:
@@ -129,14 +140,15 @@ public:
     : source_(source)
     , source_grid_view_(source_grid_view)
     , entity_search_(source_grid_view_)
-    , guessed_source_order_(source_.local_function(*source_grid_view_.template begin< 0 >())->order())
-  {}
+    , guessed_source_order_(source_.local_function(*source_grid_view_.template begin<0>())->order())
+  {
+  }
 
   virtual ~Reinterpret() = default;
 
-  virtual std::unique_ptr< LocalfunctionType > local_function(const EntityType& entity) const
+  virtual std::unique_ptr<LocalfunctionType> local_function(const EntityType& entity) const
   {
-    return DSC::make_unique< ReinterpretLocalfunction >(entity, guessed_source_order_, *this);
+    return DSC::make_unique<ReinterpretLocalfunction>(entity, guessed_source_order_, *this);
   }
 
   virtual std::string type() const
@@ -154,7 +166,7 @@ private:
 
   const SourceType& source_;
   const GridViewType& source_grid_view_;
-  mutable XT::Grid::EntityInlevelSearch< GridViewType > entity_search_;
+  mutable XT::Grid::EntityInlevelSearch<GridViewType> entity_search_;
   const size_t guessed_source_order_;
 }; // class Reinterpret
 

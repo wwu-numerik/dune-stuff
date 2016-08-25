@@ -34,7 +34,7 @@
 #include <sys/types.h>
 
 #include <dune/stuff/common/disable_warnings.hh>
-# include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string.hpp>
 #include <dune/stuff/common/reenable_warnings.hh>
 #include <boost/filesystem/fstream.hpp>
 
@@ -43,11 +43,11 @@ namespace Stuff {
 namespace Common {
 
 //! element-index-in-container search
-template< class StlSequence >
-inline int getIdx(const StlSequence& ct,
-                  const typename StlSequence::value_type& val) {
+template <class StlSequence>
+inline int getIdx(const StlSequence& ct, const typename StlSequence::value_type& val)
+{
   const auto result = std::find(ct.begin(), ct.end(), val);
-  if ( result == ct.end() )
+  if (result == ct.end())
     return -1;
   return std::distance(ct.begin(), result);
 } // getIdx
@@ -56,55 +56,57 @@ inline int getIdx(const StlSequence& ct,
 /** this allows subscription indices to wrap around
    * \example N=4: wraparound_array[4] == wraparound_array[0] && wraparound_array[-1] == wraparound_array[3]
    **/
-template< class T, size_t N >
-struct wraparound_array
-  : public Dune::array< T, N >
+template <class T, size_t N>
+struct wraparound_array : public Dune::array<T, N>
 {
-  typedef Dune::array< T, N >
-  BaseType;
-  wraparound_array() {
+  typedef Dune::array<T, N> BaseType;
+  wraparound_array()
+  {
     for (size_t i = 0; i < N; ++i)
-      this-> operator[](i) = T();
+      this->operator[](i) = T();
   }
 
-  wraparound_array(const BaseType other) {
+  wraparound_array(const BaseType other)
+  {
     for (size_t i = 0; i < N; ++i)
-      this-> operator[](i) = other[i];
+      this->operator[](i) = other[i];
   }
 
-  typename BaseType::reference operator[](std::size_t i) {
+  typename BaseType::reference operator[](std::size_t i)
+  {
     return BaseType::operator[](i % N);
   }
 
-  typename BaseType::reference operator[](int i) {
-    const std::size_t real_index =
-        i < 0 ? static_cast< std::size_t >( N - ( ( (i * -1) % N ) + 1 ) )
-              : std::size_t(i);
+  typename BaseType::reference operator[](int i)
+  {
+    const std::size_t real_index = i < 0 ? static_cast<std::size_t>(N - (((i * -1) % N) + 1)) : std::size_t(i);
     return BaseType::operator[](real_index);
   } // []
 
-  typename BaseType::const_reference operator[](std::size_t i) const {
+  typename BaseType::const_reference operator[](std::size_t i) const
+  {
     return BaseType::operator[](i % N);
   }
 
-  typename BaseType::const_reference operator[](int i) const {
-    const std::size_t real_index =
-        i < 0 ? static_cast< std::size_t >( N - ( ( (i * -1) % N ) + 1 ) )
-              : std::size_t(i);
+  typename BaseType::const_reference operator[](int i) const
+  {
+    const std::size_t real_index = i < 0 ? static_cast<std::size_t>(N - (((i * -1) % N) + 1)) : std::size_t(i);
     return BaseType::operator[](real_index);
   } // []
 };
 
 //! type safe (this will not compile for degraded-to-pointer arrays) way of getting array length
-template< class T, size_t N >
-size_t arrayLength(T(&/*array*/)[N]) {
+template <class T, size_t N>
+size_t arrayLength(T (&/*array*/)[N])
+{
   return N;
 }
 
 //! get a non-zero initialised array
 template <class T, size_t N>
-std::array<T,N> make_array(const T &v) {
-  std::array<T,N> ret;
+std::array<T, N> make_array(const T& v)
+{
+  std::array<T, N> ret;
   ret.fill(v);
   return ret;
 }

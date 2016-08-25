@@ -10,7 +10,7 @@
 #if HAVE_EIGEN
 
 extern "C" {
-  #include "fasp_functs.h"
+#include "fasp_functs.h"
 }
 
 #include <dune/stuff/la/container/eigen.hh>
@@ -22,19 +22,19 @@ namespace Stuff {
 namespace LA {
 
 
-template< class ElementImp >
-class AmgSolver< Dune::Stuff::LA::EigenRowMajorSparseMatrix< ElementImp >,
-                     Dune::Stuff::LA::EigenDenseVector< ElementImp > >
-  : public SolverInterface< Dune::Stuff::LA::EigenRowMajorSparseMatrix< ElementImp >,
-                            Dune::Stuff::LA::EigenDenseVector< ElementImp > >
+template <class ElementImp>
+class AmgSolver<Dune::Stuff::LA::EigenRowMajorSparseMatrix<ElementImp>, Dune::Stuff::LA::EigenDenseVector<ElementImp>>
+    : public SolverInterface<Dune::Stuff::LA::EigenRowMajorSparseMatrix<ElementImp>,
+                             Dune::Stuff::LA::EigenDenseVector<ElementImp>>
 {
 public:
-  typedef SolverInterface< Dune::Stuff::LA::EigenRowMajorSparseMatrix< ElementImp >,
-                           Dune::Stuff::LA::EigenDenseVector< ElementImp > > BaseType;
+  typedef SolverInterface<Dune::Stuff::LA::EigenRowMajorSparseMatrix<ElementImp>,
+                          Dune::Stuff::LA::EigenDenseVector<ElementImp>>
+      BaseType;
 
-  typedef typename BaseType::MatrixType   MatrixType;
-  typedef typename BaseType::VectorType   VectorType;
-  typedef typename BaseType::ScalarType  ScalarType;
+  typedef typename BaseType::MatrixType MatrixType;
+  typedef typename BaseType::VectorType VectorType;
+  typedef typename BaseType::ScalarType ScalarType;
 
   static Dune::ParameterTree defaultSettings()
   {
@@ -148,11 +148,11 @@ public:
                        VectorType& solutionVector,
                        const Dune::ParameterTree description = defaultSettings()) const
   {
-    const size_t maxIter = description.get<size_t >("maxIter");
+    const size_t maxIter = description.get<size_t>("maxIter");
     const ScalarType precision = description.get<ScalarType>("precision");
     // init system matrix and right hand side
-    MatrixType& systemMatrix = const_cast< MatrixType& >(_systemMatrix);
-    VectorType& rhsVector = const_cast< VectorType& >(_rhsVector);
+    MatrixType& systemMatrix = const_cast<MatrixType&>(_systemMatrix);
+    VectorType& rhsVector = const_cast<VectorType&>(_rhsVector);
     dCSRmat A;
     A.row = systemMatrix.rows();
     A.col = systemMatrix.cols();
@@ -166,11 +166,11 @@ public:
     x.row = rhsVector.backend().rows();
     x.val = solutionVector.backend().data();
     // init parameters
-    input_param     inparam = initInputParams(maxIter, precision, description);
-    itsolver_param  itparam = initItsolverParams(maxIter, precision, description);
-    AMG_param       amgparam = initAMGParams(1, precision, description); // the 1 is on purpose!
-    ILU_param       iluparam = initIluParams(maxIter, precision, description);
-    Schwarz_param   swzparam = initSchwarzParams(maxIter, precision, description);
+    input_param inparam = initInputParams(maxIter, precision, description);
+    itsolver_param itparam = initItsolverParams(maxIter, precision, description);
+    AMG_param amgparam = initAMGParams(1, precision, description); // the 1 is on purpose!
+    ILU_param iluparam = initIluParams(maxIter, precision, description);
+    Schwarz_param swzparam = initSchwarzParams(maxIter, precision, description);
     // call fasp (this is taken from the fasp example test)
     int status = -1;
     // Preconditioned Krylov methods
@@ -216,8 +216,7 @@ public:
       if (inparam.print_level > PRINT_NONE)
         fasp_param_amg_print(&amgparam);
       fasp_solver_famg(&A, &f, &x, &amgparam);
-    }
-    else {
+    } else {
       DUNE_THROW(Dune::RangeError, "### ERROR: Wrong solver type: " << inparam.solver_type << "!");
       status = ERROR_SOLVER_TYPE;
     }
@@ -228,108 +227,111 @@ public:
   } // ... apply(...)
 
 private:
-  input_param initInputParams(const size_t& maxIter, const ScalarType& precision, const Dune::ParameterTree& description) const
+  input_param
+  initInputParams(const size_t& maxIter, const ScalarType& precision, const Dune::ParameterTree& description) const
   {
     input_param inputParam;
-    inputParam.print_level = description.get< int >("input_param.print_level", 0);
-    inputParam.output_type = description.get< int >("input_param.output_type", 0);
-//    inputParam.workdir = description.get< char >("input_param.workdir", '.');
+    inputParam.print_level = description.get<int>("input_param.print_level", 0);
+    inputParam.output_type = description.get<int>("input_param.output_type", 0);
+    //    inputParam.workdir = description.get< char >("input_param.workdir", '.');
     inputParam.problem_num = 14;
-    inputParam.solver_type = description.get< int >("input_param.solver_type", 1);
-    inputParam.precond_type = description.get< int >("input_param.precond_type", 2);
-    inputParam.stop_type = description.get< int >("input_param.stop_type", 1);
+    inputParam.solver_type = description.get<int>("input_param.solver_type", 1);
+    inputParam.precond_type = description.get<int>("input_param.precond_type", 2);
+    inputParam.stop_type = description.get<int>("input_param.stop_type", 1);
     inputParam.itsolver_tol = precision;
     inputParam.itsolver_maxit = maxIter;
-    inputParam.restart = description.get< int >("input_param.restart", 20);
-    inputParam.ILU_type = description.get< int >("input_param.ILU_type", 1);
-    inputParam.ILU_lfil = description.get< int >("input_param.ILU_lfil", 0);
-    inputParam.ILU_droptol = description.get< double >("input_param.ILU_droptol", 1.000000e-01);
-    inputParam.ILU_relax = description.get< double >("input_param.ILU_relax", 9.000000e-01);
-    inputParam.ILU_permtol = description.get< double >("input_param.ILU_permtol", 1.000000e-03);
-    inputParam.Schwarz_mmsize = description.get< int >("input_param.Schwarz_mmsize", 200);
-    inputParam.Schwarz_maxlvl = description.get< int >("input_param.Schwarz_maxlvl", 2);
-    inputParam.Schwarz_type = description.get< int >("input_param.Schwarz_type", 1);
-    inputParam.AMG_type = description.get< int >("input_param.AMG_type", 1);
-    inputParam.AMG_levels = description.get< int >("input_param.AMG_levels", 20);
-    inputParam.AMG_cycle_type = description.get< int >("input_param.AMG_cycle_type", 1);
-    inputParam.AMG_smoother = description.get< int >("input_param.AMG_smoother", 2);
-    inputParam.AMG_relaxation = description.get< double >("input_param.AMG_relaxation", 1.100000e+00);
-    inputParam.AMG_polynomial_degree = description.get< int >("input_param.AMG_polynomial_degree", 3);
-    inputParam.AMG_presmooth_iter = description.get< int >("input_param.AMG_presmooth_iter", 2);
-    inputParam.AMG_postsmooth_iter = description.get< int >("input_param.AMG_postsmooth_iter", 2);
-    inputParam.AMG_coarse_dof = description.get< int >("input_param.AMG_coarse_dof", 100);
-    inputParam.AMG_tol = description.get< double >("input_param.AMG_tol", 1.000000e-08);
-    inputParam.AMG_maxit = description.get< int >("input_param.AMG_maxit", 1);
-    inputParam.AMG_ILU_levels = description.get< int >("input_param.AMG_ILU_levels", 0);
-    inputParam.AMG_coarse_scaling = description.get< int >("input_param.AMG_coarse_scaling", 0);
-    inputParam.AMG_amli_degree = description.get< int >("input_param.AMG_amli_degree", 2);
-    inputParam.AMG_nl_amli_krylov_type = description.get< int >("input_param.AMG_nl_amli_krylov_type", 6);
-    inputParam.AMG_schwarz_levels = description.get< int >("input_param.AMG_schwarz_levels", 0);
-    inputParam.AMG_coarsening_type = description.get< int >("input_param.AMG_coarsening_type", 1);
-    inputParam.AMG_interpolation_type = description.get< int >("input_param.AMG_interpolation_type", 1);
-    inputParam.AMG_strong_threshold = description.get< double >("input_param.AMG_strong_threshold", 3.000000e-01);
-    inputParam.AMG_truncation_threshold = description.get< double >("input_param.AMG_truncation_threshold", 4.000000e-01);
-    inputParam.AMG_max_row_sum = description.get< double >("input_param.AMG_max_row_sum", 9.000000e-01);
-    inputParam.AMG_strong_coupled = description.get< double >("input_param.AMG_strong_coupled", 8.000000e-02);
-    inputParam.AMG_max_aggregation = description.get< int >("input_param.AMG_max_aggregation", 20);
-    inputParam.AMG_tentative_smooth = description.get< double >("input_param.AMG_tentative_smooth", 6.700000e-01);
-    inputParam.AMG_smooth_filter = description.get< int >("input_param.AMG_smooth_filter", 0);
+    inputParam.restart = description.get<int>("input_param.restart", 20);
+    inputParam.ILU_type = description.get<int>("input_param.ILU_type", 1);
+    inputParam.ILU_lfil = description.get<int>("input_param.ILU_lfil", 0);
+    inputParam.ILU_droptol = description.get<double>("input_param.ILU_droptol", 1.000000e-01);
+    inputParam.ILU_relax = description.get<double>("input_param.ILU_relax", 9.000000e-01);
+    inputParam.ILU_permtol = description.get<double>("input_param.ILU_permtol", 1.000000e-03);
+    inputParam.Schwarz_mmsize = description.get<int>("input_param.Schwarz_mmsize", 200);
+    inputParam.Schwarz_maxlvl = description.get<int>("input_param.Schwarz_maxlvl", 2);
+    inputParam.Schwarz_type = description.get<int>("input_param.Schwarz_type", 1);
+    inputParam.AMG_type = description.get<int>("input_param.AMG_type", 1);
+    inputParam.AMG_levels = description.get<int>("input_param.AMG_levels", 20);
+    inputParam.AMG_cycle_type = description.get<int>("input_param.AMG_cycle_type", 1);
+    inputParam.AMG_smoother = description.get<int>("input_param.AMG_smoother", 2);
+    inputParam.AMG_relaxation = description.get<double>("input_param.AMG_relaxation", 1.100000e+00);
+    inputParam.AMG_polynomial_degree = description.get<int>("input_param.AMG_polynomial_degree", 3);
+    inputParam.AMG_presmooth_iter = description.get<int>("input_param.AMG_presmooth_iter", 2);
+    inputParam.AMG_postsmooth_iter = description.get<int>("input_param.AMG_postsmooth_iter", 2);
+    inputParam.AMG_coarse_dof = description.get<int>("input_param.AMG_coarse_dof", 100);
+    inputParam.AMG_tol = description.get<double>("input_param.AMG_tol", 1.000000e-08);
+    inputParam.AMG_maxit = description.get<int>("input_param.AMG_maxit", 1);
+    inputParam.AMG_ILU_levels = description.get<int>("input_param.AMG_ILU_levels", 0);
+    inputParam.AMG_coarse_scaling = description.get<int>("input_param.AMG_coarse_scaling", 0);
+    inputParam.AMG_amli_degree = description.get<int>("input_param.AMG_amli_degree", 2);
+    inputParam.AMG_nl_amli_krylov_type = description.get<int>("input_param.AMG_nl_amli_krylov_type", 6);
+    inputParam.AMG_schwarz_levels = description.get<int>("input_param.AMG_schwarz_levels", 0);
+    inputParam.AMG_coarsening_type = description.get<int>("input_param.AMG_coarsening_type", 1);
+    inputParam.AMG_interpolation_type = description.get<int>("input_param.AMG_interpolation_type", 1);
+    inputParam.AMG_strong_threshold = description.get<double>("input_param.AMG_strong_threshold", 3.000000e-01);
+    inputParam.AMG_truncation_threshold = description.get<double>("input_param.AMG_truncation_threshold", 4.000000e-01);
+    inputParam.AMG_max_row_sum = description.get<double>("input_param.AMG_max_row_sum", 9.000000e-01);
+    inputParam.AMG_strong_coupled = description.get<double>("input_param.AMG_strong_coupled", 8.000000e-02);
+    inputParam.AMG_max_aggregation = description.get<int>("input_param.AMG_max_aggregation", 20);
+    inputParam.AMG_tentative_smooth = description.get<double>("input_param.AMG_tentative_smooth", 6.700000e-01);
+    inputParam.AMG_smooth_filter = description.get<int>("input_param.AMG_smooth_filter", 0);
     return inputParam;
   } // ... initInputParams(...)
 
-  itsolver_param initItsolverParams(const size_t& maxIter, const ScalarType& precision, const Dune::ParameterTree& description) const
+  itsolver_param
+  initItsolverParams(const size_t& maxIter, const ScalarType& precision, const Dune::ParameterTree& description) const
   {
     itsolver_param itsolverParams;
-    itsolverParams.itsolver_type = description.get< int >("itsolver_param.itsolver_type", 1);
-    itsolverParams.precond_type = description.get< int >("itsolver_param.precond_type", 2);
-    itsolverParams.stop_type = description.get< int >("itsolver_param.stop_type", 1);
+    itsolverParams.itsolver_type = description.get<int>("itsolver_param.itsolver_type", 1);
+    itsolverParams.precond_type = description.get<int>("itsolver_param.precond_type", 2);
+    itsolverParams.stop_type = description.get<int>("itsolver_param.stop_type", 1);
     itsolverParams.maxit = maxIter;
     itsolverParams.tol = precision;
-    itsolverParams.restart = description.get< int >("itsolver_param.restart", 20);
-    itsolverParams.print_level = description.get< int >("itsolver_param.print_level", 0);
+    itsolverParams.restart = description.get<int>("itsolver_param.restart", 20);
+    itsolverParams.print_level = description.get<int>("itsolver_param.print_level", 0);
     return itsolverParams;
   } // ... initItsolverParams(...)
 
-  AMG_param initAMGParams(const size_t& maxIter, const ScalarType& precision, const Dune::ParameterTree& description) const
+  AMG_param
+  initAMGParams(const size_t& maxIter, const ScalarType& precision, const Dune::ParameterTree& description) const
   {
     AMG_param amgParams;
-    amgParams.AMG_type = description.get< int >("AMG_param.AMG_type", 1);
-    amgParams.print_level = description.get< int >("AMG_param.print_level", 0);
+    amgParams.AMG_type = description.get<int>("AMG_param.AMG_type", 1);
+    amgParams.print_level = description.get<int>("AMG_param.print_level", 0);
     amgParams.maxit = maxIter;
     amgParams.tol = precision;
-    amgParams.max_levels = description.get< int >("AMG_param.max_levels", 20);
-    amgParams.coarse_dof = description.get< int >("AMG_param.coarse_dof", 100);
-    amgParams.cycle_type = description.get< int >("AMG_param.cycle_type", 1);
-    amgParams.smoother = description.get< int >("AMG_param.smoother", 2);
-    amgParams.smooth_order = description.get< int >("AMG_param.smooth_order", 1);
-    amgParams.presmooth_iter = description.get< int >("AMG_param.presmooth_iter", 2);
-    amgParams.postsmooth_iter = description.get< int >("AMG_param.postsmooth_iter", 2);
-    amgParams.relaxation = description.get< double >("AMG_param.relaxation", 1.1);
-    amgParams.polynomial_degree = description.get< int >("AMG_param.polynomial_degree", 3);
-    amgParams.coarse_scaling = description.get< int >("AMG_param.coarse_scaling", 0);
-    amgParams.amli_degree = description.get< int >("AMG_param.amli_degree", 2);
-    double tmp = description.get< double >("AMG_param.amli_coef", 1.1);
+    amgParams.max_levels = description.get<int>("AMG_param.max_levels", 20);
+    amgParams.coarse_dof = description.get<int>("AMG_param.coarse_dof", 100);
+    amgParams.cycle_type = description.get<int>("AMG_param.cycle_type", 1);
+    amgParams.smoother = description.get<int>("AMG_param.smoother", 2);
+    amgParams.smooth_order = description.get<int>("AMG_param.smooth_order", 1);
+    amgParams.presmooth_iter = description.get<int>("AMG_param.presmooth_iter", 2);
+    amgParams.postsmooth_iter = description.get<int>("AMG_param.postsmooth_iter", 2);
+    amgParams.relaxation = description.get<double>("AMG_param.relaxation", 1.1);
+    amgParams.polynomial_degree = description.get<int>("AMG_param.polynomial_degree", 3);
+    amgParams.coarse_scaling = description.get<int>("AMG_param.coarse_scaling", 0);
+    amgParams.amli_degree = description.get<int>("AMG_param.amli_degree", 2);
+    double tmp = description.get<double>("AMG_param.amli_coef", 1.1);
     amgParams.amli_coef = &tmp;
-    amgParams.nl_amli_krylov_type = description.get< int >("AMG_param.nl_amli_krylov_type",6 );
-    amgParams.coarsening_type = description.get< int >("AMG_param.coarsening_type", 1);
-    amgParams.interpolation_type = description.get< int >("AMG_param.interpolation_type", 1);
-    amgParams.strong_threshold = description.get< double >("AMG_param.strong_threshold", 3.e-1);
-    amgParams.max_row_sum = description.get< double >("AMG_param.max_row_sum", 9.0e-1);
-    amgParams.truncation_threshold = description.get< double >("AMG_param.truncation_threshold", 1.0e-1);
-    amgParams.strong_coupled = description.get< double >("AMG_param.strong_coupled", 8.0e-2);
-    amgParams.max_aggregation = description.get< int >("AMG_param.max_aggregation", 20);
-    amgParams.tentative_smooth = description.get< double >("AMG_param.tentative_smooth", 6.7e-1);
-    amgParams.smooth_filter = description.get< int >("AMG_param.smooth_filter", 0);
-    amgParams.ILU_levels = description.get< int >("AMG_param.ILU_levels", 0);
-    amgParams.ILU_type = description.get< int >("AMG_param.ILU_type", 1);
-    amgParams.ILU_lfil = description.get< int >("AMG_param.ILU_lfil", 0);
-    amgParams.ILU_droptol = description.get< double >("AMG_param.ILU_droptol", 1.0e-1);
-    amgParams.ILU_relax = description.get< double >("AMG_param.ILU_relax", 9.0e-1);
-    amgParams.ILU_permtol = description.get< double >("AMG_param.ILU_permtol", 1.0e-3);
-    amgParams.schwarz_levels = description.get< int >("AMG_param.schwarz_levels", 0);
-    amgParams.schwarz_mmsize = description.get< int >("AMG_param.schwarz_mmsize", 200);
-    amgParams.schwarz_maxlvl = description.get< int >("AMG_param.schwarz_maxlvl", 2);
-    amgParams.schwarz_type = description.get< int >("AMG_param.schwarz_type", 1);
+    amgParams.nl_amli_krylov_type = description.get<int>("AMG_param.nl_amli_krylov_type", 6);
+    amgParams.coarsening_type = description.get<int>("AMG_param.coarsening_type", 1);
+    amgParams.interpolation_type = description.get<int>("AMG_param.interpolation_type", 1);
+    amgParams.strong_threshold = description.get<double>("AMG_param.strong_threshold", 3.e-1);
+    amgParams.max_row_sum = description.get<double>("AMG_param.max_row_sum", 9.0e-1);
+    amgParams.truncation_threshold = description.get<double>("AMG_param.truncation_threshold", 1.0e-1);
+    amgParams.strong_coupled = description.get<double>("AMG_param.strong_coupled", 8.0e-2);
+    amgParams.max_aggregation = description.get<int>("AMG_param.max_aggregation", 20);
+    amgParams.tentative_smooth = description.get<double>("AMG_param.tentative_smooth", 6.7e-1);
+    amgParams.smooth_filter = description.get<int>("AMG_param.smooth_filter", 0);
+    amgParams.ILU_levels = description.get<int>("AMG_param.ILU_levels", 0);
+    amgParams.ILU_type = description.get<int>("AMG_param.ILU_type", 1);
+    amgParams.ILU_lfil = description.get<int>("AMG_param.ILU_lfil", 0);
+    amgParams.ILU_droptol = description.get<double>("AMG_param.ILU_droptol", 1.0e-1);
+    amgParams.ILU_relax = description.get<double>("AMG_param.ILU_relax", 9.0e-1);
+    amgParams.ILU_permtol = description.get<double>("AMG_param.ILU_permtol", 1.0e-3);
+    amgParams.schwarz_levels = description.get<int>("AMG_param.schwarz_levels", 0);
+    amgParams.schwarz_mmsize = description.get<int>("AMG_param.schwarz_mmsize", 200);
+    amgParams.schwarz_maxlvl = description.get<int>("AMG_param.schwarz_maxlvl", 2);
+    amgParams.schwarz_type = description.get<int>("AMG_param.schwarz_type", 1);
     return amgParams;
   } // ... initAMGParams(...)
 
@@ -338,12 +340,12 @@ private:
                           const Dune::ParameterTree& description) const
   {
     ILU_param iluParams;
-    iluParams.print_level = description.get< int >("ILU_param.print_level", 0);
-    iluParams.ILU_type = description.get< int >("ILU_param.ILU_type", 1);
-    iluParams.ILU_lfil = description.get< int >("ILU_param.ILU_lfil", 0);
-    iluParams.ILU_droptol = description.get< double >("ILU_param.ILU_droptol", 1.0e-1);
-    iluParams.ILU_relax = description.get< double >("ILU_param.ILU_relax", 9.0e-1);
-    iluParams.ILU_permtol = description.get< double >("ILU_param.ILU_permtol", 1.0e-3);
+    iluParams.print_level = description.get<int>("ILU_param.print_level", 0);
+    iluParams.ILU_type = description.get<int>("ILU_param.ILU_type", 1);
+    iluParams.ILU_lfil = description.get<int>("ILU_param.ILU_lfil", 0);
+    iluParams.ILU_droptol = description.get<double>("ILU_param.ILU_droptol", 1.0e-1);
+    iluParams.ILU_relax = description.get<double>("ILU_param.ILU_relax", 9.0e-1);
+    iluParams.ILU_permtol = description.get<double>("ILU_param.ILU_permtol", 1.0e-3);
     return iluParams;
   } // ... initIluParams(...)
 
@@ -352,10 +354,10 @@ private:
                                   const Dune::ParameterTree& description) const
   {
     Schwarz_param schwarzParams;
-    schwarzParams.print_level = description.get< int >("schwarzParams.print_level", 0);
-    schwarzParams.schwarz_type = description.get< int >("schwarzParams.schwarz_type", 1);
-    schwarzParams.schwarz_maxlvl = description.get< int >("schwarzParams.schwarz_maxlvl", 2);
-    schwarzParams.schwarz_mmsize = description.get< int >("schwarzParams.schwarz_mmsize", 200);
+    schwarzParams.print_level = description.get<int>("schwarzParams.print_level", 0);
+    schwarzParams.schwarz_type = description.get<int>("schwarzParams.schwarz_type", 1);
+    schwarzParams.schwarz_maxlvl = description.get<int>("schwarzParams.schwarz_maxlvl", 2);
+    schwarzParams.schwarz_mmsize = description.get<int>("schwarzParams.schwarz_mmsize", 200);
     return schwarzParams;
   } // ... initSchwarzParams(...)
 }; // class AmgSolver

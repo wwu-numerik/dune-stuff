@@ -68,27 +68,27 @@ std::string color(size_t i)
 }
 
 
-std::map< std::string, std::string >& color_map()
+std::map<std::string, std::string>& color_map()
 {
-  static std::map< std::string, std::string > map_;
+  static std::map<std::string, std::string> map_;
   static bool created_ = false;
   if (!created_) {
-    map_["black"]       = Colors::black;
-    map_["blue"]        = Colors::blue;
-    map_["brown"]       = Colors::brown;
-    map_["cyan"]        = Colors::cyan;
-    map_["darkgray"]    = Colors::darkgray;
-    map_["green"]       = Colors::green;
-    map_["lightblue"]   = Colors::lightblue;
-    map_["lightcyan"]   = Colors::lightcyan;
-    map_["lightgray"]   = Colors::lightgray;
-    map_["lightgreen"]  = Colors::lightgreen;
+    map_["black"] = Colors::black;
+    map_["blue"] = Colors::blue;
+    map_["brown"] = Colors::brown;
+    map_["cyan"] = Colors::cyan;
+    map_["darkgray"] = Colors::darkgray;
+    map_["green"] = Colors::green;
+    map_["lightblue"] = Colors::lightblue;
+    map_["lightcyan"] = Colors::lightcyan;
+    map_["lightgray"] = Colors::lightgray;
+    map_["lightgreen"] = Colors::lightgreen;
     map_["lightpurple"] = Colors::lightpurple;
-    map_["lightred"]    = Colors::lightred;
-    map_["purple"]      = Colors::purple;
-    map_["red"]         = Colors::red;
-    map_["white"]       = Colors::white;
-    map_["yellow"]      = Colors::yellow;
+    map_["lightred"] = Colors::lightred;
+    map_["purple"] = Colors::purple;
+    map_["red"] = Colors::red;
+    map_["white"] = Colors::white;
+    map_["yellow"] = Colors::yellow;
     created_ = true;
   }
   return map_;
@@ -117,7 +117,6 @@ size_t templateColorChooser(size_t i)
 }
 
 
-
 /**
  * This is taken from gtest-all.cc!
  */
@@ -128,12 +127,8 @@ bool terminal_supports_color()
     return false;
   else {
     const auto term_str = std::string(term);
-    return term_str == "xterm"
-        || term_str == "xterm-color"
-        || term_str == "xterm-256color"
-        || term_str == "screen"
-        || term_str == "linux"
-        || term_str == "cygwin";
+    return term_str == "xterm" || term_str == "xterm-color" || term_str == "xterm-256color" || term_str == "screen"
+           || term_str == "linux" || term_str == "cygwin";
   }
 } // ... terminal_supports_color(...)
 
@@ -142,22 +137,19 @@ std::string highlightTemplate(std::string str, size_t maxlevel)
 {
   size_t startindex = 0;
   size_t level = 0;
-  for (size_t i = 0; i < str.size(); i++)
-  {
-    if (str[i] == '<')
-    {
+  for (size_t i = 0; i < str.size(); i++) {
+    if (str[i] == '<') {
       level++;
-      std::string dummy = "\033[38;5;" + std::to_string( templateColorChooser(level) ) + "m";
+      std::string dummy = "\033[38;5;" + std::to_string(templateColorChooser(level)) + "m";
       str.insert(i, dummy);
       i += dummy.size();
       if (level == maxlevel)
         startindex = i + 1;
     } else if (str[i] == '>') {
       level--;
-      std::string dummy = "\033[38;5;" + std::to_string( templateColorChooser(level) ) + "m";
+      std::string dummy = "\033[38;5;" + std::to_string(templateColorChooser(level)) + "m";
       str.insert(++i, dummy);
-      if (level + 1 == maxlevel)
-      {
+      if (level + 1 == maxlevel) {
         auto size = i - startindex - 1;
         str.erase(startindex, size);
         i = startindex + 1;
@@ -180,13 +172,12 @@ std::string highlightSearchString(std::string str, std::string substr, size_t co
 {
   long index = long(str.find(substr, 0));
 
-  while ( index != long(std::string::npos) )
-  {
+  while (index != long(std::string::npos)) {
     std::string dummy = "\033[38;5;" + std::to_string(colornr % 256) + "m";
     std::string dummy2 = "\033[38;5;0m";
     str.insert(index, dummy);
     str.insert(index + substr.size() + dummy.size(), dummy2);
-    index = str.find( substr, index + dummy.size() + substr.size() + dummy2.size() );
+    index = str.find(substr, index + dummy.size() + substr.size() + dummy2.size());
   }
   return str;
 } // highlightSearchString

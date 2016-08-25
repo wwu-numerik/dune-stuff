@@ -6,7 +6,7 @@
 #ifndef DUNE_STUFF_GRID_WALKER_FUNCTORS_HH
 #define DUNE_STUFF_GRID_WALKER_FUNCTORS_HH
 
-//nothing here will compile w/o grid present
+// nothing here will compile w/o grid present
 #if HAVE_DUNE_GRID
 
 #include <dune/common/deprecated.hh>
@@ -20,33 +20,39 @@ namespace Stuff {
 namespace Grid {
 
 
-template< class GridViewImp >
+template <class GridViewImp>
 class Codim0Functor
 {
 public:
   typedef GridViewImp GridViewType;
-  typedef typename Stuff::Grid::Entity< GridViewType >::Type EntityType;
+  typedef typename Stuff::Grid::Entity<GridViewType>::Type EntityType;
 
   virtual ~Codim0Functor() = default;
 
-  virtual void prepare() {}
+  virtual void prepare()
+  {
+  }
 
   virtual void apply_local(const EntityType& entity) = 0;
 
-  virtual void finalize() {}
+  virtual void finalize()
+  {
+  }
 }; // class Codim0Functor
 
 
-template< class GridViewImp, class ReturnImp >
-class Codim0ReturnFunctor
-  : public Codim0Functor< GridViewImp >
+template <class GridViewImp, class ReturnImp>
+class Codim0ReturnFunctor : public Codim0Functor<GridViewImp>
 {
-  typedef Codim0Functor< GridViewImp > BaseType;
+  typedef Codim0Functor<GridViewImp> BaseType;
+
 public:
-  typedef ReturnImp        ReturnType;
+  typedef ReturnImp ReturnType;
   using typename BaseType::EntityType;
 
-  virtual ~Codim0ReturnFunctor() {}
+  virtual ~Codim0ReturnFunctor()
+  {
+  }
 
   virtual ReturnType compute_locally(const EntityType& entity) = 0;
 
@@ -54,62 +60,64 @@ public:
 }; // class Codim0ReturnFunctor
 
 
-template< class GridViewImp >
+template <class GridViewImp>
 class Codim1Functor
 {
 public:
   typedef GridViewImp GridViewType;
-  typedef typename Stuff::Grid::Entity< GridViewType >::Type       EntityType;
-  typedef typename Stuff::Grid::Intersection< GridViewType >::Type IntersectionType;
+  typedef typename Stuff::Grid::Entity<GridViewType>::Type EntityType;
+  typedef typename Stuff::Grid::Intersection<GridViewType>::Type IntersectionType;
 
   virtual ~Codim1Functor() = default;
 
-  virtual void prepare() {}
+  virtual void prepare()
+  {
+  }
 
   virtual void apply_local(const IntersectionType& intersection,
                            const EntityType& inside_entity,
                            const EntityType& outside_entity) = 0;
 
-  virtual void finalize() {}
+  virtual void finalize()
+  {
+  }
 }; // class Codim1Functor
 
 
 namespace Functor {
 
 
-template< class GridViewImp >
-class
-  DUNE_DEPRECATED_MSG("Use Codim0Functor instead (03.07.2015)!")
-      Codim0
-  : public Codim0Functor< GridViewImp >
+template <class GridViewImp>
+class DUNE_DEPRECATED_MSG("Use Codim0Functor instead (03.07.2015)!") Codim0 : public Codim0Functor<GridViewImp>
 {
 public:
   virtual ~Codim0() = default;
 };
 
 
-template< class GridViewImp >
-class
-  DUNE_DEPRECATED_MSG("Use Codim1Functor instead (25.09.2015)!")
-      Codim1
-  : public Codim1Functor< GridViewImp >
+template <class GridViewImp>
+class DUNE_DEPRECATED_MSG("Use Codim1Functor instead (25.09.2015)!") Codim1 : public Codim1Functor<GridViewImp>
 {
 public:
   virtual ~Codim1() = default;
 };
 
 
-template< class GridViewImp >
+template <class GridViewImp>
 class Codim0And1
 {
 public:
   typedef GridViewImp GridViewType;
-  typedef typename Stuff::Grid::Entity< GridViewType >::Type       EntityType;
-  typedef typename Stuff::Grid::Intersection< GridViewType >::Type IntersectionType;
+  typedef typename Stuff::Grid::Entity<GridViewType>::Type EntityType;
+  typedef typename Stuff::Grid::Intersection<GridViewType>::Type IntersectionType;
 
-  virtual ~Codim0And1() {}
+  virtual ~Codim0And1()
+  {
+  }
 
-  virtual void prepare() {}
+  virtual void prepare()
+  {
+  }
 
   virtual void apply_local(const EntityType& entity) = 0;
 
@@ -117,26 +125,31 @@ public:
                            const EntityType& /*inside_entity*/,
                            const EntityType& /*outside_entity*/) = 0;
 
-  virtual void finalize() {}
+  virtual void finalize()
+  {
+  }
 }; // class Codim0And1
 
 
-template< class GridViewImp >
-class DirichletDetector
-  : public Codim1< GridViewImp >
+template <class GridViewImp>
+class DirichletDetector : public Codim1<GridViewImp>
 {
-  typedef Codim1< GridViewImp > BaseType;
+  typedef Codim1<GridViewImp> BaseType;
+
 public:
-  typedef typename BaseType::GridViewType     GridViewType;
-  typedef typename BaseType::EntityType       EntityType;
+  typedef typename BaseType::GridViewType GridViewType;
+  typedef typename BaseType::EntityType EntityType;
   typedef typename BaseType::IntersectionType IntersectionType;
 
-  explicit DirichletDetector(const BoundaryInfoInterface< IntersectionType >& boundary_info)
+  explicit DirichletDetector(const BoundaryInfoInterface<IntersectionType>& boundary_info)
     : boundary_info_(boundary_info)
     , found_(0)
-  {}
+  {
+  }
 
-  virtual ~DirichletDetector() {}
+  virtual ~DirichletDetector()
+  {
+  }
 
   virtual void apply_local(const IntersectionType& intersection,
                            const EntityType& /*inside_entity*/,
@@ -152,7 +165,7 @@ public:
   }
 
 private:
-  const BoundaryInfoInterface< IntersectionType >& boundary_info_;
+  const BoundaryInfoInterface<IntersectionType>& boundary_info_;
   size_t found_;
 }; // class DirichletDetector
 

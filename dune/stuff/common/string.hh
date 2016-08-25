@@ -24,9 +24,9 @@
 #include <iostream>
 
 #include <dune/stuff/common/disable_warnings.hh>
-# include <boost/algorithm/string.hpp>
-# include <boost/lexical_cast.hpp>
-# include <boost/numeric/conversion/cast.hpp>
+#include <boost/algorithm/string.hpp>
+#include <boost/lexical_cast.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 #include <dune/stuff/common/reenable_warnings.hh>
 
 #include <dune/common/array.hh>
@@ -63,7 +63,8 @@ namespace Common {
  **/
 template <class T = std::string>
 inline std::vector<T>
-tokenize(const std::string& msg, const std::string& separators,
+tokenize(const std::string& msg,
+         const std::string& separators,
          const boost::algorithm::token_compress_mode_type mode = boost::algorithm::token_compress_off);
 
 } // namespace Common
@@ -135,8 +136,8 @@ std::string whitespaceify(const T& t, const char whitespace = ' ')
 } // ... whitespaceify(...)
 
 template <class T>
-inline std::vector<T> tokenize(const std::string& msg, const std::string& separators,
-                               const boost::algorithm::token_compress_mode_type mode)
+inline std::vector<T>
+tokenize(const std::string& msg, const std::string& separators, const boost::algorithm::token_compress_mode_type mode)
 {
   std::vector<std::string> strings;
   boost::algorithm::split(strings, msg, boost::algorithm::is_any_of(separators), mode);
@@ -149,8 +150,8 @@ inline std::vector<T> tokenize(const std::string& msg, const std::string& separa
 } // ... tokenize(...)
 
 template <>
-inline std::vector<std::string> tokenize(const std::string& msg, const std::string& separators,
-                                         const boost::algorithm::token_compress_mode_type mode)
+inline std::vector<std::string>
+tokenize(const std::string& msg, const std::string& separators, const boost::algorithm::token_compress_mode_type mode)
 {
   std::vector<std::string> strings;
   boost::algorithm::split(strings, msg, boost::algorithm::is_any_of(separators), mode);

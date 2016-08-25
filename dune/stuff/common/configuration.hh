@@ -33,7 +33,8 @@ namespace Common {
 
 
 //! use this to record defaults, placements and so forth
-class Request {
+class Request
+{
   int line;
   std::string file;
   std::string key;
@@ -41,20 +42,25 @@ class Request {
   std::string validator;
 
 public:
-  Request(const int _line, const std::string _file, const std::string _key,
-          const std::string _def, const std::string _validator);
+  Request(const int _line,
+          const std::string _file,
+          const std::string _key,
+          const std::string _def,
+          const std::string _validator);
 
   /**
    * \brief less-than operator for Requests
    * \details Compare this' member variables key, def, file, line and validator (in that order) with other's. Returns
    *          true if the first comparison returns true (i.e. this.key < other.key) and returns false if this.key >
-   *          other.key. If neither true nor false is returned in the first comparison (i.e. this.key "==" other.key), the
-   *          next comparison is evaluated similarly. If none of the first four comparisons returns a value, the value of
+   *          other.key. If neither true nor false is returned in the first comparison (i.e. this.key "==" other.key),
+   * the
+   *          next comparison is evaluated similarly. If none of the first four comparisons returns a value, the value
+   * of
    *          this.validator < other.validator is returned.
    * \param other Request to compare with.
    * \return bool this < other (see detailed description)
    */
-  bool operator < (const Request& other) const;
+  bool operator<(const Request& other) const;
 
   /**
    * \brief Less-than comparison of member variables key and def of a and b
@@ -64,13 +70,12 @@ public:
    * \return bool a < b (see detailed description)
    */
   friend bool strictRequestCompare(const Request& a, const Request& b);
-  friend std::ostream& operator <<(std::ostream& out, const Request& r);
-
+  friend std::ostream& operator<<(std::ostream& out, const Request& r);
 };
 
 bool strictRequestCompare(const Request& a, const Request& b);
 
-std::ostream& operator <<(std::ostream& out, const Request& r);
+std::ostream& operator<<(std::ostream& out, const Request& r);
 
 
 namespace internal {
@@ -83,18 +88,18 @@ static const std::string configuration_logfile = "data/log/dsc_parameter.log";
 
 
 template <class T>
-struct Typer {
+struct Typer
+{
   typedef typename std::conditional<std::is_convertible<T, std::string>::value, std::string, T>::type type;
 };
 
 } // namespace internal
 
 
-class Configuration
-  : public Dune::ParameterTree
+class Configuration : public Dune::ParameterTree
 {
   typedef Dune::ParameterTree BaseType;
-  typedef std::map< std::string, std::set< Request > > RequestMapType;
+  typedef std::map<std::string, std::set<Request>> RequestMapType;
 
 public:
   // This ctor has to be marked explicit!
@@ -145,7 +150,7 @@ public:
                 const bool log_on_exit = internal::configuration_log_on_exit,
                 const std::string logfile = internal::configuration_logfile);
 
-  template< class T >
+  template <class T>
   explicit Configuration(const std::string key,
                          const T& value,
                          const bool record_defaults = internal::configuration_record_defaults,
@@ -164,27 +169,27 @@ public:
   }
 
   Configuration(const std::string key,
-                         const char* value,
-                         const bool record_defaults = internal::configuration_record_defaults,
-                         const bool warn_on_default_access = internal::configuration_warn_on_default_access,
-                         const bool log_on_exit = internal::configuration_log_on_exit,
-                         const std::string logfile = internal::configuration_logfile);
+                const char* value,
+                const bool record_defaults = internal::configuration_record_defaults,
+                const bool warn_on_default_access = internal::configuration_warn_on_default_access,
+                const bool log_on_exit = internal::configuration_log_on_exit,
+                const std::string logfile = internal::configuration_logfile);
 
   Configuration(const char* key,
-                         const char* value,
-                         const bool record_defaults = internal::configuration_record_defaults,
-                         const bool warn_on_default_access = internal::configuration_warn_on_default_access,
-                         const bool log_on_exit = internal::configuration_log_on_exit,
-                         const std::string logfile = internal::configuration_logfile);
+                const char* value,
+                const bool record_defaults = internal::configuration_record_defaults,
+                const bool warn_on_default_access = internal::configuration_warn_on_default_access,
+                const bool log_on_exit = internal::configuration_log_on_exit,
+                const std::string logfile = internal::configuration_logfile);
 
   //! operator[](keys[ii]) = values[ii] for 0 <= ii <= keys.size()
-  template< class T >
-  Configuration(const std::vector< std::string > keys,
-                         const std::vector< T > values_in,
-                         const bool record_defaults = internal::configuration_record_defaults,
-                         const bool warn_on_default_access = internal::configuration_warn_on_default_access,
-                         const bool log_on_exit = internal::configuration_log_on_exit,
-                         const std::string logfile = internal::configuration_logfile)
+  template <class T>
+  Configuration(const std::vector<std::string> keys,
+                const std::vector<T> values_in,
+                const bool record_defaults = internal::configuration_record_defaults,
+                const bool warn_on_default_access = internal::configuration_warn_on_default_access,
+                const bool log_on_exit = internal::configuration_log_on_exit,
+                const std::string logfile = internal::configuration_logfile)
     : BaseType()
     , requests_map_()
     , record_defaults_(record_defaults)
@@ -194,8 +199,8 @@ public:
   {
     if (keys.size() != values_in.size())
       DUNE_THROW(Exceptions::shapes_do_not_match,
-                            "The size of 'keys' (" << keys.size() << ") does not match the size of 'values' ("
-                            << values_in.size() << ")!");
+                 "The size of 'keys' (" << keys.size() << ") does not match the size of 'values' (" << values_in.size()
+                                        << ")!");
     for (size_t ii = 0; ii < keys.size(); ++ii)
       set(keys[ii], values_in[ii]);
     setup_();
@@ -203,28 +208,24 @@ public:
 
   /** creates std::vector< T > from value_list and then behaves exactly like
    * Configuration(const std::vector< std::string > keys, const std::vector< T > values_in) */
-  template< class T >
-  Configuration(const std::vector< std::string > keys,
-                         const std::initializer_list< T > value_list,
-                         const bool record_defaults = internal::configuration_record_defaults,
-                         const bool warn_on_default_access = internal::configuration_warn_on_default_access,
-                         const bool log_on_exit = internal::configuration_log_on_exit,
-                         const std::string logfile = internal::configuration_logfile)
-    : Configuration(keys,
-                      std::vector< T >(value_list),
-                      record_defaults,
-                      warn_on_default_access,
-                      log_on_exit,
-                      logfile)
-  {}
+  template <class T>
+  Configuration(const std::vector<std::string> keys,
+                const std::initializer_list<T> value_list,
+                const bool record_defaults = internal::configuration_record_defaults,
+                const bool warn_on_default_access = internal::configuration_warn_on_default_access,
+                const bool log_on_exit = internal::configuration_log_on_exit,
+                const std::string logfile = internal::configuration_logfile)
+    : Configuration(keys, std::vector<T>(value_list), record_defaults, warn_on_default_access, log_on_exit, logfile)
+  {
+  }
 
   // specialization of the constructor above for std::string
-  Configuration(const std::vector< std::string > keys,
-                         const std::initializer_list< std::string > value_list,
-                         const bool record_defaults = internal::configuration_record_defaults,
-                         const bool warn_on_default_access = internal::configuration_warn_on_default_access,
-                         const bool log_on_exit = internal::configuration_log_on_exit,
-                         const std::string logfile = internal::configuration_logfile);
+  Configuration(const std::vector<std::string> keys,
+                const std::initializer_list<std::string> value_list,
+                const bool record_defaults = internal::configuration_record_defaults,
+                const bool warn_on_default_access = internal::configuration_warn_on_default_access,
+                const bool log_on_exit = internal::configuration_log_on_exit,
+                const std::string logfile = internal::configuration_logfile);
 
   ~Configuration();
 
@@ -257,30 +258,31 @@ public:
    */
 
   /**
-   * \defgroup base_get ´´These methods replace the get methods of Dune::ParameterTree and allow for vectors and matrices.``
+   * \defgroup base_get ´´These methods replace the get methods of Dune::ParameterTree and allow for vectors and
+   * matrices.``
    * \{
    */
 
   //! const get without default value, without validation
-  template< class T >
+  template <class T>
   T get(const std::string key, const size_t size = 0, const size_t cols = 0) const
   {
     if (!has_key(key))
       DUNE_THROW(Exceptions::configuration_error,
                  "This configuration (see below) does not contain the key '" << key << "' and there was no default "
-                 << "value provided!\n\n" << report_string());
-    return get_valid_value< T, ValidateAny< T > >(key, T(), ValidateAny< T >(), size, cols);
+                                                                             << "value provided!\n\n"
+                                                                             << report_string());
+    return get_valid_value<T, ValidateAny<T>>(key, T(), ValidateAny<T>(), size, cols);
   } // ... get(...)
 
   //! const get with default value, without validation
-  template< class T >
-  typename internal::Typer<T>::type get(const std::string key,
-                                        const T& def, const size_t size = 0,
-                                        const size_t cols = 0) const
+  template <class T>
+  typename internal::Typer<T>::type
+  get(const std::string key, const T& def, const size_t size = 0, const size_t cols = 0) const
   {
     typedef typename internal::Typer<T>::type Tt;
     const auto def_t = static_cast<Tt>(def);
-    return get_valid_value< Tt, ValidateAny< Tt > >(key, def_t, ValidateAny< Tt >(), size, cols);
+    return get_valid_value<Tt, ValidateAny<Tt>>(key, def_t, ValidateAny<Tt>(), size, cols);
   } // ... get(...)
 
   /**
@@ -293,24 +295,26 @@ public:
    */
 
   //! const get without default value, with validation
-  template< class T, class Validator >
+  template <class T, class Validator>
   T get(const std::string key,
-        const ValidatorInterface< T, Validator >& validator,
+        const ValidatorInterface<T, Validator>& validator,
         const size_t size = 0,
         const size_t cols = 0) const
   {
     if (!has_key(key))
-      DUNE_THROW(Exceptions::configuration_error, "Configuration does not have this key and there was no default value provided");
+      DUNE_THROW(Exceptions::configuration_error,
+                 "Configuration does not have this key and there was no default value provided");
     return get_valid_value(key, T(), validator, size, cols);
   } // ... get(...)
 
   //! const get with default value, with validation
-  template< class T , class Validator>
-  typename internal::Typer<T>::type get(const std::string key,
-                                        const T& def,
-                                        const ValidatorInterface< typename internal::Typer< T >::type, Validator >& validator,
-                                        const size_t size = 0,
-                                        const size_t cols = 0) const
+  template <class T, class Validator>
+  typename internal::Typer<T>::type
+  get(const std::string key,
+      const T& def,
+      const ValidatorInterface<typename internal::Typer<T>::type, Validator>& validator,
+      const size_t size = 0,
+      const size_t cols = 0) const
   {
     // static cast is either a noop or char* to string
     const auto def_t = static_cast<typename internal::Typer<T>::type>(def);
@@ -327,67 +331,67 @@ public:
    */
 
   //! variant with default value, without validation
-  template< typename T >
+  template <typename T>
   T get(const std::string key, const T& def, const size_t size = 0, const size_t cols = 0)
   {
-    Request req(-1, std::string(), key,
+    Request req(-1,
+                std::string(),
+                key,
                 Dune::Stuff::Common::to_string(def),
-                Dune::Stuff::Common::getTypename(ValidateAny< T >()));
-    return get_(key, def, ValidateAny< T >(), req, size, cols, true);
+                Dune::Stuff::Common::getTypename(ValidateAny<T>()));
+    return get_(key, def, ValidateAny<T>(), req, size, cols, true);
   } // ... get(...)
 
   //! get variation with default value, without validation, request needs to be provided
-  template< typename T >
-  typename internal::Typer<T>::type get(const std::string key,
-                                        const T& def,
-                                        Request req,
-                                        const size_t size = 0,
-                                        const size_t cols = 0)
+  template <typename T>
+  typename internal::Typer<T>::type
+  get(const std::string key, const T& def, Request req, const size_t size = 0, const size_t cols = 0)
   {
     const auto def_t = static_cast<typename internal::Typer<T>::type>(def);
-    return get_(key, def_t, ValidateAny< typename internal::Typer<T>::type >(), req, size, cols, true);
+    return get_(key, def_t, ValidateAny<typename internal::Typer<T>::type>(), req, size, cols, true);
   }
 
   //! get variation with default value and validation, request needs to be provided
-  template< typename T, class Validator >
-  typename internal::Typer<T>::type get(const std::string key,
-                                        const T& def,
-                                        const ValidatorInterface< typename internal::Typer< T >::type, Validator >& validator,
-                                        Request req,
-                                        const size_t size = 0,
-                                        const size_t cols = 0)
+  template <typename T, class Validator>
+  typename internal::Typer<T>::type
+  get(const std::string key,
+      const T& def,
+      const ValidatorInterface<typename internal::Typer<T>::type, Validator>& validator,
+      Request req,
+      const size_t size = 0,
+      const size_t cols = 0)
   {
     return get_(key, def, validator, req, size, cols, true);
   }
 
   //! get variation with default value, validation
-  template< typename T, class Validator >
-  typename internal::Typer<T>::type get(const std::string key,
-                                        const T& def,
-                                        const size_t size = 0,
-                                        const size_t cols = 0,
-                                        const ValidatorInterface< typename internal::Typer< T >::type, Validator >& validator
-                                            = ValidateAny< typename internal::Typer<T>::type >())
+  template <typename T, class Validator>
+  typename internal::Typer<T>::type
+  get(const std::string key,
+      const T& def,
+      const size_t size = 0,
+      const size_t cols = 0,
+      const ValidatorInterface<typename internal::Typer<T>::type, Validator>& validator =
+          ValidateAny<typename internal::Typer<T>::type>())
   {
     const auto def_t = static_cast<typename internal::Typer<T>::type>(def);
-    Request req(-1, std::string(), key,
-                Dune::Stuff::Common::to_string(def_t),
-                Dune::Stuff::Common::getTypename(validator));
+    Request req(
+        -1, std::string(), key, Dune::Stuff::Common::to_string(def_t), Dune::Stuff::Common::getTypename(validator));
     return get_(key, def_t, validator, req, size, cols, true);
   } // ... get(...)
 
   //! get variation with default value, validation
-  template< typename T , class Validator >
-  typename internal::Typer<T>::type get(const std::string key,
-                                        const T& def,
-                                        const ValidatorInterface< typename internal::Typer<T>::type, Validator >& validator,
-                                        const size_t size = 0,
-                                        const size_t cols = 0)
+  template <typename T, class Validator>
+  typename internal::Typer<T>::type
+  get(const std::string key,
+      const T& def,
+      const ValidatorInterface<typename internal::Typer<T>::type, Validator>& validator,
+      const size_t size = 0,
+      const size_t cols = 0)
   {
     const auto def_t = static_cast<typename internal::Typer<T>::type>(def);
-    Request req(-1, std::string(), key,
-                Dune::Stuff::Common::to_string(def_t),
-                Dune::Stuff::Common::getTypename(validator));
+    Request req(
+        -1, std::string(), key, Dune::Stuff::Common::to_string(def_t), Dune::Stuff::Common::getTypename(validator));
     return get_(key, def_t, validator, req, size, cols, true);
   }
 
@@ -396,28 +400,26 @@ public:
    */
 
   //! get std::vector< T > from tree_
-  template< typename T, class Validator = ValidateAny< typename internal::Typer< T >::type > >
-  std::vector< typename internal::Typer<T>::type > getList(const std::string key,
-                                                           const T& def = T(),
-                                                           const std::string separators = ";",
-                                                           const ValidatorInterface< typename internal::Typer<T>::type, Validator >& validator
-                                                              = ValidateAny< typename internal::Typer<T>::type >()) const
+  template <typename T, class Validator = ValidateAny<typename internal::Typer<T>::type>>
+  std::vector<typename internal::Typer<T>::type>
+  getList(const std::string key,
+          const T& def = T(),
+          const std::string separators = ";",
+          const ValidatorInterface<typename internal::Typer<T>::type, Validator>& validator =
+              ValidateAny<typename internal::Typer<T>::type>()) const
   {
     typedef typename internal::Typer<T>::type Tt;
     const auto def_t = static_cast<Tt>(def);
-    Request req(-1, std::string(), key,
-                Dune::Stuff::Common::to_string(def_t),
-                Dune::Stuff::Common::getTypename(validator));
-    const auto value = get(key, to_string(def_t), ValidateAny< std::string >(), req);
-    const auto tokens = tokenize< Tt >(value, separators);
-    for (auto token : tokens)
-    {
-        if(!validator(token))
-        {
-            std::stringstream ss;
-            validator.print(ss);
-            DUNE_THROW(Exceptions::configuration_error, ss.str());
-        }
+    Request req(
+        -1, std::string(), key, Dune::Stuff::Common::to_string(def_t), Dune::Stuff::Common::getTypename(validator));
+    const auto value = get(key, to_string(def_t), ValidateAny<std::string>(), req);
+    const auto tokens = tokenize<Tt>(value, separators);
+    for (auto token : tokens) {
+      if (!validator(token)) {
+        std::stringstream ss;
+        validator.print(ss);
+        DUNE_THROW(Exceptions::configuration_error, ss.str());
+      }
     }
     return tokens;
   } // ... getList(...)
@@ -428,13 +430,14 @@ public:
    */
 
   //! set value to key in Configuration
-  template< class T >
+  template <class T>
   void set(const std::string key, const T& value, const bool overwrite = false)
   {
     if (has_key(key) && !overwrite)
       DUNE_THROW(Exceptions::configuration_error,
                  "While setting '" << key << "' in this configuration (see below), it already exists and you requested "
-                 << "no overwrite!\n======================\n" << report_string());
+                                   << "no overwrite!\n======================\n"
+                                   << report_string());
     BaseType::operator[](key) = to_string(value);
   } // ... set(..., T, ...)
 
@@ -487,7 +490,7 @@ public:
   //! store output of report(..., prefix) in std::string
   std::string report_string(const std::string& prefix = "") const;
 
-  std::map< std::string, std::string > flatten() const;
+  std::map<std::string, std::string> flatten() const;
 
   /** get parameters from parameter file or key-value pairs given on the command line and store in Configuration (and
   load into fem parameter, if available) */
@@ -509,14 +512,15 @@ public:
   /**
      * \brief Checks if there are Request with differing default values to the same key
      *  (i.e. if the key was queried with non-matching default values)
-     * \details Extracts the std::set<Request> from pair and removes all duplicates with respect to key and def. If there is
+     * \details Extracts the std::set<Request> from pair and removes all duplicates with respect to key and def. If
+   * there is
      *  only one Request left after this step (or if the extracted set was empty originally), an empty set is returned,
      *  otherwise the set of differing requests is returned.
      * \param pair RequestMapType::value_type (i.e. std::pair< std::string, std::set<Request> >)
      * \return std::set filled with Requests that differ either in key or in def (or both), empty if there are no such
      *  differing Requests
      */
-  std::set< Request > get_mismatched_defaults(RequestMapType::value_type pair) const;
+  std::set<Request> get_mismatched_defaults(RequestMapType::value_type pair) const;
 
   //! print all keys that were requested with at least two different default values and their respective Requests
   void print_mismatched_defaults(std::ostream& out) const;
@@ -524,19 +528,22 @@ public:
   /**
    *  \note this method is needed for the python bindings
    */
-  template< class T >
+  template <class T>
   T pb_get(const std::string key, const DUNE_STUFF_SSIZE_T size = 0) const
   {
     size_t sz = 0;
     try {
-      sz = boost::numeric_cast< size_t >(size);
+      sz = boost::numeric_cast<size_t>(size);
     } catch (boost::bad_numeric_cast& ee) {
       DUNE_THROW(Exceptions::external_error,
                  "There was an error in boost converting '" << size << "' from '"
-                 << Typename< DUNE_STUFF_SSIZE_T >::value() << "' to '" << Typename< size_t >::value() << ":\n"
-                 << ee.what());
+                                                            << Typename<DUNE_STUFF_SSIZE_T>::value()
+                                                            << "' to '"
+                                                            << Typename<size_t>::value()
+                                                            << ":\n"
+                                                            << ee.what());
     }
-    return get< T >(key, sz);
+    return get<T>(key, sz);
   } // ... get(...)
 
 private:
@@ -545,30 +552,38 @@ private:
   void add_tree_(const Configuration& other, const std::string sub_id, const bool overwrite);
 
   //! get value from tree and validate with validator
-  template< typename T, class Validator >
+  template <typename T, class Validator>
   T get_valid_value(const std::string& key,
                     const T& def,
-                    const ValidatorInterface< T, Validator >& validator,
+                    const ValidatorInterface<T, Validator>& validator,
                     const size_t size,
                     const size_t cols) const
   {
     std::string valstring = BaseType::get(key, to_string(def));
     try {
-      T val = from_string< T >(valstring, size, cols);
+      T val = from_string<T>(valstring, size, cols);
       if (validator(val))
         return val;
       else
         DUNE_THROW(Exceptions::configuration_error, validator.msg());
     } catch (boost::bad_lexical_cast& e) {
       DUNE_THROW(Exceptions::external_error,
-                 "Error in boost while converting the string '" << valstring << "' to type '"
-                 << Typename< T >::value() << "':\n" << e.what()
-                 << "\non accessing key " << key << " with default " << to_string(def));
+                 "Error in boost while converting the string '" << valstring << "' to type '" << Typename<T>::value()
+                                                                << "':\n"
+                                                                << e.what()
+                                                                << "\non accessing key "
+                                                                << key
+                                                                << " with default "
+                                                                << to_string(def));
     } catch (std::exception& e) {
       DUNE_THROW(Exceptions::external_error,
-                 "Error in the stl while converting the string '" << valstring << "' to type '"
-                 << Typename< T >::value() << "':\n" << e.what()
-                 << "\non accessing key " << key << " with default " << to_string(def));
+                 "Error in the stl while converting the string '" << valstring << "' to type '" << Typename<T>::value()
+                                                                  << "':\n"
+                                                                  << e.what()
+                                                                  << "\non accessing key "
+                                                                  << key
+                                                                  << " with default "
+                                                                  << to_string(def));
     }
   } // ... get_valid_value(...)
 
@@ -585,10 +600,10 @@ private:
    *  \return value associated to key in Configuration (interpreted as type T),
    *  def if key does not exist in Configuration
    */
-  template< typename T, class Validator >
+  template <typename T, class Validator>
   T get_(const std::string& key,
          const T& def,
-         const ValidatorInterface< T, Validator >& validator,
+         const ValidatorInterface<T, Validator>& validator,
          const Request& request,
          const size_t size,
          const size_t cols,
@@ -597,8 +612,8 @@ private:
     requests_map_insert(request, key);
 #ifndef NDEBUG
     if (warn_on_default_access_ && !has_key(key)) {
-      std::cerr << DSC::colorString("WARNING:", DSC::Colors::brown)
-                << " using default value for parameter \"" << key << "\"" << std::endl;
+      std::cerr << DSC::colorString("WARNING:", DSC::Colors::brown) << " using default value for parameter \"" << key
+                << "\"" << std::endl;
     }
 #endif // ifndef NDEBUG
     if (record_defaults_ && !has_key(key) && def_provided)
@@ -665,9 +680,9 @@ bool operator!=(const ParameterTree& left, const ParameterTree& right);
 namespace std {
 
 
-template<>
+template <>
 
-struct less< Dune::Stuff::Common::Configuration >
+struct less<Dune::Stuff::Common::Configuration>
 {
   typedef bool result_type;
   typedef Dune::Stuff::Common::Configuration first_argument_type;
@@ -682,13 +697,21 @@ struct less< Dune::Stuff::Common::Configuration >
 
 #define DSC_CONFIG Dune::Stuff::Common::Config()
 
-#define DSC_CONFIG_GET(key,def) \
-  DSC_CONFIG.get(key,def,Dune::Stuff::Common::Request(__LINE__, __FILE__,key,Dune::Stuff::Common::to_string(def), "none"))
+#define DSC_CONFIG_GET(key, def)                                                                                       \
+  DSC_CONFIG.get(                                                                                                      \
+      key, def, Dune::Stuff::Common::Request(__LINE__, __FILE__, key, Dune::Stuff::Common::to_string(def), "none"))
 
-#define DSC_CONFIG_GETV(key,def,validator) \
-  DSC_CONFIG.get(key,def, validator, Dune::Stuff::Common::Request(__LINE__, __FILE__,key,Dune::Stuff::Common::to_string(def), #validator ))
+#define DSC_CONFIG_GETV(key, def, validator)                                                                           \
+  DSC_CONFIG.get(                                                                                                      \
+      key,                                                                                                             \
+      def,                                                                                                             \
+      validator,                                                                                                       \
+      Dune::Stuff::Common::Request(__LINE__, __FILE__, key, Dune::Stuff::Common::to_string(def), #validator))
 
-#define DSC_CONFIG_GETB(key,def,use_logger) \
-  DSC_CONFIG.get(key,def,Dune::Stuff::Common::Request(__LINE__, __FILE__,key,Dune::Stuff::Common::to_string(def), "none" ), use_logger)
+#define DSC_CONFIG_GETB(key, def, use_logger)                                                                          \
+  DSC_CONFIG.get(key,                                                                                                  \
+                 def,                                                                                                  \
+                 Dune::Stuff::Common::Request(__LINE__, __FILE__, key, Dune::Stuff::Common::to_string(def), "none"),   \
+                 use_logger)
 
 #endif // DUNE_STUFF_COMMON_CONFIGURATION_HH

@@ -25,13 +25,17 @@ namespace Functions {
  * \brief Simple affine function of the form f(x) = A*x + b. For dimRangeCols > 1, there has to be a matrix A_i for
  * every column.
  */
-template <class EntityImp, class DomainFieldImp, size_t domainDim, class RangeFieldImp, size_t rangeDim,
+template <class EntityImp,
+          class DomainFieldImp,
+          size_t domainDim,
+          class RangeFieldImp,
+          size_t rangeDim,
           size_t rangeDimCols = 1>
-class Affine
-  : public Dune::Stuff::GlobalFunctionInterface<EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols>
+class Affine : public Dune::Stuff::
+                   GlobalFunctionInterface<EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols>
 {
-  typedef GlobalFunctionInterface< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols> BaseType;
-  typedef Affine< EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols > ThisType;
+  typedef GlobalFunctionInterface<EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols> BaseType;
+  typedef Affine<EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, rangeDimCols> ThisType;
 
 public:
   using typename BaseType::DomainType;
@@ -48,14 +52,17 @@ public:
 
   static const bool available = true;
 
-  static std::string static_id() { return BaseType::static_id() + ".affine"; }
+  static std::string static_id()
+  {
+    return BaseType::static_id() + ".affine";
+  }
 
   static Common::Configuration default_config(const std::string sub_name = "")
   {
     Common::Configuration config;
-    config["A"]      = internal::EyeMatrix<RangeFieldImp, rangeDim, domainDim>::value_str();
-    config["b"]      = internal::EyeMatrix<RangeFieldImp, rangeDim, 1>::value_str();
-    config["name"]   = static_id();
+    config["A"] = internal::EyeMatrix<RangeFieldImp, rangeDim, domainDim>::value_str();
+    config["b"] = internal::EyeMatrix<RangeFieldImp, rangeDim, 1>::value_str();
+    config["name"] = static_id();
     if (sub_name.empty())
       return config;
     else {
@@ -69,7 +76,7 @@ public:
                                           const std::string sub_name = static_id())
   {
     // get correct config
-    const Common::Configuration cfg         = config.has_sub(sub_name) ? config.sub(sub_name) : config;
+    const Common::Configuration cfg = config.has_sub(sub_name) ? config.sub(sub_name) : config;
     const Common::Configuration default_cfg = default_config();
     std::vector<MatrixType> A_vector(dimRangeCols);
     for (size_t cc = 0; cc < dimRangeCols; ++cc) {
@@ -79,9 +86,8 @@ public:
         A_vector[cc] = cfg.get<MatrixType>("A." + DSC::to_string(cc), dimRange, dimDomain);
       }
     }
-    return Common::make_unique<ThisType>(A_vector,
-                                         cfg.get<RangeType>("b"),
-                                         cfg.get("name", default_cfg.get<std::string>("name")));
+    return Common::make_unique<ThisType>(
+        A_vector, cfg.get<RangeType>("b"), cfg.get("name", default_cfg.get<std::string>("name")));
   } // ... create(...)
 
   // constructor
@@ -96,7 +102,7 @@ public:
     assert(A.size() >= dimRangeCols);
   }
 
-  explicit Affine(const Dune::FieldVector< FieldMatrixType, dimRangeCols> A,
+  explicit Affine(const Dune::FieldVector<FieldMatrixType, dimRangeCols> A,
                   const RangeType b = RangeType(0),
                   const bool prune = true,
                   const std::string name_in = static_id())
@@ -110,9 +116,7 @@ public:
   }
 
   // constructor for dimRangeCols = 1.
-  explicit Affine(const MatrixType A,
-                  const RangeType b = RangeType(0),
-                  const std::string name_in = static_id())
+  explicit Affine(const MatrixType A, const RangeType b = RangeType(0), const std::string name_in = static_id())
     : Affine(std::vector<MatrixType>(1, A), b, name_in)
   {
     static_assert(dimRangeCols == 1, "Use constructor above for dimRangeCols > 1");
@@ -120,7 +124,8 @@ public:
 
   Affine(const ThisType& other) = default;
 
-// if HAVE_DUNE_FEM is true, GlobalFunctionInterface is derived from Fem::Function which has a deleted copy assignment operator
+// if HAVE_DUNE_FEM is true, GlobalFunctionInterface is derived from Fem::Function which has a deleted copy assignment
+// operator
 #if HAVE_DUNE_FEM
   ThisType& operator=(const ThisType& other)
   {
@@ -132,60 +137,69 @@ public:
   }
 #endif
 
-  virtual std::string type() const override final { return BaseType::static_id() + ".affine"; }
+  virtual std::string type() const override final
+  {
+    return BaseType::static_id() + ".affine";
+  }
 
-  virtual size_t order() const override final { return 1; }
+  virtual size_t order() const override final
+  {
+    return 1;
+  }
 
   using BaseType::evaluate;
 
   virtual void evaluate(const DomainType& x, RangeType& ret) const override final
   {
-    evaluate_helper(x, ret, internal::ChooseVariant< dimRangeCols >());
+    evaluate_helper(x, ret, internal::ChooseVariant<dimRangeCols>());
   }
 
   using BaseType::jacobian;
 
   virtual void jacobian(const DomainType& x, JacobianRangeType& ret) const override final
   {
-    jacobian_helper(x, ret, internal::ChooseVariant< dimRangeCols >());
+    jacobian_helper(x, ret, internal::ChooseVariant<dimRangeCols>());
   }
 
-  virtual std::string name() const override final { return name_; }
+  virtual std::string name() const override final
+  {
+    return name_;
+  }
 
 private:
-  template< size_t rC >
-  void evaluate_helper(const DomainType& x, RangeType& ret, const internal::ChooseVariant< rC >) const
+  template <size_t rC>
+  void evaluate_helper(const DomainType& x, RangeType& ret, const internal::ChooseVariant<rC>) const
   {
     for (size_t cc = 0; cc < rC; ++cc) {
-    Dune::FieldVector< RangeFieldType, dimRange > tmp_col;
-    A_[cc].mv(x, tmp_col);
-    for (size_t rr = 0; rr < dimRange; ++rr)
-      ret[rr][cc] = tmp_col[rr];
+      Dune::FieldVector<RangeFieldType, dimRange> tmp_col;
+      A_[cc].mv(x, tmp_col);
+      for (size_t rr = 0; rr < dimRange; ++rr)
+        ret[rr][cc] = tmp_col[rr];
     }
     if (!b_zero_)
       ret += b_;
   }
 
-  void evaluate_helper(const DomainType& x, RangeType& ret, const internal::ChooseVariant< 1 >) const
+  void evaluate_helper(const DomainType& x, RangeType& ret, const internal::ChooseVariant<1>) const
   {
     A_[0].mv(x, ret);
     if (!b_zero_)
       ret += b_;
   }
 
-  template< size_t rC >
-  void jacobian_helper(const DomainType& /*x*/, JacobianRangeType& ret, const internal::ChooseVariant< rC >) const
+  template <size_t rC>
+  void jacobian_helper(const DomainType& /*x*/, JacobianRangeType& ret, const internal::ChooseVariant<rC>) const
   {
     for (size_t cc = 0; cc < rC; ++cc)
       ret[cc] = A_[cc].operator FieldMatrixType();
   }
 
-  void jacobian_helper(const DomainType& /*x*/, JacobianRangeType& ret, const internal::ChooseVariant< 1 >) const
+  void jacobian_helper(const DomainType& /*x*/, JacobianRangeType& ret, const internal::ChooseVariant<1>) const
   {
     ret = A_[0].operator FieldMatrixType();
   }
 
-  std::vector< MatrixType > A_;
+  std::vector<MatrixType> A_;
   RangeType b_;
   bool b_zero_;
   std::string name_;

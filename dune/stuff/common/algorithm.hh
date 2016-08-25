@@ -13,22 +13,20 @@ namespace Stuff {
 namespace Common {
 
 //! same as std::copy_if, but with move
-template<class InputIt, class OutputIt, class UnaryPredicate>
-OutputIt move_if(InputIt first, InputIt last,
-                 OutputIt d_first, UnaryPredicate pred)
+template <class InputIt, class OutputIt, class UnaryPredicate>
+OutputIt move_if(InputIt first, InputIt last, OutputIt d_first, UnaryPredicate pred)
 {
-    while (first != last) {
-        if (pred(*first))
-            *d_first++ = std::move(*first);
-        first++;
-    }
-    return d_first;
+  while (first != last) {
+    if (pred(*first))
+      *d_first++ = std::move(*first);
+    first++;
+  }
+  return d_first;
 }
 
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
-
 
 
 #endif // DUNE_STUFF_ALGORITHM_HH

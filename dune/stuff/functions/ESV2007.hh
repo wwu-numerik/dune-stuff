@@ -25,22 +25,24 @@ namespace Functions {
 namespace ESV2007 {
 
 
-template< class E, class D, size_t d, class R, size_t r, size_t rC = 1 >
-class Testcase1Force
-  : public LocalizableFunctionInterface< E, D, d, R, r, rC >
+template <class E, class D, size_t d, class R, size_t r, size_t rC = 1>
+class Testcase1Force : public LocalizableFunctionInterface<E, D, d, R, r, rC>
 {
-  Testcase1Force() { static_assert(AlwaysFalse< E >::value, "Not available for these dimensions!"); }
+  Testcase1Force()
+  {
+    static_assert(AlwaysFalse<E>::value, "Not available for these dimensions!");
+  }
 };
 
 
-template< class EntityImp, class DomainFieldImp, class RangeFieldImp >
-class Testcase1Force< EntityImp, DomainFieldImp, 2, RangeFieldImp, 1, 1 >
-  : public GlobalFunctionInterface< EntityImp, DomainFieldImp, 2, RangeFieldImp, 1 >
+template <class EntityImp, class DomainFieldImp, class RangeFieldImp>
+class Testcase1Force<EntityImp, DomainFieldImp, 2, RangeFieldImp, 1, 1>
+    : public GlobalFunctionInterface<EntityImp, DomainFieldImp, 2, RangeFieldImp, 1>
 {
-  typedef Testcase1Force< EntityImp, DomainFieldImp, 2, RangeFieldImp, 1, 1 >          ThisType;
-  typedef GlobalFunctionInterface< EntityImp, DomainFieldImp, 2, RangeFieldImp, 1, 1 > BaseType;
-public:
+  typedef Testcase1Force<EntityImp, DomainFieldImp, 2, RangeFieldImp, 1, 1> ThisType;
+  typedef GlobalFunctionInterface<EntityImp, DomainFieldImp, 2, RangeFieldImp, 1, 1> BaseType;
 
+public:
   using typename BaseType::DomainFieldType;
   using typename BaseType::DomainType;
   using typename BaseType::RangeType;
@@ -67,23 +69,23 @@ public:
     }
   } // ... default_config(...)
 
-  static std::unique_ptr< ThisType > create(const Common::Configuration config = default_config(),
-                                            const std::string sub_name = static_id())
+  static std::unique_ptr<ThisType> create(const Common::Configuration config = default_config(),
+                                          const std::string sub_name = static_id())
   {
     // get correct config
     const Common::Configuration cfg = config.has_sub(sub_name) ? config.sub(sub_name) : config;
     const Common::Configuration default_cfg = default_config();
-    //create
-    return Common::make_unique< ThisType >(
-          cfg.get("integration_order", default_cfg.get< size_t >("integration_order")),
-          cfg.get("name",              default_cfg.get< std::string >("name")));
+    // create
+    return Common::make_unique<ThisType>(cfg.get("integration_order", default_cfg.get<size_t>("integration_order")),
+                                         cfg.get("name", default_cfg.get<std::string>("name")));
   } // ... create(...)
 
-  Testcase1Force(const size_t ord = default_config().template get< size_t >("integration_order"),
+  Testcase1Force(const size_t ord = default_config().template get<size_t>("integration_order"),
                  const std::string nm = static_id())
     : order_(ord)
     , name_(nm)
-  {}
+  {
+  }
 
   Testcase1Force(const ThisType& /*other*/) = default;
 
@@ -132,22 +134,24 @@ private:
 }; // class Testcase1Force
 
 
-template< class E, class D, size_t d, class R, size_t r, size_t rC = 1 >
-class Testcase1ExactSolution
-  : public LocalizableFunctionInterface< E, D, d, R, r, rC >
+template <class E, class D, size_t d, class R, size_t r, size_t rC = 1>
+class Testcase1ExactSolution : public LocalizableFunctionInterface<E, D, d, R, r, rC>
 {
-  Testcase1ExactSolution() { static_assert(AlwaysFalse< E >::value, "Not available for these dimensions!"); }
+  Testcase1ExactSolution()
+  {
+    static_assert(AlwaysFalse<E>::value, "Not available for these dimensions!");
+  }
 };
 
 
-template< class EntityImp, class DomainFieldImp, class RangeFieldImp >
-class Testcase1ExactSolution< EntityImp, DomainFieldImp, 2, RangeFieldImp, 1, 1 >
-  : public GlobalFunctionInterface< EntityImp, DomainFieldImp, 2, RangeFieldImp, 1, 1 >
+template <class EntityImp, class DomainFieldImp, class RangeFieldImp>
+class Testcase1ExactSolution<EntityImp, DomainFieldImp, 2, RangeFieldImp, 1, 1>
+    : public GlobalFunctionInterface<EntityImp, DomainFieldImp, 2, RangeFieldImp, 1, 1>
 {
-  typedef Testcase1ExactSolution< EntityImp, DomainFieldImp, 2, RangeFieldImp, 1, 1 >  ThisType;
-  typedef GlobalFunctionInterface< EntityImp, DomainFieldImp, 2, RangeFieldImp, 1, 1 > BaseType;
-public:
+  typedef Testcase1ExactSolution<EntityImp, DomainFieldImp, 2, RangeFieldImp, 1, 1> ThisType;
+  typedef GlobalFunctionInterface<EntityImp, DomainFieldImp, 2, RangeFieldImp, 1, 1> BaseType;
 
+public:
   using typename BaseType::DomainFieldType;
   using typename BaseType::DomainType;
   using typename BaseType::RangeType;
@@ -174,23 +178,23 @@ public:
     }
   } // ... default_config(...)
 
-  static std::unique_ptr< ThisType > create(const Common::Configuration config = default_config(),
-                                            const std::string sub_name = static_id())
+  static std::unique_ptr<ThisType> create(const Common::Configuration config = default_config(),
+                                          const std::string sub_name = static_id())
   {
     // get correct config
     const Common::Configuration cfg = config.has_sub(sub_name) ? config.sub(sub_name) : config;
     const Common::Configuration default_cfg = default_config();
-    //create
-    return Common::make_unique< ThisType >(
-          cfg.get("integration_order", default_cfg.get< size_t >("integration_order")),
-          cfg.get("name",              default_cfg.get< std::string >("name")));
+    // create
+    return Common::make_unique<ThisType>(cfg.get("integration_order", default_cfg.get<size_t>("integration_order")),
+                                         cfg.get("name", default_cfg.get<std::string>("name")));
   } // ... create(...)
 
-  Testcase1ExactSolution(const size_t ord = default_config().template get< size_t >("integration_order"),
+  Testcase1ExactSolution(const size_t ord = default_config().template get<size_t>("integration_order"),
                          const std::string nm = static_id())
     : order_(ord)
     , name_(nm)
-  {}
+  {
+  }
 
   Testcase1ExactSolution(const ThisType& /*other*/) = default;
 
@@ -238,58 +242,60 @@ private:
 }; // class Testcase1ExactSolution
 
 
-template< class DiffusionFactorType, class DiffusionTensorType = void >
+template <class DiffusionFactorType, class DiffusionTensorType = void>
 class Cutoff;
 
 
-template< class DiffusionType >
-class Cutoff< DiffusionType, void >
-  : public LocalizableFunctionInterface< typename DiffusionType::EntityType
-                                       , typename DiffusionType::DomainFieldType, DiffusionType::dimDomain
-                                       , typename DiffusionType::RangeFieldType, 1, 1 >
+template <class DiffusionType>
+class Cutoff<DiffusionType, void> : public LocalizableFunctionInterface<typename DiffusionType::EntityType,
+                                                                        typename DiffusionType::DomainFieldType,
+                                                                        DiffusionType::dimDomain,
+                                                                        typename DiffusionType::RangeFieldType,
+                                                                        1,
+                                                                        1>
 {
-  static_assert(std::is_base_of< Tags::LocalizableFunction, DiffusionType >::value,
+  static_assert(std::is_base_of<Tags::LocalizableFunction, DiffusionType>::value,
                 "DiffusionType has to be tagged as a LocalizableFunction!");
   typedef typename DiffusionType::EntityType E_;
   typedef typename DiffusionType::DomainFieldType D_;
   static const size_t d_ = DiffusionType::dimDomain;
   typedef typename DiffusionType::RangeFieldType R_;
-  typedef LocalizableFunctionInterface< E_, D_, d_, R_, 1 > BaseType;
-  typedef Cutoff< DiffusionType >                            ThisType;
+  typedef LocalizableFunctionInterface<E_, D_, d_, R_, 1> BaseType;
+  typedef Cutoff<DiffusionType> ThisType;
 
-  class Localfunction
-    : public LocalfunctionInterface< E_, D_, d_, R_, 1, 1 >
+  class Localfunction : public LocalfunctionInterface<E_, D_, d_, R_, 1, 1>
   {
-    typedef LocalfunctionInterface< E_, D_, d_, R_, 1, 1 > BaseType;
+    typedef LocalfunctionInterface<E_, D_, d_, R_, 1, 1> BaseType;
+
   public:
     typedef typename BaseType::EntityType EntityType;
 
     typedef typename BaseType::DomainFieldType DomainFieldType;
-    static const size_t                        dimDomain = BaseType::dimDomain;
-    typedef typename BaseType::DomainType      DomainType;
+    static const size_t dimDomain = BaseType::dimDomain;
+    typedef typename BaseType::DomainType DomainType;
 
     typedef typename BaseType::RangeFieldType RangeFieldType;
-    static const size_t                       dimRange = BaseType::dimRange;
-    static const size_t                       dimRangeCols = BaseType::dimRangeCols;
-    typedef typename BaseType::RangeType      RangeType;
+    static const size_t dimRange = BaseType::dimRange;
+    static const size_t dimRangeCols = BaseType::dimRangeCols;
+    typedef typename BaseType::RangeType RangeType;
 
     typedef typename BaseType::JacobianRangeType JacobianRangeType;
 
   private:
-    template< class D, int r, int rR >
+    template <class D, int r, int rR>
     struct Compute
     {
-      static_assert(AlwaysFalse< D >::value, "Not implemented for these dimensions!");
+      static_assert(AlwaysFalse<D>::value, "Not implemented for these dimensions!");
     };
 
-    template< class D >
-    struct Compute< D, 1, 1 >
+    template <class D>
+    struct Compute<D, 1, 1>
     {
       static RangeFieldType min_eigenvalue_of(const D& diffusion, const EntityType& ent)
       {
         const auto local_diffusion = diffusion.local_function(ent);
         assert(local_diffusion->order() == 0);
-        const auto& reference_element = ReferenceElements< DomainFieldType, dimDomain >::general(ent.type());
+        const auto& reference_element = ReferenceElements<DomainFieldType, dimDomain>::general(ent.type());
         return local_diffusion->evaluate(reference_element.position(0, 0))[0];
       } // ... min_eigenvalue_of_(...)
     }; // class Compute< ..., 1, 1 >
@@ -299,9 +305,9 @@ class Cutoff< DiffusionType, void >
       : BaseType(ent)
       , value_(0)
     {
-      const RangeFieldType min_eigen_value
-          = Compute< DiffusionType, DiffusionType::dimRange, DiffusionType::dimRangeCols >::min_eigenvalue_of(diffusion,
-                                                                                                           ent);
+      const RangeFieldType min_eigen_value =
+          Compute<DiffusionType, DiffusionType::dimRange, DiffusionType::dimRangeCols>::min_eigenvalue_of(diffusion,
+                                                                                                          ent);
       assert(min_eigen_value > 0.0);
       const DomainFieldType hh = compute_diameter_of_(ent);
       value_ = (poincare_constant * hh * hh) / min_eigen_value;
@@ -332,10 +338,10 @@ class Cutoff< DiffusionType, void >
     static DomainFieldType compute_diameter_of_(const EntityType& ent)
     {
       DomainFieldType ret(0);
-      for (auto cc : DSC::valueRange(ent.template count< dimDomain >())) {
-        const auto vertex = ent.template subEntity< dimDomain >(cc)->geometry().center();
-        for (auto dd : DSC::valueRange(cc + 1, ent.template count< dimDomain >())) {
-          const auto other_vertex = ent.template subEntity< dimDomain >(dd)->geometry().center();
+      for (auto cc : DSC::valueRange(ent.template count<dimDomain>())) {
+        const auto vertex = ent.template subEntity<dimDomain>(cc)->geometry().center();
+        for (auto dd : DSC::valueRange(cc + 1, ent.template count<dimDomain>())) {
+          const auto other_vertex = ent.template subEntity<dimDomain>(dd)->geometry().center();
           const auto diff = vertex - other_vertex;
           ret = std::max(ret, diff.two_norm());
         }
@@ -347,9 +353,9 @@ class Cutoff< DiffusionType, void >
   }; // class Localfunction
 
 public:
-  typedef typename BaseType::EntityType        EntityType;
+  typedef typename BaseType::EntityType EntityType;
   typedef typename BaseType::LocalfunctionType LocalfunctionType;
-  typedef typename BaseType::RangeFieldType    RangeFieldType;
+  typedef typename BaseType::RangeFieldType RangeFieldType;
 
   static std::string static_id()
   {
@@ -362,7 +368,8 @@ public:
     : diffusion_(diffusion)
     , poincare_constant_(poincare_constant)
     , name_(nm)
-  {}
+  {
+  }
 
   Cutoff(const ThisType& other) = default;
 
@@ -373,9 +380,9 @@ public:
     return name_;
   }
 
-  virtual std::unique_ptr< LocalfunctionType > local_function(const EntityType& entity) const override final
+  virtual std::unique_ptr<LocalfunctionType> local_function(const EntityType& entity) const override final
   {
-    return std::unique_ptr< Localfunction >(new Localfunction(entity, diffusion_, poincare_constant_));
+    return std::unique_ptr<Localfunction>(new Localfunction(entity, diffusion_, poincare_constant_));
   }
 
 private:

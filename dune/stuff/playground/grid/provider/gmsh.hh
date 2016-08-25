@@ -38,17 +38,16 @@ namespace Stuff {
 /**
  * \brief   Gmsh grid provider
  */
-template< class GridImp = Dune::YaspGrid< 2, Dune::EquidistantOffsetCoordinates<double, 2 > >
-class GridProviderGmsh
-  : public GridProviderInterface< GridImp >
+template <class GridImp = Dune::YaspGrid<2, Dune::EquidistantOffsetCoordinates<double, 2>> class
+          GridProviderGmsh : public GridProviderInterface<GridImp>
 {
 public:
   //! Type of the provided grid.
   typedef GridImp GridType;
 
-  typedef GridProviderInterface< GridType > BaseType;
+  typedef GridProviderInterface<GridType> BaseType;
 
-  typedef GridProviderGmsh< GridType > ThisType;
+  typedef GridProviderGmsh<GridType> ThisType;
 
   //! Dimension of the provided grid.
   static const size_t dim = BaseType::dim;
@@ -64,18 +63,21 @@ public:
 
   GridProviderGmsh(const std::string filename)
   {
-    static_assert(!(Dune::is_same< GridType, Dune::YaspGrid< dim > >::value), "GmshReader does not work with YaspGrid!");
-    static_assert(!(Dune::is_same< GridType, Dune::YaspGrid< 2, Dune::EquidistantOffsetCoordinates<double, 2 > >::value), "GmshReader does not work with SGrid!");
-    grid_ = std::shared_ptr< GridType >(GmshReader< GridType >::read(filename));
+    static_assert(!(Dune::is_same<GridType, Dune::YaspGrid<dim>>::value), "GmshReader does not work with YaspGrid!");
+    static_assert(!(Dune::is_same < GridType, Dune::YaspGrid<2, Dune::EquidistantOffsetCoordinates<double, 2>>::value),
+                  "GmshReader does not work with SGrid!");
+    grid_ = std::shared_ptr<GridType>(GmshReader<GridType>::read(filename));
   }
 
   GridProviderGmsh(ThisType& other)
     : grid_(other.grid_)
-  {}
+  {
+  }
 
   GridProviderGmsh(const ThisType& other)
     : grid_(other.grid_)
-  {}
+  {
+  }
 
   static Dune::ParameterTree defaultSettings(const std::string subName = "")
   {
@@ -101,7 +103,8 @@ public:
     // create and return
     if (!settings.hasKey("filename"))
       DUNE_THROW(Dune::RangeError,
-                 "\nMissing key 'filename' in the following Dune::ParameterTree:\n" << settings.reportString("  "));
+                 "\nMissing key 'filename' in the following Dune::ParameterTree:\n"
+                     << settings.reportString("  "));
     const std::string filename = settings.get("filename", "meaningless_default_value");
     return new ThisType(filename);
   }
@@ -121,13 +124,13 @@ public:
   }
 
   //! const access to shared ptr
-  virtual const std::shared_ptr< const GridType > grid() const
+  virtual const std::shared_ptr<const GridType> grid() const
   {
     return grid_;
   }
 
 private:
-  std::shared_ptr< GridType > grid_;
+  std::shared_ptr<GridType> grid_;
 }; // class GridProviderGmsh
 
 
@@ -135,7 +138,8 @@ private:
 } // namespace Dune
 
 #endif // HAVE_DUNE_GRID
-#endif // defined ALUGRID_CONFORM || defined ALUGRID_CUBE || defined ALUGRID_SIMPLEX || defined ALBERTAGRID || defined UGGRID
+#endif // defined ALUGRID_CONFORM || defined ALUGRID_CUBE || defined ALUGRID_SIMPLEX || defined ALBERTAGRID || defined
+       // UGGRID
 #endif // HAVE_DUNE_ALUGRID || HAVE_ALBERTA || HAVE_UG
 
 #endif // DUNE_STUFF_GRID_PROVIDER_GMSH_HH
