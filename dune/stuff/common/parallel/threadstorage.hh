@@ -11,6 +11,7 @@
 
 #include <deque>
 #include <algorithm>
+#include <numeric>
 #include <type_traits>
 #if HAVE_TBB
 #include <tbb/enumerable_thread_specific.h>
