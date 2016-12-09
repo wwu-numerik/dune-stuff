@@ -14,7 +14,7 @@ DUNE_AC_INIT # gets module version from dune.module file
 AC_CONFIG_SRCDIR([dune/stuff/aliases.hh])
 AM_CONFIG_HEADER([config.h])
 
-AM_INIT_AUTOMAKE([subdir-objects])
+AM_INIT_AUTOMAKE
 
 # check all dune-module stuff
 DUNE_CHECK_ALL
