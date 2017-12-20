@@ -94,17 +94,17 @@ public:
     GradientStringVectorType gradient_as_vectors;
     if (cfg.has_key("gradient")) {
       if (cfg.has_key("gradient.0"))
-        assert((cfg.get<std::string>("gradient") == cfg.get<std::string>("gradient.0"))
+        assert((cfg.template get<std::string>("gradient") == cfg.template get<std::string>("gradient.0"))
                && "gradient and gradient.0 differ but should be synonymous!");
       get_gradient(cfg, gradient_as_vectors, "gradient");
     } else if (cfg.has_key("gradient.0")) {
       get_gradient(cfg, gradient_as_vectors, "gradient.0");
     }
     // create
-    return Common::make_unique<ThisType>(cfg.get("variable", default_cfg.get<std::string>("variable")),
+    return Common::make_unique<ThisType>(cfg.get("variable", default_cfg.template get<std::string>("variable")),
                                          expression_as_vectors,
-                                         cfg.get("order", default_cfg.get<size_t>("order")),
-                                         cfg.get("name", default_cfg.get<std::string>("name")),
+                                         cfg.get("order", default_cfg.template get<size_t>("order")),
+                                         cfg.get("name", default_cfg.template get<std::string>("name")),
                                          gradient_as_vectors);
   } // ... create(...)
 
@@ -142,7 +142,7 @@ public:
    * std::vector< std::vector< std::string > to ExpressionStringVectorType and GradientStringVectorType, respectively.
    */
   Expression(const std::string variable, const std::vector<std::string> expressions,
-             const size_t ord = default_config().get<size_t>("order"), const std::string nm = static_id(),
+             const size_t ord = default_config().template get<size_t>("order"), const std::string nm = static_id(),
              const std::vector<std::vector<std::string>> gradient_expressions = std::vector<std::vector<std::string>>())
     : function_(new MathExpressionFunctionType(variable, expressions)), order_(ord), name_(nm)
   {
@@ -321,7 +321,7 @@ private:
                                     internal::ChooseVariant<rC>)
   {
     typedef typename Dune::FieldMatrix<std::string, dimRange, dimRangeCols> ExpressionMatrixType;
-    const ExpressionMatrixType expression_as_matrix = cfg.get<ExpressionMatrixType>("expression");
+    const ExpressionMatrixType expression_as_matrix = cfg.template get<ExpressionMatrixType>("expression");
     // convert FieldMatrix to ExpressionStringVectorType
     for (size_t rr = 0; rr < dimRange; ++rr) {
       std::vector<std::string> expression_row;
@@ -335,7 +335,7 @@ private:
                                     internal::ChooseVariant<1>)
   {
     typedef typename Dune::FieldVector<std::string, dimRange> ExpressionVectorType;
-    const ExpressionVectorType expression_as_vector = cfg.get<ExpressionVectorType>("expression");
+    const ExpressionVectorType expression_as_vector = cfg.template get<ExpressionVectorType>("expression");
     // convert Vector to ExpressionStringVectorType
     for (size_t rr = 0; rr < dimRange; ++rr) {
       std::vector<std::string> expression_row(1, expression_as_vector[rr]);
@@ -354,7 +354,7 @@ private:
     for (std::string key : gradient_keys) {
       ExpressionStringVectorType gradient_as_vectors_component;
       typedef typename Dune::FieldMatrix<std::string, dimRange, dimDomain> JacobianMatrixType;
-      const JacobianMatrixType gradient_as_matrix = cfg.get<JacobianMatrixType>(key);
+      const JacobianMatrixType gradient_as_matrix = cfg.template get<JacobianMatrixType>(key);
       // convert FieldMatrix to ExpressionStringVectorType
       for (size_t rr = 0; rr < dimRange; ++rr) {
         std::vector<std::string> gradient_expression;

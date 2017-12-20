@@ -72,9 +72,9 @@ public:
     // get correct config
     const Common::Configuration cfg         = config.has_sub(sub_name) ? config.sub(sub_name) : config;
     const Common::Configuration default_cfg = default_config();
-    return Common::make_unique<ThisType>(cfg.get("A", default_cfg.get<MatrixType>("A")),
-                                         cfg.get("b", default_cfg.get<RangeType>("b")),
-                                         cfg.get("name", default_cfg.get<std::string>("name")));
+    return Common::make_unique<ThisType>(cfg.get("A", default_cfg.template get<MatrixType>("A")),
+                                         cfg.get("b", default_cfg.template get<RangeType>("b")),
+                                         cfg.get("name", default_cfg.template get<std::string>("name")));
   } // ... create(...)
 
   explicit Affine(const MatrixType& matrix, const RangeType& vector = RangeType(0),

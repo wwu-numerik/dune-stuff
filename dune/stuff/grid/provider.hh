@@ -60,7 +60,7 @@ public:
 
   static std::unique_ptr<InterfaceType> create(const Common::Configuration& config)
   {
-    return create(config.get<std::string>("type"), config);
+    return create(config.template get<std::string>("type"), config);
   }
 
   static std::unique_ptr<InterfaceType> create(const std::string& type = available()[0],

@@ -146,8 +146,8 @@ public:
     // get correct config
     const Common::Configuration cfg         = config.has_sub(sub_name) ? config.sub(sub_name) : config;
     const Common::Configuration default_cfg = default_config();
-    return Common::make_unique<ThisType>(cfg.get("value", default_cfg.get<RangeType>("value")),
-                                         cfg.get("name", default_cfg.get<std::string>("name")));
+    return Common::make_unique<ThisType>(cfg.get("value", default_cfg.template get<RangeType>("value")),
+                                         cfg.get("name", default_cfg.template get<std::string>("name")));
   } // ... create(...)
 
   explicit Constant(const RangeType& constant, const std::string name_in = static_id())

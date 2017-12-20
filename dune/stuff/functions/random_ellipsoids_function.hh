@@ -159,7 +159,7 @@ public:
     typedef unsigned long UL;
     const UL level_0_count = ellipsoid_cfg.get("ellipsoids.count", 10);
     const UL max_depth     = ellipsoid_cfg.get("ellipsoids.recursion_depth", 1);
-    const UL children      = ellipsoid_cfg.get<UL>("ellipsoids.children", 3u); //, DSC::ValidateLess<UL>(0));
+    const UL children      = ellipsoid_cfg.template get<UL>("ellipsoids.children", 3u); //, DSC::ValidateLess<UL>(0));
     const UL total_count = level_0_count + level_0_count * std::pow(children, max_depth + 1);
     ellipsoids_.resize(level_0_count);
     ellipsoids_.reserve(total_count);

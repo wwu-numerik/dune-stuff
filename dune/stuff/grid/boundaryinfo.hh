@@ -294,7 +294,7 @@ public:
     std::map<std::string, std::set<int>> id_to_type_map;
     for (const std::string& type : {"dirichlet", "neumann"})
       if (cfg.has_key(type)) {
-        const auto ids = cfg.get<std::vector<int>>(type);
+        const auto ids = cfg.template get<std::vector<int>>(type);
         id_to_type_map.insert(std::make_pair(type, std::set<int>(ids.begin(), ids.end())));
       }
     return Common::make_unique<ThisType>(
@@ -390,12 +390,12 @@ public:
     const Common::Configuration cfg         = config.has_sub(sub_name) ? config.sub(sub_name) : config;
     const Common::Configuration default_cfg = default_config();
     // get default
-    const std::string default_type = cfg.get("default", default_cfg.get<std::string>("default"));
+    const std::string default_type = cfg.get("default", default_cfg.template get<std::string>("default"));
     if (default_type != "dirichlet" && default_type != "neumann")
       DUNE_THROW(Exceptions::configuration_error, "Wrong default '" << default_type << "' given!");
     const bool default_to_dirichlet = default_type == "dirichlet";
     // get tolerance
-    const DomainFieldType tol = cfg.get("compare_tolerance", default_cfg.get<DomainFieldType>("compare_tolerance"));
+    const DomainFieldType tol = cfg.get("compare_tolerance", default_cfg.template get<DomainFieldType>("compare_tolerance"));
     // get dirichlet and neumann
     std::vector<WorldType> dirichlets = getVectors(cfg, "dirichlet");
     std::vector<WorldType> neumanns   = getVectors(cfg, "neumann");
@@ -468,13 +468,13 @@ private:
       while (found) {
         const std::string localKey = key + "." + Dune::Stuff::Common::toString(counter);
         if (config.has_key(localKey))
-          ret.push_back(config.get<WorldType>(localKey, dimWorld));
+          ret.push_back(config.template get<WorldType>(localKey, dimWorld));
         else
           found = false;
         ++counter;
       }
     } else if (config.has_key(key))
-      ret.push_back(config.get<WorldType>(key, dimWorld));
+      ret.push_back(config.template get<WorldType>(key, dimWorld));
     return ret;
   } // ... getVectors(...)
 
@@ -523,12 +523,12 @@ private:
     auto logger = Common::TimedLogger().get("stuff.grid.boundaryinfo.get_value_range");
     std::vector<Common::FieldVector<double, 2>> value_range;
     if (cfg.has_key(id) && !cfg.has_sub(id))
-      value_range.push_back(cfg.get<Common::FieldVector<double, 2>>(id));
+      value_range.push_back(cfg.template get<Common::FieldVector<double, 2>>(id));
     else {
       Common::Configuration sub_cfg = cfg.has_sub(id) ? cfg.sub(id) : default_cfg.sub(id);
       size_t counter = 0;
       while (sub_cfg.has_key(Common::toString(counter))) {
-        value_range.push_back(sub_cfg.get<Common::FieldVector<double, 2>>(Common::toString(counter)));
+        value_range.push_back(sub_cfg.template get<Common::FieldVector<double, 2>>(Common::toString(counter)));
         ++counter;
       }
     }
@@ -543,7 +543,7 @@ public:
     const Common::Configuration cfg         = config.has_sub(sub_name) ? config.sub(sub_name) : config;
     const Common::Configuration default_cfg = default_config();
     // get default
-    const std::string default_type = cfg.get("default", default_cfg.get<std::string>("default"));
+    const std::string default_type = cfg.get("default", default_cfg.template get<std::string>("default"));
     if (default_type != "dirichlet" && default_type != "neumann")
       DUNE_THROW(Exceptions::configuration_error, "Wrong default '" << default_type << "' given!");
     const bool default_to_dirichlet = default_type == "dirichlet";
@@ -678,7 +678,7 @@ public:
 
   static std::unique_ptr<InterfaceType> create(const Common::Configuration& config)
   {
-    return create(config.get<std::string>("type"), config);
+    return create(config.template get<std::string>("type"), config);
   }
 
   static std::unique_ptr<InterfaceType> create(const std::string& type = available()[0],

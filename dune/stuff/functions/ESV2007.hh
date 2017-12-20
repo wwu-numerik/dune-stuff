@@ -76,11 +76,11 @@ public:
     const Common::Configuration cfg         = config.has_sub(sub_name) ? config.sub(sub_name) : config;
     const Common::Configuration default_cfg = default_config();
     // create
-    return Common::make_unique<ThisType>(cfg.get("integration_order", default_cfg.get<size_t>("integration_order")),
-                                         cfg.get("name", default_cfg.get<std::string>("name")));
+    return Common::make_unique<ThisType>(cfg.get("integration_order", default_cfg.template get<size_t>("integration_order")),
+                                         cfg.get("name", default_cfg.template get<std::string>("name")));
   } // ... create(...)
 
-  Testcase1Force(const size_t ord = default_config().get<size_t>("integration_order"),
+  Testcase1Force(const size_t ord = default_config().template get<size_t>("integration_order"),
                  const std::string nm = static_id())
     : order_(ord), name_(nm)
   {
@@ -166,11 +166,11 @@ public:
     const Common::Configuration cfg         = config.has_sub(sub_name) ? config.sub(sub_name) : config;
     const Common::Configuration default_cfg = default_config();
     // create
-    return Common::make_unique<ThisType>(cfg.get("integration_order", default_cfg.get<size_t>("integration_order")),
-                                         cfg.get("name", default_cfg.get<std::string>("name")));
+    return Common::make_unique<ThisType>(cfg.get("integration_order", default_cfg.template get<size_t>("integration_order")),
+                                         cfg.get("name", default_cfg.template get<std::string>("name")));
   } // ... create(...)
 
-  Testcase1ExactSolution(const size_t ord = default_config().get<size_t>("integration_order"),
+  Testcase1ExactSolution(const size_t ord = default_config().template get<size_t>("integration_order"),
                          const std::string nm = static_id())
     : order_(ord), name_(nm)
   {

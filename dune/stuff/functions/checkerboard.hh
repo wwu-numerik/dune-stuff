@@ -122,23 +122,23 @@ public:
     const Common::Configuration default_cfg = default_config();
     // calculate number of values and get values
     auto num_elements =
-        cfg.get("num_elements", default_cfg.get<Common::FieldVector<size_t, dimDomain>>("num_elements"), dimDomain);
+        cfg.get("num_elements", default_cfg.template get<Common::FieldVector<size_t, dimDomain>>("num_elements"), dimDomain);
     size_t num_values = 1;
     for (size_t ii = 0; ii < num_elements.size(); ++ii)
       num_values *= num_elements[ii];
     std::vector<RangeType> values(num_values);
-    auto values_rf = cfg.get("values", default_cfg.get<std::vector<RangeFieldType>>("values"), num_values);
+    auto values_rf = cfg.get("values", default_cfg.template get<std::vector<RangeFieldType>>("values"), num_values);
     for (size_t ii = 0; ii < values_rf.size(); ++ii)
       values[ii] = RangeType(values_rf[ii]);
     // create
     return Common::make_unique<ThisType>(
         cfg.get(
-            "lower_left", default_cfg.get<Common::FieldVector<DomainFieldType, dimDomain>>("lower_left"), dimDomain),
+            "lower_left", default_cfg.template get<Common::FieldVector<DomainFieldType, dimDomain>>("lower_left"), dimDomain),
         cfg.get(
-            "upper_right", default_cfg.get<Common::FieldVector<DomainFieldType, dimDomain>>("upper_right"), dimDomain),
+            "upper_right", default_cfg.template get<Common::FieldVector<DomainFieldType, dimDomain>>("upper_right"), dimDomain),
         std::move(num_elements),
         std::move(values),
-        cfg.get("name", default_cfg.get<std::string>("name")));
+        cfg.get("name", default_cfg.template get<std::string>("name")));
   } // ... create(...)
 
   Checkerboard(const Common::FieldVector<DomainFieldType, dimDomain>& lowerLeft,

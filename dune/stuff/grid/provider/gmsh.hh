@@ -75,7 +75,7 @@ public:
   {
     const Common::Configuration cfg         = config.has_sub(sub_name) ? config.sub(sub_name) : config;
     const Common::Configuration default_cfg = default_config();
-    return Common::make_unique<ThisType>(cfg.get("filename", default_cfg.get<std::string>("filename")));
+    return Common::make_unique<ThisType>(cfg.get("filename", default_cfg.template get<std::string>("filename")));
   }
 
   Gmsh(const std::string filename) { grid_ = std::shared_ptr<GridType>(GmshReader<GridType>::read(filename)); }

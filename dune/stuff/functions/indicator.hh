@@ -114,18 +114,18 @@ public:
     while (cfg.has_sub(DSC::toString(cc))) {
       const Stuff::Common::Configuration local_cfg = cfg.sub(DSC::toString(cc));
       if (local_cfg.has_key("domain") && local_cfg.has_key("value")) {
-        auto domains = local_cfg.get<FieldMatrix<DomainFieldType, d, 2>>("domain");
+        auto domains = local_cfg.template get<FieldMatrix<DomainFieldType, d, 2>>("domain");
         for (size_t dd = 0; dd < d; ++dd) {
           tmp_lower[dd] = domains[dd][0];
           tmp_upper[dd] = domains[dd][1];
         }
-        auto val = local_cfg.get<RangeFieldType>("value");
+        auto val = local_cfg.template get<RangeFieldType>("value");
         values.emplace_back(tmp_lower, tmp_upper, val);
       } else
         break;
       ++cc;
     }
-    return Common::make_unique<ThisType>(values, cfg.get("name", def_cfg.get<std::string>("name")));
+    return Common::make_unique<ThisType>(values, cfg.get("name", def_cfg.template get<std::string>("name")));
   } // ... create(...)
 
   Indicator(const std::vector<std::tuple<DomainType, DomainType, R>>& values, const std::string name_in = "indicator")
@@ -147,8 +147,8 @@ public:
   {
     const auto center = entity.geometry().center();
     for (const auto& element : values_)
-      if (Common::FloatCmp::le(std::get<0>(element), center) && Common::FloatCmp::lt(center, std::get<1>(element)))
-        return Common::make_unique<Localfunction>(entity, std::get<2>(element));
+      if (Common::FloatCmp::le(std::template get<0>(element), center) && Common::FloatCmp::lt(center, std::template get<1>(element)))
+        return Common::make_unique<Localfunction>(entity, std::template get<2>(element));
     return Common::make_unique<Localfunction>(entity, 0.0);
   } // ... local_function(...)
 

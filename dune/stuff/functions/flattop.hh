@@ -79,16 +79,16 @@ public:
     // get correct config
     const Common::Configuration cfg         = config.has_sub(sub_name) ? config.sub(sub_name) : config;
     const Common::Configuration default_cfg = default_config();
-    return Common::make_unique<ThisType>(cfg.get("lower_left", default_cfg.get<DomainType>("lower_left")),
-                                         cfg.get("upper_right", default_cfg.get<DomainType>("upper_right")),
-                                         cfg.get("boundary_layer", default_cfg.get<DomainType>("boundary_layer")),
-                                         cfg.get("value", default_cfg.get<RangeType>("value")),
-                                         cfg.get("name", default_cfg.get<std::string>("name")));
+    return Common::make_unique<ThisType>(cfg.get("lower_left", default_cfg.template get<DomainType>("lower_left")),
+                                         cfg.get("upper_right", default_cfg.template get<DomainType>("upper_right")),
+                                         cfg.get("boundary_layer", default_cfg.template get<DomainType>("boundary_layer")),
+                                         cfg.get("value", default_cfg.template get<RangeType>("value")),
+                                         cfg.get("name", default_cfg.template get<std::string>("name")));
   } // ... create(...)
 
   FlatTop(const StuffDomainType& lower_left, const StuffDomainType& upper_right, const StuffDomainType& boundary_layer,
-          const StuffRangeType& value = default_config().get<StuffRangeType>("value"),
-          const std::string name_in = default_config().get<std::string>("name"))
+          const StuffRangeType& value = default_config().template get<StuffRangeType>("value"),
+          const std::string name_in = default_config().template get<std::string>("name"))
     : lower_left_(lower_left), upper_right_(upper_right), boundary_layer_(boundary_layer), value_(value), name_(name_in)
   {
     check_input();

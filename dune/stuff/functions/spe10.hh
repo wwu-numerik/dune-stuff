@@ -122,12 +122,12 @@ public:
     const Common::Configuration cfg         = config.has_sub(sub_name) ? config.sub(sub_name) : config;
     const Common::Configuration default_cfg = default_config();
     // create
-    return Common::make_unique<DerivedType>(cfg.get("filename", default_cfg.get<std::string>("filename")),
-                                            cfg.get("lower_left", default_cfg.get<DomainType>("lower_left")),
-                                            cfg.get("upper_right", default_cfg.get<DomainType>("upper_right")),
-                                            cfg.get("min_value", default_cfg.get<RangeFieldType>("min_value")),
-                                            cfg.get("max_value", default_cfg.get<RangeFieldType>("max_value")),
-                                            cfg.get("name", default_cfg.get<std::string>("name")));
+    return Common::make_unique<DerivedType>(cfg.get("filename", default_cfg.template get<std::string>("filename")),
+                                            cfg.get("lower_left", default_cfg.template get<DomainType>("lower_left")),
+                                            cfg.get("upper_right", default_cfg.template get<DomainType>("upper_right")),
+                                            cfg.get("min_value", default_cfg.template get<RangeFieldType>("min_value")),
+                                            cfg.get("max_value", default_cfg.template get<RangeFieldType>("max_value")),
+                                            cfg.get("name", default_cfg.template get<std::string>("name")));
   } // ... create(...)
 
   Model1Base(const std::string& filename, const DomainType& lowerLeft, const DomainType& upperRight,

@@ -164,7 +164,7 @@ private:
     // boundary info
     typedef Stuff::Grid::BoundaryInfoProvider<typename LevelGridViewType::Intersection> BoundaryInfoProvider;
     auto boundary_info_ptr =
-        BoundaryInfoProvider::create(boundary_info_cfg.get<std::string>("type"), boundary_info_cfg);
+        BoundaryInfoProvider::create(boundary_info_cfg.template get<std::string>("type"), boundary_info_cfg);
     for (auto level : DSC::valueRange(grid().maxLevel() + 1)) {
       auto grid_view = level_view(level);
       // vtk writer
